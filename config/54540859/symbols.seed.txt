@@ -2,7 +2,12 @@
 text_padding_88B0079C = .text:0x88B0079C; // type:object size:0x1C scope:local data:byte
 ts4_script_title_server_logout = .text:0x88792820; // type:function size:0x68
 ts4_script_title_server_get_patch = .text:0x88794FE8; // type:function size:0x38
+ts4_script_minigame_prepare_ingame = .text:0x88795548; // type:function size:0x24
+ts4_script_minigame_hide_unused_tracksides = .text:0x88795570; // type:function size:0x30
 ts4_script_king_of_court_prepare_ingame = .text:0x887955A0; // type:function size:0x24
+ts4_find_service = .text:0x8860BB30; // type:function size:0xA4
+ts4_minigame_prepare_ingame = .text:0x888E3118; // type:function size:0xD0
+ts4_minigame_hide_unused_tracksides = .text:0x888E31E8; // type:function size:0x208
 ts4_king_of_court_prepare_ingame = .text:0x888E3FF0; // type:function size:0xC0
 ts4_title_server_logout = .text:0x889B1A58; // type:function size:0x84
 ts4_title_server_request_patch = .text:0x889B39A0; // type:function size:0xCC

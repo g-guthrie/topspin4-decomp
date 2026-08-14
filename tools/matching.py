@@ -16,6 +16,16 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/minigame_prepare.c",
+        "object": "minigame_prepare.obj",
+        "symbols": {"ts4_script_minigame_prepare_ingame": 36},
+    },
+    {
+        "source": "src/xbox360/minigame_hide_tracksides.c",
+        "object": "minigame_hide_tracksides.obj",
+        "symbols": {"ts4_script_minigame_hide_unused_tracksides": 48},
+    },
+    {
         "source": "src/xbox360/king_of_court_prepare.c",
         "object": "king_of_court_prepare.obj",
         "symbols": {"ts4_script_king_of_court_prepare_ingame": 36},

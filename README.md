@@ -4,7 +4,7 @@ Clean-room reverse engineering and source reconstruction of *Top Spin 4*.
 
 ## Status
 
-Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Thirty-six functions have reviewed names. Three reconstructed functions now compile to 100% code matches: 196 of 10,153,700 measured Swing code bytes (`0.0019303309%`).
+Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Forty-one functions have reviewed names. Five reconstructed functions now compile to 100% code matches: 280 of 10,153,700 measured Swing code bytes (`0.0027576154%`).
 
 The selected build is title ID `54540859` (`TT-2137`), media ID `60819732`, executable version `0.0.0.3`. See [docs/targets.md](docs/targets.md), [docs/analysis-status.md](docs/analysis-status.md), the [matching-decomp assessment](docs/matching-decomp.md), and [matching build instructions](docs/matching-build.md). The first active investigation maps the dormant server-delivered patch path in [docs/title-server-patch.md](docs/title-server-patch.md). Official updates and optional content are tracked separately in [docs/additional-content.md](docs/additional-content.md); they are not part of the baseline.
 

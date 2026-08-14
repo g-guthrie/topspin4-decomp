@@ -1,6 +1,6 @@
 # Matching build
 
-The first three matching translation units are `src/xbox360/king_of_court_prepare.c`, `src/xbox360/title_server_logout.c`, and `src/xbox360/title_patch.c` from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 196 code bytes exactly.
+The first five matching translation units cover title-server, minigame, and King of the Court callbacks from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 280 code bytes exactly.
 
 ## Local prerequisites
 
@@ -29,6 +29,6 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 196 of 10,153,700 Swing code bytes (`0.0019303309%`) and three of 47,250 objdiff functions (`0.0063492064%`). These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
+The match is 280 of 10,153,700 Swing code bytes (`0.0027576154%`) and five of 47,250 objdiff functions (`0.010582011%`). These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
 
 Each accompanying eight-byte `.pdata` range is also a 100% relocation-aware objdiff match. The progress percentage intentionally counts code bytes only.

@@ -23,6 +23,14 @@ src/xbox360/title_patch.c:
 	.pdata      start:0x88128518 end:0x88128520
 	.text       start:0x88794FE8 end:0x88795020
 
+src/xbox360/minigame_prepare.c:
+	.pdata      start:0x88128540 end:0x88128548
+	.text       start:0x88795548 end:0x8879556C
+
+src/xbox360/minigame_hide_tracksides.c:
+	.pdata      start:0x88128548 end:0x88128550
+	.text       start:0x88795570 end:0x887955A0
+
 src/xbox360/king_of_court_prepare.c:
 	.pdata      start:0x88128550 end:0x88128558
 	.text       start:0x887955A0 end:0x887955C4

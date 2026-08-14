@@ -14,6 +14,22 @@
   "objdiff_sha256_macos_arm64": "acd0f01e40319c862c84effd9f744a6ccfeec10074cbc89ef232d96d333ab528",
   "matches": [
     {
+      "source": "src/xbox360/minigame_prepare.c",
+      "symbol": "ts4_script_minigame_prepare_ingame",
+      "text_range": "0x88795548-0x8879556C",
+      "pdata_range": "0x88128540-0x88128548",
+      "matched_code_bytes": 36,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/minigame_hide_tracksides.c",
+      "symbol": "ts4_script_minigame_hide_unused_tracksides",
+      "text_range": "0x88795570-0x887955A0",
+      "pdata_range": "0x88128548-0x88128550",
+      "matched_code_bytes": 48,
+      "function_match_percent": 100.0
+    },
+    {
       "source": "src/xbox360/king_of_court_prepare.c",
       "symbol": "ts4_script_king_of_court_prepare_ingame",
       "text_range": "0x887955A0-0x887955C4",
@@ -38,13 +54,13 @@
       "function_match_percent": 100.0
     }
   ],
-  "matched_code_bytes": 196,
+  "matched_code_bytes": 280,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.0019303309,
+  "module_matched_code_percent": 0.0027576154,
   "module_total_functions": 47250,
-  "module_matched_functions": 3,
-  "module_matched_functions_percent": 0.0063492064,
-  "module_total_units": 24,
-  "module_complete_units": 3,
-  "note": "A fresh full-analysis run verifies all three functions and their relocation-aware .pdata sections at 100%. Progress reports code bytes only."
+  "module_matched_functions": 5,
+  "module_matched_functions_percent": 0.010582011,
+  "module_total_units": 27,
+  "module_complete_units": 5,
+  "note": "A fresh full-analysis run verifies all five functions and their relocation-aware .pdata sections at 100%. Progress reports code bytes only."
 }
