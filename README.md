@@ -4,9 +4,9 @@ Clean-room reverse engineering and source reconstruction of *Top Spin 4*.
 
 ## Status
 
-Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules; no game code has been reconstructed yet.
+Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Thirty-four functions have reviewed names and one function has a clean-room semantic draft. No function is yet compiler-matched or validated.
 
-The selected build is title ID `54540859` (`TT-2137`), media ID `60819732`, executable version `0.0.0.3`. See [docs/targets.md](docs/targets.md) and [docs/analysis-status.md](docs/analysis-status.md). Official updates and optional content are tracked separately in [docs/additional-content.md](docs/additional-content.md); they are not part of the baseline.
+The selected build is title ID `54540859` (`TT-2137`), media ID `60819732`, executable version `0.0.0.3`. See [docs/targets.md](docs/targets.md), [docs/analysis-status.md](docs/analysis-status.md), and the [matching-decomp assessment](docs/matching-decomp.md). The first active investigation maps the dormant server-delivered patch path in [docs/title-server-patch.md](docs/title-server-patch.md). Official updates and optional content are tracked separately in [docs/additional-content.md](docs/additional-content.md); they are not part of the baseline.
 
 ## Boundaries
 
@@ -31,7 +31,7 @@ tools/analyze_xbox360.sh /absolute/path/to/extracted-game
 
 ## Definition of progress
 
-Progress is counted by independently validated reconstructed functions—not lines emitted by a decompiler. The canonical counters live in [config/progress.json](config/progress.json).
+Progress distinguishes reviewed names, semantic drafts, validated reconstructions, and exact compiler matches. Ghidra output and host-C syntax checks do not count as matching progress. The canonical counters live in [config/progress.json](config/progress.json).
 
 ## License
 

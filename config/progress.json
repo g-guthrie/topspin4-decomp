@@ -8,8 +8,12 @@
     "Loader_DLL.xex": 8786,
     "Swing_DLL.xex": 32506
   },
-  "named_functions": 0,
+  "named_functions": 34,
   "typed_functions": 0,
+  "semantic_drafts": 1,
   "reconstructed_functions": 0,
-  "validated_functions": 0
+  "validated_functions": 0,
+  "matching_functions": 0,
+  "matching_bytes": 0,
+  "binary_match_verified": false
 }

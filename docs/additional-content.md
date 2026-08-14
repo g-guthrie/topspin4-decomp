@@ -4,10 +4,12 @@
 
 No credible expanded Xbox 360 ROM or maintained Top Spin 4 content-mod project was found as of 2026-08-14.
 
+Static analysis now confirms that the retail game has a separate downloadable data-patch system. `Swing_DLL.xex` contains a `TitleServer_GetPatch` command, a `CPatchManager`, temporary-patch handling, and names for patch archives and descriptors. None of those downloadable payload files exists in the extracted retail disc. See [title-server-patch.md](title-server-patch.md).
+
 What does exist:
 
 1. **One conventional Xbox title update.** XboxUnity currently lists exactly one update for title `54540859` and media `60819732`: version `1`, base version `00000003`, database ID `21675`, SHA-1 `95FB351098AC7E4E6996CE5EC781ABE0F87BC929`, uploaded 2011-06-08. Its package has not been downloaded or accepted into this project.
-2. **Separate in-game balancing data.** Historical players distinguish Microsoft's title update from multiple balancing updates fetched from the now-offline 2K server. This likely explains claims of three or four "patches." The payloads and exact final balance state are not yet verified.
+2. **Separate in-game data patches.** Historical players distinguish Microsoft's title update from multiple updates fetched from the now-offline 2K server. The executable confirms that delivery path, but the payloads and exact final balance state are not yet recovered or verified. This likely explains claims of three or four "patches."
 3. **Agassi preorder content.** Contemporary reports describe an Andre Agassi vintage/third-outfit unlock. This is cosmetic optional content, not a roster or feature expansion.
 4. **Save/XP editors.** Old tools advertised as "Top Spin 4 mod tools" edit player progression or save data. They do not contain a reconstructed game or expanded roster.
 5. **Emulator patches.** The Xenia Canary game-patches repository currently has no patch file for title ID `54540859`.

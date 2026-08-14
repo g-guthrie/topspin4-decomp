@@ -29,6 +29,16 @@ Start with deterministic, testable code such as math, state transitions, and ser
 
 Exit condition: each reconstructed unit has a behavioral oracle or binary-match check appropriate to the chosen strategy.
 
+### 3a. Establish matching-build infrastructure
+
+1. Make Jeff split each target module without a crash or unresolved function overlap.
+2. Recover real translation-unit boundaries and commit reviewed `splits.txt` and `symbols.txt` files.
+3. Confirm Xbox 360 MSVC `16.0.10224.0` flags with small code-generation probes.
+4. Generate an objdiff configuration and classify every source unit as missing, non-matching, equivalent, or matching.
+5. Keep semantic and matching counters separate.
+
+Exit condition: one source translation unit is compiled with the target toolchain and has a reproducible objdiff report against its original COFF.
+
 ## 4. Playable replacement
 
 Replace platform services behind a narrow compatibility layer. Game assets remain user-supplied and loaded at runtime.
