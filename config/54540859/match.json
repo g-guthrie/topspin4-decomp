@@ -9,10 +9,74 @@
     "/Oi"
   ],
   "jeff_version": "0.3.5 with patches/jeff-v0.3.5-topspin4.patch",
-  "jeff_patched_sha256_macos_arm64": "a063924510dd9065f70577e2b9637f7d19bd02d3b3f25990b28a35fbfd9f2c6c",
+  "jeff_patched_sha256_macos_arm64": "4eeef8cbcb5d833726ef3dce15da4993f3142a73ba295d099515f16ce3793049",
   "objdiff_version": "3.7.1",
   "objdiff_sha256_macos_arm64": "acd0f01e40319c862c84effd9f744a6ccfeec10074cbc89ef232d96d333ab528",
   "matches": [
+    {
+      "source": "src/xbox360/title_server_login_user_only.c",
+      "symbol": "ts4_script_title_server_login_user_only",
+      "text_range": "0x88792638-0x887926D8",
+      "pdata_range": "0x881283C0-0x881283C8",
+      "matched_code_bytes": 160,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/title_server_logout.c",
+      "symbol": "ts4_script_title_server_logout",
+      "text_range": "0x88792820-0x88792888",
+      "pdata_range": "0x881283D0-0x881283D8",
+      "matched_code_bytes": 104,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/minigame_change_display_mode.c",
+      "symbol": "ts4_script_minigame_change_display_game_mode",
+      "text_range": "0x88792CB8-0x88792D48",
+      "pdata_range": "0x881283F0-0x881283F8",
+      "matched_code_bytes": 144,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/player_visibility.c",
+      "symbol": "ts4_script_set_player_body_visibility",
+      "text_range": "0x88794C18-0x88794C6C",
+      "pdata_range": "0x881284F0-0x881284F8",
+      "matched_code_bytes": 84,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/player_visibility.c",
+      "symbol": "ts4_script_set_player_visibility",
+      "text_range": "0x88794C70-0x88794CC4",
+      "pdata_range": "0x881284F8-0x88128500",
+      "matched_code_bytes": 84,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/title_server_callbacks.c",
+      "symbol": "ts4_script_pro_challenge_title_server_login",
+      "text_range": "0x88794E38-0x88794ED8",
+      "pdata_range": "0x88128508-0x88128510",
+      "matched_code_bytes": 160,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/title_server_callbacks.c",
+      "symbol": "ts4_script_title_server_query_round_info",
+      "text_range": "0x88794ED8-0x88794FE8",
+      "pdata_range": "0x88128510-0x88128518",
+      "matched_code_bytes": 272,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/title_patch.c",
+      "symbol": "ts4_script_title_server_get_patch",
+      "text_range": "0x88794FE8-0x88795020",
+      "pdata_range": "0x88128518-0x88128520",
+      "matched_code_bytes": 56,
+      "function_match_percent": 100.0
+    },
     {
       "source": "src/xbox360/minigame_prepare.c",
       "symbol": "ts4_script_minigame_prepare_ingame",
@@ -36,31 +100,15 @@
       "pdata_range": "0x88128550-0x88128558",
       "matched_code_bytes": 36,
       "function_match_percent": 100.0
-    },
-    {
-      "source": "src/xbox360/title_server_logout.c",
-      "symbol": "ts4_script_title_server_logout",
-      "text_range": "0x88792820-0x88792888",
-      "pdata_range": "0x881283D0-0x881283D8",
-      "matched_code_bytes": 104,
-      "function_match_percent": 100.0
-    },
-    {
-      "source": "src/xbox360/title_patch.c",
-      "symbol": "ts4_script_title_server_get_patch",
-      "text_range": "0x88794FE8-0x88795020",
-      "pdata_range": "0x88128518-0x88128520",
-      "matched_code_bytes": 56,
-      "function_match_percent": 100.0
     }
   ],
-  "matched_code_bytes": 280,
+  "matched_code_bytes": 1184,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.0027576154,
-  "module_total_functions": 47250,
-  "module_matched_functions": 5,
-  "module_matched_functions_percent": 0.010582011,
-  "module_total_units": 27,
-  "module_complete_units": 5,
-  "note": "A fresh full-analysis run verifies all five functions and their relocation-aware .pdata sections at 100%. Progress reports code bytes only."
+  "module_matched_code_percent": 0.011660774,
+  "module_total_functions": 47280,
+  "module_matched_functions": 11,
+  "module_matched_functions_percent": 0.023265652,
+  "module_total_units": 37,
+  "module_complete_units": 9,
+  "note": "The canonical whole-module report verifies all eleven functions and their relocation-aware .pdata sections at 100%. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

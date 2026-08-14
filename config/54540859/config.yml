@@ -1,0 +1,13 @@
+# Jeff/decomp-toolkit configuration for the reviewed Swing_DLL target.
+# The input is user-supplied and deliberately ignored by Git.
+object: orig/54540859/Swing_DLL.xex
+symbols: config/54540859/symbols.txt
+splits: config/54540859/splits.txt
+write_asm: false
+detect_objects: false
+detect_strings: false
+symbols_known: true
+quick_analysis: true
+
+# Top Spin 4 needs the tracked Jeff v0.3.5 patch. Pass the resulting binary to
+# configure.py with --dtk; see docs/canonical-build.md.

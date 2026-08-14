@@ -16,6 +16,32 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/title_server_login_user_only.c",
+        "object": "title_server_login_user_only.obj",
+        "symbols": {"ts4_script_title_server_login_user_only": 160},
+    },
+    {
+        "source": "src/xbox360/title_server_callbacks.c",
+        "object": "title_server_callbacks.obj",
+        "symbols": {
+            "ts4_script_pro_challenge_title_server_login": 160,
+            "ts4_script_title_server_query_round_info": 272,
+        },
+    },
+    {
+        "source": "src/xbox360/minigame_change_display_mode.c",
+        "object": "minigame_change_display_mode.obj",
+        "symbols": {"ts4_script_minigame_change_display_game_mode": 144},
+    },
+    {
+        "source": "src/xbox360/player_visibility.c",
+        "object": "player_visibility.obj",
+        "symbols": {
+            "ts4_script_set_player_body_visibility": 84,
+            "ts4_script_set_player_visibility": 84,
+        },
+    },
+    {
         "source": "src/xbox360/minigame_prepare.c",
         "object": "minigame_prepare.obj",
         "symbols": {"ts4_script_minigame_prepare_ingame": 36},

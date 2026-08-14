@@ -19,6 +19,22 @@ src/xbox360/title_server_logout.c:
 	.pdata      start:0x881283D0 end:0x881283D8
 	.text       start:0x88792820 end:0x88792888
 
+src/xbox360/title_server_login_user_only.c:
+	.pdata      start:0x881283C0 end:0x881283C8
+	.text       start:0x88792638 end:0x887926D8
+
+src/xbox360/minigame_change_display_mode.c:
+	.pdata      start:0x881283F0 end:0x881283F8
+	.text       start:0x88792CB8 end:0x88792D48
+
+src/xbox360/player_visibility.c:
+	.pdata      start:0x881284F0 end:0x88128500
+	.text       start:0x88794C18 end:0x88794CC4
+
+src/xbox360/title_server_callbacks.c:
+	.pdata      start:0x88128508 end:0x88128518
+	.text       start:0x88794E38 end:0x88794FE8
+
 src/xbox360/title_patch.c:
 	.pdata      start:0x88128518 end:0x88128520
 	.text       start:0x88794FE8 end:0x88795020

@@ -11,7 +11,7 @@ The three retail XEX modules were imported with Ghidra 12.1.2 and XEXLoaderWV 12
 | `Swing_DLL.xex` | `0x88000000` | `0x88562DB0` | 32,506 | 34 |
 | **Total** | | | **41,795** | **73** |
 
-This is a discovery denominator, not a claim that every boundary is correct. It may change when bad disassembly is removed, missed functions are recovered, or thunks are normalized. The current reviewed counts are 41 named functions, five semantic source drafts, five validated reconstructions, and five compiler-matched functions.
+This is a discovery denominator, not a claim that every boundary is correct. It may change when bad disassembly is removed, missed functions are recovered, or thunks are normalized. The current reviewed counts are 52 named functions, eleven semantic source drafts, eleven validated reconstructions, and eleven compiler-matched functions.
 
 The initial import incorrectly marked the shared `_savegprlr_14` through `_savegprlr_29` helpers as non-returning. The reproducible repair script corrected 11,645 call sites and recovered complete bodies for affected callers. This materially improves the decompiler output without changing the current function denominator.
 
@@ -25,4 +25,4 @@ Do not call the import validated until representative functions are compared aga
 
 ## Matching toolchain
 
-Jeff `0.3.5` identified Xbox 360 MSVC C1/C2 `16.0.10224.0` and linker `10.0.10224.0` in all three modules. Official Jeff still fails on both DLLs; the reviewed repository patch now makes the complete Swing split succeed. Five source boundaries and `/O2 /Oi` flags are verified, producing 280 exact code bytes. Flags and source-file boundaries remain unknown for the rest of the game, as does whole-program LTCG status. See [matching-decomp.md](matching-decomp.md), [matching-build.md](matching-build.md), and `config/toolchain.json`.
+Jeff `0.3.5` identified Xbox 360 MSVC C1/C2 `16.0.10224.0` and linker `10.0.10224.0` in all three modules. The reviewed repository patch now makes complete Swing and Loader splits succeed. Nine measurement-unit boundaries and `/O2 /Oi` flags are verified, producing 1,184 exact code bytes across eleven functions. Original source-file boundaries remain provisional for the game, as does whole-program LTCG status. See [matching-decomp.md](matching-decomp.md), [matching-build.md](matching-build.md), and `config/toolchain.json`.

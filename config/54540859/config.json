@@ -1,0 +1,17 @@
+{
+  "progress_categories": {
+    "game": "Top Spin 4 game code"
+  },
+  "asflags": [],
+  "ldflags": [],
+  "cflags": {
+    "base": {
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/Oi"
+      ]
+    }
+  }
+}
