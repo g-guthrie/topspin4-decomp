@@ -1,0 +1,29 @@
+# User-supplied game data and extracted executables
+*.iso
+*.7z
+*.zip
+*.rar
+*.pkg
+*.rap
+*.bin
+*.self
+*.elf
+*.xex
+PS3_GAME/
+$SystemUpdate/
+VIDEO_TS/
+inputs/
+dumps/
+roms/
+
+# Local analysis state
+work/
+artifacts/
+*.gpr
+*.rep/
+.ghidra/
+
+# Tooling noise
+__pycache__/
+*.pyc
+.DS_Store
