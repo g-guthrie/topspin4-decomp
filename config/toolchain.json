@@ -28,7 +28,9 @@
       "compiler_frontend": "16.0.10224.0",
       "compiler_backend": "16.0.10224.0",
       "initial_split": "failed",
-      "split_detail": "Jeff FunctionSlices panicked when a visited-address index equaled the FixedBitSet size (2540014)."
+      "split_detail": "Official Jeff 0.3.5 misclassified a .text data trailer and then panicked when a visited-address index equaled the FixedBitSet size (2540014).",
+      "patched_split": "success",
+      "patched_split_detail": "The reviewed local patch skips known object ranges during function discovery and reserves an end-sentinel visited bit. With text_padding_88B0079C typed as a 0x1C-byte object, Jeff emits 18 stable split units including src/xbox360/title_patch.c."
     }
   },
   "interpretation": {
@@ -36,6 +38,6 @@
     "compiler_flags_verified": false,
     "translation_unit_boundaries_verified": false,
     "whole_program_ltcg_verified": false,
-    "note": "D3D9LTCG is linked into Loader_DLL.xex and Swing_DLL.xex, but that alone does not prove the game code used whole-program LTCG."
+    "note": "Flags /O1 /Oi are verified only for src/xbox360/title_patch.c. D3D9LTCG is linked into Loader_DLL.xex and Swing_DLL.xex, but that alone does not prove the game code used whole-program LTCG."
   }
 }

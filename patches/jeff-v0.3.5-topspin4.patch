@@ -1,0 +1,52 @@
+diff --git a/src/analysis/cfa.rs b/src/analysis/cfa.rs
+index 6d0efb6..6135a37 100644
+--- a/src/analysis/cfa.rs
++++ b/src/analysis/cfa.rs
+@@ -496,2 +496,26 @@ impl AnalyzerState {
+     fn detect_new_functions(&mut self, obj: &ObjInfo) -> Result<bool> {
++        let skip_alignment_and_objects =
++            |section: &crate::obj::ObjSection,
++             mut addr: SectionAddress,
++             end: SectionAddress|
++             -> Option<SectionAddress> {
++                loop {
++                    addr = skip_alignment(section, addr, end)?;
++                    let covering_object = obj
++                        .symbols
++                        .for_section_range(addr.section, ..=addr.address)
++                        .rfind(|(_, symbol)| {
++                            symbol.kind == ObjSymbolKind::Object
++                                && symbol.size_known
++                                && symbol.address + symbol.size > addr.address as u64
++                        });
++                    let Some((_, symbol)) = covering_object else {
++                        return Some(addr);
++                    };
++                    addr.address = (symbol.address + symbol.size) as u32;
++                    if addr >= end {
++                        return None;
++                    }
++                }
++            };
+         let mut new_functions = vec![];
+@@ -511,3 +535,3 @@ impl AnalyzerState {
+                         }
+-                        let addr = match skip_alignment(section, first_end, second) {
++                        let addr = match skip_alignment_and_objects(section, first_end, second) {
+                             Some(addr) => addr,
+@@ -538,3 +562,3 @@ impl AnalyzerState {
+                         if last_end < section_end {
+-                            let addr = match skip_alignment(section, last_end, section_end) {
++                            let addr = match skip_alignment_and_objects(section, last_end, section_end) {
+                                 Some(addr) => addr,
+diff --git a/src/analysis/executor.rs b/src/analysis/executor.rs
+index 2b69f46..e6b48f9 100644
+--- a/src/analysis/executor.rs
++++ b/src/analysis/executor.rs
+@@ -23,3 +23,5 @@ impl VisitedAddresses {
+             if section.kind == ObjSectionKind::Code {
+-                let size = (section.size / 4) as usize;
++                // Execution may briefly visit the end sentinel before
++                // disassembly rejects it as outside the section.
++                let size = (section.size / 4) as usize + 1;
+                 inner.push(FixedBitSet::with_capacity(size));

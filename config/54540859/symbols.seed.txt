@@ -1,0 +1,5 @@
+# Reviewed symbols needed before Jeff's first full analysis pass.
+text_padding_88B0079C = .text:0x88B0079C; // type:object size:0x1C scope:local data:byte
+ts4_script_title_server_get_patch = .text:0x88794FE8; // type:function size:0x38
+ts4_title_server_request_patch = .text:0x889B39A0; // type:function size:0xCC
+g_ts4_title_server = .data:0x88D45840; // type:object size:0x4 data:4byte

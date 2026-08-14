@@ -11,9 +11,15 @@
   "named_functions": 34,
   "typed_functions": 0,
   "semantic_drafts": 1,
-  "reconstructed_functions": 0,
-  "validated_functions": 0,
-  "matching_functions": 0,
-  "matching_bytes": 0,
-  "binary_match_verified": false
+  "reconstructed_functions": 1,
+  "validated_functions": 1,
+  "matching_functions": 1,
+  "matching_bytes": 56,
+  "binary_match_verified": true,
+  "matching_scope": "Swing_DLL.xex",
+  "matching_total_code_bytes": 10153700,
+  "matching_code_percent": 0.0005515231,
+  "matching_total_functions": 47250,
+  "matching_functions_percent": 0.0021164021,
+  "matching_basis": "objdiff-cli 3.7.1 over all Jeff 0.3.5 split units for Swing_DLL.xex"
 }

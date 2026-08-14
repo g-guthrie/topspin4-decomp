@@ -31,13 +31,13 @@ Exit condition: each reconstructed unit has a behavioral oracle or binary-match 
 
 ### 3a. Establish matching-build infrastructure
 
-1. Make Jeff split each target module without a crash or unresolved function overlap.
-2. Recover real translation-unit boundaries and commit reviewed `splits.txt` and `symbols.txt` files.
-3. Confirm Xbox 360 MSVC `16.0.10224.0` flags with small code-generation probes.
-4. Generate an objdiff configuration and classify every source unit as missing, non-matching, equivalent, or matching.
-5. Keep semantic and matching counters separate.
+1. Make Jeff split each target module without a crash or unresolved function overlap. **Swing complete; Loader pending.**
+2. Recover real translation-unit boundaries and commit reviewed `splits.txt` and `symbols.txt` files. **First Swing unit complete.**
+3. Confirm Xbox 360 MSVC `16.0.10224.0` flags with small code-generation probes. **`/O1 /Oi` verified for the first unit only.**
+4. Generate an objdiff configuration and classify every source unit as missing, non-matching, equivalent, or matching. **Initial full-Swing report complete.**
+5. Keep semantic and matching counters separate. **Complete.**
 
-Exit condition: one source translation unit is compiled with the target toolchain and has a reproducible objdiff report against its original COFF.
+Exit condition met: `src/xbox360/title_patch.c` is compiled with the target toolchain and has a reproducible objdiff report against its original COFF.
 
 ## 4. Playable replacement
 
