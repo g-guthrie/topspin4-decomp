@@ -1,29 +1,42 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "module": "Swing_DLL.xex",
   "module_sha256": "dfa71292f75a649773c280de7bc2688e6e47e473aba397c248fb4204c45fac44",
-  "source": "src/xbox360/title_patch.c",
-  "symbol": "ts4_script_title_server_get_patch",
-  "text_range": "0x88794FE8-0x88795020",
-  "pdata_range": "0x88128518-0x88128520",
   "compiler": "Xbox 360 MSVC 16.00.10224.00",
   "compiler_sha256": "6c27181a805dee13d0c9515efc00812d92f9c504cd1158eaf1f338d9f651f198",
   "compiler_flags": [
-    "/O1",
+    "/O2",
     "/Oi"
   ],
   "jeff_version": "0.3.5 with patches/jeff-v0.3.5-topspin4.patch",
   "jeff_patched_sha256_macos_arm64": "a063924510dd9065f70577e2b9637f7d19bd02d3b3f25990b28a35fbfd9f2c6c",
   "objdiff_version": "3.7.1",
   "objdiff_sha256_macos_arm64": "acd0f01e40319c862c84effd9f744a6ccfeec10074cbc89ef232d96d333ab528",
-  "matched_code_bytes": 56,
-  "function_match_percent": 100.0,
+  "matches": [
+    {
+      "source": "src/xbox360/title_server_logout.c",
+      "symbol": "ts4_script_title_server_logout",
+      "text_range": "0x88792820-0x88792888",
+      "pdata_range": "0x881283D0-0x881283D8",
+      "matched_code_bytes": 104,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/title_patch.c",
+      "symbol": "ts4_script_title_server_get_patch",
+      "text_range": "0x88794FE8-0x88795020",
+      "pdata_range": "0x88128518-0x88128520",
+      "matched_code_bytes": 56,
+      "function_match_percent": 100.0
+    }
+  ],
+  "matched_code_bytes": 160,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.0005515231,
+  "module_matched_code_percent": 0.0015757803,
   "module_total_functions": 47250,
-  "module_matched_functions": 1,
-  "module_matched_functions_percent": 0.0021164021,
-  "module_total_units": 18,
-  "module_complete_units": 1,
-  "note": "The function's 56 code bytes match exactly. The eight-byte .pdata section is only a fuzzy data match because its function address is relocated; its unwind word matches."
+  "module_matched_functions": 2,
+  "module_matched_functions_percent": 0.0042328043,
+  "module_total_units": 21,
+  "module_complete_units": 2,
+  "note": "A fresh full-analysis run verifies both functions and their relocation-aware .pdata sections at 100%. Progress reports code bytes only."
 }

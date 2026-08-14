@@ -4,7 +4,7 @@
 
 The repository now meets the minimum technical definition of a matching decompilation used by [decomp.dev](https://decomp.dev/) and [dc3-decomp](https://github.com/rjkiv/dc3-decomp): new source is compiled with the target toolchain and measured against the original object in objdiff. Ghidra pseudocode, reviewed symbol names, behavioral equivalence, and successful host-C compilation remain useful inputs, but do not count as binary-match evidence.
 
-Current matching progress is **one function and 56 code bytes**. Xbox 360 MSVC `16.00.10224.00` with `/O1 /Oi` reproduces `ts4_script_title_server_get_patch` exactly. Against all Jeff-emitted Swing units, that is 56 of 10,153,700 code bytes (`0.0005515231%`) and one of 47,250 functions (`0.0021164021%`).
+Current matching progress is **two functions and 160 code bytes**. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces `ts4_script_title_server_logout` and `ts4_script_title_server_get_patch` exactly. Against all Jeff-emitted Swing units, that is 160 of 10,153,700 code bytes (`0.0015757803%`) and two of 47,250 functions (`0.0042328043%`).
 
 ## What is already right
 

@@ -26,18 +26,19 @@ class SymbolMapTests(unittest.TestCase):
         compiler = shutil.which("cc")
         if compiler is None:
             self.skipTest("no C compiler available")
-        subprocess.run(
-            [
-                compiler,
-                "-std=c11",
-                "-Wall",
-                "-Wextra",
-                "-Werror",
-                "-fsyntax-only",
-                str(ROOT / "src" / "xbox360" / "title_patch.c"),
-            ],
-            check=True,
-        )
+        for source in sorted((ROOT / "src" / "xbox360").glob("*.c")):
+            subprocess.run(
+                [
+                    compiler,
+                    "-std=c11",
+                    "-Wall",
+                    "-Wextra",
+                    "-Werror",
+                    "-fsyntax-only",
+                    str(source),
+                ],
+                check=True,
+            )
 
 
 if __name__ == "__main__":

@@ -15,6 +15,10 @@ Sections:
 	.XBLD       type:data align:65536
 	.reloc      type:data align:65536
 
+src/xbox360/title_server_logout.c:
+	.pdata      start:0x881283D0 end:0x881283D8
+	.text       start:0x88792820 end:0x88792888
+
 src/xbox360/title_patch.c:
 	.pdata      start:0x88128518 end:0x88128520
 	.text       start:0x88794FE8 end:0x88795020

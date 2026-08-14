@@ -28,13 +28,23 @@ class ProgressTests(unittest.TestCase):
         )
 
         self.assertTrue(progress["binary_match_verified"])
-        self.assertEqual(progress["matching_functions"], 1)
+        self.assertEqual(
+            progress["matching_functions"], match["module_matched_functions"]
+        )
         self.assertEqual(progress["matching_bytes"], match["matched_code_bytes"])
         self.assertEqual(
             progress["matching_total_code_bytes"], match["module_total_code_bytes"]
         )
         self.assertEqual(
             progress["matching_code_percent"], match["module_matched_code_percent"]
+        )
+        self.assertEqual(
+            match["matched_code_bytes"],
+            sum(item["matched_code_bytes"] for item in match["matches"]),
+        )
+        self.assertEqual(match["module_matched_functions"], len(match["matches"]))
+        self.assertTrue(
+            all(item["function_match_percent"] == 100.0 for item in match["matches"])
         )
 
     def test_first_matching_unit_has_reviewed_boundaries_and_symbols(self):
@@ -43,7 +53,10 @@ class ProgressTests(unittest.TestCase):
         symbols = (version_dir / "symbols.seed.txt").read_text()
 
         self.assertIn("src/xbox360/title_patch.c:", splits)
+        self.assertIn("src/xbox360/title_server_logout.c:", splits)
+        self.assertIn("start:0x88792820 end:0x88792888", splits)
         self.assertIn("start:0x88794FE8 end:0x88795020", splits)
+        self.assertIn("ts4_script_title_server_logout", symbols)
         self.assertIn("ts4_script_title_server_get_patch", symbols)
         self.assertIn("text_padding_88B0079C", symbols)
 

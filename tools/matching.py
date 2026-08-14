@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build and measure the first Xbox 360 matching translation unit."""
+"""Build and measure the reviewed Xbox 360 matching translation units."""
 
 from __future__ import annotations
 
@@ -14,9 +14,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
-SOURCE_UNIT = "src/xbox360/title_patch.c"
-MATCHED_SYMBOL = "ts4_script_title_server_get_patch"
-MATCHED_CODE_BYTES = 56
+MATCHING_UNITS = (
+    {
+        "source": "src/xbox360/title_server_logout.c",
+        "object": "title_server_logout.obj",
+        "symbols": {"ts4_script_title_server_logout": 104},
+    },
+    {
+        "source": "src/xbox360/title_patch.c",
+        "object": "title_patch.obj",
+        "symbols": {"ts4_script_title_server_get_patch": 56},
+    },
+)
 
 
 def sha256(path: Path) -> str:
@@ -65,7 +74,7 @@ def resolve_generated(path: str) -> Path:
     return generated if generated.is_absolute() else ROOT / generated
 
 
-def objdiff_config(split_config: dict, original: Path, rebuilt: Path) -> dict:
+def objdiff_config(split_config: dict, rebuilt_by_source: dict[str, Path]) -> dict:
     units = []
     for unit in split_config["units"]:
         name = unit["name"]
@@ -77,12 +86,13 @@ def objdiff_config(split_config: dict, original: Path, rebuilt: Path) -> dict:
                 "progress_categories": ["game"],
             },
         }
-        if name == SOURCE_UNIT:
+        rebuilt = rebuilt_by_source.get(name)
+        if rebuilt is not None:
             entry["base_path"] = str(rebuilt)
             entry["metadata"].update(
                 {
                     "complete": True,
-                    "source_path": str(original),
+                    "source_path": name,
                 }
             )
         units.append(entry)
@@ -94,30 +104,30 @@ def objdiff_config(split_config: dict, original: Path, rebuilt: Path) -> dict:
     }
 
 
-def normalize_report(report: dict) -> dict:
-    for unit in report.get("units", []):
-        metadata = unit.get("metadata", {})
-        if metadata.get("source_path"):
-            metadata["source_path"] = SOURCE_UNIT
-    return report
-
-
 def verify_report(report: dict) -> None:
-    functions = [
-        function
+    expected = {
+        symbol: size
+        for unit in MATCHING_UNITS
+        for symbol, size in unit["symbols"].items()
+    }
+    found = {
+        function["name"]: function
         for unit in report.get("units", [])
         for function in unit.get("functions", [])
-        if function.get("name") == MATCHED_SYMBOL
-    ]
-    if len(functions) != 1:
-        raise SystemExit(f"expected one {MATCHED_SYMBOL} result, found {len(functions)}")
-    function = functions[0]
-    if function.get("size") != str(MATCHED_CODE_BYTES):
-        raise SystemExit(f"unexpected matched size: {function.get('size')}")
-    if function.get("fuzzy_match_percent") != 100.0:
-        raise SystemExit(
-            f"function is not a perfect match: {function.get('fuzzy_match_percent')}%"
-        )
+        if function.get("name") in expected
+    }
+    if found.keys() != expected.keys():
+        missing = sorted(expected.keys() - found.keys())
+        raise SystemExit(f"missing matching results: {', '.join(missing)}")
+    for symbol, size in expected.items():
+        function = found[symbol]
+        if function.get("size") != str(size):
+            raise SystemExit(f"unexpected {symbol} size: {function.get('size')}")
+        if function.get("fuzzy_match_percent") != 100.0:
+            raise SystemExit(
+                f"{symbol} is not a perfect match: "
+                f"{function.get('fuzzy_match_percent')}%"
+            )
 
 
 def main() -> int:
@@ -167,24 +177,27 @@ def main() -> int:
     write_jeff_config(jeff_config, xex, symbols, splits, quick)
     run([str(jeff), "xex", "split", str(jeff_config), str(split_dir)])
 
-    source = ROOT / SOURCE_UNIT
-    rebuilt = rebuilt_dir / "title_patch.obj"
-    output_arg = f"/Fo{rebuilt.relative_to(ROOT)}"
-    run(
-        [
-            str(wrapper),
-            str(compiler),
-            "/nologo",
-            "/c",
-            "/O1",
-            "/Oi",
-            output_arg,
-            SOURCE_UNIT,
-        ]
-    )
+    rebuilt_by_source = {}
+    for unit in MATCHING_UNITS:
+        source = unit["source"]
+        rebuilt = rebuilt_dir / unit["object"]
+        rebuilt_by_source[source] = rebuilt
+        output_arg = f"/Fo{rebuilt.relative_to(ROOT)}"
+        run(
+            [
+                str(wrapper),
+                str(compiler),
+                "/nologo",
+                "/c",
+                "/O2",
+                "/Oi",
+                output_arg,
+                source,
+            ]
+        )
 
     split_config = json.loads((split_dir / "config.json").read_text())
-    project = objdiff_config(split_config, source, rebuilt)
+    project = objdiff_config(split_config, rebuilt_by_source)
     (project_dir / "objdiff.json").write_text(
         json.dumps(project, indent=2) + "\n", encoding="utf-8"
     )
@@ -202,7 +215,7 @@ def main() -> int:
             "json-pretty",
         ]
     )
-    report = normalize_report(json.loads(report_path.read_text()))
+    report = json.loads(report_path.read_text())
     verify_report(report)
     report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
@@ -214,8 +227,8 @@ def main() -> int:
 
     measures = report["measures"]
     print(
-        f"Matched {MATCHED_SYMBOL}: {MATCHED_CODE_BYTES} bytes; "
-        f"project code {measures['matched_code']}/{measures['total_code']} bytes "
+        f"Matched {measures['matched_functions']} functions: "
+        f"{measures['matched_code']}/{measures['total_code']} code bytes "
         f"({measures['matched_code_percent']:.8f}%)"
     )
     return 0
