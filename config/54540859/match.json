@@ -14,6 +14,14 @@
   "objdiff_sha256_macos_arm64": "acd0f01e40319c862c84effd9f744a6ccfeec10074cbc89ef232d96d333ab528",
   "matches": [
     {
+      "source": "src/xbox360/king_of_court_prepare.c",
+      "symbol": "ts4_script_king_of_court_prepare_ingame",
+      "text_range": "0x887955A0-0x887955C4",
+      "pdata_range": "0x88128550-0x88128558",
+      "matched_code_bytes": 36,
+      "function_match_percent": 100.0
+    },
+    {
       "source": "src/xbox360/title_server_logout.c",
       "symbol": "ts4_script_title_server_logout",
       "text_range": "0x88792820-0x88792888",
@@ -30,13 +38,13 @@
       "function_match_percent": 100.0
     }
   ],
-  "matched_code_bytes": 160,
+  "matched_code_bytes": 196,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.0015757803,
+  "module_matched_code_percent": 0.0019303309,
   "module_total_functions": 47250,
-  "module_matched_functions": 2,
-  "module_matched_functions_percent": 0.0042328043,
-  "module_total_units": 21,
-  "module_complete_units": 2,
-  "note": "A fresh full-analysis run verifies both functions and their relocation-aware .pdata sections at 100%. Progress reports code bytes only."
+  "module_matched_functions": 3,
+  "module_matched_functions_percent": 0.0063492064,
+  "module_total_units": 24,
+  "module_complete_units": 3,
+  "note": "A fresh full-analysis run verifies all three functions and their relocation-aware .pdata sections at 100%. Progress reports code bytes only."
 }

@@ -54,9 +54,12 @@ class ProgressTests(unittest.TestCase):
 
         self.assertIn("src/xbox360/title_patch.c:", splits)
         self.assertIn("src/xbox360/title_server_logout.c:", splits)
+        self.assertIn("src/xbox360/king_of_court_prepare.c:", splits)
         self.assertIn("start:0x88792820 end:0x88792888", splits)
         self.assertIn("start:0x88794FE8 end:0x88795020", splits)
+        self.assertIn("start:0x887955A0 end:0x887955C4", splits)
         self.assertIn("ts4_script_title_server_logout", symbols)
+        self.assertIn("ts4_script_king_of_court_prepare_ingame", symbols)
         self.assertIn("ts4_script_title_server_get_patch", symbols)
         self.assertIn("text_padding_88B0079C", symbols)
 

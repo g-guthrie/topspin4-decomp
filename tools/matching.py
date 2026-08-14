@@ -16,6 +16,11 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/king_of_court_prepare.c",
+        "object": "king_of_court_prepare.obj",
+        "symbols": {"ts4_script_king_of_court_prepare_ingame": 36},
+    },
+    {
         "source": "src/xbox360/title_server_logout.c",
         "object": "title_server_logout.obj",
         "symbols": {"ts4_script_title_server_logout": 104},

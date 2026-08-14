@@ -1,6 +1,6 @@
 # Matching build
 
-The first two matching translation units are `src/xbox360/title_server_logout.c` and `src/xbox360/title_patch.c` from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 160 code bytes exactly.
+The first three matching translation units are `src/xbox360/king_of_court_prepare.c`, `src/xbox360/title_server_logout.c`, and `src/xbox360/title_patch.c` from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 196 code bytes exactly.
 
 ## Local prerequisites
 
@@ -25,10 +25,10 @@ python3 tools/matching.py \
   --fresh-analysis
 ```
 
-The command verifies the XEX hash, runs Jeff, compiles both source units, generates an objdiff report over every Swing split unit, and rejects the result unless both named functions are 100% matches at their recorded sizes. The full report stays under ignored `work/`; its durable summary is `config/54540859/match.json`.
+The command verifies the XEX hash, runs Jeff, compiles all source units, generates an objdiff report over every Swing split unit, and rejects the result unless every named function is a 100% match at its recorded size. The full report stays under ignored `work/`; its durable summary is `config/54540859/match.json`.
 
 ## Measurement boundary
 
-The match is 160 of 10,153,700 Swing code bytes (`0.0015757803%`) and two of 47,250 objdiff functions (`0.0042328043%`). These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
+The match is 196 of 10,153,700 Swing code bytes (`0.0019303309%`) and three of 47,250 objdiff functions (`0.0063492064%`). These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
 
 Each accompanying eight-byte `.pdata` range is also a 100% relocation-aware objdiff match. The progress percentage intentionally counts code bytes only.

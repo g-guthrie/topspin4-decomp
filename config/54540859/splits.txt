@@ -22,3 +22,7 @@ src/xbox360/title_server_logout.c:
 src/xbox360/title_patch.c:
 	.pdata      start:0x88128518 end:0x88128520
 	.text       start:0x88794FE8 end:0x88795020
+
+src/xbox360/king_of_court_prepare.c:
+	.pdata      start:0x88128550 end:0x88128558
+	.text       start:0x887955A0 end:0x887955C4

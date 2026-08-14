@@ -38,6 +38,6 @@
     "compiler_flags_verified": false,
     "translation_unit_boundaries_verified": false,
     "whole_program_ltcg_verified": false,
-    "note": "Flags /O2 /Oi are verified for src/xbox360/title_server_logout.c and src/xbox360/title_patch.c. The smaller title_patch unit also matches with /O1, so it does not distinguish the optimization level; title_server_logout does. D3D9LTCG is linked into Loader_DLL.xex and Swing_DLL.xex, but that alone does not prove the game code used whole-program LTCG."
+    "note": "Flags /O2 /Oi are verified for three source units. The smaller title_patch unit also matches with /O1, so it does not distinguish the optimization level; title_server_logout does. D3D9LTCG is linked into Loader_DLL.xex and Swing_DLL.xex, but that alone does not prove the game code used whole-program LTCG."
   }
 }
