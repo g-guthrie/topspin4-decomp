@@ -2,7 +2,7 @@
 
 A decompilation must name one exact executable. Region, update version, and platform can change addresses, code generation, imports, and assets.
 
-## Local candidate measured on 2026-08-14
+## Locked Xbox 360 retail baseline
 
 | Field | Value |
 | --- | --- |
@@ -11,13 +11,19 @@ A decompilation must name one exact executable. Region, update version, and plat
 | Filesystem | UDF 1.5, label `CD_ROM` |
 | Visible roots | `$SystemUpdate`, `AUDIO_TS`, `VIDEO_TS` |
 | Classification | Xbox 360-style optical-disc image |
-| PS3 markers | No `PS3_GAME` tree found |
+| Title ID | `54540859` (`TT-2137`) |
+| Media ID | `60819732` |
+| Executable version | `0.0.0.3` |
+| Disc / region | 1 of 1 / all regions |
+| `default.xex` size | `638,976` bytes |
+| `default.xex` SHA-256 | `2d72e84feab9a84ac0e1239785a9af1ed7b6e693cf39041f206a92ac9454ce28` |
+| Image load address / size | `0x82000000` / `0x00180000` |
+| Additional modules | `Loader_DLL.xex`, `Swing_DLL.xex` |
 
 The filename is not treated as provenance. The unusually old filesystem timestamp is also not treated as a release date.
 
-## Decision required
+## Scope decision
 
-- **Xbox 360:** extract and identify `default.xex`; analyze Xenon big-endian PowerPC/VMX code and use Xenia for runtime validation.
-- **PlayStation 3:** provide a lawful PS3 disc dump; identify `PS3_GAME/USRDIR/EBOOT.BIN`; analyze Cell PPU big-endian PowerPC code and use RPCS3 for runtime validation.
+This project targets the Xbox 360 build. Analyze Xenon big-endian PowerPC/VMX code and use Xenia Canary for runtime validation. The PS3 build is out of scope.
 
-Do not mix measurements or symbols from the two builds.
+Title updates are derivative targets, not replacements for this baseline. Record each update's package hash, media compatibility, resulting executable hash, and behavioral changes separately.

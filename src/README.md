@@ -1,3 +1,3 @@
 # Reconstructed source
 
-No reconstructed game source exists yet. Platform-specific work will begin under `src/xbox360/` or `src/ps3/` only after `config/target.json` is locked.
+No reconstructed game source exists yet. Xbox 360 work will begin under `src/xbox360/`; PS3 is out of scope.

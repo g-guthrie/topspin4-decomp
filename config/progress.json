@@ -1,7 +1,13 @@
 {
   "schema_version": 1,
-  "target_locked": false,
-  "total_functions": null,
+  "target_locked": true,
+  "total_functions": 41795,
+  "total_functions_basis": "Ghidra 12.1.2 FunctionManager after XEXLoaderWV 12.1.2 import",
+  "module_functions": {
+    "default.xex": 503,
+    "Loader_DLL.xex": 8786,
+    "Swing_DLL.xex": 32506
+  },
   "named_functions": 0,
   "typed_functions": 0,
   "reconstructed_functions": 0,

@@ -1,8 +1,17 @@
 {
-  "status": "unlocked",
-  "platform": null,
-  "title_id": null,
-  "region": null,
-  "version": null,
-  "executable_sha256": null
+  "status": "locked",
+  "platform": "xbox360",
+  "title_id": "54540859",
+  "title_code": "TT-2137",
+  "media_id": "60819732",
+  "region": "all",
+  "version": "0.0.0.3",
+  "disc_number": 1,
+  "disc_count": 1,
+  "container_sha256": "93f3436310632c59334fd5df0f2e7d7a8350e867ce7e354780c871dfbf8f3e5c",
+  "executable_sha256": "2d72e84feab9a84ac0e1239785a9af1ed7b6e693cf39041f206a92ac9454ce28",
+  "modules": {
+    "Loader_DLL.xex": "8f9ed530c9cf32cf2ae33534ba1ca99e3abdcf2f5859bc8f68658e23187fd092",
+    "Swing_DLL.xex": "dfa71292f75a649773c280de7bc2688e6e47e473aba397c248fb4204c45fac44"
+  }
 }
