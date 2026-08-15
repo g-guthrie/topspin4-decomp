@@ -30,6 +30,15 @@ src/xbox360/session_policy_stubs.c:
 src/xbox360/competition_game_reset.c:
 	.text       start:0x88779960 end:0x88779968
 
+src/xbox360/is_session_started.c:
+	.text       start:0x8877BFD8 end:0x8877BFF8
+
+src/xbox360/is_lobby_full.c:
+	.text       start:0x887801E0 end:0x88780200
+
+src/xbox360/is_host.c:
+	.text       start:0x88780200 end:0x88780224
+
 src/xbox360/modify_session.c:
 	.pdata      start:0x88127918 end:0x88127920
 	.text       start:0x8877BC98 end:0x8877BCE8

@@ -1956,7 +1956,7 @@ def calculate_progress(config: ProjectConfig) -> None:
         complete_units = measures.get("complete_units", 0)
 
         progress_print(
-            f"  {name}: {matched_code_percent:.2f}% matched, {complete_code_percent:.2f}% linked ({complete_units} / {total_units} files)"
+            f"  {name}: {matched_code_percent:.2f}% matched, {complete_code_percent:.2f}% complete source ({complete_units} / {total_units} units)"
         )
         progress_print(
             f"    Code: {matched_code} / {total_code} bytes ({matched_functions} / {total_functions} functions)"

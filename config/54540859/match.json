@@ -110,6 +110,30 @@
       "function_match_percent": 100.0
     },
     {
+      "source": "src/xbox360/is_session_started.c",
+      "symbol": "ts4_script_is_session_started",
+      "text_range": "0x8877BFD8-0x8877BFF8",
+      "pdata_range": null,
+      "matched_code_bytes": 32,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/is_lobby_full.c",
+      "symbol": "ts4_script_is_lobby_full",
+      "text_range": "0x887801E0-0x88780200",
+      "pdata_range": null,
+      "matched_code_bytes": 32,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/is_host.c",
+      "symbol": "ts4_script_is_host",
+      "text_range": "0x88780200-0x88780224",
+      "pdata_range": null,
+      "matched_code_bytes": 36,
+      "function_match_percent": 100.0
+    },
+    {
       "source": "src/xbox360/modify_session.c",
       "symbol": "ts4_script_modify_session",
       "text_range": "0x8877BC98-0x8877BCE8",
@@ -222,13 +246,13 @@
       "function_match_percent": 100.0
     }
   ],
-  "matched_code_bytes": 1820,
+  "matched_code_bytes": 1920,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.0179245,
+  "module_matched_code_percent": 0.018909363,
   "module_total_functions": 47280,
-  "module_matched_functions": 26,
-  "module_matched_functions_percent": 0.054991543,
-  "module_total_units": 51,
-  "module_complete_units": 17,
-  "note": "The canonical whole-module report verifies all twenty-six functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 29,
+  "module_matched_functions_percent": 0.06133672,
+  "module_total_units": 56,
+  "module_complete_units": 20,
+  "note": "The canonical whole-module report verifies all twenty-nine functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

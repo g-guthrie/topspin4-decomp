@@ -52,6 +52,21 @@ MATCHING_UNITS = (
         "symbols": {"ts4_script_competition_game_reset": 8},
     },
     {
+        "source": "src/xbox360/is_session_started.c",
+        "object": "is_session_started.obj",
+        "symbols": {"ts4_script_is_session_started": 32},
+    },
+    {
+        "source": "src/xbox360/is_lobby_full.c",
+        "object": "is_lobby_full.obj",
+        "symbols": {"ts4_script_is_lobby_full": 32},
+    },
+    {
+        "source": "src/xbox360/is_host.c",
+        "object": "is_host.obj",
+        "symbols": {"ts4_script_is_host": 36},
+    },
+    {
         "source": "src/xbox360/modify_session.c",
         "object": "modify_session.obj",
         "symbols": {"ts4_script_modify_session": 80},
