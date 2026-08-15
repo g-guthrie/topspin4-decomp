@@ -32,6 +32,10 @@
         "status": "Matching",
         "source": "xbox360/is_session_started.c"
       },
+      "src/xbox360/is_remote.c": {
+        "status": "Matching",
+        "source": "xbox360/is_remote.c"
+      },
       "src/xbox360/is_lobby_full.c": {
         "status": "Matching",
         "source": "xbox360/is_lobby_full.c"

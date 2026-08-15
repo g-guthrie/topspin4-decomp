@@ -8,17 +8,20 @@
   ],
   "input_matching_functions": 8,
   "input_matching_code_bytes": 64,
+  "input_object_kind": "source-built base objects",
+  "input_object_path_prefix": "build/54540859/src/src/xbox360/",
   "link_flags": [
     "/dll",
     "/noentry",
     "/nodefaultlib",
     "/machine:PPCBE",
     "/subsystem:XBOX",
-    "/XEX:NO"
+    "/XEX:NO",
+    "/OPT:NOREF"
   ],
   "output_format": "PE32 Xbox PowerPC big-endian DLL",
   "output_size_bytes": 2560,
-  "output_sha256": "035685844cf92a6464b991b53b7c4c45bb24194bec30615a3f1289652666de1c",
+  "output_sha256": "75d72862e1a467705892d447acb9bfdda7d2176391023ffe2327000d6e869519",
   "output_text_bytes": 64,
   "has_entry_point": false,
   "has_imports": false,
@@ -26,5 +29,26 @@
   "is_xex": false,
   "is_runnable": false,
   "runtime_tested": false,
-  "artifact_committed": false
+  "artifact_committed": false,
+  "forced_all_units_probe": {
+    "input_source_objects": 22,
+    "input_matching_functions": 31,
+    "input_matching_code_bytes": 2156,
+    "input_object_kind": "source-built base objects",
+    "link_flags_added": [
+      "/FORCE:UNRESOLVED",
+      "/MAP"
+    ],
+    "output_size_bytes": 5632,
+    "output_sha256": "89c45fcfd9e56d38a25de9782a7eba64bb47bcbe2fd4ecf6f2b074c664551a01",
+    "output_text_bytes": 2376,
+    "map_matching_public_functions": 31,
+    "map_additional_static_helpers": 2,
+    "unresolved_external_symbols": 24,
+    "is_xex": false,
+    "is_runnable": false,
+    "runtime_tested": false,
+    "artifact_committed": false,
+    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 31 exact public functions plus source helper code and alignment, so total text size is not a matching-progress counter."
+  }
 }

@@ -126,6 +126,14 @@
       "function_match_percent": 100.0
     },
     {
+      "source": "src/xbox360/is_remote.c",
+      "symbol": "ts4_script_is_remote",
+      "text_range": "0x8877BFF8-0x8877C0A0",
+      "pdata_range": null,
+      "matched_code_bytes": 168,
+      "function_match_percent": 100.0
+    },
+    {
       "source": "src/xbox360/is_lobby_full.c",
       "symbol": "ts4_script_is_lobby_full",
       "text_range": "0x887801E0-0x88780200",
@@ -254,13 +262,13 @@
       "function_match_percent": 100.0
     }
   ],
-  "matched_code_bytes": 1988,
+  "matched_code_bytes": 2156,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.01957907,
+  "module_matched_code_percent": 0.021233639,
   "module_total_functions": 47280,
-  "module_matched_functions": 30,
-  "module_matched_functions_percent": 0.06345178,
-  "module_total_units": 56,
-  "module_complete_units": 21,
-  "note": "The canonical whole-module report verifies all thirty functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 31,
+  "module_matched_functions_percent": 0.06556684,
+  "module_total_units": 57,
+  "module_complete_units": 22,
+  "note": "The canonical whole-module report verifies all thirty-one functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

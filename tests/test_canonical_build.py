@@ -71,11 +71,25 @@ class CanonicalBuildTests(unittest.TestCase):
         self.assertEqual(status["input_matching_functions"], 8)
         self.assertEqual(status["input_matching_code_bytes"], 64)
         self.assertEqual(status["output_text_bytes"], 64)
+        self.assertEqual(status["input_object_kind"], "source-built base objects")
+        self.assertEqual(
+            status["input_object_path_prefix"],
+            "build/54540859/src/src/xbox360/",
+        )
+        self.assertIn("/OPT:NOREF", status["link_flags"])
         self.assertFalse(status["has_entry_point"])
         self.assertFalse(status["is_xex"])
         self.assertFalse(status["is_runnable"])
         self.assertFalse(status["runtime_tested"])
         self.assertFalse(status["artifact_committed"])
+
+        forced = status["forced_all_units_probe"]
+        self.assertEqual(forced["input_source_objects"], 22)
+        self.assertEqual(forced["input_matching_functions"], 31)
+        self.assertEqual(forced["map_matching_public_functions"], 31)
+        self.assertEqual(forced["unresolved_external_symbols"], 24)
+        self.assertFalse(forced["is_xex"])
+        self.assertFalse(forced["is_runnable"])
 
 
 if __name__ == "__main__":

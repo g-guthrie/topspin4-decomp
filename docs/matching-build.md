@@ -1,6 +1,6 @@
 # Matching build
 
-The first twenty-one matching measurement units cover online feature stubs, session predicates, Pro Challenge, title-server, player-visibility, minigame, and King of the Court callbacks from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 1,988 code bytes across thirty functions exactly.
+The first twenty-two matching measurement units cover online feature stubs, session predicates, Pro Challenge, title-server, player-visibility, minigame, and King of the Court callbacks from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 2,156 code bytes across thirty-one functions exactly.
 
 ## Local prerequisites
 
@@ -29,7 +29,7 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 1,988 of 10,153,700 Swing code bytes (`0.01957907%`) and thirty of 47,280 objdiff functions (`0.06345178%`). These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
+The match is 2,156 of 10,153,700 Swing code bytes (`0.021233639%`) and thirty-one of 47,280 objdiff functions (`0.06556684%`). These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
 
 Where a function has an accompanying eight-byte `.pdata` range, it is also a
 100% relocation-aware objdiff match. Leaf functions without an exception record
@@ -47,9 +47,11 @@ interpreted as a successfully linked game executable.
 A separate capability probe has now linked two exact reconstructed objects
 with Xbox `link.exe 10.00.10224.00`. The result is a 2,560-byte Xbox PowerPC
 PE32 DLL whose 64-byte `.text` contains eight matching functions. It uses
-`/XEX:NO`, `/dll`, `/noentry`, and `/nodefaultlib`; it has no imports or
-exports. The ignored output hash and machine-readable boundary are recorded in
-`config/link-status.json`. Running this linker under macOS requires the
+`/XEX:NO`, `/dll`, `/noentry`, `/nodefaultlib`, and `/OPT:NOREF`; it has no
+imports or exports. `/OPT:NOREF` is necessary because an entryless DLL would
+otherwise discard every unreferenced function. The ignored output hash and
+machine-readable boundary are recorded in `config/link-status.json`. Running
+this linker under macOS requires the
 guest-side fake PDB service from
 [decompals/wibo PR 110](https://github.com/decompals/wibo/pull/110).
 
@@ -59,10 +61,24 @@ with local, uncommitted tool paths:
 ```sh
 /path/to/wibo-pr110 /path/to/X360/16.00.10224.00/link.exe \
   /nologo /dll /noentry /nodefaultlib /machine:PPCBE \
-  /subsystem:XBOX /XEX:NO /out:work/two-object-link.dll \
-  build/54540859/obj/src/xbox360/online_feature_stubs.obj \
-  build/54540859/obj/src/xbox360/generate_cpu_results.obj
+  /subsystem:XBOX /XEX:NO /OPT:NOREF \
+  /out:work/two-object-link.dll \
+  build/54540859/src/src/xbox360/online_feature_stubs.obj \
+  build/54540859/src/src/xbox360/generate_cpu_results.obj
 ```
+
+The path distinction is part of the proof: `build/54540859/src/` contains
+objects compiled from this repository's source, while `build/54540859/obj/`
+contains original split target objects used only for comparison.
+
+A second probe passes all twenty-two source-built objects to the linker. Its
+map contains all thirty-one exact public functions. Because the remaining game
+code and data are not reconstructed, this probe requires `/FORCE:UNRESOLVED`
+and reports twenty-four unresolved external symbols. The linker emits a
+5,632-byte inspection PE with 2,376 bytes of `.text`; that section also includes
+two source helper functions and alignment, so it is not a new matching-progress
+denominator. This is evidence that the current reconstructed subset can enter a
+single Xbox link, not evidence of a usable module.
 
 This proves that reconstructed COFF objects can be combined by the original
 Xbox linker. It does **not** produce a replacement game module or runnable XEX,

@@ -36,6 +36,9 @@ src/xbox360/reset_online_config.c:
 src/xbox360/is_session_started.c:
 	.text       start:0x8877BFD8 end:0x8877BFF8
 
+src/xbox360/is_remote.c:
+	.text       start:0x8877BFF8 end:0x8877C0A0
+
 src/xbox360/is_lobby_full.c:
 	.text       start:0x887801E0 end:0x88780200
 

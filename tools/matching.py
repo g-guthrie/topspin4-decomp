@@ -62,6 +62,11 @@ MATCHING_UNITS = (
         "symbols": {"ts4_script_is_session_started": 32},
     },
     {
+        "source": "src/xbox360/is_remote.c",
+        "object": "is_remote.obj",
+        "symbols": {"ts4_script_is_remote": 168},
+    },
+    {
         "source": "src/xbox360/is_lobby_full.c",
         "object": "is_lobby_full.obj",
         "symbols": {"ts4_script_is_lobby_full": 32},
