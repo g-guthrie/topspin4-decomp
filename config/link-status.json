@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "linker": "Xbox 360 link.exe 10.00.10224.00",
+  "wrapper_requirement": "decompals/wibo PR 110 commit a91b26e05df7e3ee67e684d96b266b1aba13f3e3",
+  "input_sources": [
+    "src/xbox360/online_feature_stubs.c",
+    "src/xbox360/generate_cpu_results.c"
+  ],
+  "input_matching_functions": 8,
+  "input_matching_code_bytes": 64,
+  "link_flags": [
+    "/dll",
+    "/noentry",
+    "/nodefaultlib",
+    "/machine:PPCBE",
+    "/subsystem:XBOX",
+    "/XEX:NO"
+  ],
+  "output_format": "PE32 Xbox PowerPC big-endian DLL",
+  "output_size_bytes": 2560,
+  "output_sha256": "035685844cf92a6464b991b53b7c4c45bb24194bec30615a3f1289652666de1c",
+  "output_text_bytes": 64,
+  "has_entry_point": false,
+  "has_imports": false,
+  "has_exports": false,
+  "is_xex": false,
+  "is_runnable": false,
+  "runtime_tested": false,
+  "artifact_committed": false
+}

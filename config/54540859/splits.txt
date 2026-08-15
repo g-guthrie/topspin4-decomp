@@ -30,6 +30,9 @@ src/xbox360/session_policy_stubs.c:
 src/xbox360/competition_game_reset.c:
 	.text       start:0x88779960 end:0x88779968
 
+src/xbox360/reset_online_config.c:
+	.text       start:0x88779968 end:0x887799AC
+
 src/xbox360/is_session_started.c:
 	.text       start:0x8877BFD8 end:0x8877BFF8
 

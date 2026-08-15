@@ -24,6 +24,10 @@
         "status": "Matching",
         "source": "xbox360/competition_game_reset.c"
       },
+      "src/xbox360/reset_online_config.c": {
+        "status": "Matching",
+        "source": "xbox360/reset_online_config.c"
+      },
       "src/xbox360/is_session_started.c": {
         "status": "Matching",
         "source": "xbox360/is_session_started.c"

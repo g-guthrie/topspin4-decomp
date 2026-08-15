@@ -66,6 +66,17 @@ class CanonicalBuildTests(unittest.TestCase):
         self.assertIn("symbols_known: true", config)
         self.assertIn("quick_analysis: true", config)
 
+    def test_link_probe_is_explicitly_non_runnable(self):
+        status = json.loads((ROOT / "config" / "link-status.json").read_text())
+        self.assertEqual(status["input_matching_functions"], 8)
+        self.assertEqual(status["input_matching_code_bytes"], 64)
+        self.assertEqual(status["output_text_bytes"], 64)
+        self.assertFalse(status["has_entry_point"])
+        self.assertFalse(status["is_xex"])
+        self.assertFalse(status["is_runnable"])
+        self.assertFalse(status["runtime_tested"])
+        self.assertFalse(status["artifact_committed"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -52,6 +52,11 @@ MATCHING_UNITS = (
         "symbols": {"ts4_script_competition_game_reset": 8},
     },
     {
+        "source": "src/xbox360/reset_online_config.c",
+        "object": "reset_online_config.obj",
+        "symbols": {"ts4_script_reset_online_config": 68},
+    },
+    {
         "source": "src/xbox360/is_session_started.c",
         "object": "is_session_started.obj",
         "symbols": {"ts4_script_is_session_started": 32},
