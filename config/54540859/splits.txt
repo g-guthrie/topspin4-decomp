@@ -15,6 +15,14 @@ Sections:
 	.XBLD       type:data align:65536
 	.reloc      type:data align:65536
 
+src/xbox360/modify_session.c:
+	.pdata      start:0x88127918 end:0x88127920
+	.text       start:0x8877BC98 end:0x8877BCE8
+
+src/xbox360/set_no_disco.c:
+	.pdata      start:0x88127938 end:0x88127940
+	.text       start:0x8877C0A0 end:0x8877C0F0
+
 src/xbox360/title_server_logout.c:
 	.pdata      start:0x881283D0 end:0x881283D8
 	.text       start:0x88792820 end:0x88792888

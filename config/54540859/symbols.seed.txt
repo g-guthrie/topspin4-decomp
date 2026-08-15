@@ -1,5 +1,7 @@
 # Reviewed symbols needed before Jeff's first full analysis pass.
 text_padding_88B0079C = .text:0x88B0079C; // type:object size:0x1C scope:local data:byte
+ts4_script_modify_session = .text:0x8877BC98; // type:function size:0x50
+ts4_script_set_no_disco = .text:0x8877C0A0; // type:function size:0x50
 ts4_script_title_server_logout = .text:0x88792820; // type:function size:0x68
 ts4_script_title_server_login_user_only = .text:0x88792638; // type:function size:0xA0
 ts4_script_minigame_change_display_game_mode = .text:0x88792CB8; // type:function size:0x90

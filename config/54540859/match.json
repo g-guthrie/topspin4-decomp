@@ -14,6 +14,22 @@
   "objdiff_sha256_macos_arm64": "acd0f01e40319c862c84effd9f744a6ccfeec10074cbc89ef232d96d333ab528",
   "matches": [
     {
+      "source": "src/xbox360/modify_session.c",
+      "symbol": "ts4_script_modify_session",
+      "text_range": "0x8877BC98-0x8877BCE8",
+      "pdata_range": "0x88127918-0x88127920",
+      "matched_code_bytes": 80,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/set_no_disco.c",
+      "symbol": "ts4_script_set_no_disco",
+      "text_range": "0x8877C0A0-0x8877C0F0",
+      "pdata_range": "0x88127938-0x88127940",
+      "matched_code_bytes": 80,
+      "function_match_percent": 100.0
+    },
+    {
       "source": "src/xbox360/title_server_login_user_only.c",
       "symbol": "ts4_script_title_server_login_user_only",
       "text_range": "0x88792638-0x887926D8",
@@ -102,13 +118,13 @@
       "function_match_percent": 100.0
     }
   ],
-  "matched_code_bytes": 1184,
+  "matched_code_bytes": 1344,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.011660774,
+  "module_matched_code_percent": 0.013236554,
   "module_total_functions": 47280,
-  "module_matched_functions": 11,
-  "module_matched_functions_percent": 0.023265652,
-  "module_total_units": 37,
-  "module_complete_units": 9,
-  "note": "The canonical whole-module report verifies all eleven functions and their relocation-aware .pdata sections at 100%. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 13,
+  "module_matched_functions_percent": 0.027495772,
+  "module_total_units": 43,
+  "module_complete_units": 11,
+  "note": "The canonical whole-module report verifies all thirteen functions and their relocation-aware .pdata sections at 100%. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

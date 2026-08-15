@@ -4,6 +4,14 @@
     "mw_version": "X360/16.00.10224.00",
     "cflags": "base",
     "objects": {
+      "src/xbox360/modify_session.c": {
+        "status": "Matching",
+        "source": "xbox360/modify_session.c"
+      },
+      "src/xbox360/set_no_disco.c": {
+        "status": "Matching",
+        "source": "xbox360/set_no_disco.c"
+      },
       "src/xbox360/title_server_logout.c": {
         "status": "Matching",
         "source": "xbox360/title_server_logout.c"

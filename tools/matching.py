@@ -16,6 +16,16 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/modify_session.c",
+        "object": "modify_session.obj",
+        "symbols": {"ts4_script_modify_session": 80},
+    },
+    {
+        "source": "src/xbox360/set_no_disco.c",
+        "object": "set_no_disco.obj",
+        "symbols": {"ts4_script_set_no_disco": 80},
+    },
+    {
         "source": "src/xbox360/title_server_login_user_only.c",
         "object": "title_server_login_user_only.obj",
         "symbols": {"ts4_script_title_server_login_user_only": 160},

@@ -61,6 +61,10 @@ class ProgressTests(unittest.TestCase):
         self.assertIn("src/xbox360/minigame_hide_tracksides.c:", splits)
         self.assertIn("src/xbox360/player_visibility.c:", splits)
         self.assertIn("src/xbox360/minigame_change_display_mode.c:", splits)
+        self.assertIn("src/xbox360/modify_session.c:", splits)
+        self.assertIn("src/xbox360/set_no_disco.c:", splits)
+        self.assertIn("start:0x8877BC98 end:0x8877BCE8", splits)
+        self.assertIn("start:0x8877C0A0 end:0x8877C0F0", splits)
         self.assertIn("start:0x88792820 end:0x88792888", splits)
         self.assertIn("start:0x88792638 end:0x887926D8", splits)
         self.assertIn("start:0x88794E38 end:0x88794FE8", splits)
@@ -81,6 +85,8 @@ class ProgressTests(unittest.TestCase):
         self.assertIn("ts4_script_set_player_visibility", symbols)
         self.assertIn("ts4_script_minigame_change_display_game_mode", symbols)
         self.assertIn("ts4_script_title_server_get_patch", symbols)
+        self.assertIn("ts4_script_modify_session", symbols)
+        self.assertIn("ts4_script_set_no_disco", symbols)
         self.assertIn("text_padding_88B0079C", symbols)
 
 

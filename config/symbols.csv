@@ -1,5 +1,7 @@
 module,address,name,confidence,evidence
 Swing_DLL.xex,887b1468,RegisterOnlineScriptCommands,high,direct_script_registration_table
+Swing_DLL.xex,8877bc98,Script_ModifySession,high,direct_ModifySession_registration
+Swing_DLL.xex,8877c0a0,Script_SetNoDisco,high,direct_SetNoDisco_registration
 Swing_DLL.xex,88794fe8,Script_TitleServer_GetPatch,high,direct_TitleServer_GetPatch_registration
 Swing_DLL.xex,88795020,Script_TitleServer_Login,high,direct_TitleServer_Login_registration
 Swing_DLL.xex,88792820,Script_TitleServer_Logout,high,direct_TitleServer_Logout_registration
