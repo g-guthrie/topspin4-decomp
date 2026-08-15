@@ -16,6 +16,42 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/online_feature_stubs.c",
+        "object": "online_feature_stubs.obj",
+        "symbols": {
+            "ts4_script_title_server_feature_unavailable": 8,
+            "ts4_script_online_ps3_is_invitation_enabled": 8,
+            "ts4_script_online_ps3_is_player_created_enabled": 8,
+            "ts4_script_online_true_stub": 8,
+            "ts4_script_remove_ai_player_from_lobby": 8,
+            "ts4_script_online_false_stub_a": 8,
+            "ts4_script_online_false_stub_b": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/generate_cpu_results.c",
+        "object": "generate_cpu_results.obj",
+        "symbols": {"ts4_script_generate_cpu_results": 8},
+    },
+    {
+        "source": "src/xbox360/is_in_a_session.c",
+        "object": "is_in_a_session.obj",
+        "symbols": {"ts4_script_is_in_a_session": 24},
+    },
+    {
+        "source": "src/xbox360/session_policy_stubs.c",
+        "object": "session_policy_stubs.obj",
+        "symbols": {
+            "ts4_script_session_policy_true": 8,
+            "ts4_script_set_everyone_ready_in_lobby": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/competition_game_reset.c",
+        "object": "competition_game_reset.obj",
+        "symbols": {"ts4_script_competition_game_reset": 8},
+    },
+    {
         "source": "src/xbox360/modify_session.c",
         "object": "modify_session.obj",
         "symbols": {"ts4_script_modify_session": 80},
@@ -50,6 +86,11 @@ MATCHING_UNITS = (
             "ts4_script_set_player_body_visibility": 84,
             "ts4_script_set_player_visibility": 84,
         },
+    },
+    {
+        "source": "src/xbox360/query_pro_player_list.c",
+        "object": "query_pro_player_list.obj",
+        "symbols": {"ts4_script_pro_challenge_query_pro_player_list": 364},
     },
     {
         "source": "src/xbox360/minigame_prepare.c",

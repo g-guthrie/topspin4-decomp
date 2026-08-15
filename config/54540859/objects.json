@@ -4,6 +4,26 @@
     "mw_version": "X360/16.00.10224.00",
     "cflags": "base",
     "objects": {
+      "src/xbox360/online_feature_stubs.c": {
+        "status": "Matching",
+        "source": "xbox360/online_feature_stubs.c"
+      },
+      "src/xbox360/generate_cpu_results.c": {
+        "status": "Matching",
+        "source": "xbox360/generate_cpu_results.c"
+      },
+      "src/xbox360/is_in_a_session.c": {
+        "status": "Matching",
+        "source": "xbox360/is_in_a_session.c"
+      },
+      "src/xbox360/session_policy_stubs.c": {
+        "status": "Matching",
+        "source": "xbox360/session_policy_stubs.c"
+      },
+      "src/xbox360/competition_game_reset.c": {
+        "status": "Matching",
+        "source": "xbox360/competition_game_reset.c"
+      },
       "src/xbox360/modify_session.c": {
         "status": "Matching",
         "source": "xbox360/modify_session.c"
@@ -27,6 +47,10 @@
       "src/xbox360/player_visibility.c": {
         "status": "Matching",
         "source": "xbox360/player_visibility.c"
+      },
+      "src/xbox360/query_pro_player_list.c": {
+        "status": "Matching",
+        "source": "xbox360/query_pro_player_list.c"
       },
       "src/xbox360/title_server_callbacks.c": {
         "status": "Matching",

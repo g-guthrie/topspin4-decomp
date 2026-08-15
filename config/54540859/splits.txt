@@ -15,6 +15,21 @@ Sections:
 	.XBLD       type:data align:65536
 	.reloc      type:data align:65536
 
+src/xbox360/online_feature_stubs.c:
+	.text       start:0x88778698 end:0x887786D0
+
+src/xbox360/generate_cpu_results.c:
+	.text       start:0x88778CE8 end:0x88778CF0
+
+src/xbox360/is_in_a_session.c:
+	.text       start:0x88778CF0 end:0x88778D08
+
+src/xbox360/session_policy_stubs.c:
+	.text       start:0x88778D08 end:0x88778D18
+
+src/xbox360/competition_game_reset.c:
+	.text       start:0x88779960 end:0x88779968
+
 src/xbox360/modify_session.c:
 	.pdata      start:0x88127918 end:0x88127920
 	.text       start:0x8877BC98 end:0x8877BCE8
@@ -38,6 +53,10 @@ src/xbox360/minigame_change_display_mode.c:
 src/xbox360/player_visibility.c:
 	.pdata      start:0x881284F0 end:0x88128500
 	.text       start:0x88794C18 end:0x88794CC4
+
+src/xbox360/query_pro_player_list.c:
+	.pdata      start:0x88128500 end:0x88128508
+	.text       start:0x88794CC8 end:0x88794E38
 
 src/xbox360/title_server_callbacks.c:
 	.pdata      start:0x88128508 end:0x88128518
