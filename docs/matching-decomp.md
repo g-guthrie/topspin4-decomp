@@ -4,7 +4,7 @@
 
 The repository now meets the minimum technical definition of a matching decompilation used by [decomp.dev](https://decomp.dev/) and [dc3-decomp](https://github.com/rjkiv/dc3-decomp): new source is compiled with the target toolchain and measured against the original object in objdiff. Ghidra pseudocode, reviewed symbol names, behavioral equivalence, and successful host-C compilation remain useful inputs, but do not count as binary-match evidence.
 
-Current matching progress is **thirty-one functions and 2,156 code bytes**. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces twenty-two reviewed measurement units spanning online feature stubs, session predicates, Pro Challenge, title-server, player-visibility, minigame, and King of the Court callbacks exactly. Against all Jeff-emitted Swing units, that is 2,156 of 10,153,700 code bytes (`0.021233639%`) and thirty-one of 47,280 functions (`0.06556684%`).
+Current matching progress is **thirty-four functions and 2,540 code bytes**. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces twenty-five reviewed measurement units spanning online feature stubs, session predicates, TSU statistics, Pro Challenge, title-server, player-visibility, minigame, and King of the Court callbacks exactly. Against all Jeff-emitted Swing units, that is 2,540 of 10,153,700 code bytes (`0.025015512%`) and thirty-four of 47,280 functions (`0.07191201%`).
 
 ## What is already right
 

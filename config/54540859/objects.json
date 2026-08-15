@@ -28,6 +28,10 @@
         "status": "Matching",
         "source": "xbox360/reset_online_config.c"
       },
+      "src/xbox360/session_match_accessor.c": {
+        "status": "Matching",
+        "source": "xbox360/session_match_accessor.c"
+      },
       "src/xbox360/is_session_started.c": {
         "status": "Matching",
         "source": "xbox360/is_session_started.c"
@@ -35,6 +39,14 @@
       "src/xbox360/is_remote.c": {
         "status": "Matching",
         "source": "xbox360/is_remote.c"
+      },
+      "src/xbox360/is_local_user_a_guest.c": {
+        "status": "Matching",
+        "source": "xbox360/is_local_user_a_guest.c"
+      },
+      "src/xbox360/tsu_session_stats.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_session_stats.c"
       },
       "src/xbox360/is_lobby_full.c": {
         "status": "Matching",

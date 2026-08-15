@@ -33,11 +33,11 @@ Exit condition: each reconstructed unit has a behavioral oracle or binary-match 
 
 1. Make Jeff split each target module without a crash or unresolved function overlap. **Swing complete; Loader pending.**
 2. Recover real translation-unit boundaries and commit reviewed `splits.txt` and `symbols.txt` files. **Nine exact Swing measurement units are committed; original translation-unit boundaries remain provisional.**
-3. Confirm Xbox 360 MSVC `16.0.10224.0` flags with small code-generation probes. **`/O2 /Oi` verified for thirty-one functions.**
+3. Confirm Xbox 360 MSVC `16.0.10224.0` flags with small code-generation probes. **`/O2 /Oi` verified for thirty-four functions.**
 4. Generate an objdiff configuration and classify every source unit as missing, non-matching, equivalent, or matching. **Initial full-Swing report complete.**
 5. Keep semantic and matching counters separate. **Complete.**
 
-Exit condition met: twenty-two source measurement units containing thirty-one functions are compiled with the target toolchain and have reproducible objdiff reports against their original COFFs. These units are not presented as proven original source-file boundaries.
+Exit condition met: twenty-five source measurement units containing thirty-four functions are compiled with the target toolchain and have reproducible objdiff reports against their original COFFs. These units are not presented as proven original source-file boundaries.
 
 ## 4. Playable replacement
 

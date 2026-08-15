@@ -33,11 +33,21 @@ src/xbox360/competition_game_reset.c:
 src/xbox360/reset_online_config.c:
 	.text       start:0x88779968 end:0x887799AC
 
+src/xbox360/session_match_accessor.c:
+	.text       start:0x887799B0 end:0x887799C0
+
 src/xbox360/is_session_started.c:
 	.text       start:0x8877BFD8 end:0x8877BFF8
 
 src/xbox360/is_remote.c:
 	.text       start:0x8877BFF8 end:0x8877C0A0
+
+src/xbox360/tsu_session_stats.c:
+	.pdata      start:0x88127B28 end:0x88127B30
+	.text       start:0x8877F758 end:0x8877F814
+
+src/xbox360/is_local_user_a_guest.c:
+	.text       start:0x8877FCD0 end:0x8877FD84
 
 src/xbox360/is_lobby_full.c:
 	.text       start:0x887801E0 end:0x88780200

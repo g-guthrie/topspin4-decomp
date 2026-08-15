@@ -57,6 +57,11 @@ MATCHING_UNITS = (
         "symbols": {"ts4_script_reset_online_config": 68},
     },
     {
+        "source": "src/xbox360/session_match_accessor.c",
+        "object": "session_match_accessor.obj",
+        "symbols": {"ts4_get_session_match_descriptor": 16},
+    },
+    {
         "source": "src/xbox360/is_session_started.c",
         "object": "is_session_started.obj",
         "symbols": {"ts4_script_is_session_started": 32},
@@ -65,6 +70,18 @@ MATCHING_UNITS = (
         "source": "src/xbox360/is_remote.c",
         "object": "is_remote.obj",
         "symbols": {"ts4_script_is_remote": 168},
+    },
+    {
+        "source": "src/xbox360/tsu_session_stats.c",
+        "object": "tsu_session_stats.obj",
+        "symbols": {
+            "ts4_script_tsu_replace_search_results_with_session_stats": 188
+        },
+    },
+    {
+        "source": "src/xbox360/is_local_user_a_guest.c",
+        "object": "is_local_user_a_guest.obj",
+        "symbols": {"ts4_script_is_local_user_a_guest": 180},
     },
     {
         "source": "src/xbox360/is_lobby_full.c",

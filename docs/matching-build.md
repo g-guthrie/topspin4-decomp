@@ -1,6 +1,6 @@
 # Matching build
 
-The first twenty-two matching measurement units cover online feature stubs, session predicates, Pro Challenge, title-server, player-visibility, minigame, and King of the Court callbacks from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 2,156 code bytes across thirty-one functions exactly.
+The first twenty-five matching measurement units cover online feature stubs, session predicates, TSU statistics, Pro Challenge, title-server, player-visibility, minigame, and King of the Court callbacks from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 2,540 code bytes across thirty-four functions exactly.
 
 ## Local prerequisites
 
@@ -29,7 +29,7 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 2,156 of 10,153,700 Swing code bytes (`0.021233639%`) and thirty-one of 47,280 objdiff functions (`0.06556684%`). These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
+The match is 2,540 of 10,153,700 Swing code bytes (`0.025015512%`) and thirty-four of 47,280 objdiff functions (`0.07191201%`). These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
 
 Where a function has an accompanying eight-byte `.pdata` range, it is also a
 100% relocation-aware objdiff match. Leaf functions without an exception record
@@ -71,12 +71,12 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe passes all twenty-two source-built objects to the linker. Its
-map contains all thirty-one exact public functions. Because the remaining game
+A second probe passes all twenty-five source-built objects to the linker. Its
+map contains all thirty-four exact public functions. Because the remaining game
 code and data are not reconstructed, this probe requires `/FORCE:UNRESOLVED`
-and reports twenty-four unresolved external symbols. The linker emits a
-5,632-byte inspection PE with 2,376 bytes of `.text`; that section also includes
-two source helper functions and alignment, so it is not a new matching-progress
+and reports twenty-six unresolved external symbols. The linker emits a
+6,144-byte inspection PE with 2,764 bytes of `.text`; that section also includes
+three source helper functions and alignment, so it is not a new matching-progress
 denominator. This is evidence that the current reconstructed subset can enter a
 single Xbox link, not evidence of a usable module.
 
