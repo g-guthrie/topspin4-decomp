@@ -54,6 +54,49 @@ MATCHING_UNITS = (
         "symbols": {"ts4_initialize_netdb_extended_record": 96},
     },
     {
+        "source": "src/xbox360/netdb_value_at_most_eight.c",
+        "object": "netdb_value_at_most_eight.obj",
+        "symbols": {"ts4_netdb_value_at_most_eight": 52},
+    },
+    {
+        "source": "src/xbox360/netdb_destroy_variant_a.c",
+        "object": "netdb_destroy_variant_a.obj",
+        "symbols": {"ts4_netdb_destroy_variant_a": 72},
+    },
+    {
+        "source": "src/xbox360/netdb_destroy_variant_b.c",
+        "object": "netdb_destroy_variant_b.obj",
+        "symbols": {"ts4_netdb_destroy_variant_b": 72},
+    },
+    {
+        "source": "src/xbox360/span28_append.c",
+        "object": "span28_append.obj",
+        "symbols": {"ts4_span28_append": 88},
+    },
+    {
+        "source": "src/xbox360/insert_sorted_node.c",
+        "object": "insert_sorted_node.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_insert_sorted_node": 112},
+    },
+    {
+        "source": "src/xbox360/consume_to_delimiter.c",
+        "object": "consume_to_delimiter.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_consume_to_delimiter": 76},
+    },
+    {
+        "source": "src/xbox360/increment_shared_refcount.c",
+        "object": "increment_shared_refcount.obj",
+        "symbols": {"ts4_increment_shared_refcount": 84},
+    },
+    {
+        "source": "src/xbox360/decrement_shared_refcount.c",
+        "object": "decrement_shared_refcount.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_decrement_shared_refcount": 88},
+    },
+    {
         "source": "src/xbox360/is_in_a_session.c",
         "object": "is_in_a_session.obj",
         "symbols": {"ts4_script_is_in_a_session": 24},

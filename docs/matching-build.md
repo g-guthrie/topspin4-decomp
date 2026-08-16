@@ -1,6 +1,6 @@
 # Matching build
 
-The first seventy matching measurement units cover online feature stubs, session predicates, TSU statistics, profile summaries, friends leaderboards, Pro Challenge, title-server, player-visibility, minigame, King of the Court, TSU object callbacks, NetDB initialization, and span helpers from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` reproduces all 9,676 code bytes across eighty functions exactly: most units use `/O2 /Oi`, the per-round TSU aggregation and lobby-timer units additionally require `/GS-`, the three friends-leaderboard units require `/GS- /GR- /EHs-c-`, and the thread-resume wrapper requires `/O1 /Oi`.
+The first seventy-eight matching measurement units cover online feature stubs, session predicates, TSU statistics, profile summaries, friends leaderboards, Pro Challenge, title-server, player-visibility, minigame, King of the Court, TSU object callbacks, NetDB initialization, containers, and runtime helpers from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` reproduces all 10,320 code bytes across eighty-eight functions exactly: most units use `/O2 /Oi`, the per-round TSU aggregation and lobby-timer units additionally require `/GS-`, the three friends-leaderboard units require `/GS- /GR- /EHs-c-`, and selected runtime helpers require `/O1 /Oi`.
 
 ## Local prerequisites
 
@@ -29,7 +29,7 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 9,676 of 10,153,700 Swing code bytes (`0.095295310%`) and eighty of 47,250 objdiff functions (`0.169312180%`). The decomp-framework report has seventy complete-source units among 159 total units. These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
+The match is 10,320 of 10,153,700 Swing code bytes (`0.101637825%`) and eighty-eight of 47,250 objdiff functions (`0.186243390%`). The decomp-framework report has seventy-eight complete-source units among 174 total units. These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
 
 Where a function has an accompanying eight-byte `.pdata` range, it is also a
 100% relocation-aware objdiff match. Leaf functions without an exception record
@@ -71,11 +71,11 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe passes all seventy source-built objects to the linker. Its map
-contains all eighty exact public functions. Because the remaining game code and
+A second probe passes all seventy-eight source-built objects to the linker. Its map
+contains all eighty-eight exact public functions. Because the remaining game code and
 data are not reconstructed, this probe requires `/FORCE:UNRESOLVED` and reports
-seventy-nine unresolved external symbols. The linker emits a 14,336-byte
-inspection PE with 10,280 bytes of `.text`; that section also includes eight
+eighty-four unresolved external symbols. The linker emits a 14,848-byte
+inspection PE with 10,936 bytes of `.text`; that section also includes eight
 source helper functions and alignment, so it is not a new matching-progress
 denominator. This is evidence that the current reconstructed subset can enter a
 single Xbox link, not evidence of a usable module.

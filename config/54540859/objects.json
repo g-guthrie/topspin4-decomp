@@ -28,6 +28,41 @@
         "status": "Matching",
         "source": "xbox360/initialize_netdb_extended_record.c"
       },
+      "src/xbox360/netdb_value_at_most_eight.c": {
+        "status": "Matching",
+        "source": "xbox360/netdb_value_at_most_eight.c"
+      },
+      "src/xbox360/netdb_destroy_variant_a.c": {
+        "status": "Matching",
+        "source": "xbox360/netdb_destroy_variant_a.c"
+      },
+      "src/xbox360/netdb_destroy_variant_b.c": {
+        "status": "Matching",
+        "source": "xbox360/netdb_destroy_variant_b.c"
+      },
+      "src/xbox360/span28_append.c": {
+        "status": "Matching",
+        "source": "xbox360/span28_append.c"
+      },
+      "src/xbox360/insert_sorted_node.c": {
+        "status": "Matching",
+        "source": "xbox360/insert_sorted_node.c",
+        "cflags": "o1"
+      },
+      "src/xbox360/consume_to_delimiter.c": {
+        "status": "Matching",
+        "source": "xbox360/consume_to_delimiter.c",
+        "cflags": "o1"
+      },
+      "src/xbox360/increment_shared_refcount.c": {
+        "status": "Matching",
+        "source": "xbox360/increment_shared_refcount.c"
+      },
+      "src/xbox360/decrement_shared_refcount.c": {
+        "status": "Matching",
+        "source": "xbox360/decrement_shared_refcount.c",
+        "cflags": "o1"
+      },
       "src/xbox360/is_in_a_session.c": {
         "status": "Matching",
         "source": "xbox360/is_in_a_session.c"

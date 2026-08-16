@@ -33,6 +33,30 @@ src/xbox360/clear_netdb_owned_record.c:
 src/xbox360/initialize_netdb_extended_record.c:
 	.text       start:0x88151C70 end:0x88151CD0
 
+src/xbox360/netdb_value_at_most_eight.c:
+	.text       start:0x88152660 end:0x88152698
+
+src/xbox360/netdb_destroy_variant_a.c:
+	.text       start:0x88152698 end:0x881526E0
+
+src/xbox360/netdb_destroy_variant_b.c:
+	.text       start:0x881526E0 end:0x88152728
+
+src/xbox360/span28_append.c:
+	.text       start:0x8816FD60 end:0x8816FDB8
+
+src/xbox360/insert_sorted_node.c:
+	.text       start:0x8857CB00 end:0x8857CB70
+
+src/xbox360/consume_to_delimiter.c:
+	.text       start:0x8857CB70 end:0x8857CBBC
+
+src/xbox360/increment_shared_refcount.c:
+	.text       start:0x8857D528 end:0x8857D57C
+
+src/xbox360/decrement_shared_refcount.c:
+	.text       start:0x8857D580 end:0x8857D5D8
+
 src/xbox360/is_in_a_session.c:
 	.text       start:0x88778CF0 end:0x88778D08
 
