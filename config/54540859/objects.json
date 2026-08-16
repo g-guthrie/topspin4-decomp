@@ -64,6 +64,10 @@
         "status": "Matching",
         "source": "xbox360/min_u32.c"
       },
+      "src/xbox360/create_3ac_object.c": {
+        "status": "Matching",
+        "source": "xbox360/create_3ac_object.c"
+      },
       "src/xbox360/create_runtime_object.c": {
         "status": "Matching",
         "source": "xbox360/create_runtime_object.c"

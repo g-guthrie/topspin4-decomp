@@ -60,6 +60,9 @@ src/xbox360/clone_byte_with_object_context.c:
 src/xbox360/min_u32.c:
 	.text       start:0x88154588 end:0x88154598
 
+src/xbox360/create_3ac_object.c:
+	.text       start:0x88154598 end:0x88154604
+
 src/xbox360/span28_append.c:
 	.text       start:0x8816FD60 end:0x8816FDB8
 

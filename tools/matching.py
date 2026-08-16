@@ -99,6 +99,11 @@ MATCHING_UNITS = (
         "symbols": {"ts4_min_u32": 16},
     },
     {
+        "source": "src/xbox360/create_3ac_object.c",
+        "object": "create_3ac_object.obj",
+        "symbols": {"ts4_create_3ac_object": 108},
+    },
+    {
         "source": "src/xbox360/create_runtime_object.c",
         "object": "create_runtime_object.obj",
         "symbols": {"ts4_create_container_factory": 88},

@@ -111,6 +111,7 @@ ts4_netdb_allocate_94 = .text:0x88152CF8; // type:function
 ts4_assign_text_from_c_string = .text:0x88152E70; // type:function
 ts4_clone_byte_with_object_context = .text:0x88153620; // type:function
 ts4_min_u32 = .text:0x88154588; // type:function
+ts4_create_3ac_object = .text:0x88154598; // type:function
 ts4_create_runtime_object_28_pool2 = .text:0x88171480; // type:function
 ts4_create_runtime_object_28_pool0 = .text:0x881714D8; // type:function
 ts4_create_runtime_object_54_pool2 = .text:0x88171530; // type:function
