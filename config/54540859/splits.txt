@@ -137,6 +137,10 @@ src/xbox360/tsu_destroy_owned_object.c:
 	.pdata      start:0x88128188 end:0x88128190
 	.text       start:0x8878C300 end:0x8878C33C
 
+src/xbox360/tsu_format_and_assign.c:
+	.pdata      start:0x88128198 end:0x881281A0
+	.text       start:0x8878C388 end:0x8878C3DC
+
 src/xbox360/tsu_declare_match_official.c:
 	.pdata      start:0x88127F50 end:0x88127F58
 	.text       start:0x88787718 end:0x8878774C
