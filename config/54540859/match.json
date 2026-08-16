@@ -569,15 +569,18 @@
       "pdata_range": "0x88128828-0x88128830",
       "matched_code_bytes": 200,
       "function_match_percent": 100.0
-    }
+    },
+    {"source":"src/xbox360/tsu_report_event.c","symbol":"ts4_script_tsu_report_event","text_range":"0x8878BDD0-0x8878BE18","pdata_range":"0x88128148-0x88128150","matched_code_bytes":72,"function_match_percent":100.0},
+    {"source":"src/xbox360/tsu_profile_service_reset.c","symbol":"ts4_script_tsu_profile_service_reset","text_range":"0x8878BE18-0x8878BE48","pdata_range":"0x88128150-0x88128158","matched_code_bytes":48,"function_match_percent":100.0},
+    {"source":"src/xbox360/tsu_notify_object.c","symbol":"ts4_script_tsu_notify_object","text_range":"0x8878BE48-0x8878BE74","pdata_range":"0x88128158-0x88128160","matched_code_bytes":44,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 8628,
+  "matched_code_bytes": 8792,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.084973950,
+  "module_matched_code_percent": 0.086589125,
   "module_total_functions": 47250,
-  "module_matched_functions": 66,
-  "module_matched_functions_percent": 0.139682540,
-  "module_total_units": 126,
-  "module_complete_units": 56,
-  "note": "The canonical whole-module report verifies all sixty-six functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 69,
+  "module_matched_functions_percent": 0.146031746,
+  "module_total_units": 129,
+  "module_complete_units": 59,
+  "note": "The canonical whole-module report verifies all sixty-nine functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

@@ -194,6 +194,24 @@ MATCHING_UNITS = (
         "symbols": {"tsu_update_player_rank": 176},
     },
     {
+        "source": "src/xbox360/tsu_report_event.c",
+        "object": "tsu_report_event.obj",
+        "extra_flags": ["/GS-", "/GR-", "/EHs-c-"],
+        "symbols": {"ts4_script_tsu_report_event": 72},
+    },
+    {
+        "source": "src/xbox360/tsu_profile_service_reset.c",
+        "object": "tsu_profile_service_reset.obj",
+        "extra_flags": ["/GS-", "/GR-", "/EHs-c-"],
+        "symbols": {"ts4_script_tsu_profile_service_reset": 48},
+    },
+    {
+        "source": "src/xbox360/tsu_notify_object.c",
+        "object": "tsu_notify_object.obj",
+        "extra_flags": ["/GS-", "/GR-", "/EHs-c-"],
+        "symbols": {"ts4_script_tsu_notify_object": 44},
+    },
+    {
         "source": "src/xbox360/tsu_declare_match_official.c",
         "object": "tsu_declare_match_official.obj",
         "symbols": {"ts4_script_declare_match_official": 52},

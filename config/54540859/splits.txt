@@ -121,6 +121,18 @@ src/xbox360/tsu_update_player_rank.c:
 	.pdata      start:0x88128140 end:0x88128148
 	.text       start:0x8878BD20 end:0x8878BDD0
 
+src/xbox360/tsu_report_event.c:
+	.pdata      start:0x88128148 end:0x88128150
+	.text       start:0x8878BDD0 end:0x8878BE18
+
+src/xbox360/tsu_profile_service_reset.c:
+	.pdata      start:0x88128150 end:0x88128158
+	.text       start:0x8878BE18 end:0x8878BE48
+
+src/xbox360/tsu_notify_object.c:
+	.pdata      start:0x88128158 end:0x88128160
+	.text       start:0x8878BE48 end:0x8878BE74
+
 src/xbox360/tsu_declare_match_official.c:
 	.pdata      start:0x88127F50 end:0x88127F58
 	.text       start:0x88787718 end:0x8878774C
