@@ -69,6 +69,31 @@ MATCHING_UNITS = (
         "symbols": {"ts4_netdb_destroy_variant_b": 72},
     },
     {
+        "source": "src/xbox360/netdb_release_owned_list.c",
+        "object": "netdb_release_owned_list.obj",
+        "symbols": {"ts4_netdb_release_owned_list": 108},
+    },
+    {
+        "source": "src/xbox360/netdb_allocate_98.c",
+        "object": "netdb_allocate_98.obj",
+        "symbols": {"ts4_netdb_allocate_98": 96},
+    },
+    {
+        "source": "src/xbox360/netdb_allocate_94.c",
+        "object": "netdb_allocate_94.obj",
+        "symbols": {"ts4_netdb_allocate_94": 96},
+    },
+    {
+        "source": "src/xbox360/create_runtime_object.c",
+        "object": "create_runtime_object.obj",
+        "symbols": {"ts4_create_container_factory": 88},
+    },
+    {
+        "source": "src/xbox360/destroy_polymorphic_span.c",
+        "object": "destroy_polymorphic_span.obj",
+        "symbols": {"ts4_destroy_polymorphic_value_range": 96},
+    },
+    {
         "source": "src/xbox360/span28_append.c",
         "object": "span28_append.obj",
         "symbols": {"ts4_span28_append": 88},

@@ -40,6 +40,26 @@
         "status": "Matching",
         "source": "xbox360/netdb_destroy_variant_b.c"
       },
+      "src/xbox360/netdb_release_owned_list.c": {
+        "status": "Matching",
+        "source": "xbox360/netdb_release_owned_list.c"
+      },
+      "src/xbox360/netdb_allocate_98.c": {
+        "status": "Matching",
+        "source": "xbox360/netdb_allocate_98.c"
+      },
+      "src/xbox360/netdb_allocate_94.c": {
+        "status": "Matching",
+        "source": "xbox360/netdb_allocate_94.c"
+      },
+      "src/xbox360/create_runtime_object.c": {
+        "status": "Matching",
+        "source": "xbox360/create_runtime_object.c"
+      },
+      "src/xbox360/destroy_polymorphic_span.c": {
+        "status": "Matching",
+        "source": "xbox360/destroy_polymorphic_span.c"
+      },
       "src/xbox360/span28_append.c": {
         "status": "Matching",
         "source": "xbox360/span28_append.c"

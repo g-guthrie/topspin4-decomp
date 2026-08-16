@@ -31,24 +31,24 @@
   "runtime_tested": false,
   "artifact_committed": false,
   "forced_all_units_probe": {
-    "input_source_objects": 78,
-    "input_matching_functions": 88,
-    "input_matching_code_bytes": 10320,
+    "input_source_objects": 83,
+    "input_matching_functions": 93,
+    "input_matching_code_bytes": 10804,
     "input_object_kind": "source-built base objects",
     "link_flags_added": [
       "/FORCE:UNRESOLVED",
       "/MAP"
     ],
-    "output_size_bytes": 14848,
-    "output_sha256": "bf98ca266eac9795c3f1fe7c25e0d5f19c6fafa785d3c199bef529a88d26d6c9",
-    "output_text_bytes": 10936,
-    "map_matching_public_functions": 88,
+    "output_size_bytes": 15872,
+    "output_sha256": "60ab0ee4e3c8c91b9713650bc55a4060723ca576641875528dcff4308f1f2856",
+    "output_text_bytes": 11424,
+    "map_matching_public_functions": 93,
     "map_additional_static_helpers": 8,
-    "unresolved_external_symbols": 84,
+    "unresolved_external_symbols": 245,
     "is_xex": false,
     "is_runnable": false,
     "runtime_tested": false,
     "artifact_committed": false,
-    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 88 exact public functions plus source helper code and alignment, so total text size is not a matching-progress counter."
+    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 93 exact public functions plus source helper code and alignment, so total text size is not a matching-progress counter."
   }
 }
