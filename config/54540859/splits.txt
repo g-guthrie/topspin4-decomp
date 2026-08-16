@@ -149,6 +149,10 @@ src/xbox360/tsu_disable_object.c:
 	.pdata      start:0x881281B8 end:0x881281C0
 	.text       start:0x8878C7E8 end:0x8878C820
 
+src/xbox360/tsu_cleanup_object.c:
+	.pdata      start:0x881281C8 end:0x881281D0
+	.text       start:0x8878C940 end:0x8878C99C
+
 src/xbox360/tsu_declare_match_official.c:
 	.pdata      start:0x88127F50 end:0x88127F58
 	.text       start:0x88787718 end:0x8878774C

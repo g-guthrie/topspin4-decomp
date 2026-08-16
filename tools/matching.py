@@ -234,6 +234,11 @@ MATCHING_UNITS = (
         "symbols": {"ts4_tsu_disable_object": 56},
     },
     {
+        "source": "src/xbox360/tsu_cleanup_object.c",
+        "object": "tsu_cleanup_object.obj",
+        "symbols": {"ts4_tsu_cleanup_object": 92},
+    },
+    {
         "source": "src/xbox360/tsu_declare_match_official.c",
         "object": "tsu_declare_match_official.obj",
         "symbols": {"ts4_script_declare_match_official": 52},

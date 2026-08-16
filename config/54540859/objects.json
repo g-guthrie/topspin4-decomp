@@ -164,6 +164,10 @@
         "status": "Matching",
         "source": "xbox360/tsu_disable_object.c"
       },
+      "src/xbox360/tsu_cleanup_object.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_cleanup_object.c"
+      },
       "src/xbox360/tsu_declare_match_official.c": {
         "status": "Matching",
         "source": "xbox360/tsu_declare_match_official.c"
