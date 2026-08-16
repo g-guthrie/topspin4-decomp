@@ -224,6 +224,16 @@ MATCHING_UNITS = (
         "symbols": {"ts4_tsu_format_and_assign": 84},
     },
     {
+        "source": "src/xbox360/tsu_enable_object.c",
+        "object": "tsu_enable_object.obj",
+        "symbols": {"ts4_tsu_enable_object": 56},
+    },
+    {
+        "source": "src/xbox360/tsu_disable_object.c",
+        "object": "tsu_disable_object.obj",
+        "symbols": {"ts4_tsu_disable_object": 56},
+    },
+    {
         "source": "src/xbox360/tsu_declare_match_official.c",
         "object": "tsu_declare_match_official.obj",
         "symbols": {"ts4_script_declare_match_official": 52},

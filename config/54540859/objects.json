@@ -156,6 +156,14 @@
         "source": "xbox360/tsu_format_and_assign.c",
         "cflags": "gs_off_no_rtti_no_eh"
       },
+      "src/xbox360/tsu_enable_object.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_enable_object.c"
+      },
+      "src/xbox360/tsu_disable_object.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_disable_object.c"
+      },
       "src/xbox360/tsu_declare_match_official.c": {
         "status": "Matching",
         "source": "xbox360/tsu_declare_match_official.c"
