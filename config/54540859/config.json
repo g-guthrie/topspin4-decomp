@@ -21,6 +21,17 @@
         "/Oi",
         "/GS-"
       ]
+    },
+    "gs_off_no_rtti_no_eh": {
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O2",
+        "/Oi",
+        "/GS-",
+        "/GR-",
+        "/EHs-c-"
+      ]
     }
   }
 }

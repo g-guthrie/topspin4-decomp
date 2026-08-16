@@ -37,6 +37,10 @@ class CanonicalBuildTests(unittest.TestCase):
             config["cflags"]["gs_off"]["flags"],
             ["/nologo", "/c", "/O2", "/Oi", "/GS-"],
         )
+        self.assertEqual(
+            config["cflags"]["gs_off_no_rtti_no_eh"]["flags"],
+            ["/nologo", "/c", "/O2", "/Oi", "/GS-", "/GR-", "/EHs-c-"],
+        )
 
         objects = json.loads((VERSION_DIR / "objects.json").read_text())
         library = objects["swing"]
@@ -88,11 +92,11 @@ class CanonicalBuildTests(unittest.TestCase):
         self.assertFalse(status["artifact_committed"])
 
         forced = status["forced_all_units_probe"]
-        self.assertEqual(forced["input_source_objects"], 44)
-        self.assertEqual(forced["input_matching_functions"], 54)
-        self.assertEqual(forced["map_matching_public_functions"], 54)
-        self.assertEqual(forced["map_additional_static_helpers"], 5)
-        self.assertEqual(forced["unresolved_external_symbols"], 50)
+        self.assertEqual(forced["input_source_objects"], 52)
+        self.assertEqual(forced["input_matching_functions"], 62)
+        self.assertEqual(forced["map_matching_public_functions"], 62)
+        self.assertEqual(forced["map_additional_static_helpers"], 8)
+        self.assertEqual(forced["unresolved_external_symbols"], 57)
         self.assertFalse(forced["is_xex"])
         self.assertFalse(forced["is_runnable"])
 

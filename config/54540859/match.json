@@ -14,6 +14,27 @@
     ],
     "src/xbox360/tsu_debug_ind_dec_lobby_timer.c": [
       "/GS-"
+    ],
+    "src/xbox360/tsu_init_friends_leaderboard.c": [
+      "/GS-",
+      "/GR-",
+      "/EHs-c-"
+    ],
+    "src/xbox360/tsu_read_stats_around_user.c": [
+      "/GS-",
+      "/GR-",
+      "/EHs-c-"
+    ],
+    "src/xbox360/tsu_read_stats_by_rank.c": [
+      "/GS-",
+      "/GR-",
+      "/EHs-c-"
+    ],
+    "src/xbox360/tsu_update_created_player_stats.c": [
+      "/GS-"
+    ],
+    "src/xbox360/tsu_update_player_rank.c": [
+      "/GS-"
     ]
   },
   "jeff_version": "0.3.5 with patches/jeff-v0.3.5-topspin4.patch",
@@ -452,15 +473,79 @@
       "pdata_range": "0x881286E8-0x881286F0",
       "matched_code_bytes": 56,
       "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_get_profile_summaries.c",
+      "symbol": "tsu_get_profile_summaries",
+      "text_range": "0x88783870-0x8878395C",
+      "pdata_range": "0x88127D98-0x88127DA0",
+      "matched_code_bytes": 236,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_init_friends_leaderboard.c",
+      "symbol": "tsu_init_friends_leaderboard",
+      "text_range": "0x8878B600-0x8878B820",
+      "pdata_range": "0x88128120-0x88128128",
+      "matched_code_bytes": 544,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_read_stats_around_user.c",
+      "symbol": "tsu_read_stats_around_user",
+      "text_range": "0x8878B820-0x8878BAA0",
+      "pdata_range": "0x88128128-0x88128130",
+      "matched_code_bytes": 640,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_read_stats_by_rank.c",
+      "symbol": "tsu_read_stats_by_rank",
+      "text_range": "0x8878BAA0-0x8878BCE8",
+      "pdata_range": "0x88128130-0x88128138",
+      "matched_code_bytes": 584,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_update_created_player_stats.c",
+      "symbol": "tsu_update_created_player_stats",
+      "text_range": "0x8878BCE8-0x8878BD1C",
+      "pdata_range": "0x88128138-0x88128140",
+      "matched_code_bytes": 52,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_update_player_rank.c",
+      "symbol": "tsu_update_player_rank",
+      "text_range": "0x8878BD20-0x8878BDD0",
+      "pdata_range": "0x88128140-0x88128148",
+      "matched_code_bytes": 176,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_write_profile_summaries.c",
+      "symbol": "tsu_write_profile_summaries",
+      "text_range": "0x8879BC28-0x8879BCC8",
+      "pdata_range": "0x88128800-0x88128808",
+      "matched_code_bytes": 160,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_load_profile_summaries.c",
+      "symbol": "tsu_load_profile_summaries",
+      "text_range": "0x8879BCC8-0x8879BD68",
+      "pdata_range": "0x88128808-0x88128810",
+      "matched_code_bytes": 160,
+      "function_match_percent": 100.0
     }
   ],
-  "matched_code_bytes": 5372,
+  "matched_code_bytes": 7924,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.052906822,
+  "module_matched_code_percent": 0.078040517,
   "module_total_functions": 47250,
-  "module_matched_functions": 54,
-  "module_matched_functions_percent": 0.114285714,
-  "module_total_units": 105,
-  "module_complete_units": 44,
-  "note": "The canonical whole-module report verifies all fifty-four functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 62,
+  "module_matched_functions_percent": 0.131216931,
+  "module_total_units": 118,
+  "module_complete_units": 52,
+  "note": "The canonical whole-module report verifies all sixty-two functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

@@ -159,6 +159,41 @@ MATCHING_UNITS = (
         "symbols": {"tsu_fill_friends_leaderboard": 260},
     },
     {
+        "source": "src/xbox360/tsu_get_profile_summaries.c",
+        "object": "tsu_get_profile_summaries.obj",
+        "symbols": {"tsu_get_profile_summaries": 236},
+    },
+    {
+        "source": "src/xbox360/tsu_init_friends_leaderboard.c",
+        "object": "tsu_init_friends_leaderboard.obj",
+        "extra_flags": ["/GS-", "/GR-", "/EHs-c-"],
+        "symbols": {"tsu_init_friends_leaderboard": 544},
+    },
+    {
+        "source": "src/xbox360/tsu_read_stats_around_user.c",
+        "object": "tsu_read_stats_around_user.obj",
+        "extra_flags": ["/GS-", "/GR-", "/EHs-c-"],
+        "symbols": {"tsu_read_stats_around_user": 640},
+    },
+    {
+        "source": "src/xbox360/tsu_read_stats_by_rank.c",
+        "object": "tsu_read_stats_by_rank.obj",
+        "extra_flags": ["/GS-", "/GR-", "/EHs-c-"],
+        "symbols": {"tsu_read_stats_by_rank": 584},
+    },
+    {
+        "source": "src/xbox360/tsu_update_created_player_stats.c",
+        "object": "tsu_update_created_player_stats.obj",
+        "extra_flags": ["/GS-"],
+        "symbols": {"tsu_update_created_player_stats": 52},
+    },
+    {
+        "source": "src/xbox360/tsu_update_player_rank.c",
+        "object": "tsu_update_player_rank.obj",
+        "extra_flags": ["/GS-"],
+        "symbols": {"tsu_update_player_rank": 176},
+    },
+    {
         "source": "src/xbox360/tsu_declare_match_official.c",
         "object": "tsu_declare_match_official.obj",
         "symbols": {"ts4_script_declare_match_official": 52},
@@ -258,6 +293,16 @@ MATCHING_UNITS = (
         "source": "src/xbox360/tsu_save_profile.c",
         "object": "tsu_save_profile.obj",
         "symbols": {"tsu_save_profile": 208},
+    },
+    {
+        "source": "src/xbox360/tsu_write_profile_summaries.c",
+        "object": "tsu_write_profile_summaries.obj",
+        "symbols": {"tsu_write_profile_summaries": 160},
+    },
+    {
+        "source": "src/xbox360/tsu_load_profile_summaries.c",
+        "object": "tsu_load_profile_summaries.obj",
+        "symbols": {"tsu_load_profile_summaries": 160},
     },
     {
         "source": "src/xbox360/title_patch.c",

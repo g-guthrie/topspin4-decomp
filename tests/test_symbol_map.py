@@ -12,7 +12,7 @@ class SymbolMapTests(unittest.TestCase):
     def test_reviewed_symbols_are_unique_and_well_formed(self):
         with (ROOT / "config" / "symbols.csv").open(newline="") as handle:
             rows = list(csv.DictReader(handle))
-        self.assertEqual(len(rows), 81)
+        self.assertEqual(len(rows), 89)
         identities = {(row["module"], row["address"]) for row in rows}
         self.assertEqual(len(identities), len(rows))
         for row in rows:

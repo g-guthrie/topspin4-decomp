@@ -97,6 +97,30 @@ src/xbox360/tsu_fill_friends_leaderboard.c:
 	.pdata      start:0x88127D88 end:0x88127D90
 	.text       start:0x88783620 end:0x88783724
 
+src/xbox360/tsu_get_profile_summaries.c:
+	.pdata      start:0x88127D98 end:0x88127DA0
+	.text       start:0x88783870 end:0x8878395C
+
+src/xbox360/tsu_init_friends_leaderboard.c:
+	.pdata      start:0x88128120 end:0x88128128
+	.text       start:0x8878B600 end:0x8878B820
+
+src/xbox360/tsu_read_stats_around_user.c:
+	.pdata      start:0x88128128 end:0x88128130
+	.text       start:0x8878B820 end:0x8878BAA0
+
+src/xbox360/tsu_read_stats_by_rank.c:
+	.pdata      start:0x88128130 end:0x88128138
+	.text       start:0x8878BAA0 end:0x8878BCE8
+
+src/xbox360/tsu_update_created_player_stats.c:
+	.pdata      start:0x88128138 end:0x88128140
+	.text       start:0x8878BCE8 end:0x8878BD1C
+
+src/xbox360/tsu_update_player_rank.c:
+	.pdata      start:0x88128140 end:0x88128148
+	.text       start:0x8878BD20 end:0x8878BDD0
+
 src/xbox360/tsu_declare_match_official.c:
 	.pdata      start:0x88127F50 end:0x88127F58
 	.text       start:0x88787718 end:0x8878774C
@@ -136,6 +160,14 @@ src/xbox360/tsu_update_profile.c:
 src/xbox360/tsu_save_profile.c:
 	.pdata      start:0x881287F8 end:0x88128800
 	.text       start:0x8879BB58 end:0x8879BC28
+
+src/xbox360/tsu_write_profile_summaries.c:
+	.pdata      start:0x88128800 end:0x88128808
+	.text       start:0x8879BC28 end:0x8879BCC8
+
+src/xbox360/tsu_load_profile_summaries.c:
+	.pdata      start:0x88128808 end:0x88128810
+	.text       start:0x8879BCC8 end:0x8879BD68
 
 src/xbox360/title_server_login_user_only.c:
 	.pdata      start:0x881283C0 end:0x881283C8
