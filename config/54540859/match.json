@@ -8,6 +8,11 @@
     "/O2",
     "/Oi"
   ],
+  "compiler_flag_exceptions": {
+    "src/xbox360/tsu_per_round_stats.c": [
+      "/GS-"
+    ]
+  },
   "jeff_version": "0.3.5 with patches/jeff-v0.3.5-topspin4.patch",
   "jeff_patched_sha256_macos_arm64": "4eeef8cbcb5d833726ef3dce15da4993f3142a73ba295d099515f16ce3793049",
   "objdiff_version": "3.7.1",
@@ -150,6 +155,102 @@
       "function_match_percent": 100.0
     },
     {
+      "source": "src/xbox360/tsu_per_round_stats.c",
+      "symbol": "tsu_replace_search_results_with_per_round_stats",
+      "text_range": "0x8877F818-0x8877F96C",
+      "pdata_range": "0x88127B30-0x88127B38",
+      "matched_code_bytes": 340,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_copy_local_stat_to_netdb.c",
+      "symbol": "ts4_script_copy_local_stat_to_netdb",
+      "text_range": "0x8877F970-0x8877FA98",
+      "pdata_range": "0x88127B38-0x88127B40",
+      "matched_code_bytes": 296,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_refresh_tournament_sessions.c",
+      "symbol": "tsu_refresh_tournament_sessions",
+      "text_range": "0x8877FA98-0x8877FACC",
+      "pdata_range": "0x88127B40-0x88127B48",
+      "matched_code_bytes": 52,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_season_time.c",
+      "symbol": "ts4_script_has_time_to_enter_lobby_before_season_end",
+      "text_range": "0x887835A8-0x887835C4",
+      "pdata_range": null,
+      "matched_code_bytes": 28,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_season_time.c",
+      "symbol": "ts4_script_has_time_before_season_end",
+      "text_range": "0x887835C8-0x887835E4",
+      "pdata_range": null,
+      "matched_code_bytes": 28,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_reset_season_rank_history.c",
+      "symbol": "ts4_script_reset_season_rank_history",
+      "text_range": "0x887835E8-0x88783620",
+      "pdata_range": "0x88127D80-0x88127D88",
+      "matched_code_bytes": 56,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/competition_game_ask_for_character.c",
+      "symbol": "competition_game_ask_for_character",
+      "text_range": "0x88787638-0x887876DC",
+      "pdata_range": "0x88127F40-0x88127F48",
+      "matched_code_bytes": 164,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_declare_match_official.c",
+      "symbol": "ts4_script_declare_match_official",
+      "text_range": "0x88787718-0x8878774C",
+      "pdata_range": "0x88127F50-0x88127F58",
+      "matched_code_bytes": 52,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_debug_remove_fake_player.c",
+      "symbol": "tsu_debug_remove_fake_player_from_lobby",
+      "text_range": "0x88783AF8-0x88783B9C",
+      "pdata_range": "0x88127DB0-0x88127DB8",
+      "matched_code_bytes": 164,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_debug_add_fake_player.c",
+      "symbol": "tsu_debug_add_fake_player_to_lobby",
+      "text_range": "0x88783BA0-0x88783BD8",
+      "pdata_range": "0x88127DB8-0x88127DC0",
+      "matched_code_bytes": 56,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_debug_end_season.c",
+      "symbol": "tsu_debug_end_season",
+      "text_range": "0x8877FD88-0x8877FE28",
+      "pdata_range": "0x88127B58-0x88127B60",
+      "matched_code_bytes": 160,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_debug_send_end_season.c",
+      "symbol": "tsu_debug_send_end_season_to_all",
+      "text_range": "0x88787E10-0x88787EB0",
+      "pdata_range": "0x88127F80-0x88127F88",
+      "matched_code_bytes": 160,
+      "function_match_percent": 100.0
+    },
+    {
       "source": "src/xbox360/is_local_user_a_guest.c",
       "symbol": "ts4_script_is_local_user_a_guest",
       "text_range": "0x8877FCD0-0x8877FD84",
@@ -203,6 +304,30 @@
       "text_range": "0x88792820-0x88792888",
       "pdata_range": "0x881283D0-0x881283D8",
       "matched_code_bytes": 104,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_unload_profile.c",
+      "symbol": "tsu_unload_profile",
+      "text_range": "0x88792888-0x887928A4",
+      "pdata_range": null,
+      "matched_code_bytes": 28,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_load_profile.c",
+      "symbol": "tsu_load_profile",
+      "text_range": "0x8879BAA8-0x8879BB58",
+      "pdata_range": "0x881287F0-0x881287F8",
+      "matched_code_bytes": 176,
+      "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_update_profile.c",
+      "symbol": "tsu_update_profile",
+      "text_range": "0x8879B9F8-0x8879BAA8",
+      "pdata_range": "0x881287E8-0x881287F0",
+      "matched_code_bytes": 176,
       "function_match_percent": 100.0
     },
     {
@@ -284,15 +409,23 @@
       "pdata_range": "0x88128550-0x88128558",
       "matched_code_bytes": 36,
       "function_match_percent": 100.0
+    },
+    {
+      "source": "src/xbox360/tsu_forfeit_in_lobby.c",
+      "symbol": "tsu_forfeit_in_lobby",
+      "text_range": "0x88798C60-0x88798C98",
+      "pdata_range": "0x881286E8-0x881286F0",
+      "matched_code_bytes": 56,
+      "function_match_percent": 100.0
     }
   ],
-  "matched_code_bytes": 2540,
+  "matched_code_bytes": 4532,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.025015512,
+  "module_matched_code_percent": 0.044633976,
   "module_total_functions": 47280,
-  "module_matched_functions": 34,
-  "module_matched_functions_percent": 0.07191201,
-  "module_total_units": 64,
-  "module_complete_units": 25,
-  "note": "The canonical whole-module report verifies all thirty-four functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 50,
+  "module_matched_functions_percent": 0.105752961,
+  "module_total_units": 99,
+  "module_complete_units": 40,
+  "note": "The canonical whole-module report verifies all fifty functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

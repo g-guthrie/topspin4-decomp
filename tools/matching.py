@@ -52,6 +52,13 @@ MATCHING_UNITS = (
         "symbols": {"ts4_script_competition_game_reset": 8},
     },
     {
+        "source": "src/xbox360/competition_game_ask_for_character.c",
+        "object": "competition_game_ask_for_character.obj",
+        "symbols": {
+            "competition_game_ask_for_character": 164
+        },
+    },
+    {
         "source": "src/xbox360/reset_online_config.c",
         "object": "reset_online_config.obj",
         "symbols": {"ts4_script_reset_online_config": 68},
@@ -77,6 +84,68 @@ MATCHING_UNITS = (
         "symbols": {
             "ts4_script_tsu_replace_search_results_with_session_stats": 188
         },
+    },
+    {
+        "source": "src/xbox360/tsu_copy_local_stat_to_netdb.c",
+        "object": "tsu_copy_local_stat_to_netdb.obj",
+        "symbols": {"ts4_script_copy_local_stat_to_netdb": 296},
+    },
+    {
+        "source": "src/xbox360/tsu_refresh_tournament_sessions.c",
+        "object": "tsu_refresh_tournament_sessions.obj",
+        "symbols": {"tsu_refresh_tournament_sessions": 52},
+    },
+    {
+        "source": "src/xbox360/tsu_per_round_stats.c",
+        "object": "tsu_per_round_stats.obj",
+        "extra_flags": ["/GS-"],
+        "symbols": {
+            "tsu_replace_search_results_with_per_round_stats": 340
+        },
+    },
+    {
+        "source": "src/xbox360/tsu_debug_add_fake_player.c",
+        "object": "tsu_debug_add_fake_player.obj",
+        "symbols": {
+            "tsu_debug_add_fake_player_to_lobby": 56
+        },
+    },
+    {
+        "source": "src/xbox360/tsu_debug_remove_fake_player.c",
+        "object": "tsu_debug_remove_fake_player.obj",
+        "symbols": {
+            "tsu_debug_remove_fake_player_from_lobby": 164
+        },
+    },
+    {
+        "source": "src/xbox360/tsu_debug_end_season.c",
+        "object": "tsu_debug_end_season.obj",
+        "symbols": {"tsu_debug_end_season": 160},
+    },
+    {
+        "source": "src/xbox360/tsu_debug_send_end_season.c",
+        "object": "tsu_debug_send_end_season.obj",
+        "symbols": {
+            "tsu_debug_send_end_season_to_all": 160
+        },
+    },
+    {
+        "source": "src/xbox360/tsu_season_time.c",
+        "object": "tsu_season_time.obj",
+        "symbols": {
+            "ts4_script_has_time_to_enter_lobby_before_season_end": 28,
+            "ts4_script_has_time_before_season_end": 28,
+        },
+    },
+    {
+        "source": "src/xbox360/tsu_reset_season_rank_history.c",
+        "object": "tsu_reset_season_rank_history.obj",
+        "symbols": {"ts4_script_reset_season_rank_history": 56},
+    },
+    {
+        "source": "src/xbox360/tsu_declare_match_official.c",
+        "object": "tsu_declare_match_official.obj",
+        "symbols": {"ts4_script_declare_match_official": 52},
     },
     {
         "source": "src/xbox360/is_local_user_a_guest.c",
@@ -155,9 +224,29 @@ MATCHING_UNITS = (
         "symbols": {"ts4_script_title_server_logout": 104},
     },
     {
+        "source": "src/xbox360/tsu_unload_profile.c",
+        "object": "tsu_unload_profile.obj",
+        "symbols": {"tsu_unload_profile": 28},
+    },
+    {
+        "source": "src/xbox360/tsu_load_profile.c",
+        "object": "tsu_load_profile.obj",
+        "symbols": {"tsu_load_profile": 176},
+    },
+    {
+        "source": "src/xbox360/tsu_update_profile.c",
+        "object": "tsu_update_profile.obj",
+        "symbols": {"tsu_update_profile": 176},
+    },
+    {
         "source": "src/xbox360/title_patch.c",
         "object": "title_patch.obj",
         "symbols": {"ts4_script_title_server_get_patch": 56},
+    },
+    {
+        "source": "src/xbox360/tsu_forfeit_in_lobby.c",
+        "object": "tsu_forfeit_in_lobby.obj",
+        "symbols": {"tsu_forfeit_in_lobby": 56},
     },
 )
 
@@ -325,6 +414,7 @@ def main() -> int:
                 "/c",
                 "/O2",
                 "/Oi",
+                *unit.get("extra_flags", []),
                 output_arg,
                 source,
             ]

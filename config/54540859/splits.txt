@@ -30,6 +30,10 @@ src/xbox360/session_policy_stubs.c:
 src/xbox360/competition_game_reset.c:
 	.text       start:0x88779960 end:0x88779968
 
+src/xbox360/competition_game_ask_for_character.c:
+	.pdata      start:0x88127F40 end:0x88127F48
+	.text       start:0x88787638 end:0x887876DC
+
 src/xbox360/reset_online_config.c:
 	.text       start:0x88779968 end:0x887799AC
 
@@ -45,6 +49,45 @@ src/xbox360/is_remote.c:
 src/xbox360/tsu_session_stats.c:
 	.pdata      start:0x88127B28 end:0x88127B30
 	.text       start:0x8877F758 end:0x8877F814
+
+src/xbox360/tsu_copy_local_stat_to_netdb.c:
+	.pdata      start:0x88127B38 end:0x88127B40
+	.text       start:0x8877F970 end:0x8877FA98
+
+src/xbox360/tsu_refresh_tournament_sessions.c:
+	.pdata      start:0x88127B40 end:0x88127B48
+	.text       start:0x8877FA98 end:0x8877FACC
+
+src/xbox360/tsu_per_round_stats.c:
+	.pdata      start:0x88127B30 end:0x88127B38
+	.text       start:0x8877F818 end:0x8877F96C
+
+src/xbox360/tsu_debug_add_fake_player.c:
+	.pdata      start:0x88127DB8 end:0x88127DC0
+	.text       start:0x88783BA0 end:0x88783BD8
+
+src/xbox360/tsu_debug_remove_fake_player.c:
+	.pdata      start:0x88127DB0 end:0x88127DB8
+	.text       start:0x88783AF8 end:0x88783B9C
+
+src/xbox360/tsu_debug_end_season.c:
+	.pdata      start:0x88127B58 end:0x88127B60
+	.text       start:0x8877FD88 end:0x8877FE28
+
+src/xbox360/tsu_debug_send_end_season.c:
+	.pdata      start:0x88127F80 end:0x88127F88
+	.text       start:0x88787E10 end:0x88787EB0
+
+src/xbox360/tsu_season_time.c:
+	.text       start:0x887835A8 end:0x887835E4
+
+src/xbox360/tsu_reset_season_rank_history.c:
+	.pdata      start:0x88127D80 end:0x88127D88
+	.text       start:0x887835E8 end:0x88783620
+
+src/xbox360/tsu_declare_match_official.c:
+	.pdata      start:0x88127F50 end:0x88127F58
+	.text       start:0x88787718 end:0x8878774C
 
 src/xbox360/is_local_user_a_guest.c:
 	.text       start:0x8877FCD0 end:0x8877FD84
@@ -66,6 +109,17 @@ src/xbox360/set_no_disco.c:
 src/xbox360/title_server_logout.c:
 	.pdata      start:0x881283D0 end:0x881283D8
 	.text       start:0x88792820 end:0x88792888
+
+src/xbox360/tsu_unload_profile.c:
+	.text       start:0x88792888 end:0x887928A4
+
+src/xbox360/tsu_load_profile.c:
+	.pdata      start:0x881287F0 end:0x881287F8
+	.text       start:0x8879BAA8 end:0x8879BB58
+
+src/xbox360/tsu_update_profile.c:
+	.pdata      start:0x881287E8 end:0x881287F0
+	.text       start:0x8879B9F8 end:0x8879BAA8
 
 src/xbox360/title_server_login_user_only.c:
 	.pdata      start:0x881283C0 end:0x881283C8
@@ -102,3 +156,7 @@ src/xbox360/minigame_hide_tracksides.c:
 src/xbox360/king_of_court_prepare.c:
 	.pdata      start:0x88128550 end:0x88128558
 	.text       start:0x887955A0 end:0x887955C4
+
+src/xbox360/tsu_forfeit_in_lobby.c:
+	.pdata      start:0x881286E8 end:0x881286F0
+	.text       start:0x88798C60 end:0x88798C98

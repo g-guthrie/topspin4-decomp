@@ -2,6 +2,13 @@
 
 typedef int ts4_script_s32;
 
+#if defined(_MSC_VER)
+typedef ts4_script_u32 ts4_memcpy_size;
+#else
+#include <stddef.h>
+typedef size_t ts4_memcpy_size;
+#endif
+
 struct TS4SessionStats {
     ts4_script_u8 reserved[0x84];
     ts4_script_u32 stat_a;
@@ -29,10 +36,13 @@ struct TS4StatsOnlineContext {
 extern struct TS4StatsOnlineContext *g_ts4_session_context;
 
 void ts4_session_stats_init(struct TS4SessionStats *stats);
-void *ts4_memcpy(
+#if defined(_MSC_VER)
+#pragma function(memcpy)
+#endif
+void *memcpy(
     void *destination,
     const void *source,
-    ts4_script_u32 size
+    ts4_memcpy_size size
 );
 
 /*
@@ -69,7 +79,7 @@ ts4_script_u32 ts4_script_tsu_replace_search_results_with_session_stats(void)
         struct TS4SessionStats *first = (struct TS4SessionStats *)(
             (ts4_script_u8 *)results + results->data_offset
         );
-        ts4_memcpy(first, &combined, sizeof(combined));
+        memcpy(first, &combined, sizeof(combined));
         ++results->length;
     }
 

@@ -72,6 +72,13 @@ class ProgressTests(unittest.TestCase):
         self.assertIn("src/xbox360/is_session_started.c:", splits)
         self.assertIn("src/xbox360/is_remote.c:", splits)
         self.assertIn("src/xbox360/tsu_session_stats.c:", splits)
+        self.assertIn("src/xbox360/tsu_per_round_stats.c:", splits)
+        self.assertIn("src/xbox360/tsu_copy_local_stat_to_netdb.c:", splits)
+        self.assertIn("src/xbox360/tsu_refresh_tournament_sessions.c:", splits)
+        self.assertIn("src/xbox360/tsu_season_time.c:", splits)
+        self.assertIn("src/xbox360/tsu_load_profile.c:", splits)
+        self.assertIn("src/xbox360/tsu_update_profile.c:", splits)
+        self.assertIn("src/xbox360/tsu_unload_profile.c:", splits)
         self.assertIn("src/xbox360/is_local_user_a_guest.c:", splits)
         self.assertIn("src/xbox360/is_lobby_full.c:", splits)
         self.assertIn("src/xbox360/is_host.c:", splits)
@@ -87,6 +94,8 @@ class ProgressTests(unittest.TestCase):
         self.assertIn("start:0x8877BFD8 end:0x8877BFF8", splits)
         self.assertIn("start:0x8877BFF8 end:0x8877C0A0", splits)
         self.assertIn("start:0x8877F758 end:0x8877F814", splits)
+        self.assertIn("start:0x8877F818 end:0x8877F96C", splits)
+        self.assertIn("start:0x8877F970 end:0x8877FA98", splits)
         self.assertIn("start:0x8877FCD0 end:0x8877FD84", splits)
         self.assertIn("start:0x887801E0 end:0x88780200", splits)
         self.assertIn("start:0x88780200 end:0x88780224", splits)
@@ -123,6 +132,10 @@ class ProgressTests(unittest.TestCase):
         self.assertIn("ts4_script_is_remote", symbols)
         self.assertIn(
             "ts4_script_tsu_replace_search_results_with_session_stats",
+            symbols,
+        )
+        self.assertIn(
+            "tsu_replace_search_results_with_per_round_stats",
             symbols,
         )
         self.assertIn("ts4_script_is_local_user_a_guest", symbols)

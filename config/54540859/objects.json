@@ -24,6 +24,10 @@
         "status": "Matching",
         "source": "xbox360/competition_game_reset.c"
       },
+      "src/xbox360/competition_game_ask_for_character.c": {
+        "status": "Matching",
+        "source": "xbox360/competition_game_ask_for_character.c"
+      },
       "src/xbox360/reset_online_config.c": {
         "status": "Matching",
         "source": "xbox360/reset_online_config.c"
@@ -48,6 +52,47 @@
         "status": "Matching",
         "source": "xbox360/tsu_session_stats.c"
       },
+      "src/xbox360/tsu_copy_local_stat_to_netdb.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_copy_local_stat_to_netdb.c"
+      },
+      "src/xbox360/tsu_refresh_tournament_sessions.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_refresh_tournament_sessions.c"
+      },
+      "src/xbox360/tsu_per_round_stats.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_per_round_stats.c",
+        "cflags": "gs_off"
+      },
+      "src/xbox360/tsu_debug_add_fake_player.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_debug_add_fake_player.c"
+      },
+      "src/xbox360/tsu_debug_remove_fake_player.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_debug_remove_fake_player.c"
+      },
+      "src/xbox360/tsu_debug_end_season.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_debug_end_season.c"
+      },
+      "src/xbox360/tsu_debug_send_end_season.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_debug_send_end_season.c"
+      },
+      "src/xbox360/tsu_season_time.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_season_time.c"
+      },
+      "src/xbox360/tsu_reset_season_rank_history.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_reset_season_rank_history.c"
+      },
+      "src/xbox360/tsu_declare_match_official.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_declare_match_official.c"
+      },
       "src/xbox360/is_lobby_full.c": {
         "status": "Matching",
         "source": "xbox360/is_lobby_full.c"
@@ -67,6 +112,18 @@
       "src/xbox360/title_server_logout.c": {
         "status": "Matching",
         "source": "xbox360/title_server_logout.c"
+      },
+      "src/xbox360/tsu_unload_profile.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_unload_profile.c"
+      },
+      "src/xbox360/tsu_load_profile.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_load_profile.c"
+      },
+      "src/xbox360/tsu_update_profile.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_update_profile.c"
       },
       "src/xbox360/title_server_login_user_only.c": {
         "status": "Matching",
@@ -103,6 +160,10 @@
       "src/xbox360/king_of_court_prepare.c": {
         "status": "Matching",
         "source": "xbox360/king_of_court_prepare.c"
+      },
+      "src/xbox360/tsu_forfeit_in_lobby.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_forfeit_in_lobby.c"
       }
     }
   }
