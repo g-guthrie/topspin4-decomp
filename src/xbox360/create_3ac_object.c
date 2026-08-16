@@ -1,5 +1,5 @@
 typedef unsigned int u32;
-#if defined(__clang__)
+#if defined(__clang__) || defined(__GNUC__)
 typedef unsigned long uintptr_t;
 #else
 typedef unsigned int uintptr_t;
