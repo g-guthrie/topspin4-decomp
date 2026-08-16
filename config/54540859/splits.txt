@@ -153,6 +153,14 @@ src/xbox360/tsu_load_profile.c:
 	.pdata      start:0x881287F0 end:0x881287F8
 	.text       start:0x8879BAA8 end:0x8879BB58
 
+src/xbox360/pro_challenge_save_profile.c:
+	.pdata      start:0x881287D8 end:0x881287E0
+	.text       start:0x8879B898 end:0x8879B944
+
+src/xbox360/pro_challenge_load_profile.c:
+	.pdata      start:0x881287E0 end:0x881287E8
+	.text       start:0x8879B948 end:0x8879B9F4
+
 src/xbox360/tsu_update_profile.c:
 	.pdata      start:0x881287E8 end:0x881287F0
 	.text       start:0x8879B9F8 end:0x8879BAA8
@@ -168,6 +176,14 @@ src/xbox360/tsu_write_profile_summaries.c:
 src/xbox360/tsu_load_profile_summaries.c:
 	.pdata      start:0x88128808 end:0x88128810
 	.text       start:0x8879BCC8 end:0x8879BD68
+
+src/xbox360/profile_internal_bd68.c:
+	.pdata      start:0x88128810 end:0x88128818
+	.text       start:0x8879BD68 end:0x8879BE08
+
+src/xbox360/profile_internal_bff8.c:
+	.pdata      start:0x88128828 end:0x88128830
+	.text       start:0x8879BFF8 end:0x8879C0C0
 
 src/xbox360/title_server_login_user_only.c:
 	.pdata      start:0x881283C0 end:0x881283C8

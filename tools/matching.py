@@ -285,6 +285,16 @@ MATCHING_UNITS = (
         "symbols": {"tsu_load_profile": 176},
     },
     {
+        "source": "src/xbox360/pro_challenge_save_profile.c",
+        "object": "pro_challenge_save_profile.obj",
+        "symbols": {"ts4_script_pro_challenge_save_profile": 172},
+    },
+    {
+        "source": "src/xbox360/pro_challenge_load_profile.c",
+        "object": "pro_challenge_load_profile.obj",
+        "symbols": {"ts4_script_pro_challenge_load_profile": 172},
+    },
+    {
         "source": "src/xbox360/tsu_update_profile.c",
         "object": "tsu_update_profile.obj",
         "symbols": {"tsu_update_profile": 176},
@@ -303,6 +313,16 @@ MATCHING_UNITS = (
         "source": "src/xbox360/tsu_load_profile_summaries.c",
         "object": "tsu_load_profile_summaries.obj",
         "symbols": {"tsu_load_profile_summaries": 160},
+    },
+    {
+        "source": "src/xbox360/profile_internal_bd68.c",
+        "object": "profile_internal_bd68.obj",
+        "symbols": {"ts4_script_profile_internal_lookup": 160},
+    },
+    {
+        "source": "src/xbox360/profile_internal_bff8.c",
+        "object": "profile_internal_bff8.obj",
+        "symbols": {"ts4_script_profile_internal_activate": 200},
     },
     {
         "source": "src/xbox360/title_patch.c",
