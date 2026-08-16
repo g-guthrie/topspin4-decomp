@@ -58,6 +58,10 @@ src/xbox360/tsu_refresh_tournament_sessions.c:
 	.pdata      start:0x88127B40 end:0x88127B48
 	.text       start:0x8877FA98 end:0x8877FACC
 
+src/xbox360/tsu_reset_friends_leaderboard.c:
+	.pdata      start:0x88127B48 end:0x88127B50
+	.text       start:0x8877FBC0 end:0x8877FC10
+
 src/xbox360/tsu_per_round_stats.c:
 	.pdata      start:0x88127B30 end:0x88127B38
 	.text       start:0x8877F818 end:0x8877F96C
@@ -78,12 +82,20 @@ src/xbox360/tsu_debug_send_end_season.c:
 	.pdata      start:0x88127F80 end:0x88127F88
 	.text       start:0x88787E10 end:0x88787EB0
 
+src/xbox360/tsu_debug_ind_dec_lobby_timer.c:
+	.pdata      start:0x88127F78 end:0x88127F80
+	.text       start:0x88787CE8 end:0x88787E0C
+
 src/xbox360/tsu_season_time.c:
 	.text       start:0x887835A8 end:0x887835E4
 
 src/xbox360/tsu_reset_season_rank_history.c:
 	.pdata      start:0x88127D80 end:0x88127D88
 	.text       start:0x887835E8 end:0x88783620
+
+src/xbox360/tsu_fill_friends_leaderboard.c:
+	.pdata      start:0x88127D88 end:0x88127D90
+	.text       start:0x88783620 end:0x88783724
 
 src/xbox360/tsu_declare_match_official.c:
 	.pdata      start:0x88127F50 end:0x88127F58
@@ -120,6 +132,10 @@ src/xbox360/tsu_load_profile.c:
 src/xbox360/tsu_update_profile.c:
 	.pdata      start:0x881287E8 end:0x881287F0
 	.text       start:0x8879B9F8 end:0x8879BAA8
+
+src/xbox360/tsu_save_profile.c:
+	.pdata      start:0x881287F8 end:0x88128800
+	.text       start:0x8879BB58 end:0x8879BC28
 
 src/xbox360/title_server_login_user_only.c:
 	.pdata      start:0x881283C0 end:0x881283C8

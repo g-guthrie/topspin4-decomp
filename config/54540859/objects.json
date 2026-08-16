@@ -60,6 +60,10 @@
         "status": "Matching",
         "source": "xbox360/tsu_refresh_tournament_sessions.c"
       },
+      "src/xbox360/tsu_reset_friends_leaderboard.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_reset_friends_leaderboard.c"
+      },
       "src/xbox360/tsu_per_round_stats.c": {
         "status": "Matching",
         "source": "xbox360/tsu_per_round_stats.c",
@@ -81,6 +85,11 @@
         "status": "Matching",
         "source": "xbox360/tsu_debug_send_end_season.c"
       },
+      "src/xbox360/tsu_debug_ind_dec_lobby_timer.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_debug_ind_dec_lobby_timer.c",
+        "cflags": "gs_off"
+      },
       "src/xbox360/tsu_season_time.c": {
         "status": "Matching",
         "source": "xbox360/tsu_season_time.c"
@@ -88,6 +97,10 @@
       "src/xbox360/tsu_reset_season_rank_history.c": {
         "status": "Matching",
         "source": "xbox360/tsu_reset_season_rank_history.c"
+      },
+      "src/xbox360/tsu_fill_friends_leaderboard.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_fill_friends_leaderboard.c"
       },
       "src/xbox360/tsu_declare_match_official.c": {
         "status": "Matching",
@@ -124,6 +137,10 @@
       "src/xbox360/tsu_update_profile.c": {
         "status": "Matching",
         "source": "xbox360/tsu_update_profile.c"
+      },
+      "src/xbox360/tsu_save_profile.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_save_profile.c"
       },
       "src/xbox360/title_server_login_user_only.c": {
         "status": "Matching",

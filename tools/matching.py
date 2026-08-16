@@ -96,6 +96,11 @@ MATCHING_UNITS = (
         "symbols": {"tsu_refresh_tournament_sessions": 52},
     },
     {
+        "source": "src/xbox360/tsu_reset_friends_leaderboard.c",
+        "object": "tsu_reset_friends_leaderboard.obj",
+        "symbols": {"tsu_reset_friends_leaderboard": 80},
+    },
+    {
         "source": "src/xbox360/tsu_per_round_stats.c",
         "object": "tsu_per_round_stats.obj",
         "extra_flags": ["/GS-"],
@@ -130,6 +135,12 @@ MATCHING_UNITS = (
         },
     },
     {
+        "source": "src/xbox360/tsu_debug_ind_dec_lobby_timer.c",
+        "object": "tsu_debug_ind_dec_lobby_timer.obj",
+        "extra_flags": ["/GS-"],
+        "symbols": {"tsu_debug_ind_dec_lobby_timer": 292},
+    },
+    {
         "source": "src/xbox360/tsu_season_time.c",
         "object": "tsu_season_time.obj",
         "symbols": {
@@ -141,6 +152,11 @@ MATCHING_UNITS = (
         "source": "src/xbox360/tsu_reset_season_rank_history.c",
         "object": "tsu_reset_season_rank_history.obj",
         "symbols": {"ts4_script_reset_season_rank_history": 56},
+    },
+    {
+        "source": "src/xbox360/tsu_fill_friends_leaderboard.c",
+        "object": "tsu_fill_friends_leaderboard.obj",
+        "symbols": {"tsu_fill_friends_leaderboard": 260},
     },
     {
         "source": "src/xbox360/tsu_declare_match_official.c",
@@ -237,6 +253,11 @@ MATCHING_UNITS = (
         "source": "src/xbox360/tsu_update_profile.c",
         "object": "tsu_update_profile.obj",
         "symbols": {"tsu_update_profile": 176},
+    },
+    {
+        "source": "src/xbox360/tsu_save_profile.c",
+        "object": "tsu_save_profile.obj",
+        "symbols": {"tsu_save_profile": 208},
     },
     {
         "source": "src/xbox360/title_patch.c",
