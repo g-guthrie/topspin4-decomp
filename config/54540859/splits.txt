@@ -63,6 +63,9 @@ src/xbox360/min_u32.c:
 src/xbox360/create_3ac_object.c:
 	.text       start:0x88154598 end:0x88154604
 
+src/xbox360/copy_block94.c:
+	.text       start:0x881546E8 end:0x88154754
+
 src/xbox360/span28_append.c:
 	.text       start:0x8816FD60 end:0x8816FDB8
 
@@ -88,6 +91,14 @@ src/xbox360/container_factory_wrappers.c:
 	.text       start:0x88171698 end:0x881716F0
 	.text       start:0x88171748 end:0x881717A0
 
+src/xbox360/set_parsed_values.c:
+	.text       start:0x88171C88 end:0x88171CE4
+	.text       start:0x88171CE8 end:0x88171D4C
+
+src/xbox360/destroy_object_variants.c:
+	.text       start:0x88171D50 end:0x88171DAC
+	.text       start:0x88172148 end:0x881721A4
+
 src/xbox360/insert_sorted_node.c:
 	.text       start:0x8857CB00 end:0x8857CB70
 
@@ -109,6 +120,12 @@ src/xbox360/runtime_small_helpers.c:
 	.text       start:0x88582138 end:0x88582144
 	.text       start:0x88582450 end:0x8858246C
 	.text       start:0x88582608 end:0x8858260C
+
+src/xbox360/runtime_forwarders.c:
+	.text       start:0x88582BC8 end:0x88582BCC
+	.text       start:0x88582F28 end:0x88582F2C
+	.text       start:0x885830B0 end:0x885830B4
+	.text       start:0x885830B8 end:0x885830BC
 
 src/xbox360/is_in_a_session.c:
 	.text       start:0x88778CF0 end:0x88778D08

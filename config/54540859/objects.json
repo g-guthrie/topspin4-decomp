@@ -68,6 +68,22 @@
         "status": "Matching",
         "source": "xbox360/create_3ac_object.c"
       },
+      "src/xbox360/copy_block94.c": {
+        "status": "Matching",
+        "source": "xbox360/copy_block94.c"
+      },
+      "src/xbox360/set_parsed_values.c": {
+        "status": "Matching",
+        "source": "xbox360/set_parsed_values.c"
+      },
+      "src/xbox360/destroy_object_variants.c": {
+        "status": "Matching",
+        "source": "xbox360/destroy_object_variants.c"
+      },
+      "src/xbox360/runtime_forwarders.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_forwarders.c"
+      },
       "src/xbox360/create_runtime_object.c": {
         "status": "Matching",
         "source": "xbox360/create_runtime_object.c"

@@ -104,6 +104,37 @@ MATCHING_UNITS = (
         "symbols": {"ts4_create_3ac_object": 108},
     },
     {
+        "source": "src/xbox360/copy_block94.c",
+        "object": "copy_block94.obj",
+        "symbols": {"ts4_copy_block94": 108},
+    },
+    {
+        "source": "src/xbox360/set_parsed_values.c",
+        "object": "set_parsed_values.obj",
+        "symbols": {
+            "ts4_set_parsed_i64_if_changed": 92,
+            "ts4_set_parsed_u32_if_changed": 100,
+        },
+    },
+    {
+        "source": "src/xbox360/destroy_object_variants.c",
+        "object": "destroy_object_variants.obj",
+        "symbols": {
+            "ts4_destroy_variant_6b74": 92,
+            "ts4_destroy_variant_6bc0": 92,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_forwarders.c",
+        "object": "runtime_forwarders.obj",
+        "symbols": {
+            "ts4_query_system_time": 4,
+            "ts4_forward_record_status": 4,
+            "ts4_forward_runtime_b3360": 4,
+            "ts4_forward_runtime_8bee8": 4,
+        },
+    },
+    {
         "source": "src/xbox360/create_runtime_object.c",
         "object": "create_runtime_object.obj",
         "symbols": {"ts4_create_container_factory": 88},
@@ -670,7 +701,9 @@ def main() -> int:
             f"wrong {MODULE} SHA-256: expected {expected_hash}, got {actual_hash}"
         )
 
-    work_dir = args.work_dir.expanduser().resolve()
+    # Keep an in-repository symlink unresolved so large transient analyses can
+    # live on local scratch storage instead of an offloading cloud filesystem.
+    work_dir = args.work_dir.expanduser().absolute()
     analysis_dir = work_dir / "analysis"
     split_dir = work_dir / "split"
     rebuilt_dir = work_dir / "rebuilt"
