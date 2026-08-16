@@ -84,6 +84,11 @@ MATCHING_UNITS = (
         "symbols": {"ts4_netdb_allocate_94": 96},
     },
     {
+        "source": "src/xbox360/assign_text_from_c_string.c",
+        "object": "assign_text_from_c_string.obj",
+        "symbols": {"ts4_assign_text_from_c_string": 100},
+    },
+    {
         "source": "src/xbox360/create_runtime_object.c",
         "object": "create_runtime_object.obj",
         "symbols": {"ts4_create_container_factory": 88},
@@ -120,6 +125,12 @@ MATCHING_UNITS = (
         "object": "decrement_shared_refcount.obj",
         "extra_flags": ["/O1"],
         "symbols": {"ts4_decrement_shared_refcount": 88},
+    },
+    {
+        "source": "src/xbox360/find_runtime_entry_payload.c",
+        "object": "find_runtime_entry_payload.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_find_runtime_entry_payload": 168},
     },
     {
         "source": "src/xbox360/is_in_a_session.c",

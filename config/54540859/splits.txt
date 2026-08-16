@@ -51,6 +51,9 @@ src/xbox360/netdb_allocate_98.c:
 src/xbox360/netdb_allocate_94.c:
 	.text       start:0x88152CF8 end:0x88152D58
 
+src/xbox360/assign_text_from_c_string.c:
+	.text       start:0x88152E70 end:0x88152ED4
+
 src/xbox360/span28_append.c:
 	.text       start:0x8816FD60 end:0x8816FDB8
 
@@ -71,6 +74,9 @@ src/xbox360/increment_shared_refcount.c:
 
 src/xbox360/decrement_shared_refcount.c:
 	.text       start:0x8857D580 end:0x8857D5D8
+
+src/xbox360/find_runtime_entry_payload.c:
+	.text       start:0x8857DB20 end:0x8857DBC8
 
 src/xbox360/is_in_a_session.c:
 	.text       start:0x88778CF0 end:0x88778D08
