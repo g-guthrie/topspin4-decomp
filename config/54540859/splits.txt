@@ -24,6 +24,15 @@ src/xbox360/generate_cpu_results.c:
 src/xbox360/initialize_netdb_stat_record.c:
 	.text       start:0x88151B08 end:0x88151B90
 
+src/xbox360/session_stats_init.c:
+	.text       start:0x88150E50 end:0x88150EAC
+
+src/xbox360/clear_netdb_owned_record.c:
+	.text       start:0x881515B8 end:0x881515F8
+
+src/xbox360/initialize_netdb_extended_record.c:
+	.text       start:0x88151C70 end:0x88151CD0
+
 src/xbox360/is_in_a_session.c:
 	.text       start:0x88778CF0 end:0x88778D08
 
@@ -42,6 +51,12 @@ src/xbox360/reset_online_config.c:
 
 src/xbox360/session_match_accessor.c:
 	.text       start:0x887799B0 end:0x887799C0
+
+src/xbox360/span16_append.c:
+	.text       start:0x88152530 end:0x88152588
+
+src/xbox360/resume_thread.c:
+	.text       start:0x8857C888 end:0x8857C8C4
 
 src/xbox360/is_session_started.c:
 	.text       start:0x8877BFD8 end:0x8877BFF8

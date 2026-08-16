@@ -13,6 +13,14 @@
         "/Oi"
       ]
     },
+    "o1": {
+      "flags": [
+        "/nologo",
+        "/c",
+        "/O1",
+        "/Oi"
+      ]
+    },
     "gs_off": {
       "flags": [
         "/nologo",

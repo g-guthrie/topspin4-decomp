@@ -16,6 +16,18 @@
         "status": "Matching",
         "source": "xbox360/initialize_netdb_stat_record.c"
       },
+      "src/xbox360/session_stats_init.c": {
+        "status": "Matching",
+        "source": "xbox360/session_stats_init.c"
+      },
+      "src/xbox360/clear_netdb_owned_record.c": {
+        "status": "Matching",
+        "source": "xbox360/clear_netdb_owned_record.c"
+      },
+      "src/xbox360/initialize_netdb_extended_record.c": {
+        "status": "Matching",
+        "source": "xbox360/initialize_netdb_extended_record.c"
+      },
       "src/xbox360/is_in_a_session.c": {
         "status": "Matching",
         "source": "xbox360/is_in_a_session.c"
@@ -39,6 +51,15 @@
       "src/xbox360/session_match_accessor.c": {
         "status": "Matching",
         "source": "xbox360/session_match_accessor.c"
+      },
+      "src/xbox360/span16_append.c": {
+        "status": "Matching",
+        "source": "xbox360/span16_append.c"
+      },
+      "src/xbox360/resume_thread.c": {
+        "status": "Matching",
+        "source": "xbox360/resume_thread.c",
+        "cflags": "o1"
       },
       "src/xbox360/is_session_started.c": {
         "status": "Matching",

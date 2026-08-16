@@ -34,6 +34,10 @@ class CanonicalBuildTests(unittest.TestCase):
             ["/nologo", "/c", "/O2", "/Oi"],
         )
         self.assertEqual(
+            config["cflags"]["o1"]["flags"],
+            ["/nologo", "/c", "/O1", "/Oi"],
+        )
+        self.assertEqual(
             config["cflags"]["gs_off"]["flags"],
             ["/nologo", "/c", "/O2", "/Oi", "/GS-"],
         )
@@ -92,11 +96,11 @@ class CanonicalBuildTests(unittest.TestCase):
         self.assertFalse(status["artifact_committed"])
 
         forced = status["forced_all_units_probe"]
-        self.assertEqual(forced["input_source_objects"], 65)
-        self.assertEqual(forced["input_matching_functions"], 75)
-        self.assertEqual(forced["map_matching_public_functions"], 75)
+        self.assertEqual(forced["input_source_objects"], 70)
+        self.assertEqual(forced["input_matching_functions"], 80)
+        self.assertEqual(forced["map_matching_public_functions"], 80)
         self.assertEqual(forced["map_additional_static_helpers"], 8)
-        self.assertEqual(forced["unresolved_external_symbols"], 76)
+        self.assertEqual(forced["unresolved_external_symbols"], 79)
         self.assertFalse(forced["is_xex"])
         self.assertFalse(forced["is_runnable"])
 

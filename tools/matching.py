@@ -39,6 +39,21 @@ MATCHING_UNITS = (
         "symbols": {"ts4_initialize_netdb_stat_record": 136},
     },
     {
+        "source": "src/xbox360/session_stats_init.c",
+        "object": "session_stats_init.obj",
+        "symbols": {"ts4_session_stats_init": 92},
+    },
+    {
+        "source": "src/xbox360/clear_netdb_owned_record.c",
+        "object": "clear_netdb_owned_record.obj",
+        "symbols": {"ts4_clear_netdb_owned_record": 64},
+    },
+    {
+        "source": "src/xbox360/initialize_netdb_extended_record.c",
+        "object": "initialize_netdb_extended_record.obj",
+        "symbols": {"ts4_initialize_netdb_extended_record": 96},
+    },
+    {
         "source": "src/xbox360/is_in_a_session.c",
         "object": "is_in_a_session.obj",
         "symbols": {"ts4_script_is_in_a_session": 24},
@@ -72,6 +87,17 @@ MATCHING_UNITS = (
         "source": "src/xbox360/session_match_accessor.c",
         "object": "session_match_accessor.obj",
         "symbols": {"ts4_get_session_match_descriptor": 16},
+    },
+    {
+        "source": "src/xbox360/span16_append.c",
+        "object": "span16_append.obj",
+        "symbols": {"ts4_span16_append": 88},
+    },
+    {
+        "source": "src/xbox360/resume_thread.c",
+        "object": "resume_thread.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_resume_thread": 60},
     },
     {
         "source": "src/xbox360/is_session_started.c",
