@@ -34,6 +34,11 @@ MATCHING_UNITS = (
         "symbols": {"ts4_script_generate_cpu_results": 8},
     },
     {
+        "source": "src/xbox360/initialize_netdb_stat_record.c",
+        "object": "initialize_netdb_stat_record.obj",
+        "symbols": {"ts4_initialize_netdb_stat_record": 136},
+    },
+    {
         "source": "src/xbox360/is_in_a_session.c",
         "object": "is_in_a_session.obj",
         "symbols": {"ts4_script_is_in_a_session": 24},

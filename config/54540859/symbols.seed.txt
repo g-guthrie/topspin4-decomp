@@ -102,6 +102,7 @@ ts4_init_search_result = .text:0x88150EB0; // type:function
 ts4_initialize_netdb_stat_record = .text:0x88151B08; // type:function
 ts4_clear_intrusive_list = .text:0x8817F670; // type:function
 memcpy = .text:0x8856A670; // type:function
+ts4_memset = .text:0x8857C630; // type:function
 ts4_copy_bytes = .text:0x88563498; // type:function
 ts4_copy_friend_leaderboard_records = .text:0x88155450; // type:function
 ts4_lobby_add_fake_player = .text:0x8899FC78; // type:function

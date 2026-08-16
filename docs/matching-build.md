@@ -1,6 +1,6 @@
 # Matching build
 
-The first sixty-four matching measurement units cover online feature stubs, session predicates, TSU statistics, profile summaries, friends leaderboards, Pro Challenge, title-server, player-visibility, minigame, King of the Court, and TSU object callbacks from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 9,140 code bytes across seventy-four functions exactly; the per-round TSU aggregation and lobby-timer units additionally require `/GS-`, while the three friends-leaderboard units require `/GS- /GR- /EHs-c-`.
+The first sixty-five matching measurement units cover online feature stubs, session predicates, TSU statistics, profile summaries, friends leaderboards, Pro Challenge, title-server, player-visibility, minigame, King of the Court, TSU object callbacks, and NetDB initialization from the locked `Swing_DLL.xex`. Xbox 360 MSVC `16.00.10224.00` with `/O2 /Oi` reproduces all 9,276 code bytes across seventy-five functions exactly; the per-round TSU aggregation and lobby-timer units additionally require `/GS-`, while the three friends-leaderboard units require `/GS- /GR- /EHs-c-`.
 
 ## Local prerequisites
 
@@ -29,7 +29,7 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 9,140 of 10,153,700 Swing code bytes (`0.090016450%`) and seventy-four of 47,250 objdiff functions (`0.156613750%`). The decomp-framework report has sixty-four complete-source units among 142 total units. These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
+The match is 9,276 of 10,153,700 Swing code bytes (`0.091355860%`) and seventy-five of 47,250 objdiff functions (`0.158730160%`). The decomp-framework report has sixty-five complete-source units among 145 total units. These are matching-build counters, not the Ghidra discovery denominator in `config/progress.json`.
 
 Where a function has an accompanying eight-byte `.pdata` range, it is also a
 100% relocation-aware objdiff match. Leaf functions without an exception record
@@ -71,11 +71,11 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe passes all sixty-four source-built objects to the linker. Its map
-contains all seventy-four exact public functions. Because the remaining game code and
+A second probe passes all sixty-five source-built objects to the linker. Its map
+contains all seventy-five exact public functions. Because the remaining game code and
 data are not reconstructed, this probe requires `/FORCE:UNRESOLVED` and reports
 seventy-six unresolved external symbols. The linker emits a 13,824-byte
-inspection PE with 9,736 bytes of `.text`; that section also includes eight
+inspection PE with 9,872 bytes of `.text`; that section also includes eight
 source helper functions and alignment, so it is not a new matching-progress
 denominator. This is evidence that the current reconstructed subset can enter a
 single Xbox link, not evidence of a usable module.

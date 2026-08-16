@@ -12,6 +12,10 @@
         "status": "Matching",
         "source": "xbox360/generate_cpu_results.c"
       },
+      "src/xbox360/initialize_netdb_stat_record.c": {
+        "status": "Matching",
+        "source": "xbox360/initialize_netdb_stat_record.c"
+      },
       "src/xbox360/is_in_a_session.c": {
         "status": "Matching",
         "source": "xbox360/is_in_a_session.c"

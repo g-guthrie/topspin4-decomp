@@ -21,6 +21,9 @@ src/xbox360/online_feature_stubs.c:
 src/xbox360/generate_cpu_results.c:
 	.text       start:0x88778CE8 end:0x88778CF0
 
+src/xbox360/initialize_netdb_stat_record.c:
+	.text       start:0x88151B08 end:0x88151B90
+
 src/xbox360/is_in_a_session.c:
 	.text       start:0x88778CF0 end:0x88778D08
 
