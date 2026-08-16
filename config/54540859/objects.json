@@ -56,6 +56,14 @@
         "status": "Matching",
         "source": "xbox360/assign_text_from_c_string.c"
       },
+      "src/xbox360/clone_byte_with_object_context.c": {
+        "status": "Matching",
+        "source": "xbox360/clone_byte_with_object_context.c"
+      },
+      "src/xbox360/min_u32.c": {
+        "status": "Matching",
+        "source": "xbox360/min_u32.c"
+      },
       "src/xbox360/create_runtime_object.c": {
         "status": "Matching",
         "source": "xbox360/create_runtime_object.c"
@@ -63,6 +71,18 @@
       "src/xbox360/destroy_polymorphic_span.c": {
         "status": "Matching",
         "source": "xbox360/destroy_polymorphic_span.c"
+      },
+      "src/xbox360/create_container_factory_alias.c": {
+        "status": "Matching",
+        "source": "xbox360/create_container_factory_alias.c"
+      },
+      "src/xbox360/create_runtime_object_20.c": {
+        "status": "Matching",
+        "source": "xbox360/create_runtime_object_20.c"
+      },
+      "src/xbox360/container_factory_wrappers.c": {
+        "status": "Matching",
+        "source": "xbox360/container_factory_wrappers.c"
       },
       "src/xbox360/span28_append.c": {
         "status": "Matching",
@@ -91,6 +111,10 @@
         "status": "Matching",
         "source": "xbox360/find_runtime_entry_payload.c",
         "cflags": "o1"
+      },
+      "src/xbox360/runtime_small_helpers.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_small_helpers.c"
       },
       "src/xbox360/is_in_a_session.c": {
         "status": "Matching",

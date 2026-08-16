@@ -54,6 +54,12 @@ src/xbox360/netdb_allocate_94.c:
 src/xbox360/assign_text_from_c_string.c:
 	.text       start:0x88152E70 end:0x88152ED4
 
+src/xbox360/clone_byte_with_object_context.c:
+	.text       start:0x88153620 end:0x88153674
+
+src/xbox360/min_u32.c:
+	.text       start:0x88154588 end:0x88154598
+
 src/xbox360/span28_append.c:
 	.text       start:0x8816FD60 end:0x8816FDB8
 
@@ -62,6 +68,22 @@ src/xbox360/create_runtime_object.c:
 
 src/xbox360/destroy_polymorphic_span.c:
 	.text       start:0x88170F58 end:0x88170FB8
+
+src/xbox360/create_container_factory_alias.c:
+	.text       start:0x88171690 end:0x88171694
+
+src/xbox360/create_runtime_object_20.c:
+	.text       start:0x881716F0 end:0x88171748
+
+src/xbox360/container_factory_wrappers.c:
+	.text       start:0x88171480 end:0x881714D8
+	.text       start:0x881714D8 end:0x88171530
+	.text       start:0x88171530 end:0x88171588
+	.text       start:0x88171588 end:0x881715E0
+	.text       start:0x881715E0 end:0x88171638
+	.text       start:0x88171638 end:0x88171690
+	.text       start:0x88171698 end:0x881716F0
+	.text       start:0x88171748 end:0x881717A0
 
 src/xbox360/insert_sorted_node.c:
 	.text       start:0x8857CB00 end:0x8857CB70
@@ -77,6 +99,13 @@ src/xbox360/decrement_shared_refcount.c:
 
 src/xbox360/find_runtime_entry_payload.c:
 	.text       start:0x8857DB20 end:0x8857DBC8
+
+src/xbox360/runtime_small_helpers.c:
+	.text       start:0x88581F40 end:0x88581F4C
+	.text       start:0x88582130 end:0x88582134
+	.text       start:0x88582138 end:0x88582144
+	.text       start:0x88582450 end:0x8858246C
+	.text       start:0x88582608 end:0x8858260C
 
 src/xbox360/is_in_a_session.c:
 	.text       start:0x88778CF0 end:0x88778D08

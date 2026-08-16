@@ -89,6 +89,16 @@ MATCHING_UNITS = (
         "symbols": {"ts4_assign_text_from_c_string": 100},
     },
     {
+        "source": "src/xbox360/clone_byte_with_object_context.c",
+        "object": "clone_byte_with_object_context.obj",
+        "symbols": {"ts4_clone_byte_with_object_context": 84},
+    },
+    {
+        "source": "src/xbox360/min_u32.c",
+        "object": "min_u32.obj",
+        "symbols": {"ts4_min_u32": 16},
+    },
+    {
         "source": "src/xbox360/create_runtime_object.c",
         "object": "create_runtime_object.obj",
         "symbols": {"ts4_create_container_factory": 88},
@@ -97,6 +107,30 @@ MATCHING_UNITS = (
         "source": "src/xbox360/destroy_polymorphic_span.c",
         "object": "destroy_polymorphic_span.obj",
         "symbols": {"ts4_destroy_polymorphic_value_range": 96},
+    },
+    {
+        "source": "src/xbox360/create_container_factory_alias.c",
+        "object": "create_container_factory_alias.obj",
+        "symbols": {"ts4_create_container_factory_alias": 4},
+    },
+    {
+        "source": "src/xbox360/create_runtime_object_20.c",
+        "object": "create_runtime_object_20.obj",
+        "symbols": {"ts4_create_runtime_object_20": 88},
+    },
+    {
+        "source": "src/xbox360/container_factory_wrappers.c",
+        "object": "container_factory_wrappers.obj",
+        "symbols": {
+            "ts4_create_runtime_object_28_pool2": 88,
+            "ts4_create_runtime_object_28_pool0": 88,
+            "ts4_create_runtime_object_54_pool2": 88,
+            "ts4_create_runtime_object_54_pool0": 88,
+            "ts4_create_runtime_object_80_pool2": 88,
+            "ts4_create_runtime_object_80_pool0": 88,
+            "ts4_create_runtime_object_54_alt_pool0": 88,
+            "ts4_create_runtime_object_20_pool0": 88,
+        },
     },
     {
         "source": "src/xbox360/span28_append.c",
@@ -131,6 +165,17 @@ MATCHING_UNITS = (
         "object": "find_runtime_entry_payload.obj",
         "extra_flags": ["/O1"],
         "symbols": {"ts4_find_runtime_entry_payload": 168},
+    },
+    {
+        "source": "src/xbox360/runtime_small_helpers.c",
+        "object": "runtime_small_helpers.obj",
+        "symbols": {
+            "ts4_get_loaded_command_line": 12,
+            "ts4_call_runtime_a1e0": 4,
+            "ts4_call_runtime_2890": 12,
+            "ts4_set_four_word_record": 28,
+            "ts4_call_runtime_2610": 4,
+        },
     },
     {
         "source": "src/xbox360/is_in_a_session.c",

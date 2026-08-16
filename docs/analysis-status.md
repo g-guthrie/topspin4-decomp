@@ -11,7 +11,7 @@ The three retail XEX modules were imported with Ghidra 12.1.2 and XEXLoaderWV 12
 | `Swing_DLL.xex` | `0x88000000` | `0x88562DB0` | 32,506 | 34 |
 | **Total** | | | **41,795** | **73** |
 
-This is a discovery denominator, not a claim that every boundary is correct. It may change when bad disassembly is removed, missed functions are recovered, or thunks are normalized. The current reviewed counts are 132 named functions, ninety-five semantic source drafts, ninety-five validated reconstructions, and ninety-five compiler-matched functions.
+This is a discovery denominator, not a claim that every boundary is correct. It may change when bad disassembly is removed, missed functions are recovered, or thunks are normalized. The current reviewed counts are 149 named functions, one hundred twelve semantic source drafts, one hundred twelve validated reconstructions, and one hundred twelve compiler-matched functions.
 
 The initial import incorrectly marked the shared `_savegprlr_14` through `_savegprlr_29` helpers as non-returning. The reproducible repair script corrected 11,645 call sites and recovered complete bodies for affected callers. This materially improves the decompiler output without changing the current function denominator.
 
@@ -25,4 +25,4 @@ Do not call the import validated until representative functions are compared aga
 
 ## Matching toolchain
 
-Jeff `0.3.5` identified Xbox 360 MSVC C1/C2 `16.0.10224.0` and linker `10.0.10224.0` in all three modules. The reviewed repository patch now makes complete Swing and Loader splits succeed. Eighty-five measurement-unit boundaries are verified, producing 11,072 exact code bytes across ninety-five functions; most use `/O2 /Oi`, the per-round TSU aggregation and lobby-timer callback additionally require `/GS-`, three friends-leaderboard units require `/GS- /GR- /EHs-c-`, and selected runtime helpers require `/O1 /Oi`. Original source-file boundaries remain provisional for the game, as does whole-program LTCG status. See [matching-decomp.md](matching-decomp.md), [matching-build.md](matching-build.md), and `config/toolchain.json`.
+Jeff `0.3.5` identified Xbox 360 MSVC C1/C2 `16.0.10224.0` and linker `10.0.10224.0` in all three modules. Ninety-one measurement-unit boundaries are verified, producing 12,028 exact code bytes across one hundred twelve functions. Original source-file boundaries remain provisional for the game, as does whole-program LTCG status.
