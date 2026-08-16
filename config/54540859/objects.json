@@ -146,6 +146,11 @@
         "source": "xbox360/tsu_notify_object.c",
         "cflags": "gs_off_no_rtti_no_eh"
       },
+      "src/xbox360/tsu_destroy_owned_object.c": {
+        "status": "Matching",
+        "source": "xbox360/tsu_destroy_owned_object.c",
+        "cflags": "gs_off_no_rtti_no_eh"
+      },
       "src/xbox360/tsu_declare_match_official.c": {
         "status": "Matching",
         "source": "xbox360/tsu_declare_match_official.c"

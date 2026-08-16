@@ -572,15 +572,16 @@
     },
     {"source":"src/xbox360/tsu_report_event.c","symbol":"ts4_script_tsu_report_event","text_range":"0x8878BDD0-0x8878BE18","pdata_range":"0x88128148-0x88128150","matched_code_bytes":72,"function_match_percent":100.0},
     {"source":"src/xbox360/tsu_profile_service_reset.c","symbol":"ts4_script_tsu_profile_service_reset","text_range":"0x8878BE18-0x8878BE48","pdata_range":"0x88128150-0x88128158","matched_code_bytes":48,"function_match_percent":100.0},
-    {"source":"src/xbox360/tsu_notify_object.c","symbol":"ts4_script_tsu_notify_object","text_range":"0x8878BE48-0x8878BE74","pdata_range":"0x88128158-0x88128160","matched_code_bytes":44,"function_match_percent":100.0}
+    {"source":"src/xbox360/tsu_notify_object.c","symbol":"ts4_script_tsu_notify_object","text_range":"0x8878BE48-0x8878BE74","pdata_range":"0x88128158-0x88128160","matched_code_bytes":44,"function_match_percent":100.0},
+    {"source":"src/xbox360/tsu_destroy_owned_object.c","symbol":"ts4_tsu_destroy_owned_object","text_range":"0x8878C300-0x8878C33C","pdata_range":"0x88128188-0x88128190","matched_code_bytes":60,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 8792,
+  "matched_code_bytes": 8852,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.086589125,
+  "module_matched_code_percent": 0.087180043,
   "module_total_functions": 47250,
-  "module_matched_functions": 69,
-  "module_matched_functions_percent": 0.146031746,
-  "module_total_units": 129,
-  "module_complete_units": 59,
-  "note": "The canonical whole-module report verifies all sixty-nine functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 70,
+  "module_matched_functions_percent": 0.148148148,
+  "module_total_units": 130,
+  "module_complete_units": 60,
+  "note": "The canonical whole-module report verifies all seventy functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }
