@@ -781,6 +781,21 @@ MATCHING_UNITS = (
         "symbols": {"ts4_script_notify_rich_presence_by_part": 120},
     },
     {
+        "source": "src/xbox360/script_callback_batch_f.c",
+        "object": "script_callback_batch_f.obj",
+        "symbols": {
+            "ts4_script_choose_in_game_camera": 44,
+            "ts4_script_unload_all_player_portraits": 36,
+            "ts4_script_unload_all_temporary_player_portraits": 36,
+            "ts4_script_unload_all_players_player_creator": 52,
+            "ts4_script_debug_reset_all_unlocks": 44,
+            "ts4_script_configure_pc_for_player_area": 52,
+            "ts4_script_configure_pc_for_locker_room": 52,
+            "ts4_script_unload_all_outfits": 44,
+            "ts4_script_unload_all_players_in_game": 56,
+        },
+    },
+    {
         "source": "src/xbox360/compact_owned_span16.c",
         "object": "compact_owned_span16.obj",
         "symbols": {"ts4_compact_owned_span16": 132},

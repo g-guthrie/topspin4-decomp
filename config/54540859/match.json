@@ -720,15 +720,24 @@
     {"source":"src/xbox360/runtime_dispatch_slots_3c_4c.c","symbol":"ts4_runtime_type_code_none","text_range":"0x8815EFC0-0x8815EFC8","matched_code_bytes":8,"function_match_percent":100.0},
     {"source":"src/xbox360/runtime_dispatch_slots_3c_4c.c","symbol":"ts4_runtime_dispatch_slot_3c","text_range":"0x8815EFC8-0x8815EFD8","matched_code_bytes":16,"function_match_percent":100.0},
     {"source":"src/xbox360/runtime_dispatch_slots_3c_4c.c","symbol":"ts4_runtime_dispatch_slot_4c","text_range":"0x8815EFD8-0x8815EFE8","matched_code_bytes":16,"function_match_percent":100.0},
-    {"source":"src/xbox360/erase_value16_from_span.c","symbol":"ts4_erase_value16_from_span","text_range":"0x8816FA88-0x8816FAF0","pdata_range":null,"matched_code_bytes":104,"function_match_percent":100.0}
+    {"source":"src/xbox360/erase_value16_from_span.c","symbol":"ts4_erase_value16_from_span","text_range":"0x8816FA88-0x8816FAF0","pdata_range":null,"matched_code_bytes":104,"function_match_percent":100.0},
+    {"source":"src/xbox360/script_callback_batch_f.c","symbol":"ts4_script_choose_in_game_camera","text_range":"0x8879FA30-0x8879FA5C","pdata_range":"0x88128968-0x88128970","matched_code_bytes":44,"function_match_percent":100.0},
+    {"source":"src/xbox360/script_callback_batch_f.c","symbol":"ts4_script_unload_all_player_portraits","text_range":"0x887A0A18-0x887A0A3C","pdata_range":"0x881289E8-0x881289F0","matched_code_bytes":36,"function_match_percent":100.0},
+    {"source":"src/xbox360/script_callback_batch_f.c","symbol":"ts4_script_unload_all_temporary_player_portraits","text_range":"0x887A0A40-0x887A0A64","pdata_range":"0x881289F0-0x881289F8","matched_code_bytes":36,"function_match_percent":100.0},
+    {"source":"src/xbox360/script_callback_batch_f.c","symbol":"ts4_script_unload_all_players_player_creator","text_range":"0x887A0A68-0x887A0A9C","pdata_range":"0x881289F8-0x88128A00","matched_code_bytes":52,"function_match_percent":100.0},
+    {"source":"src/xbox360/script_callback_batch_f.c","symbol":"ts4_script_debug_reset_all_unlocks","text_range":"0x887A3060-0x887A308C","pdata_range":"0x88128AA8-0x88128AB0","matched_code_bytes":44,"function_match_percent":100.0},
+    {"source":"src/xbox360/script_callback_batch_f.c","symbol":"ts4_script_configure_pc_for_player_area","text_range":"0x887A31E0-0x887A3214","pdata_range":"0x88128AB8-0x88128AC0","matched_code_bytes":52,"function_match_percent":100.0},
+    {"source":"src/xbox360/script_callback_batch_f.c","symbol":"ts4_script_configure_pc_for_locker_room","text_range":"0x887A3218-0x887A324C","pdata_range":"0x88128AC0-0x88128AC8","matched_code_bytes":52,"function_match_percent":100.0},
+    {"source":"src/xbox360/script_callback_batch_f.c","symbol":"ts4_script_unload_all_outfits","text_range":"0x887A3250-0x887A327C","pdata_range":"0x88128AC8-0x88128AD0","matched_code_bytes":44,"function_match_percent":100.0},
+    {"source":"src/xbox360/script_callback_batch_f.c","symbol":"ts4_script_unload_all_players_in_game","text_range":"0x887A4EF0-0x887A4F28","pdata_range":"0x88128B48-0x88128B50","matched_code_bytes":56,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 15204,
+  "matched_code_bytes": 15620,
   "module_total_code_bytes": 10153700,
-  "module_matched_code_percent": 0.14973852,
+  "module_matched_code_percent": 0.15383555,
   "module_total_functions": 47250,
-  "module_matched_functions": 217,
-  "module_matched_functions_percent": 0.45925924,
-  "module_total_units": 311,
-  "module_complete_units": 123,
-  "note": "The canonical whole-module report verifies all two hundred seventeen functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 226,
+  "module_matched_functions_percent": 0.4783069,
+  "module_total_units": 326,
+  "module_complete_units": 124,
+  "note": "The canonical whole-module report verifies all two hundred twenty-six functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

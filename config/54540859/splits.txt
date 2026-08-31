@@ -415,6 +415,26 @@ src/xbox360/script_notify_rich_presence_by_part.c:
 	.pdata      start:0x881285C8 end:0x881285D0
 	.text       start:0x88796668 end:0x887966E0
 
+src/xbox360/script_callback_batch_f.c:
+	.pdata      start:0x88128968 end:0x88128970
+	.pdata      start:0x881289E8 end:0x881289F0
+	.pdata      start:0x881289F0 end:0x881289F8
+	.pdata      start:0x881289F8 end:0x88128A00
+	.pdata      start:0x88128AA8 end:0x88128AB0
+	.pdata      start:0x88128AB8 end:0x88128AC0
+	.pdata      start:0x88128AC0 end:0x88128AC8
+	.pdata      start:0x88128AC8 end:0x88128AD0
+	.pdata      start:0x88128B48 end:0x88128B50
+	.text       start:0x8879FA30 end:0x8879FA5C
+	.text       start:0x887A0A18 end:0x887A0A3C
+	.text       start:0x887A0A40 end:0x887A0A64
+	.text       start:0x887A0A68 end:0x887A0A9C
+	.text       start:0x887A3060 end:0x887A308C
+	.text       start:0x887A31E0 end:0x887A3214
+	.text       start:0x887A3218 end:0x887A324C
+	.text       start:0x887A3250 end:0x887A327C
+	.text       start:0x887A4EF0 end:0x887A4F28
+
 src/xbox360/tsu_unload_profile.c:
 	.text       start:0x88792888 end:0x887928A4
 

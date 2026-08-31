@@ -497,6 +497,10 @@
         "status": "Matching",
         "source": "xbox360/script_notify_rich_presence_by_part.c"
       },
+      "src/xbox360/script_callback_batch_f.c": {
+        "status": "Matching",
+        "source": "xbox360/script_callback_batch_f.c"
+      },
       "src/xbox360/compact_owned_span16.c": {
         "status": "Matching",
         "source": "xbox360/compact_owned_span16.c"
