@@ -17,6 +17,15 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/runtime_dispatch_slots_3c_4c.c",
+        "object": "runtime_dispatch_slots_3c_4c.obj",
+        "symbols": {
+            "ts4_runtime_type_code_none": 8,
+            "ts4_runtime_dispatch_slot_3c": 16,
+            "ts4_runtime_dispatch_slot_4c": 16,
+        },
+    },
+    {
         "source": "src/xbox360/runtime_type_codes_21_26.c",
         "object": "runtime_type_codes_21_26.obj",
         "symbols": {
@@ -772,6 +781,21 @@ MATCHING_UNITS = (
         "symbols": {"ts4_script_notify_rich_presence_by_part": 120},
     },
     {
+        "source": "src/xbox360/script_callback_batch_f.c",
+        "object": "script_callback_batch_f.obj",
+        "symbols": {
+            "ts4_script_choose_in_game_camera": 44,
+            "ts4_script_unload_all_player_portraits": 36,
+            "ts4_script_unload_all_temporary_player_portraits": 36,
+            "ts4_script_unload_all_players_player_creator": 52,
+            "ts4_script_debug_reset_all_unlocks": 44,
+            "ts4_script_configure_pc_for_player_area": 52,
+            "ts4_script_configure_pc_for_locker_room": 52,
+            "ts4_script_unload_all_outfits": 44,
+            "ts4_script_unload_all_players_in_game": 56,
+        },
+    },
+    {
         "source": "src/xbox360/compact_owned_span16.c",
         "object": "compact_owned_span16.obj",
         "symbols": {"ts4_compact_owned_span16": 132},
@@ -785,6 +809,11 @@ MATCHING_UNITS = (
         "source": "src/xbox360/destroy_owned_container.c",
         "object": "destroy_owned_container.obj",
         "symbols": {"ts4_destroy_owned_container": 92},
+    },
+    {
+        "source": "src/xbox360/erase_value16_from_span.c",
+        "object": "erase_value16_from_span.obj",
+        "symbols": {"ts4_erase_value16_from_span": 104},
     },
 )
 
