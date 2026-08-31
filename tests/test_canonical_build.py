@@ -2,6 +2,8 @@ import json
 import unittest
 from pathlib import Path
 
+from tools.matching import compiler_output_arg
+
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSION_DIR = ROOT / "config" / "54540859"
@@ -27,6 +29,12 @@ def symbol_addresses(text: str) -> dict[str, str]:
 
 
 class CanonicalBuildTests(unittest.TestCase):
+    def test_external_work_directory_uses_relative_compiler_output(self):
+        external_object = ROOT.parent / "external-work" / "rebuilt" / "unit.obj"
+        output_arg = compiler_output_arg(external_object)
+        self.assertTrue(output_arg.startswith("/Fo"))
+        self.assertIn("../external-work/rebuilt/unit.obj", output_arg)
+
     def test_exact_compiler_configuration(self):
         config = json.loads((VERSION_DIR / "config.json").read_text())
         self.assertEqual(

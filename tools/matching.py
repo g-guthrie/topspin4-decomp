@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -593,6 +594,11 @@ def checked_file(path: Path, description: str) -> Path:
     return resolved
 
 
+def compiler_output_arg(rebuilt: Path) -> str:
+    """Return an MSVC output argument that works inside or outside the checkout."""
+    return f"/Fo{os.path.relpath(rebuilt, ROOT)}"
+
+
 def write_jeff_config(
     path: Path, xex: Path, symbols: Path, splits: Path, quick: bool
 ) -> None:
@@ -729,7 +735,7 @@ def main() -> int:
         source = unit["source"]
         rebuilt = rebuilt_dir / unit["object"]
         rebuilt_by_source[source] = rebuilt
-        output_arg = f"/Fo{rebuilt.relative_to(ROOT)}"
+        output_arg = compiler_output_arg(rebuilt)
         run(
             [
                 str(wrapper),
