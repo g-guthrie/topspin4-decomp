@@ -17,6 +17,24 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/runtime_type_codes_12_1f.c",
+        "object": "runtime_type_codes_12_1f.obj",
+        "symbols": {
+            "ts4_runtime_type_code_12": 8,
+            "ts4_runtime_type_code_13": 8,
+            "ts4_runtime_type_code_15": 8,
+            "ts4_runtime_type_code_16": 8,
+            "ts4_runtime_type_code_17": 8,
+            "ts4_runtime_type_code_18": 8,
+            "ts4_runtime_type_code_19": 8,
+            "ts4_runtime_type_code_1a": 8,
+            "ts4_runtime_type_code_1c": 8,
+            "ts4_runtime_type_code_1d": 8,
+            "ts4_runtime_type_code_1e": 8,
+            "ts4_runtime_type_code_1f": 8,
+        },
+    },
+    {
         "source": "src/xbox360/runtime_type_code_27.c",
         "object": "runtime_type_code_27.obj",
         "symbols": {"ts4_runtime_type_code_27": 8},
@@ -727,9 +745,24 @@ MATCHING_UNITS = (
         },
     },
     {
+        "source": "src/xbox360/script_callback_batch_d.c",
+        "object": "script_callback_batch_d.obj",
+        "symbols": {
+            "ts4_script_exit_locker_room": 80,
+            "ts4_script_check_dlc_ok": 140,
+            "ts4_script_set_furniture_visibility": 96,
+            "ts4_script_set_free_form_replay_visibility": 84,
+        },
+    },
+    {
         "source": "src/xbox360/compact_owned_span16.c",
         "object": "compact_owned_span16.obj",
         "symbols": {"ts4_compact_owned_span16": 132},
+    },
+    {
+        "source": "src/xbox360/advance_bit_cursor_to_location.c",
+        "object": "advance_bit_cursor_to_location.obj",
+        "symbols": {"ts4_advance_bit_cursor_to_location": 88},
     },
 )
 

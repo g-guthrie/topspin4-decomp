@@ -4,6 +4,10 @@
     "mw_version": "X360/16.00.10224.00",
     "cflags": "base",
     "objects": {
+      "src/xbox360/runtime_type_codes_12_1f.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_type_codes_12_1f.c"
+      },
       "src/xbox360/runtime_type_code_27.c": {
         "status": "Matching",
         "source": "xbox360/runtime_type_code_27.c"
@@ -477,9 +481,17 @@
         "status": "Matching",
         "source": "xbox360/script_callback_batch_c.c"
       },
+      "src/xbox360/script_callback_batch_d.c": {
+        "status": "Matching",
+        "source": "xbox360/script_callback_batch_d.c"
+      },
       "src/xbox360/compact_owned_span16.c": {
         "status": "Matching",
         "source": "xbox360/compact_owned_span16.c"
+      },
+      "src/xbox360/advance_bit_cursor_to_location.c": {
+        "status": "Matching",
+        "source": "xbox360/advance_bit_cursor_to_location.c"
       }
     }
   }

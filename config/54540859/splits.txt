@@ -18,6 +18,9 @@ Sections:
 src/xbox360/online_feature_stubs.c:
 	.text       start:0x88778698 end:0x887786D0
 
+src/xbox360/runtime_type_codes_12_1f.c:
+	.text       start:0x881721A8 end:0x88172208
+
 src/xbox360/runtime_type_code_27.c:
 	.text       start:0x8816D4A8 end:0x8816D4B0
 
@@ -116,6 +119,9 @@ src/xbox360/destroy_polymorphic_span.c:
 
 src/xbox360/compact_owned_span16.c:
 	.text       start:0x88170048 end:0x881700CC
+
+src/xbox360/advance_bit_cursor_to_location.c:
+	.text       start:0x8816FAF0 end:0x8816FB48
 
 src/xbox360/create_zeroed_triplet.c:
 	.text       start:0x88170DC0 end:0x88170E24
@@ -382,6 +388,16 @@ src/xbox360/script_callback_batch_c.c:
 	.text       start:0x8879AC08 end:0x8879AC34
 	.text       start:0x8879AD18 end:0x8879AD48
 	.text       start:0x8879AD48 end:0x8879AD6C
+
+src/xbox360/script_callback_batch_d.c:
+	.pdata      start:0x88128490 end:0x88128498
+	.pdata      start:0x881284E0 end:0x881284E8
+	.pdata      start:0x881284E8 end:0x881284F0
+	.pdata      start:0x88128638 end:0x88128640
+	.text       start:0x887940C8 end:0x88794154
+	.text       start:0x88794B60 end:0x88794BC0
+	.text       start:0x88794BC0 end:0x88794C14
+	.text       start:0x88797088 end:0x887970D8
 
 src/xbox360/tsu_unload_profile.c:
 	.text       start:0x88792888 end:0x887928A4
