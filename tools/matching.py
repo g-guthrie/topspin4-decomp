@@ -17,6 +17,18 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/runtime_adjusted_record_forwarders.c",
+        "object": "runtime_adjusted_record_forwarders.obj",
+        "symbols": {
+            "ts4_runtime_forward_record_minus_1c_to_98090": 8,
+            "ts4_runtime_forward_record_minus_20_to_98048": 8,
+            "ts4_runtime_forward_record_minus_1c_to_98000": 8,
+            "ts4_runtime_forward_record_minus_20_to_51810": 8,
+            "ts4_runtime_forward_record_minus_1c_to_51878": 8,
+            "ts4_runtime_forward_record_minus_1c_to_51cd0": 8,
+        },
+    },
+    {
         "source": "src/xbox360/runtime_dispatch_slots_3c_4c.c",
         "object": "runtime_dispatch_slots_3c_4c.obj",
         "symbols": {
@@ -262,6 +274,11 @@ MATCHING_UNITS = (
             "ts4_set_parsed_i64_if_changed": 92,
             "ts4_set_parsed_u32_if_changed": 100,
         },
+    },
+    {
+        "source": "src/xbox360/parse_u8_decimal_if_changed.c",
+        "object": "parse_u8_decimal_if_changed.obj",
+        "symbols": {"ts4_parse_u8_decimal_if_changed": 120},
     },
     {
         "source": "src/xbox360/destroy_object_variants.c",
@@ -793,6 +810,17 @@ MATCHING_UNITS = (
             "ts4_script_configure_pc_for_locker_room": 52,
             "ts4_script_unload_all_outfits": 44,
             "ts4_script_unload_all_players_in_game": 56,
+        },
+    },
+    {
+        "source": "src/xbox360/script_callback_batch_g.c",
+        "object": "script_callback_batch_g.obj",
+        "symbols": {
+            "ts4_script_dll_init_master_pad": 44,
+            "ts4_script_debug_unlock_all": 44,
+            "ts4_script_end_of_match_apply_coach_progress": 44,
+            "ts4_script_start_loading": 52,
+            "ts4_script_pop_me": 56,
         },
     },
     {
