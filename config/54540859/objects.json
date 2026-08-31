@@ -4,6 +4,26 @@
     "mw_version": "X360/16.00.10224.00",
     "cflags": "base",
     "objects": {
+      "src/xbox360/runtime_record_accessors_20.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_record_accessors_20.c"
+      },
+      "src/xbox360/runtime_record_accessors_1c.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_record_accessors_1c.c"
+      },
+      "src/xbox360/runtime_type_codes_34_42.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_type_codes_34_42.c"
+      },
+      "src/xbox360/runtime_type_codes_41_4a.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_type_codes_41_4a.c"
+      },
+      "src/xbox360/runtime_type_code_80.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_type_code_80.c"
+      },
       "src/xbox360/online_feature_stubs.c": {
         "status": "Matching",
         "source": "xbox360/online_feature_stubs.c"
@@ -404,6 +424,18 @@
       "src/xbox360/tsu_forfeit_in_lobby.c": {
         "status": "Matching",
         "source": "xbox360/tsu_forfeit_in_lobby.c"
+      },
+      "src/xbox360/create_zeroed_triplet.c": {
+        "status": "Matching",
+        "source": "xbox360/create_zeroed_triplet.c"
+      },
+      "src/xbox360/allocate_zeroed_triplets.c": {
+        "status": "Matching",
+        "source": "xbox360/allocate_zeroed_triplets.c"
+      },
+      "src/xbox360/title_server_small_batch.c": {
+        "status": "Matching",
+        "source": "xbox360/title_server_small_batch.c"
       }
     }
   }

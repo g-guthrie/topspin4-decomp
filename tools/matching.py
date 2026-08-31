@@ -17,6 +17,62 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/runtime_record_accessors_20.c",
+        "object": "runtime_record_accessors_20.obj",
+        "symbols": {
+            "ts4_runtime_record_get_word_324": 8,
+            "ts4_runtime_process_subrecord_20": 8,
+            "ts4_runtime_record_get_word_620": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_record_accessors_1c.c",
+        "object": "runtime_record_accessors_1c.obj",
+        "symbols": {
+            "ts4_runtime_process_subrecord_1c": 8,
+            "ts4_runtime_record_get_word_61c": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_type_codes_34_42.c",
+        "object": "runtime_type_codes_34_42.obj",
+        "symbols": {
+            "ts4_runtime_type_code_34": 8,
+            "ts4_runtime_type_code_35": 8,
+            "ts4_runtime_type_code_36": 8,
+            "ts4_runtime_type_code_37": 8,
+            "ts4_runtime_type_code_38": 8,
+            "ts4_runtime_type_code_39": 8,
+            "ts4_runtime_type_code_3a": 8,
+            "ts4_runtime_type_code_3b": 8,
+            "ts4_runtime_type_code_3c": 8,
+            "ts4_runtime_type_code_3d": 8,
+            "ts4_runtime_type_code_3e": 8,
+            "ts4_runtime_type_code_47": 8,
+            "ts4_runtime_type_code_3f": 8,
+            "ts4_runtime_type_code_42": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_type_codes_41_4a.c",
+        "object": "runtime_type_codes_41_4a.obj",
+        "symbols": {
+            "ts4_runtime_type_code_43": 8,
+            "ts4_runtime_type_code_44": 8,
+            "ts4_runtime_type_code_45": 8,
+            "ts4_runtime_type_code_41": 8,
+            "ts4_runtime_type_code_46": 8,
+            "ts4_runtime_type_code_48": 8,
+            "ts4_runtime_type_code_49": 8,
+            "ts4_runtime_type_code_4a": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_type_code_80.c",
+        "object": "runtime_type_code_80.obj",
+        "symbols": {"ts4_runtime_type_code_80": 8},
+    },
+    {
         "source": "src/xbox360/online_feature_stubs.c",
         "object": "online_feature_stubs.obj",
         "symbols": {
@@ -570,6 +626,27 @@ MATCHING_UNITS = (
         "source": "src/xbox360/tsu_forfeit_in_lobby.c",
         "object": "tsu_forfeit_in_lobby.obj",
         "symbols": {"tsu_forfeit_in_lobby": 56},
+    },
+    {
+        "source": "src/xbox360/create_zeroed_triplet.c",
+        "object": "create_zeroed_triplet.obj",
+        "symbols": {"ts4_create_zeroed_triplet": 100},
+    },
+    {
+        "source": "src/xbox360/allocate_zeroed_triplets.c",
+        "object": "allocate_zeroed_triplets.obj",
+        "symbols": {"ts4_allocate_zeroed_triplets": 152},
+    },
+    {
+        "source": "src/xbox360/title_server_small_batch.c",
+        "object": "title_server_small_batch.obj",
+        "symbols": {
+            "ts4_script_player_select_unload_all_created_players": 44,
+            "ts4_script_end_of_point_check_coach_objectives": 44,
+            "ts4_script_apply_profile_options": 48,
+            "ts4_script_start_practice_ground": 48,
+            "ts4_script_init_main_camera": 44,
+        },
     },
 )
 

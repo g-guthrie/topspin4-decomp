@@ -18,6 +18,21 @@ Sections:
 src/xbox360/online_feature_stubs.c:
 	.text       start:0x88778698 end:0x887786D0
 
+src/xbox360/runtime_record_accessors_20.c:
+	.text       start:0x881517F8 end:0x88151810
+
+src/xbox360/runtime_record_accessors_1c.c:
+	.text       start:0x88151868 end:0x88151878
+
+src/xbox360/runtime_type_codes_34_42.c:
+	.text       start:0x88151D88 end:0x88151DF8
+
+src/xbox360/runtime_type_codes_41_4a.c:
+	.text       start:0x88151E50 end:0x88151E90
+
+src/xbox360/runtime_type_code_80.c:
+	.text       start:0x88152478 end:0x88152480
+
 src/xbox360/generate_cpu_results.c:
 	.text       start:0x88778CE8 end:0x88778CF0
 
@@ -74,6 +89,12 @@ src/xbox360/create_runtime_object.c:
 
 src/xbox360/destroy_polymorphic_span.c:
 	.text       start:0x88170F58 end:0x88170FB8
+
+src/xbox360/create_zeroed_triplet.c:
+	.text       start:0x88170DC0 end:0x88170E24
+
+src/xbox360/allocate_zeroed_triplets.c:
+	.text       start:0x88170E28 end:0x88170EC0
 
 src/xbox360/create_container_factory_alias.c:
 	.text       start:0x88171690 end:0x88171694
@@ -289,6 +310,18 @@ src/xbox360/set_no_disco.c:
 src/xbox360/title_server_logout.c:
 	.pdata      start:0x881283D0 end:0x881283D8
 	.text       start:0x88792820 end:0x88792888
+
+src/xbox360/title_server_small_batch.c:
+	.pdata      start:0x88128408 end:0x88128410
+	.pdata      start:0x88128488 end:0x88128490
+	.pdata      start:0x88128498 end:0x881284A0
+	.pdata      start:0x881284B0 end:0x881284B8
+	.pdata      start:0x881284B8 end:0x881284C0
+	.text       start:0x88793000 end:0x8879302C
+	.text       start:0x88794098 end:0x887940C4
+	.text       start:0x88794158 end:0x88794188
+	.text       start:0x887948A8 end:0x887948D8
+	.text       start:0x887948D8 end:0x88794904
 
 src/xbox360/tsu_unload_profile.c:
 	.text       start:0x88792888 end:0x887928A4
