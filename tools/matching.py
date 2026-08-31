@@ -17,6 +17,18 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/runtime_type_codes_21_26.c",
+        "object": "runtime_type_codes_21_26.obj",
+        "symbols": {
+            "ts4_runtime_type_code_21": 8,
+            "ts4_runtime_type_code_22": 8,
+            "ts4_runtime_type_code_23": 8,
+            "ts4_runtime_type_code_24": 8,
+            "ts4_runtime_type_code_25": 8,
+            "ts4_runtime_type_code_26": 8,
+        },
+    },
+    {
         "source": "src/xbox360/runtime_type_codes_12_1f.c",
         "object": "runtime_type_codes_12_1f.obj",
         "symbols": {
@@ -755,6 +767,11 @@ MATCHING_UNITS = (
         },
     },
     {
+        "source": "src/xbox360/script_notify_rich_presence_by_part.c",
+        "object": "script_notify_rich_presence_by_part.obj",
+        "symbols": {"ts4_script_notify_rich_presence_by_part": 120},
+    },
+    {
         "source": "src/xbox360/compact_owned_span16.c",
         "object": "compact_owned_span16.obj",
         "symbols": {"ts4_compact_owned_span16": 132},
@@ -763,6 +780,11 @@ MATCHING_UNITS = (
         "source": "src/xbox360/advance_bit_cursor_to_location.c",
         "object": "advance_bit_cursor_to_location.obj",
         "symbols": {"ts4_advance_bit_cursor_to_location": 88},
+    },
+    {
+        "source": "src/xbox360/destroy_owned_container.c",
+        "object": "destroy_owned_container.obj",
+        "symbols": {"ts4_destroy_owned_container": 92},
     },
 )
 
