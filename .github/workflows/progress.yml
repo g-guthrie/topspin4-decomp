@@ -11,7 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Validate public progress report
-        run: python3 tools/validate_decomp_dev_report.py
+        run: |
+          python3 tools/validate_decomp_dev_report.py
+          python3 tools/validate_link_status.py
       - name: Upload decomp.dev report
         uses: actions/upload-artifact@v4
         with:

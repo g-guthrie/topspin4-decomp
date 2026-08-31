@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -15,6 +16,86 @@ ROOT = Path(__file__).resolve().parents[1]
 VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
+    {
+        "source": "src/xbox360/runtime_dispatch_slot_38.c",
+        "object": "runtime_dispatch_slot_38.obj",
+        "symbols": {"ts4_runtime_dispatch_slot_38": 16},
+    },
+    {
+        "source": "src/xbox360/runtime_type_code_fe.c",
+        "object": "runtime_type_code_fe.obj",
+        "symbols": {"ts4_runtime_type_code_fe": 8},
+    },
+    {
+        "source": "src/xbox360/runtime_type_codes_2e_31.c",
+        "object": "runtime_type_codes_2e_31.obj",
+        "symbols": {
+            "ts4_runtime_type_code_2e": 8,
+            "ts4_runtime_type_code_2f": 8,
+            "ts4_runtime_type_code_31": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_type_code_4b0.c",
+        "object": "runtime_type_code_4b0.obj",
+        "symbols": {"ts4_runtime_type_code_4b0": 8},
+    },
+    {
+        "source": "src/xbox360/runtime_record_accessors_20.c",
+        "object": "runtime_record_accessors_20.obj",
+        "symbols": {
+            "ts4_runtime_record_get_word_324": 8,
+            "ts4_runtime_process_subrecord_20": 8,
+            "ts4_runtime_record_get_word_620": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_record_accessors_1c.c",
+        "object": "runtime_record_accessors_1c.obj",
+        "symbols": {
+            "ts4_runtime_process_subrecord_1c": 8,
+            "ts4_runtime_record_get_word_61c": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_type_codes_34_42.c",
+        "object": "runtime_type_codes_34_42.obj",
+        "symbols": {
+            "ts4_runtime_type_code_34": 8,
+            "ts4_runtime_type_code_35": 8,
+            "ts4_runtime_type_code_36": 8,
+            "ts4_runtime_type_code_37": 8,
+            "ts4_runtime_type_code_38": 8,
+            "ts4_runtime_type_code_39": 8,
+            "ts4_runtime_type_code_3a": 8,
+            "ts4_runtime_type_code_3b": 8,
+            "ts4_runtime_type_code_3c": 8,
+            "ts4_runtime_type_code_3d": 8,
+            "ts4_runtime_type_code_3e": 8,
+            "ts4_runtime_type_code_47": 8,
+            "ts4_runtime_type_code_3f": 8,
+            "ts4_runtime_type_code_42": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_type_codes_41_4a.c",
+        "object": "runtime_type_codes_41_4a.obj",
+        "symbols": {
+            "ts4_runtime_type_code_43": 8,
+            "ts4_runtime_type_code_44": 8,
+            "ts4_runtime_type_code_45": 8,
+            "ts4_runtime_type_code_41": 8,
+            "ts4_runtime_type_code_46": 8,
+            "ts4_runtime_type_code_48": 8,
+            "ts4_runtime_type_code_49": 8,
+            "ts4_runtime_type_code_4a": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_type_code_80.c",
+        "object": "runtime_type_code_80.obj",
+        "symbols": {"ts4_runtime_type_code_80": 8},
+    },
     {
         "source": "src/xbox360/online_feature_stubs.c",
         "object": "online_feature_stubs.obj",
@@ -570,6 +651,40 @@ MATCHING_UNITS = (
         "object": "tsu_forfeit_in_lobby.obj",
         "symbols": {"tsu_forfeit_in_lobby": 56},
     },
+    {
+        "source": "src/xbox360/create_zeroed_triplet.c",
+        "object": "create_zeroed_triplet.obj",
+        "symbols": {"ts4_create_zeroed_triplet": 100},
+    },
+    {
+        "source": "src/xbox360/allocate_zeroed_triplets.c",
+        "object": "allocate_zeroed_triplets.obj",
+        "symbols": {"ts4_allocate_zeroed_triplets": 152},
+    },
+    {
+        "source": "src/xbox360/title_server_small_batch.c",
+        "object": "title_server_small_batch.obj",
+        "symbols": {
+            "ts4_script_player_select_unload_all_created_players": 44,
+            "ts4_script_end_of_point_check_coach_objectives": 44,
+            "ts4_script_apply_profile_options": 48,
+            "ts4_script_start_practice_ground": 48,
+            "ts4_script_init_main_camera": 44,
+        },
+    },
+    {
+        "source": "src/xbox360/script_callback_batch_b.c",
+        "object": "script_callback_batch_b.obj",
+        "symbols": {
+            "ts4_script_are_there_rewards_for_event_recap": 4,
+            "ts4_script_match_start_reset_rewards": 36,
+            "ts4_script_init_practice_ground": 44,
+            "ts4_script_reset_all_free_form_sliders": 36,
+            "ts4_script_restore_all_free_form_sliders_step2": 44,
+            "ts4_script_show_hot_spots": 44,
+            "ts4_script_hide_hot_spots": 44,
+        },
+    },
 )
 
 
@@ -591,6 +706,11 @@ def checked_file(path: Path, description: str) -> Path:
     if not resolved.is_file():
         raise SystemExit(f"missing {description}: {resolved}")
     return resolved
+
+
+def compiler_output_arg(rebuilt: Path) -> str:
+    """Return an MSVC output argument that works inside or outside the checkout."""
+    return f"/Fo{os.path.relpath(rebuilt, ROOT)}"
 
 
 def write_jeff_config(
@@ -729,7 +849,7 @@ def main() -> int:
         source = unit["source"]
         rebuilt = rebuilt_dir / unit["object"]
         rebuilt_by_source[source] = rebuilt
-        output_arg = f"/Fo{rebuilt.relative_to(ROOT)}"
+        output_arg = compiler_output_arg(rebuilt)
         run(
             [
                 str(wrapper),
