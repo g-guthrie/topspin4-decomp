@@ -24,6 +24,12 @@ src/xbox360/runtime_dispatch_slots_3c_4c.c:
 src/xbox360/runtime_adjusted_record_forwarders.c:
 	.text       start:0x88156E80 end:0x88156EB0
 
+src/xbox360/runtime_record_words_14_1c.c:
+	.text       start:0x8818B2E0 end:0x8818B2F0
+
+src/xbox360/runtime_record_words_90_98.c:
+	.text       start:0x881978A8 end:0x881978C0
+
 src/xbox360/runtime_type_codes_21_26.c:
 	.text       start:0x88172208 end:0x88172238
 
@@ -166,6 +172,9 @@ src/xbox360/set_parsed_values.c:
 
 src/xbox360/parse_u8_decimal_if_changed.c:
 	.text       start:0x88171C10 end:0x88171C88
+
+src/xbox360/copy_offset_span12.c:
+	.text       start:0x881720B8 end:0x88172148
 
 src/xbox360/destroy_object_variants.c:
 	.text       start:0x88171D50 end:0x88171DAC
@@ -452,6 +461,10 @@ src/xbox360/script_callback_batch_g.c:
 	.text       start:0x887B8AA0 end:0x887B8ACC
 	.text       start:0x887BBCD8 end:0x887BBD0C
 	.text       start:0x887BF780 end:0x887BF7B8
+
+src/xbox360/script_callback_batch_h.c:
+	.pdata      start:0x881284A0 end:0x881284A8
+	.text       start:0x88794188 end:0x8879421C
 
 src/xbox360/tsu_unload_profile.c:
 	.text       start:0x88792888 end:0x887928A4

@@ -17,6 +17,23 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/runtime_record_words_14_1c.c",
+        "object": "runtime_record_words_14_1c.obj",
+        "symbols": {
+            "ts4_runtime_record_get_word_14": 8,
+            "ts4_runtime_record_get_word_1c": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_record_words_90_98.c",
+        "object": "runtime_record_words_90_98.obj",
+        "symbols": {
+            "ts4_runtime_record_get_word_90": 8,
+            "ts4_runtime_record_get_word_94": 8,
+            "ts4_runtime_record_get_word_98": 8,
+        },
+    },
+    {
         "source": "src/xbox360/runtime_adjusted_record_forwarders.c",
         "object": "runtime_adjusted_record_forwarders.obj",
         "symbols": {
@@ -279,6 +296,11 @@ MATCHING_UNITS = (
         "source": "src/xbox360/parse_u8_decimal_if_changed.c",
         "object": "parse_u8_decimal_if_changed.obj",
         "symbols": {"ts4_parse_u8_decimal_if_changed": 120},
+    },
+    {
+        "source": "src/xbox360/copy_offset_span12.c",
+        "object": "copy_offset_span12.obj",
+        "symbols": {"ts4_copy_offset_span12": 144},
     },
     {
         "source": "src/xbox360/destroy_object_variants.c",
@@ -822,6 +844,11 @@ MATCHING_UNITS = (
             "ts4_script_start_loading": 52,
             "ts4_script_pop_me": 56,
         },
+    },
+    {
+        "source": "src/xbox360/script_callback_batch_h.c",
+        "object": "script_callback_batch_h.obj",
+        "symbols": {"ts4_script_change_part": 148},
     },
     {
         "source": "src/xbox360/compact_owned_span16.c",
