@@ -17,6 +17,30 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/runtime_dispatch_slot_38.c",
+        "object": "runtime_dispatch_slot_38.obj",
+        "symbols": {"ts4_runtime_dispatch_slot_38": 16},
+    },
+    {
+        "source": "src/xbox360/runtime_type_code_fe.c",
+        "object": "runtime_type_code_fe.obj",
+        "symbols": {"ts4_runtime_type_code_fe": 8},
+    },
+    {
+        "source": "src/xbox360/runtime_type_codes_2e_31.c",
+        "object": "runtime_type_codes_2e_31.obj",
+        "symbols": {
+            "ts4_runtime_type_code_2e": 8,
+            "ts4_runtime_type_code_2f": 8,
+            "ts4_runtime_type_code_31": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_type_code_4b0.c",
+        "object": "runtime_type_code_4b0.obj",
+        "symbols": {"ts4_runtime_type_code_4b0": 8},
+    },
+    {
         "source": "src/xbox360/runtime_record_accessors_20.c",
         "object": "runtime_record_accessors_20.obj",
         "symbols": {
@@ -646,6 +670,19 @@ MATCHING_UNITS = (
             "ts4_script_apply_profile_options": 48,
             "ts4_script_start_practice_ground": 48,
             "ts4_script_init_main_camera": 44,
+        },
+    },
+    {
+        "source": "src/xbox360/script_callback_batch_b.c",
+        "object": "script_callback_batch_b.obj",
+        "symbols": {
+            "ts4_script_are_there_rewards_for_event_recap": 4,
+            "ts4_script_match_start_reset_rewards": 36,
+            "ts4_script_init_practice_ground": 44,
+            "ts4_script_reset_all_free_form_sliders": 36,
+            "ts4_script_restore_all_free_form_sliders_step2": 44,
+            "ts4_script_show_hot_spots": 44,
+            "ts4_script_hide_hot_spots": 44,
         },
     },
 )

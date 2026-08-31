@@ -18,6 +18,18 @@ Sections:
 src/xbox360/online_feature_stubs.c:
 	.text       start:0x88778698 end:0x887786D0
 
+src/xbox360/runtime_dispatch_slot_38.c:
+	.text       start:0x88151538 end:0x88151548
+
+src/xbox360/runtime_type_code_fe.c:
+	.text       start:0x88157008 end:0x88157010
+
+src/xbox360/runtime_type_codes_2e_31.c:
+	.text       start:0x88157070 end:0x88157088
+
+src/xbox360/runtime_type_code_4b0.c:
+	.text       start:0x881571F8 end:0x88157200
+
 src/xbox360/runtime_record_accessors_20.c:
 	.text       start:0x881517F8 end:0x88151810
 
@@ -322,6 +334,21 @@ src/xbox360/title_server_small_batch.c:
 	.text       start:0x88794158 end:0x88794188
 	.text       start:0x887948A8 end:0x887948D8
 	.text       start:0x887948D8 end:0x88794904
+
+src/xbox360/script_callback_batch_b.c:
+	.pdata      start:0x881285C0 end:0x881285C8
+	.pdata      start:0x881285D8 end:0x881285E0
+	.pdata      start:0x881285E8 end:0x881285F0
+	.pdata      start:0x881285F0 end:0x881285F8
+	.pdata      start:0x88128618 end:0x88128620
+	.pdata      start:0x88128620 end:0x88128628
+	.text       start:0x887965D0 end:0x887965D4
+	.text       start:0x88796640 end:0x88796664
+	.text       start:0x88796770 end:0x8879679C
+	.text       start:0x88796990 end:0x887969B4
+	.text       start:0x887969B8 end:0x887969E4
+	.text       start:0x88796C78 end:0x88796CA4
+	.text       start:0x88796CA8 end:0x88796CD4
 
 src/xbox360/tsu_unload_profile.c:
 	.text       start:0x88792888 end:0x887928A4
