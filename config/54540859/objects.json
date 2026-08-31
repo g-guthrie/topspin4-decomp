@@ -4,6 +4,10 @@
     "mw_version": "X360/16.00.10224.00",
     "cflags": "base",
     "objects": {
+      "src/xbox360/runtime_dispatch_slots_3c_4c.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_dispatch_slots_3c_4c.c"
+      },
       "src/xbox360/runtime_type_codes_21_26.c": {
         "status": "Matching",
         "source": "xbox360/runtime_type_codes_21_26.c"
@@ -504,6 +508,10 @@
       "src/xbox360/destroy_owned_container.c": {
         "status": "Matching",
         "source": "xbox360/destroy_owned_container.c"
+      },
+      "src/xbox360/erase_value16_from_span.c": {
+        "status": "Matching",
+        "source": "xbox360/erase_value16_from_span.c"
       }
     }
   }

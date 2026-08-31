@@ -18,6 +18,9 @@ Sections:
 src/xbox360/online_feature_stubs.c:
 	.text       start:0x88778698 end:0x887786D0
 
+src/xbox360/runtime_dispatch_slots_3c_4c.c:
+	.text       start:0x8815EFC0 end:0x8815EFE8
+
 src/xbox360/runtime_type_codes_21_26.c:
 	.text       start:0x88172208 end:0x88172238
 
@@ -128,6 +131,9 @@ src/xbox360/advance_bit_cursor_to_location.c:
 
 src/xbox360/destroy_owned_container.c:
 	.text       start:0x8816F8C0 end:0x8816F91C
+
+src/xbox360/erase_value16_from_span.c:
+	.text       start:0x8816FA88 end:0x8816FAF0
 
 src/xbox360/create_zeroed_triplet.c:
 	.text       start:0x88170DC0 end:0x88170E24

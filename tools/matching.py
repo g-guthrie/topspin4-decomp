@@ -17,6 +17,15 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/runtime_dispatch_slots_3c_4c.c",
+        "object": "runtime_dispatch_slots_3c_4c.obj",
+        "symbols": {
+            "ts4_runtime_type_code_none": 8,
+            "ts4_runtime_dispatch_slot_3c": 16,
+            "ts4_runtime_dispatch_slot_4c": 16,
+        },
+    },
+    {
         "source": "src/xbox360/runtime_type_codes_21_26.c",
         "object": "runtime_type_codes_21_26.obj",
         "symbols": {
@@ -785,6 +794,11 @@ MATCHING_UNITS = (
         "source": "src/xbox360/destroy_owned_container.c",
         "object": "destroy_owned_container.obj",
         "symbols": {"ts4_destroy_owned_container": 92},
+    },
+    {
+        "source": "src/xbox360/erase_value16_from_span.c",
+        "object": "erase_value16_from_span.obj",
+        "symbols": {"ts4_erase_value16_from_span": 104},
     },
 )
 
