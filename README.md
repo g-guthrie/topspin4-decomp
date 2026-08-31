@@ -1,5 +1,8 @@
 # Top Spin 4 decompilation
 
+[![Repository guard](https://github.com/g-guthrie/topspin4-decomp/actions/workflows/guard.yml/badge.svg)](https://github.com/g-guthrie/topspin4-decomp/actions/workflows/guard.yml)
+[![Code progress](https://decomp.dev/g-guthrie/topspin4-decomp.svg?mode=shield&measure=code&label=Code)](https://decomp.dev/g-guthrie/topspin4-decomp)
+
 Clean-room reverse engineering and source reconstruction of *Top Spin 4*.
 
 ## Status
@@ -7,6 +10,8 @@ Clean-room reverse engineering and source reconstruction of *Top Spin 4*.
 Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. One hundred fifty functions have reviewed names. One hundred twenty-two reconstructed functions now compile to 100% code matches: 12,636 of 10,153,700 measured Swing code bytes (`0.12444725%`).
 
 The selected build is title ID `54540859` (`TT-2137`), media ID `60819732`, executable version `0.0.0.3`. See [docs/targets.md](docs/targets.md), [docs/analysis-status.md](docs/analysis-status.md), the [canonical decomp.dev-style build](docs/canonical-build.md), and [matching build instructions](docs/matching-build.md). The first active investigation maps the dormant server-delivered patch path in [docs/title-server-patch.md](docs/title-server-patch.md); the separate Loader split is documented in [docs/loader-analysis.md](docs/loader-analysis.md). Official updates and optional content are tracked separately in [docs/additional-content.md](docs/additional-content.md); they are not part of the baseline.
+
+The public progress artifact in `reports/54540859/report.json` contains measurements, unit sizes, and exact-match metadata only. GitHub Actions validates and uploads it for decomp.dev; it contains no original executable bytes.
 
 ## Boundaries
 
