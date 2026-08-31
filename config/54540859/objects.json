@@ -4,6 +4,10 @@
     "mw_version": "X360/16.00.10224.00",
     "cflags": "base",
     "objects": {
+      "src/xbox360/runtime_adjusted_record_forwarders.c": {
+        "status": "Matching",
+        "source": "xbox360/runtime_adjusted_record_forwarders.c"
+      },
       "src/xbox360/runtime_dispatch_slots_3c_4c.c": {
         "status": "Matching",
         "source": "xbox360/runtime_dispatch_slots_3c_4c.c"
@@ -139,6 +143,10 @@
       "src/xbox360/set_parsed_values.c": {
         "status": "Matching",
         "source": "xbox360/set_parsed_values.c"
+      },
+      "src/xbox360/parse_u8_decimal_if_changed.c": {
+        "status": "Matching",
+        "source": "xbox360/parse_u8_decimal_if_changed.c"
       },
       "src/xbox360/destroy_object_variants.c": {
         "status": "Matching",
@@ -500,6 +508,10 @@
       "src/xbox360/script_callback_batch_f.c": {
         "status": "Matching",
         "source": "xbox360/script_callback_batch_f.c"
+      },
+      "src/xbox360/script_callback_batch_g.c": {
+        "status": "Matching",
+        "source": "xbox360/script_callback_batch_g.c"
       },
       "src/xbox360/compact_owned_span16.c": {
         "status": "Matching",
