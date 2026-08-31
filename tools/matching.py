@@ -17,6 +17,33 @@ VERSION = "54540859"
 MODULE = "Swing_DLL.xex"
 MATCHING_UNITS = (
     {
+        "source": "src/xbox360/runtime_type_code_27.c",
+        "object": "runtime_type_code_27.obj",
+        "symbols": {"ts4_runtime_type_code_27": 8},
+    },
+    {
+        "source": "src/xbox360/runtime_type_code_28.c",
+        "object": "runtime_type_code_28.obj",
+        "symbols": {"ts4_runtime_type_code_28": 8},
+    },
+    {
+        "source": "src/xbox360/runtime_type_codes_05_0b.c",
+        "object": "runtime_type_codes_05_0b.obj",
+        "symbols": {
+            "ts4_runtime_type_code_05": 8,
+            "ts4_runtime_type_code_06": 8,
+            "ts4_runtime_type_code_07": 8,
+            "ts4_runtime_type_code_09": 8,
+            "ts4_runtime_type_code_0a": 8,
+            "ts4_runtime_type_code_0b": 8,
+        },
+    },
+    {
+        "source": "src/xbox360/runtime_type_code_400.c",
+        "object": "runtime_type_code_400.obj",
+        "symbols": {"ts4_runtime_type_code_400": 8},
+    },
+    {
         "source": "src/xbox360/runtime_dispatch_slot_38.c",
         "object": "runtime_dispatch_slot_38.obj",
         "symbols": {"ts4_runtime_dispatch_slot_38": 16},
@@ -684,6 +711,25 @@ MATCHING_UNITS = (
             "ts4_script_show_hot_spots": 44,
             "ts4_script_hide_hot_spots": 44,
         },
+    },
+    {
+        "source": "src/xbox360/script_callback_batch_c.c",
+        "object": "script_callback_batch_c.obj",
+        "symbols": {
+            "ts4_script_king_of_the_court_wait_for_players_loading": 44,
+            "ts4_script_king_of_the_court_prepare_next_match": 48,
+            "ts4_script_minigame_update_camera": 48,
+            "ts4_script_king_of_the_court_start_match": 48,
+            "ts4_script_top_spin_school_save_progress": 48,
+            "ts4_script_end_of_match_check_coach_objectives": 44,
+            "ts4_script_enter_practice_ground": 48,
+            "ts4_script_facial_stop_anim": 36,
+        },
+    },
+    {
+        "source": "src/xbox360/compact_owned_span16.c",
+        "object": "compact_owned_span16.obj",
+        "symbols": {"ts4_compact_owned_span16": 132},
     },
 )
 

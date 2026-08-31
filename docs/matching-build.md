@@ -71,11 +71,11 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe passes all one hundred nine source-built objects to the linker. Its map
-contains all one hundred seventy exact public functions. Because the remaining game code and
+A second probe passes all one hundred fifteen source-built objects to the linker. Its map
+contains all one hundred eighty-eight exact public functions. Because the remaining game code and
 data are not reconstructed, this probe requires `/FORCE:UNRESOLVED` and reports
-163 unique unresolved external symbols across 303 references. The linker emits a 19,456-byte
-inspection PE with 14,384 bytes of `.text`; that section also includes eight
+176 unique unresolved external symbols across 317 references. The linker emits a 19,968-byte
+inspection PE with 14,968 bytes of `.text`; that section also includes eight
 source helper functions and alignment, so it is not a new matching-progress
 denominator. This is evidence that the current reconstructed subset can enter a
 single Xbox link, not evidence of a usable module.
