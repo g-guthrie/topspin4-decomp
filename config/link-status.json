@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "linker": "Xbox 360 link.exe 10.00.10224.00",
+  "wrapper_requirement": "decompals/wibo PR 110 commit a91b26e05df7e3ee67e684d96b266b1aba13f3e3",
+  "input_sources": [
+    "src/xbox360/online_feature_stubs.c",
+    "src/xbox360/generate_cpu_results.c"
+  ],
+  "input_matching_functions": 8,
+  "input_matching_code_bytes": 64,
+  "input_object_kind": "source-built base objects",
+  "input_object_path_prefix": "build/54540859/src/src/xbox360/",
+  "link_flags": [
+    "/dll",
+    "/noentry",
+    "/nodefaultlib",
+    "/machine:PPCBE",
+    "/subsystem:XBOX",
+    "/XEX:NO",
+    "/OPT:NOREF"
+  ],
+  "output_format": "PE32 Xbox PowerPC big-endian DLL",
+  "output_size_bytes": 2560,
+  "output_sha256": "75d72862e1a467705892d447acb9bfdda7d2176391023ffe2327000d6e869519",
+  "output_text_bytes": 64,
+  "has_entry_point": false,
+  "has_imports": false,
+  "has_exports": false,
+  "is_xex": false,
+  "is_runnable": false,
+  "runtime_tested": false,
+  "artifact_committed": false,
+  "forced_all_units_probe": {
+    "input_source_objects": 96,
+    "input_matching_functions": 122,
+    "input_matching_code_bytes": 12636,
+    "input_object_kind": "source-built base objects",
+    "link_flags_added": [
+      "/FORCE:UNRESOLVED",
+      "/MAP"
+    ],
+    "output_size_bytes": 18432,
+    "output_sha256": "b25b3837551cd6fc9539ead09d8027896576de79e61a7649dccb16397497ddb4",
+    "output_text_bytes": 13328,
+    "map_matching_public_functions": 122,
+    "map_additional_static_helpers": 6,
+    "unresolved_external_symbols": 116,
+    "unresolved_external_references": 280,
+    "is_xex": false,
+    "is_runnable": false,
+    "runtime_tested": false,
+    "artifact_committed": false,
+    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 122 exact public functions plus source helper code and alignment, so total text size is not a matching-progress counter."
+  }
+}

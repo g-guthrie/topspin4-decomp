@@ -39,7 +39,7 @@ public class ExportProgramInventory extends GhidraScript {
         int externalCount = 0;
         FunctionIterator functions = currentProgram.getFunctionManager().getFunctions(true);
         try (BufferedWriter writer = Files.newBufferedWriter(csvPath, StandardCharsets.UTF_8)) {
-            writer.write("entry,name,namespace,source_type,is_thunk,is_external,body_bytes\n");
+            writer.write("entry,name,namespace,source_type,is_thunk,is_external,is_no_return,body_bytes\n");
             while (functions.hasNext() && !monitor.isCancelled()) {
                 Function function = functions.next();
                 functionCount++;
@@ -55,6 +55,7 @@ public class ExportProgramInventory extends GhidraScript {
                 writer.write("," + csv(function.getSymbol().getSource().toString()));
                 writer.write("," + function.isThunk());
                 writer.write("," + function.isExternal());
+                writer.write("," + function.hasNoReturn());
                 writer.write("," + function.getBody().getNumAddresses());
                 writer.write("\n");
             }

@@ -9,6 +9,7 @@
 *.self
 *.elf
 *.xex
+*.dll
 PS3_GAME/
 $SystemUpdate/
 VIDEO_TS/
@@ -19,6 +20,12 @@ roms/
 # Local analysis state
 work/
 artifacts/
+build/
+.ninja_*
+build.ninja
+objdiff.json
+compile_commands.json
+_CL_*
 *.gpr
 *.rep/
 .ghidra/

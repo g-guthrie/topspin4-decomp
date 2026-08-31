@@ -1,0 +1,20 @@
+name: progress-report
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate public progress report
+        run: python3 tools/validate_decomp_dev_report.py
+      - name: Upload decomp.dev report
+        uses: actions/upload-artifact@v4
+        with:
+          name: 54540859_report
+          path: reports/54540859/report.json
+          if-no-files-found: error

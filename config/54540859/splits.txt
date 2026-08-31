@@ -1,0 +1,370 @@
+Sections:
+	.rdata      type:rodata align:65536
+	.pdata      type:rodata align:65536
+	BINKCONS    type:rodata align:65536
+	.text       type:code align:65536
+	BINK        type:code align:65536
+	RADCODE     type:code align:65536
+	BINKBSS     type:bss align:65536
+	.data       type:data align:65536
+	.XBMOVIE    type:data align:65536
+	BINKDATA    type:data align:65536
+	RADDATA     type:data align:65536
+	.edata      type:rodata align:65536
+	.idata      type:data align:65536
+	.XBLD       type:data align:65536
+	.reloc      type:data align:65536
+
+src/xbox360/online_feature_stubs.c:
+	.text       start:0x88778698 end:0x887786D0
+
+src/xbox360/generate_cpu_results.c:
+	.text       start:0x88778CE8 end:0x88778CF0
+
+src/xbox360/initialize_netdb_stat_record.c:
+	.text       start:0x88151B08 end:0x88151B90
+
+src/xbox360/session_stats_init.c:
+	.text       start:0x88150E50 end:0x88150EAC
+
+src/xbox360/clear_netdb_owned_record.c:
+	.text       start:0x881515B8 end:0x881515F8
+
+src/xbox360/initialize_netdb_extended_record.c:
+	.text       start:0x88151C70 end:0x88151CD0
+
+src/xbox360/netdb_value_at_most_eight.c:
+	.text       start:0x88152660 end:0x88152698
+
+src/xbox360/netdb_destroy_variant_a.c:
+	.text       start:0x88152698 end:0x881526E0
+
+src/xbox360/netdb_destroy_variant_b.c:
+	.text       start:0x881526E0 end:0x88152728
+
+src/xbox360/netdb_release_owned_list.c:
+	.text       start:0x88152A00 end:0x88152A6C
+
+src/xbox360/netdb_allocate_98.c:
+	.text       start:0x88152C98 end:0x88152CF8
+
+src/xbox360/netdb_allocate_94.c:
+	.text       start:0x88152CF8 end:0x88152D58
+
+src/xbox360/assign_text_from_c_string.c:
+	.text       start:0x88152E70 end:0x88152ED4
+
+src/xbox360/clone_byte_with_object_context.c:
+	.text       start:0x88153620 end:0x88153674
+
+src/xbox360/min_u32.c:
+	.text       start:0x88154588 end:0x88154598
+
+src/xbox360/create_3ac_object.c:
+	.text       start:0x88154598 end:0x88154604
+
+src/xbox360/copy_block94.c:
+	.text       start:0x881546E8 end:0x88154754
+
+src/xbox360/span28_append.c:
+	.text       start:0x8816FD60 end:0x8816FDB8
+
+src/xbox360/create_runtime_object.c:
+	.text       start:0x88170A58 end:0x88170AB0
+
+src/xbox360/destroy_polymorphic_span.c:
+	.text       start:0x88170F58 end:0x88170FB8
+
+src/xbox360/create_container_factory_alias.c:
+	.text       start:0x88171690 end:0x88171694
+
+src/xbox360/create_runtime_object_20.c:
+	.text       start:0x881716F0 end:0x88171748
+
+src/xbox360/container_factory_wrappers.c:
+	.text       start:0x88171480 end:0x881714D8
+	.text       start:0x881714D8 end:0x88171530
+	.text       start:0x88171530 end:0x88171588
+	.text       start:0x88171588 end:0x881715E0
+	.text       start:0x881715E0 end:0x88171638
+	.text       start:0x88171638 end:0x88171690
+	.text       start:0x88171698 end:0x881716F0
+	.text       start:0x88171748 end:0x881717A0
+
+src/xbox360/set_parsed_values.c:
+	.text       start:0x88171C88 end:0x88171CE4
+	.text       start:0x88171CE8 end:0x88171D4C
+
+src/xbox360/destroy_object_variants.c:
+	.text       start:0x88171D50 end:0x88171DAC
+	.text       start:0x88172148 end:0x881721A4
+
+src/xbox360/insert_sorted_node.c:
+	.text       start:0x8857CB00 end:0x8857CB70
+
+src/xbox360/consume_to_delimiter.c:
+	.text       start:0x8857CB70 end:0x8857CBBC
+
+src/xbox360/increment_shared_refcount.c:
+	.text       start:0x8857D528 end:0x8857D57C
+
+src/xbox360/decrement_shared_refcount.c:
+	.text       start:0x8857D580 end:0x8857D5D8
+
+src/xbox360/find_runtime_entry_payload.c:
+	.text       start:0x8857DB20 end:0x8857DBC8
+
+src/xbox360/runtime_small_helpers.c:
+	.text       start:0x88581F40 end:0x88581F4C
+	.text       start:0x88582130 end:0x88582134
+	.text       start:0x88582138 end:0x88582144
+	.text       start:0x88582450 end:0x8858246C
+	.text       start:0x88582608 end:0x8858260C
+
+src/xbox360/runtime_forwarders.c:
+	.text       start:0x88582BC8 end:0x88582BCC
+	.text       start:0x88582F28 end:0x88582F2C
+	.text       start:0x885830B0 end:0x885830B4
+	.text       start:0x885830B8 end:0x885830BC
+
+src/xbox360/is_in_a_session.c:
+	.text       start:0x88778CF0 end:0x88778D08
+
+src/xbox360/session_policy_stubs.c:
+	.text       start:0x88778D08 end:0x88778D18
+
+src/xbox360/competition_game_reset.c:
+	.text       start:0x88779960 end:0x88779968
+
+src/xbox360/competition_game_ask_for_character.c:
+	.pdata      start:0x88127F40 end:0x88127F48
+	.text       start:0x88787638 end:0x887876DC
+
+src/xbox360/reset_online_config.c:
+	.text       start:0x88779968 end:0x887799AC
+
+src/xbox360/session_match_accessor.c:
+	.text       start:0x887799B0 end:0x887799C0
+
+src/xbox360/span16_append.c:
+	.text       start:0x88152530 end:0x88152588
+
+src/xbox360/resume_thread.c:
+	.text       start:0x8857C888 end:0x8857C8C4
+
+src/xbox360/is_session_started.c:
+	.text       start:0x8877BFD8 end:0x8877BFF8
+
+src/xbox360/is_remote.c:
+	.text       start:0x8877BFF8 end:0x8877C0A0
+
+src/xbox360/tsu_session_stats.c:
+	.pdata      start:0x88127B28 end:0x88127B30
+	.text       start:0x8877F758 end:0x8877F814
+
+src/xbox360/tsu_copy_local_stat_to_netdb.c:
+	.pdata      start:0x88127B38 end:0x88127B40
+	.text       start:0x8877F970 end:0x8877FA98
+
+src/xbox360/tsu_refresh_tournament_sessions.c:
+	.pdata      start:0x88127B40 end:0x88127B48
+	.text       start:0x8877FA98 end:0x8877FACC
+
+src/xbox360/tsu_reset_friends_leaderboard.c:
+	.pdata      start:0x88127B48 end:0x88127B50
+	.text       start:0x8877FBC0 end:0x8877FC10
+
+src/xbox360/tsu_per_round_stats.c:
+	.pdata      start:0x88127B30 end:0x88127B38
+	.text       start:0x8877F818 end:0x8877F96C
+
+src/xbox360/tsu_debug_add_fake_player.c:
+	.pdata      start:0x88127DB8 end:0x88127DC0
+	.text       start:0x88783BA0 end:0x88783BD8
+
+src/xbox360/tsu_debug_remove_fake_player.c:
+	.pdata      start:0x88127DB0 end:0x88127DB8
+	.text       start:0x88783AF8 end:0x88783B9C
+
+src/xbox360/tsu_debug_end_season.c:
+	.pdata      start:0x88127B58 end:0x88127B60
+	.text       start:0x8877FD88 end:0x8877FE28
+
+src/xbox360/tsu_debug_send_end_season.c:
+	.pdata      start:0x88127F80 end:0x88127F88
+	.text       start:0x88787E10 end:0x88787EB0
+
+src/xbox360/tsu_debug_ind_dec_lobby_timer.c:
+	.pdata      start:0x88127F78 end:0x88127F80
+	.text       start:0x88787CE8 end:0x88787E0C
+
+src/xbox360/tsu_season_time.c:
+	.text       start:0x887835A8 end:0x887835E4
+
+src/xbox360/tsu_reset_season_rank_history.c:
+	.pdata      start:0x88127D80 end:0x88127D88
+	.text       start:0x887835E8 end:0x88783620
+
+src/xbox360/tsu_fill_friends_leaderboard.c:
+	.pdata      start:0x88127D88 end:0x88127D90
+	.text       start:0x88783620 end:0x88783724
+
+src/xbox360/tsu_get_profile_summaries.c:
+	.pdata      start:0x88127D98 end:0x88127DA0
+	.text       start:0x88783870 end:0x8878395C
+
+src/xbox360/tsu_init_friends_leaderboard.c:
+	.pdata      start:0x88128120 end:0x88128128
+	.text       start:0x8878B600 end:0x8878B820
+
+src/xbox360/tsu_read_stats_around_user.c:
+	.pdata      start:0x88128128 end:0x88128130
+	.text       start:0x8878B820 end:0x8878BAA0
+
+src/xbox360/tsu_read_stats_by_rank.c:
+	.pdata      start:0x88128130 end:0x88128138
+	.text       start:0x8878BAA0 end:0x8878BCE8
+
+src/xbox360/tsu_update_created_player_stats.c:
+	.pdata      start:0x88128138 end:0x88128140
+	.text       start:0x8878BCE8 end:0x8878BD1C
+
+src/xbox360/tsu_update_player_rank.c:
+	.pdata      start:0x88128140 end:0x88128148
+	.text       start:0x8878BD20 end:0x8878BDD0
+
+src/xbox360/tsu_report_event.c:
+	.pdata      start:0x88128148 end:0x88128150
+	.text       start:0x8878BDD0 end:0x8878BE18
+
+src/xbox360/tsu_profile_service_reset.c:
+	.pdata      start:0x88128150 end:0x88128158
+	.text       start:0x8878BE18 end:0x8878BE48
+
+src/xbox360/tsu_notify_object.c:
+	.pdata      start:0x88128158 end:0x88128160
+	.text       start:0x8878BE48 end:0x8878BE74
+
+src/xbox360/tsu_destroy_owned_object.c:
+	.pdata      start:0x88128188 end:0x88128190
+	.text       start:0x8878C300 end:0x8878C33C
+
+src/xbox360/tsu_format_and_assign.c:
+	.pdata      start:0x88128198 end:0x881281A0
+	.text       start:0x8878C388 end:0x8878C3DC
+
+src/xbox360/tsu_enable_object.c:
+	.pdata      start:0x881281B0 end:0x881281B8
+	.text       start:0x8878C7B0 end:0x8878C7E8
+
+src/xbox360/tsu_disable_object.c:
+	.pdata      start:0x881281B8 end:0x881281C0
+	.text       start:0x8878C7E8 end:0x8878C820
+
+src/xbox360/tsu_cleanup_object.c:
+	.pdata      start:0x881281C8 end:0x881281D0
+	.text       start:0x8878C940 end:0x8878C99C
+
+src/xbox360/tsu_declare_match_official.c:
+	.pdata      start:0x88127F50 end:0x88127F58
+	.text       start:0x88787718 end:0x8878774C
+
+src/xbox360/is_local_user_a_guest.c:
+	.text       start:0x8877FCD0 end:0x8877FD84
+
+src/xbox360/is_lobby_full.c:
+	.text       start:0x887801E0 end:0x88780200
+
+src/xbox360/is_host.c:
+	.text       start:0x88780200 end:0x88780224
+
+src/xbox360/modify_session.c:
+	.pdata      start:0x88127918 end:0x88127920
+	.text       start:0x8877BC98 end:0x8877BCE8
+
+src/xbox360/set_no_disco.c:
+	.pdata      start:0x88127938 end:0x88127940
+	.text       start:0x8877C0A0 end:0x8877C0F0
+
+src/xbox360/title_server_logout.c:
+	.pdata      start:0x881283D0 end:0x881283D8
+	.text       start:0x88792820 end:0x88792888
+
+src/xbox360/tsu_unload_profile.c:
+	.text       start:0x88792888 end:0x887928A4
+
+src/xbox360/tsu_load_profile.c:
+	.pdata      start:0x881287F0 end:0x881287F8
+	.text       start:0x8879BAA8 end:0x8879BB58
+
+src/xbox360/pro_challenge_save_profile.c:
+	.pdata      start:0x881287D8 end:0x881287E0
+	.text       start:0x8879B898 end:0x8879B944
+
+src/xbox360/pro_challenge_load_profile.c:
+	.pdata      start:0x881287E0 end:0x881287E8
+	.text       start:0x8879B948 end:0x8879B9F4
+
+src/xbox360/tsu_update_profile.c:
+	.pdata      start:0x881287E8 end:0x881287F0
+	.text       start:0x8879B9F8 end:0x8879BAA8
+
+src/xbox360/tsu_save_profile.c:
+	.pdata      start:0x881287F8 end:0x88128800
+	.text       start:0x8879BB58 end:0x8879BC28
+
+src/xbox360/tsu_write_profile_summaries.c:
+	.pdata      start:0x88128800 end:0x88128808
+	.text       start:0x8879BC28 end:0x8879BCC8
+
+src/xbox360/tsu_load_profile_summaries.c:
+	.pdata      start:0x88128808 end:0x88128810
+	.text       start:0x8879BCC8 end:0x8879BD68
+
+src/xbox360/profile_internal_bd68.c:
+	.pdata      start:0x88128810 end:0x88128818
+	.text       start:0x8879BD68 end:0x8879BE08
+
+src/xbox360/profile_internal_bff8.c:
+	.pdata      start:0x88128828 end:0x88128830
+	.text       start:0x8879BFF8 end:0x8879C0C0
+
+src/xbox360/title_server_login_user_only.c:
+	.pdata      start:0x881283C0 end:0x881283C8
+	.text       start:0x88792638 end:0x887926D8
+
+src/xbox360/minigame_change_display_mode.c:
+	.pdata      start:0x881283F0 end:0x881283F8
+	.text       start:0x88792CB8 end:0x88792D48
+
+src/xbox360/player_visibility.c:
+	.pdata      start:0x881284F0 end:0x88128500
+	.text       start:0x88794C18 end:0x88794CC4
+
+src/xbox360/query_pro_player_list.c:
+	.pdata      start:0x88128500 end:0x88128508
+	.text       start:0x88794CC8 end:0x88794E38
+
+src/xbox360/title_server_callbacks.c:
+	.pdata      start:0x88128508 end:0x88128518
+	.text       start:0x88794E38 end:0x88794FE8
+
+src/xbox360/title_patch.c:
+	.pdata      start:0x88128518 end:0x88128520
+	.text       start:0x88794FE8 end:0x88795020
+
+src/xbox360/minigame_prepare.c:
+	.pdata      start:0x88128540 end:0x88128548
+	.text       start:0x88795548 end:0x8879556C
+
+src/xbox360/minigame_hide_tracksides.c:
+	.pdata      start:0x88128548 end:0x88128550
+	.text       start:0x88795570 end:0x887955A0
+
+src/xbox360/king_of_court_prepare.c:
+	.pdata      start:0x88128550 end:0x88128558
+	.text       start:0x887955A0 end:0x887955C4
+
+src/xbox360/tsu_forfeit_in_lobby.c:
+	.pdata      start:0x881286E8 end:0x881286F0
+	.text       start:0x88798C60 end:0x88798C98

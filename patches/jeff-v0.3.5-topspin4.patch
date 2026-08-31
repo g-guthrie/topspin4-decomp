@@ -1,0 +1,106 @@
+diff --git a/src/analysis/cfa.rs b/src/analysis/cfa.rs
+index 6d0efb6..44b43df 100644
+--- a/src/analysis/cfa.rs
++++ b/src/analysis/cfa.rs
+@@ -389,7 +389,18 @@ impl AnalyzerState {
+                 for address in slices.function_references.iter().cloned() {
+                     // Only create functions for code sections
+                     // Some games use branches to data sections to prevent dead stripping (Mario Party)
+-                    if matches!(obj.sections.get(address.section), Some(section) if section.kind == ObjSectionKind::Code)
++                    // A shared jump table may contain entries that land inside a
++                    // pdata-bounded function. Do not turn those labels into
++                    // overlapping function starts.
++                    let inside_known_function = self
++                        .functions
++                        .range(..=address)
++                        .next_back()
++                        .is_some_and(|(&start, info)| {
++                            start != address && info.end.is_some_and(|end| address < end)
++                        });
++                    if !inside_known_function
++                        && matches!(obj.sections.get(address.section), Some(section) if section.kind == ObjSectionKind::Code)
+                     {
+                         self.functions.entry(address).or_default();
+                     }
+@@ -442,7 +453,18 @@ impl AnalyzerState {
+             for address in slices.function_references.iter().cloned() {
+                 // Only create functions for code sections
+                 // Some games use branches to data sections to prevent dead stripping (Mario Party)
+-                if matches!(obj.sections.get(address.section), Some(section) if section.kind == ObjSectionKind::Code)
++                // A shared jump table may contain entries that land inside a
++                // pdata-bounded function. Do not turn those labels into
++                // overlapping function starts.
++                let inside_known_function = self
++                    .functions
++                    .range(..=address)
++                    .next_back()
++                    .is_some_and(|(&start, info)| {
++                        start != address && info.end.is_some_and(|end| address < end)
++                    });
++                if !inside_known_function
++                    && matches!(obj.sections.get(address.section), Some(section) if section.kind == ObjSectionKind::Code)
+                 {
+                     self.functions.entry(address).or_default();
+                 }
+@@ -496,4 +518,28 @@ impl AnalyzerState {
+     fn detect_new_functions(&mut self, obj: &ObjInfo) -> Result<bool> {
++        let skip_alignment_and_objects =
++            |section: &crate::obj::ObjSection,
++             mut addr: SectionAddress,
++             end: SectionAddress|
++             -> Option<SectionAddress> {
++                loop {
++                    addr = skip_alignment(section, addr, end)?;
++                    let covering_object = obj
++                        .symbols
++                        .for_section_range(addr.section, ..=addr.address)
++                        .rfind(|(_, symbol)| {
++                            symbol.kind == ObjSymbolKind::Object
++                                && symbol.size_known
++                                && symbol.address + symbol.size > addr.address as u64
++                        });
++                    let Some((_, symbol)) = covering_object else {
++                        return Some(addr);
++                    };
++                    addr.address = (symbol.address + symbol.size) as u32;
++                    if addr >= end {
++                        return None;
++                    }
++                }
++            };
+         let mut new_functions = vec![];
+         for (section_index, section) in obj.sections.by_kind(ObjSectionKind::Code) {
+             if section.name == ".xidata" {
+@@ -509,7 +555,7 @@ impl AnalyzerState {
+                         if first_end > second {
+                             bail!("Overlapping functions {}-{} -> {}", first, first_end, second);
+                         }
+-                        let addr = match skip_alignment(section, first_end, second) {
++                        let addr = match skip_alignment_and_objects(section, first_end, second) {
+                             Some(addr) => addr,
+                             None => continue,
+                         };
+@@ -536,7 +582,7 @@ impl AnalyzerState {
+                     (Some((last, last_info)), None) => {
+                         let Some(last_end) = last_info.end else { continue };
+                         if last_end < section_end {
+-                            let addr = match skip_alignment(section, last_end, section_end) {
++                            let addr = match skip_alignment_and_objects(section, last_end, section_end) {
+                                 Some(addr) => addr,
+                                 None => continue,
+                             };
+diff --git a/src/analysis/executor.rs b/src/analysis/executor.rs
+index 2b69f46..e6b48f9 100644
+--- a/src/analysis/executor.rs
++++ b/src/analysis/executor.rs
+@@ -21,7 +21,9 @@ impl VisitedAddresses {
+         let mut inner = Vec::with_capacity(obj.sections.len() as usize);
+         for (_, section) in obj.sections.iter() {
+             if section.kind == ObjSectionKind::Code {
+-                let size = (section.size / 4) as usize;
++                // Execution may briefly visit the end sentinel before
++                // disassembly rejects it as outside the section.
++                let size = (section.size / 4) as usize + 1;
+                 inner.push(FixedBitSet::with_capacity(size));
+             } else {
+                 // Empty
