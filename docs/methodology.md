@@ -1,6 +1,6 @@
 # Matching methodology for the wave-1 additions
 
-Guide version **1** (2026-10-20). It describes how the 194 functions added in
+Guide version **2** (2026-10-20). It describes how the 194 functions added in
 `src/xbox360/matched/` were found, written, checked and reviewed, and how far
 that evidence goes. [reproduction.md](reproduction.md) gives the commands to
 re-run the check yourself. Everything here is relative to the repository root.
@@ -12,7 +12,7 @@ committed.
 | item | identity |
 |---|---|
 | repository base | `553f78394f95d28e1ccba43dab50f7c5adafc18e` (131 units, 245 functions, 16,360 code bytes) |
-| this guide | `docs/methodology.md` and `docs/reproduction.md`, version 1 |
+| this guide | `docs/methodology.md` and `docs/reproduction.md`, version 2 (version 1 plus reproduction clarifications) |
 | target module | `Swing_DLL.xex` SHA-256 `dfa71292f75a649773c280de7bc2688e6e47e473aba397c248fb4204c45fac44` (`config/target.json`) |
 | compiler | Xbox 360 `cl.exe` 16.00.10224.00, SHA-256 `6c27181a805dee13d0c9515efc00812d92f9c504cd1158eaf1f338d9f651f198` (`config/54540859/match.json`) |
 | linker (link probe only) | Xbox 360 `link.exe` 10.00.10224.0, SHA-256 `5c970fc53998e620fc70c100ef2729cd59c8714f8b761eeac289cfa2fa3a5acf` |
