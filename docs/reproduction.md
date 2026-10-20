@@ -44,7 +44,7 @@ The wave-1 units need no SDK headers and no `ATL100.DLL`.
    ```
 
    - **Unit tests on Windows** (observed): `FAILED (failures=1, skipped=1)`, exit code 1. The failure is `test_external_work_directory_uses_relative_compiler_output`, because `/Fo` uses backslashes there; the base commit 553f783 fails the same test in the same way.
-   - **Unit tests on Linux** (as in CI, not run locally for this change): 15 tests with one skip, and that test passes.
+   - **Unit tests on Linux: expected, not verified on this revision.** Linux and the remote CI were not run for this revision. The expected result, by the CI configuration, is 15 tests with one skip, with the `/Fo` test passing.
 
 2. **Full matching check** (template; PowerShell form below). It splits the module, compiles all 205 units, generates the objdiff report and rejects any listed function that is not at 100% at its recorded size.
 
