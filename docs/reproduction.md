@@ -1,10 +1,14 @@
 # Reproducing the matching result
 
-Guide version **2** (2026-10-20); it goes with [methodology.md](methodology.md).
+Guide version **3** (2026-10-20); it goes with [methodology.md](methodology.md).
 The commands below are the ones actually run for this change, on Windows 11 x64
 with Python 3.13.11 (the CI uses 3.12). Each is followed by its expected output.
 On Windows, write `python` wherever this guide says `python3`: there `python3`
 usually starts the Microsoft Store stub instead of an installed interpreter.
+The `sh` blocks in the quick start are POSIX **templates** (backslash line
+continuation, `<…>` placeholders) and do not run in PowerShell as written. The
+PowerShell 7.6 block after the quick start was run exactly as shown, with only
+the paths changed.
 Paths are written relative to the repository root, and `<…>` marks a path you
 supply.
 
@@ -22,7 +26,7 @@ The wave-1 units need no SDK headers and no `ATL100.DLL`.
 
 ## Quick start
 
-1. **Repository checks.** These need no game data, but they must run in a git checkout: `tools/check_no_game_data.py` lists files with `git ls-files`, so it fails in an exported tree or archive.
+1. **Repository checks** (template; PowerShell form below). These need no game data, but they must run in a git checkout: `tools/check_no_game_data.py` lists files with `git ls-files`, so it fails in an exported tree or archive.
 
    ```sh
    python3 tools/check_no_game_data.py
@@ -37,12 +41,12 @@ The wave-1 units need no SDK headers and no `ATL100.DLL`.
    No tracked game-data candidates found.
    Validated decomp.dev report: 439 exact functions, 34632/10153700 code bytes, 594 units
    Validated link status: 205 source objects, 439 exact functions, 34632 matching bytes
-   Ran 15 tests ... OK (skipped=1)
    ```
 
-   - On Windows, `test_external_work_directory_uses_relative_compiler_output` fails, as it already does at the base commit, because `/Fo` uses backslashes there. It passes on Linux.
+   - **Unit tests on Windows** (observed): `FAILED (failures=1, skipped=1)`, exit code 1. The failure is `test_external_work_directory_uses_relative_compiler_output`, because `/Fo` uses backslashes there; the base commit 553f783 fails the same test in the same way.
+   - **Unit tests on Linux** (as in CI, not run locally for this change): 15 tests with one skip, and that test passes.
 
-2. **Full matching check.** It splits the module, compiles all 205 units, generates the objdiff report and rejects any listed function that is not at 100% at its recorded size.
+2. **Full matching check** (template; PowerShell form below). It splits the module, compiles all 205 units, generates the objdiff report and rejects any listed function that is not at 100% at its recorded size.
 
    ```sh
    python3 tools/matching.py \
@@ -60,7 +64,7 @@ The wave-1 units need no SDK headers and no `ATL100.DLL`.
    - The exit code is 0.
    - The work directory contains game-derived split objects. Keep it private.
 
-3. **Optional: regenerate the committed report.** The committed `reports/54540859/report.json` is derived from the generated `objdiff-project/report.json`:
+3. **Optional: regenerate the committed report** (template; PowerShell form below). The committed `reports/54540859/report.json` is derived from the generated `objdiff-project/report.json`:
    - Keep the top-level keys and every unit in the generated order, with each unit's keys unchanged.
    - In each unit, set `functions` to the entries whose `fuzzy_match_percent` is exactly `100.0`. A unit with no `functions` list gets `"functions": []` written as its last key.
    - Serialise with Python `json.dumps(report, separators=(",", ":"))`: no key sorting, default float formatting. Add exactly one trailing newline and no BOM.
@@ -74,7 +78,10 @@ The wave-1 units need no SDK headers and no `ATL100.DLL`.
    - The two hashes printed must be equal. Two independent runs on this tree produced the same file, and the same transformation reproduces the base commit's committed report byte for byte.
    - Compare git blob ids as shown, not the working file's SHA-256. A fresh Windows clone with `core.autocrlf=true` checks `report.json` out with CRLF line endings, which changes the working file's bytes.
 
-4. **Optional: forced link probe** (`config/link-status.json`). Link every rebuilt object, in `MATCHING_UNITS` order. Two hundred five absolute paths exceed the Windows command-line limit, so run the linker from `<work-dir>/rebuilt` with a response file that holds the bare object names, one per line, in `MATCHING_UNITS` order:
+4. **Optional: forced link probe** (`config/link-status.json`).
+   - **Linker.** `link.exe` is the one in the same `16.00.10224.00` compiler directory, SHA-256 `5c970fc53998e620fc70c100ef2729cd59c8714f8b761eeac289cfa2fa3a5acf`.
+   - **Git Bash.** Set `MSYS_NO_PATHCONV=1`; otherwise arguments such as `/nologo` are rewritten as paths. cmd.exe and PowerShell are not affected.
+   - **Why a response file.** Every rebuilt object is linked, in `MATCHING_UNITS` order. Two hundred five absolute paths exceed the Windows command-line limit, so run the linker from `<work-dir>/rebuilt` with a response file that holds the bare object names, one per line, in `MATCHING_UNITS` order. The block below is a template; the tested PowerShell form follows the quick start.
 
    ```
    python3 -c "import tools.matching as m; print(chr(10).join(u['object'] for u in m.MATCHING_UNITS))" > <work-dir>/rebuilt/objects.rsp
@@ -86,6 +93,38 @@ The wave-1 units need no SDK headers and no `ATL100.DLL`.
    - **Counting rules.** These are the definitions that reproduce the base commit's 218 / 373 / 22,528 / 17,176 / 8 exactly. "Unique unresolved external symbols" = distinct `LNK2001`/`LNK2019` message texts with the object-file prefix removed. "References" = all such lines. `.text` bytes = the section's VirtualSize. Static helpers = static function symbols in the map.
    - **Results on this tree:** 343 / 588 / 45,568 / 37,772 / 51.
    - **Output hash.** The output file's SHA-256 changes with every link, because of the link timestamp.
+
+### The same steps in PowerShell (tested on Windows 11, PowerShell 7.6.6)
+
+Replace the paths in the first lines with your own; the repository root must be the current directory.
+
+```powershell
+$Xex = 'D:\private\Swing_DLL.xex'; $Jeff = 'D:\tools\jeff.exe'; $Cl = 'D:\tools\16.00.10224.00'
+$Wrap = 'D:\tools\passthrough.cmd'; $Objdiff = 'D:\tools\objdiff-cli.exe'; $Work = 'D:\scratch\work'
+python tools/check_no_game_data.py
+python tools/validate_decomp_dev_report.py
+python tools/validate_link_status.py
+python -m unittest discover -s tests          # Windows: FAILED (failures=1, skipped=1), see above
+python tools/matching.py --xex $Xex --jeff $Jeff --compiler-dir $Cl --wrapper $Wrap --objdiff $Objdiff --work-dir $Work --fresh-analysis
+# committed report form, then compare git blob ids (both lines must print the same id)
+python -c 'import json,sys; r=json.load(open(sys.argv[1])); [u.__setitem__("functions",[f for f in u.get("functions",[]) if f.get("fuzzy_match_percent")==100.0]) for u in r["units"]]; open(sys.argv[2],"wb").write((json.dumps(r,separators=(",",":"))+chr(10)).encode())' "$Work\objdiff-project\report.json" "$Work\report.committed.json"
+git hash-object "$Work\report.committed.json"
+git rev-parse HEAD:reports/54540859/report.json
+# link probe: an ASCII, LF-terminated response file of bare object names in MATCHING_UNITS order
+python -c 'import sys,tools.matching as m; open(sys.argv[1],"wb").write("".join(u["object"]+chr(10) for u in m.MATCHING_UNITS).encode("ascii"))' "$Work\rebuilt\objects.rsp"
+$Link = Join-Path $Cl 'link.exe'
+Push-Location "$Work\rebuilt"
+& $Link /nologo /dll /noentry /nodefaultlib /machine:PPCBE /subsystem:XBOX /XEX:NO /OPT:NOREF /FORCE:UNRESOLVED /MAP '/out:probe.dll' '@objects.rsp' > link.txt
+Pop-Location
+```
+
+**Observed results**
+- The three checks print the lines above.
+- `matching.py` ends with `Matched 439 functions: 34632/10153700 code bytes (0.34107763%)`, exit code 0.
+- Both blob ids are `bd072ba189589396ff9b709143082dc445641fd3`.
+- The linker exits 0. `link.txt` contains 588 `LNK2001`/`LNK2019` lines, and `probe.dll` is 45,568 bytes.
+
+Quote `'@objects.rsp'` as shown: unquoted, PowerShell reads `@objects` as splatting.
 
 ## Directory and configuration schema (what a new match touches)
 

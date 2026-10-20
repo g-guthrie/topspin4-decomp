@@ -1,6 +1,6 @@
 # Matching methodology for the wave-1 additions
 
-Guide version **2** (2026-10-20). It describes how the 194 functions added in
+Guide version **3** (2026-10-20). It describes how the 194 functions added in
 `src/xbox360/matched/` were found, written, checked and reviewed, and how far
 that evidence goes. [reproduction.md](reproduction.md) gives the commands to
 re-run the check yourself. Everything here is relative to the repository root.
@@ -12,14 +12,14 @@ committed.
 | item | identity |
 |---|---|
 | repository base | `553f78394f95d28e1ccba43dab50f7c5adafc18e` (131 units, 245 functions, 16,360 code bytes) |
-| this guide | `docs/methodology.md` and `docs/reproduction.md`, version 2 (version 1 plus reproduction clarifications) |
+| this guide | `docs/methodology.md` and `docs/reproduction.md`, version 3 (corrected relocation equations, analysis provenance, tested PowerShell commands, scope) |
 | target module | `Swing_DLL.xex` SHA-256 `dfa71292f75a649773c280de7bc2688e6e47e473aba397c248fb4204c45fac44` (`config/target.json`) |
 | compiler | Xbox 360 `cl.exe` 16.00.10224.00, SHA-256 `6c27181a805dee13d0c9515efc00812d92f9c504cd1158eaf1f338d9f651f198` (`config/54540859/match.json`) |
 | linker (link probe only) | Xbox 360 `link.exe` 10.00.10224.0, SHA-256 `5c970fc53998e620fc70c100ef2729cd59c8714f8b761eeac289cfa2fa3a5acf` |
 | splitter | Jeff tag `v0.3.5` (`a7b667e29cce75c4c6329624b398c05c6b163d36`) plus `patches/jeff-v0.3.5-topspin4.patch` (LF SHA-256 `31050b8a6d624adb52676f2add9f9d40763ac48a7e31cd1b974815da76c49ce4`). The Windows build used here reports `0.3.5 1ae97da6…`, SHA-256 `c3bece150b9c88e2a052955646a21a777d2d9dd15689ba05b4ad265c0dec83c4` |
 | diff tool | objdiff-cli 3.7.1, Windows x86-64 build SHA-256 `97f906acf83442040e3624688341f821238db367c9dba7585213d301216310d2` |
 | Python | 3.12.14 and 3.13.11, standard library only |
-| analysis | Ghidra 12.1.2 with XEXLoaderWV 12.1.2 (`tools/analyze_xbox360.sh`) |
+| analysis (private exports used for reading) | Ghidra 12.1.2, as the export job logs record. The XEXLoaderWV extension was loaded from the Ghidra 12.1.2 `Extensions` folder; its `extension.properties` there reads `version=13.0.0` (SaveEditors fork, created 2026-03-25; `XEXLoaderWV.jar` SHA-256 `aff95fe850f7f88497155fe33a3dc29e0ee200429aab6eaeb51758dbe80ac7de`), and that folder was installed before the export jobs ran. The job logs do not print the extension version themselves, so 13.0.0 is the installed version, not a version the logs prove. `tools/analyze_xbox360.sh` was not used for these exports. |
 
 The review used further private tools, listed in "Tools not in this
 repository" below. They are not needed to reproduce the result.
@@ -34,12 +34,19 @@ repository" below. They are not needed to reproduce the result.
 | share of 10,153,700 Swing code bytes | 0.16112353% | 0.34107763% | +0.17995410 points |
 | report units (`total_units`) | 346 | 594 | the new split ranges divide auto units |
 
+The 194 added functions are the **wave-1 cut-off set**, selected from the reviewed records available at about 20:30Z on 2026-10-20.
+
 **What the 194 added functions are**
 - **Distinct code shapes.** They have 135 distinct code shapes once relocation fields are masked (two functions share a shape when their instructions are identical apart from the addresses they reference).
 - **Trivial functions (8 bytes or less): 101 functions, 752 bytes.** These are constant returns, single-word record getters, one-instruction no-op slots and two-instruction thunks. They are real matches but low in novelty.
 - **Substantive functions: 93 functions, 17,520 bytes.** Most of the bytes come from the 77 script-native family functions (16,772 bytes); the rest are runtime helpers.
 
-**Reviewed matches not in this change.** At the cut-off for this branch, 205 functions (20,100 bytes; 146 distinct shapes) had passed the full local review described below; 11 of them are held back. The 15 functions accepted after the cut-off (at the time of writing) are not included either. Holding a function back is not a statement that it fails to match.
+**Reviewed matches not in this change.**
+- **At the wave-1 cut-off,** 205 functions (20,100 bytes; 146 distinct shapes) had passed the full local review described below. 11 of them are held back, with the reasons listed below.
+- **Since then,** the local review stands at 223 functions / 25,472 bytes. The functions accepted after the cut-off are not in this change.
+- **Six later-accepted functions** had a duplicate name and declaration in their source. That integration hold has been cleared without adding new matches; they are still not in this change.
+- **The source-signature hold** on one input function (0x88884C08) still stands.
+- **Holding a function back** is not a statement that it fails to match.
 - **Signature not settled (1).** One input function's source signature is still on hold.
 - **Toolchain dependency (1).** One function needs a C++ compiler component (`/TP`) that is not in the canonical toolchain.
 - **SDK header (1).** One function includes an SDK header and depends on a header revision that is still under review.
@@ -74,10 +81,28 @@ The steps run in order: selection, then source, compile, compare, regression con
 - **A match** is objdiff `fuzzy_match_percent == 100.0` at the exact `symbols.txt` size (`tools/matching.py verify_report`).
 
 objdiff 3.7.1 does not penalise a relocation that points at a differently named symbol. The local review therefore adds checks that objdiff does not make. Every relocation in the function is accounted for, and the effective target and addend must be equal:
-- **Branches (REL24/REL14).** The branch destination is decoded on both sides, together with its AA/LK bits.
-- **ADDR32.** The stored word is compared as an addend.
-- **REFHI/REFLO/PAIR.** For every REFLO, the effective address is the high half plus the PAIR displacement plus the sign-extended low half.
-- **PAIR field.** Jeff writes the REFHI symbol index into PAIR, while MSVC writes the displacement. Each such case is resolved per function, never by a global rule.
+In the formulas below, `S` is the referenced symbol's address resolved through `symbols.txt`, and `sext16` is 16-bit sign extension. Branch and ADDR32 relocations are each normalised on their own. The REFHI/REFLO/PAIR rule is separate and applies to the high/low pair.
+
+- **Branches (REL24/REL14).** These must sit on a branch instruction.
+  - Target object: the destination is decoded from the instruction (absolute when AA is set, otherwise relative to the site), and target addend = destination - `S`.
+  - Rebuilt object: the unresolved PC-relative field is normalised to an addend by adding the site's section offset. An absolute (AA) field is used as is.
+  - Equal: the addends, and the AA, LK and other non-field bits.
+- **ADDR32.**
+  - Target addend = stored word - `S`.
+  - Rebuilt addend = the stored, unresolved word.
+  - The two must be equal.
+- **REFHI/REFLO/PAIR.** Each REFHI must be followed immediately by a PAIR and have at least one REFLO of the same symbol.
+  - Target addend at each low site = `((hi_imm << 16) + sext16(lo_imm)) - S`.
+  - Rebuilt REFHI addend = `(hi_imm << 16) + sext16(PAIR)`.
+  - Rebuilt REFLO addend = `sext16(lo_imm)`, which must equal the rebuilt REFHI addend.
+  - The target addend must equal the rebuilt one, and the low-site offsets and their order must be identical.
+  - Do not add the PAIR displacement and the REFLO immediate together: that counts the low part twice.
+- **PAIR field.**
+  - In the target objects, the patched Jeff writes the REFHI's symbol index into the PAIR record. This is accepted only for the pinned Jeff build.
+  - In `cl.exe` objects, the REFHI's PAIR carries the displacement.
+  - A REFLO may be followed by a PAIR whose raw value is the symbol index in the target and 0 in `cl.exe` objects.
+- **Anything else is unresolved.** That covers any other relocation kind and any malformed group (a standalone REFLO, a dangling PAIR, a REFHI without PAIR or REFLO); such a function is never accepted.
+- **Checker version.** The wave-1 results come from the local checker `reloc_effective` v2.2, part of runner release R4.2 (SHA-256 `d16cceec960cf3c38eaf5eb34c732d75d08c8f367dc2be6530ed6bc51cfc5407`). A later revision, v2.3 in R4.3 (`49350fcf…`), was not used for wave 1.
 - **`.pdata`.** The function's original `.pdata` entry must match where one exists.
 
 ### 5. Regression controls
@@ -151,11 +176,13 @@ Open shapes that are still unmatched, such as a pointer-guarded byte store of th
 ## Tools not in this repository (not needed to reproduce the result)
 These are listed openly here rather than left as hidden dependencies. Publishing any of them would be a separate change.
 
+**Scope.** With your own game copy and compiler, the public `tools/matching.py` reproduces the existing 439 exact matches. It does **not** reproduce the independent acceptance process, and the repository does not contain the private candidate corpus. The tools below are named by hash only. A hash does not let a third party run them. Continuing the search for new matches needs a separate, reviewed release of that tooling; a separate local packet is under review and is not part of this change.
+
 | tool | identity | role |
 |---|---|---|
 | local runner release R4.2 | manifest SHA-256 `a733c2d147aa218faa2028c891d8be81d7445504780c7ab50d49aa7961200eb0` | isolated per-candidate compile/split/objdiff runs |
 | bound-report helper v3.1 | `aaef54c5ddbcd2bac8149a6d4e9ab407ec09add61de2f816bc1d615bbbdd43b8` | report binding and gate checks |
-| effective relocation checker (R4.2) | `d16cceec960cf3c38eaf5eb34c732d75d08c8f367dc2be6530ed6bc51cfc5407` | the relocation check in step 4 |
+| effective relocation checker v2.2 (R4.2) | `d16cceec960cf3c38eaf5eb34c732d75d08c8f367dc2be6530ed6bc51cfc5407` | the relocation check in step 4 |
 | automated leaf classifier, review 5 | closure SHA-256 `5e7b8e208dfe418314906d710be2216d37a53d3d98617939a1869412c33c3fd0` (a version 6 is pending) | screening of trivial leaf candidates |
 | Ghidra export (pass 2b) | function index SHA-256 `8629e41b57308daa331ddaf856d2535fa913b2b8cd10331ca630818905a6c997` | private listings and decompiler output used for reading |
 
