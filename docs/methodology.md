@@ -183,7 +183,7 @@ These are listed openly here rather than left as hidden dependencies. Publishing
 | local runner release R4.2 | manifest SHA-256 `a733c2d147aa218faa2028c891d8be81d7445504780c7ab50d49aa7961200eb0` | isolated per-candidate compile/split/objdiff runs |
 | bound-report helper v3.1 | `aaef54c5ddbcd2bac8149a6d4e9ab407ec09add61de2f816bc1d615bbbdd43b8` | report binding and gate checks |
 | effective relocation checker v2.2 (R4.2) | `d16cceec960cf3c38eaf5eb34c732d75d08c8f367dc2be6530ed6bc51cfc5407` | the relocation check in step 4 |
-| automated leaf classifier, review 5 | closure SHA-256 `5e7b8e208dfe418314906d710be2216d37a53d3d98617939a1869412c33c3fd0` (a version 6 is pending) | screening of trivial leaf candidates |
+| automated leaf classifier, review 5 | closure SHA-256 `5e7b8e208dfe418314906d710be2216d37a53d3d98617939a1869412c33c3fd0` (a sixth review was pending at the wave-1 cut-off (about 20:30Z on 2026-10-20). Since then, the narrow class-7 leaf rule was accepted at 21:08:57Z, per-member validation of the leaf families S01, S02, S04 and S11 at 21:23:43Z, and the S03 family at 21:18:49Z (all UTC, 2026-10-20)) | screening of trivial leaf candidates |
 | Ghidra export (pass 2b) | function index SHA-256 `8629e41b57308daa331ddaf856d2535fa913b2b8cd10331ca630818905a6c997` | private listings and decompiler output used for reading |
 
 **SDK and companion dependencies (wave-1 needs none of them).**
@@ -193,11 +193,11 @@ These are listed openly here rather than left as hidden dependencies. Publishing
 ## Known limitations
 - **Scope of a match.** A 100% objdiff score at the recorded size, with effective relocations and `.pdata` equal, proves that the function's code bytes and relocations match. It does not prove the original prototype, types, source language, whole-translation-unit flags or behaviour. Fuzzy scores below 100 are not matches.
 - **Names, types and grouping.** Names, field roles and source groupings are reconstructions. Units are measurement units, not proven original object boundaries.
-- **The `validated_functions` counter** follows this repository's existing convention: it moves with `matching_functions` and does not certify a runtime trace.
+- **The `validated_functions` counter** follows this repository's existing convention: it moves with `matching_functions` and does not certify a runtime trace. Like `reconstructed_functions`, it is best read as a count of verified exact code matches, not as proof of the original ABI, types or gameplay. `typed_functions` stays 0, because no original type is known.
 - **Not a runnable game.** Neither compiling nor matching produces one. The forced link probe in `config/link-status.json` is an inspection artefact only.
 - **Lines of work that produced no match.**
   - A pilot on vector-container functions stopped without an exact member (best score 81.73%).
-  - The leaf classifier's sixth review is pending.
+  - Leaf classifier: a sixth review was pending at the wave-1 cut-off (about 20:30Z on 2026-10-20). Since then, the narrow class-7 leaf rule was accepted at 21:08:57Z, per-member validation of the leaf families S01, S02, S04 and S11 at 21:23:43Z, and the S03 family at 21:18:49Z (all UTC, 2026-10-20).
   - Some caller-ABI questions and missing regression controls keep individual functions on hold.
 - **Portability.** Only Windows 11 x64 was exercised, where the "wrapper" is a pass-through, and only the commands in reproduction.md. Linux and macOS with wibo are documented upstream but were not exercised for this change.
 
