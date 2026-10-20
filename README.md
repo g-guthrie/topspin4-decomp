@@ -3,7 +3,7 @@
 [![Repository guard](https://github.com/g-guthrie/topspin4-decomp/actions/workflows/guard.yml/badge.svg)](https://github.com/g-guthrie/topspin4-decomp/actions/workflows/guard.yml)
 [![Code progress](https://decomp.dev/g-guthrie/topspin4-decomp.svg?mode=shield&measure=code&label=Code)](https://decomp.dev/g-guthrie/topspin4-decomp)
 
-Clean-room reverse engineering and source reconstruction of *Top Spin 4*.
+Clean-room reverse engineering and source reconstruction of *Top Spin 4*. That description applies to the project's established work; the units under `src/xbox360/matched/` were produced differently, as described in "Provenance of the matched-function units" below.
 
 ## Status
 
@@ -16,6 +16,16 @@ The public progress artifact in `reports/54540859/report.json` contains measurem
 ## Boundaries
 
 This repository contains only original source, analysis notes, symbols, hashes, and tooling. It must never contain game images, extracted executables, keys, firmware, proprietary SDK files, or copyrighted game assets. Contributors must supply their own lawfully obtained game copy locally.
+
+## Provenance of the matched-function units
+
+The sources and headers under `src/xbox360/matched/` were written for this repository from disassembly listings of the retail module, with AI assistance. They are not the product of a separately established clean-room process, and they contain no game bytes, decompiler output or SDK files.
+
+What is established and what is not:
+- **Verified:** each function is checked by byte-exact matching. It compiles with the target compiler to a 100% objdiff match at its recorded size, and its effective relocations and original `.pdata` entry were checked equal.
+- **Scope of the proof:** a match proves the code bytes, relocations and `.pdata` only.
+- **Reconstructed or unknown:** names, prototypes, signatures, types, field roles and source groupings.
+- **Method:** [docs/methodology.md](docs/methodology.md) describes how the units were produced, and [docs/reproduction.md](docs/reproduction.md) how to reproduce the matches.
 
 ## Start here
 
