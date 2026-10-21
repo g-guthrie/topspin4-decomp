@@ -30,7 +30,7 @@ What is established and what is not:
 The five `leaf_family_*.c` units are a separate supplement.
 - **What they are:** 617 trivial 8- and 4-byte leaf functions (constant returns, single-word getters, no-op returns), each under its existing `fn_XXXXXXXX` name.
 - **What is not known:** their original prototypes and roles. Their C bodies reproduce the instruction shape only.
-- **Next-candidate addition (1,161 functions, 4,932 B).** Leaf functions were appended to these units and to `runtime_constant_slot_families.c` (27 no-op slots and the identity `fn_881B3360`), and twelve 32-bit constant returns were added in `constant_u32_family.c`. Each extent is byte-identical to the retail module. Scope: code identity only; semantic NOT_TESTED; reuse of prior independent verification; `publication_ready` false; zero ledger credit.
+- **Next-candidate addition (1,161 functions, 4,932 B).** Leaf functions were appended to these units and to `runtime_constant_slot_families.c` (27 no-op slots and the 4-byte `fn_881B3360` leaf), and twelve 32-bit constant returns were added in `constant_u32_family.c`. Each extent is byte-identical to the retail module. Scope: code identity only; semantic NOT_TESTED; reuse of prior independent verification; `publication_ready` false; zero ledger credit.
 - **What they do not claim:** they carry no reviewed names and no understanding of behaviour beyond the exact code match.
 
 ## Start here
