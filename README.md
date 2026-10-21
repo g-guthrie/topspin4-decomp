@@ -3,11 +3,11 @@
 [![Repository guard](https://github.com/g-guthrie/topspin4-decomp/actions/workflows/guard.yml/badge.svg)](https://github.com/g-guthrie/topspin4-decomp/actions/workflows/guard.yml)
 [![Code progress](https://decomp.dev/g-guthrie/topspin4-decomp.svg?mode=shield&measure=code&label=Code)](https://decomp.dev/g-guthrie/topspin4-decomp)
 
-Clean-room reverse engineering and source reconstruction of *Top Spin 4*.
+Clean-room reverse engineering and source reconstruction of *Top Spin 4*. That description applies to the project's established work; the units under `src/xbox360/matched/` were produced differently, as described in "Provenance of the matched-function units" below.
 
 ## Status
 
-Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Two hundred eighty functions have reviewed names. Two hundred forty-five reconstructed functions now compile to 100% code matches: 16,360 of 10,153,700 measured Swing code bytes (`0.16112353%`).
+Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Four hundred eighteen functions have reviewed names. Four hundred thirty-nine reconstructed functions now compile to 100% code matches: 34,632 of 10,153,700 measured Swing code bytes (`0.34107763%`). The `reconstructed_functions` and `validated_functions` counters in [config/progress.json](config/progress.json) follow the project's existing convention and move with the match count. For the functions under `src/xbox360/matched/` they are best read as **verified exact code matches**, not as proof of the original ABI, types or gameplay behaviour. No function has a known original type (`typed_functions` is 0), and the roles of most matched functions remain unknown.
 
 The selected build is title ID `54540859` (`TT-2137`), media ID `60819732`, executable version `0.0.0.3`. See [docs/targets.md](docs/targets.md), [docs/analysis-status.md](docs/analysis-status.md), the [canonical decomp.dev-style build](docs/canonical-build.md), and [matching build instructions](docs/matching-build.md). The first active investigation maps the dormant server-delivered patch path in [docs/title-server-patch.md](docs/title-server-patch.md); the separate Loader split is documented in [docs/loader-analysis.md](docs/loader-analysis.md). Official updates and optional content are tracked separately in [docs/additional-content.md](docs/additional-content.md); they are not part of the baseline.
 
@@ -16,6 +16,16 @@ The public progress artifact in `reports/54540859/report.json` contains measurem
 ## Boundaries
 
 This repository contains only original source, analysis notes, symbols, hashes, and tooling. It must never contain game images, extracted executables, keys, firmware, proprietary SDK files, or copyrighted game assets. Contributors must supply their own lawfully obtained game copy locally.
+
+## Provenance of the matched-function units
+
+The sources and headers under `src/xbox360/matched/` were written for this repository from disassembly listings of the retail module, with AI assistance. They are not the product of a separately established clean-room process, and they contain no game bytes, decompiler output or SDK files.
+
+What is established and what is not:
+- **Verified:** each function is checked by byte-exact matching. It compiles with the target compiler to a 100% objdiff match at its recorded size, and its effective relocations and original `.pdata` entry were checked equal.
+- **Scope of the proof:** a match proves the code bytes, relocations and `.pdata` only.
+- **Reconstructed or unknown:** names, prototypes, signatures, types, field roles and source groupings.
+- **Method:** [docs/methodology.md](docs/methodology.md) describes how the units were produced, and [docs/reproduction.md](docs/reproduction.md) how to reproduce the matches.
 
 ## Start here
 
