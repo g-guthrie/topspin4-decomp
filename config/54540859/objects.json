@@ -864,6 +864,14 @@
       "src/xbox360/matched/constant_u32_family.c": {
         "status": "Matching",
         "source": "xbox360/matched/constant_u32_family.c"
+      },
+      "src/xbox360/matched/allocation_wrappers_88617d88.c": {
+        "status": "Matching",
+        "source": "xbox360/matched/allocation_wrappers_88617d88.c"
+      },
+      "src/xbox360/matched/allocation_wrappers_fill.c": {
+        "status": "Matching",
+        "source": "xbox360/matched/allocation_wrappers_fill.c"
       }
     }
   }

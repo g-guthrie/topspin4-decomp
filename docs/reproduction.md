@@ -1,7 +1,7 @@
 # Reproducing the matching result
 
-Guide version **3-next1** (2026-10-21); it goes with [methodology.md](methodology.md).
-This branch carries the wave-1 change plus a **separate leaf supplement**: 617 trivial 8- and 4-byte leaf functions, with unknown prototypes and no publication approval yet (`publication_ready` false). The supplement claims no new-match credit. This branch also carries a **next-candidate addition**: 1,161 leaf, slot and constant functions (4,932 B; code identity only; semantic NOT_TESTED; reuse of prior independent verification; `publication_ready` false; zero ledger credit). The expected outputs below are for this branch. The wave-1 baseline values (the branch without the supplement, `cb59ab3`) are given next to them, labelled as such.
+Guide version **3-next2** (2026-10-21); it goes with [methodology.md](methodology.md).
+This branch carries the wave-1 change plus a **separate leaf supplement**: 617 trivial 8- and 4-byte leaf functions, with unknown prototypes and no publication approval yet (`publication_ready` false). The supplement claims no new-match credit. This branch also carries a **next-candidate addition**: 1,161 leaf, slot and constant functions (4,932 B; code identity only; semantic NOT_TESTED; reuse of prior independent verification; `publication_ready` false; zero ledger credit), and an **allocation-wrapper addition**: 180 functions in two units (21,936 B; code identity only; semantic NOT_TESTED; `publication_ready` false; zero ledger credit). The expected outputs below are for this branch. The wave-1 baseline values (the branch without the supplement, `cb59ab3`) are given next to them, labelled as such.
 The commands below are the ones actually run for this change, on Windows 11 x64
 with Python 3.13.11 (the CI uses 3.12). Each is followed by its expected output.
 On Windows, write `python` wherever this guide says `python3`: there `python3`
@@ -40,14 +40,14 @@ The wave-1 units need no SDK headers and no `ATL100.DLL`.
 
    ```
    No tracked game-data candidates found.
-   Validated decomp.dev report: 2217 exact functions, 44300/10153700 code bytes, 2028 units
-   Validated link status: 211 source objects, 2217 exact functions, 44300 matching bytes
+   Validated decomp.dev report: 2397 exact functions, 66236/10153700 code bytes, 2168 units
+   Validated link status: 213 source objects, 2397 exact functions, 66236 matching bytes
    ```
 
    - **Unit tests on Windows** (observed): `FAILED (failures=1, skipped=1)`, exit code 1. The failure is `test_external_work_directory_uses_relative_compiler_output`, because `/Fo` uses backslashes there; the base commit 553f783 fails the same test in the same way.
    - **Unit tests on Linux: expected, not verified on this revision.** Linux and the remote CI were not run for this revision. The expected result, by the CI configuration, is 15 tests with one skip, with the `/Fo` test passing.
 
-2. **Full matching check** (template; PowerShell form below). It splits the module, compiles all 211 units, generates the objdiff report and rejects any listed function that is not at 100% at its recorded size.
+2. **Full matching check** (template; PowerShell form below). It splits the module, compiles all 213 units, generates the objdiff report and rejects any listed function that is not at 100% at its recorded size.
 
    ```sh
    python3 tools/matching.py \
@@ -61,7 +61,7 @@ The wave-1 units need no SDK headers and no `ATL100.DLL`.
    ```
 
    - The run takes under two minutes on a 48-thread host.
-   - The last line is: `Matched 2217 functions: 44300/10153700 code bytes (0.43629417%)`. With the leaf supplement only, it is `Matched 1056 functions: 39368/10153700 code bytes (0.38772073%)`. On the wave-1 baseline it is `Matched 439 functions: 34632/10153700 code bytes (0.34107763%)`.
+   - The last line is: `Matched 2397 functions: 66236/10153700 code bytes (0.65233360%)`. Without the allocation-wrapper addition, it is `Matched 2217 functions: 44300/10153700 code bytes (0.43629417%)`. With the leaf supplement only, it is `Matched 1056 functions: 39368/10153700 code bytes (0.38772073%)`. On the wave-1 baseline it is `Matched 439 functions: 34632/10153700 code bytes (0.34107763%)`.
    - The exit code is 0.
    - The work directory contains game-derived split objects. Keep it private.
 
@@ -92,7 +92,7 @@ The wave-1 units need no SDK headers and no `ATL100.DLL`.
 
    - Run the first command from the repository root.
    - **Counting rules.** These are the definitions that reproduce the base commit's 218 / 373 / 22,528 / 17,176 / 8 exactly. "Unique unresolved external symbols" = distinct `LNK2001`/`LNK2019` message texts with the object-file prefix removed. "References" = all such lines. `.text` bytes = the section's VirtualSize. Static helpers = static function symbols in the map.
-   - **Results on this branch:** 342 / 587 / 59,904 / 52,000 / 51. With the leaf supplement only: 343 / 588 / 50,688 / 42,712 / 51. On the wave-1 baseline: 343 / 588 / 45,568 / 37,772 / 51.
+   - **Results on this branch:** 433 / 682 / 86,016 / 74,028 / 51. Without the allocation-wrapper addition: 342 / 587 / 59,904 / 52,000 / 51. With the leaf supplement only: 343 / 588 / 50,688 / 42,712 / 51. On the wave-1 baseline: 343 / 588 / 45,568 / 37,772 / 51.
    - **Output hash.** The output file's SHA-256 changes with every link, because of the link timestamp.
 
 ### The same steps in PowerShell (tested on Windows 11, PowerShell 7.6.6)
@@ -123,9 +123,9 @@ Pop-Location
 - The three checks print the lines above.
 - This block was run on the **wave-1 baseline tree**. There, `matching.py` ended with `Matched 439 functions: 34632/10153700 code bytes (0.34107763%)` (exit code 0) and both blob ids were `bd072ba189589396ff9b709143082dc445641fd3`. The linker exited 0, with 588 `LNK2001`/`LNK2019` lines in `link.txt` and a 45,568-byte `probe.dll`.
 - **On this branch** the same commands give the following. These were checked with the same `matching.py` invocation, the report one-liner and the link probe run from a POSIX shell, not with this PowerShell block.
-  - `Matched 2217 functions: 44300/10153700 code bytes (0.43629417%)`
-  - both blob ids `12e9d516b39fdbd00482c82c58ac2a5164640bfb` (the committed report's SHA-256 is `b41a8d11845bd683675a9953886ec6b35e307119d07678a7faaaf61cdfa5bd34`)
-  - 587 unresolved lines and a 59,904-byte `probe.dll`
+  - `Matched 2397 functions: 66236/10153700 code bytes (0.65233360%)`
+  - both blob ids `e17d3b565f4a3e223d2a5712fd0b4b96916303fa` (the committed report's SHA-256 is `0d54ccdb8ae8c774e5d8d28e035a28068060907faf7eb7e9338086a887049b77`)
+  - 682 unresolved lines and an 86,016-byte `probe.dll`
 
 Quote `'@objects.rsp'` as shown: unquoted, PowerShell reads `@objects` as splatting.
 

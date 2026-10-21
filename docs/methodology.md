@@ -34,7 +34,7 @@ repository" below. They are not needed to reproduce the result.
 | share of 10,153,700 Swing code bytes | 0.16112353% | 0.34107763% | +0.17995410 points |
 | report units (`total_units`) | 346 | 594 | the new split ranges divide auto units |
 
-The table compares the public baseline with the wave-1 change. This branch also carries the separate leaf supplement described in the next section. The supplement brings the totals to 210 units, 1,056 functions and 39,368 matched code bytes (0.38772073%), with 963 report units. This next-candidate branch adds 1,161 further leaf, slot and constant functions (4,932 B; code identity only; semantic NOT_TESTED; reuse of prior independent verification; `publication_ready` false; zero ledger credit). The totals are therefore 211 units, 2,217 functions and 44,300 matched code bytes (0.43629417%), with 2,028 report units.
+The table compares the public baseline with the wave-1 change. This branch also carries the separate leaf supplement described in the next section. The supplement brings the totals to 210 units, 1,056 functions and 39,368 matched code bytes (0.38772073%), with 963 report units. This next-candidate branch adds 1,161 further leaf, slot and constant functions (4,932 B; code identity only; semantic NOT_TESTED; reuse of prior independent verification; `publication_ready` false; zero ledger credit). With it the totals were 211 units, 2,217 functions and 44,300 matched code bytes (0.43629417%), with 2,028 report units. On top of that, two allocation-wrapper units, `allocation_wrappers_88617d88.c` (156 functions) and `allocation_wrappers_fill.c` (24 functions), add 180 functions (21,936 B) that call the `fn_88613268` allocator (code identity only; semantic NOT_TESTED; `publication_ready` false; zero ledger credit). The totals are therefore 213 units, 2,397 functions and 66,236 matched code bytes (0.65233360%), with 2,168 report units.
 
 ## Leaf supplement (separate from wave 1)
 
@@ -59,7 +59,7 @@ The table compares the public baseline with the wave-1 change. This branch also 
 
 **How it was checked.**
 - **Staging, per function.** The bound source rehashes to its record; the function compiled with exit 0 and no includes; its code bytes are identical to the reviewed rebuilt object, and both sides have no relocations; `symbols.txt` holds its `fn_` name with a matching size; its range does not overlap any existing split.
-- **Canonical run.** The repository's own `tools/matching.py --fresh-analysis` verifies all 1,056 functions at 100%. On this next-candidate branch it verifies all 2,217.
+- **Canonical run.** The repository's own `tools/matching.py --fresh-analysis` verifies all 1,056 functions at 100%. On this next-candidate branch it verifies all 2,397.
 
 The 194 added functions are the **wave-1 cut-off set**, selected from the reviewed records available at about 20:30Z on 2026-10-20.
 
@@ -203,7 +203,7 @@ Open shapes that are still unmatched, such as a pointer-guarded byte store of th
 ## Tools not in this repository (not needed to reproduce the result)
 These are listed openly here rather than left as hidden dependencies. Publishing any of them would be a separate change.
 
-**Scope.** With your own game copy and compiler, the public `tools/matching.py` reproduces the existing exact matches: 2,217 on this branch, of which 439 come from the baseline and wave 1, 617 from the leaf supplement and 1,161 from the next-candidate addition. It does **not** reproduce the independent acceptance process, and the repository does not contain the private candidate corpus. The tools below are named by hash only. A hash does not let a third party run them. Continuing the search for new matches needs a separate, reviewed release of that tooling; a separate local packet is under review and is not part of this change.
+**Scope.** With your own game copy and compiler, the public `tools/matching.py` reproduces the existing exact matches: 2,397 on this branch, of which 439 come from the baseline and wave 1, 617 from the leaf supplement, 1,161 from the next-candidate addition and 180 from the allocation-wrapper addition. It does **not** reproduce the independent acceptance process, and the repository does not contain the private candidate corpus. The tools below are named by hash only. A hash does not let a third party run them. Continuing the search for new matches needs a separate, reviewed release of that tooling; a separate local packet is under review and is not part of this change.
 
 | tool | identity | role |
 |---|---|---|
@@ -219,6 +219,7 @@ These are listed openly here rather than left as hidden dependencies. Publishing
 
 ## Known limitations
 - **Scope of a match.** A 100% objdiff score at the recorded size, with effective relocations and `.pdata` equal, proves that the function's code bytes and relocations match. It does not prove the original prototype, types, source language, whole-translation-unit flags or behaviour. Fuzzy scores below 100 are not matches.
+- **Shared helper declarations.** Units declare the helpers they call themselves; there is no shared header. The `fn_88613268` allocator is declared with three different result types in the tree: `u32` in `container_factory_wrappers.c`, `create_3ac_object.c`, `create_runtime_object.c` and `create_runtime_object_20.c`; `void *` in `allocate_zeroed_triplets.c` and `create_zeroed_triplet.c`; `ts4_u8 *` in `matched/script_family_d01.c` and `matched/script_family_d01_887926d8.c`. The two allocation-wrapper units follow the `u32` form. Each unit keeps its own declaration; none is a claim about the original return type.
 - **Names, types and grouping.** Names, field roles and source groupings are reconstructions. Units are measurement units, not proven original object boundaries.
 - **The `validated_functions` counter** follows this repository's existing convention: it moves with `matching_functions` and does not certify a runtime trace. Like `reconstructed_functions`, it is best read as a count of verified exact code matches, not as proof of the original ABI, types or gameplay. `typed_functions` stays 0, because no original type is known.
 - **Not a runnable game.** Neither compiling nor matching produces one. The forced link probe in `config/link-status.json` is an inspection artefact only.
