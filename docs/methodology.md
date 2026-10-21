@@ -55,7 +55,7 @@ The table compares the public baseline with the wave-1 change. This branch also 
 
 **Status.**
 - **Separate.** The supplement is not part of the 194 wave-1 functions, and it claims no new-match credit beyond the measured counters.
-- **Public scope.** Reviewed for publication as exact code matches. Semantics are NOT_TESTED, and the original ABI and types not established.
+- **Public scope.** Reviewed for publication as exact code matches. Semantics are NOT_TESTED, and the original ABI and types are not established.
 
 **How it was checked.**
 - **Staging, per function.** The bound source rehashes to its record; the function compiled with exit 0 and no includes; its code bytes are identical to the reviewed rebuilt object, and both sides have no relocations; `symbols.txt` holds its `fn_` name with a matching size; its range does not overlap any existing split.
