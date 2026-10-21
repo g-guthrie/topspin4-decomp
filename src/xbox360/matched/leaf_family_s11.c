@@ -727,3 +727,12 @@ ts4_u16 fn_88932370(const void *record)
 {
     return *(const ts4_u16 *)((const ts4_u8 *)record + 0x6);
 }
+
+/* Swing_DLL.xex 0x885450E8-0x885450F0. */
+ts4_u16 fn_885450E8(const void *record) { return *(const ts4_u16 *)((const ts4_u8 *)record + 0x0); }
+
+/* Swing_DLL.xex 0x885F5340-0x885F5348. */
+ts4_u16 fn_885F5340(const void *record) { return *(const ts4_u16 *)((const ts4_u8 *)record + 0x16); }
+
+/* Swing_DLL.xex 0x885F5348-0x885F5350. */
+ts4_u16 fn_885F5348(const void *record) { return *(const ts4_u16 *)((const ts4_u8 *)record + 0x14); }

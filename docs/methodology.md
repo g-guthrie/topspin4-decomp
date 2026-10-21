@@ -34,7 +34,7 @@ repository" below. They are not needed to reproduce the result.
 | share of 10,153,700 Swing code bytes | 0.16112353% | 0.34107763% | +0.17995410 points |
 | report units (`total_units`) | 346 | 594 | the new split ranges divide auto units |
 
-The table compares the public baseline with the wave-1 change. This branch also carries the separate leaf supplement described in the next section. The supplement brings the totals to 210 units, 1,056 functions and 39,368 matched code bytes (0.38772073%), with 963 report units.
+The table compares the public baseline with the wave-1 change. This branch also carries the separate leaf supplement described in the next section. The supplement brings the totals to 210 units, 1,056 functions and 39,368 matched code bytes (0.38772073%), with 963 report units. This next-candidate branch adds 1,161 further leaf, slot and constant functions (4,932 B; code identity only; semantic NOT_TESTED; reuse of prior independent verification; `publication_ready` false; zero ledger credit). The totals are therefore 211 units, 2,217 functions and 44,300 matched code bytes (0.43629417%), with 2,028 report units.
 
 ## Leaf supplement (separate from wave 1)
 
@@ -59,7 +59,7 @@ The table compares the public baseline with the wave-1 change. This branch also 
 
 **How it was checked.**
 - **Staging, per function.** The bound source rehashes to its record; the function compiled with exit 0 and no includes; its code bytes are identical to the reviewed rebuilt object, and both sides have no relocations; `symbols.txt` holds its `fn_` name with a matching size; its range does not overlap any existing split.
-- **Canonical run.** The repository's own `tools/matching.py --fresh-analysis` verifies all 1,056 functions at 100%.
+- **Canonical run.** The repository's own `tools/matching.py --fresh-analysis` verifies all 1,056 functions at 100%. On this next-candidate branch it verifies all 2,217.
 
 The 194 added functions are the **wave-1 cut-off set**, selected from the reviewed records available at about 20:30Z on 2026-10-20.
 
@@ -203,7 +203,7 @@ Open shapes that are still unmatched, such as a pointer-guarded byte store of th
 ## Tools not in this repository (not needed to reproduce the result)
 These are listed openly here rather than left as hidden dependencies. Publishing any of them would be a separate change.
 
-**Scope.** With your own game copy and compiler, the public `tools/matching.py` reproduces the existing exact matches: 1,056 on this branch, of which 439 come from the baseline and wave 1 and 617 from the leaf supplement. It does **not** reproduce the independent acceptance process, and the repository does not contain the private candidate corpus. The tools below are named by hash only. A hash does not let a third party run them. Continuing the search for new matches needs a separate, reviewed release of that tooling; a separate local packet is under review and is not part of this change.
+**Scope.** With your own game copy and compiler, the public `tools/matching.py` reproduces the existing exact matches: 2,217 on this branch, of which 439 come from the baseline and wave 1, 617 from the leaf supplement and 1,161 from the next-candidate addition. It does **not** reproduce the independent acceptance process, and the repository does not contain the private candidate corpus. The tools below are named by hash only. A hash does not let a third party run them. Continuing the search for new matches needs a separate, reviewed release of that tooling; a separate local packet is under review and is not part of this change.
 
 | tool | identity | role |
 |---|---|---|

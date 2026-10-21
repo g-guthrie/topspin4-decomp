@@ -144,3 +144,12 @@ ts4_u8 fn_88864C10(const void *record)
 {
     return *((const ts4_u8 *)record + 0x2);
 }
+
+/* Swing_DLL.xex 0x8818AAB8-0x8818AAC0. */
+ts4_u8 fn_8818AAB8(const void *record) { return *((const ts4_u8 *)record + 0xC); }
+
+/* Swing_DLL.xex 0x884263E8-0x884263F0. */
+ts4_u8 fn_884263E8(const void *record) { return *((const ts4_u8 *)record + 0xD); }
+
+/* Swing_DLL.xex 0x885E1930-0x885E1938. */
+ts4_u8 fn_885E1930(const void *record) { return *((const ts4_u8 *)record + 0x860); }

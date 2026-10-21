@@ -860,6 +860,10 @@
       "src/xbox360/matched/leaf_family_s04.c": {
         "status": "Matching",
         "source": "xbox360/matched/leaf_family_s04.c"
+      },
+      "src/xbox360/matched/constant_u32_family.c": {
+        "status": "Matching",
+        "source": "xbox360/matched/constant_u32_family.c"
       }
     }
   }

@@ -1680,3 +1680,117 @@ ts4_u32 fn_889C5F00(void)
 {
     return 0x0;
 }
+
+/* Swing_DLL.xex 0x883F7280-0x883F7288. */
+ts4_u32 fn_883F7280(void) { return 0x21; }
+
+/* Swing_DLL.xex 0x883F72F8-0x883F7300. */
+ts4_u32 fn_883F72F8(void) { return 0x25; }
+
+/* Swing_DLL.xex 0x883FD308-0x883FD310. */
+ts4_u32 fn_883FD308(void) { return 0x1; }
+
+/* Swing_DLL.xex 0x883FD4F0-0x883FD4F8. */
+ts4_u32 fn_883FD4F0(void) { return 0x3; }
+
+/* Swing_DLL.xex 0x88411D20-0x88411D28. */
+ts4_u32 fn_88411D20(void) { return 0x3; }
+
+/* Swing_DLL.xex 0x8841AD70-0x8841AD78. */
+ts4_u32 fn_8841AD70(void) { return 0x1; }
+
+/* Swing_DLL.xex 0x8841AD78-0x8841AD80. */
+ts4_u32 fn_8841AD78(void) { return 0x1; }
+
+/* Swing_DLL.xex 0x8841AD80-0x8841AD88. */
+ts4_u32 fn_8841AD80(void) { return 0x1; }
+
+/* Swing_DLL.xex 0x8841AD88-0x8841AD90. */
+int fn_8841AD88(void) { return -1; }
+
+/* Swing_DLL.xex 0x8841EB68-0x8841EB70. */
+ts4_u32 fn_8841EB68(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x8841EB70-0x8841EB78. */
+ts4_u32 fn_8841EB70(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88425D40-0x88425D48. */
+ts4_u32 fn_88425D40(void) { return 0x1; }
+
+/* Swing_DLL.xex 0x88429030-0x88429038. */
+ts4_u32 fn_88429030(void) { return 0x1; }
+
+/* Swing_DLL.xex 0x88436E38-0x88436E40. */
+ts4_u32 fn_88436E38(void) { return 0x30; }
+
+/* Swing_DLL.xex 0x88436F50-0x88436F58. */
+int fn_88436F50(void) { return -1; }
+
+/* Swing_DLL.xex 0x884370C0-0x884370C8. */
+ts4_u32 fn_884370C0(void) { return 0x40; }
+
+/* Swing_DLL.xex 0x88438660-0x88438668. */
+ts4_u32 fn_88438660(void) { return 0x20; }
+
+/* Swing_DLL.xex 0x88438F20-0x88438F28. */
+ts4_u32 fn_88438F20(void) { return 0x60; }
+
+/* Swing_DLL.xex 0x88439718-0x88439720. */
+int fn_88439718(void) { return -1; }
+
+/* Swing_DLL.xex 0x88439810-0x88439818. */
+ts4_u32 fn_88439810(void) { return 0x2; }
+
+/* Swing_DLL.xex 0x88439A40-0x88439A48. */
+ts4_u32 fn_88439A40(void) { return 0x8; }
+
+/* Swing_DLL.xex 0x8843A0A8-0x8843A0B0. */
+ts4_u32 fn_8843A0A8(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x8843A490-0x8843A498. */
+ts4_u32 fn_8843A490(void) { return 0x2; }
+
+/* Swing_DLL.xex 0x8843B740-0x8843B748. */
+ts4_u32 fn_8843B740(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88605EC0-0x88605EC8. */
+ts4_u32 fn_88605EC0(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88605EC8-0x88605ED0. */
+ts4_u32 fn_88605EC8(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x886063C8-0x886063D0. */
+ts4_u32 fn_886063C8(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88606B20-0x88606B28. */
+ts4_u32 fn_88606B20(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88606B40-0x88606B48. */
+ts4_u32 fn_88606B40(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88606B48-0x88606B50. */
+ts4_u32 fn_88606B48(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88606B50-0x88606B58. */
+ts4_u32 fn_88606B50(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88606B58-0x88606B60. */
+ts4_u32 fn_88606B58(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88606B60-0x88606B68. */
+ts4_u32 fn_88606B60(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88606B68-0x88606B70. */
+ts4_u32 fn_88606B68(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88606C08-0x88606C10. */
+ts4_u32 fn_88606C08(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88606C28-0x88606C30. */
+ts4_u32 fn_88606C28(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88608320-0x88608328. */
+ts4_u32 fn_88608320(void) { return 0x0; }
+
+/* Swing_DLL.xex 0x88609428-0x88609430. */
+ts4_u32 fn_88609428(void) { return 0x0; }

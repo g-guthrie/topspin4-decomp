@@ -877,3 +877,51 @@ ts4_u32 fn_889C61B8(const void *record)
 {
     return *(const ts4_u32 *)((const ts4_u8 *)record + 0x0);
 }
+
+/* Swing_DLL.xex 0x882E2970-0x882E2978. */
+ts4_u32 fn_882E2970(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x554); }
+
+/* Swing_DLL.xex 0x883A9590-0x883A9598. */
+ts4_u32 fn_883A9590(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x34); }
+
+/* Swing_DLL.xex 0x8841EAC8-0x8841EAD0. */
+ts4_u32 fn_8841EAC8(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x0); }
+
+/* Swing_DLL.xex 0x8841EAD0-0x8841EAD8. */
+ts4_u32 fn_8841EAD0(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x4); }
+
+/* Swing_DLL.xex 0x8841EB78-0x8841EB80. */
+ts4_u32 fn_8841EB78(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0xC); }
+
+/* Swing_DLL.xex 0x8841ED78-0x8841ED80. */
+ts4_u32 fn_8841ED78(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x1C); }
+
+/* Swing_DLL.xex 0x8841EF28-0x8841EF30. */
+ts4_u32 fn_8841EF28(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x8); }
+
+/* Swing_DLL.xex 0x88426138-0x88426140. */
+ts4_u32 fn_88426138(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x4); }
+
+/* Swing_DLL.xex 0x88426140-0x88426148. */
+ts4_u32 fn_88426140(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x8); }
+
+/* Swing_DLL.xex 0x88426158-0x88426160. */
+ts4_u32 fn_88426158(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x8); }
+
+/* Swing_DLL.xex 0x88428978-0x88428980. */
+ts4_u32 fn_88428978(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x0); }
+
+/* Swing_DLL.xex 0x88428980-0x88428988. */
+ts4_u32 fn_88428980(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x0); }
+
+/* Swing_DLL.xex 0x88428AC0-0x88428AC8. */
+ts4_u32 fn_88428AC0(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0x4); }
+
+/* Swing_DLL.xex 0x884761D8-0x884761E0. */
+ts4_u32 fn_884761D8(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0xE0); }
+
+/* Swing_DLL.xex 0x88476280-0x88476288. */
+ts4_u32 fn_88476280(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0xE8); }
+
+/* Swing_DLL.xex 0x88476298-0x884762A0. */
+ts4_u32 fn_88476298(const void *record) { return *(const ts4_u32 *)((const ts4_u8 *)record + 0xE4); }
