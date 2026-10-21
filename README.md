@@ -7,7 +7,7 @@ Clean-room reverse engineering and source reconstruction of *Top Spin 4*. That d
 
 ## Status
 
-Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Four hundred eighteen functions have reviewed names. Four hundred thirty-nine reconstructed functions now compile to 100% code matches: 34,632 of 10,153,700 measured Swing code bytes (`0.34107763%`). The `reconstructed_functions` and `validated_functions` counters in [config/progress.json](config/progress.json) follow the project's existing convention and move with the match count. For the functions under `src/xbox360/matched/` they are best read as **verified exact code matches**, not as proof of the original ABI, types or gameplay behaviour. No function has a known original type (`typed_functions` is 0), and the roles of most matched functions remain unknown.
+Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Four hundred eighteen functions have reviewed names. One thousand fifty-six reconstructed functions now compile to 100% code matches: 39,368 of 10,153,700 measured Swing code bytes (`0.38772073%`). The `reconstructed_functions` and `validated_functions` counters in [config/progress.json](config/progress.json) follow the project's existing convention and move with the match count. For the functions under `src/xbox360/matched/` they are best read as **verified exact code matches**, not as proof of the original ABI, types or gameplay behaviour. No function has a known original type (`typed_functions` is 0), and the roles of most matched functions remain unknown.
 
 The selected build is title ID `54540859` (`TT-2137`), media ID `60819732`, executable version `0.0.0.3`. See [docs/targets.md](docs/targets.md), [docs/analysis-status.md](docs/analysis-status.md), the [canonical decomp.dev-style build](docs/canonical-build.md), and [matching build instructions](docs/matching-build.md). The first active investigation maps the dormant server-delivered patch path in [docs/title-server-patch.md](docs/title-server-patch.md); the separate Loader split is documented in [docs/loader-analysis.md](docs/loader-analysis.md). Official updates and optional content are tracked separately in [docs/additional-content.md](docs/additional-content.md); they are not part of the baseline.
 
@@ -26,6 +26,11 @@ What is established and what is not:
 - **Scope of the proof:** a match proves the code bytes, relocations and `.pdata` only.
 - **Reconstructed or unknown:** names, prototypes, signatures, types, field roles and source groupings.
 - **Method:** [docs/methodology.md](docs/methodology.md) describes how the units were produced, and [docs/reproduction.md](docs/reproduction.md) how to reproduce the matches.
+
+The five `leaf_family_*.c` units are a separate supplement.
+- **What they are:** 617 trivial 8- and 4-byte leaf functions (constant returns, single-word getters, no-op returns), each under its existing `fn_XXXXXXXX` name.
+- **What is not known:** their original prototypes and roles. Their C bodies reproduce the instruction shape only.
+- **What they do not claim:** they carry no reviewed names and no understanding of behaviour beyond the exact code match.
 
 ## Start here
 
