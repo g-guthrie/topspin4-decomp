@@ -7,10 +7,12 @@
  */
 typedef unsigned int ts4_u32;
 
-/* Swing_DLL.xex 0x881B3360-0x881B3364. */
-void *fn_881B3360(void *value)
+/*
+ * Swing_DLL.xex 0x881B3360-0x881B3364. Code identity only: the declaration is aligned
+ * with the existing caller in runtime_forwarders.c; the original ABI is not recovered.
+ */
+void fn_881B3360(void)
 {
-    return value;
 }
 
 #define TS4_NO_OP_SLOT(address) void ts4_runtime_no_op_slot_##address(void *self) { (void)self; }
