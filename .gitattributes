@@ -1,0 +1,11 @@
+# These publication manifests pin source/header bytes. Keep them identical on
+# Windows and POSIX checkouts regardless of the user's core.autocrlf setting.
+# Retained sources include both LF and CRLF; preserve each exact byte sequence.
+/src/xbox360/matched/local_20261025/** -text
+/src/xbox360/matched/remaining_20261025/** -text
+/config/54540859/local_20261025_units.json text eol=lf
+/config/54540859/remaining_20261025_units.json text eol=lf
+/tools/matching.py -text
+/tools/verify_exact_objects.py -text
+/tools/ppc_exact_coff.py -text
+/tools/flatten_pe.py -text

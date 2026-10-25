@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -3405,12 +3406,140 @@ MATCHING_UNITS = (
 )
 
 
+def load_local_20261025_units() -> tuple[dict, ...]:
+    """Load path-free, source-hashed exact-code units staged for this branch.
+
+    This is packaging metadata. The fresh compiler/objdiff run below remains the
+    match gate; loading a unit never treats its prior local proof as a match.
+    """
+    manifest = ROOT / "config" / VERSION / "local_20261025_units.json"
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    if data.get("schema") != "exact-code-units/1" or data.get("target") != MODULE:
+        raise ValueError("unexpected local exact-code units manifest")
+    if data.get("base_commit") != "94748f2946b876c0629ca3f628f74fd296adcf75":
+        raise ValueError("local unit baseline changed")
+    if data.get("root_accepted_inventory_sha256") != "80e2e26f21072f3ac721c8afeacc81d3466704f5364725124f565f2f281c8b50":
+        raise ValueError("local unit inventory pin changed")
+    rows = data.get("units")
+    if not isinstance(rows, list) or len(rows) != data.get("count") or len(rows) != 11368:
+        raise ValueError("incomplete local unit inventory")
+    old_sources = {unit["source"] for unit in MATCHING_UNITS}
+    old_objects = {unit["object"] for unit in MATCHING_UNITS}
+    old_symbols = {symbol for unit in MATCHING_UNITS for symbol in unit["symbols"]}
+    sources, objects, symbols = set(), set(), set()
+    loaded = []
+    for row in rows:
+        source = row.get("source")
+        object_name = row.get("object")
+        symbol_sizes = row.get("symbols")
+        if not isinstance(source, str) or not source.startswith("src/xbox360/matched/local_20261025/"):
+            raise ValueError("local unit source path outside generated scope")
+        if "\\" in source or ".." in source.split("/") or source.startswith("/") or not source.endswith(".c"):
+            raise ValueError(f"unsafe local unit path: {source}")
+        if not isinstance(symbol_sizes, dict) or len(symbol_sizes) != 1:
+            raise ValueError(f"unexpected local unit symbols: {source}")
+        symbol, size = next(iter(symbol_sizes.items()))
+        if (not isinstance(symbol, str) or len(symbol) != 11 or
+                not symbol.startswith("fn_") or any(c not in "0123456789ABCDEF" for c in symbol[3:]) or
+                not isinstance(size, int) or size <= 0 or size % 4):
+            raise ValueError(f"invalid local unit symbol/size: {source}")
+        if object_name != f"{symbol}.obj" or not source.endswith(f"/{symbol}.c"):
+            raise ValueError(f"local unit source/object identity differs: {source}")
+        if row.get("compiler_profile") != "A-base" or row.get("headers") != []:
+            raise ValueError(f"unsupported local unit compiler/header profile: {source}")
+        if source in old_sources | sources or object_name in old_objects | objects or symbol in old_symbols | symbols:
+            raise ValueError(f"duplicate local unit identity: {source}")
+        expected_source_hash = row.get("source_sha256")
+        if not isinstance(expected_source_hash, str) or len(expected_source_hash) != 64:
+            raise ValueError(f"invalid local unit source hash: {source}")
+        if sha256(ROOT / source) != expected_source_hash:
+            raise ValueError(f"local unit source changed: {source}")
+        sources.add(source)
+        objects.add(object_name)
+        symbols.add(symbol)
+        loaded.append({"source": source, "object": object_name, "symbols": {symbol: size}})
+    return tuple(loaded)
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+MATCHING_UNITS += load_local_20261025_units()
+
+
+def load_remaining_20261025_units() -> tuple[dict, ...]:
+    """Load the smaller legacy contribution without treating metadata as proof."""
+    path = ROOT / "config" / VERSION / "remaining_20261025_units.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    rows = data.get("units", [])
+    if (data.get("schema") != "remaining-exact-units/1" or data.get("target") != MODULE
+            or data.get("count") != 28 or data.get("bytes") != 7104 or len(rows) != 17):
+        raise ValueError("incomplete remaining exact-code unit manifest")
+    old_sources = {u["source"] for u in MATCHING_UNITS}
+    old_objects = {u["object"] for u in MATCHING_UNITS}
+    old_symbols = {s for u in MATCHING_UNITS for s in u["symbols"]}
+    loaded = []
+    def pinned(relative, expected):
+        if (not isinstance(relative, str) or "\\" in relative or ".." in relative.split("/")
+                or not relative.startswith("src/xbox360/matched/remaining_20261025/")):
+            raise ValueError("remaining unit escaped its source subtree")
+        if (not isinstance(expected, str) or len(expected) != 64
+                or sha256(ROOT / relative) != expected):
+            raise ValueError(f"remaining source/header pin changed: {relative}")
+    for row in rows:
+        source, obj, symbols = row["source"], row["object"], row["symbols"]
+        pinned(source, row["source_sha256"])
+        if not source.endswith(".c") or not isinstance(symbols, dict) or not symbols:
+            raise ValueError("invalid remaining source or symbol inventory")
+        if (not isinstance(obj, str) or "/" in obj or "\\" in obj or not obj.endswith(".obj")
+                or obj in old_objects or source in old_sources):
+            raise ValueError("duplicate or unsafe remaining object/source")
+        for symbol, size in symbols.items():
+            if (not isinstance(symbol, str) or len(symbol) != 11 or not symbol.startswith("fn_")
+                    or any(c not in "0123456789ABCDEF" for c in symbol[3:])
+                    or symbol in old_symbols or not isinstance(size, int) or size <= 0 or size % 4):
+                raise ValueError("duplicate or invalid remaining function")
+        headers = row.get("headers")
+        if not isinstance(headers, dict):
+            raise ValueError("remaining header closure missing")
+        for header, pin in headers.items():
+            pinned(header, pin)
+        pending, visited = [source], set()
+        while pending:
+            current = pending.pop()
+            if current in visited:
+                continue
+            visited.add(current)
+            text = (ROOT / current).read_text(encoding="utf-8")
+            for delimiter, include in re.findall(
+                r'^\s*#\s*include\s*(["<])([^">]+)[">]', text, re.MULTILINE
+            ):
+                if delimiter != '"':
+                    raise ValueError("remaining unit has an unpinned system include")
+                included = ((ROOT / current).parent / include).resolve()
+                try:
+                    relative = included.relative_to(ROOT.resolve()).as_posix()
+                except ValueError:
+                    raise ValueError("remaining include escaped the repository") from None
+                if relative not in headers:
+                    raise ValueError(f"included header pin missing: {relative}")
+                pending.append(relative)
+        flags = row.get("extra_flags", [])
+        if flags not in ([], ["/O1"], ["/TP"]):
+            raise ValueError("unreviewed remaining compiler profile")
+        loaded.append({"source": source, "object": obj, "symbols": symbols, "extra_flags": flags})
+        old_objects.add(obj); old_sources.add(source); old_symbols.update(symbols)
+    if sum(len(u["symbols"]) for u in loaded) != 28 or sum(sum(u["symbols"].values()) for u in loaded) != 7104:
+        raise ValueError("remaining function inventory/extent changed")
+    return tuple(loaded)
+
+
+MATCHING_UNITS += load_remaining_20261025_units()
 
 
 def run(command: list[str]) -> None:
@@ -3427,7 +3556,7 @@ def checked_file(path: Path, description: str) -> Path:
 
 def compiler_output_arg(rebuilt: Path) -> str:
     """Return an MSVC output argument that works inside or outside the checkout."""
-    return f"/Fo{os.path.relpath(rebuilt, ROOT)}"
+    return f"/Fo{Path(os.path.relpath(rebuilt, ROOT)).as_posix()}"
 
 
 def write_jeff_config(
@@ -3492,12 +3621,15 @@ def verify_report(report: dict) -> None:
         for unit in MATCHING_UNITS
         for symbol, size in unit["symbols"].items()
     }
-    found = {
-        function["name"]: function
+    found_rows = [
+        function
         for unit in report.get("units", [])
         for function in unit.get("functions", [])
         if function.get("name") in expected
-    }
+    ]
+    found = {function["name"]: function for function in found_rows}
+    if len(found) != len(found_rows):
+        raise SystemExit("duplicate matching result symbol")
     if found.keys() != expected.keys():
         missing = sorted(expected.keys() - found.keys())
         raise SystemExit(f"missing matching results: {', '.join(missing)}")
@@ -3512,6 +3644,60 @@ def verify_report(report: dict) -> None:
             )
 
 
+def reproduction_inputs(xex: Path, jeff: Path, compiler: Path, objdiff: Path, wrapper: Path) -> dict:
+    """Snapshot public sources and private tools before compiling (no game bytes)."""
+    source_files = {ROOT / unit["source"] for unit in MATCHING_UNITS}
+    source_files.update((ROOT / "src" / "xbox360").rglob("*.h"))
+    source_files.update(p for p in (ROOT / "config").rglob("*") if p.is_file())
+    if (ROOT / "tools" / "matching.py").is_file():
+        source_files.add(ROOT / "tools" / "matching.py")
+    return {
+        "runner_sha256": sha256(Path(__file__)),
+        "pins": {name: {"path": str(path), "sha256": sha256(path)} for name, path in
+                 (("xex", xex), ("jeff", jeff), ("compiler", compiler), ("objdiff", objdiff), ("wrapper", wrapper))},
+        "repo_files_sha256": {p.relative_to(ROOT).as_posix(): sha256(p) for p in sorted(source_files)},
+        "compiler_companions_sha256": {p.name: sha256(p) for p in sorted(compiler.parent.glob("*.dll"))},
+    }
+
+
+def write_reproduction_receipt(work_dir: Path, inputs: dict, rebuilt_by_source: dict[str, Path]) -> None:
+    """A receipt is provenance only; independent raw verification is still required."""
+    if inputs["runner_sha256"] != sha256(Path(__file__)):
+        raise SystemExit("matching runner changed during reproduction")
+    for relative, expected in inputs["repo_files_sha256"].items():
+        if sha256(ROOT / relative) != expected:
+            raise SystemExit(f"source/header changed during reproduction: {relative}")
+    for pin in inputs["pins"].values():
+        if sha256(Path(pin["path"])) != pin["sha256"]:
+            raise SystemExit("private tool/input changed during reproduction")
+    compiler_dir = Path(inputs["pins"]["compiler"]["path"]).parent
+    if {p.name for p in compiler_dir.glob("*.dll")} != set(inputs["compiler_companions_sha256"]):
+        raise SystemExit("compiler companion inventory changed during reproduction")
+    for name, expected in inputs["compiler_companions_sha256"].items():
+        if sha256(compiler_dir / name) != expected:
+            raise SystemExit("compiler companion changed during reproduction")
+    bindings = []
+    for unit in MATCHING_UNITS:
+        obj = rebuilt_by_source[unit["source"]]
+        bindings.append({"source": unit["source"], "source_sha256": inputs["repo_files_sha256"][unit["source"]],
+                         "extra_flags": unit.get("extra_flags", []),
+                         "object": obj.relative_to(work_dir).as_posix(), "object_sha256": sha256(obj)})
+    project = work_dir / "objdiff-project" / "objdiff.json"
+    report = project.parent / "report.json"
+    receipt = {"schema": "matching-source-reproduction/1", "exit_code": 0,
+               "cleanup_scope": "sequential child commands completed; whole descendant cleanup not inspected",
+               "base_flags": ["/nologo", "/c", "/O2", "/Oi"],
+               "source_object_bindings": bindings,
+               "objdiff_project_sha256": sha256(project), "objdiff_report_sha256": sha256(report)}
+    with (work_dir / "INPUTS.json").open("x", encoding="utf-8", newline="\n") as handle:
+        json.dump(inputs, handle, indent=2); handle.write("\n")
+    receipt["inputs_sha256"] = sha256(work_dir / "INPUTS.json")
+    split_config = work_dir / "split" / "config.json"
+    receipt["jeff_split_config_sha256"] = sha256(split_config) if split_config.is_file() else None
+    with (work_dir / "REPRODUCTION-RECEIPT.json").open("x", encoding="utf-8", newline="\n") as handle:
+        json.dump(receipt, handle, indent=2); handle.write("\n")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--xex", type=Path, default=ROOT / "orig" / VERSION / MODULE)
@@ -3522,6 +3708,7 @@ def main() -> int:
     parser.add_argument("--work-dir", type=Path, default=ROOT / "work" / "matching")
     parser.add_argument("--fresh-analysis", action="store_true")
     parser.add_argument("--publish-report", type=Path)
+    parser.add_argument("--write-receipt", action="store_true", help="create private source/object/tool provenance receipts in a new work directory")
     args = parser.parse_args()
 
     xex = checked_file(args.xex, MODULE)
@@ -3541,6 +3728,9 @@ def main() -> int:
     # Keep an in-repository symlink unresolved so large transient analyses can
     # live on local scratch storage instead of an offloading cloud filesystem.
     work_dir = args.work_dir.expanduser().absolute()
+    if args.write_receipt and any((work_dir / name).exists() for name in ("INPUTS.json", "REPRODUCTION-RECEIPT.json")):
+        raise SystemExit("receipt output already exists; use a fresh private work directory")
+    receipt_inputs = reproduction_inputs(xex, jeff, compiler, objdiff, wrapper) if args.write_receipt else None
     analysis_dir = work_dir / "analysis"
     split_dir = work_dir / "split"
     rebuilt_dir = work_dir / "rebuilt"
@@ -3603,6 +3793,8 @@ def main() -> int:
     report = json.loads(report_path.read_text())
     verify_report(report)
     report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    if receipt_inputs is not None:
+        write_reproduction_receipt(work_dir, receipt_inputs, rebuilt_by_source)
 
     if args.publish_report:
         publish_path = args.publish_report.expanduser().resolve()

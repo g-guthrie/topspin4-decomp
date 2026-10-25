@@ -63,15 +63,8 @@ rectangles, where area comes from `function.size` and color again comes from
 the function match percentage. `metadata.source_path` supplies the link back to
 the exact source revision on GitHub. No project-specific map code is needed.
 
-For eventual ingestion, a completed default-branch push workflow must upload
-the report in an artifact named `54540859_report` (the hyphen form is also
-accepted). The repository must be public before decomp.dev project management
-can add it. This repository intentionally has no report-upload workflow yet:
-CI still needs a private, lawful source for the user-owned XEX, Xbox compiler,
-and patched Jeff binary. The repository remains private and no decomp.dev
-submission has been made.
-
-decomp.dev's public project listing currently filters projects below 0.5%
-matched code. This does not prevent report ingestion or the treemap from
-working, but it means the project should reach roughly 50,769 exact Swing code
-bytes before expecting it in the public list.
+The repository is public and contains a `progress.yml` workflow that validates
+and uploads the metadata-only report on `main` or manual dispatch. The compiler,
+retail inputs and raw-verification products remain private. This update's remote
+workflow execution and decomp.dev ingestion were not observed here. Report
+acceptance is separate from a runnable build; see [reproduction](reproduction.md).

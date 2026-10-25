@@ -1,5 +1,7 @@
 # Matching methodology for the wave-1 additions
 
+Current update (25 October 2026): 11,396 additional exact-code functions / 1,089,572 bytes; branch total 13,793 / 1,155,808 bytes. The earlier wave-by-wave counts below are historical. The current [method and limitations](exact-matches-20261025.md) and [reproduction commands](reproduction.md) supersede their branch totals. The portable raw verifier and COFF reader are now included under `tools/`; no private author workspace is needed to run those checks.
+
 Guide version **3** (2026-10-20). It describes how the 194 functions added in
 `src/xbox360/matched/` were found, written, checked and reviewed, and how far
 that evidence goes. [reproduction.md](reproduction.md) gives the commands to

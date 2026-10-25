@@ -1,151 +1,62 @@
-# Reproducing the matching result
+# Reproduce the exact-code publication set
 
-Guide version **3-next2** (2026-10-21); it goes with [methodology.md](methodology.md).
-This branch carries the wave-1 change plus a **separate leaf supplement**: 617 trivial 8- and 4-byte leaf functions, with unknown prototypes, reviewed for publication as exact code matches. Rechecking these functions does not add duplicate match credit. This branch also carries a **leaf, slot and constant addition**: 1,161 leaf, slot and constant functions (4,932 B; code identity only; semantic NOT_TESTED; reviewed for publication as exact code matches, without duplicate verification credit), and an **allocation-wrapper addition**: 180 functions in two units (21,936 B; code identity only; semantic NOT_TESTED; reviewed for publication as exact code matches, without duplicate verification credit). The expected outputs below are for this branch. The wave-1 baseline values (the branch without the supplement, `cb59ab3`) are given next to them, labelled as such.
-The commands below are the ones actually run for this change, on Windows 11 x64
-with Python 3.13.11 (the CI uses 3.12). Each is followed by its expected output.
-On Windows, write `python` wherever this guide says `python3`: there `python3`
-usually starts the Microsoft Store stub instead of an installed interpreter.
-The `sh` blocks in the quick start are POSIX **templates** (backslash line
-continuation, `<…>` placeholders) and do not run in PowerShell as written. The
-PowerShell 7.6 block after the quick start was run exactly as shown, with only
-the paths changed.
-Paths are written relative to the repository root, and `<…>` marks a path you
-supply.
+Version 25 October 2026. Branch measurements: **13,793 functions, 1,155,808 / 10,153,700 code bytes (objdiff-reported 11.3831215%), 11,598 source objects and 21,576 report units**. Compared with public branch `94748f2946b876c0629ca3f628f74fd296adcf75`, this adds **11,396 functions / 1,089,572 bytes**. Upstream `553f783` had 245 / 16,360 bytes. These comparisons count code identity; original ABI, types and most behavior remain unproven.
 
-## What you need (supplied locally, never committed)
+## Private prerequisites
 
-| input | check |
+Supply your own files locally. Never commit their contents or generated objects.
+
+| Input | Tested SHA-256 or version |
 |---|---|
-| `Swing_DLL.xex` from your own copy of the game | SHA-256 `dfa71292f75a649773c280de7bc2688e6e47e473aba397c248fb4204c45fac44` |
-| Xbox 360 compiler directory `16.00.10224.00` (`cl.exe`, `c1.dll`, `c2.dll`, `1033/clui.dll`, `mspdbXX.dll` and the rest of the folder) | `cl.exe` SHA-256 `6c27181a805dee13d0c9515efc00812d92f9c504cd1158eaf1f338d9f651f198` |
-| Jeff 0.3.5 with `patches/jeff-v0.3.5-topspin4.patch` | built from tag `v0.3.5` (`a7b667e29cce75c4c6329624b398c05c6b163d36`) as in [canonical-build.md](canonical-build.md). That build step was **not exercised** for this change. The Windows binary that was used reports `jeff 0.3.5 1ae97da6…` and has SHA-256 `c3bece150b9c88e2a052955646a21a777d2d9dd15689ba05b4ad265c0dec83c4`; a binary with that hash is the tested alternative. |
-| objdiff-cli 3.7.1 | `objdiff-cli --version` prints `objdiff-cli 3.7.1` |
-| a "wrapper" | On Linux or macOS this is wibo, as upstream documents (not exercised for this change). On Windows, a one-line pass-through batch file that runs its arguments: `@echo off` / `%*` / `exit /b %ERRORLEVEL%` |
+| `Swing_DLL.xex` | `dfa71292f75a649773c280de7bc2688e6e47e473aba397c248fb4204c45fac44` |
+| Xbox compiler directory 16.00.10224.00, including its companion DLLs | `cl.exe`: `6c27181a805dee13d0c9515efc00812d92f9c504cd1158eaf1f338d9f651f198` |
+| ATL100 runtime companion, needed by the single `/TP` unit | `81bc7479b974658741f7d1b9a321a9d1303b2c95416b5170eee74fef09280875` |
+| Jeff 0.3.5 plus `patches/jeff-v0.3.5-topspin4.patch` | Tested Windows binary: `c3bece150b9c88e2a052955646a21a777d2d9dd15689ba05b4ad265c0dec83c4` |
+| objdiff-cli 3.7.1 | Tested Windows binary: `97f906acf83442040e3624688341f821238db367c9dba7585213d301216310d2` |
+| Python | Local checks used Python 3.13.11; CI config uses 3.12 |
 
-The wave-1 units need no SDK headers and no `ATL100.DLL`.
+Jeff's upstream tag is `v0.3.5` (`a7b667e29cce75c4c6329624b398c05c6b163d36`); [canonical-build.md](canonical-build.md) gives its patch/build commands. Rebuilding Jeff itself was not tested in this update. Its pinned prebuilt binary was used. No proprietary SDK header is shipped or required by the new units; their minimal guest declarations are original project code. Keep the ATL runtime locally on `PATH`. Compiler flags are `/nologo /c /O2 /Oi`, with the recorded per-unit `/O1`, `/TP` and pre-existing flag exceptions.
 
-## Quick start
+## Build and compare (PowerShell templates)
 
-1. **Repository checks** (template; PowerShell form below). These need no game data, but they must run in a git checkout: `tools/check_no_game_data.py` lists files with `git ls-files`, so it fails in an exported tree or archive.
-
-   ```sh
-   python3 tools/check_no_game_data.py
-   python3 tools/validate_decomp_dev_report.py
-   python3 tools/validate_link_status.py
-   python3 -m unittest discover -s tests -v
-   ```
-
-   Expected output on this branch (wave-1 baseline: 439 exact functions, 34632 bytes, 594 units, 205 source objects):
-
-   ```
-   No tracked game-data candidates found.
-   Validated decomp.dev report: 2397 exact functions, 66236/10153700 code bytes, 2168 units
-   Validated link status: 213 source objects, 2397 exact functions, 66236 matching bytes
-   ```
-
-   - **Unit tests on Windows** (observed): `FAILED (failures=1, skipped=1)`, exit code 1. The failure is `test_external_work_directory_uses_relative_compiler_output`, because `/Fo` uses backslashes there; the base commit 553f783 fails the same test in the same way.
-   - **Unit tests on Linux: expected, not verified on this revision.** Linux and the remote CI were not run for this revision. The expected result, by the CI configuration, is 15 tests with one skip, with the `/Fo` test passing.
-
-2. **Full matching check** (template; PowerShell form below). It splits the module, compiles all 213 units, generates the objdiff report and rejects any listed function that is not at 100% at its recorded size.
-
-   ```sh
-   python3 tools/matching.py \
-     --xex <Swing_DLL.xex> \
-     --jeff <patched jeff> \
-     --compiler-dir <16.00.10224.00 directory> \
-     --wrapper <wibo or pass-through.cmd> \
-     --objdiff <objdiff-cli> \
-     --work-dir <scratch directory outside the repository> \
-     --fresh-analysis
-   ```
-
-   - The run takes under two minutes on a 48-thread host.
-   - The last line is: `Matched 2397 functions: 66236/10153700 code bytes (0.65233360%)`. Without the allocation-wrapper addition, it is `Matched 2217 functions: 44300/10153700 code bytes (0.43629417%)`. With the leaf supplement only, it is `Matched 1056 functions: 39368/10153700 code bytes (0.38772073%)`. On the wave-1 baseline it is `Matched 439 functions: 34632/10153700 code bytes (0.34107763%)`.
-   - The exit code is 0.
-   - The work directory contains game-derived split objects. Keep it private.
-
-3. **Optional: regenerate the committed report** (template; PowerShell form below). The committed `reports/54540859/report.json` is derived from the generated `objdiff-project/report.json`:
-   - Keep the top-level keys and every unit in the generated order, with each unit's keys unchanged.
-   - In each unit, set `functions` to the entries whose `fuzzy_match_percent` is exactly `100.0`. A unit with no `functions` list gets `"functions": []` written as its last key.
-   - Serialise with Python `json.dumps(report, separators=(",", ":"))`: no key sorting, default float formatting. Add exactly one trailing newline and no BOM.
-
-   ```sh
-   python3 -c "import json,sys; r=json.load(open(sys.argv[1])); [u.__setitem__('functions',[f for f in u.get('functions',[]) if f.get('fuzzy_match_percent')==100.0]) for u in r['units']]; open(sys.argv[2],'wb').write((json.dumps(r,separators=(',',':'))+chr(10)).encode())" <work-dir>/objdiff-project/report.json <out.json>
-   git hash-object <out.json>
-   git rev-parse HEAD:reports/54540859/report.json
-   ```
-
-   - The two hashes printed must be equal. Two independent runs on this tree produced the same file, and the same transformation reproduces the base commit's committed report byte for byte.
-   - Compare git blob ids as shown, not the working file's SHA-256. A fresh Windows clone with `core.autocrlf=true` checks `report.json` out with CRLF line endings, which changes the working file's bytes.
-
-4. **Optional: forced link probe** (`config/link-status.json`).
-   - **Linker.** `link.exe` is the one in the same `16.00.10224.00` compiler directory, SHA-256 `5c970fc53998e620fc70c100ef2729cd59c8714f8b761eeac289cfa2fa3a5acf`.
-   - **Git Bash.** Set `MSYS_NO_PATHCONV=1`; otherwise arguments such as `/nologo` are rewritten as paths. cmd.exe and PowerShell are not affected.
-   - **Why a response file.** Every rebuilt object is linked, in `MATCHING_UNITS` order. Two hundred five absolute paths exceed the Windows command-line limit, so run the linker from `<work-dir>/rebuilt` with a response file that holds the bare object names, one per line, in `MATCHING_UNITS` order. The block below is a template; the tested PowerShell form follows the quick start.
-
-   ```
-   python3 -c "import tools.matching as m; print(chr(10).join(u['object'] for u in m.MATCHING_UNITS))" > <work-dir>/rebuilt/objects.rsp
-   cd <work-dir>/rebuilt
-   link.exe /nologo /dll /noentry /nodefaultlib /machine:PPCBE /subsystem:XBOX /XEX:NO /OPT:NOREF /FORCE:UNRESOLVED /MAP /out:probe.dll @objects.rsp
-   ```
-
-   - Run the first command from the repository root.
-   - **Counting rules.** These are the definitions that reproduce the base commit's 218 / 373 / 22,528 / 17,176 / 8 exactly. "Unique unresolved external symbols" = distinct `LNK2001`/`LNK2019` message texts with the object-file prefix removed. "References" = all such lines. `.text` bytes = the section's VirtualSize. Static helpers = static function symbols in the map.
-   - **Results on this branch:** 433 / 682 / 86,016 / 74,028 / 51. Without the allocation-wrapper addition: 342 / 587 / 59,904 / 52,000 / 51. With the leaf supplement only: 343 / 588 / 50,688 / 42,712 / 51. On the wave-1 baseline: 343 / 588 / 45,568 / 37,772 / 51.
-   - **Output hash.** The output file's SHA-256 changes with every link, because of the link timestamp.
-
-### The same steps in PowerShell (tested on Windows 11, PowerShell 7.6.6)
-
-Replace the paths in the first lines with your own; the repository root must be the current directory.
+Run from a complete Git checkout. Set these variables to your private input/tool paths: `$xex`, `$jeff`, `$compilerDir`, `$objdiff`, `$atlRuntimeDir`. No model or compiler cache is needed. Use a new ignored work directory so failed/partial receipts stay preserved.
 
 ```powershell
-$Xex = 'D:\private\Swing_DLL.xex'; $Jeff = 'D:\tools\jeff.exe'; $Cl = 'D:\tools\16.00.10224.00'
-$Wrap = 'D:\tools\passthrough.cmd'; $Objdiff = 'D:\tools\objdiff-cli.exe'; $Work = 'D:\scratch\work'
+New-Item -ItemType Directory -Force work | Out-Null
+@('@echo off', '%*', 'exit /b %ERRORLEVEL%') | Set-Content -Encoding ascii work/passthrough.cmd
+$env:PATH = "$compilerDir;$atlRuntimeDir;$env:PATH"
+python tools/matching.py --xex $xex --jeff $jeff --compiler-dir $compilerDir --wrapper work/passthrough.cmd --objdiff $objdiff --work-dir work/reproduce-20261025 --fresh-analysis --write-receipt
+```
+
+The compiler is deliberately sequential. Sharing its temporary directory between concurrent invocations is unsafe. Each expected function must have the exact recorded size and a 100% objdiff result. This is followed by independent raw checks below. `--write-receipt` records current sources/headers/config, DLLs alongside the compiler, private tool hashes, per-source flags and object hashes, and project/report hashes. It rejects changed inputs and refuses to overwrite an earlier receipt. The separately supplied ATL100 runtime resolved through `PATH` is not captured automatically: verify it manually against the SHA256 above before compiling the single `/TP` unit. An interrupted pair of receipt files is incomplete evidence; preserve it and choose a new work directory. A receipt is not acceptance.
+
+## Independently check raw code, relocations and pdata
+
+Jeff extracts a file-layout PE; the verifier needs an RVA-addressed image. Keep both private:
+
+```powershell
+New-Item -ItemType Directory -Force work/raw-input | Out-Null
+Copy-Item -LiteralPath $xex -Destination work/raw-input/Swing_DLL.xex
+& $jeff xex extract work/raw-input/Swing_DLL.xex
+python tools/flatten_pe.py --input work/raw-input/Swing_DLL.dll --output work/raw-input/Swing_DLL.flat.pe
+python tools/verify_exact_objects.py --repo . --pe work/raw-input/Swing_DLL.flat.pe --objdiff work/reproduce-20261025/objdiff-project/objdiff.json --out work/reproduce-20261025/INDEPENDENT-RAW.json
+```
+
+The tested extracted DLL hash is `a7f28b29ef72fcc88c9b7c8208d27367b2e1bcfdafbeaddc49b9e8d32f952ba9`; the mapped image hash is `d78f393eb434b283040f002cd5346b0a70732df8b1fc0798c7a0be8546f27997`. The historical private flat image has a different full-image hash; its entire `.text`, `.pdata` and section headers were independently checked equal to this reproducible view. The checker accepts only those two pinned images.
+
+Expected new packet: **11,368 core + 28 legacy = 11,396 exact functions / 1,089,572 bytes, zero holds and zero duplicate external function definitions**. The existing 2,397 public functions are regression-checked by the whole-module objdiff report; the new packet receives per-address full-extent/raw/effective-relocation/strict-pdata verification. Unknown relocation kinds, wrong addends, fragments, changed source/header pins and missing pdata expectations fail closed. Two exact address aliases are validated against the symbol registry and matching relocation slots; they are not arbitrary suffix-based name resolution or original ABI proof.
+
+For a small worked example, choose a `local756` row in `local_20261025_units.json`: its source, source SHA, symbol, extent and pdata range are explicit, and the compiler command above emits the corresponding `fn_XXXXXXXX.obj`. The independent receipt records both COFF hashes and raw code digests for that same address. For a substantive family, the five published shot-request functions share `remaining_20261025/group-12-8865AE10/drafts/sr_common.h`; all five pass individually. Its sixth proposed member, `0x8826B640`, is excluded because the publication source context emitted 324 bytes against retail116. Another excluded address, `0x88884C08`, retains its specific float/double signature hold. Neither adds publication credit.
+
+## Repository checks and observed validation
+
+```powershell
 python tools/check_no_game_data.py
 python tools/validate_decomp_dev_report.py
 python tools/validate_link_status.py
-python -m unittest discover -s tests          # Windows: FAILED (failures=1, skipped=1), see above
-python tools/matching.py --xex $Xex --jeff $Jeff --compiler-dir $Cl --wrapper $Wrap --objdiff $Objdiff --work-dir $Work --fresh-analysis
-# committed report form, then compare git blob ids (both lines must print the same id)
-python -c 'import json,sys; r=json.load(open(sys.argv[1])); [u.__setitem__("functions",[f for f in u.get("functions",[]) if f.get("fuzzy_match_percent")==100.0]) for u in r["units"]]; open(sys.argv[2],"wb").write((json.dumps(r,separators=(",",":"))+chr(10)).encode())' "$Work\objdiff-project\report.json" "$Work\report.committed.json"
-git hash-object "$Work\report.committed.json"
-git rev-parse HEAD:reports/54540859/report.json
-# link probe: an ASCII, LF-terminated response file of bare object names in MATCHING_UNITS order
-python -c 'import sys,tools.matching as m; open(sys.argv[1],"wb").write("".join(u["object"]+chr(10) for u in m.MATCHING_UNITS).encode("ascii"))' "$Work\rebuilt\objects.rsp"
-$Link = Join-Path $Cl 'link.exe'
-Push-Location "$Work\rebuilt"
-& $Link /nologo /dll /noentry /nodefaultlib /machine:PPCBE /subsystem:XBOX /XEX:NO /OPT:NOREF /FORCE:UNRESOLVED /MAP '/out:probe.dll' '@objects.rsp' > link.txt
-Pop-Location
+python -m unittest discover -s tests -v
 ```
 
-**Observed results**
-- The three checks print the lines above.
-- This block was run on the **wave-1 baseline tree**. There, `matching.py` ended with `Matched 439 functions: 34632/10153700 code bytes (0.34107763%)` (exit code 0) and both blob ids were `bd072ba189589396ff9b709143082dc445641fd3`. The linker exited 0, with 588 `LNK2001`/`LNK2019` lines in `link.txt` and a 45,568-byte `probe.dll`.
-- **On this branch** the same commands give the following. These were checked with the same `matching.py` invocation, the report one-liner and the link probe run from a POSIX shell, not with this PowerShell block.
-  - `Matched 2397 functions: 66236/10153700 code bytes (0.65233360%)`
-  - both blob ids `e17d3b565f4a3e223d2a5712fd0b4b96916303fa` (the committed report's SHA-256 is `0d54ccdb8ae8c774e5d8d28e035a28068060907faf7eb7e9338086a887049b77`)
-  - 682 unresolved lines and an 86,016-byte `probe.dll`
+This preparation compiled every proposed source, corrected 15 legacy header copies to their actual retained cohort versions, then rebuilt the legacy units and regenerated the whole-project comparison. A whitespace cleanup affected 726 source files; all 726 were recompiled. Final publication review also corrected stale status comments in 17 legacy units and their headers, followed by another rebuild of those 17 units and full raw verification. Unchanged, already freshly compiled objects were pinned and reused; every included function was independently raw-checked again. Failed attempts and the excluded member remain in the private review appendix. The documented extraction/flattening and the portable raw checker were run on the real complete final packet. The optional public receipt-writer mode was tested with isolated mutation fixtures; a fresh whole-corpus invocation of that newly added flag was not performed. The full real verification used the separately recorded clean private Windows Job receipt. Linux compilation, remote CI and gameplay were not run here.
 
-Quote `'@objects.rsp'` as shown: unquoted, PowerShell reads `@objects` as splatting.
-
-## Directory and configuration schema (what a new match touches)
-
-| file | entry per new function or unit |
-|---|---|
-| `src/xbox360/…/<unit>.c` | the source, compiled from the repository root |
-| `tools/matching.py` `MATCHING_UNITS` | `{"source", "object", "symbols": {name: size}, ["extra_flags"]}` |
-| `config/54540859/splits.txt` | `<source>:` block listing `.pdata` ranges (when the function has an exception entry), then `.text` ranges |
-| `config/54540859/symbols.txt` | `fn_XXXXXXXX` renamed to the function name; the size must equal the extent |
-| `config/54540859/symbols.seed.txt` | the new names, appended |
-| `config/54540859/objects.json` | `"<source>": {"status": "Matching", "source": "<path below src/>"}` |
-| `config/54540859/match.json` | one row per function plus the counters |
-| `config/progress.json` | counters equal to `match.json` |
-| `reports/54540859/report.json` | the committed report, see step 3 |
-| `config/link-status.json`, `tests/test_canonical_build.py` | forced link probe counts |
-
-The CI (`.github/workflows/guard.yml`) runs only the four checks of step 1. The matching check needs your local game copy and compiler, so its result is recorded in the pull request.
-
-## Privacy and identity checks used before committing
-- **Diff scan.** No file with a blocked suffix and no binary file. No absolute or private paths, decompiler tokens, raw instruction words, SDK includes or secrets in added lines.
-- **Commit identity.** Every commit's author and committer is the contributor's GitHub no-reply address. No other address and no trailers appear anywhere in the log.
+The separate linker capability probe passed 11,598 source objects and reported all 13,793 matching symbols. Its inspection PE required `/FORCE:UNRESOLVED` (2,408 unresolved names / 24,025 references) and is **not runnable**. It is not committed. Source grouping remains provisional; exactness is not a type/layout solution or an original TU-boundary claim. See [methodology](exact-matches-20261025.md) for remaining work and the worker/evidence protocol.
