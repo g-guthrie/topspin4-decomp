@@ -1,0 +1,9 @@
+typedef unsigned char u8;
+
+extern void fn_8835DC40(void *p);
+
+void fn_8835DD20(void *p)
+{
+    void *ptr = p ? (void *)((u8 *)p - 0x1c) : 0;
+    fn_8835DC40(ptr);
+}

@@ -11,7 +11,12 @@ BLOCKED_SUFFIXES = {
     ".7z", ".bin", ".dll", ".elf", ".iso", ".pkg", ".rap", ".rar", ".self", ".xex", ".zip"
 }
 MAX_TRACKED_FILE_SIZE = 5 * 1024 * 1024
-LARGE_TEXT_ALLOWLIST = {Path("config/54540859/symbols.txt")}
+# The whole-module measurements now cover >21,000 units. The report is JSON
+# metadata validated separately by validate_decomp_dev_report.py, never raw code.
+LARGE_TEXT_ALLOWLIST = {
+    Path("config/54540859/symbols.txt"),
+    Path("reports/54540859/report.json"),
+}
 
 
 def is_allowed_large_text(path: Path) -> bool:

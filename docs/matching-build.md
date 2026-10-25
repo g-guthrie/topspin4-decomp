@@ -71,14 +71,13 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe passes all one hundred thirty-one source-built objects to the linker. Its map
-contains all two hundred forty-five exact public functions. Because the remaining game code and
-data are not reconstructed, this probe requires `/FORCE:UNRESOLVED` and reports
-218 unique unresolved external symbols across 373 references. The linker emits a 22,528-byte
-inspection PE with 17,176 bytes of `.text`; that section also includes eight
-source helper functions and alignment, so it is not a new matching-progress
-denominator. This is evidence that the current reconstructed subset can enter a
-single Xbox link, not evidence of a usable module.
+A second probe passes all 11,598 source-built objects to the linker. Its map
+contains 13,793 exact public functions. Missing game code/data still require
+`/FORCE:UNRESOLVED`; the measured probe reports 2,408 unique unresolved symbols
+across 24,025 references. It emits a private 1,497,088-byte inspection PE with
+1,188,704 bytes of `.text`. Helpers and alignment make that section larger than
+the 1,155,808 reviewed matching bytes. These measurements are in
+`config/link-status.json`; they do not establish a usable module.
 
 This proves that reconstructed COFF objects can be combined by the original
 Xbox linker. It does **not** produce a replacement game module or runnable XEX,

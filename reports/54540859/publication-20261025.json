@@ -1,0 +1,47 @@
+{
+  "schema": "publication-measurements/1",
+  "base_public_commit": "94748f2946b876c0629ca3f628f74fd296adcf75",
+  "new_functions": 11396,
+  "new_code_bytes": 1089572,
+  "new_distinct_raw_patterns": 10865,
+  "new_trivial_leaves_at_most_8_bytes": 892,
+  "total_functions": 13793,
+  "total_code_bytes": 1155808,
+  "source_units": 11598,
+  "report_units": 21576,
+  "scope": "exact code/effective relocations/pdata only",
+  "typed_functions": 0,
+  "excluded": [
+    {
+      "address": "0x88884C08",
+      "size": 124,
+      "reason": "specific unresolved float/double source-ABI hold"
+    },
+    {
+      "address": "0x8826B640",
+      "size": 116,
+      "reason": "current source context emits 324 bytes against retail116; historical code proof is not publication source proof"
+    }
+  ],
+  "private_review_receipt_sha256": {
+    "BUILD-RECEIPT.json": "4af43b11aa099cef085415866e8d44d7fd02a71d103ad3540bd19f216d6932a4",
+    "PORTABLE-FINAL4-EXACT-RECEIPT.json": "07f3fb2371439ce8a662dc79860576509cbc0dccb0a3762e81e9fd2584fd63c3"
+  },
+  "public_files_sha256": {
+    "config/54540859/local_20261025_units.json": "d3cf88685dd0c32ac24c6c371ea535c92498460db72353a189c315147dda824d",
+    "config/54540859/remaining_20261025_units.json": "db88e70a2713331fc9ba54d4a01497ebf47c66169595eb74a63fabccf71e23df",
+    "tools/matching.py": "e1ef403b3a205bd2cdb8d7f229aa99445e844cc3745a35882dfa191dfb489c66",
+    "tools/verify_exact_objects.py": "01e850b474e860502511fa373e5182f804007fd60f1391fa43a7871cab653930",
+    "tools/ppc_exact_coff.py": "3e6e3e4c1f856932fcc90c25367492d9843c5b515047e7e3c758f2e8f31144b3",
+    "tools/flatten_pe.py": "fdb0e013d6705a81297cc5a6fc3ce46ee554ab9f99af5fd39601c95d5c3f1a4e"
+  },
+  "validation": {
+    "unit_tests": 42,
+    "skipped": 1,
+    "host_C_syntax_check": "skipped: no host C compiler in test environment; actual Xbox compilation separately completed",
+    "public_receipt_mode": "mutation tests; not a full whole-corpus CLI run",
+    "final_comparison": "13793 exact functions; 1155808 bytes; 21576 report units",
+    "formatting": "726 normalized source files recompiled and full packet independently rechecked",
+    "publication_comments": "17 legacy units recompiled after comment-only corrections; full packet independently rechecked again"
+  }
+}

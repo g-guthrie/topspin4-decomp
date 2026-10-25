@@ -31,25 +31,25 @@
   "runtime_tested": false,
   "artifact_committed": false,
   "forced_all_units_probe": {
-    "input_source_objects": 131,
-    "input_matching_functions": 245,
-    "input_matching_code_bytes": 16360,
+    "input_source_objects": 11598,
+    "input_matching_functions": 13793,
+    "input_matching_code_bytes": 1155808,
     "input_object_kind": "source-built base objects",
-    "link_flags_added": [
-      "/FORCE:UNRESOLVED",
-      "/MAP"
-    ],
-    "output_size_bytes": 22528,
-    "output_sha256": "c5f67efaf080d60a55c9fed1ed254910bf38ab893aa786e9f6871cfa1dd868d8",
-    "output_text_bytes": 17176,
-    "map_matching_public_functions": 245,
-    "map_additional_static_helpers": 8,
-    "unresolved_external_symbols": 218,
-    "unresolved_external_references": 373,
+    "output_size_bytes": 1497088,
+    "output_sha256": "865ba3721ebd0018f5f1bef739647a17b6cd90b29cf442992679a9013ef7da03",
+    "output_text_bytes": 1188704,
+    "map_matching_public_functions": 13793,
+    "map_additional_static_helpers": 12,
+    "unresolved_external_symbols": 2408,
+    "unresolved_external_references": 24025,
     "is_xex": false,
     "is_runnable": false,
     "runtime_tested": false,
     "artifact_committed": false,
-    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 245 exact public functions plus source helper code and alignment, so total text size is not a matching-progress counter."
+    "link_flags_added": [
+      "/FORCE:UNRESOLVED",
+      "/MAP"
+    ],
+    "note": "Private non-runnable inspection PE, not a replacement game module. Its text includes helpers and alignment; matched-code progress uses reviewed function extents only."
   }
 }
