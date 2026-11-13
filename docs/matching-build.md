@@ -71,16 +71,13 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe, measured when two hundred forty-five functions matched, passed all one hundred
-thirty-one source-built objects of that state to the linker. Its map contained all two hundred
-forty-five exact public functions. It has not been re-measured since: the Linux host used for
-later batches has wibo 1.0.0, which cannot run `link.exe`, so `config/link-status.json` marks
-it as a snapshot. Because the remaining game code and
+A second probe passes all one hundred forty-nine source-built objects to the linker. Its map
+contains all three thousand three hundred thirty-six exact public functions. Because the remaining game code and
 data are not reconstructed, this probe requires `/FORCE:UNRESOLVED` and reports
-218 unique unresolved external symbols across 373 references. The linker emits a 22,528-byte
-inspection PE with 17,176 bytes of `.text`; that section also includes eight
-source helper functions and alignment, so it is not a new matching-progress
-denominator. This is evidence that the current reconstructed subset can enter a
+1,468 unique unresolved external symbols across 1,906 references. The linker emits a 231,936-byte
+inspection PE with 200,528 bytes of `.text`; that section also includes eighty
+source helper functions (inline C++ constructors and allocation wrappers) and alignment, so it is not a new matching-progress
+denominator. Linker outputs embed timestamps, so their hashes change between runs. This is evidence that the current reconstructed subset can enter a
 single Xbox link, not evidence of a usable module.
 
 This proves that reconstructed COFF objects can be combined by the original
