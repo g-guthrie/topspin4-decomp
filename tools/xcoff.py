@@ -101,11 +101,30 @@ class Coff:
             return data, relocs
         raise KeyError(name)
 
-    def symbol_offset(self, name: str) -> int | None:
-        """Section-relative offset of a defined symbol (e.g. an MSVC `$LN` label)."""
+    def symbol_offset(self, name: str, start: int | None = None, end: int | None = None,
+                      section: int | None = None) -> int | None:
+        """Section-relative offset of a defined symbol (e.g. an MSVC `$LN` label).
+
+        MSVC restarts `$LN` numbering in every function, so a file with several
+        switch functions defines the same label name more than once. When
+        `start`/`end` are given, prefer the definition inside that range.
+        """
+        found = None
+        for symbol in self.symbols:
+            if symbol.name != name or symbol.section <= 0:
+                continue
+            if section is not None and symbol.section != section:
+                continue
+            if start is None or start <= symbol.value < end:
+                return symbol.value
+            if found is None:
+                found = symbol.value
+        return None if start is not None else found
+
+    def symbol_section(self, name: str) -> int | None:
         for symbol in self.symbols:
             if symbol.name == name and symbol.section > 0:
-                return symbol.value
+                return symbol.section
         return None
 
     def function_names(self) -> list[str]:

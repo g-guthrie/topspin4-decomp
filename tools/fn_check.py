@@ -159,7 +159,9 @@ def main() -> int:
                 t_sym = t_by[(r.offset, r.kind)]
                 c_sym = r.symbol
                 if c_sym.startswith(LOCAL_LABEL_PREFIX):
-                    c_off = obj.symbol_offset(c_sym)
+                    c_off = (obj.symbol_offset(c_sym, c_base, c_base + len(c_code),
+                                               obj.symbol_section(actual_name))
+                             if c_base is not None else None)
                     t_addr = text_address.get(t_sym)
                     if c_off is None or c_base is None or t_addr is None:
                         problems.append(f"reloc +{r.offset:#x}: cannot resolve label {c_sym} / {t_sym}")
