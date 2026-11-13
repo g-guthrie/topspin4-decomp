@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git clone:*)",
+      "Bash(git fetch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git apply:*)",
+      "Bash(cargo build:*)",
+      "Bash(cmake:*)",
+      "Bash(apt-get update:*)",
+      "Bash(apt-get install:*)",
+      "Bash(curl:*)",
+      "Bash(python3 tools/download_tool.py:*)",
+      "Bash(python3 tools/matching.py:*)",
+      "Bash(python3 tools/fn_asm.py:*)",
+      "Bash(python3 tools/fn_check.py:*)",
+      "Bash(python3 tools/sym_info.py:*)",
+      "Bash(python3 tools/integrate_match.py:*)",
+      "Bash(python3 tools/sync_progress.py:*)",
+      "Bash(python3 -m unittest:*)",
+      "Bash(work/matching-tools/*)",
+      "Bash(work/wibo-src/build/release64/wibo:*)",
+      "Bash(work/jeff/target/release/jeff:*)"
+    ]
+  }
+}
