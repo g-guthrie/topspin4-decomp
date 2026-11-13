@@ -22,9 +22,35 @@ from xcoff import ROOT, load_symbols, read_coff  # noqa: E402
 
 SPLIT = ROOT / "work" / "matching" / "split"
 OBJDUMP = ROOT / "work" / "matching-tools" / "binutils" / "powerpc-eabi-objdump"
+# Optional VMX128-aware disassembler from tools/ppcdis (binutils cannot decode
+# Xenon VMX128). Build: cargo build --release --manifest-path tools/ppcdis/Cargo.toml
+#   --target-dir work/ppcdis/target
+PPCDIS = ROOT / "work" / "ppcdis" / "target" / "release" / "ppcdis"
+
+
+def _ppcdis_lines(code: bytes, base: int) -> list[tuple[int, str, str]]:
+    out = subprocess.run(
+        [str(PPCDIS), f"{base:x}"], input=code, capture_output=True, check=True
+    ).stdout.decode()
+    rows = []
+    for line in out.splitlines():
+        address, word, text = line.split(" ", 2)
+        rows.append((int(address, 16), word, text))
+    return rows
 
 
 def disassemble(code: bytes, base: int, relocs, objdump: Path = OBJDUMP) -> list[str]:
+    by_offset = {}
+    for reloc in relocs:
+        by_offset.setdefault(reloc.offset & ~3, []).append(reloc)
+    if PPCDIS.is_file():
+        lines = []
+        for address, word, text in _ppcdis_lines(code, base):
+            note = "".join(
+                f"   ; {r.kind_name} {r.symbol}" for r in by_offset.get(address - base, [])
+            )
+            lines.append(f"{address:08X}  {word}  {text}{note}")
+        return lines
     with tempfile.NamedTemporaryFile(suffix=".bin") as handle:
         handle.write(code)
         handle.flush()
@@ -110,6 +136,9 @@ def find_function(name: str):
 
 
 def main() -> int:
+    import signal
+
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("names", nargs="+")
     args = parser.parse_args()

@@ -1,0 +1,6 @@
+[package]
+name = "ppcdis"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+powerpc = "=0.4.1"
