@@ -1084,6 +1084,10 @@
       "src/xbox360/r6_net_slots.c": {
         "status": "Matching",
         "source": "xbox360/r6_net_slots.c"
+      },
+      "src/xbox360/jt_switch_flags.c": {
+        "status": "Matching",
+        "source": "xbox360/jt_switch_flags.c"
       }
     }
   }

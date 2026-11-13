@@ -15699,6 +15699,11 @@ MATCHING_UNITS = (
         "object": "r6_net_slots.obj",
         "symbols": {"ts4_net_update_slots_88908B80": 264},
     },
+    {
+        "source": "src/xbox360/jt_switch_flags.c",
+        "object": "jt_switch_flags.obj",
+        "symbols": {"ts4_state_flag_8865DA28": 148},
+    },
 )
 
 

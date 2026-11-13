@@ -18668,3 +18668,6 @@ src/xbox360/r6_net_props.c:
 src/xbox360/r6_net_slots.c:
 	.pdata      start:0x881300D0 end:0x881300D8
 	.text       start:0x88908B80 end:0x88908C88
+
+src/xbox360/jt_switch_flags.c:
+	.text       start:0x8865DA28 end:0x8865DABC

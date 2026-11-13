@@ -1,6 +1,6 @@
 # Matching build
 
-The first two hundred sixty-six matching measurement units reproduce all 965,440 code bytes across fourteen thousand three hundred functions exactly.
+The first two hundred sixty-seven matching measurement units reproduce all 965,588 code bytes across fourteen thousand three hundred one functions exactly.
 
 ## Local prerequisites
 
@@ -29,7 +29,7 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 965,440 of 10,153,700 Swing code bytes (`9.50825800%`) and fourteen thousand three hundred of 47,250 objdiff functions (`30.2645510%`). The decomp-framework report has two hundred sixty-six complete-source units among 11287 total units.
+The match is 965,588 of 10,154,212 Swing code bytes (`9.50923600%`) and fourteen thousand three hundred one of 46,736 objdiff functions (`30.5995370%`). The decomp-framework report has two hundred sixty-seven complete-source units among 11310 total units.
 
 Where a function has an accompanying eight-byte `.pdata` range, it is also a
 100% relocation-aware objdiff match. Leaf functions without an exception record
@@ -71,11 +71,11 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe passes all two hundred sixty-six source-built objects to the linker. Its map
-contains all fourteen thousand three hundred exact public functions. Because the remaining game code and
+A second probe passes all two hundred sixty-seven source-built objects to the linker. Its map
+contains all fourteen thousand three hundred one exact public functions. Because the remaining game code and
 data are not reconstructed, this probe requires `/FORCE:UNRESOLVED` and reports
 13,302 unique unresolved external symbols across 18,905 references. The linker emits a 1,224,192-byte
-inspection PE with 1,015,600 bytes of `.text`; that section also includes eighty-five
+inspection PE with 1,015,748 bytes of `.text`; that section also includes eighty-five
 source helper functions (inline C++ constructors and allocation wrappers) and alignment, so it is not a new matching-progress
 denominator. Linker outputs embed timestamps, so their hashes change between runs. Reproduce with `tools/link_probe.py`. This is evidence that the current reconstructed subset can enter a
 single Xbox link, not evidence of a usable module.
@@ -90,3 +90,23 @@ resolved imports and linker directives, XEX image packaging/signing, and
 runtime verification. Until those gates exist, this repository reports exact
 object matches and the minimal PE link proof rather than claiming a runnable
 linked build.
+
+## Jump-table switches
+
+The Jeff patch rebuilds jump-table relocations and function extents for MSVC
+switch tables embedded in `.text` (534 sites in Swing). Measurements, with the
+patched Jeff 0.3.5 and objdiff-cli 3.7.1:
+
+- A fresh analysis finds 552 `jumptable_*` objects instead of 520. All 534
+  `mtctr`/`bctr` sites with an inline absolute table are covered except
+  `0x888B3C10`, whose case blocks are matched functions in
+  `symbols.seed.txt` (see below).
+- Five functions grow to include case blocks that used to be separate `fn_`
+  symbols: `fn_8849E168`, `fn_8865DA28`, `fn_8865DAC0`, `fn_886ED218`,
+  `fn_8889CD00`.
+- Table words get ADDR32 relocations against `$LN<address>` labels, are zeroed
+  in the split object, and `jumptable_*` symbols are written as labels.
+- `tools/fn_check.py` compares a candidate `$LN` relocation with the target by
+  offset inside the function. Set `TS4_MATCHING_DIR` to use the split and
+  symbols of an alternate `tools/matching.py --work-dir`.
+

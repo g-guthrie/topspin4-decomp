@@ -65,7 +65,7 @@ files, extracted data, SDK-derived tables or compiler binaries.
    python3 ../../tools/download_tool.py binutils binutils --tag 2.42-1
    cd ../..
    git clone --branch v0.3.5 https://github.com/rjkiv/jeff.git work/jeff
-   git -C work/jeff apply ../../patches/jeff-v0.3.5-topspin4.patch
+   git -C work/jeff apply ../../patches/jeff-v0.3.5-topspin4.patch   # also rebuilds jump-table relocations
    cargo build --release --manifest-path work/jeff/Cargo.toml
    cargo build --release --manifest-path tools/ppcdis/Cargo.toml --target-dir work/ppcdis/target  # VMX128 disassembly
    ```
@@ -151,10 +151,21 @@ python3 -m unittest discover -s tests && python3 tools/validate_link_status.py \
   "missing".
 - **Stale split.** `fn_asm.py` and `fn_check.py` read `work/matching/split`.
   Re-run `matching.py` to refresh it after integrating, or old names show up.
-- **Jump-table switches.** `fn_check.py` rejects them because the candidate has
-  `$LN` relocations and the original split has none. It is not yet known whether
-  objdiff accepts them; test one through `matching.py`. About 95 functions in
-  one range alone are blocked by this.
+- **Jump-table switches.** MSVC embeds the table in `.text` right after the
+  `bctr`, with one ADDR32 relocation per word against a local `$LN` label. The
+  XEX has no usable base relocations (the `.reloc` section of the decompressed
+  PE is 315 KB of high-entropy data), so the patched Jeff rebuilds those
+  relocations from the table itself, gives every case block a `$LN<addr>`
+  label, writes `jumptable_*` as plain labels (not data symbols that split the
+  function for objdiff), zeroes the table words in the split `.text` like a
+  real MSVC object, and extends leaf functions (no pdata) over their case
+  blocks. Run `TS4_MATCHING_DIR=work/matching-jt python3 tools/fn_check.py ...`
+  against a split made with that Jeff; `fn_check.py` then accepts a candidate
+  `$LN` reloc when the label sits at the same offset in the function as the
+  target address. Existing sizes in `symbols.txt` are stale for the five
+  functions listed in `docs/matching-build.md` (case blocks that were split off
+  as separate `fn_` symbols): refresh those lines from a fresh analysis before
+  `integrate_match.py`. See `src/xbox360/jt_switch_flags.c` for a worked example.
 - **`__vector4`/VMX128** used to block the ball-flight functions. Solved: include
   `src/xbox360/ts4_vector.h`, which is our own declaration of a `passinreg` 16-byte
   struct plus `#pragma intrinsic` prototypes. Dereferencing a `__vector4 *` emits

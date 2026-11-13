@@ -140,6 +140,7 @@ def main() -> int:
     scalars = {
         "matched_code_bytes": code,
         "module_matched_code_percent": measures["matched_code_percent"],
+        "module_total_code_bytes": int(measures["total_code"]),
         "module_total_functions": measures["total_functions"],
         "module_matched_functions": functions,
         "module_matched_functions_percent": measures["matched_functions_percent"],
@@ -157,6 +158,8 @@ def main() -> int:
     for key in ("semantic_drafts", "reconstructed_functions", "validated_functions", "matching_functions"):
         progress[key] = functions
     progress["matching_bytes"] = code
+    progress["matching_total_code_bytes"] = int(measures["total_code"])
+    progress["matching_total_functions"] = measures["total_functions"]
     progress["matching_code_percent"] = measures["matched_code_percent"]
     progress["matching_functions_percent"] = measures["matched_functions_percent"]
     PROGRESS.write_text(json.dumps(progress, indent=2) + "\n")

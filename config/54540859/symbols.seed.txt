@@ -14383,3 +14383,4 @@ ts4_net_parse_param_block_889954E8 = .text:0x889954E8; // type:function size:0x1
 ts4_net_set_prop_byte_8890A948 = .text:0x8890A948; // type:function size:0x108
 ts4_net_reset_two_props_88944F58 = .text:0x88944F58; // type:function size:0x104
 ts4_net_update_slots_88908B80 = .text:0x88908B80; // type:function size:0x108
+ts4_state_flag_8865DA28 = .text:0x8865DA28; // type:function size:0x94

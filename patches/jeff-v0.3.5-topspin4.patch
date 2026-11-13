@@ -42,7 +42,9 @@ index 6d0efb6..44b43df 100644
                  {
                      self.functions.entry(address).or_default();
                  }
-@@ -496,4 +518,28 @@ impl AnalyzerState {
+@@ -494,6 +516,30 @@ impl AnalyzerState {
+     }
+ 
      fn detect_new_functions(&mut self, obj: &ObjInfo) -> Result<bool> {
 +        let skip_alignment_and_objects =
 +            |section: &crate::obj::ObjSection,
@@ -104,3 +106,379 @@ index 2b69f46..e6b48f9 100644
                  inner.push(FixedBitSet::with_capacity(size));
              } else {
                  // Empty
+diff --git a/src/analysis/mod.rs b/src/analysis/mod.rs
+index 41bc3f8..6b86247 100644
+--- a/src/analysis/mod.rs
++++ b/src/analysis/mod.rs
+@@ -89,21 +89,53 @@ fn get_jump_table_entries(
+     from: SectionAddress, // the address of the bctr that uses the jump table
+     function_start: SectionAddress,
+     function_end: Option<SectionAddress>,
++    end_known: bool,
+ ) -> Result<(Vec<SectionAddress>, u32)> {
+     let section = &obj.sections[addr.section];
+     match jump_table_type {
+         JumpTableType::Absolute => {
+             // the start of the jump table should be IMMEDIATELY after the bctr
+-            assert_eq!(
+-                from + 4,
+-                addr,
+-                "Absolute jump table did not start immediately after the bctr at {}!",
+-                from
+-            );
+-            assert!(
+-                function_end.is_some(),
+-                "Must know function end for absolute jump table, because pdata"
+-            );
++            if from + 4 != addr {
++                return Ok((Vec::new(), 0));
++            }
++            // MSVC embeds absolute jump tables in .text right after the bctr, and
++            // the case blocks may follow the table, past any end estimate that
++            // was derived before the table was understood (functions without
++            // pdata). When the compare bound (`size`) is known, read exactly that
++            // many words. Every entry must be a 4-aligned address inside this
++            // code section at or after the function start, and, if the function
++            // end is authoritative (pdata or symbol size), inside the function.
++            if let Some(bytes) = size.map(|n| n.get()).filter(|n| n % 4 == 0) {
++                let section_end = (section.address + section.size) as u32;
++                let mut entries = Vec::with_capacity((bytes / 4) as usize);
++                let mut valid = addr.address.checked_add(bytes).is_some_and(|e| e <= section_end);
++                if valid {
++                    let words = section.data_range(addr.address, addr.address + bytes)?;
++                    for chunk in words.chunks_exact(4) {
++                        let entry_addr = u32::from_be_bytes(*array_ref!(chunk, 0, 4));
++                        let in_bounds = entry_addr >= function_start.address
++                            && entry_addr & 3 == 0
++                            && (entry_addr as u64) >= section.address
++                            && entry_addr < section_end
++                            && match function_end {
++                                Some(end) if end_known => entry_addr < end.address,
++                                _ => entry_addr - function_start.address < MAX_UNBOUNDED_SWITCH_SPAN,
++                            };
++                        if !in_bounds {
++                            valid = false;
++                            break;
++                        }
++                        entries.push(SectionAddress::new(addr.section, entry_addr));
++                    }
++                }
++                if valid && !entries.is_empty() {
++                    return Ok((entries, bytes));
++                }
++            }
++            let Some(function_end) = function_end else {
++                return Ok((Vec::new(), 0));
++            };
++            let function_end = Some(function_end);
+             let mut entries: Vec<SectionAddress> = Vec::new();
+             // now, step through, line by line, until you find not-an-address
+             let mut data =
+@@ -306,11 +338,37 @@ pub fn uniq_jump_table_entries(
+     from: SectionAddress, // the address of the bctr that uses the jump table
+     function_start: SectionAddress,
+     function_end: Option<SectionAddress>,
++    end_known: bool, // whether `function_end` is authoritative (pdata/symbol) or an estimate
+ ) -> Result<(BTreeSet<SectionAddress>, u32)> {
++    let (entries, size) = ordered_jump_table_entries(
++        obj,
++        addr,
++        jump_table_type,
++        size,
++        from,
++        function_start,
++        function_end,
++        end_known,
++    )?;
++    Ok((BTreeSet::from_iter(entries.iter().cloned()), size))
++}
++
++/// Like [`uniq_jump_table_entries`], but keeps table order and duplicates, so
++/// that word `i` of the table is `entries[i]`.
++pub fn ordered_jump_table_entries(
++    obj: &ObjInfo,
++    addr: SectionAddress,
++    jump_table_type: JumpTableType,
++    size: Option<NonZeroU32>,
++    from: SectionAddress,
++    function_start: SectionAddress,
++    function_end: Option<SectionAddress>,
++    end_known: bool,
++) -> Result<(Vec<SectionAddress>, u32)> {
+     if !is_valid_jump_table_addr(obj, addr, jump_table_type) {
+-        return Ok((BTreeSet::new(), 0));
++        return Ok((Vec::new(), 0));
+     }
+-    let (entries, size) = get_jump_table_entries(
++    get_jump_table_entries(
+         obj,
+         addr,
+         jump_table_type,
+@@ -318,11 +376,15 @@ pub fn uniq_jump_table_entries(
+         from,
+         function_start,
+         function_end,
++        end_known,
+     )
+-    .with_context(|| format!("While fetching jump table entries starting at {addr:#010X}"))?;
+-    Ok((BTreeSet::from_iter(entries.iter().cloned()), size))
++    .with_context(|| format!("While fetching jump table entries starting at {addr:#010X}"))
+ }
+ 
++/// Largest distance from the function start that a switch case target may have
++/// when the function has no pdata record (leaf functions).
++const MAX_UNBOUNDED_SWITCH_SPAN: u32 = 0x40000;
++
+ pub fn skip_alignment(
+     section: &ObjSection,
+     mut addr: SectionAddress,
+diff --git a/src/analysis/slices.rs b/src/analysis/slices.rs
+index 76ce962..76c13ef 100644
+--- a/src/analysis/slices.rs
++++ b/src/analysis/slices.rs
+@@ -12,7 +12,7 @@ use crate::{
+         disassemble,
+         executor::{ExecCbData, ExecCbResult, Executor},
+         uniq_jump_table_entries,
+-        vm::{section_address_for, BranchTarget, StepResult, VM},
++        vm::{section_address_for, BranchTarget, JumpTableType, StepResult, VM},
+         RelocationTarget,
+     },
+     obj::{ObjInfo, ObjKind, ObjSection, ObjSymbolKind},
+@@ -382,6 +382,7 @@ impl FunctionSlices {
+                         ins_addr,
+                         function_start,
+                         function_end.or_else(|| self.end()),
++                        function_end.is_some(),
+                     )?;
+                     log::debug!("-> size {}: {:?}", size, entries);
+ 
+@@ -398,13 +399,25 @@ impl FunctionSlices {
+                     // OR we're within known func bounds
+                     // AND
+                     // none of our jump table entries are known function starts
++                    // An absolute table that sits right after the bctr (guaranteed by
++                    // the entry reader) in a function without a known end is a MSVC
++                    // switch table: its case blocks may lie beyond the table and
++                    // extend the function.
++                    let embedded_switch = function_end.is_none()
++                        && matches!(jt, JumpTableType::Absolute)
++                        && size > 0
++                        && !entries.is_empty();
++                    // none of the entries may belong to another known function (for
++                    // example a matched case block that is still its own symbol)
++                    let hits_other_function = entries.iter().any(|&addr| {
++                        self.is_known_function(known_functions, addr)
++                            .is_some_and(|fn_addr| fn_addr != function_start)
++                    });
+                     if (entries.contains(&next_address)
+                         || self.blocks.contains_key(&next_address)
+-                        || within_func_bounds)
+-                        && !entries.iter().any(|&addr| {
+-                            self.is_known_function(known_functions, addr)
+-                                .is_some_and(|fn_addr| fn_addr != function_start)
+-                        })
++                        || within_func_bounds
++                        || embedded_switch)
++                        && !hits_other_function
+                     {
+                         self.jump_table_references.insert(address, size);
+                         self.special_jump_table_labels.push(ins_addr + 4);
+@@ -416,7 +429,7 @@ impl FunctionSlices {
+                             }
+                         }
+                         self.branches.insert(ins_addr, branches);
+-                    } else {
++                    } else if !embedded_switch {
+                         // If the table doesn't contain the next address,
+                         // it could be a function jump table instead
+                         self.possible_blocks
+diff --git a/src/analysis/tracker.rs b/src/analysis/tracker.rs
+index d0b71d6..eb81ca9 100644
+--- a/src/analysis/tracker.rs
++++ b/src/analysis/tracker.rs
+@@ -1,6 +1,7 @@
+ use std::{
+     collections::{BTreeMap, BTreeSet},
+     mem::take,
++    num::NonZeroU32,
+ };
+ 
+ use anyhow::{bail, Result};
+@@ -13,8 +14,8 @@ use crate::{
+     analysis::{
+         cfa::SectionAddress,
+         executor::{ExecCbData, ExecCbResult, Executor},
+-        relocation_target_for, uniq_jump_table_entries,
+-        vm::{is_store_op, BranchTarget, GprValue, StepResult, VM},
++        ordered_jump_table_entries, relocation_target_for, uniq_jump_table_entries,
++        vm::{is_store_op, BranchTarget, GprValue, JumpTableType, StepResult, VM},
+         RelocationTarget,
+     },
+     obj::{
+@@ -76,6 +77,8 @@ pub struct Tracker {
+     arena_lo: Option<u32>,
+     arena_hi: Option<u32>,
+     pub known_relocations: BTreeSet<SectionAddress>,
++    /// Code addresses that are case-block targets of an absolute jump table.
++    jump_table_targets: BTreeSet<SectionAddress>,
+ 
+     stores_to: BTreeSet<SectionAddress>, // for determining data vs rodata, sdata(2)/sbss(2)
+     sda_to: BTreeSet<SectionAddress>,    // for determining data vs sdata
+@@ -104,6 +107,7 @@ impl Tracker {
+                 .or_else(|| obj.db_stack_addr.map(|db_stack_addr| (db_stack_addr + 0x1F) & !0x1F)),
+             arena_hi: Some(obj.arena_hi.unwrap_or(0x81700000)),
+             known_relocations: Default::default(),
++            jump_table_targets: Default::default(),
+             stores_to: Default::default(),
+             sda_to: Default::default(),
+             hal_to: Default::default(),
+@@ -456,6 +460,16 @@ impl Tracker {
+                         ins_addr,
+                         function_start,
+                         Some(function_end),
++                        true,
++                    )?;
++                    self.record_jump_table_relocations(
++                        obj,
++                        address,
++                        jt,
++                        size,
++                        ins_addr,
++                        function_start,
++                        function_end,
+                     )?;
+                     for target in entries {
+                         if is_function_addr(target) {
+@@ -504,6 +518,16 @@ impl Tracker {
+                                 ins_addr,
+                                 function_start,
+                                 Some(function_end),
++                                true,
++                            )?;
++                            self.record_jump_table_relocations(
++                                obj,
++                                address,
++                                jt,
++                                size,
++                                ins_addr,
++                                function_start,
++                                function_end,
+                             )?;
+                             for target in entries {
+                                 if is_function_addr(target) {
+@@ -518,6 +542,40 @@ impl Tracker {
+         }
+     }
+ 
++    /// MSVC absolute jump tables live in .text and each word is an ADDR32
++    /// relocation against its case block. The original image has no base
++    /// relocation records we can read, so rebuild them from the table itself.
++    fn record_jump_table_relocations(
++        &mut self,
++        obj: &ObjInfo,
++        table: SectionAddress,
++        jump_table_type: JumpTableType,
++        size: Option<NonZeroU32>,
++        from: SectionAddress,
++        function_start: SectionAddress,
++        function_end: SectionAddress,
++    ) -> Result<()> {
++        if !matches!(jump_table_type, JumpTableType::Absolute) {
++            return Ok(());
++        }
++        let (entries, _) = ordered_jump_table_entries(
++            obj,
++            table,
++            jump_table_type,
++            size,
++            from,
++            function_start,
++            Some(function_end),
++            true,
++        )?;
++        for (index, target) in entries.into_iter().enumerate() {
++            let word = table + (index as u32 * 4);
++            self.relocations.insert(word, Relocation::Absolute(RelocationTarget::Address(target)));
++            self.jump_table_targets.insert(target);
++        }
++        Ok(())
++    }
++
+     pub fn process_function(&mut self, obj: &ObjInfo, symbol: &ObjSymbol) -> Result<()> {
+         let Some(section_index) = symbol.section else {
+             bail!("Function '{}' missing section", symbol.name)
+@@ -723,6 +781,23 @@ impl Tracker {
+             }
+         }
+ 
++        // Give every switch case block a label (named like MSVC's `$LN` labels) so
++        // that the table words relocate against the case block, not the enclosing
++        // function symbol.
++        for &target in &self.jump_table_targets {
++            if obj.symbols.at_section_address(target.section, target.address).next().is_some() {
++                continue;
++            }
++            obj.symbols.add_direct(ObjSymbol {
++                name: format!("$LN{:X}", target.address),
++                address: target.address as u64,
++                section: Some(target.section),
++                size_known: true,
++                flags: ObjSymbolFlagSet(ObjSymbolFlags::Global.into()),
++                ..Default::default()
++            })?;
++        }
++
+         for (&addr, reloc) in &self.relocations {
+             let Some((reloc_kind, target)) = reloc.kind_and_address() else {
+                 // Skip external relocations, they already exist
+diff --git a/src/util/xex.rs b/src/util/xex.rs
+index 1df2279..16cf1d5 100644
+--- a/src/util/xex.rs
++++ b/src/util/xex.rs
+@@ -1256,13 +1256,36 @@ pub fn write_coff(obj: &ObjInfo) -> Result<Vec<u8>> {
+                 ObjSectionKind::Bss => SectionKind::UninitializedData,
+             });
+         if sect.kind != ObjSectionKind::Bss {
+-            cur_coff.append_section_data(sect_id, &sect.data, sect.align);
++            if sect.kind == ObjSectionKind::Code {
++                // A COFF object keeps the addend in place. MSVC's own objects have
++                // zero in each jump table word (the `$LN` label carries the offset),
++                // so clear the absolute address the linker had resolved there.
++                let mut data = sect.data.clone();
++                for (addr, reloc) in sect.relocations.iter() {
++                    if reloc.kind == ObjRelocKind::Absolute {
++                        let offset = (addr as u64).saturating_sub(sect.address) as usize;
++                        if let Some(word) = data.get_mut(offset..offset + 4) {
++                            word.fill(0);
++                        }
++                    }
++                }
++                cur_coff.append_section_data(sect_id, &data, sect.align);
++            } else {
++                cur_coff.append_section_data(sect_id, &sect.data, sect.align);
++            }
+         }
+         sect_map.insert(idx, sect_id);
+     }
+ 
+     // insert the symbols
+     for (idx, sym) in obj.symbols.iter() {
++        // Jump tables embedded in .text are not data objects of their own: emitting
++        // them as symbols would split the enclosing function for objdiff. Write
++        // them as plain labels, like the MSVC `$LN` label at the table start.
++        let in_code_section = sym
++            .section
++            .and_then(|idx| obj.sections.get(idx))
++            .is_some_and(|sect| sect.kind == ObjSectionKind::Code);
+         let sym_id = cur_coff.add_symbol(object::write::Symbol {
+             name: sym.name.clone().into_bytes(),
+             value: match sym.section {
+@@ -1275,6 +1298,7 @@ pub fn write_coff(obj: &ObjInfo) -> Result<Vec<u8>> {
+             size: 0,
+             kind: match sym.kind {
+                 ObjSymbolKind::Function => SymbolKind::Text,
++                ObjSymbolKind::Object if in_code_section => SymbolKind::Label,
+                 ObjSymbolKind::Object => SymbolKind::Data,
+                 ObjSymbolKind::Section => SymbolKind::Section,
+                 ObjSymbolKind::Unknown => match sym.section {
