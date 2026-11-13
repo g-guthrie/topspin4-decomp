@@ -18,9 +18,9 @@ from functools import lru_cache
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from xcoff import ROOT, load_symbols, read_coff  # noqa: E402
+from xcoff import ROOT, load_symbols, matching_dir, read_coff  # noqa: E402
 
-SPLIT = ROOT / "work" / "matching" / "split"
+SPLIT = (matching_dir() or ROOT / "work" / "matching") / "split"
 OBJDUMP = ROOT / "work" / "matching-tools" / "binutils" / "powerpc-eabi-objdump"
 # Optional VMX128-aware disassembler from tools/ppcdis (binutils cannot decode
 # Xenon VMX128). Build: cargo build --release --manifest-path tools/ppcdis/Cargo.toml

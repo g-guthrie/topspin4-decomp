@@ -9,6 +9,14 @@ Each mapping pairs a function defined by the candidate (left) with the
 original function (right, a symbols.txt name or address). The comparison masks
 relocation fields, then checks relocation offsets, kinds, and targets.
 
+Switch jump tables: MSVC embeds the table in .text and emits one ADDR32
+relocation per word against a local `$LN<n>` label (the REFHI/REFLO pair that
+loads the table address also targets such a label). The split target has the
+same relocations against its own code labels. A candidate reloc to a `$LN`
+label is accepted when the label sits at the same offset inside the function
+as the address the target reloc points to; every other relocation stays
+strict.
+
 Exit status 0 means every function matches except, at most, relocation target
 names that integration can fix by renaming placeholder symbols (fn_/lbl_/...)
 in config/54540859/symbols.txt. Those renames are printed as RENAME lines.
@@ -36,6 +44,7 @@ WIBO = TOOLS / "work_wibo"
 CL = TOOLS / "compilers" / "X360" / "16.00.10224.00" / "cl.exe"
 BASE_FLAGS = ["/nologo", "/c", "/O2", "/Oi"]
 PLACEHOLDER_PREFIXES = ("fn_", "lbl_", "jumptable_", "@", "$")
+LOCAL_LABEL_PREFIX = "$LN"  # MSVC code labels (switch case blocks, jump table start)
 
 MASKS = {
     0x2: 0xFFFFFFFF,  # ADDR32
@@ -101,6 +110,7 @@ def main() -> int:
     symbols = load_symbols()
     by_addr = {entry[2]: entry[0] for entry in symbols if entry[1] == ".text"}
     known_names = {entry[0] for entry in symbols}
+    text_address = {entry[0]: entry[2] for entry in symbols if entry[1] == ".text"}
 
     obj_path = compile_candidate(args.source, args.flags)
     obj = read_coff(obj_path)
@@ -144,9 +154,21 @@ def main() -> int:
         local_renames = {}
         if not problems:
             t_by = {(r.offset, r.kind): r.symbol for r in t_relocs}
+            c_base = obj.symbol_offset(actual_name)
             for r in c_relocs:
                 t_sym = t_by[(r.offset, r.kind)]
                 c_sym = r.symbol
+                if c_sym.startswith(LOCAL_LABEL_PREFIX):
+                    c_off = obj.symbol_offset(c_sym)
+                    t_addr = text_address.get(t_sym)
+                    if c_off is None or c_base is None or t_addr is None:
+                        problems.append(f"reloc +{r.offset:#x}: cannot resolve label {c_sym} / {t_sym}")
+                    elif c_off - c_base != t_addr - address:
+                        problems.append(
+                            f"reloc +{r.offset:#x}: label {c_sym} at function+{c_off - c_base:#x}, "
+                            f"target {t_sym} at function+{t_addr - address:#x}"
+                        )
+                    continue
                 if t_sym == c_sym:
                     continue
                 if c_sym.startswith("?") or c_sym.startswith("__real@") or c_sym.startswith("$"):

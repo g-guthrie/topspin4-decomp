@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import struct
 from dataclasses import dataclass, field
@@ -10,6 +11,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SYMBOLS_TXT = ROOT / "config" / "54540859" / "symbols.txt"
+
+
+def matching_dir() -> Path | None:
+    """Alternate matching work dir (TS4_MATCHING_DIR), e.g. work/matching-jt.
+
+    When set, fn_asm/fn_check read the split objects and symbols that
+    tools/matching.py produced in that directory instead of the committed
+    config/54540859/symbols.txt and work/matching.
+    """
+    value = os.environ.get("TS4_MATCHING_DIR")
+    return Path(value).expanduser().absolute() if value else None
 
 # IMAGE_REL_PPC_* names for the relocation types emitted by the Xbox compiler.
 RELOC_NAMES = {
@@ -89,6 +101,13 @@ class Coff:
             return data, relocs
         raise KeyError(name)
 
+    def symbol_offset(self, name: str) -> int | None:
+        """Section-relative offset of a defined symbol (e.g. an MSVC `$LN` label)."""
+        for symbol in self.symbols:
+            if symbol.name == name and symbol.section > 0:
+                return symbol.value
+        return None
+
     def function_names(self) -> list[str]:
         return [
             s.name
@@ -151,8 +170,11 @@ SYMBOL_LINE = re.compile(r"^(?P<name>\S+) = (?P<section>\.?\w+):0x(?P<addr>[0-9A
 SIZE_FIELD = re.compile(r"size:0x([0-9A-Fa-f]+)")
 
 
-def load_symbols(path: Path = SYMBOLS_TXT) -> list[tuple[str, str, int, int | None]]:
+def load_symbols(path: Path | None = None) -> list[tuple[str, str, int, int | None]]:
     """Return (name, section, address, size) for every symbols.txt entry."""
+    if path is None:
+        alt = matching_dir()
+        path = alt / "analysis" / "symbols.txt" if alt else SYMBOLS_TXT
     out = []
     for line in Path(path).read_text().splitlines():
         match = SYMBOL_LINE.match(line)

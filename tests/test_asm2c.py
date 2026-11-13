@@ -116,6 +116,14 @@ class StructurizerTests(unittest.TestCase):
         self.assertIn("do {", r["body"])
         self.assertIn("} while ((ts4_word)p", r["body"])
 
+    def test_rotated_loop_becomes_while(self):
+        # if (a0 != a1) do { ... a0 += 32 } while (a0 != a1)  ==  while (p != a1) { ...; p += 32; }
+        r = gen(["cmplw cr6,r3,r4", f"beq cr6, 0x1c -> {tgt(8)}", "mr r11,r3", "lwz r10,12(r11)", "stw r10,0(r11)",
+                 "addi r11,r11,32", "cmplw cr6,r11,r4", f"bne cr6, -0x10 -> {tgt(3)}", "blr"])
+        self.assertIn("while ((ts4_word)lv1 != (ts4_word)a1) {", r["body"])
+        self.assertNotIn("do {", r["body"])
+        self.assertNotIn("if (", r["body"])
+
     def test_return_inside_loop(self):
         r = gen(["li r11,0", f"b 0x20 -> {tgt(9)}", "lwz r10,0(r4)", "cmplw cr6,r10,r5", f"bne cr6, 0xc -> {tgt(7)}",
                  "mr r3,r11", "blr", "addi r4,r4,4", "addi r11,r11,1", "cmplw cr6,r11,r3",

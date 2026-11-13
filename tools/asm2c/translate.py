@@ -805,14 +805,49 @@ class Gen:
             return J
         if A == J:
             self.merge_phi(st, [(sB, oB)], out)
-            out.append(('if', cfg.cstr(cfg.neg(e)), oB))
+            out.extend(self.unrotate(cfg.cstr(cfg.neg(e)), oB) or [('if', cfg.cstr(cfg.neg(e)), oB)])
         elif B == J:
             self.merge_phi(st, [(sA, oA)], out)
-            out.append(('if', cfg.cstr(e), oA))
+            out.extend(self.unrotate(cfg.cstr(e), oA) or [('if', cfg.cstr(e), oA)])
         else:
             self.merge_phi(st, [(sA, oA), (sB, oB)], None)
             out.append(self._if(e, A, B, oA, oB))
         return J
+
+    @staticmethod
+    def unrotate(guard, o):
+        """`if (G) { lv = init; do { body } while (C); }` is how the compiler lays out
+        `while (P) { body }`.  When G is P with the loop variables replaced by their initial
+        values (P = C with the new-value temporaries replaced by the loop variables), return
+        the initialisations plus the `while` statement (code after the loop moves to the
+        end of the body)."""
+        d = [i for i, x in enumerate(o) if isinstance(x, tuple)]
+        if len(d) != 1 or o[d[0]][0] != 'do':
+            return None
+        inits, tail = o[:d[0]], o[d[0] + 1:]
+        init_of = {}
+        for x in inits:
+            m = re.fullmatch(r'(lv\d+) = \(ts4_word\)(.*);', x) if isinstance(x, str) else None
+            if not m:
+                return None
+            init_of[m.group(1)] = m.group(2)
+        if not all(isinstance(x, str) and re.match(r'p\d+ = ', x) for x in tail):
+            return None
+        _, cond, body = o[d[0]]
+        new_to_lv = {}
+        for x in body:
+            m = re.fullmatch(r'(lv\d+) = (p\d+);', x) if isinstance(x, str) else None
+            if m:
+                new_to_lv[m.group(2)] = m.group(1)
+        pred = cond
+        for tn, lv in new_to_lv.items():
+            pred = re.sub(r'\b' + tn + r'\b', lv, pred)
+        first = pred
+        for lv, init in init_of.items():
+            first = re.sub(r'\b' + lv + r'\b', lambda m: init, first)
+        if first != guard or pred == cond:
+            return None
+        return list(inits) + [('while', pred, body + list(tail))]
 
     def _if(self, e, A, B, oA, oB):
         """if/else with the lower-addressed (fall-through) arm first; orient 1 flips."""
