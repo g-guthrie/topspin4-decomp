@@ -1008,6 +1008,82 @@
       "src/xbox360/gp8_timing_grade.c": {
         "status": "Matching",
         "source": "xbox360/gp8_timing_grade.c"
+      },
+      "src/xbox360/r1_flag_set.c": {
+        "status": "Matching",
+        "source": "xbox360/r1_flag_set.c"
+      },
+      "src/xbox360/r1_state_select.c": {
+        "status": "Matching",
+        "source": "xbox360/r1_state_select.c"
+      },
+      "src/xbox360/r2_swing_dtors.c": {
+        "status": "Matching",
+        "source": "xbox360/r2_swing_dtors.c"
+      },
+      "src/xbox360/r2_swing_ring.c": {
+        "status": "Matching",
+        "source": "xbox360/r2_swing_ring.c"
+      },
+      "src/xbox360/r2_swing_tables.cpp": {
+        "status": "Matching",
+        "source": "xbox360/r2_swing_tables.cpp"
+      },
+      "src/xbox360/r3_xmlparse.c": {
+        "status": "Matching",
+        "source": "xbox360/r3_xmlparse.c"
+      },
+      "src/xbox360/r3_xmlrole.c": {
+        "status": "Matching",
+        "source": "xbox360/r3_xmlrole.c"
+      },
+      "src/xbox360/r3_xmltok_normal.c": {
+        "status": "Matching",
+        "source": "xbox360/r3_xmltok_normal.c"
+      },
+      "src/xbox360/r3_xmltok_unknown.c": {
+        "status": "Matching",
+        "source": "xbox360/r3_xmltok_unknown.c"
+      },
+      "src/xbox360/r3_xmltok_utf16.c": {
+        "status": "Matching",
+        "source": "xbox360/r3_xmltok_utf16.c"
+      },
+      "src/xbox360/r3_zlib_deflate.c": {
+        "status": "Matching",
+        "source": "xbox360/r3_zlib_deflate.c"
+      },
+      "src/xbox360/r4_heap_adjust.c": {
+        "status": "Matching",
+        "source": "xbox360/r4_heap_adjust.c"
+      },
+      "src/xbox360/r4_record_init_181.c": {
+        "status": "Matching",
+        "source": "xbox360/r4_record_init_181.c"
+      },
+      "src/xbox360/r5_script_ui.c": {
+        "status": "Matching",
+        "source": "xbox360/r5_script_ui.c"
+      },
+      "src/xbox360/r5_ui_frontend.c": {
+        "status": "Matching",
+        "source": "xbox360/r5_ui_frontend.c"
+      },
+      "src/xbox360/r6_net_factory.c": {
+        "status": "Matching",
+        "source": "xbox360/r6_net_factory.c"
+      },
+      "src/xbox360/r6_net_params.c": {
+        "status": "Matching",
+        "source": "xbox360/r6_net_params.c"
+      },
+      "src/xbox360/r6_net_props.c": {
+        "status": "Matching",
+        "source": "xbox360/r6_net_props.c"
+      },
+      "src/xbox360/r6_net_slots.c": {
+        "status": "Matching",
+        "source": "xbox360/r6_net_slots.c"
       }
     }
   }

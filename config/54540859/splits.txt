@@ -18535,3 +18535,136 @@ src/xbox360/gp8_grade_tables.c:
 
 src/xbox360/gp8_timing_grade.c:
 	.text       start:0x8865AC08 end:0x8865AC90
+
+src/xbox360/r1_flag_set.c:
+	.text       start:0x8865B118 end:0x8865B274
+
+src/xbox360/r1_state_select.c:
+	.text       start:0x8866E128 end:0x8866E250
+
+src/xbox360/r2_swing_dtors.c:
+	.pdata      start:0x88124148 end:0x88124150
+	.pdata      start:0x88124378 end:0x88124380
+	.text       start:0x886985B0 end:0x886986C4
+	.text       start:0x886A2378 end:0x886A24D8
+
+src/xbox360/r2_swing_ring.c:
+	.pdata      start:0x88125100 end:0x88125108
+	.text       start:0x886DC9C0 end:0x886DCAC8
+
+src/xbox360/r2_swing_tables.cpp:
+	.pdata      start:0x881242E0 end:0x881242E8
+	.text       start:0x886A0548 end:0x886A0674
+
+src/xbox360/r3_xmlparse.c:
+	.pdata      start:0x8812E240 end:0x8812E248
+	.pdata      start:0x8812E248 end:0x8812E250
+	.pdata      start:0x8812E250 end:0x8812E258
+	.pdata      start:0x8812E258 end:0x8812E260
+	.pdata      start:0x8812E260 end:0x8812E268
+	.pdata      start:0x8812E268 end:0x8812E270
+	.pdata      start:0x8812E290 end:0x8812E298
+	.pdata      start:0x8812E298 end:0x8812E2A0
+	.pdata      start:0x8812E2B0 end:0x8812E2B8
+	.pdata      start:0x8812E2C8 end:0x8812E2D0
+	.pdata      start:0x8812E2D8 end:0x8812E2E0
+	.pdata      start:0x8812E310 end:0x8812E318
+	.pdata      start:0x8812E318 end:0x8812E320
+	.pdata      start:0x8812E320 end:0x8812E328
+	.pdata      start:0x8812E370 end:0x8812E378
+	.pdata      start:0x8812E398 end:0x8812E3A0
+	.text       start:0x888A2C58 end:0x888A2EFC
+	.text       start:0x888A2F00 end:0x888A3354
+	.text       start:0x888A3358 end:0x888A35A4
+	.text       start:0x888A35A8 end:0x888A383C
+	.text       start:0x888A3D88 end:0x888A411C
+	.text       start:0x888A4120 end:0x888A4278
+	.text       start:0x888A4460 end:0x888A4594
+	.text       start:0x888A4938 end:0x888A4B00
+	.text       start:0x888A4BE0 end:0x888A4D58
+	.text       start:0x888A5370 end:0x888A5604
+	.text       start:0x888A5608 end:0x888A59B4
+	.text       start:0x888A7110 end:0x888A726C
+	.text       start:0x888A81F8 end:0x888A8340
+
+src/xbox360/r3_xmlrole.c:
+	.pdata      start:0x8812E1E8 end:0x8812E1F0
+	.pdata      start:0x8812E1F8 end:0x8812E200
+	.pdata      start:0x8812E208 end:0x8812E210
+	.pdata      start:0x8812E218 end:0x8812E220
+	.text       start:0x888A0F78 end:0x888A10A0
+	.text       start:0x888A1858 end:0x888A1984
+	.text       start:0x888A1EF0 end:0x888A2000
+	.text       start:0x888A2210 end:0x888A2320
+
+src/xbox360/r3_xmltok_normal.c:
+	.pdata      start:0x8812DFC8 end:0x8812DFD0
+	.text       start:0x88892F88 end:0x888930C0
+	.text       start:0x888934B0 end:0x88893690
+
+src/xbox360/r3_xmltok_unknown.c:
+	.pdata      start:0x8812E000 end:0x8812E008
+	.text       start:0x88894C50 end:0x88894E0C
+
+src/xbox360/r3_xmltok_utf16.c:
+	.pdata      start:0x8812DFA8 end:0x8812DFB0
+	.pdata      start:0x8812DFB0 end:0x8812DFB8
+	.pdata      start:0x8812E018 end:0x8812E020
+	.pdata      start:0x8812E070 end:0x8812E078
+	.text       start:0x88891A48 end:0x88891BD4
+	.text       start:0x88891BD8 end:0x88891D4C
+	.text       start:0x88891EA8 end:0x888921C0
+	.text       start:0x88892348 end:0x88892538
+	.text       start:0x888925C0 end:0x888927FC
+	.text       start:0x88895150 end:0x888952A8
+	.text       start:0x88897270 end:0x888973C8
+
+src/xbox360/r3_zlib_deflate.c:
+	.pdata      start:0x8812D698 end:0x8812D6A0
+	.pdata      start:0x8812D6A0 end:0x8812D6A8
+	.pdata      start:0x8812D6A8 end:0x8812D6B0
+	.pdata      start:0x8812D6B0 end:0x8812D6B8
+	.text       start:0x88878230 end:0x88878404
+	.text       start:0x88878408 end:0x88878774
+	.text       start:0x88878778 end:0x88878A74
+	.text       start:0x88878A90 end:0x88878D9C
+
+src/xbox360/r4_heap_adjust.c:
+	.pdata      start:0x881091B0 end:0x881091B8
+	.pdata      start:0x881091B8 end:0x881091C0
+	.text       start:0x88186EE8 end:0x8818712C
+
+src/xbox360/r4_record_init_181.c:
+	.pdata      start:0x88106CD8 end:0x88106CE0
+	.text       start:0x88151180 end:0x881512B4
+
+src/xbox360/r5_script_ui.c:
+	.pdata      start:0x88129728 end:0x88129730
+	.pdata      start:0x88129D30 end:0x88129D38
+	.text       start:0x887D5D58 end:0x887D5EF8
+	.text       start:0x887DE350 end:0x887DE504
+	.text       start:0x887E9AA0 end:0x887E9BF4
+	.text       start:0x887F0180 end:0x887F02D4
+	.text       start:0x887F02D8 end:0x887F04C0
+
+src/xbox360/r5_ui_frontend.c:
+	.pdata      start:0x881294E0 end:0x881294E8
+	.text       start:0x887CEDD0 end:0x887CEED4
+
+src/xbox360/r6_net_factory.c:
+	.pdata      start:0x88133C50 end:0x88133C58
+	.text       start:0x889BF980 end:0x889BFA84
+
+src/xbox360/r6_net_params.c:
+	.pdata      start:0x88132B50 end:0x88132B58
+	.text       start:0x889954E8 end:0x889955EC
+
+src/xbox360/r6_net_props.c:
+	.pdata      start:0x88130158 end:0x88130160
+	.pdata      start:0x88131960 end:0x88131968
+	.text       start:0x8890A948 end:0x8890AA50
+	.text       start:0x88944F58 end:0x8894505C
+
+src/xbox360/r6_net_slots.c:
+	.pdata      start:0x881300D0 end:0x881300D8
+	.text       start:0x88908B80 end:0x88908C88

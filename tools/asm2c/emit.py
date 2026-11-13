@@ -90,8 +90,11 @@ def build(res, group, path):
     return maps, rng
 
 
-def check(path, maps):
+def check(path, maps, flags=()):
+    """Run tools/fn_check.py; `flags` are extra compiler flags such as ('/O1',)."""
     args = [f'{n}=0x{a:08X}' for n, a in maps]
+    if flags:
+        args += ['--flags', *flags]
     p = subprocess.run([sys.executable, str(ROOT / 'tools' / 'fn_check.py'), str(path), *args],
                        capture_output=True, text=True, cwd=ROOT)
     return p.stdout + p.stderr
@@ -104,14 +107,14 @@ def cc_ok(path):
     return p.returncode == 0, p.stderr
 
 
-def run_group(res, group, path, tries=8):
+def run_group(res, group, path, tries=8, flags=()):
     """build + check; on compiler errors drop the offending functions and retry.
     Returns (fn_check output, maps)."""
     group = list(group)
     out, maps = '', []
     for _ in range(tries):
         maps, rng = build(res, group, path)
-        out = check(path, maps)
+        out = check(path, maps, flags)
         if 'compile failed' not in out:
             return out, maps
         lines = [int(x) for x in re.findall(r'\((\d+)\) : error', out)]

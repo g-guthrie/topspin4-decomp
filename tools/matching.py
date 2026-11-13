@@ -15549,6 +15549,156 @@ MATCHING_UNITS = (
         "object": "gp8_timing_grade.obj",
         "symbols": {"ts4_timing_grade_factor_8865AC08": 136},
     },
+    {
+        "source": "src/xbox360/r1_flag_set.c",
+        "object": "r1_flag_set.obj",
+        "symbols": {"ts4_flag_block_set_by_hash_8865B118": 348},
+    },
+    {
+        "source": "src/xbox360/r1_state_select.c",
+        "object": "r1_state_select.obj",
+        "symbols": {"ts4_mode_selector_pick_hash_8866E128": 296},
+    },
+    {
+        "source": "src/xbox360/r2_swing_dtors.c",
+        "object": "r2_swing_dtors.obj",
+        "symbols": {
+            "ts4_r2_module_destroy_886985B0": 276,
+            "ts4_r2_swing_brain_reset_886A2378": 352,
+        },
+    },
+    {
+        "source": "src/xbox360/r2_swing_ring.c",
+        "object": "r2_swing_ring.obj",
+        "symbols": {"ts4_r2_swing_ring_release_entry_886DC9C0": 264},
+    },
+    {
+        "source": "src/xbox360/r2_swing_tables.cpp",
+        "object": "r2_swing_tables.obj",
+        "symbols": {"ts4_r2_handler_table_init_886A0548": 300},
+    },
+    {
+        "source": "src/xbox360/r3_xmlparse.c",
+        "object": "r3_xmlparse.obj",
+        "symbols": {
+            "ts4_xml_next_scaffold_part_888A2DB8": 324,
+            "ts4_xml_build_content_node_888A2C58": 352,
+            "ts4_xml_pool_grow_888A2F00": 512,
+            "ts4_xml_pool_append_string_888A3100": 596,
+            "ts4_xml_pool_copy_string_888A3358": 588,
+            "ts4_xml_pool_append_888A35A8": 660,
+            "ts4_xml_get_context_888A3D88": 916,
+            "ts4_xml_define_attribute_888A4120": 344,
+            "ts4_xml_do_ignore_section_888A4460": 308,
+            "ts4_xml_add_binding_888A4938": 456,
+            "ts4_xml_get_buffer_888A4BE0": 376,
+            "ts4_xml_set_implicit_context_888A5370": 660,
+            "ts4_xml_set_element_type_prefix_888A5890": 292,
+            "ts4_xml_get_attribute_id_888A5608": 648,
+            "ts4_xml_handle_unknown_encoding_888A81F8": 328,
+            "ts4_xml_parser_free_888A7110": 348,
+        },
+    },
+    {
+        "source": "src/xbox360/r3_xmlrole.c",
+        "object": "r3_xmlrole.obj",
+        "symbols": {
+            "ts4_prolog_attlist_type_888A0F78": 296,
+            "ts4_prolog_element_content_spec_888A1858": 300,
+            "ts4_prolog_entity_external_or_value_888A1EF0": 272,
+            "ts4_prolog_entity_external_or_value_888A2210": 272,
+        },
+    },
+    {
+        "source": "src/xbox360/r3_xmltok_normal.c",
+        "object": "r3_xmltok_normal.obj",
+        "symbols": {
+            "ts4_xmltok_normal_char_ref_number_88892F88": 312,
+            "ts4_xmltok_normal_ignore_section_tok_888934B0": 480,
+        },
+    },
+    {
+        "source": "src/xbox360/r3_xmltok_unknown.c",
+        "object": "r3_xmltok_unknown.obj",
+        "symbols": {"ts4_xmltok_unknown_to_utf8_88894C50": 444},
+    },
+    {
+        "source": "src/xbox360/r3_xmltok_utf16.c",
+        "object": "r3_xmltok_utf16.obj",
+        "symbols": {
+            "ts4_xmltok_unicode_byte_type_888927A0": 92,
+            "ts4_xmltok_big2_update_position_88895150": 344,
+            "ts4_xmltok_little2_update_position_88897270": 344,
+            "ts4_xmltok_little2_to_utf8_888925C0": 480,
+            "ts4_xmltok_big2_to_utf8_88892348": 496,
+            "ts4_xmltok_big2_char_ref_number_88891BD8": 372,
+            "ts4_xmltok_little2_char_ref_number_88892048": 376,
+            "ts4_xmltok_big2_predefined_entity_name_88891A48": 396,
+            "ts4_xmltok_little2_predefined_entity_name_88891EA8": 416,
+        },
+    },
+    {
+        "source": "src/xbox360/r3_zlib_deflate.c",
+        "object": "r3_zlib_deflate.obj",
+        "symbols": {
+            "ts4_deflate_stored_88878230": 468,
+            "ts4_crc32_little_88878778": 764,
+            "ts4_crc32_big_88878408": 876,
+            "ts4_adler32_88878A90": 780,
+        },
+    },
+    {
+        "source": "src/xbox360/r4_heap_adjust.c",
+        "object": "r4_heap_adjust.obj",
+        "symbols": {
+            "ts4_heap_adjust_ptr_88186EE8": 264,
+            "ts4_make_heap_ptr_88186FF0": 316,
+        },
+    },
+    {
+        "source": "src/xbox360/r4_record_init_181.c",
+        "object": "r4_record_init_181.obj",
+        "symbols": {"ts4_record184_init_88151180": 308},
+    },
+    {
+        "source": "src/xbox360/r5_script_ui.c",
+        "object": "r5_script_ui.obj",
+        "symbols": {
+            "ts4_r5_dispatch_message_by_type_887E9AA0": 340,
+            "ts4_r5_forward_event_by_id_887F0180": 340,
+            "ts4_r5_apply_name_for_hash_887DE350": 436,
+            "ts4_r5_visit_message_by_type_887F02D8": 488,
+            "ts4_r5_state_machine_sync_887D5D58": 416,
+        },
+    },
+    {
+        "source": "src/xbox360/r5_ui_frontend.c",
+        "object": "r5_ui_frontend.obj",
+        "symbols": {"ts4_r5_screen_latch_done_887CEDD0": 260},
+    },
+    {
+        "source": "src/xbox360/r6_net_factory.c",
+        "object": "r6_net_factory.obj",
+        "symbols": {"ts4_net_create_message_889BF980": 260},
+    },
+    {
+        "source": "src/xbox360/r6_net_params.c",
+        "object": "r6_net_params.obj",
+        "symbols": {"ts4_net_parse_param_block_889954E8": 260},
+    },
+    {
+        "source": "src/xbox360/r6_net_props.c",
+        "object": "r6_net_props.obj",
+        "symbols": {
+            "ts4_net_set_prop_byte_8890A948": 264,
+            "ts4_net_reset_two_props_88944F58": 260,
+        },
+    },
+    {
+        "source": "src/xbox360/r6_net_slots.c",
+        "object": "r6_net_slots.obj",
+        "symbols": {"ts4_net_update_slots_88908B80": 264},
+    },
 )
 
 

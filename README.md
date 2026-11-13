@@ -7,11 +7,11 @@ Clean-room reverse engineering and source reconstruction of *Top Spin 4*.
 
 ## Status
 
-Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Fourteen thousand two hundred seventy-nine functions have reviewed names. Fourteen thousand two hundred forty-four reconstructed functions now compile to 100% code matches: 942,840 of 10,153,700 measured Swing code bytes (`9.28568000%`).
+Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Fourteen thousand three hundred thirty-five functions have reviewed names. Fourteen thousand three hundred reconstructed functions now compile to 100% code matches: 965,440 of 10,153,700 measured Swing code bytes (`9.50825800%`).
 
 The selected build is title ID `54540859` (`TT-2137`), media ID `60819732`, executable version `0.0.0.3`. See [docs/targets.md](docs/targets.md), [docs/analysis-status.md](docs/analysis-status.md), the [canonical decomp.dev-style build](docs/canonical-build.md), and [matching build instructions](docs/matching-build.md). The first active investigation maps the dormant server-delivered patch path in [docs/title-server-patch.md](docs/title-server-patch.md); the separate Loader split is documented in [docs/loader-analysis.md](docs/loader-analysis.md). Official updates and optional content are tracked separately in [docs/additional-content.md](docs/additional-content.md); they are not part of the baseline.
 
-The public progress artifact in `reports/54540859/report.json` contains measurements, unit sizes, and exact-match metadata only. GitHub Actions validates and uploads it for decomp.dev; it contains no original executable bytes.
+The public progress artifact in `reports/54540859/report.json.gz` (gzip-compressed objdiff report JSON) contains measurements, unit sizes, and exact-match metadata only. GitHub Actions validates it, decompresses it, and uploads `report.json` for decomp.dev; it contains no original executable bytes.
 
 ## Boundaries
 

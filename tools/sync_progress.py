@@ -5,7 +5,7 @@ Usage: python3 tools/sync_progress.py [--new-names N]
 
 Reads work/matching/objdiff-project/report.json (which tools/matching.py has
 already verified), then rewrites config/54540859/match.json, the counters in
-config/progress.json, the public reports/54540859/report.json, and the
+config/progress.json, the public reports/54540859/report.json.gz, and the
 status sentence in README.md and docs/matching-build.md.
 """
 
@@ -23,7 +23,7 @@ from xcoff import ROOT, load_symbols, read_coff  # noqa: E402
 
 MATCH = ROOT / "config" / "54540859" / "match.json"
 PROGRESS = ROOT / "config" / "progress.json"
-PUBLIC = ROOT / "reports" / "54540859" / "report.json"
+PUBLIC = ROOT / "reports" / "54540859" / "report.json.gz"
 SPLITS = ROOT / "config" / "54540859" / "splits.txt"
 
 ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split()
@@ -175,7 +175,12 @@ def main() -> int:
             return [prune(v) for v in value]
         return value
 
-    PUBLIC.write_text(json.dumps(prune(public), separators=(",", ":")) + "\n")
+    # Stored gzip-compressed (deterministic: no name, mtime 0) to stay far
+    # below the tracked-file size limit; CI decompresses it for decomp.dev.
+    import gzip
+    payload = (json.dumps(prune(public), separators=(",", ":")) + "\n").encode()
+    with open(PUBLIC, "wb") as raw, gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as out:
+        out.write(payload)
 
     readme = ROOT / "README.md"
     text = readme.read_text()
