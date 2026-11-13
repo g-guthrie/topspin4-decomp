@@ -631,7 +631,12 @@ class Gen:
         elif tail[0] == 'call':
             clobbered = st['clobbered']
             cand = [int(r[1:]) for r in written if r[0] == 'r' and not r.startswith('__') and 3 <= int(r[1:]) <= 10 and r not in clobbered]
-            k = max([3] + cand + list(self.readp)); callargs = [rd(f'r{j}') for j in range(3, k + 1)]
+            if self.mode == 1:   # registers the function set up itself, else the callee's own argument count
+                ar = self.env.arity(tail[1])
+                k = max([3] + cand + [2 + (ar or 0)])
+            else:
+                k = max([3] + cand + list(self.readp))
+            callargs = [rd(f'r{j}') for j in range(3, k + 1)]
             if any(isinstance(c, tuple) for c in callargs):
                 raise Skip('ca hi')
             self.protos[tail[1]] = len(callargs); self.detail.append(tail[1]); self.kinds.append('tail')
