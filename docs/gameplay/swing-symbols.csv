@@ -1,0 +1,33 @@
+module,address,name,confidence,evidence
+Swing_DLL.xex,887AC0E0,PlayerRatingRecordToScript,high,reads 14 int fields and pairs them with the strings Serve/Return/Reflex/Forehand/Backhand/Volley/Power/Speed/Stamina/Mental/Overall/Skill1-4
+Swing_DLL.xex,88694200,ComputeStrengthsWeaknesses,high,builds a value-sorted multimap of the eight stat hashes from PlayerState+0x64c..0x668 and splits into two id lists
+Swing_DLL.xex,8869DEF0,PlayerStateOnMatchStart,medium,reads the PlayerState stat floats and collects up to four (id==value 1.0) entries from the +0x640 list
+Swing_DLL.xex,88699300,SwingStateEnter,high,switch on state id; stores Return/Forehand/Backhand/Volley rating into PlayerState+0x74c per state
+Swing_DLL.xex,8865B3B0,PreferForehandSide,medium,compares PlayerState+0x654 and +0x658 and the usage counters +0xf8/+0xfc
+Swing_DLL.xex,8817A688,GraphCurveEval,high,piecewise-linear segment lookup y=y0+slope*clamp(x-x0;0;x1-x0); verified instruction by instruction
+Swing_DLL.xex,88179480,GraphNodeCurve,high,reads input slot rec+0xc and writes output slot rec+0x10 via GraphCurveEval
+Swing_DLL.xex,8890DD88,GraphNodeConst,high,byte-matched; regs[slot]=literal
+Swing_DLL.xex,88178F60,GraphNodeSum,high,N-ary sum of register slots
+Swing_DLL.xex,88179050,GraphNodeProduct,high,N-ary product of register slots
+Swing_DLL.xex,88179140,GraphNodeMin,high,N-ary minimum
+Swing_DLL.xex,881792E0,GraphNodeMax,high,N-ary maximum
+Swing_DLL.xex,881794E0,GraphNodeSumOrInvalid,medium,running sum; any negative input gives the -1 pool constant
+Swing_DLL.xex,88179580,GraphNodeSub,high,out=a-b
+Swing_DLL.xex,881795B8,GraphNodeDiv,high,out=a/b
+Swing_DLL.xex,881795F0,GraphNodeLerp,high,out=a+clamp01(t)*(b-a)
+Swing_DLL.xex,88179698,GraphNodeInvLerp,high,out=clamp01((x-a)/(b-a))
+Swing_DLL.xex,8890EA30,GraphRegisterNodeKernels,high,registers 11 (node type crc32 -> kernel) pairs
+Swing_DLL.xex,8890E810,GraphBindKernels,high,fills per-node kernel pointer array at instance+0x38
+Swing_DLL.xex,8890E8B0,GraphRunNodes,high,iterates def+0x1c node entries calling kernel pointers
+Swing_DLL.xex,8890E988,GraphEvaluate,high,copy inputs to slots; run nodes; copy slots to outputs
+Swing_DLL.xex,8817A4F0,GraphResolveBindings,medium,turns descriptor hashes into float pointer plus slot pairs
+Swing_DLL.xex,8869B178,CandidateWindowBuild,high,assigns per-sample type hash Baseline/Volley/Smash/Unreachable and positions (see gp2.md section 3)
+Swing_DLL.xex,8868B4E8,CandidateReachSpeeds,high,per-sample required speed (see gp2.md section 4)
+Swing_DLL.xex,8869A520,ReachRowExtract,medium,groups reachable samples into rows (+0x24 first +0x28 last +0x20 min speed) and tracks minima at +0x24/+0x28/+0x2c
+Swing_DLL.xex,8869AB70,SelectionBuildBothSides,high,calls ReachRowExtract for both records then side choice
+Swing_DLL.xex,88689508,SelectionScoreWriter,high,per sample fills PlayerState+0xb90..0xbac and runs a graph; output PlayerState+0xba8
+Swing_DLL.xex,8865DBA8,SelectBestCandidate,high,arg-max over score arrays with Volley filter flags; initial best -1
+Swing_DLL.xex,886A2E48,CommitSwingChoice,high,runs the pipeline then writes PlayerState+0xbc8/+0xbd1 and rolls hit grade
+Swing_DLL.xex,886D3AD8,ClipPlannerSelect,medium,iterates candidate layers; markers EventRacket/Preparation; contact window test (cost not decoded)
+Swing_DLL.xex,886D4978,ClipWindowSegments,low,splits clip phase windows into 0x18-byte sub-window records
+Swing_DLL.xex,886D6820,ClipInstanceTimes,low,derives per-instance start and blend fields from the previous instance

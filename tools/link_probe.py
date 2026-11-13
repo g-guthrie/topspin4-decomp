@@ -14,6 +14,7 @@ that can run link.exe (decompals/wibo PR 110, see docs/matching-build.md).
 from __future__ import annotations
 
 import argparse
+import os
 import hashlib
 import json
 import re
@@ -60,9 +61,20 @@ def main() -> int:
         raise SystemExit(f"missing rebuilt objects (run tools/matching.py): {missing[:3]}")
     flags = ["/nologo", "/dll", "/noentry", "/nodefaultlib", "/machine:PPCBE",
              "/subsystem:XBOX", "/XEX:NO", "/OPT:NOREF", "/FORCE:UNRESOLVED"]
+    # Pass the objects through a response file: with several hundred absolute
+    # paths the command line exceeds the 32,767-character Windows limit and
+    # the linker silently sees a truncated object list.
+    # Paths are relative to ROOT (the linker's working directory): link.exe
+    # parses any argument that starts with "/" as a switch, so absolute Unix
+    # paths would be ignored as unrecognised options.
+    def rel(path: Path) -> str:
+        return os.path.relpath(path, ROOT)
+
+    response = out_dir / "objects.rsp"
+    response.write_text("\n".join(f'"{rel(o)}"' for o in objects) + "\n")
     result = subprocess.run(
         [str(args.wrapper), str(args.linker_dir / "link.exe"), *flags,
-         f"/MAP:{mapfile}", f"/out:{dll}", *map(str, objects)],
+         f"/MAP:{rel(mapfile)}", f"/out:{rel(dll)}", f"@{rel(response)}"],
         capture_output=True, text=True, cwd=ROOT,
     )
     if not dll.is_file():

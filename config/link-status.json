@@ -31,26 +31,26 @@
   "runtime_tested": false,
   "artifact_committed": false,
   "forced_all_units_probe": {
-    "input_source_objects": 267,
-    "input_matching_functions": 14301,
-    "input_matching_code_bytes": 965588,
+    "input_source_objects": 423,
+    "input_matching_functions": 15418,
+    "input_matching_code_bytes": 1025424,
     "input_object_kind": "source-built base objects",
     "link_flags_added": [
       "/FORCE:UNRESOLVED",
       "/MAP"
     ],
-    "output_size_bytes": 1224192,
-    "output_sha256": "3cefb0e3d04ce38f73fc4922cf2884ffb233a283a90543c835e8711a4e6fdecd",
-    "output_text_bytes": 1015748,
-    "map_matching_public_functions": 14301,
-    "map_additional_static_helpers": 85,
-    "unresolved_external_symbols": 13302,
-    "unresolved_external_references": 18905,
+    "output_size_bytes": 1296384,
+    "output_sha256": "26e6adf355222ddfd22e1f577bdad786a6a475cad42575b2046a690eb3b15a65",
+    "output_text_bytes": 1078344,
+    "map_matching_public_functions": 15418,
+    "map_additional_static_helpers": 86,
+    "unresolved_external_symbols": 13805,
+    "unresolved_external_references": 19748,
     "is_xex": false,
     "is_runnable": false,
     "runtime_tested": false,
     "artifact_committed": false,
-    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 14,301 exact public functions plus source helper code (including inline C++ constructors and operator new wrappers) and alignment, so total text size is not a matching-progress counter. Output hashes include link timestamps and differ between runs."
+    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 15,418 exact public functions plus source helper code (including inline C++ constructors and operator new wrappers) and alignment, so total text size is not a matching-progress counter. Output hashes include link timestamps and differ between runs."
   },
   "wrapper_build": "wibo a91b26e built on Linux x86_64 with clang/lld and i686-w64-mingw32 for the fake mspdb DLL"
 }
