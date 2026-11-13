@@ -155,8 +155,12 @@ python3 -m unittest discover -s tests && python3 tools/validate_link_status.py \
   `$LN` relocations and the original split has none. It is not yet known whether
   objdiff accepts them; test one through `matching.py`. About 95 functions in
   one range alone are blocked by this.
-- **`__vector4`/VMX128** is not available in this compiler setup, which blocks the
-  ball-flight functions. Solving it unlocks a lot of gameplay.
+- **`__vector4`/VMX128** used to block the ball-flight functions. Solved: include
+  `src/xbox360/ts4_vector.h`, which is our own declaration of a `passinreg` 16-byte
+  struct plus `#pragma intrinsic` prototypes. Dereferencing a `__vector4 *` emits
+  `lvx128`/`stvx128`, and `__vaddfp`, `__vmaddfp` and the other intrinsics emit
+  their VMX128 instructions. Add intrinsics to the header as needed, verifying
+  each with `fn_check.py`.
 - **Host syntax test.** `tests/test_symbol_map.py` compiles every
   `src/xbox360/*.c` with host `cc -Werror`. Guard MSVC-only declarations
   (`memset`, `strlen`, `__declspec`) with `#ifdef _MSC_VER`.
