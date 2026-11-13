@@ -616,6 +616,58 @@
       "src/xbox360/fd_session_vcall8.c": {
         "status": "Matching",
         "source": "xbox360/fd_session_vcall8.c"
+      },
+      "src/xbox360/fi_accessor_thunks_00.c": {
+        "status": "Matching",
+        "source": "xbox360/fi_accessor_thunks_00.c"
+      },
+      "src/xbox360/fi_accessor_thunks_01.c": {
+        "status": "Matching",
+        "source": "xbox360/fi_accessor_thunks_01.c"
+      },
+      "src/xbox360/fj_small_a.c": {
+        "status": "Matching",
+        "source": "xbox360/fj_small_a.c"
+      },
+      "src/xbox360/fj_small_b.c": {
+        "status": "Matching",
+        "source": "xbox360/fj_small_b.c"
+      },
+      "src/xbox360/gp0_instance_small.c": {
+        "status": "Matching",
+        "source": "xbox360/gp0_instance_small.c"
+      },
+      "src/xbox360/gp0_xdata_get.c": {
+        "status": "Matching",
+        "source": "xbox360/gp0_xdata_get.c"
+      },
+      "src/xbox360/gp0_xdata_state_checks.c": {
+        "status": "Matching",
+        "source": "xbox360/gp0_xdata_state_checks.c"
+      },
+      "src/xbox360/gp1_debug_text.c": {
+        "status": "Matching",
+        "source": "xbox360/gp1_debug_text.c"
+      },
+      "src/xbox360/gp1_point_log.c": {
+        "status": "Matching",
+        "source": "xbox360/gp1_point_log.c"
+      },
+      "src/xbox360/gp1_reward_list.c": {
+        "status": "Matching",
+        "source": "xbox360/gp1_reward_list.c"
+      },
+      "src/xbox360/gp2_swing_wrappers.c": {
+        "status": "Matching",
+        "source": "xbox360/gp2_swing_wrappers.c"
+      },
+      "src/xbox360/gp5_umpire_announce.cpp": {
+        "status": "Matching",
+        "source": "xbox360/gp5_umpire_announce.cpp"
+      },
+      "src/xbox360/gp5_umpire_player_name.cpp": {
+        "status": "Matching",
+        "source": "xbox360/gp5_umpire_player_name.cpp"
       }
     }
   }

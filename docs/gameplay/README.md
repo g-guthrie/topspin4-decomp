@@ -1,0 +1,22 @@
+# Gameplay extraction notes
+
+Working notes from the gameplay-first decompilation (see `docs/gameplay-map.md`
+for the subsystem map). Each file is one work package. Where a note corrects
+the map, the note is newer and wins.
+
+| Note | Package | Main findings |
+|---|---|---|
+| [gp0.md](gp0.md) | Scheduler, recorders, XData glue | Vtable slots ([2] Update, [4] Init, [5] Exit); module order is data (CoreTech_Xenon.bin); gameplay engine singleton and per-instance step order; XData handle protocol; name hashes are zlib crc32 |
+| [gp1.md](gp1.md) | Shot rewards and crowd excitement | Reward rules and thresholds, excitement gauge, point-end modifiers, court half-widths in cm |
+| [gp2.md](gp2.md) | Swing candidate selection and reach | Units (cm, 60 Hz ticks); per-sample reach cost; Baseline/Volley/Smash/Unreachable candidate types; data-driven analyser scoring; commit hysteresis; AI uses the same path |
+| [gp3.md](gp3.md) | Main frame, ball prediction, movement | Command applier and ball launch; the game's own ball stepper (not Havok) run up to 600 ticks for prediction; 23-state movement planner with Rush/Jog modes |
+| [gp5.md](gp5.md) | Ball, bounce and umpire sound events | Shot class and power buckets, bounce angle/speed buckets, net/let arrive from the physics event queue, umpire score calls |
+
+Readable C for understood but not yet byte-matching functions lives in
+`src/xbox360/drafts/`. Drafts are not part of the matching build and do not
+count as progress; they exist so ports can use the logic before it matches.
+Exact matches live in `src/xbox360/gp*_*.c` with the rest of the matched code.
+
+Most tuning values (reach radii, preparation times, scoring weights, ball
+templates) are loaded from game data files, not code. The notes name the
+loaders and offsets; the values need the user's own game data.
