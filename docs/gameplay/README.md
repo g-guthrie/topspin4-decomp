@@ -10,6 +10,7 @@ the map, the note is newer and wins.
 | [gp1.md](gp1.md) | Shot rewards and crowd excitement | Reward rules and thresholds, excitement gauge, point-end modifiers, court half-widths in cm |
 | [gp2.md](gp2.md) | Swing candidate selection and reach | Units (cm, 60 Hz ticks); per-sample reach cost; Baseline/Volley/Smash/Unreachable candidate types; data-driven analyser scoring; commit hysteresis; AI uses the same path |
 | [gp3.md](gp3.md) | Main frame, ball prediction, movement | Command applier and ball launch; the game's own ball stepper (not Havok) run up to 600 ticks for prediction; 23-state movement planner with Rush/Jog modes |
+| [gp4.md](gp4.md) | Ball flight model and Havok wrapper | Closed-form ball flight (drag toward a spin drift vector plus gravity), template-driven bounce and spin, net and let-cord rules, km/h arrival-speed launch solve; Havok never drives the ball |
 | [gp5.md](gp5.md) | Ball, bounce and umpire sound events | Shot class and power buckets, bounce angle/speed buckets, net/let arrive from the physics event queue, umpire score calls |
 
 Readable C for understood but not yet byte-matching functions lives in
