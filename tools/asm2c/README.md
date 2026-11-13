@@ -55,10 +55,12 @@ so reruns resume; use `--fresh` to discard it. Requires a completed
 Names are `ts4_<kind>_<detail>_<ADDR>`; do not commit game data.
 
 Findings worth knowing
-- Originals that build image addresses from a bare `lis 0x88xx` (no REFHI
-  relocation, e.g. the 0x88A00000 unit) have no relocations in the split
-  object; `fn_check` compares relocation layouts, so they can never match.
-  `translate.unrelocated()` reports them as `unrelocated original`.
+- A function whose original builds an image address from a bare `lis 0x88xx`
+  (no REFHI relocation) cannot match: `fn_check` compares relocation layouts
+  (`translate.unrelocated()` reports `unrelocated original`). Until the COFF
+  reader honoured relocation-count overflow (tools/xcoff.py, commit 97edd51) this
+  hit ~7,100 functions of the 0x88A442B8+ unit; rerun with a purged disassembly
+  cache if you still have one from before that fix.
 - `lwz r12,0(r3); lwz r11,N(r12); mtctr r11; bctr` is the compiler-generated
   thunk of a pointer to a virtual member (`??_9Class@@$B...AA`). It is matched
   from a `.cpp` by taking `&Class::slotN` of a class with N/4 earlier virtual
