@@ -12,6 +12,7 @@ the map, the note is newer and wins.
 | [gp3.md](gp3.md) | Main frame, ball prediction, movement | Command applier and ball launch; the game's own ball stepper (not Havok) run up to 600 ticks for prediction; 23-state movement planner with Rush/Jog modes |
 | [gp4.md](gp4.md) | Ball flight model and Havok wrapper | Closed-form ball flight (drag toward a spin drift vector plus gravity), template-driven bounce and spin, net and let-cord rules, km/h arrival-speed launch solve; Havok never drives the ball |
 | [gp4b.md](gp4b.md) | Ball model spec and shot error model | Exact launch solve (commanded speed is initial km/h), kind routines DropTime/BounceSpeed/InitialSpeed/Apogee, template layout, golden-vector validated reference C; shot outcome In/Out/Net/Let decided by dice rolls against PlayerState error floats with court bounds and dispersion |
+| [df.md](df.md) | Data file formats | XBin `.bin` container, `.arc` archives (crc32 path hashes, XOR-masked FAT), 0x8C animation records with EventRacket annotations and AOD clip mapping, curve and 2-D table nodes, Havok 5.5 packfiles; readers in `tools/ts4data/` |
 | [gp5.md](gp5.md) | Ball, bounce and umpire sound events | Shot class and power buckets, bounce angle/speed buckets, net/let arrive from the physics event queue, umpire score calls |
 
 Readable C for understood but not yet byte-matching functions lives in
