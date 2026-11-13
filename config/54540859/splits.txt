@@ -20427,3 +20427,79 @@ src/xbox360/d1_vcall_thunks_88286E20.cpp:
 
 src/xbox360/d1_vcall_thunks_88286E38.cpp:
 	.text       start:0x88286E38 end:0x88286E48
+
+src/xbox360/swa_classify_entry_881C7D08.c:
+	.pdata      start:0x8810B320 end:0x8810B328
+	.text       start:0x881C7D08 end:0x881C7E0C
+
+src/xbox360/swa_dispatch_token_888A16C0.c:
+	.pdata      start:0x8812E1F0 end:0x8812E1F8
+	.text       start:0x888A16C0 end:0x888A1854
+
+src/xbox360/swa_dispatch_token_888A2990.c:
+	.pdata      start:0x8812E230 end:0x8812E238
+	.text       start:0x888A2990 end:0x888A2AC4
+
+src/xbox360/swa_get_state_fields_883089E0.c:
+	.text       start:0x883089E0 end:0x88308ADC
+
+src/xbox360/swa_is_format_char_8819F958.c:
+	.text       start:0x8819F958 end:0x8819FA70
+
+src/xbox360/swa_is_public_id_88897AC0.c:
+	.text       start:0x88897AC0 end:0x88897C50
+
+src/xbox360/swa_log_base_const_8819CF40.c:
+	.pdata      start:0x88109E88 end:0x88109E90
+	.text       start:0x8819CF40 end:0x8819D060
+
+src/xbox360/swa_lookup_id_constant_883A34A8.c:
+	.text       start:0x883A34A8 end:0x883A361C
+
+src/xbox360/swa_lua_match_class_88824F38.c:
+	.pdata      start:0x8812B6F0 end:0x8812B6F8
+	.text       start:0x88824F38 end:0x888250FC
+
+src/xbox360/swa_map_id_to_slot_88883F38.c:
+	.pdata      start:0x8812DA18 end:0x8812DA20
+	.text       start:0x88883F38 end:0x88884018
+
+src/xbox360/swa_same_name_88892D08.c:
+	.text       start:0x88892D08 end:0x88892E94
+
+src/xbox360/swa_same_name_big2_88895410.c:
+	.pdata      start:0x8812E020 end:0x8812E028
+	.text       start:0x88895410 end:0x88895638
+
+src/xbox360/swa_scan_char_classes_88892BD8.c:
+	.text       start:0x88892BD8 end:0x88892CAC
+
+src/xbox360/swa_scan_content_token_8889CB28.c:
+	.pdata      start:0x8812E168 end:0x8812E170
+	.text       start:0x8889CB28 end:0x8889CCFC
+
+src/xbox360/swa_scan_content_token_8889CD00.c:
+	.text       start:0x8889CD00 end:0x8889CE50
+
+src/xbox360/swa_scan_literal_88893690.c:
+	.pdata      start:0x8812DFD0 end:0x8812DFD8
+	.text       start:0x88893690 end:0x8889385C
+
+src/xbox360/swa_scan_name_end_88899870.c:
+	.text       start:0x88899870 end:0x888999DC
+
+src/xbox360/swa_scan_utf16_chars_888952F0.c:
+	.text       start:0x888952F0 end:0x88895410
+
+src/xbox360/swb_a.c:
+	.text       start:0x88336790 end:0x8833686C
+
+src/xbox360/bm_ball_model.c:
+	.pdata      start:0x8812E418 end:0x8812E420
+	.pdata      start:0x8812E420 end:0x8812E428
+	.pdata      start:0x8812E430 end:0x8812E438
+	.pdata      start:0x8812E4C0 end:0x8812E4C8
+	.text       start:0x888AAA70 end:0x888AAB94
+	.text       start:0x888AAB98 end:0x888AACB8
+	.text       start:0x888AAE00 end:0x888AAF60
+	.text       start:0x888AD0E8 end:0x888AD194
