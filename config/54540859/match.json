@@ -9,6 +9,21 @@
     "/Oi"
   ],
   "compiler_flag_exceptions": {
+    "src/xbox360/insert_sorted_node.c": [
+      "/O1"
+    ],
+    "src/xbox360/consume_to_delimiter.c": [
+      "/O1"
+    ],
+    "src/xbox360/decrement_shared_refcount.c": [
+      "/O1"
+    ],
+    "src/xbox360/find_runtime_entry_payload.c": [
+      "/O1"
+    ],
+    "src/xbox360/resume_thread.c": [
+      "/O1"
+    ],
     "src/xbox360/tsu_per_round_stats.c": [
       "/GS-"
     ],
@@ -35,6 +50,31 @@
     ],
     "src/xbox360/tsu_update_player_rank.c": [
       "/GS-"
+    ],
+    "src/xbox360/tsu_report_event.c": [
+      "/GS-",
+      "/GR-",
+      "/EHs-c-"
+    ],
+    "src/xbox360/tsu_profile_service_reset.c": [
+      "/GS-",
+      "/GR-",
+      "/EHs-c-"
+    ],
+    "src/xbox360/tsu_notify_object.c": [
+      "/GS-",
+      "/GR-",
+      "/EHs-c-"
+    ],
+    "src/xbox360/tsu_destroy_owned_object.c": [
+      "/GS-",
+      "/GR-",
+      "/EHs-c-"
+    ],
+    "src/xbox360/tsu_format_and_assign.c": [
+      "/GS-",
+      "/GR-",
+      "/EHs-c-"
     ]
   },
   "jeff_version": "0.3.5 with patches/jeff-v0.3.5-topspin4.patch",

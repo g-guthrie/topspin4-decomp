@@ -31,6 +31,8 @@
   "runtime_tested": false,
   "artifact_committed": false,
   "forced_all_units_probe": {
+    "snapshot": true,
+    "snapshot_note": "Measured when 245 functions matched. Later batches were matched on a Linux host whose wibo build cannot run link.exe, so this probe is kept as a historical record rather than re-measured.",
     "input_source_objects": 131,
     "input_matching_functions": 245,
     "input_matching_code_bytes": 16360,

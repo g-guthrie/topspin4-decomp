@@ -1,6 +1,6 @@
 # Matching build
 
-The first ninety-one matching measurement units reproduce all 12,028 code bytes across one hundred twelve functions exactly.
+The first one hundred thirty-one matching measurement units reproduce all 16,360 code bytes across two hundred forty-five functions exactly.
 
 ## Local prerequisites
 
@@ -29,7 +29,7 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 12,028 of 10,153,700 Swing code bytes (`0.118459284%`) and one hundred twelve of 47,250 objdiff functions (`0.237037030%`). The decomp-framework report has ninety-one complete-source units among 210 total units.
+The match is 16,360 of 10,153,700 Swing code bytes (`0.16112353%`) and two hundred forty-five of 47,250 objdiff functions (`0.5185185%`). The decomp-framework report has one hundred thirty-one complete-source units among 346 total units.
 
 Where a function has an accompanying eight-byte `.pdata` range, it is also a
 100% relocation-aware objdiff match. Leaf functions without an exception record
@@ -71,8 +71,11 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe passes all one hundred thirty-one source-built objects to the linker. Its map
-contains all two hundred forty-five exact public functions. Because the remaining game code and
+A second probe, measured when two hundred forty-five functions matched, passed all one hundred
+thirty-one source-built objects of that state to the linker. Its map contained all two hundred
+forty-five exact public functions. It has not been re-measured since: the Linux host used for
+later batches has wibo 1.0.0, which cannot run `link.exe`, so `config/link-status.json` marks
+it as a snapshot. Because the remaining game code and
 data are not reconstructed, this probe requires `/FORCE:UNRESOLVED` and reports
 218 unique unresolved external symbols across 373 references. The linker emits a 22,528-byte
 inspection PE with 17,176 bytes of `.text`; that section also includes eight

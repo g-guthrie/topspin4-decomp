@@ -50,9 +50,18 @@ def main() -> int:
         "input_matching_code_bytes": expected_bytes,
         "map_matching_public_functions": expected_functions,
     }
-    for key, expected in expected_forced.items():
-        if forced.get(key) != expected:
-            fail(f"forced link probe {key} is {forced.get(key)!r}, expected {expected}")
+    if forced.get("snapshot"):
+        # The probe was measured at an earlier matching state and is kept as a
+        # historical record; it must describe a subset of the current matches.
+        for key, expected in expected_forced.items():
+            if not isinstance(forced.get(key), int) or forced[key] > expected:
+                fail(f"forced link snapshot {key} is {forced.get(key)!r}, exceeds {expected}")
+        if forced["map_matching_public_functions"] != forced["input_matching_functions"]:
+            fail("forced link snapshot map count differs from its input count")
+    else:
+        for key, expected in expected_forced.items():
+            if forced.get(key) != expected:
+                fail(f"forced link probe {key} is {forced.get(key)!r}, expected {expected}")
 
     base_sources = status["input_sources"]
     by_source = {unit["source"]: unit for unit in MATCHING_UNITS}
