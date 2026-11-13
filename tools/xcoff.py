@@ -147,7 +147,7 @@ def read_coff(path: Path) -> Coff:
     sections = []
     base = 20 + optsize
     for index in range(nsec):
-        raw_name, _vs, _va, size, ptr, relptr, _ln, nrel, _nln, _ch = struct.unpack_from(
+        raw_name, _vs, _va, size, ptr, relptr, _ln, nrel, _nln, characteristics = struct.unpack_from(
             "<8sIIIIIIHHI", data, base + index * 40
         )
         if raw_name.startswith(b"/"):
@@ -158,7 +158,13 @@ def read_coff(path: Path) -> Coff:
             name = raw_name.rstrip(b"\0").decode("latin-1")
         payload = data[ptr : ptr + size] if ptr else bytes(size)
         relocs = []
-        for r in range(nrel):
+        first = 0
+        if characteristics & 0x01000000 and nrel == 0xFFFF:
+            # IMAGE_SCN_LNK_NRELOC_OVFL: the real count is stored in the first
+            # relocation's VirtualAddress field, and that entry is not a relocation.
+            nrel = struct.unpack_from("<I", data, relptr)[0]
+            first = 1
+        for r in range(first, nrel):
             offset, symindex, kind = struct.unpack_from("<IIH", data, relptr + r * 10)
             target = symbols_by_index.get(symindex)
             relocs.append(Reloc(offset, target.name if target else f"#{symindex}", kind))
