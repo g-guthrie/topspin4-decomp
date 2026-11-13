@@ -166,7 +166,16 @@ def main() -> int:
         unit["functions"] = [
             f for f in unit.get("functions", []) if f.get("fuzzy_match_percent") == 100.0
         ]
-    PUBLIC.write_text(json.dumps(public, separators=(",", ":")) + "\n")
+    def prune(value):
+        # Protobuf JSON omits empty messages and lists; dropping them keeps the
+        # public report under the repository's tracked-file size limit.
+        if isinstance(value, dict):
+            return {k: prune(v) for k, v in value.items() if v not in ({}, [])}
+        if isinstance(value, list):
+            return [prune(v) for v in value]
+        return value
+
+    PUBLIC.write_text(json.dumps(prune(public), separators=(",", ":")) + "\n")
 
     readme = ROOT / "README.md"
     text = readme.read_text()

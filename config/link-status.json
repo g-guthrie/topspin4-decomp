@@ -31,26 +31,26 @@
   "runtime_tested": false,
   "artifact_committed": false,
   "forced_all_units_probe": {
-    "input_source_objects": 162,
-    "input_matching_functions": 4130,
-    "input_matching_code_bytes": 201932,
+    "input_source_objects": 247,
+    "input_matching_functions": 14244,
+    "input_matching_code_bytes": 942840,
     "input_object_kind": "source-built base objects",
     "link_flags_added": [
       "/FORCE:UNRESOLVED",
       "/MAP"
     ],
-    "output_size_bytes": 267776,
-    "output_sha256": "aca7b776ffe69d19393576598043ec018fb023dce05836a047399d84062cc42c",
-    "output_text_bytes": 232212,
-    "map_matching_public_functions": 4130,
+    "output_size_bytes": 1199104,
+    "output_sha256": "efaafd4f1a0755686c94a8491d5664b54c49ea0a28441760723860c83112dd43",
+    "output_text_bytes": 991528,
+    "map_matching_public_functions": 14244,
     "map_additional_static_helpers": 80,
-    "unresolved_external_symbols": 1832,
-    "unresolved_external_references": 2413,
+    "unresolved_external_symbols": 13217,
+    "unresolved_external_references": 18764,
     "is_xex": false,
     "is_runnable": false,
     "runtime_tested": false,
     "artifact_committed": false,
-    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 4,130 exact public functions plus source helper code (including inline C++ constructors and operator new wrappers) and alignment, so total text size is not a matching-progress counter. Output hashes include link timestamps and differ between runs."
+    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 14,244 exact public functions plus source helper code (including inline C++ constructors and operator new wrappers) and alignment, so total text size is not a matching-progress counter. Output hashes include link timestamps and differ between runs."
   },
   "wrapper_build": "wibo a91b26e built on Linux x86_64 with clang/lld and i686-w64-mingw32 for the fake mspdb DLL"
 }
