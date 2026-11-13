@@ -542,15 +542,6 @@ extern void *memset(void *dest, int value, unsigned int count); /* memset */
 
 #define TS4_XML_HASH_INIT_SIZE 64
 
-/* Expat hash(): h = h * 33 + byte. */
-static unsigned long ts4_xml_hash(const char *s)
-{
-    unsigned long h = 0;
-    while (*s)
-        h = (h << 5) + h + (unsigned char)*s++;
-    return h;
-}
-
 typedef struct ts4_xml_named {
     const char *name;
 } ts4_xml_named;
