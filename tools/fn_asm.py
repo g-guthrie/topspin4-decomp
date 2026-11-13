@@ -69,7 +69,10 @@ def split_units():
         name = unit["name"]
         if unit["code_size"] == 0:
             continue
-        units.append(Path(unit["object"]))
+        # config.json stores absolute paths; resolve them inside SPLIT so the
+        # split directory can be moved.
+        obj = unit["object"]
+        units.append(SPLIT / obj.split("/split/", 1)[1] if "/split/" in obj else Path(obj))
     return units
 
 

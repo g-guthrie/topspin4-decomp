@@ -21,7 +21,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from matching import MATCHING_UNITS  # noqa: E402
 from xcoff import ROOT, load_symbols, read_coff  # noqa: E402
 
-REPORT = ROOT / "work" / "matching" / "objdiff-project" / "report.json"
 MATCH = ROOT / "config" / "54540859" / "match.json"
 PROGRESS = ROOT / "config" / "progress.json"
 PUBLIC = ROOT / "reports" / "54540859" / "report.json"
@@ -64,7 +63,10 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--new-names", type=int, default=None,
                         help="reviewed names added this batch (default: new matched functions)")
+    parser.add_argument("--work-dir", type=Path, default=ROOT / "work" / "matching",
+                        help="the --work-dir given to tools/matching.py")
     args = parser.parse_args()
+    REPORT = args.work_dir / "objdiff-project" / "report.json"
 
     report = json.loads(REPORT.read_text())
     measures = report["measures"]
@@ -95,7 +97,7 @@ def main() -> int:
             entry["function_match_percent"] = 100.0
             entries.append(entry)
     # Pair .pdata entries with functions through the split unit's relocations.
-    split_obj = ROOT / "work" / "matching" / "split" / "obj"
+    split_obj = args.work_dir / "split" / "obj"
     for source, ranges in pdata_by_source.items():
         ranges = sorted(ranges)
         offsets = []

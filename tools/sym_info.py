@@ -42,7 +42,8 @@ def build_index():
     xrefs: dict[str, list[tuple[int, str]]] = {}
     memory: list[tuple[int, bytes, list[tuple[int, str, int]]]] = []
     for unit in config["units"]:
-        path = Path(unit["object"])
+        obj = unit["object"]
+        path = SPLIT / obj.split("/split/", 1)[1] if "/split/" in obj else Path(obj)
         if not path.stem.startswith("auto_"):
             continue
         coff = read_coff(path)
