@@ -631,9 +631,15 @@ class Gen:
         elif tail[0] == 'call':
             clobbered = st['clobbered']
             cand = [int(r[1:]) for r in written if r[0] == 'r' and not r.startswith('__') and 3 <= int(r[1:]) <= 10 and r not in clobbered]
-            if self.mode == 1:   # registers the function set up itself, else the callee's own argument count
-                ar = self.env.arity(tail[1])
-                k = max([3] + cand + [2 + (ar or 0)])
+            if self.mode == 1:   # contiguous registers set up here, then pass-through up to the callee's arity
+                run = 3
+                while f'r{run + 1}' in written and f'r{run + 1}' not in clobbered and run < 10:
+                    run += 1
+                k = max(run, 2 + (self.env.arity(tail[1]) or 0))
+                for j in range(run + 1, k + 1):      # a temporary written elsewhere is not an argument
+                    if f'r{j}' in written:
+                        k = j - 1
+                        break
             else:
                 k = max([3] + cand + list(self.readp))
             callargs = [rd(f'r{j}') for j in range(3, k + 1)]

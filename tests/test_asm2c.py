@@ -53,6 +53,13 @@ class TranslateTests(unittest.TestCase):
         self.assertEqual(r["protos"], {"fn_88001000": 1})
         self.assertEqual(r["body"], "    return fn_88001000((ts4_word)a0);\n")
 
+    def test_tail_call_arguments_follow_written_registers_in_mode_1(self):
+        # `mr r3,r5; b f`: one argument; a temporary in r10 is not an argument
+        t = ["mr r11,r3", "li r10,0", "addi r3,r3,16", "stb r10,8(r11)", "b 0x0 -> 0x88001000   ; REL24 fn_88001000"]
+        r = gen(t, mode=1)
+        self.assertIn("return fn_88001000((ts4_word)(a0 + 16));", r["body"])
+        self.assertEqual(r["protos"], {"fn_88001000": 1})
+
     def test_unsupported_raises_skip(self):
         with self.assertRaises(translate.Skip):
             translate.gen([line(0x88000000, "00000000", "frobnicate r3,r4")], ENV)
