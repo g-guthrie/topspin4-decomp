@@ -21,7 +21,7 @@ Prints per-category failure counts.  Results are cached in --work/state.pkl so
 the run can be resumed or re-run after generator improvements (--fresh to
 discard).  Does not touch git, matching.py or any other repo file.
 """
-import argparse, collections, json, os, pickle, re, sys, tempfile
+import argparse, collections, hashlib, json, os, pickle, re, sys, tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -57,8 +57,10 @@ def translate_all(names, dis, env, variant):
 
 
 def digest(r):
-    """Identity of a translation result (variants that render identically are not re-checked)."""
-    return hash((r['sig'], r['body'], tuple(sorted(r['protos'].items()))))
+    """Identity of a translation result (variants that render identically are not re-checked).
+    Stable across processes (it is stored in the state file), so not `hash()`."""
+    key = repr((r['sig'], r['body'], sorted(r['protos'].items()), r.get('vthunk')))
+    return hashlib.md5(key.encode()).hexdigest()
 
 
 def is_cpp(r):
