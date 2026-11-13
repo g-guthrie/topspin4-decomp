@@ -5,3 +5,4 @@
 - Keep Xbox 360 and PS3 work in separate target directories after the target is locked.
 - Prefer small scripts with standard-library dependencies.
 - A decompiled function is not reconstructed until behavior is named, typed, reviewed, and validated.
+- New agents: read docs/START_HERE.md for setup, current state, priorities, and pitfalls.

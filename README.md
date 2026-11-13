@@ -19,6 +19,8 @@ This repository contains only original source, analysis notes, symbols, hashes, 
 
 ## Start here
 
+Agents and new contributors: read [docs/START_HERE.md](docs/START_HERE.md) first.
+
 ```sh
 python3 tools/inventory.py /absolute/path/to/your/dump --output work/inventory.json
 python3 tools/xex_info.py /absolute/path/to/default.xex
