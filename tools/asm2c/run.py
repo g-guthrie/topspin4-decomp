@@ -38,14 +38,17 @@ def categorize(reason):
 
 
 def translate_all(names, dis, env, variant):
-    mode, orient = int(variant[0]), int(variant[1])
+    """variant = mode digit, orient digit, then optional letters: u = no signed-type
+    inference, v = volatile stores, V = volatile loads and stores, L = volatile loads."""
+    mode, orient, signed = int(variant[0]), int(variant[1]), 'u' not in variant
+    vol = 2 if 'V' in variant else 1 if 'v' in variant else 3 if 'L' in variant else 0
     res, fails = {}, {}
     for name, addr, size in names:
         lines = dis.lines(name)
         if not lines:
             fails[addr] = 'nolookup'; continue
         try:
-            res[addr] = translate.gen(lines, env, mode, orient)
+            res[addr] = translate.gen(lines, env, mode, orient, signed, vol)
         except translate.Skip as e:
             fails[addr] = str(e)
         except Exception as e:  # generator bug: keep going, report as category
@@ -58,12 +61,22 @@ def digest(r):
     return hash((r['sig'], r['body'], tuple(sorted(r['protos'].items()))))
 
 
+def is_cpp(r):
+    """vcall thunks are reproduced from C++ (pointer to virtual member), so they go to .cpp files."""
+    return 'vthunk' in r
+
+
 def check_chunks(res, addrs, work, tag, chunk, jobs, flags=()):
-    """Verify addrs in files of `chunk`; returns set of matched addresses."""
-    groups = [addrs[i:i + chunk] for i in range(0, len(addrs), chunk)]
+    """Verify addrs in files of `chunk` (C and C++ results in separate files);
+    returns the set of matched addresses."""
+    groups = []
+    for cpp in (False, True):
+        sel = [a for a in addrs if is_cpp(res[a]) == cpp]
+        groups += [(cpp, sel[i:i + chunk]) for i in range(0, len(sel), chunk)]
     def one(ix):
-        path = work / f'{tag}_{ix:03d}.c'
-        out, maps = emit.run_group(res, groups[ix], path, flags=flags)
+        cpp, grp = groups[ix]
+        path = work / f'{tag}_{ix:03d}.{"cpp" if cpp else "c"}'
+        out, maps = emit.run_group(res, grp, path, flags=flags, cpp=cpp)
         ok, _, _ = emit.parse_check(out)
         n2a = {n: a for n, a in maps}
         return {n2a[n] for n in ok if n in n2a}
@@ -100,11 +113,12 @@ def main():
     ap.add_argument('--spec-dir', type=Path)
     ap.add_argument('--work', type=Path, default=Path(tempfile.gettempdir()) / 'asm2c-work')
     ap.add_argument('--limit', type=int, default=0, help='only the first N candidates (testing)')
-    ap.add_argument('--variants', default='10,20,11,21,00,01')
+    ap.add_argument('--variants', default='10,10v,10V,10L,20,20v,20V,11,10u', help='mode+orient digits; u = no signed-type inference, v/V/L = volatile stores / loads+stores / loads')
     ap.add_argument('--flagsets', default=',O1', help='comma list of compiler flag sets: "" (base), O1')
     ap.add_argument('--skip-addrs', default='', help='file of extra addresses (hex per line) to skip, e.g. ones already matched elsewhere')
     ap.add_argument('--fresh', action='store_true')
     ap.add_argument('--no-final', action='store_true', help='only the verification passes')
+    ap.add_argument('--final-only', action='store_true', help='skip the verification passes, only write files for the cached matches')
     a = ap.parse_args()
     spec_dir = a.spec_dir or ROOT / 'work' / 'specs' / a.family
     a.work.mkdir(parents=True, exist_ok=True)
@@ -122,7 +136,7 @@ def main():
     print(f'{len(cands)} candidates, {sum(c[2] for c in cands):#x} bytes', flush=True)
     matched = state['matched']
     lastfail = {}
-    for fs in a.flagsets.split(','):
+    for fs in ([] if a.final_only else a.flagsets.split(',')):
         flags = FLAGSETS[fs]
         for v in a.variants.split(','):
             todo = [c for c in cands if c[1] not in matched]
@@ -143,25 +157,27 @@ def main():
         sizes = {c[1]: c[2] for c in cands}
         spec_dir.mkdir(parents=True, exist_ok=True)
         tot = tbytes = 0
-        for fs in sorted({f for _, f in matched.values()}):
-            res = {ad: r for ad, (r, f) in matched.items() if f == fs}
+        for fs, cpp in sorted({(f, is_cpp(r)) for r, f in matched.values()}):
+            res = {ad: r for ad, (r, f) in matched.items() if f == fs and is_cpp(r) == cpp}
             pending = split_files(sorted(res), res, addr2name, a.chunk)
             for idx, group in enumerate(pending):
-                stem = f'{a.prefix}_{fs.lower() + "_" if fs else ""}{idx:03d}'; path = a.out_dir / f'{stem}.c'
-                out, maps = emit.run_group(res, group, path, flags=FLAGSETS[fs])
+                tag = ('cpp_' if cpp else '') + (fs.lower() + '_' if fs else '')
+                stem = f'{a.prefix}_{tag}{idx:03d}'; ext = 'cpp' if cpp else 'c'
+                path = a.out_dir / f'{stem}.{ext}'
+                out, maps = emit.run_group(res, group, path, flags=FLAGSETS[fs], cpp=cpp)
                 ok, bad, ren = emit.parse_check(out)
                 n2a = dict(maps)
                 if bad or len(maps) != len(group):
                     # keep only verified functions, rebuild and re-verify
                     keep = [n2a[n] for n in ok if n in n2a]
-                    out, maps = emit.run_group(res, keep, path, flags=FLAGSETS[fs])
+                    out, maps = emit.run_group(res, keep, path, flags=FLAGSETS[fs], cpp=cpp)
                     ok, bad, ren = emit.parse_check(out); n2a = dict(maps)
                 if not ok:
                     path.unlink(missing_ok=True); continue
                 cc, err = emit.cc_ok(path)
                 if not cc: print('CC FAIL', path, err[:400])
                 funcs = {n: f'0x{n2a[n]:08X}' for n in ok}
-                json.dump({'source': f'src/xbox360/{stem}.c', 'flags': FLAGSETS[fs], 'functions': funcs, 'renames': ren},
+                json.dump({'source': f'src/xbox360/{stem}.{ext}', 'flags': FLAGSETS[fs], 'functions': funcs, 'renames': ren},
                           open(spec_dir / f'{stem}.json', 'w'), indent=1)
                 tot += len(ok); tbytes += sum(sizes[n2a[n]] for n in ok)
                 print(f'{path.name}: {len(ok)}/{len(maps)} MATCH, bad {len(bad)}, cc {"ok" if cc else "FAIL"}', flush=True)

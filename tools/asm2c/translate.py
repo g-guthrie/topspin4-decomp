@@ -1,16 +1,29 @@
 """Core translation: PowerPC disassembly lines -> a C function body.
 
 Input is a list of lines in the `tools/fn_asm.py` format
-(``ADDRESS  WORDHEX  mnemonic operands   ; RELOCKIND symbol``).  `gen()`
-walks the instructions with a tiny symbolic executor (registers hold C
-expressions, loads become lazily materialised locals) and returns a dict
-``kind, detail, sig, body, externs, protos`` or raises `Skip(reason)` when the
-shape is not supported.  The result is *not* guaranteed to compile to the same
-bytes; `emit.py` verifies every candidate with tools/fn_check.py.
+(``ADDRESS  WORDHEX  mnemonic operands   ; RELOCKIND symbol``).  `gen()` cuts the
+function into basic blocks (`cfg.py`), then walks the structure while symbolically
+executing it (registers hold C expressions, loads become lazily materialised
+locals) and returns a dict ``kind, detail, sig, body, externs, protos`` or raises
+`Skip(reason)` when the shape is not supported.  The result is *not* guaranteed to
+compile to the same bytes; `emit.py` verifies every candidate with tools/fn_check.py.
 
-Variants: `mode` 1 also counts contiguously-written argument registers after
-a call setup (callee arity otherwise comes from `env.arity`), mode 2 counts every argument register written up to the highest one, `orient` picks
-which branch arm becomes the `if` body for non-returning diamonds.
+Structurizer (class `Gen`)
+- a conditional block is folded with following single-use condition blocks into
+  `&&` / `||` conditions (`cfg.fold`);
+- the join of an if is the immediate post-dominator; arms are emitted in copies
+  of the register state and registers they change are merged into phi
+  variables (`pN`);  an arm that leaves the function is emitted as an early
+  return;
+- natural loops become `while` (header tests) or `do ... while` (latch tests);
+  registers that are live around the back edge become `lvN` variables.
+
+Variants (all produce the same behaviour, different compiler input): `mode` 1
+also counts contiguously-written argument registers after a call setup (callee
+arity otherwise comes from `env.arity`), mode 2 counts every argument register
+written up to the highest one, `orient` picks which branch arm becomes the `if`
+body, `infer_signed` declares values only used in signed compares as `int`,
+`vol` makes stores (1), loads and stores (2) or loads (3) volatile to keep their order.
 """
 import re
 
@@ -135,8 +148,10 @@ class Gen:
     """One translation: decode, build the CFG, structurize while symbolically
     executing, then render C.  See `gen()`."""
 
-    def __init__(self, lines, env, mode=0, orient=0):
-        self.env, self.mode, self.orient = env, mode, orient
+    def __init__(self, lines, env, mode=0, orient=0, word_ret=False, infer_signed=True, vol=0):
+        self.env, self.mode, self.orient, self.word_ret = env, mode, orient, word_ret
+        self.infer_signed = infer_signed
+        self.vol = vol
         if unrelocated(lines):
             raise Skip('unrelocated original')
         self.lines = annotate(lines, env)
@@ -152,6 +167,7 @@ class Gen:
         self.externs = {}; self.protos = {}; self.detail = []; self.kinds = []
         self.ptype = {}; self.fparams = {}; self.readp = set(); self.phis = []
         self.calls = 0; self.rets = []; self.localnames = []
+        self.signed = set(); self.unsigned = set()   # value names compared with signed / unsigned compares
         self.pending = {}
 
     # ---- stack locals ------------------------------------------------------
@@ -167,6 +183,28 @@ class Gen:
             nxt = bases[i + 1] if i + 1 < len(bases) else 1 << 30
             top = max([a for a in acc if b <= a < nxt] + [b])
             self.local_ext[b] = (top - b) // 4 + 1
+        # the frame size shows how big the locals are: fill each array up to the next
+        # base and the last one up to the register save area at the top of the frame
+        frame = self.frame_size()
+        for i, b in enumerate(bases):
+            end = bases[i + 1] if i + 1 < len(bases) else (frame[0] - frame[1] if frame else b)
+            self.local_ext[b] = max(self.local_ext[b], (end - b) // 4)
+
+    def frame_size(self):
+        """(frame size, bytes of saved registers incl. LR) from the prologue, or None."""
+        n = saved = None
+        for ln in self.lines[:12]:
+            m = re.search(r'\bstwu\s+r1,\s*-(\w+)\(r1\)', ln)
+            if m:
+                n = int(m.group(1), 0)
+            m = re.search(r'REL24\s+__savegprlr_(\d+)', ln)
+            if m:
+                saved = 8 + 8 * (32 - int(m.group(1)))
+        if n is None or any('__savefpr' in ln or '__savevmx' in ln for ln in self.lines[:12]):
+            return None
+        if saved is None:
+            saved = 8 + 8 * sum(1 for ln in self.lines[:12] if re.search(r'\bstd\s+r\d+,\s*-\w+\(r1\)', ln))
+        return n, saved
 
     def local_of(self, off):
         for b in self.bases:
@@ -233,6 +271,10 @@ class Gen:
         first into pre_out).  Registers without a value in every path become
         unusable (clobbered)."""
         regs0 = st['regs']
+        for s, o in arms:
+            for f in set(s['fregs']) | set(st['fregs']):
+                if s['fregs'].get(f) is not st['fregs'].get(f):
+                    raise Skip('float phi')
         names = set()
         for s, o in arms:
             names |= set(s['written']) | set(s['regs']) | set(s['clobbered'])
@@ -273,6 +315,11 @@ class Gen:
     def setf(self, st, f, e, t='float'):
         st['fregs'][f] = (e, t); st['fwritten'].add(f)
 
+    def q(self, kind):
+        """`volatile ` qualifier for stores ('s') / loads ('l'): volatile accesses keep the
+        original program order (the scheduler may otherwise reorder independent stores)."""
+        return 'volatile ' if (self.vol in (1, 2) and kind == 's') or (self.vol in (2, 3) and kind == 'l') else ''
+
     def step(self, ins, st, out):
         """Execute one non-terminator instruction symbolically."""
         mn, ops, rk, sym = ins.mn, ins.ops, ins.rk, ins.sym
@@ -304,6 +351,8 @@ class Gen:
             a = rd(o[0]); b = rd(o[1]) if reg2 else str(num(o[1]))
             nohi(a, b)
             cast = 'ts4_word' if mn in ('cmplwi', 'cmplw') else 'int'
+            for x in ([a, b] if reg2 else [a]):
+                (self.unsigned if cast == 'ts4_word' else self.signed).add(x)
             st['cmps'][cr] = (f'({cast}){a}', f'({cast}){b}' if reg2 else b, False)
             return
         if mn in ('fcmpu', 'fcmpo'):
@@ -312,8 +361,10 @@ class Gen:
             return
         if mn.endswith('.') and mn not in ('andi.', 'andis.'):
             base = mn[:-1]
-            if base in ('subic', 'addic', 'stwcx', 'stdcx', 'subfe', 'subfc', 'addze'):
+            if base in ('stwcx', 'stdcx', 'subfe', 'subfc', 'addze'):
                 raise Skip(mn)
+            if base in ('subic', 'addic'):   # no carry consumer is modelled: plain add/sub + cr0 compare
+                base = 'subi' if base == 'subic' else 'addi'
             ins2 = type(ins)(ins.addr, base, ops, rk, sym, ins.tgt, ins.ln)
             self.step(ins2, st, out)
             v = rd(ops[0])
@@ -359,29 +410,29 @@ class Gen:
                 addr_e = f'((char *)(ts4_word)({bv}) + {off})'
             if mn in LD:
                 t, ty = LD[mn]
-                setr(ops[0], self.newv(out, t, f'*({t} *){addr_e}'))
+                setr(ops[0], self.newv(out, t, f'*({self.q("l")}{t} *){addr_e}'))
                 self.detail.append(f'{ty}@{off:#x}' if not rk else f'{ty}@{addr_e}'); self.kinds.append('get')
             elif mn in ST:
                 t, ty = ST[mn]; r = ops[0]
                 if mn == 'std':
                     self.ptype[r] = 'ts4_u64'
                 v = rd(r); nohi(v)
-                out.append(f'*({t} *){addr_e} = ({t}){v};')
+                out.append(f'*({self.q("s")}{t} *){addr_e} = ({t}){v};')
                 self.detail.append(f'{ty}@{off:#x}' if not rk else f'{ty}@{addr_e}'); self.kinds.append('set')
             elif mn in FLD:
                 t, ty = FLD[mn]
                 v = self.newv(out, t, f'*({t} *){addr_e}'); self.setf(st, ops[0], v, t); self.kinds.append('get')
             else:
                 t, ty = FST[mn]; fv = self.fval(st, ops[0], t)
-                out.append(f'*({t} *){addr_e} = {fv};'); self.kinds.append('set')
+                out.append(f'*({self.q("s")}{t} *){addr_e} = {fv};'); self.kinds.append('set')
             return
         if mn in IDX_LD:
             t = IDX_LD[mn]; a = rd(ops[1]); b = rd(ops[2]); nohi(a, b)
-            setr(ops[0], self.newv(out, t, f'*({t} *)((char *)(ts4_word)({a}) + {b})')); self.kinds.append('get')
+            setr(ops[0], self.newv(out, t, f'*({self.q("l")}{t} *)((char *)(ts4_word)({a}) + {b})')); self.kinds.append('get')
             return
         if mn in IDX_ST:
             t = IDX_ST[mn]; v = rd(ops[0]); a = rd(ops[1]); b = rd(ops[2]); nohi(v, a, b)
-            out.append(f'*({t} *)((char *)(ts4_word)({a}) + {b}) = ({t}){v};'); self.kinds.append('set')
+            out.append(f'*({self.q("s")}{t} *)((char *)(ts4_word)({a}) + {b}) = ({t}){v};'); self.kinds.append('set')
             return
         if mn == 'li':
             setr(ops[0], str(num(ops[1]))); return
@@ -439,7 +490,7 @@ class Gen:
             setr(ops[0], f'({a} & {hex(m)})'); return
         if mn == 'rotlwi':
             a = rd(ops[1]); nohi(a); n = num(ops[2])
-            setr(ops[0], f'(({a} << {n}) | ({a} >> {32 - n}))'); return
+            setr(ops[0], f'(({a} << {n}) | ({a} >> {32 - n}))' if n else a); return
         if mn == 'rlwinm':
             a = rd(ops[1]); nohi(a); sh, mb, me = num(ops[2]), num(ops[3]), num(ops[4])
             if mb <= me:
@@ -448,6 +499,11 @@ class Gen:
                 mask = 0xFFFFFFFF ^ (((1 << (mb - me - 1)) - 1) << (31 - mb + 1))
             r = f'(({a} << {sh}) | ({a} >> {32 - sh}))' if sh else a
             setr(ops[0], f'({r} & {hex(mask)})'); return
+        if mn == 'rlwimi':
+            a = rd(ops[0]); b = rd(ops[1]); nohi(a, b); sh, mb, me = num(ops[2]), num(ops[3]), num(ops[4])
+            mask = ((1 << (me - mb + 1)) - 1) << (31 - me) if mb <= me else 0xFFFFFFFF ^ (((1 << (mb - me - 1)) - 1) << (32 - mb))
+            r = f'(({b} << {sh}) | ({b} >> {32 - sh}))' if sh else b
+            setr(ops[0], f'(({r} & {hex(mask)}) | ({a} & {hex(~mask & 0xFFFFFFFF)}))'); return
         if mn == 'cntlzw':
             a = rd(ops[1]); nohi(a); setr(ops[0], ('clz', a)); return
         if mn == 'extrwi' and isinstance(regs.get(ops[1]), tuple) and regs[ops[1]][0] == 'clz' and ops[2] == '1' and num(ops[3]) == 26:
@@ -487,14 +543,18 @@ class Gen:
         mn, sym, rk = ins.mn, ins.sym, ins.rk
         regs = st['regs']; written = st['written']; clobbered = st['clobbered']
         self.calls += 1
+        if mn == 'bctrl' and st['ctr'] is None:
+            raise Skip('ctr lost')     # mtctr happened in a branch arm
         ctr_reg = st['ctr_reg'] if mn == 'bctrl' else None
         wr = [int(r[1:]) for r in written if r[0] == 'r' and 3 <= int(r[1:]) <= 10 and r not in clobbered and r != ctr_reg]
         if mn == 'bl':
             if rk != 'REL24' or sym.startswith('__'):
                 raise Skip('call ' + str(sym))
             ar = self.env.arity(sym)
-            if ar is None:
-                raise Skip('noarity')
+            if ar is None:  # callee not disassemblable (import, thunk): arguments come from the call setup
+                if self.mode == 0:
+                    raise Skip('noarity')
+                ar = 0
         else:
             ar = 1
         n = ar
@@ -562,6 +622,8 @@ class Gen:
                 if isinstance(fv, V):
                     fv.used = True; fv = fv.n
                 self.rets.append(ft); out.append(f'return {fv};')
+            elif 'r3' not in written and self.word_ret:
+                rv = rd('r3'); self.rets.append('ts4_word'); out.append(f'return {rv};')
             elif 'r3' not in written:
                 self.rets.append('void'); out.append('return;')
             else:
@@ -575,9 +637,21 @@ class Gen:
             self.protos[tail[1]] = len(callargs); self.detail.append(tail[1]); self.kinds.append('tail')
             self.rets.append('ts4_word'); out.append(f'return {tail[1]}({", ".join("(ts4_word)" + c for c in callargs)});')
         else:
-            k = max([3] + [r + 2 for r in self.readp]); callargs = [rd(f'r{j}') for j in range(3, k + 1)]
-            pt = ', '.join(['ts4_word'] * len(callargs)); self.kinds.append('vcall')
+            if st['ctr'] is None:
+                raise Skip('ctr lost')
+            wr = [int(r[1:]) for r in written if r[0] == 'r' and not r.startswith('__') and 3 <= int(r[1:]) <= 10
+                  and r not in st['clobbered'] and r != st['ctr_reg']]
+            if self.mode == 1:
+                k = max([3] + wr)                         # only registers the function set up itself
+            elif self.mode == 2:
+                k = max([3] + wr + list(self.readp))      # plus pass-through parameters it reads
+            else:
+                k = max([3] + [r + 2 for r in self.readp])
+            callargs = [rd(f'r{j}') for j in range(3, k + 1)]
+            if any(isinstance(c, tuple) for c in callargs) or isinstance(tail[1], tuple):
+                raise Skip('ca hi')
             self.rets.append('ts4_word')
+            pt = ', '.join(['ts4_word'] * len(callargs)); self.kinds.append('vcall')
             out.append(f'return ((ts4_word (*)({pt}))({tail[1]}))({", ".join("(ts4_word)" + c for c in callargs)});')
 
     # ---- conditions ------------------------------------------------------------
@@ -708,6 +782,16 @@ class Gen:
             raise Skip('fold join')
         sA, oA, rA = self.arm(A, stop, st, J) if A != J else (None, [], J)
         sB, oB, rB = self.arm(B, stop, st, J) if B != J else (None, [], J)
+        if (rA is None) != (rB is None):
+            # one arm leaves the function (early return, also inside loops): emit it as
+            # `if (c) { ...; return; }` and carry on in the other arm's state
+            (e1, o1, sk, ok2, rk) = (e, oA, sB, oB, rB) if rA is None else (cfg.neg(e), oB, sA, oA, rA)
+            if sk is None:       # the continuing arm is empty: the join block itself
+                sk, ok2 = self.cp(st), []
+            out.append(('if', cfg.cstr(e1), o1)); out.extend(ok2)
+            for k in sk:
+                st[k] = sk[k]
+            return rk
         for r in (rA, rB):
             if isinstance(r, str) or (r is not None and r != J):
                 raise Skip('irregular exit')
@@ -716,8 +800,6 @@ class Gen:
             t = self._if(e, A, B, oA, oB)
             out.append(t[:3]); out.extend(t[3])
             return None
-        if rA is None or rB is None:
-            raise Skip('arm terminates')
         # both arms reach J
         if A == J and B == J:
             return J
@@ -739,11 +821,44 @@ class Gen:
         return ('if', cfg.cstr(cfg.neg(e)), oB, oA)
 
     # ---- loops -----------------------------------------------------------------
-    def carried(self, L, st):
-        """Registers written inside loop blocks `L` that have a value before the loop."""
+    @staticmethod
+    def src_regs(i):
+        """General registers read by instruction i."""
+        if i.mn in ('bl', 'bctrl', 'mflr', 'mtlr') or i.mn.startswith('b'):
+            return set()
+        ops = i.ops if (i.mn in NO_DST or i.mn.startswith('st')) else i.ops[1:]
+        return {r for o in ops for r in re.findall(r'\br\d+\b', o)}
+
+    def live_in(self, L, h):
+        """Registers read before being written on some path through loop blocks L from header h."""
+        use, dfn = {}, {}
+        for b in L:
+            u, d = set(), set()
+            for i in self.blocks[b].insns:
+                u |= self.src_regs(i) - d
+                d |= dst_regs([i])
+            use[b], dfn[b] = u, d
+        live = {b: set(use[b]) for b in L}
+        changed = True
+        while changed:
+            changed = False
+            for b in L:
+                out = set()
+                for sx in cfg.succs(self.blocks[b]):
+                    if sx in L:
+                        out |= live[sx]
+                new = use[b] | (out - dfn[b])
+                if new != live[b]:
+                    live[b] = new; changed = True
+        return live[h]
+
+    def carried(self, L, st, h):
+        """Registers that are written inside loop blocks `L` and live around the back
+        edge (read before written in an iteration), with a value before the loop."""
         w = set()
         for b in L:
             w |= dst_regs(self.blocks[b].insns)
+        w &= self.live_in(L, h)
         res = []
         for r in sorted(w):
             if r == 'r1' or r.startswith('__') or int(r[1:]) in (0, 2, 13):
@@ -762,10 +877,13 @@ class Gen:
     def emit_loop(self, h, stop, st, out):
         L = self.loops[h]
         hb = self.blocks[h]
+        for b in L:
+            if any(i.ops and re.fullmatch(r'f\d+', i.ops[0]) and not i.mn.startswith('fcmp') and not i.mn.startswith('stf') for i in self.blocks[b].insns):
+                raise Skip('float loop')
         # classify: while-form when the header tests and exactly one successor leaves the loop
         inside = [s for s in cfg.succs(hb) if s in L]
         whileform = hb.term[0] == 'cond' and len(inside) == 1 and inside[0] != h and all(i.mn in PURE for i in hb.insns)
-        car = self.carried(L, st)
+        car = self.carried(L, st, h)
         sw = self.cp(st); sw['cmps'] = {}
         lv = {}
         for r in car:
@@ -879,11 +997,42 @@ class Gen:
         return top
 
 
-def gen(lines_all, env, mode=0, orient=0):
-    """Translate one function (fn_asm lines) to C; see the module docstring."""
-    g = Gen(lines_all, env, mode, orient)
+def vcall_thunk(lines):
+    """Byte offset N when `lines` is exactly the compiler-generated thunk of a
+    pointer to a virtual member function (`lwz r12,0(r3); lwz r11,N(r12);
+    mtctr r11; bctr`, symbol ??_9Class@@$B...), else None.  emit.py reproduces it
+    by taking `&Class::slot` of a class with N/4 earlier virtual functions."""
+    if len(lines) != 4:
+        return None
+    p = [parse(l) for l in lines]
+    if [x[0] for x in p] != ['lwz', 'lwz', 'mtctr', 'bctr'] or p[2][1] != ['r11']:
+        return None
+    def mem(ops):
+        m = re.fullmatch(r'(\w+)\((r\d+)\)', ops[1]) if len(ops) == 2 else None
+        return (int(m.group(1), 0), m.group(2)) if m else None
+    a, b = mem(p[0][1]), mem(p[1][1])
+    if a == (0, 'r3') and p[0][1][0] == 'r12' and b and b[1] == 'r12' and p[1][1][0] == 'r11' and b[0] % 4 == 0:
+        return b[0]
+    return None
+
+
+def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
+    """Translate one function (fn_asm lines) to C; see the module docstring.
+    `vol` 1 makes stores volatile, 2 loads and stores, 3 loads only.  With `infer_signed`, params and loaded values that are only compared with
+    signed compares (cmpwi/cmpw) are declared `int` (the compiler emits cmpwi
+    only for signed operands; casts alone are optimised away for ==/!=)."""
+    off = vcall_thunk(lines_all)
+    if off is not None:
+        return dict(kind='vthunk', detail=[f'slot{off // 4}'], sig='', body='', externs=[], protos={},
+                    vthunk=off)
+    g = Gen(lines_all, env, mode, orient, infer_signed=infer_signed, vol=vol)
     top = g.run()
     rets = set(g.rets)
+    if rets == {'ts4_word', 'void'}:
+        # some paths return a value, others leave r3 untouched: return the incoming r3 there
+        g = Gen(lines_all, env, mode, orient, word_ret=True, infer_signed=infer_signed, vol=vol)
+        top = g.run()
+        rets = set(g.rets)
     if len(rets) != 1:
         raise Skip('mixed rets ' + str(rets))
     rt = rets.pop()
@@ -951,7 +1100,8 @@ def gen(lines_all, env, mode=0, orient=0):
         for x in stmts:
             if isinstance(x, V):
                 if x.used:
-                    decls.append(f'{x.t} {x.n};'); o.append(' ' * ind + f'{x.n} = {x.e};')
+                    ty = 'int' if g.infer_signed and x.t == 'ts4_word' and x.n in g.signed and x.n not in g.unsigned else x.t
+                    decls.append(f'{ty} {x.n};'); o.append(' ' * ind + f'{x.n} = {x.e};')
                 elif not x.e.startswith('*('):
                     o.append(' ' * ind + x.e + ';')
             elif isinstance(x, tuple):
@@ -973,7 +1123,12 @@ def gen(lines_all, env, mode=0, orient=0):
     decls = [f'ts4_word {n};' for n in phis] + [f'ts4_word {n}[{g.local_ext[int(n[3:], 16)]}];' for n in g.localnames] + decls
     body = ''.join('    ' + d + '\n' for d in decls) + ('\n' if decls else '') + '\n'.join(body_l) + '\n'
     maxp = max(readp) if readp else 2
-    params = [f'{g.ptype.get(f"r{j}", "ts4_word")} a{j - 3}' for j in range(3, maxp + 1)]
+    def ptype(j):
+        n = f'a{j - 3}'
+        if g.infer_signed and n in g.signed and n not in g.unsigned and f'r{j}' not in g.ptype:
+            return 'int'
+        return g.ptype.get(f'r{j}', 'ts4_word')
+    params = [f'{ptype(j)} a{j - 3}' for j in range(3, maxp + 1)]
     for f in sorted(g.fparams):
         params.append(f'{g.fparams[f]} {f}')
     def has(stmts, kinds):

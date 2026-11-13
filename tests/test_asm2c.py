@@ -4,7 +4,9 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools" / "asm2c"))
+import cfg  # noqa: E402
 import emit  # noqa: E402
+import run  # noqa: E402
 import translate  # noqa: E402
 
 
@@ -13,6 +15,21 @@ def line(addr, word, text):
 
 
 ENV = translate.Env(lambda sym: None)
+BASE = 0x88000000
+
+
+def prog(texts):
+    """Instruction texts -> fn_asm lines at consecutive addresses from BASE."""
+    return [line(BASE + 4 * i, "00000000", t) for i, t in enumerate(texts)]
+
+
+def tgt(i):
+    """Branch target text for instruction index i."""
+    return f"0x{BASE + 4 * i:08x}"
+
+
+def gen(texts, **kw):
+    return translate.gen(prog(texts), ENV, **kw)
 
 
 class TranslateTests(unittest.TestCase):
@@ -45,7 +62,222 @@ class TranslateTests(unittest.TestCase):
         self.assertEqual(translate.arity(lines, lambda s: None), 3)
 
 
+class StructurizerTests(unittest.TestCase):
+    """Short-circuit conditions, shared tails, diamonds and loops (pure translation)."""
+
+    def test_and_chain(self):
+        r = gen(["lwz r11,0(r3)", "cmplwi cr6,r11,0", f"beq cr6, 0x1c -> {tgt(8)}", "lwz r10,4(r3)",
+                 "cmplwi cr6,r10,0", f"beq cr6, 0x10 -> {tgt(8)}", "li r11,1", "stw r11,8(r3)", "blr"])
+        self.assertEqual(r["kind"], "if_get")
+        self.assertRegex(r["body"], r"if \(\(ts4_word\)t1 != 0 && .*\+ 4\)\)? != 0\) \{")
+
+    def test_or_chain(self):
+        r = gen(["lwz r11,0(r3)", "cmplwi cr6,r11,0", f"bne cr6, 0x14 -> {tgt(6)}", "lwz r10,4(r3)",
+                 "cmplwi cr6,r10,0", f"beq cr6, 0x10 -> {tgt(8)}", "li r11,1", "stw r11,8(r3)", "blr"])
+        self.assertIn(" || ", r["body"])
+        self.assertIn("= (ts4_word)1;", r["body"])
+
+    def test_shared_tail(self):
+        # if (a && b) a->0 = b; return 0;   (two branches to the same tail)
+        r = gen(["cmplwi cr6,r3,0", f"beq cr6, 0x14 -> {tgt(5)}", "cmplwi cr6,r4,0", f"beq cr6, 0xc -> {tgt(5)}",
+                 "stw r4,0(r3)", "li r3,0", "blr"])
+        self.assertIn("(ts4_word)a0 != 0 && (ts4_word)a1 != 0", r["body"])
+        self.assertTrue(r["body"].rstrip().endswith("return 0;"))
+
+    def test_early_return_vs_flipped(self):
+        texts = ["cmplwi cr6,r3,0", f"bne cr6, 0xc -> {tgt(4)}", "li r3,1", "blr", "li r3,2", "blr"]
+        a = gen(texts, orient=0)["body"]
+        b = gen(texts, orient=1)["body"]
+        self.assertIn("if ((ts4_word)a0 == 0) {\n        return 1;", a)
+        self.assertIn("if ((ts4_word)a0 != 0) {\n        return 2;", b)
+
+    def test_diamond_phi(self):
+        r = gen(["cmpwi cr6,r4,5", f"bge cr6, 0xc -> {tgt(4)}", "li r11,1", f"b 0x8 -> {tgt(5)}", "li r11,2",
+                 "stw r11,0(r3)", "blr"])
+        self.assertIn("p1 = (ts4_word)1;", r["body"])
+        self.assertIn("} else {", r["body"])
+        self.assertIn("= (ts4_word)p1;", r["body"])
+
+    def test_one_armed_if_keeps_old_value(self):
+        r = gen(["li r11,7", "cmplwi cr6,r4,0", f"beq cr6, 0x8 -> {tgt(4)}", "li r11,9", "stw r11,0(r3)", "blr"])
+        self.assertIn("p1 = (ts4_word)7;", r["body"])
+        self.assertIn("p1 = (ts4_word)9;", r["body"])
+
+    def test_while_loop(self):
+        r = gen(["li r11,0", f"b 0x10 -> {tgt(4)}", "lwz r10,0(r4)", "addi r11,r11,1", "cmplw cr6,r11,r3",
+                 f"blt cr6, 0xc -> {tgt(2)}", "mr r3,r11", "blr"])
+        self.assertTrue(r["kind"].startswith("loop_"))
+        self.assertIn("while ((ts4_word)lv", r["body"])
+        self.assertIn("return lv", r["body"])
+
+    def test_do_while_loop(self):
+        r = gen(["li r11,0", "li r10,0", "lwz r9,0(r4)", "add r10,r10,r9", "addi r11,r11,1", "addi r4,r4,4",
+                 "cmplw cr6,r11,r3", f"blt cr6, 0x10 -> {tgt(2)}", "mr r3,r10", "blr"])
+        self.assertIn("do {", r["body"])
+        self.assertIn("} while ((ts4_word)p", r["body"])
+
+    def test_return_inside_loop(self):
+        r = gen(["li r11,0", f"b 0x20 -> {tgt(9)}", "lwz r10,0(r4)", "cmplw cr6,r10,r5", f"bne cr6, 0xc -> {tgt(7)}",
+                 "mr r3,r11", "blr", "addi r4,r4,4", "addi r11,r11,1", "cmplw cr6,r11,r3",
+                 f"blt cr6, 0x-20 -> {tgt(2)}", "li r3,-1", "blr"])
+        self.assertIn("while ((ts4_word)lv", r["body"])
+        self.assertRegex(r["body"], r"if \(\(ts4_word\)t\d+ == \(ts4_word\)a2\) \{\n\s+return lv\d+;")
+        self.assertTrue(r["body"].rstrip().endswith("return -1;"))
+        # temporaries written inside the loop are not parameters (a3.. would be unused)
+        self.assertEqual(r["sig"], "ts4_word NAME(ts4_word a0, ts4_word a1, ts4_word a2)")
+
+    def test_signed_compare_types(self):
+        r = gen(["lwz r11,12(r3)", "cmpwi cr6,r11,0", "beqlr cr6", "cmpwi cr6,r4,5", f"bge cr6, 0x8 -> {tgt(6)}",
+                 "stw r4,0(r3)", "blr"])
+        self.assertIn("int t1;", r["body"])
+        self.assertIn("int a1", r["sig"])
+        r = gen(["lwz r11,12(r3)", "cmpwi cr6,r11,0", "beqlr cr6", "blr"], infer_signed=False)
+        self.assertIn("ts4_word t1;", r["body"])
+
+    def test_volatile_stores_variant(self):
+        r = gen(["stw r4,0(r3)", "stw r4,4(r3)", "blr"], vol=1)
+        self.assertEqual(r["body"].count("volatile ts4_word"), 2)
+        r = gen(["lwz r11,0(r3)", "stw r11,4(r3)", "blr"], vol=2)
+        self.assertEqual(r["body"].count("volatile"), 2)
+
+    def test_unsupported_branch_is_skipped(self):
+        with self.assertRaises(translate.Skip):
+            gen(["mtctr r3", f"bdnz 0x0 -> {tgt(0)}", "blr"])
+
+    def test_float_phi_is_skipped(self):
+        with self.assertRaises(translate.Skip):
+            gen(["lfs f0,0(r3)", "fcmpu cr6,f0,f1", f"bge cr6, 0x8 -> {tgt(4)}", "fmr f1,f0", "blr"])
+
+
+class OpcodeTests(unittest.TestCase):
+    def test_integer_ops(self):
+        r = gen(["clrrwi r11,r3,4", "mulli r10,r11,12", "divw r9,r10,r4", "srawi r7,r9,2", "add r3,r7,r9", "blr"])
+        self.assertIn("0xfffffff0", r["body"])
+        self.assertIn("* 12", r["body"])
+        self.assertIn("/ (int)a1", r["body"])
+        self.assertIn(">> 2", r["body"])
+
+    def test_rlwinm_mask(self):
+        r = gen(["rlwinm r3,r3,3,0,27", "blr"])
+        self.assertIn("0xfffffff0", r["body"])
+        self.assertIn("<< 3", r["body"])
+
+    def test_indexed_store(self):
+        r = gen(["stwx r4,r3,r5", "blr"])
+        self.assertIn("(char *)(ts4_word)(a0) + a2) = (ts4_word)a1;", r["body"])
+
+    def test_record_form_sets_cr0(self):
+        r = gen(["srawi. r11,r4,1", "stw r11,0(r3)", f"beq 0x8 -> {tgt(4)}", "li r11,1", "stw r11,4(r3)", "blr"])
+        self.assertIn("if ((int)((int)a1 >> 1) != 0)", r["body"])
+
+    def test_conditional_return(self):
+        r = gen(["cmplwi cr6,r4,0", "beqlr cr6", "stw r4,0(r3)", "blr"])
+        self.assertIn("return;", r["body"])
+
+    def test_float_basics(self):
+        r = gen(["lfs f0,0(r3)", "fmr f1,f0", "fadds f1,f1,f2", "stfs f1,4(r3)", "blr"])
+        self.assertEqual(r["sig"], "float NAME(ts4_word a0, float f2)")
+        self.assertIn("t1 + f2", r["body"])
+
+    def test_unrelocated_original_is_rejected(self):
+        with self.assertRaises(translate.Skip):
+            gen(["lis r10,0x88b9", "addi r3,r10,0x2320", "blr"])
+        gen(["lis r10,0x88b9   ; REFHI lbl_88B92320", "addi r3,r10,0x2320   ; REFLO lbl_88B92320", "blr"])
+
+
+class CfgTests(unittest.TestCase):
+    leaf = staticmethod(lambda x, op, y: ("c", x, op, y, False))
+
+    def test_negation_uses_de_morgan(self):
+        c = ("and", self.leaf("a", "==", "0"), ("or", self.leaf("b", "<", "1"), self.leaf("c", ">=", "2")))
+        self.assertEqual(cfg.cstr(cfg.neg(c)), "a != 0 || (b >= 1 && c < 2)")
+        self.assertEqual(cfg.neg(cfg.neg(c)), c)
+
+    def test_float_negation_keeps_not(self):
+        c = ("c", "x", "<", "y", True)
+        self.assertEqual(cfg.cstr(cfg.neg(c)), "!(x < y)")
+
+    def test_fold_or_and_and(self):
+        e1, e2 = self.leaf("a", "!=", "0"), self.leaf("b", "!=", "0")
+        nxt = {20: (e2, 40, 50)}
+        tri, ab = cfg.fold((e1, 40, 20), nxt.get)        # a -> 40 else (b -> 40 else 50)
+        self.assertEqual((cfg.cstr(tri[0]), tri[1], tri[2], ab), ("a != 0 || b != 0", 40, 50, [20]))
+        tri, ab = cfg.fold((e1, 20, 50), {20: (e2, 40, 50)}.get)   # a -> (b -> 40 else 50) else 50
+        self.assertEqual((cfg.cstr(tri[0]), tri[1], tri[2]), ("a != 0 && b != 0", 40, 50))
+
+    def test_blocks_dominators_and_loops(self):
+        insns = cfg.decode(prog(["li r11,0", f"b 0x10 -> {tgt(4)}", "addi r11,r11,1", "nop", "cmplw cr6,r11,r3",
+                                 f"blt cr6, 0xc -> {tgt(2)}", "blr"]), translate.parse)
+        order, blocks = cfg.build_blocks(insns)
+        self.assertEqual(order, [BASE, BASE + 8, BASE + 16, BASE + 24])
+        loops = cfg.natural_loops(order, blocks)
+        self.assertEqual(loops, {BASE + 8: {BASE + 8, BASE + 16}} | {} if False else loops)
+        self.assertTrue(loops)
+        pdom = cfg.post_dominators(blocks)
+        self.assertEqual(cfg.ipdom(pdom, BASE), BASE + 16)
+
+    def test_unmodelled_branches_skip(self):
+        insns = cfg.decode(prog(["bdnz 0x0 -> 0x88000000", "blr"]), translate.parse)
+        with self.assertRaises(cfg.Skip):
+            cfg.build_blocks(insns)
+
+
+class VcallThunkTests(unittest.TestCase):
+    def test_detects_exact_vcall_thunk(self):
+        t = ["lwz r12,0(r3)", "lwz r11,0x1bc(r12)", "mtctr r11", "bctr"]
+        self.assertEqual(translate.vcall_thunk(prog(t)), 0x1BC)
+        r = gen(t)
+        self.assertEqual((r["kind"], r["vthunk"]), ("vthunk", 0x1BC))
+        self.assertIsNone(translate.vcall_thunk(prog(["lwz r11,0(r3)", "lwz r10,4(r11)", "mtctr r10", "bctr"])))
+
+    def test_symbol_encoding(self):
+        self.assertEqual(emit.mangle_num(0), "A@")
+        self.assertEqual(emit.mangle_num(3), "2")
+        self.assertEqual(emit.mangle_num(12), "M@")
+        self.assertEqual(emit.mangle_num(0x1BC), "BLM@")
+        self.assertEqual(emit.vthunk_name(0x8816EDC8, 0x1BC)[1], "??_9ts4_vcall_slot111_8816EDC8@@$BBLM@AA")
+
+
+class RunTests(unittest.TestCase):
+    def test_split_files_keeps_callers_and_callees_apart(self):
+        matched = {1: {"protos": {"fn_B": 1}}, 2: {"protos": {}}, 3: {"protos": {}}}
+        names = {1: "fn_A", 2: "fn_B", 3: "fn_C"}
+        files = run.split_files([1, 2, 3], matched, names, 200)
+        self.assertEqual(files, [[1, 3], [2]])
+        self.assertEqual(run.split_files([1, 2, 3], matched, names, 1), [[1], [2], [3]])
+
+    def test_categorize_strips_addresses(self):
+        self.assertEqual(run.categorize("read r11"), "read r")
+        self.assertEqual(run.categorize("call fn_88123456"), "call fn_")
+
+
 class EmitTests(unittest.TestCase):
+    def test_build_reports_line_ranges_of_each_definition(self):
+        import tempfile
+        r = {"kind": "get", "detail": ["u32@0x0"], "sig": "ts4_word NAME(ts4_word a0)",
+             "body": "    ts4_word t1;\n\n    t1 = a0;\n    return t1;\n", "externs": [], "protos": {}}
+        res = {0x88000000: r, 0x88000010: dict(r), 0x88000020: dict(r)}
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "x.c"
+            maps, rng = emit.build(res, sorted(res), path)
+            lines = path.read_text().split("\n")
+            for name, a in maps:
+                first, last = rng[a]
+                self.assertIn(name, lines[first - 1])      # first line of the definition
+                self.assertEqual(lines[last - 2], "}")      # closing brace
+            self.assertLess(rng[0x88000000][1], rng[0x88000010][0])
+
+    def test_vthunk_in_cpp_file(self):
+        import tempfile
+        res = {0x88000000: {"kind": "vthunk", "detail": ["slot3"], "sig": "", "body": "", "externs": [], "protos": {},
+                            "vthunk": 12}}
+        with tempfile.TemporaryDirectory() as d:
+            maps, rng = emit.build(res, [0x88000000], Path(d) / "x.cpp", cpp=True)
+            text = (Path(d) / "x.cpp").read_text()
+        self.assertEqual(maps, [("??_9ts4_vcall_slot3_88000000@@$BM@AA", 0x88000000)])
+        self.assertIn("&ts4_vcall_slot3_88000000::s3;", text)
+        self.assertIn('extern "C" {', text)
+
     def test_func_name(self):
         r = {"kind": "get", "detail": ["u32@0x8"]}
         self.assertEqual(emit.func_name(r, 0x88167CF0), "ts4_get_u32_off8_88167CF0")

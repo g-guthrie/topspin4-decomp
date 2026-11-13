@@ -51,7 +51,34 @@ def strip_dead_locals(body):
             return re.sub(r'\n\n\n+', '\n\n', body)
 
 
-def build(res, group, path):
+def vt_class(name, slot):
+    """C++ class whose virtual function number `slot` is `s<slot>` (earlier slots are dummies)."""
+    o = [f'struct {name} {{']
+    o += [f'    virtual void d{i}();' for i in range(slot)]
+    o += [f'    virtual ts4_word s{slot}();', '};']
+    return o
+
+
+def mangle_num(n):
+    """MSVC number encoding used in `$B` (vcall thunk) names: 1..10 -> digit, else hex nibbles + '@'."""
+    if n == 0:
+        return 'A@'
+    if n <= 10:
+        return str(n - 1)
+    h = ''
+    while n:
+        h = chr(ord('A') + (n & 15)) + h
+        n >>= 4
+    return h + '@'
+
+
+def vthunk_name(a, off):
+    """(class name, symbol of the compiler-generated vcall thunk) for a function at `a`."""
+    cls = f'ts4_vcall_slot{off // 4}_{a:08X}'
+    return cls, f'??_9{cls}@@$B{mangle_num(off)}AA'
+
+
+def build(res, group, path, cpp=False):
     """Write `group` (addresses into dict `res`) to `path`.
     Returns ([(name, addr)], {addr: (first_line, last_line)}). """
     # Callees are declared unprototyped (`ts4_word f();`) so that call sites with
@@ -61,20 +88,36 @@ def build(res, group, path):
         protos.update(res[a]['protos'])
     ext = {e for a in kept for e in res[a]['externs']}
     o = list(HDR)
+    if cpp:  # one class per vcall thunk; everything else is extern "C"
+        vth = {}
+        for a in kept:
+            if 'vthunk' in res[a]:
+                cls, sym = vthunk_name(a, res[a]['vthunk'])
+                start = len('\n'.join(o).split('\n')) + 1
+                # taking the address of a virtual member makes the compiler emit its vcall thunk
+                o.append(f'/* Swing_DLL.xex 0x{a:08X}: vcall thunk, virtual slot {res[a]["vthunk"] // 4} (symbol {sym}) */')
+                o += vt_class(cls, res[a]['vthunk'] // 4)
+                o.append(f'ts4_word ({cls}::*ts4_pm_{a:08X})() = &{cls}::s{res[a]["vthunk"] // 4};')
+                vth[a] = (sym, start, len(o))
+        o.append('extern "C" {')
     for e in sorted(ext):
         if e not in protos:
             o.append(f'extern char {e}[];')
     # a name used both as data address and as callee is declared as a function
     for p, n in sorted(protos.items()):
-        if p in HOST_BUILTINS:  # keep gcc/clang from rejecting the prototype
+        if p in HOST_BUILTINS and not cpp:  # keep gcc/clang from rejecting the prototype
             o += [f'#ifndef _MSC_VER', f'#define {p} ts4_host_{p}', '#endif']
-        o.append(f'ts4_word {p}();')
+        o.append(f'ts4_word {p}({", ".join(["ts4_word"] * n)});' if cpp else f'ts4_word {p}();')
     o.append('')
     maps, rng = [], {}
     for a in kept:
-        r = res[a]; nm = func_name(r, a)
+        r = res[a]
+        if 'vthunk' in r:
+            maps.append((vth[a][0], a)); rng[a] = vth[a][1:]
+            continue
+        nm = func_name(r, a)
         o.append(f'/* Swing_DLL.xex 0x{a:08X}: {r["kind"]} {", ".join(r["detail"][:6])} */')
-        start = len(o) + 1
+        start = len('\n'.join(o).split('\n')) + 1   # first line of the definition (entries hold several lines)
         body = strip_dead_locals(r['body'])
         unused = [p for p in re.findall(r'\ba\d+\b', r['sig']) if not re.search(r'\b' + p + r'\b', body)]
         if unused:
@@ -86,6 +129,8 @@ def build(res, group, path):
         o.append(r['sig'].replace('NAME', nm) + '\n{\n' + body + '}\n')
         rng[a] = (start, len('\n'.join(o).split('\n')))
         maps.append((nm, a))
+    if cpp:
+        o.append('}')
     Path(path).write_text('\n'.join(o))
     return maps, rng
 
@@ -101,19 +146,20 @@ def check(path, maps, flags=()):
 
 
 def cc_ok(path):
-    """Host syntax check required by AGENTS/brief."""
-    p = subprocess.run(['cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-fsyntax-only', str(path)],
+    """Host syntax check required by AGENTS/brief (C++ files: c++ -fsyntax-only)."""
+    cmd = ['c++', '-std=c++11', '-fsyntax-only'] if str(path).endswith('.cpp') else ['cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-fsyntax-only']
+    p = subprocess.run(cmd + [str(path)],
                        capture_output=True, text=True)
     return p.returncode == 0, p.stderr
 
 
-def run_group(res, group, path, tries=8, flags=()):
+def run_group(res, group, path, tries=8, flags=(), cpp=False):
     """build + check; on compiler errors drop the offending functions and retry.
     Returns (fn_check output, maps)."""
     group = list(group)
     out, maps = '', []
     for _ in range(tries):
-        maps, rng = build(res, group, path)
+        maps, rng = build(res, group, path, cpp)
         out = check(path, maps, flags)
         if 'compile failed' not in out:
             return out, maps
