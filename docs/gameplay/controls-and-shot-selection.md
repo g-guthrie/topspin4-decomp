@@ -321,8 +321,12 @@ Power is not only a tier: about 25 analyser graphs read S+0xE00 (cell 107) besid
 graphs, and output `AimingState` (cell 145), `ControlValues` (cells 286..297) and related control
 cells. So the hold time also feeds aiming precision and control directly (graph formulas: G1/G4b,
 `graphs.yaml`). Nothing in code scales ball speed by power. The tier picks the template row
-(gp4b, shot-to-template s7). `fn_886B5128 +0xC10` tests `S+0xE00 > cfg+0xC74` (0.7) for the
-"powerful ball" flag of the incoming-ball descriptor.
+(gp4b, shot-to-template s7). `fn_886B5128 +0xC10` (0x886B5D38) reads `cfg+0xC74`, which is
+**`Objective8AllAround.533e0737` = 0.7** inside the F2A0BD48 Objective block at `cfg+0xC34` (G5b names),
+not a tier edge: it sets the shot descriptor byte `+0x3F` when the chosen row is one of the
+`{Flat,Slice,TopSpin,Lob}Powerful` rows, or when it is a Risky row and `S+0xE00 > 0.7`; byte `+0x3E` is set
+for the RiskyFinesse/Finesse group. `cfg+0xC6C/0xC70` are not read through that base (G6b, V). The tier
+edges 0.15 / 0.70 come only from the three graphs above plus the `> 0.5` test in `fn_886872A0`.
 
 ## 6. The shot-selection decision tree (`Settings.bin`, H)
 
@@ -542,7 +546,10 @@ The AI goes through the same PlayerState and tree:
 | release countdown | 40 frames | `cfg+0x8CC` = PT+0x74C | data |
 | serve input delay / auto serve | 30 / 480 frames | `cfg+0x9A8` / `cfg+0x9AC` | data |
 | serve tier edges | 0.1 / 0.8 | `g_ts4_script_constants+0x2AC/+0x110`, `fn_886723A8` | code |
-| powerful-ball edge | 0.7 (`cfg+0xC74`), 0.4 at `cfg+0xC70` (U) | `fn_886B5128 +0xC10` | data |
+| descriptor byte +0x3F (Risky row, power) | > 0.7 (`cfg+0xC74` = Objective8AllAround.533e0737; `cfg+0xC70` not read) | `fn_886B5128 +0xC10` | data |
+| Fatality power edge | > 0.15 | `lbl_880D0934`, `fn_88697E98` | code |
+| swing reach speeds | 3.5 / 4.5 m/s | `PT+0x1B0/+0x1B4` | data |
+| wood arm radius^2 | 225 (15 cm) | `g_ts4_script_constants+0x4EC`, `fn_886D6EB0` | code |
 | wood timing edge | abs(t) >= 0.1 | `g_ts4_script_constants+0x2AC/+0x474` | code |
 | wood-down x clamp / radius^2 | +-50 / 640000 | `g_ts4_script_constants+0xF0/+0x570/+0x7EC` | code |
 | GoodTiming window | abs(t) < 0.3 .. 0.8 by skill | graph `GoodTiming` | data |
@@ -553,6 +560,8 @@ The AI goes through the same PlayerState and tree:
 | aim mirror | pi | `lbl_880C88DC` | code |
 
 ## 12. Open items
+
+G6b status (details in s17): items 2, 3, 4 answered; 1, 5, 6, 8 still open.
 
 1. **State hashes.** `0xAFAF1093`, `0x658B2E11`, `0xF6EB6636`, `0xA1903341`, `0x93E5E96D` are unnamed.
 2. **Unnamed fields.** `S+0x424..0x428` (e4e2402d: 707fdc19..888ddb39), `S+0x438` (d3ef3bda), `S+0x5C`
@@ -595,6 +604,10 @@ The AI goes through the same PlayerState and tree:
 | `fn_886A3440` tests `bb+0x47E` "reaction allowed" (movement-and-ai.md, gp3.md) | S+0x47E is `Buttons.LT`; PS Move synthesises it in `fn_886BD690` |
 | G2 s9: serve power is timing-derived through the shot power graphs | serve tier = toss fraction at release (`fn_886723A8`, 0.1 / 0.8) |
 | `00236a48` list = reward/coach evaluators (G2b draft) | per-shot control graphs (outputs ControlValues and AimingState) |
+| G2/G5: `cfg+0xC6C..0xC74` (0.3/0.4/0.7) are shot-request tier thresholds | they are `Objective8AllAround` fields; only `cfg+0xC74` is read (descriptor byte +0x3F, s5.3); tiers come from the graphs (G6b) |
+| G2b s15.5: Fatality = "AI S+0x4E0, human sticky RB + zone, power > 0.15" | Fatality = **not** (AI and S+0x4E0) **and not** (sticky RB and zone) **and** power > 0.15: going to the net blocks the put-away clip (G6b, s17) |
+| `S+0x4E0` = human serve-and-volley request | written only by the AI (`fn_886825A0 +0x1F4`); no InputMapper binding, so 0 for a pad player (G6b) |
+| wood radius `r28+0x4EC`, base unknown | `r28 = g_ts4_script_constants`, +0x4EC = 225 = 15^2 (G6b) |
 
 ## 14. Reproduction
 
@@ -612,6 +625,9 @@ TS4_MATCHING_DIR=work/matching-b9 python3 tools/fn_asm.py fn_8868F178 fn_886783B
     fn_886AE528 fn_8890E358 fn_88662458
 python3 work/disc/ppcd.py 886AD380 0x20        # rally+0x68 = clock at launch (fn_886AD278)
 grep -n "offset: 0x7c8" data/gameplay/graphs.yaml   # the 27 InsideOut graph inputs (s15.3)
+cc -std=c11 -Wall -Wextra -Werror -o /tmp/tsc ref/gameplay/test_swing_category.c ref/gameplay/swing_category.c -lm && /tmp/tsc
+TS4_MATCHING_DIR=work/matching-b9 python3 tools/fn_asm.py fn_886B0250 fn_886B01A8 fn_886AFDF8 \
+    fn_88697E98 fn_886AC7E0 fn_886DAA48 fn_886B0380 fn_886D6EB0 fn_886B5128   # s17
 ```
 
 ## 15. What RT and LT really do (agent G2b; answers the coordinator and R1 s8)
@@ -707,7 +723,7 @@ planner (stroke-side selection), not in the shot tree.
 | # | hypothesis | verdict |
 |---|---|---|
 | 1 | LT and RT both set `@Risk`; Risk only turns Slice into drop shot / drop volley; LT + X also drops; inside-out reads `Buttons.LT` and forces the stroke side outside the tree | **Confirmed** (H). LT + X = drop shot. Inside-out: `fn_886BD690` (request), `fn_886AE528` (decision), `fn_886A3440` -> `fn_886A2E48` (side commit) |
-| 2 | RB = follow-to-net / fast reposition; RB on a serve = serve & volley; LB may be dead | **Partly confirmed.** RB -> `@Rush`, `@ReqFastRepos`, `@ReqVolleyRepos`; the sticky `PC+0x3D` drives the condition `GoToNet` (0x7E522D55: sticky RB and `|player z| < PlayerTuning+0x6F0` = 300) and `Fatality` (0xC78C8F06: AI `S+0x4E0`, human sticky RB + the same zone test, and power > 0.15) in the swing-category rule list (`fn_886AFDF8` -> `fn_88697E98`, data at Settings file ~0x2AC00, category `0x1EB396F9`). `ReqVolleyRepos` is also read by the side filter `fn_8869A520 +0x210`. Serve & volley uses `S+0x4E0`; its human writer was not found (AI: `fn_886825A0`). RB's `@ReqFastRepos` 0x4E2 is read by `fn_8868C218` and `fn_8869B928`, `@Rush` 0x4DD by `fn_8865E430`. LB: `@ReqSpeedSwing` 0x4E1 is read by `fn_8868C660` and `fn_886BB0A8`, and the press edges `@OnRaiseReqBaselineRepos`/`@OnRaiseReqVolleyRepos` (0x4E3/0x4E4) by `fn_8866F9F0`; no reader of the level `@ReqBaselineRepos` 0x4DE was found. So LB is not dead in code even though the manual lists it as N/A (M) |
+| 2 | RB = follow-to-net / fast reposition; RB on a serve = serve & volley; LB may be dead | **Partly confirmed.** RB -> `@Rush`, `@ReqFastRepos`, `@ReqVolleyRepos`; the sticky `PC+0x3D` drives the condition `GoToNet` (0x7E522D55: sticky RB and `|player z| < PlayerTuning+0x6F0` = 300) and blocks `Fatality` (0xC78C8F06: false when the AI has `S+0x4E0` set or when sticky RB holds in the same zone; otherwise power > 0.15; corrected by G6b, s17) in the swing-category rule list (`fn_886AFDF8` -> `fn_88697E98`, data at Settings file ~0x2AC00, category `0x1EB396F9`). `ReqVolleyRepos` is also read by the side filter `fn_8869A520 +0x210`. Serve & volley uses `S+0x4E0`; its human writer was not found (AI: `fn_886825A0`). RB's `@ReqFastRepos` 0x4E2 is read by `fn_8868C218` and `fn_8869B928`, `@Rush` 0x4DD by `fn_8865E430`. LB: `@ReqSpeedSwing` 0x4E1 is read by `fn_8868C660` and `fn_886BB0A8`, and the press edges `@OnRaiseReqBaselineRepos`/`@OnRaiseReqVolleyRepos` (0x4E3/0x4E4) by `fn_8866F9F0`; no reader of the level `@ReqBaselineRepos` 0x4DE was found. So LB is not dead in code even though the manual lists it as N/A (M) |
 | 3 | Control / Normal / Power = Finesse / Medium / Powerful by hold time | **Confirmed** (H): < 0.1875 s, 0.1875..0.875 s, >= 0.875 s. The rows differ in template speed (gp4b); power also feeds 25 aiming/control graphs. Error growth with timing per tier is in those graphs (G4b) |
 | 4 | Late timing penalised more than early | **Confirmed for the serve** (H, s9.3 table). For groundstrokes the control graphs' timing curves are symmetric in `ManualShotTiming` (graph 188); the TimingValue computation itself is in the TimingState analysers (not traced here) |
 | 5 | Volleys ignore charge | **Confirmed for the row** (H): the volley branch (node 30) has no tier test, so the volley row is the same at any hold time. The charge counter still runs and S+0xE00 still feeds the analysers |
@@ -723,3 +739,85 @@ planner (stroke-side selection), not in the shot tree.
 - `Expressions.bin` (sha256 `1351c0b9...909d`) does not parse with `ts4_analyser.py` ("unexpected
   signature"), so TU1 graph changes were not compared.
 - TU1 also ships `Swing_DLL.xexp` (a code patch, not analysed) and a new `Layoutall.bin`.
+
+## 17. Swing-category rule lists and G6b answers
+
+Agent G6b. V = read instruction by instruction in `Swing_DLL.dll` (capstone 5, base 0x88000000).
+Data: `data/gameplay/shot_tree.yaml` `swing_category_rules` (same command as s14). Reference model:
+`ref/gameplay/swing_category.{h,c}` with `test_swing_category.c` (synthetic).
+
+### 17.1 Who writes SwingCategory (S+0x360) (V)
+
+1. `fn_886B3CF8` (normal request) calls `fn_886B0250(ctrl, 0)`. The autoswing check `fn_886B0380` runs
+   the analyser at `ctrl+0x2A0` (volley) or `+0x25C` (baseline), writes `TimingState.0eaa0333`
+   (S+0xD10) = `AutoSwingEvaluation` (S+0x7B4 volley / S+0x7B0 baseline) > 0.5, then calls
+   `fn_886B0250(ctrl, 1)`.
+2. `fn_886B0250` picks the **mode**: Normal for a normal request; otherwise `AutoSwingGood` (baeb910f)
+   when S+0xD10 or `SlowDown` (S+0x7CC) > 0.5, else `AutoSwingBad` (3b574c5b).
+3. `fn_886B01A8` picks the **class** from the swing class key S+0x35C, which `fn_886872A0` writes:
+   Smash; else for volleys TopSpin -> VolleyPower, other -> VolleyStandard; else Slice/DropShot ->
+   Slice; else RequireFinesse -> FlatFinesse; else FlatPower.
+4. `fn_886AFDF8` walks the list at `PT+0x4D8 + 0x48*mode + 0xC*class` (descriptor {rel, count, cap}).
+   Each 0x14-byte row is {Value, AltValue 5d78dedc, Condition 2ce1ada4, SkillId, byte EasyAutoSwing
+   5b9470b9, byte e0dcd0b9}. The first row whose condition holds is stored to S+0x360 and the clip
+   query runs; on "no clip" (-1) AltValue is tried; the walk stops at the first row whose query
+   started a clip. If none does, the last row tried stays in S+0x360.
+5. `fn_886AC7E0` (the query) loops `SwingPreferenceLevel` 8, 7, 6, 5, 4, 3 (PT+0x5B0), writes each to
+   S+0x380 and calls `fn_886DAA48(animsel, autoswing, frames, flag)`. With autoswing 0 it starts the
+   clip (`fn_886CEA10`) and returns 0, or -1. With autoswing 1 it returns the frames until the racket
+   event (0 when within `frames`), and the walk sets the autoswing-due flag `PC+0x59C` when that is
+   below the limit. Frame pairs (window, limit): 5/8 default, 10/20 inside-out, 15/20 with S+0xBD2
+   (PT+0x6D0..0x6E4).
+
+Shipped rows (Normal mode; the AutoSwing lists are similar, see the YAML):
+
+| class | rows in order (Value <- condition) |
+|---|---|
+| FlatPower, FlatFinesse | Fatality <- Fatality; FlatFollowNet <- GoToNet; FlatPerfect <- IsPerfect; FlatClay <- 693616c3; FlatGoodReach <- de050fd0; FlatBadReach <- 42864090; FlatPower <- None; FlatReturn <- IsFastBall |
+| Slice | SliceFollowNet <- GoToNet; SliceClay <- 693616c3; DropShot <- DropShot; SliceGoodReach <- de050fd0; FlatBadReach <- 42864090; Slice <- None; SliceReturn <- IsFastBall |
+| VolleyStandard / VolleyPower | VolleyDropShot <- DropShot; VolleyForward <- VolleyForward; VolleyStandard/VolleyPower <- IsGoodVolleyRelease; VolleySpectacular <- VolleySpectacular; VolleyReflex <- None |
+| Smash | Smash <- None |
+
+`0x1EB396F9` = crc32("FlatFollowNet") (the category G2b could not name).
+
+### 17.2 Conditions (`fn_88697E98`, V)
+
+| condition | true when |
+|---|---|
+| None dfa2aff1 | always |
+| Fatality c78c8f06 | not (AI and S+0x4E0) and not (sticky RB `PC+0x3D` and `fn_8866B6E0` zone \|z\| < PT+0x6F0 = 300) and S+0xE00 > 0.15 |
+| GoToNet 7e522d55 | sticky RB and the zone |
+| IsPerfect 07f0df25 | `PerfectShotEvaluation` S+0x7D4 > 0.5 |
+| 693616c3 | min(LeftLine.MinSpeed S+0xA5C, RightLine.MinSpeed S+0xABC) > PT+0x1B0 (3.5 m/s) |
+| 60d5b606 | the same minimum > PT+0x1B4 (4.5) |
+| de050fd0 | minimum > 3.5 and (AI or -0.3 < ManualShotTiming S+0x544 < 0.1) |
+| 42864090 | minimum > 4.5 and not in that window |
+| BadTiming d00ac582 | TimingValue S+0xD08 > 0.1 |
+| 4041760a | S+0x544 > 0.1 and SlowDown < 0.5 (no shipped row uses it) |
+| IsFastBall fe98362e | S+0x5DD or S+0x5DF (IsBaselineFastBall acfa7448) |
+| DropShot 990377a5 | latched stroke ctx+0x3C == DropShot |
+| VolleyForward 7d633a62 | S+0x8E0 + (team mode 2 ? 600 : 450) < 0 and stroke not Slice/DropShot |
+| IsGoodVolleyRelease 28d4d485 / IsBadVolleyRelease de102fec | S+0x7B8 > 0.5 / its inverse |
+| VolleySpectacular 1de220e2 | S+0x388 |
+| InsideOut bd8ea388 | S+0x5DB (IsInsideOut) |
+| SkillRequired c42ef3fe | `fn_8868F0D8(SkillId)` |
+
+So a **Fatality (put-away) swing** is played by a human when the shot is not a tap (power > 0.15),
+the player is not following to the net with RB inside 3 m of it, the class is FlatPower or FlatFinesse
+(not Slice, volley or smash), and a clip of category Fatality matches the other keys at some
+preference level. The four unnamed conditions are named in `shot_tree.py` by their tests only.
+
+### 17.3 Answers to s12 and G2b
+
+| item | answer |
+|---|---|
+| S+0x424..0x427 (e4e2402d) | GoToVolley 707fdc19, GoToBaseline a56afcd0, FreeMove1 fe4df5f2, FreeMove2 6744a448 (crc32 checked); 888ddb39 "SwitchToNext" doubtful |
+| other names | AutoSwingEvaluation 533fe6b7 (S+0x7B0), SlowDown dd446c94 (S+0x7CC), PerfectShotEvaluation a0f3af10 (S+0x7D4), MoveToBaseline bde7e956 (S+0x3C0), IsInsideOut (S+0x5DB) |
+| S+0x4E0 human writer | none: one writer, the AI `fn_886825A0` at 0x88682794 (= S+0x4DF, command float > f30); no InputMapper binding, so a pad player keeps 0 |
+| wood radius `r28+0x4EC` | `r28 = g_ts4_script_constants`; +0x4EC = 225 (15 cm squared). `fn_886D6EB0` also requires the clip property WoodUpCompliant (`fn_886C87B8`) and uses heights 250 / 13 (+0x35C / +0x714) |
+| cfg+0xC6C..0xC74 | Objective8AllAround fields; see s5.3 |
+| 08950daa | `MatchAnalyser.Flammable` (+0xF94): `fn_886BDCC0` 0x886BE0B8..D4 stores 1.0 when team counter +0x30 >= 4; accepted in `names.yaml` |
+
+Still open: the state hashes (s12.1), the inside-out geometry and its skill (s12.5-6), the consumer
+of `00236a48`, the InputMapper `+0x18/+0x24` blocks, and the names of the conditions 693616c3,
+60d5b606, de050fd0, 42864090, 4041760a.

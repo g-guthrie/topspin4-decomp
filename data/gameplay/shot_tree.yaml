@@ -996,8 +996,8 @@ power:
   power2_curve_default_cfg_0x908: [[0.0, 1.0, 0.0, 1.0]]
   power_curve_alt_cfg_0x914: [[0.0, 1.25, 0.0, 1.0]]
   power2_curve_alt_cfg_0x920: [[0.0, 0.9, 0.0, 1.0]]
-  cfg_0xc70: 0.4
-  cfg_0xc74: 0.7
+  objective8allaround_b0f5d5f5_cfg_0xc70: 0.4
+  objective8allaround_533e0737_cfg_0xc74: 0.7
   swing_lead_frames_cfg_0x8c0: 12
   serve_lead_frames_cfg_0x8c4: 12
   release_countdown_frames_cfg_0x8cc: 40
@@ -1339,6 +1339,607 @@ input_mapper:
             power_range: [0.0, 1.0]
             word_0x20: 0
             flags_0x24: 0x00010000
+swing_category_rules:
+  source: "PlayerTuning (cfg+0x180) SwingSelectionCategory, file 0x67c"
+  row_fields: "Value, AltValue (5d78dedc, used when no clip matches Value), Condition (2ce1ada4), SkillId, EasyAutoSwing (5b9470b9), e0dcd0b9"
+  modes:
+    Normal:
+      FlatPower:
+        - value: Fatality
+          alt: null
+          condition: Fatality
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatFollowNet
+          alt: null
+          condition: GoToNet
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatPerfect
+          alt: null
+          condition: IsPerfect
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatClay
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatGoodReach
+          alt: null
+          condition: de050fd0
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatBadReach
+          alt: null
+          condition: 42864090
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatPower
+          alt: FlatTooLate
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatReturn
+          alt: null
+          condition: IsFastBall
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      FlatFinesse:
+        - value: Fatality
+          alt: null
+          condition: Fatality
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatFollowNet
+          alt: null
+          condition: GoToNet
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatPerfect
+          alt: null
+          condition: IsPerfect
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatClay
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatGoodReach
+          alt: null
+          condition: de050fd0
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatBadReach
+          alt: null
+          condition: 42864090
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatPower
+          alt: FlatTooLate
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatReturn
+          alt: null
+          condition: IsFastBall
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      Slice:
+        - value: SliceFollowNet
+          alt: null
+          condition: GoToNet
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: SliceClay
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: DropShot
+          alt: null
+          condition: DropShot
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: SliceGoodReach
+          alt: null
+          condition: de050fd0
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatBadReach
+          alt: null
+          condition: 42864090
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: Slice
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: SliceReturn
+          alt: FlatReturn
+          condition: IsFastBall
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+      VolleyStandard:
+        - value: VolleyDropShot
+          alt: null
+          condition: DropShot
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyForward
+          alt: null
+          condition: VolleyForward
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: VolleyStandard
+          alt: null
+          condition: IsGoodVolleyRelease
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleySpectacular
+          alt: null
+          condition: VolleySpectacular
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyReflex
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      VolleyPower:
+        - value: VolleyDropShot
+          alt: null
+          condition: DropShot
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyForward
+          alt: null
+          condition: VolleyForward
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: VolleyPower
+          alt: null
+          condition: IsGoodVolleyRelease
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleySpectacular
+          alt: null
+          condition: VolleySpectacular
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyReflex
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      Smash:
+        - value: Smash
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+    AutoSwingGood:
+      FlatPower:
+        - value: Fatality
+          alt: null
+          condition: Fatality
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatFollowNet
+          alt: null
+          condition: GoToNet
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatClay
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatPower
+          alt: FlatTooLate
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatReturn
+          alt: null
+          condition: IsFastBall
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatGoodReach
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatBadReach
+          alt: null
+          condition: 60d5b606
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      FlatFinesse:
+        - value: Fatality
+          alt: null
+          condition: Fatality
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatFollowNet
+          alt: null
+          condition: GoToNet
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatClay
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatPower
+          alt: FlatTooLate
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatReturn
+          alt: null
+          condition: IsFastBall
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatGoodReach
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatBadReach
+          alt: null
+          condition: 60d5b606
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      Slice:
+        - value: SliceFollowNet
+          alt: null
+          condition: GoToNet
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: SliceClay
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: SliceGoodReach
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: Slice
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: SliceReturn
+          alt: FlatReturn
+          condition: IsFastBall
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+      VolleyStandard:
+        - value: VolleyDropShot
+          alt: null
+          condition: DropShot
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyForward
+          alt: null
+          condition: VolleyForward
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: VolleyStandard
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleySpectacular
+          alt: null
+          condition: VolleySpectacular
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyReflex
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      VolleyPower:
+        - value: VolleyDropShot
+          alt: null
+          condition: DropShot
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyForward
+          alt: null
+          condition: VolleyForward
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: VolleyPower
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleySpectacular
+          alt: null
+          condition: VolleySpectacular
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyReflex
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      Smash:
+        - value: Smash
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+    AutoSwingBad:
+      FlatPower:
+        - value: Fatality
+          alt: null
+          condition: Fatality
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatFollowNet
+          alt: null
+          condition: GoToNet
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatClay
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatBadReach
+          alt: null
+          condition: 60d5b606
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatGoodReach
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatReturn
+          alt: null
+          condition: IsFastBall
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatTooLate
+          alt: FlatPower
+          condition: BadTiming
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      FlatFinesse:
+        - value: Fatality
+          alt: null
+          condition: Fatality
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatFollowNet
+          alt: null
+          condition: GoToNet
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatClay
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatBadReach
+          alt: null
+          condition: 60d5b606
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: FlatGoodReach
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatReturn
+          alt: null
+          condition: IsFastBall
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatTooLate
+          alt: FlatPower
+          condition: BadTiming
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      Slice:
+        - value: SliceFollowNet
+          alt: null
+          condition: GoToNet
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: SliceClay
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: FlatBadReach
+          alt: null
+          condition: 60d5b606
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: SliceGoodReach
+          alt: null
+          condition: 693616c3
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+        - value: Slice
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: SliceReturn
+          alt: FlatReturn
+          condition: IsFastBall
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+      VolleyStandard:
+        - value: VolleyDropShot
+          alt: null
+          condition: DropShot
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleySpectacular
+          alt: null
+          condition: VolleySpectacular
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyReflex
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      VolleyPower:
+        - value: VolleyDropShot
+          alt: null
+          condition: DropShot
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleySpectacular
+          alt: null
+          condition: VolleySpectacular
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+        - value: VolleyReflex
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 0
+          e0dcd0b9: 0
+      Smash:
+        - value: Smash
+          alt: null
+          condition: None
+          skill_id: null
+          easy_autoswing: 1
+          e0dcd0b9: 0
+  conditions:
+    42864090: "min(MinSpeed) > PT+0x1B4 and not (PT+0x5C8 < ManualShotTiming < PT+0x5C4)"
+    60d5b606: "min(LeftLine.MinSpeed, RightLine.MinSpeed) > PT+0x1B4"
+    693616c3: "min(LeftLine.MinSpeed S+0xA5C, RightLine.MinSpeed S+0xABC) > PT+0x1B0"
+    BadTiming: "TimingState.TimingValue S+0xD08 > PT+0x5BC"
+    DropShot: shot id ctx+0x3C == DropShot
+    Fatality: "not following to the net (human: !(sticky RB && |z| < PT+0x6F0); AI: !S+0x4E0) and power S+0xE00 > 0.15"
+    GoToNet: "sticky RB (PC+0x3D, InputState.ReqVolleyRepos) and |z| < PT+0x6F0 (fn_8866B6E0)"
+    IsFastBall: Context.IsFastBall S+0x5DD or Context.IsBaselineFastBall S+0x5DF
+    IsGoodVolleyRelease: "S+0x7B8 (7e28dbc0.b928d859) > 0.5"
+    IsPerfect: "PerfectShotEvaluation S+0x7D4 > 0.5"
+    None: always (None)
+    VolleyForward: "LocalPosition S+0x8E0 + (team mode 2 ? 600 : 450) < 0 and shot id not Slice/DropShot"
+    VolleySpectacular: AnimationSelection.SwingSelection.VolleySpectacular S+0x388
+    de050fd0: "min(MinSpeed) > PT+0x1B0 and (AI or PT+0x5C8 < ManualShotTiming S+0x544 < PT+0x5C4)"
+  preference_level_names: [8, 7, 6, 5, 4, 3]
+  thresholds:
+    min_speed_reach_mps_pt_0x1b0: 3.5
+    min_speed_bad_reach_mps_pt_0x1b4: 4.5
+    late_timing_pt_0x5bc: 0.1
+    pt_0x5c0: -1.0
+    timing_window_hi_pt_0x5c4: 0.1
+    timing_window_lo_pt_0x5c8: -0.3
+    pt_0x5cc: 0.2
+    pt_0x5d0: -0.5
+    net_zone_abs_z_pt_0x6f0: 300.0
+  autoswing_frames:
+    default_pt_0x6d0: [5, 8]
+    inside_out_pt_0x6d8: [10, 20]
+    bd2_pt_0x6e0: [15, 20]
 tier_graphs:
   Finesse:
     inputs:

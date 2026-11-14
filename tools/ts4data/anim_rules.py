@@ -510,7 +510,7 @@ def emit(o, db, sa, sources, cmd):
     w("planner_parameters: {%s}\n" % ", ".join("%s: %s" % (q(k), fnum(v)) for k, v in sa["planner_parameters"].items()))
     w("planner_target: {%s}\n" % ", ".join("%s: %s" % (q(k), fnum(v)) for k, v in sa["planner_target"].items()))
     w("\n# Selection procedures: qualifier filter trees (all / any / not; equals = constant value,\n")
-    w("# match_key(_mask) = value read from gameplay through KeyXPath).  Exclusive = the clip must carry only that value.\n")
+    w("# match_key(_mask) = value read from gameplay through KeyXPath).  Exclusive = clip mask equals the value mask (00000000 = no value); else all value bits present (fn_886C9F08, G6b).\n")
     w("selection_procedures:\n")
     for pid, terms in sa["selection_procedures"]:
         w("  - id: %s\n    terms:\n" % q(pid))

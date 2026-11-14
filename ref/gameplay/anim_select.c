@@ -6,25 +6,54 @@
 
 #include <math.h>
 
-static int leaf(const AsClip *c, int qtype, uint32_t want_mask, int exclusive)
+/* fn_886C9F08 (V).  `want` is the node's mask: a value index becomes 1 << index and
+ * AS_VALUE_NONE / AS_KEY_UNSET become mask 0. */
+static uint32_t idx_mask(uint32_t index)
+{
+    return index < 32 ? 1u << index : 0u;
+}
+
+static int have_mask(const AsClip *c, int qtype, uint32_t *have)
 {
     if (qtype < 0 || qtype >= AS_QUALIFIER_TYPES)
         return 0;
-    uint32_t have = c->q[qtype];
+    *have = c->q[qtype];
+    return 1;
+}
+
+/* equals (00bf4ffc) and match_key_mask (1ae94a04): exclusive is clip == want, otherwise every
+ * wanted bit must be present.  Exclusive with want 0 means "the clip carries no value". */
+static int leaf_mask(const AsClip *c, int qtype, uint32_t want, int exclusive)
+{
+    uint32_t have;
+    if (!have_mask(c, qtype, &have))
+        return 0;
+    return exclusive ? have == want : (have & want) == want;
+}
+
+/* match_key (332e57c4): exclusive is clip == key.  Otherwise an unset key wants an unconstrained
+ * clip, an unconstrained clip passes any set key, and else every key bit must be present. */
+static int leaf_key(const AsClip *c, int qtype, uint32_t want, int exclusive)
+{
+    uint32_t have;
+    if (!have_mask(c, qtype, &have))
+        return 0;
     if (exclusive)
-        return have != 0 && (have & ~want_mask) == 0;
-    return have == 0 || (have & want_mask) != 0;
+        return have == want;
+    if (want == 0)
+        return have == 0;
+    return have == 0 || (have & want) == want;
 }
 
 int as_eval(const AsNode *n, const AsClip *c, const uint32_t *keys)
 {
     switch (n->kind) {
     case AS_NODE_EQUALS:
-        return leaf(c, n->qtype, 1u << n->value, n->exclusive);
+        return leaf_mask(c, n->qtype, idx_mask(n->value), n->exclusive);
     case AS_NODE_MATCH_KEY:
-        return leaf(c, n->qtype, 1u << keys[n->key], n->exclusive);
+        return leaf_key(c, n->qtype, idx_mask(keys[n->key]), n->exclusive);
     case AS_NODE_MATCH_KEY_MASK:
-        return leaf(c, n->qtype, keys[n->key], n->exclusive);
+        return leaf_mask(c, n->qtype, keys[n->key], n->exclusive);
     case AS_NODE_ALL:
         for (int i = 0; i < n->nchildren; ++i)
             if (!as_eval(n->children[i], c, keys))
@@ -43,7 +72,7 @@ int as_eval(const AsNode *n, const AsClip *c, const uint32_t *keys)
 
 static int key_ok(const AsClip *c, int qtype, int value)
 {
-    return value < 0 || leaf(c, qtype, 1u << value, 0);
+    return value < 0 || leaf_key(c, qtype, idx_mask((uint32_t)value), 0);
 }
 
 int as_swing_matches(const AsClip *c, const AsSwingKeys *k)

@@ -13426,7 +13426,7 @@ planner_parameters: {"12252d0f": 1.0, "79f3ff55": 20.0, "288efa50": 15.0, "5c727
 planner_target: {"Position[0]": 30.0, "Position[1]": 120.0, "Position[2]": -120.0, "Position[3]": 0.0, MinTime: 0, MaxTime: 25}
 
 # Selection procedures: qualifier filter trees (all / any / not; equals = constant value,
-# match_key(_mask) = value read from gameplay through KeyXPath).  Exclusive = the clip must carry only that value.
+# match_key(_mask) = value read from gameplay through KeyXPath).  Exclusive = clip mask equals the value mask (00000000 = no value); else all value bits present (fn_886C9F08, G6b).
 selection_procedures:
   - id: Clay
     terms:

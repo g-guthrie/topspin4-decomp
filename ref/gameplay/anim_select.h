@@ -62,15 +62,23 @@ typedef struct AsNode {
     int qtype;                           /* leaf: qualifier type index */
     uint32_t value;                      /* EQUALS: value index */
     int key;                             /* MATCH_KEY(_MASK): index into the key array */
-    int exclusive;                       /* leaf: the clip must carry only the wanted value(s) */
+    int exclusive;                       /* leaf: the clip mask must equal the wanted mask (V) */
     const struct AsNode *const *children;
     int nchildren;
 } AsNode;
 
-/* Evaluate a selection-procedure node against a clip.  keys[] holds the
- * gameplay key values (value index for MATCH_KEY, mask for MATCH_KEY_MASK).
- * A clip whose mask for the type is 0 is unconstrained and passes a
- * non-exclusive leaf (I: 0 = wildcard, consistent with the counts). */
+/* Value index meaning "no value" (the 00000000 procedure values): mask 0. */
+#define AS_VALUE_NONE 0xFFFFFFFFu
+#define AS_KEY_UNSET  0xFFFFFFFFu
+
+/* Evaluate a selection-procedure node against a clip (fn_886C9F08, V, G6b).
+ * keys[] holds the gameplay key values (value index for MATCH_KEY, mask for
+ * MATCH_KEY_MASK).  want = 1 << index, or 0 for AS_VALUE_NONE/AS_KEY_UNSET.
+ *   EQUALS, MATCH_KEY_MASK: exclusive -> have == want; else (have & want) == want
+ *                           (so exclusive with want 0 = "clip has no value of the type")
+ *   MATCH_KEY: exclusive -> have == want; else want 0 -> have == 0;
+ *              have 0 -> pass; else (have & want) == want
+ * The 9e4d5a77 AnimEvent-id node is not modelled. */
 int as_eval(const AsNode *n, const AsClip *c, const uint32_t *keys);
 
 /* The seven swing keys (qualifier_sources, V): PlayerState offsets of

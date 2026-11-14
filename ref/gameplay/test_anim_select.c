@@ -51,6 +51,22 @@ static void test_filters(void)
     AsNode eq = {AS_NODE_EQUALS, AS_Q_SWING_TYPE, 2, 0, 1, 0, 0};
     CHECK(!as_eval(&eq, &fh, keys) && as_eval(&eq, &bh, keys));
 
+    /* exact fn_886C9F08 rules: exclusive EQUALS with the 00000000 value = "no value of the type" */
+    AsNode none_x = {AS_NODE_EQUALS, Q_SURFACE, AS_VALUE_NONE, 0, 1, 0, 0};
+    AsNode none_n = {AS_NODE_EQUALS, Q_SURFACE, AS_VALUE_NONE, 0, 0, 0, 0};
+    CHECK(!as_eval(&none_x, &fh, keys) && as_eval(&none_x, &bh, keys));
+    CHECK(as_eval(&none_n, &fh, keys) && as_eval(&none_n, &bh, keys));
+    /* non-exclusive EQUALS: the wanted bit must be present (an empty clip fails) */
+    AsNode clay_eq = {AS_NODE_EQUALS, Q_SURFACE, 0, 0, 0, 0, 0};
+    CHECK(as_eval(&clay_eq, &fh, keys) && !as_eval(&clay_eq, &bh, keys));
+    /* MATCH_KEY with an unset key wants an unconstrained clip */
+    uint32_t unset[2] = {0, AS_KEY_UNSET};
+    CHECK(!as_eval(&clay, &fh, unset) && as_eval(&clay, &bh, unset));
+    /* exclusive leaves need equality: a clip carrying two values fails a one-value test */
+    AsClip both = fh;
+    both.q[Q_SURFACE] = 3u;
+    CHECK(as_eval(&clay, &both, keys) && !as_eval(&clay_x, &both, keys));
+
     AsSwingKeys k = {0, -1, -1, -1, -1, -1, 1};   /* Timing Good, FH */
     CHECK(as_swing_matches(&fh, &k) && !as_swing_matches(&bh, &k));
     k.swing_type = 2;

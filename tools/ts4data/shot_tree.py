@@ -21,7 +21,10 @@ Format notes (big-endian; ``rel`` = signed 32-bit offset from the field that hol
     cfg+0x08 {rel, count, cap}     template rows, 0x8C bytes each, row id at row+0x88
     cfg+0x8E0 {rel, count, cap}    InputMapper configs (0x40 bytes each)
     cfg+0x8FC/0x908/0x914/0x920    curve16 {rel,count,cap} -> keys {x0, x1, y0, y1}
-    cfg+0xC70/0xC74                f32 0.4 / 0.7
+    cfg+0xC70/0xC74                f32 0.4 / 0.7: members of Objective8AllAround (type F2A0BD48 block at
+                                   cfg+0xC34, per-play-style objectives), NOT power-tier edges.  Only
+                                   cfg+0xC74 is read (0x886B5D38): the "powerful" byte of the shot
+                                   descriptor for the Risky rows.  Tier edges: graphs Finesse/Medium/Powerful.
   tree node  {rel children, 2, 2, condition crc32, rel path string, pre-order index}
              child = {rel, type}: type 0x48BFC8B8 = node, 0x2C3F7780 = leaf {shot id, row index}
              child 0 is taken when the condition byte is 1, child 1 otherwise (fn_8865A938)
@@ -703,8 +706,10 @@ def extract(settings: bytes, expressions: bytes | None, layout_bytes: bytes | No
         "power2_curve_default_cfg_0x908": read_curve16(b, CFG + 0x908),
         "power_curve_alt_cfg_0x914": read_curve16(b, CFG + 0x914),
         "power2_curve_alt_cfg_0x920": read_curve16(b, CFG + 0x920),
-        "cfg_0xc70": b.f32(CFG + 0xC70),
-        "cfg_0xc74": b.f32(CFG + 0xC74),
+        # Objective8AllAround.b0f5d5f5 / .533e0737 (G5b names; doc s5.3): not tier edges.  0x886B5D38
+        # reads only cfg+0xC74, as "power > it" for the Risky rows' powerful-shot byte.
+        "objective8allaround_b0f5d5f5_cfg_0xc70": b.f32(CFG + 0xC70),
+        "objective8allaround_533e0737_cfg_0xc74": b.f32(CFG + 0xC74),
         # human swing/serve timing words of PlayerTuning (cfg+0x180): PT+0x740 swing lead (planner
         # runs when contact frame - now <= it), PT+0x744 serve lead, PT+0x74C release countdown
         "swing_lead_frames_cfg_0x8c0": b.i32(CFG + 0x8C0),

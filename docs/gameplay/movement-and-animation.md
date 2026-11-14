@@ -118,7 +118,18 @@ Counts are in the YAML `clip_classes`. Properties counts:
 | TrickShot | 4 |
 | PowerfulShot | 4 |
 
-`SwingPreferenceLevel` is 5 for 2,952 clips and 3..8 for the rest. It is a likely tie-break weight (I; reader not found).
+`SwingPreferenceLevel` is 5 for 2,952 clips and 3..8 for the rest. It is **not** a tie-break weight: the swing query
+`fn_886AC7E0` writes the levels 8, 7, 6, 5, 4, 3 (PlayerTuning list PT+0x5B0) one by one into the key S+0x380 and keeps
+the first level for which a clip starts (G6b, V; s6).
+
+**Property readers (G6b, V).** The table offsets above are relative to the Properties block; code addresses the
+record directly, 0x14 higher:
+* Tolerancy (record +0x30..+0x44): `fn_886D3310` copies the six values into per-clip arrays at selector
+  +0x40/+0x4C/+0x58/+0x64/+0x70/+0x7C; `fn_886D7638` is a debug live editor of the same values (GameplayInterface
+  +0x298..+0x2A8). The consumer of those arrays was not traced.
+* AngleClamp Left/Right (record +0x48/+0x4C): `fn_886DAA48` copies them into AnimIface +0x44C/+0x450 when it starts a swing.
+* MaximumOccurency (record +0x54): `fn_886CD880` copies it into a per-clip counter array at selector +0x14C;
+  `fn_886C50D0` resets PlayCountStat (+0x88).
 
 ### 1.3 Groups, sub-groups, move sets
 
@@ -247,8 +258,10 @@ The chain from the pad to a playing clip:
 * RushSpeedCoef (`S+0x398`) and SwingSpeedCoef (`S+0x378`) are analyser-graph outputs fed by Profile.Speed, CurrentVigor
   and the fatigue level (G1 `graphs-catalogue.md`). They feed the play rate of the Rush and swing groups. So fatigue
   slows the **animations** as well as the planner speed (I).
-* RB sprint enters through the input mapper. Its write to an animation key was not traced (U). It most plausibly
-  selects the Rush regime or move set.
+* RB sprint enters through the input mapper (`@Rush` S+0x4DD, `@ReqFastRepos` S+0x4E2, `@ReqVolleyRepos` S+0x4E4;
+  controls-and-shot-selection s15.5). On the swing side the sticky RB (`PC+0x3D`) inside 300 cm of the net selects the
+  category FlatFollowNet/SliceFollowNet (condition GoToNet) and blocks Fatality (G6b, V). Its path into the locomotion
+  keys (Rush regime / move set) was still not traced (U).
 
 ## 3. Special and automatic swings
 
@@ -269,7 +282,7 @@ selected and what it does; confidence is per row.
 | Spectacular | `Properties=Spectacular` 92 (BadReach jog clips, reflex volleys, 4 dives) | Selected like reach when the reach class carries the tag | SpectacularAnimation reward (I: tag cell k0) |
 | Dive volley | 4 clips `Swing_Volley_FH/BH_Dive_Stand_OpenStance_Waist`, SwingCategory VolleySpectacular, AnimEvent `Dive` | `fn_886BCE88` sets `S+0x388` VolleySpectacular (`stb r11,0x388(r29)`, about 0x886BD5C0..0x886BD620) when all of: x > -600 cm (pool+0x390); team mode != 2; ctx+0x3B8 set; skill SpectacularVolleys 0x1E8D4F10 (`fn_8868F0D8`); TimingState `S+0xD00` > 60 and `S+0xCF0` < 45 (V). Condition procedure "Dive" reads that key, and procedure "VolleySpectacular" filters on it (V) | Spectacular reward; confirms R1 hypothesis 20. C: `as_volley_spectacular` |
 | Rushing | Rush group, 10 x 2 clips, `Properties=Rushing` | Planner regime Rush (20) and move set Rush; speed scaled by RushSpeedCoef | RushingAnimation reward; RushingToBall when distance > cfg+0xC4 and ratio > cfg+0xC8 (`as_rushing_to_ball`) |
-| Put-away ("Fatality") | 74 clips, groups Swings_FH_Fatality, SwingCategory Fatality | Gameplay writes SwingCategory (`S+0x360`) Fatality (I; writer not traced) | Fatality reward when `S+0xE00 > cfg+0x934` (ball-physics.md) |
+| Put-away ("Fatality") | 74 clips, groups Swings_FH_Fatality, SwingCategory Fatality | `fn_886AFDF8` writes SwingCategory (`S+0x360`) Fatality as the first FlatPower/FlatFinesse row when: not (AI and S+0x4E0), not (sticky RB within 300 cm of the net), power S+0xE00 > 0.15 (G6b, V; s6) | Fatality reward when `S+0xE00 > cfg+0x934` (ball-physics.md) |
 | Tweener (trick shot) | 4 clips `Swing_(FHBH|BH)_Trick_Jog_Back_Medium_GoodPos_Knee`, `Properties=TrickShot` | Automatic when running back to a lob at knee height (direction Back, Jog). Selected by sector Back plus the fit (I) | TrickShot reward (+0x37F) |
 | Powerful shot | 4 BH 2H Power Steps clips, `Properties=PowerfulShot` | Power key VeryGood with steps (I) | PowerfulShotAnimation reward |
 | Reflex / auto volley | VolleyReflex 100, `Properties=ReflexVolley` 16 | PositionOnCourt=Volley with low time (I) | ReflexVolleyAnimation reward |
@@ -283,11 +296,13 @@ selected and what it does; confidence is per row.
 
 Reward edge detection (`fn_88697118`, the tag tracker):
 
-* Cells k0..k6 and k16 are raised by the playing clip's Properties: Spectacular, SwingReach, Rushing, PowerfulShot,
-  ReflexVolley, Smash and TrickShot, plus Fatality.
+* `fn_886750D0` binds the tag cells to rows of the `8ea88f9f/Qualifier` list at S+0x2A0 (G6b, V). Properties
+  cells: k0 Spectacular, k1 SwingReach, k2 Rushing, k3 PowerfulShot, k4 ReflexVolley, k5 Smash, k6 TrickShot,
+  k7 BadControl, k8 WrongFoot, k9 56d002df and k10 Effort ef823202 (both absent from the data), k11/k12
+  FrustrationLow/High, k13..k15 VictoryLow/Medium/High; k16 is SwingCategory == Fatality.
 * Each reward fires once per clip, on the rising edge.
 * C: `as_rewards_from_props`, `as_reward_edges`.
-* Confidence: the cell names are V from the reward table (gp1); the cell-to-Properties binding is I.
+* Confidence: the cell names are V from the reward table (gp1); the cell-to-Properties binding is V (G6b).
 
 ## 4. Selection mechanics
 
@@ -305,11 +320,16 @@ Reward edge detection (`fn_88697118`, the tag tracker):
   | `1ae94a04` | match_key_mask (mask read from a key) |
 
   Every leaf has an `Exclusive` flag. The tree is V. C: `as_eval`.
-* **Exclusive semantics (U).** Two readings fit the data:
-  * the clip must carry only the wanted value (implemented); or
-  * clips that carry the value are reserved for this procedure and are excluded elsewhere. Procedures `Volley`,
-    `Baseline` and `VolleySpectacular` are Exclusive equals filters, which fits the second reading.
-* **A zero mask** on a clip means the clip is unconstrained (I). For example, about 100 swings have no Timing bit.
+* **Exclusive semantics (V, G6b, evaluator `fn_886C9F08`).** `want` is the node's mask (the value's bit; a value
+  printing as `00000000` is mask 0):
+  * equals and match_key_mask: Exclusive -> clip mask == want; otherwise (clip & want) == want. So Exclusive with
+    the `00000000` value means "the clip carries no value of this type";
+  * match_key: Exclusive -> clip == key; otherwise an unset key (0) needs clip == 0, a clip with mask 0 passes any
+    set key, else (clip & key) == key;
+  * a further node `9e4d5a77` compares the clip's first AnimEvent Id with the node value and, on a match, requires a
+    condition bool from selector +0x20 (not modelled).
+* **A zero mask** on a clip therefore passes only match_key leaves (wildcard) and Exclusive-none leaves. For example,
+  about 100 swings have no Timing bit.
 * **YAML limitation.** For nested trees the YAML flattens children into `terms` with `node: "all/match_key[1]"` paths,
   and a few deep trees repeat indexes. The raw tree is recoverable from the walker paths.
 * **ConditionProcedures** (root+0x88, 19) name boolean keys. Examples:
@@ -367,7 +387,7 @@ Selection order (I):
 2. qualifier filters;
 3. MaximumOccurency / PlayCountStat;
 4. positional fit;
-5. SwingPreferenceLevel as a tie-break (U).
+5. SwingPreferenceLevel: an outer loop 8 -> 3 around the whole query, not a tie-break (V, G6b).
 
 ### 4.4 Mirroring (V/I)
 
@@ -379,15 +399,54 @@ Selection order (I):
 
 ## 5. Open items
 
-1. **Writers of the SwingSelection.Output keys** (`S+0x3B0..0x3D0`) and of SwingCategory `S+0x360`: who sets Fatality,
-   TooLate and FollowNet. The stores found were noisy (U).
-2. **Exclusive flag semantics** and the meaning of procedure values that print as `00000000` (U).
-3. **Which clip Properties fields the code reads** (Tolerancy*, AngleClamp*, MaximumOccurency): the offsets were not
-   confirmed in `fn_886D3AD8` or its callers (I). The Tolerancy values (35 / 60 cm) look like the fit's per-axis gates.
-4. **Tag cell to Properties binding** in `fn_88697118` (I).
-5. **Names of TimingState fields** `S+0xCF0` (3fe3a099) and `S+0xD00` (1490306b) used by the Dive gate (U).
-6. **Sector angle rounding**, the Back look-side rule, the vivacity source of the transition speed and the blend curve (I).
-7. **Sprint (RB)** path into animation keys (U).
-8. `tests/test_gameplay_ref.py` (owned by another agent) does not yet build `locomotion` or `anim_select`. Add
-   `"locomotion": ["locomotion.c", "test_locomotion.c"]` and `"anim_select": ["anim_select.c", "test_anim_select.c"]`
-   when convenient.
+G6b status: items 1-5 answered in s6 (1 partly: the Output-key contradiction remains); 6 and 7 still open.
+
+1. **Writers of the SwingSelection.Output keys** (`S+0x3B0..0x3D0`): see s6.1. Open: who, if anyone, raises Power/
+   Control above Good, given that the Fatality clips ask for VeryGood.
+2. ~~Exclusive flag semantics~~ (s4.1).
+3. ~~Clip Properties readers~~ (s1.1); the consumer of the Tolerancy arrays is still open.
+4. ~~Tag cell binding~~ (s3).
+5. **Names of TimingState fields** `S+0xCF0` (3fe3a099) and `S+0xD00` (1490306b): meanings known (s6.3), names not.
+6. **Sector angle rounding**, the Back look-side rule, the vivacity source of the transition speed, the blend curve,
+   root-motion mirroring and the retarget angle tests (I).
+7. **Sprint (RB)** path into the locomotion keys (U); its swing-side effect is in s2.4.
+
+## 6. G6b answers
+
+### 6.1 Who writes the seven swing keys and SwingCategory (V)
+
+| key | writers |
+|---|---|
+| Timing S+0x3B0, PositionOnCourt S+0x3C8, SwingEffect S+0x3CC | none in code (no store with that base and offset) |
+| Power S+0x3B4, Control S+0x3B8, MoveToNet S+0x3BC | only the init `fn_8867E3A0`, which sets them to Good |
+| SwingType S+0x3D0 | the serve `fn_886723A8` (FH) and the command copy `fn_886B5128` |
+| AnimationSelection SwingType S+0x384 | the planner (ctrl+0x39 FH/BH) |
+| SwingCategory S+0x360 | `fn_886AFDF8`, the swing-category rule walk (controls-and-shot-selection s17) |
+
+`TooLate` is read only by the HUD (`fn_886865D8`) and the serve grade (`fn_886B2638`). `fn_886A9050` is the PC
+constructor, not a PlayerState writer. Contradiction (open): the 74 Fatality clips require Power and Control
+VeryGood, while code only ever stores Good. Either the `qualifier_sources` binding is not used by the swing query
+(the selection reads S+0x360/S+0x380/S+0x384 through the procedures) or a data-driven writer exists.
+
+### 6.2 Fatality (put-away) conditions (V)
+
+Fatality is the first row of the FlatPower and FlatFinesse lists in all three modes (Normal, AutoSwingGood,
+AutoSwingBad). Its condition (`fn_88697E98`, case c78c8f06) is: not (AI and S+0x4E0), and not (sticky RB `PC+0x3D`
+and |z| < PT+0x6F0 = 300 cm), and S+0xE00 > 0.15 (`lbl_880D0934`). Slice, volley and smash classes have no Fatality
+row. The query then needs a Fatality clip at some preference level. C: `ref/gameplay/swing_category.c`.
+
+### 6.3 TimingState (V meaning, names unknown)
+
+`fn_88661B60` fills them at the opponent's launch: `S+0xCF0` = sample tick - clock (frames to contact), `S+0xCF4` =
+|depth difference|, `S+0xD00` = |ball velocity| x 3.6 (km/h; `g_ts4_script_constants+0x2A4` = 3.6), `S+0xD10`
+(0eaa0333) the autoswing-good bool (controls s17.1). So the Dive gate reads "ball faster than 60 km/h and contact
+in fewer than 45 frames".
+
+### 6.4 Reproduction
+
+```sh
+TS4_MATCHING_DIR=work/matching-b9 python3 tools/fn_asm.py fn_886C9F08 fn_886AFDF8 fn_88697E98 fn_886AC7E0 \
+    fn_886DAA48 fn_886D3310 fn_886CD880 fn_886750D0 fn_88661B60 fn_8867E3A0 fn_886B5128
+cc -std=c11 -Wall -Wextra -Werror -o /tmp/tas ref/gameplay/test_anim_select.c ref/gameplay/anim_select.c -lm && /tmp/tas
+python3 -m unittest tests.test_gameplay_ref
+```

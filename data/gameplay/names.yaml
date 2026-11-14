@@ -144,7 +144,7 @@ names:
   "084d7ee1": {name: "LastIndex", src: merged, conf: medium, note: "analyser_names"}
   "085923ec": {name: "LevelList", src: string, conf: high}
   "0885625c": {name: "InsideOutDefinition", src: guess3, conf: medium}
-  "08950daa": {name: "Flammable", src: G4c, conf: medium, note: "MatchAnalyser.Flammable (G4c); G1b had rejected it as a false hit"}
+  "08950daa": {name: "Flammable", src: G4c, conf: high, note: "verdict G6b: accepted. crc32(Flammable)=08950daa; PlayerState MatchAnalyser +0xF94; fn_886BDCC0 0x886BE0B8..0x886BE0D4 stores 1.0 when the team record counter (+0x30) >= 4 else 0.0; read by one control graph only as product(SkillList link, Flammable, ...), i.e. the HighlyFlammable skill (on fire after 4+ points, community-reference.md). G1b rejection overruled: the semantics match"}
   "08986d30": {name: "Pam::SwingAnimation::AnimationDB::TransitionSpecialRule_Transition", src: dict, conf: certain}
   "08b1c95f": {name: "PlayerArea", src: string, conf: high}
   "08c35ef9": {name: "Pam::Net::Data::InGameType", src: nsrule, conf: high}
