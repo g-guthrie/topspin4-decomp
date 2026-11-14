@@ -45369,3 +45369,19 @@ src/xbox360/t1_oc_000.c:
 	.text       start:0x887F4D30 end:0x887F4E30
 	.text       start:0x88884CD0 end:0x88884D68
 	.text       start:0x8890DAE8 end:0x8890DB38
+
+src/xbox360/t1_000.c:
+	.pdata      start:0x88107F08 end:0x88107F10
+	.pdata      start:0x8810BAF8 end:0x8810BB00
+	.pdata      start:0x8810C538 end:0x8810C540
+	.pdata      start:0x8810CBF8 end:0x8810CC00
+	.pdata      start:0x8810CC48 end:0x8810CC50
+	.pdata      start:0x88128F30 end:0x88128F38
+	.pdata      start:0x88131380 end:0x88131388
+	.text       start:0x8816CCE0 end:0x8816CD94
+	.text       start:0x881DD520 end:0x881DD5E0
+	.text       start:0x881FBFA8 end:0x881FC068
+	.text       start:0x8820F680 end:0x8820F740
+	.text       start:0x8820FCC0 end:0x8820FD80
+	.text       start:0x887B5BD8 end:0x887B5C98
+	.text       start:0x889399B8 end:0x88939A34

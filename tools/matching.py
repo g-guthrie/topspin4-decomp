@@ -38318,6 +38318,19 @@ MATCHING_UNITS = (
             "ts4_if_get_u32_off1c_8890DAE8": 80,
         },
     },
+    {
+        "source": "src/xbox360/t1_000.c",
+        "object": "t1_000.obj",
+        "symbols": {
+            "ts4_if_get_u32_off0_8816CCE0": 180,
+            "ts4_call_seq_lbl_88C698A4_881DD520": 192,
+            "ts4_call_seq_lbl_88C69734_881FBFA8": 192,
+            "ts4_call_seq_lbl_88C69544_8820F680": 192,
+            "ts4_call_seq_lbl_88C69510_8820FCC0": 192,
+            "ts4_call_seq_lbl_88C476C0_887B5BD8": 192,
+            "ts4_call_seq_ts4_memset_889399B8": 124,
+        },
+    },
 )
 
 

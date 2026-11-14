@@ -247,33 +247,3 @@ void ts4_call_seq_ts4_memset_889399B8(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x889D14C8: if_call_seq fn_889D01F8, ts4_set_u32_off0_889D18A0, u32@lbl_88C6E1A8, KeTlsSetValue, u32@0x10, u32@0x14 */
-void ts4_if_call_seq_fn_889D01F8_889D14C8(ts4_word a0, ts4_word a1)
-{
-    ts4_word t115;
-    ts4_word s50;
-    ts4_word t1;
-    ts4_word t2;
-    ts4_word t5;
-    ts4_word t6;
-    ts4_word t9;
-    ts4_word t12;
-    ts4_word t14;
-
-    s50 = (ts4_word)28;
-    t1 = fn_889D01F8((ts4_word)(ts4_word)&s50);
-    t2 = ts4_set_u32_off0_889D18A0((ts4_word)t1, (ts4_word)a1, (ts4_word)0, (ts4_word)a0);
-    KeTlsSetValue((ts4_word)(*(volatile ts4_word *)lbl_88C6E1A8), (ts4_word)t2);
-    t5 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 16);
-    t6 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 20);
-    t115 = (*(volatile ts4_word *)((char *)(ts4_word)(a0) + 12));
-    fn_889D02D8((ts4_word)t115, (ts4_word)t6, (ts4_word)t5);
-    t9 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 24);
-    if ((ts4_word)t9 != 0) {
-        fn_889D0270((ts4_word)t9);
-    }
-    t12 = *(volatile ts4_word *)lbl_88C6E1A8;
-    t14 = KeTlsSetValue((ts4_word)t12, (ts4_word)(*(volatile ts4_word *)((char *)(ts4_word)(t2) + 16)));
-    fn_88580EB8((ts4_word)(ts4_get_u32_lbl_88D4E11C_88581A90((ts4_word)t14)), (ts4_word)0, (ts4_word)t2);
-    return;
-}

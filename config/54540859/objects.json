@@ -6036,6 +6036,10 @@
       "src/xbox360/t1_oc_000.c": {
         "status": "Matching",
         "source": "xbox360/t1_oc_000.c"
+      },
+      "src/xbox360/t1_000.c": {
+        "status": "Matching",
+        "source": "xbox360/t1_000.c"
       }
     }
   }
