@@ -278,3 +278,168 @@ int mv_alt_swing_ok(int human, float stick_angle, float stick_power, int frames_
     int stick_ok = !human || (fabsf(stick_angle) > 1.5f && 0.2f - stick_power < 0.0f);
     return !blocked && frames_left < 10 && stick_ok;
 }
+
+/* ---- GE2: planner geometry and repositioning (movement-and-ai.md A.4c, repositioning.md) ---- */
+
+static float cross2(struct mv_v2 a, struct mv_v2 b) { return a.x * b.z - a.z * b.x; }
+static float dot2(struct mv_v2 a, struct mv_v2 b) { return a.x * b.x + a.z * b.z; }
+static struct mv_v2 sub2(struct mv_v2 a, struct mv_v2 b) { struct mv_v2 r = {a.x - b.x, a.z - b.z}; return r; }
+static struct mv_v2 norm2(struct mv_v2 a)
+{
+    float l = sqrtf(dot2(a, a));
+    struct mv_v2 r = a;
+    if (l != 0.0f) { r.x /= l; r.z /= l; }   /* vsel keeps a zero vector */
+    return r;
+}
+
+int mv_line_intersect(struct mv_v2 p1, struct mv_v2 d1, struct mv_v2 p2, struct mv_v2 d2,
+                      struct mv_v2 *point, float *t1, float *t2)
+{
+    float den = cross2(d1, d2);
+    struct mv_v2 w;
+    if (den == 0.0f) {
+        *point = p1;
+        return 0;
+    }
+    w = sub2(p2, p1);
+    *t1 = cross2(w, d2) / den;
+    *t2 = cross2(w, d1) / den;
+    point->x = p1.x + *t1 * d1.x;
+    point->z = p1.z + *t1 * d1.z;
+    return 1;
+}
+
+int mv_replan_check(struct mv_v2 a, struct mv_v2 q, struct mv_v2 pos, struct mv_v2 pred,
+                    int frames_left)
+{
+    float d1 = dot2(sub2(q, a), sub2(pred, pos));   /* already moving from a toward q */
+    struct mv_v2 u = norm2(sub2(a, q)), n = {-u.z, u.x};
+    struct mv_v2 c = sub2(pred, q);
+    float along = dot2(c, u), lateral = dot2(c, n);
+    int near = fabsf(lateral) - 40.0f < 0.0f;
+    int ok = d1 > 0.0f ? (along < 0.0f && along > -30.0f) : (along < 30.0f && along > -20.0f);
+    if (!(near && ok))
+        return 0;
+    return frames_left <= 10 ? 1 : -1;
+}
+
+float mv_run_angle(struct mv_v2 q, struct mv_v2 pos, struct mv_v2 velocity_ms)
+{
+    struct mv_v2 e = sub2(sub2(q, pos), velocity_ms);   /* cm minus m/s, as in the code */
+    return fabsf(atan2f(e.z, e.x));
+}
+
+float mv_mode_slack(int frames_left, float prep, float lead)
+{
+    return (float)frames_left - prep - lead;
+}
+
+void mv_mover_step(float *sum, float *mean, float sample, float tau)
+{
+    *sum = *sum - *mean + sample;
+    *mean = *sum / tau;
+}
+
+int mv_volley_or_bounce(int first_type_is_baseline, int last_type_is_baseline)
+{
+    return !first_type_is_baseline && last_type_is_baseline;
+}
+
+float mv_human_reach_input(float reach_speed, float best_speed, float margin)
+{
+    return reach_speed - (best_speed + margin) < 0.0f ? best_speed : 100.0f;
+}
+
+int mv_inside_out(struct mv_v2 p, struct mv_v2 b0, struct mv_v2 b1, int far)
+{
+    struct mv_v2 dir = norm2(sub2(b1, b0)), zdir = {0.0f, 1.0f}, pt;
+    float t1 = 0.0f, t2 = 0.0f, qz;
+    int s1, s2;
+    mv_line_intersect(b0, dir, p, zdir, &pt, &t1, &t2);
+    qz = p.z + t2;                    /* crossing of the line x = p.x */
+    s1 = (far ? -qz : qz) < p.z;      /* mirrored by the own court tag, compared in world */
+    mv_line_intersect(b0, dir, b0, zdir, &pt, &t1, &t2);   /* degenerate: t2 = 0 */
+    qz = b0.z + t2;
+    s2 = (far ? -qz : qz) < b0.z;
+    return s1 != s2;
+}
+
+static float clampf(float v, float lo, float hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+void rp_singles_points(float opp_hit_z, struct mv_v2 *net, struct mv_v2 *baseline)
+{
+    float z = clampf(opp_hit_z, -600.0f, 600.0f);
+    net->x = 300.0f;  net->z = z / 6.0f;          /* curve1: +-600 -> +-100 */
+    baseline->x = 1300.0f; baseline->z = -z / 12.0f;  /* curve2: +-600 -> -+50 */
+}
+
+int rp_human_mode(float pos_x, float pos_z, float move_power, float stick_minus_target_rad,
+                  float dist_to_net_point, int rb, int play_mode_1, int event_frames_valid,
+                  int event_frames_left, int old_mode)
+{
+    int mode = 0, inbox, aimed, far;
+    if (move_power < 0.1f || pos_x > -500.0f)
+        return 0;
+    inbox = pos_x < -700.0f && pos_z < 400.0f && pos_x > -1100.0f && pos_z > -400.0f;
+    aimed = fabsf(stick_minus_target_rad) < 40.0f * 0.0174532924f;
+    far = dist_to_net_point * dist_to_net_point > 175.0f * 175.0f;
+    if (aimed && far && ((inbox && !play_mode_1) || rb))
+        mode = 2;
+    if (mode != old_mode && mode == 2 && event_frames_valid &&
+        (unsigned)event_frames_left < 20u)
+        mode = old_mode;
+    return mode;
+}
+
+int rp_ai_singles_mode(float r, float volley, float baseline, int old_mode)
+{
+    int mode = old_mode;
+    if (r > 0.0f && r < volley)
+        mode = 2;
+    if (volley < r && r < volley + baseline)
+        mode = 1;
+    return mode;
+}
+
+int rp_doubles_nearest(float d160, float d170, float d180, float d190, int old_mode)
+{
+    int mode = old_mode;
+    if (d160 < d170 && d160 < d190 && d160 < d180) mode = 4;
+    if (d170 < d160 && d170 < d190 && d170 < d180) mode = 6;
+    if (d180 < d170 && d180 < d190 && d180 < d160) mode = 3;
+    if (d190 < d170 && d190 < d160 && d190 < d180) mode = 5;
+    return mode;
+}
+
+int rp_doubles_ai_swap(int mode, float partner_local_z, float own_local_x)
+{
+    int back = own_local_x < -900.0f;
+    if (partner_local_z > 0.0f) {
+        if (mode == 3) return 5;
+        if (mode == 4) return 6;
+        if (mode == 0) return back ? 5 : 6;
+    } else {
+        if (mode == 5) return 3;
+        if (mode == 6) return 4;
+        if (mode == 0) return back ? 3 : 4;
+    }
+    return mode;
+}
+
+int rp_ai_stop(float c2b4b4baa, float stop_moving, float c2ac5965a, float opp_frames)
+{
+    return (c2b4b4baa < 0.5f || stop_moving > 0.5f) && opp_frames < c2ac5965a;
+}
+
+int rp_ai_post_swing_hold(int n, int swing_running, int *stamp, int now)
+{
+    if (n <= 0)
+        return 0;
+    if (!swing_running && *stamp == -1)
+        *stamp = now;
+    if (*stamp == -1)
+        return 1;
+    if (*stamp <= 0)
+        return 0;
+    return now - *stamp <= n;
+}

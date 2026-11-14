@@ -188,4 +188,58 @@ int mv_shot_window(float player_x_local, int side_tag, float zone_distance);
 int mv_alt_swing_ok(int human, float stick_angle, float stick_power, int frames_left,
                     int blocked);
 
+/* ---- GE2: planner geometry and repositioning (read from code; docs/gameplay/movement-and-ai.md
+ * A.4c and docs/gameplay/repositioning.md).  Vectors are x-z (y ignored), cm, world or local
+ * frame as stated.  Values in comments are the disc values (data/gameplay/repositioning.yaml). */
+struct mv_v2 { float x, z; };
+
+/* fn_881896F8: intersect line p1 + t1 d1 with p2 + t2 d2 in x-z.  Returns 0 when parallel
+ * (cross(d1, d2) == 0; the game then copies p1 to the output point). */
+int mv_line_intersect(struct mv_v2 p1, struct mv_v2 d1, struct mv_v2 p2, struct mv_v2 d2,
+                      struct mv_v2 *point, float *t1, float *t2);
+
+/* fn_886A9678 after its latch (the swing clip has passed its event): a = committed ball sample
+ * (local), q = the side's stand point from the plan buffer, pos = LocalPosition, pred = the position
+ * predicted 20 frames ahead (fn_8868ED00).  Returns 1 (replan, state 9) when the predicted point
+ * is "arrived" and frames_left <= 10, -1 (hold, state 13) when arrived earlier, 0 otherwise. */
+int mv_replan_check(struct mv_v2 a, struct mv_v2 q, struct mv_v2 pos, struct mv_v2 pred,
+                    int frames_left);
+
+/* fn_886887C0: slack frames of a mode test = frames_left - prep - lead, prep from the preparation
+ * table PT+0x17C(speed m/s, |angle|), angle = atan2(e.z, e.x) of e = (q - pos) - velocity. */
+float mv_run_angle(struct mv_v2 q, struct mv_v2 pos, struct mv_v2 velocity_ms);
+float mv_mode_slack(int frames_left, float prep, float lead);
+
+/* fn_8866CDC8: one step of the Mover's 3-frame average (sum, mean) with tau = 0.6 x 5. */
+void mv_mover_step(float *sum, float *mean, float sample, float tau);
+
+/* fn_8865D8D8: the hittable stretch starts on a non-Baseline candidate and ends on a Baseline one
+ * (state 15, volley or let it bounce). */
+int mv_volley_or_bounce(int first_type_is_baseline, int last_type_is_baseline);
+
+/* fn_88689068 with PT+0x1B8 set (humans): Reachability fed to the selection score. */
+float mv_human_reach_input(float reach_speed, float best_speed, float margin);
+
+/* fn_886AE528 +0x78..+0x3B4: inside-out decision.  p = hitter (world), b0/b1 = incoming shot hit
+ * point and landing target (ball state +0x100/+0x110, world), far = own court tag 0xA2EDA1E7. */
+int mv_inside_out(struct mv_v2 p, struct mv_v2 b0, struct mv_v2 b1, int far);
+
+/* Repositioning (repositioning.md). */
+/* graph 116 RepositioningPointSingle: points in the court frame of the receiving side. */
+void rp_singles_points(float opp_hit_z, struct mv_v2 *net, struct mv_v2 *baseline);
+/* fn_8869B928: human singles mode (0 none, 2 go to the net). */
+int rp_human_mode(float pos_x, float pos_z, float move_power, float stick_minus_target_rad,
+                  float dist_to_net_point, int rb, int play_mode_1, int event_frames_valid,
+                  int event_frames_left, int old_mode);
+/* fn_886BADA0: AI singles draw; r in [0, volley + baseline]. Returns 2 (net), 1 (baseline) or old. */
+int rp_ai_singles_mode(float r, float volley, float baseline, int old_mode);
+/* fn_8866CBE0: doubles mode of the strictly nearest point: d160, d170, d180, d190 squared. */
+int rp_doubles_nearest(float d160, float d170, float d180, float d190, int old_mode);
+/* fn_886A40A8: doubles AI while its own team has the ball. */
+int rp_doubles_ai_swap(int mode, float partner_local_z, float own_local_x);
+/* fn_886A3DF0 stop rule (retail inputs 1, 0, 0 make it never fire). */
+int rp_ai_stop(float c2b4b4baa, float stop_moving, float c2ac5965a, float opp_frames);
+/* fn_886BB0A8 tail: AI stands still while swinging and for n frames after (#6e33662f). */
+int rp_ai_post_swing_hold(int n, int swing_running, int *stamp, int now);
+
 #endif

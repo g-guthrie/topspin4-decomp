@@ -90,6 +90,64 @@ int main(void)
     CHECK(!mv_alt_swing_ok(1, 2.0f, 0.1f, 5, 0) && !mv_alt_swing_ok(0, 0.0f, 0.0f, 10, 0));
     CHECK(mv_alt_swing_ok(0, 0.0f, 0.0f, 9, 0) && !mv_alt_swing_ok(0, 0.0f, 0.0f, 9, 1));
     CHECK(strcmp(mv_state_name(MV_RUSH), "Rush") == 0);
+    /* GE2: planner geometry and repositioning */
+    {
+        struct mv_v2 a = {0, 100}, q = {0, 0}, pos = {0, -100}, pred = {0, -10}, pt;
+        float t1, t2;
+        CHECK(mv_replan_check(a, q, pos, pred, 8) == 1);
+        CHECK(mv_replan_check(a, q, pos, pred, 30) == -1);
+        pred.z = -50.0f;                       /* 50 cm short of the stand point */
+        CHECK(mv_replan_check(a, q, pos, pred, 8) == 0);
+        pred.z = -10.0f; pred.x = 45.0f;       /* 45 cm off the line */
+        CHECK(mv_replan_check(a, q, pos, pred, 8) == 0);
+        {
+            struct mv_v2 p1 = {0, 0}, d1 = {1, 0}, p2 = {50, -20}, d2 = {0, 1};
+            CHECK(mv_line_intersect(p1, d1, p2, d2, &pt, &t1, &t2));
+            CHECK(pt.x == 50.0f && t1 == 50.0f && t2 == 20.0f);
+            CHECK(!mv_line_intersect(p1, d1, p2, d1, &pt, &t1, &t2));
+        }
+        {
+            struct mv_v2 tq = {500, 0}, tp = {0, 0}, v0 = {0, 0}, tb = {-500, 1};
+            CHECK(mv_run_angle(tq, tp, v0) < 0.01f && mv_run_angle(tb, tp, v0) > 3.1f);
+            CHECK(mv_mode_slack(60, 10.0f, 15.0f) == 35.0f);
+        }
+        {
+            float sum = 0.0f, mean = 0.0f; int i;
+            for (i = 0; i < 60; i++) mv_mover_step(&sum, &mean, 6.0f, 3.0f);
+            CHECK(mean > 5.99f && mean < 6.01f);
+        }
+        CHECK(mv_volley_or_bounce(0, 1) && !mv_volley_or_bounce(1, 1) && !mv_volley_or_bounce(0, 0));
+        CHECK(mv_human_reach_input(2.0f, 1.0f, 2.8f) == 1.0f && mv_human_reach_input(4.0f, 1.0f, 2.8f) == 100.0f);
+        {
+            struct mv_v2 p = {-1000, 0}, b0 = {1000, 0}, b1l = {-1100, -100}, b1r = {-1100, 100};
+            CHECK(mv_inside_out(p, b0, b1l, 0) && !mv_inside_out(p, b0, b1r, 0));
+        }
+        {
+            struct mv_v2 net, base;
+            rp_singles_points(600.0f, &net, &base);
+            CHECK(net.x == 300.0f && net.z == 100.0f && base.x == 1300.0f && base.z == -50.0f);
+            rp_singles_points(-900.0f, &net, &base);
+            CHECK(net.z == -100.0f && base.z == 50.0f);
+        }
+        CHECK(rp_human_mode(-900.0f, 0.0f, 0.5f, 0.2f, 600.0f, 0, 0, 0, 0, 0) == 2);  /* baseline box */
+        CHECK(rp_human_mode(-600.0f, 0.0f, 0.5f, 0.2f, 600.0f, 0, 0, 0, 0, 0) == 0);  /* outside: needs RB */
+        CHECK(rp_human_mode(-600.0f, 0.0f, 0.5f, 0.2f, 600.0f, 1, 0, 0, 0, 0) == 2);
+        CHECK(rp_human_mode(-400.0f, 0.0f, 0.5f, 0.2f, 600.0f, 1, 0, 0, 0, 0) == 0);  /* already at the net */
+        CHECK(rp_human_mode(-900.0f, 0.0f, 0.5f, 0.8f, 600.0f, 1, 0, 0, 0, 0) == 0);  /* stick 46 deg off */
+        CHECK(rp_human_mode(-900.0f, 0.0f, 0.5f, 0.2f, 600.0f, 1, 0, 1, 10, 0) == 0); /* event in 10 frames */
+        CHECK(rp_ai_singles_mode(0.3f, 0.5f, 0.5f, 0) == 2 && rp_ai_singles_mode(0.7f, 0.5f, 0.5f, 0) == 1);
+        CHECK(rp_doubles_nearest(1, 2, 3, 4, 0) == 4 && rp_doubles_nearest(4, 3, 2, 1, 0) == 5);
+        CHECK(rp_doubles_nearest(1, 1, 3, 4, 7) == 7);
+        CHECK(rp_doubles_ai_swap(3, 100.0f, 0.0f) == 5 && rp_doubles_ai_swap(6, -100.0f, 0.0f) == 4);
+        CHECK(rp_doubles_ai_swap(0, -1.0f, -1000.0f) == 3 && rp_doubles_ai_swap(0, 1.0f, -500.0f) == 6);
+        CHECK(!rp_ai_stop(1.0f, 0.0f, 0.0f, 30.0f) && rp_ai_stop(0.0f, 0.0f, 40.0f, 30.0f));
+        {
+            int stamp = -1;
+            CHECK(rp_ai_post_swing_hold(20, 1, &stamp, 100) == 1 && stamp == -1);
+            CHECK(rp_ai_post_swing_hold(20, 0, &stamp, 110) == 1 && stamp == 110);
+            CHECK(rp_ai_post_swing_hold(20, 0, &stamp, 130) == 1 && rp_ai_post_swing_hold(20, 0, &stamp, 131) == 0);
+        }
+    }
     if (!fails)
         printf("movement tests passed\n");
     return fails != 0;
