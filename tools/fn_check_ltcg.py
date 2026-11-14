@@ -369,6 +369,10 @@ def compare(c_code: bytes, c_sites: list[Site], c_start: int, c_index: SymbolInd
                 continue
             c_sym = c_index.lookup(cs.address) if cs.address >= 0 else None
             t_sym = t_index.lookup(ts.address) if ts.address >= 0 else None
+            if c_sym is None and t_sym is not None and cs.address >= 0:
+                # LTCG emits literals and trimmed static const data without a
+                # map symbol: compare the value, as for a named pool.
+                c_sym = ("__pool@anonymous", 0)
             if c_sym is None or t_sym is None:
                 problems.append(f"{where}: unresolved target ({cs.address:#x} / {ts.address:#x})")
                 continue
