@@ -11,13 +11,13 @@ Tools (standard library only, plus the repository's `ts4_arc`, `xdvdfs`, `ts4_te
 | `tools/port/lua50.py` | Lua 5.0 / LuaPlus bytecode loader, disassembler, symbolic evaluator, pseudo-Lua decompiler |
 | `tools/port/ui_actions.py` | `.actions` (tokenised command scripts) and `.anims` (key-framed clips) readers |
 | `tools/port/ui_formats.py` | `StringTable.bin`, `.abc` fonts, `PositioningInfo`, `ControlData`, scene JSON post-processing |
-| `tools/port/ui_export.py` | reads the user's ISO in place and writes `work/port/assets/ui/` (git-ignored); `--summary data/ui` writes the committed, game-free summaries |
+| `tools/port/ui_export.py` | reads the user's ISO in place and writes `work/port/assets/ui/` (git-ignored); `--summary data/gameplay/ui` writes the committed, game-free summaries |
 | `tests/test_port_ui.py` | 16 tests, synthetic bytes only (`python3 -m unittest tests.test_port_ui`) |
 
-Reproduce: `python3 tools/port/ui_export.py --out work/port/assets/ui --summary data/ui` (Python 3, ISO found
+Reproduce: `python3 tools/port/ui_export.py --out work/port/assets/ui --summary data/gameplay/ui` (Python 3, ISO found
 under `orig/` automatically or with `--iso`). Last full run: 337 scenes, 958 textures, 5 string tables of
-8,211 keys each, 4 fonts; archive sha256s are in `work/port/assets/ui/manifest.json` and in every
-`data/ui/*.json` (`source_sha256`). Core.arc sha256 `7df7bfd5…aefbf50`, PracticeGroundPart.arc
+8,211 keys each, 4 fonts, 414 flow edges, 17 packages, 9 Lua libraries (2 min 23 s, Python 3.13); archive sha256s are in `work/port/assets/ui/manifest.json` and in every
+`data/gameplay/ui/*.json` (`source_sha256`). Core.arc sha256 `7df7bfd5…aefbf50`, PracticeGroundPart.arc
 `e9acba16…c0af5`, PlayerBackGround.arc `bb580156…68ec`.
 
 ## 1. Technology
@@ -119,7 +119,7 @@ array B at 0x20 (12 B: rel, class, key; sorted by key; class `0x92A82712` = rel 
 `0x9EDE2887` = rel → UTF-16BE), array C at 0x30 (case pairs). Key = `zlib.crc32(TextID)`. 8,211 keys
 per language; table key → language: `7e885948` en, `b7977968` fr, `e26082c0` de, `803e07b4` es,
 `297fbe13` it (identified by word statistics, `ui_formats.guess_language`). 770 key names recovered
-from scene TextIDs and Lua/action strings (`data/ui/loc_keys.json`). Controller buttons are private-use
+from scene TextIDs and Lua/action strings (`data/gameplay/ui/loc_keys.json`). Controller buttons are private-use
 glyphs in the text.
 
 ### 2.7 Fonts — confidence high (glyphs), medium (header word 5)
@@ -137,8 +137,8 @@ A3's audio export for the event banks).
 
 ## 3. Screen map and flow
 
-`data/ui/screens.json` lists every scene (archives, layers, texture packs, node counts and types, actions,
-menu item → transition targets); `data/ui/flow.json` lists every `ChangeScene`/`PushScene`/`PushLayer`
+`data/gameplay/ui/screens.json` lists every scene (archives, layers, texture packs, node counts and types, actions,
+menu item → transition targets); `data/gameplay/ui/flow.json` lists every `ChangeScene`/`PushScene`/`PushLayer`
 edge found in actions. Main path, derived from data (confidence high unless noted):
 
 ```
@@ -215,4 +215,4 @@ action_closures, closure_writes, menu_targets, lists, geometry by expanded node 
   that starts the match from `S4ExhibitionConfig`, the code that fills player/venue grids and that
   calls `Cpp_Timing_*` — none located in the executable yet (no addresses).
 - Career, online, player creator, stats and trophy screens are exported and listed in
-  `data/ui/screens.json`, but their flows were not walked by hand.
+  `data/gameplay/ui/screens.json`, but their flows were not walked by hand.

@@ -1,0 +1,3397 @@
+{
+ "command": "python3 tools/port/ui_export.py --iso <disc> --summary data/gameplay/ui (python 3.13.18)",
+ "source_sha256": {
+  "Core": "7df7bfd575150e9ff3b3a171bada368e8bb4d6676ef82505f46961da0aefbf50",
+  "PracticeGroundPart": "e9acba16859fb277cad3439280010b7811e4107d21ecda2ecc36cd80178c0af5",
+  "PlayerBackGround": "bb580156670cae9fcfb1bfdc4c639d1484bd554578704e964e8811dc358f68ec",
+  "OnlineExhibition": "3a8d59be5bf9e6f3627a52a2e7277f7bbd9085daf4f8eede9ef05cfd84c6188c",
+  "CareerMain": "6b864014bba4d4522643c4d8fefba302b665a6f3b72c14d2a4687b403ca05329",
+  "CareerTournament": "d4b2fdc56ffcdd35358f965083d1b830fad8803d67d5c1da99ddf89f2befc870",
+  "PlayerAreaMenus": "60840a84937e7e7b60c5aad846ee71dc07660d3e8614ef502bdf40d015e5e957",
+  "PlayerCreator": "44f9c3111c46ce7c1283d7c0fb3719090afe59faa6e14372e9c1cc9d52cd66ba",
+  "LockerRoom": "1ef2610f45379b63ed58ebe25b4a13d1a0a82c362c70cdb9174be088d2f1e18b",
+  "TopSpinAcademy": "e007d550551beac58dff076961b787524d6da8ee2c194b44cddfc87b214fc23f",
+  "KingOfTheCourtMenus": "026e7e69f4a440b0ffa2f8e4173f8f13f0f95b544315d389695b0fa66a67b71c",
+  "KingOfTheCourt": "94fb5b07fcbdc2b5cce5dcbee4e72e2f7812d71843dda07b78b2e7502f77ddfa",
+  "OnlineProChallenge": "d179a5d690b16b78c725d47ac0e728ddd1367587370e6f2ae1a403286c1b8c87",
+  "OnlineWorldTour": "ad7b2c2822d9bf0fbbbc912cdb03f1e0a70e11352bb08bf7d6bb2eae69fa0f77"
+ },
+ "edges": [
+  {
+   "from": "S4Academy_Chat",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Recap",
+   "args": [],
+   "action": "Case2093",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Chat",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Play",
+   "args": [],
+   "action": "Case2096",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Chat",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Recap",
+   "args": [],
+   "action": "False2087",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Chat",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_GetReady",
+   "args": [],
+   "action": "True2085",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Final",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Main",
+   "args": [],
+   "action": "A2103",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Fork",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Main",
+   "args": [],
+   "action": "GotFocus2277",
+   "if": null
+  },
+  {
+   "from": "S4Academy_GetReady",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Chat",
+   "args": [],
+   "action": "Case2321",
+   "if": null
+  },
+  {
+   "from": "S4Academy_GetReady",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Play",
+   "args": [],
+   "action": "GotFocus2340",
+   "if": null
+  },
+  {
+   "from": "S4Academy_GetReady",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Main",
+   "args": [],
+   "action": "GotFocus2366",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Loading",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Fork",
+   "args": [],
+   "action": "True2370",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Main",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Chat",
+   "args": [],
+   "action": "GotFocus2430",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Main",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Fork",
+   "args": [],
+   "action": "GotFocus2446",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Pause",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Recap",
+   "args": [],
+   "action": "Case2513",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Pause",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Chat",
+   "args": [],
+   "action": "Case2522",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Pause",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Main",
+   "args": [],
+   "action": "____Case251804",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Play",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Recap",
+   "args": [],
+   "action": "False2794",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Play",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Chat",
+   "args": [],
+   "action": "True2689",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Play",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Chat",
+   "args": [],
+   "action": "True2789",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Main",
+   "args": [],
+   "action": "Case3018",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Main",
+   "args": [],
+   "action": "Case3024",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Main",
+   "args": [],
+   "action": "Case3026",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Main",
+   "args": [],
+   "action": "Case3028",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Main",
+   "args": [],
+   "action": "Case3030",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Chat",
+   "args": [],
+   "action": "False2992",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Chat",
+   "args": [],
+   "action": "GotFocus2994",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Fork",
+   "args": [],
+   "action": "GotFocus3032",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_GetReady",
+   "args": [],
+   "action": "True2990",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Recap",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Fork",
+   "args": [],
+   "action": "True3020",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Welcome",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Loading",
+   "args": [],
+   "action": "False3041",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Welcome",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Fork",
+   "args": [],
+   "action": "False3048",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Welcome",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Fork",
+   "args": [],
+   "action": "False3064",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Welcome",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Fork",
+   "args": [],
+   "action": "True3039",
+   "if": null
+  },
+  {
+   "from": "S4Academy_Welcome",
+   "cmd": "ChangeScene",
+   "to": "S4Academy_Fork",
+   "args": [],
+   "action": "True3054",
+   "if": null
+  },
+  {
+   "from": "S4AttractMode",
+   "cmd": "ChangeScene",
+   "to": "S4StartScreen",
+   "args": [],
+   "action": "A3070",
+   "if": null
+  },
+  {
+   "from": "S4AttractMode",
+   "cmd": "ChangeScene",
+   "to": "S4StartScreen",
+   "args": [],
+   "action": "Start3071",
+   "if": null
+  },
+  {
+   "from": "S4AttractMode",
+   "cmd": "ChangeScene",
+   "to": "S4StartScreen",
+   "args": [],
+   "action": "True3067",
+   "if": null
+  },
+  {
+   "from": "S4CareerAttributeEvolution",
+   "cmd": "ChangeScene",
+   "to": "S4CoachList",
+   "args": [],
+   "action": "Case3198",
+   "if": null
+  },
+  {
+   "from": "S4CareerAttributeEvolution",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "GotFocus3453",
+   "if": null
+  },
+  {
+   "from": "S4CareerAttributeEvolution",
+   "cmd": "ChangeScene",
+   "to": "S4CoachList",
+   "args": [],
+   "action": "True3242",
+   "if": null
+  },
+  {
+   "from": "S4CareerCalendar",
+   "cmd": "ChangeScene",
+   "to": "S4CareerSparringSelect",
+   "args": [],
+   "action": "Case3700",
+   "if": null
+  },
+  {
+   "from": "S4CareerCalendar",
+   "cmd": "ChangeScene",
+   "to": "S4CareerSpecialEventSelect",
+   "args": [],
+   "action": "Case3706",
+   "if": null
+  },
+  {
+   "from": "S4CareerCalendar",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTransition",
+   "args": [],
+   "action": "Case3774",
+   "if": null
+  },
+  {
+   "from": "S4CareerCalendar",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMain",
+   "args": [],
+   "action": "GotFocus4472",
+   "if": null
+  },
+  {
+   "from": "S4CareerConfig",
+   "cmd": "ChangeScene",
+   "to": "S4CareerWelcome",
+   "args": [],
+   "action": "Case4726",
+   "if": null
+  },
+  {
+   "from": "S4CareerConfig",
+   "cmd": "ChangeScene",
+   "to": "S4CareerWelcome",
+   "args": [],
+   "action": "Case4865",
+   "if": null
+  },
+  {
+   "from": "S4CareerEnd",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTransition",
+   "args": [],
+   "action": "False4933",
+   "if": null
+  },
+  {
+   "from": "S4CareerEnd",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTransition",
+   "args": [],
+   "action": "True4910",
+   "if": null
+  },
+  {
+   "from": "S4CareerEnd",
+   "cmd": "PushScene",
+   "to": "S4Recap",
+   "args": [
+    "false"
+   ],
+   "action": "True4918",
+   "if": null
+  },
+  {
+   "from": "S4CareerEventCompleted",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMain",
+   "args": [],
+   "action": "False4975",
+   "if": null
+  },
+  {
+   "from": "S4CareerEventCompleted",
+   "cmd": "PushScene",
+   "to": "S4Recap",
+   "args": [
+    "false"
+   ],
+   "action": "True4954",
+   "if": null
+  },
+  {
+   "from": "S4CareerEventCompleted",
+   "cmd": "ChangeScene",
+   "to": "S4CareerLevelUp",
+   "args": [],
+   "action": "True4973",
+   "if": null
+  },
+  {
+   "from": "S4CareerEventConfirm",
+   "cmd": "PushScene",
+   "to": "S4CareerInfoCenterRanking",
+   "args": [
+    "true"
+   ],
+   "action": "Case5032",
+   "if": null
+  },
+  {
+   "from": "S4CareerEventConfirm",
+   "cmd": "PushScene",
+   "to": "S4CareerConfig",
+   "args": [
+    "true"
+   ],
+   "action": "Case5041",
+   "if": null
+  },
+  {
+   "from": "S4CareerEventConfirm",
+   "cmd": "PushScene",
+   "to": "S4CareerInfoCenterOtherPlayerMain",
+   "args": [
+    "true"
+   ],
+   "action": "Case5046",
+   "if": null
+  },
+  {
+   "from": "S4CareerEventConfirm",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMain",
+   "args": [],
+   "action": "GotFocus5086",
+   "if": null
+  },
+  {
+   "from": "S4CareerEventConfirm",
+   "cmd": "ChangeScene",
+   "to": "S4CareerFakeMatch",
+   "args": [],
+   "action": "GotFocus5093",
+   "if": null
+  },
+  {
+   "from": "S4CareerEventConfirm",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "GotFocus5096",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "Case5139",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4UpDownInitializationScreen",
+   "args": [],
+   "action": "Case5141",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "Case5150",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4UpDownInitializationScreen",
+   "args": [],
+   "action": "Case5152",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTournamentMain",
+   "args": [],
+   "action": "False5239",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMain",
+   "args": [],
+   "action": "False5246",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4InGameFinalMenu",
+   "args": [],
+   "action": "False5258",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4InGameFinalMenu",
+   "args": [],
+   "action": "False5261",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4UpDownInitializationScreen",
+   "args": [],
+   "action": "True5166",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "PushScene",
+   "to": "S4Recap",
+   "args": [
+    "false"
+   ],
+   "action": "True5207",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "PushScene",
+   "to": "S4Recap",
+   "args": [
+    "false"
+   ],
+   "action": "True5222",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTournamentWinner",
+   "args": [],
+   "action": "True5237",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4CareerLevelUp",
+   "args": [],
+   "action": "True5244",
+   "if": null
+  },
+  {
+   "from": "S4CareerFakeMatch",
+   "cmd": "PushScene",
+   "to": "S4UpDownInitializationScreen",
+   "args": [
+    "false"
+   ],
+   "action": "__True52028",
+   "if": null
+  },
+  {
+   "from": "S4CareerInfoCenterRanking",
+   "cmd": "PushScene",
+   "to": "S4CareerInfoCenterOtherPlayerMain",
+   "args": [
+    "true"
+   ],
+   "action": "False5495",
+   "if": null
+  },
+  {
+   "from": "S4CareerInfoCenterRanking",
+   "cmd": "PushScene",
+   "to": "S4CareerInfoCenterMyPlayerMain",
+   "args": [
+    "true"
+   ],
+   "action": "True5493",
+   "if": null
+  },
+  {
+   "from": "S4CareerInit",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTransition",
+   "args": [],
+   "action": "On",
+   "if": null
+  },
+  {
+   "from": "S4CareerLevelUp",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTransition",
+   "args": [],
+   "action": "GotFocus5980",
+   "if": null
+  },
+  {
+   "from": "S4CareerLevelUp",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTransitionLegend",
+   "args": [],
+   "action": "True5950",
+   "if": null
+  },
+  {
+   "from": "S4CareerLevelUp",
+   "cmd": "PushScene",
+   "to": "S4Recap",
+   "args": [
+    "false"
+   ],
+   "action": "True5962",
+   "if": null
+  },
+  {
+   "from": "S4CareerLevelUp",
+   "cmd": "ChangeScene",
+   "to": "S4CareerEnd",
+   "args": [],
+   "action": "__True59394",
+   "if": null
+  },
+  {
+   "from": "S4CareerMailBox",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMain",
+   "args": [],
+   "action": "B6043",
+   "if": null
+  },
+  {
+   "from": "S4CareerMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMailBox",
+   "args": [],
+   "action": "Case6402",
+   "if": null
+  },
+  {
+   "from": "S4CareerMain",
+   "cmd": "PushScene",
+   "to": "S4CareerConfig",
+   "args": [
+    "true"
+   ],
+   "action": "Case6408",
+   "if": null
+  },
+  {
+   "from": "S4CareerMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerPerfectEnd",
+   "args": [],
+   "action": "Case6413",
+   "if": null
+  },
+  {
+   "from": "S4CareerMain",
+   "cmd": "PushScene",
+   "to": "S4PopupCareerSave",
+   "args": [
+    "false"
+   ],
+   "action": "Case6416",
+   "if": null
+  },
+  {
+   "from": "S4CareerMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerCalendar",
+   "args": [],
+   "action": "Case6419",
+   "if": null
+  },
+  {
+   "from": "S4CareerMain",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "GotFocus6485",
+   "if": null
+  },
+  {
+   "from": "S4CareerMain",
+   "cmd": "PushScene",
+   "to": "S4CareerInfoCenterRanking",
+   "args": [
+    "true"
+   ],
+   "action": "GotFocus6492",
+   "if": null
+  },
+  {
+   "from": "S4CareerPerfectEnd",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMain",
+   "args": [],
+   "action": "B6632",
+   "if": null
+  },
+  {
+   "from": "S4CareerRoundRobinGroups",
+   "cmd": "ChangeScene",
+   "to": "S4CareerViewBracket",
+   "args": [],
+   "action": "False6744",
+   "if": null
+  },
+  {
+   "from": "S4CareerRoundRobinGroups",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTournamentMain",
+   "args": [],
+   "action": "True6742",
+   "if": null
+  },
+  {
+   "from": "S4CareerSeasonEnd",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTransition",
+   "args": [],
+   "action": "False6935",
+   "if": null
+  },
+  {
+   "from": "S4CareerSeasonEnd",
+   "cmd": "ChangeScene",
+   "to": "S4CareerLevelUp",
+   "args": [],
+   "action": "True6933",
+   "if": null
+  },
+  {
+   "from": "S4CareerSeasonEnd",
+   "cmd": "PushScene",
+   "to": "S4Recap",
+   "args": [
+    "false"
+   ],
+   "action": "True7125",
+   "if": null
+  },
+  {
+   "from": "S4CareerSparringSelect",
+   "cmd": "ChangeScene",
+   "to": "S4CareerCalendar",
+   "args": [],
+   "action": "False7217",
+   "if": null
+  },
+  {
+   "from": "S4CareerSparringSelect",
+   "cmd": "ChangeScene",
+   "to": "S4CareerEventConfirm",
+   "args": [],
+   "action": "False7229",
+   "if": null
+  },
+  {
+   "from": "S4CareerSparringSelect",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "True7215",
+   "if": null
+  },
+  {
+   "from": "S4CareerSparringSelect",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSparringPartnerMain",
+   "args": [],
+   "action": "True7223",
+   "if": null
+  },
+  {
+   "from": "S4CareerSpecialEventSelect",
+   "cmd": "ChangeScene",
+   "to": "S4CareerEventConfirm",
+   "args": [],
+   "action": "False7292",
+   "if": null
+  },
+  {
+   "from": "S4CareerSpecialEventSelect",
+   "cmd": "ChangeScene",
+   "to": "S4CareerEventCompleted",
+   "args": [],
+   "action": "True7289",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentMain",
+   "cmd": "PushScene",
+   "to": "S4CareerInfoCenterOtherPlayerMain",
+   "args": [
+    "true"
+   ],
+   "action": "Case8015",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerViewTournamentInfo",
+   "args": [],
+   "action": "Case8017",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentMain",
+   "cmd": "PushScene",
+   "to": "S4CareerConfig",
+   "args": [
+    "true"
+   ],
+   "action": "Case8021",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerRoundRobinGroups",
+   "args": [],
+   "action": "Case8027",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerFakeMatch",
+   "args": [],
+   "action": "GotFocus8085",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "GotFocus8113",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerViewBracket",
+   "args": [],
+   "action": "GotFocus8122",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentMain",
+   "cmd": "PushScene",
+   "to": "S4CareerInfoCenterRanking",
+   "args": [
+    "true"
+   ],
+   "action": "GotFocus8123",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentMain",
+   "cmd": "PushScene",
+   "to": "S4Recap",
+   "args": [
+    "false"
+   ],
+   "action": "True8096",
+   "if": null
+  },
+  {
+   "from": "S4CareerTournamentWinner",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTournamentMain",
+   "args": [],
+   "action": "A8170",
+   "if": null
+  },
+  {
+   "from": "S4CareerTransition",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMain",
+   "args": [],
+   "action": "Case8177",
+   "if": null
+  },
+  {
+   "from": "S4CareerTransition",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTournamentMain",
+   "args": [],
+   "action": "Case8199",
+   "if": null
+  },
+  {
+   "from": "S4CareerTransition",
+   "cmd": "ChangeScene",
+   "to": "S4CareerEventConfirm",
+   "args": [],
+   "action": "Case8213",
+   "if": null
+  },
+  {
+   "from": "S4CareerTransition",
+   "cmd": "ChangeScene",
+   "to": "S4CareerSeasonEnd",
+   "args": [],
+   "action": "Case8233",
+   "if": null
+  },
+  {
+   "from": "S4CareerTransitionLegend",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMailBox",
+   "args": [],
+   "action": "False8315",
+   "if": null
+  },
+  {
+   "from": "S4CareerTransitionLegend",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMailBox",
+   "args": [],
+   "action": "True8284",
+   "if": null
+  },
+  {
+   "from": "S4CareerTransitionLegend",
+   "cmd": "PushScene",
+   "to": "S4Recap",
+   "args": [
+    "false"
+   ],
+   "action": "True8300",
+   "if": null
+  },
+  {
+   "from": "S4CareerTransitionLegend",
+   "cmd": "PushScene",
+   "to": "S4CareerCredits",
+   "args": [
+    "false"
+   ],
+   "action": "__A82934",
+   "if": null
+  },
+  {
+   "from": "S4CareerViewBracket",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTournamentMain",
+   "args": [],
+   "action": "GotFocus8398",
+   "if": null
+  },
+  {
+   "from": "S4CareerViewBracket",
+   "cmd": "ChangeScene",
+   "to": "S4CareerRoundRobinGroups",
+   "args": [],
+   "action": "GotFocus8399",
+   "if": null
+  },
+  {
+   "from": "S4CareerViewTournamentInfo",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTournamentMain",
+   "args": [],
+   "action": "B8407",
+   "if": null
+  },
+  {
+   "from": "S4CareerWelcome",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMain",
+   "args": [],
+   "action": "A8417",
+   "if": null
+  },
+  {
+   "from": "S4CoachComparison",
+   "cmd": "ChangeScene",
+   "to": "S4CoachList",
+   "args": [],
+   "action": "B8589",
+   "if": null
+  },
+  {
+   "from": "S4CoachComparison",
+   "cmd": "ChangeScene",
+   "to": "S4CoachList",
+   "args": [],
+   "action": "True8559",
+   "if": null
+  },
+  {
+   "from": "S4CoachComparison",
+   "cmd": "ChangeScene",
+   "to": "S4CoachInfo",
+   "args": [],
+   "action": "X8603",
+   "if": null
+  },
+  {
+   "from": "S4CoachInfo",
+   "cmd": "ChangeScene",
+   "to": "S4CoachList",
+   "args": [],
+   "action": "False8943",
+   "if": null
+  },
+  {
+   "from": "S4CoachInfo",
+   "cmd": "ChangeScene",
+   "to": "S4CoachComparison",
+   "args": [],
+   "action": "False8979",
+   "if": null
+  },
+  {
+   "from": "S4CoachInfo",
+   "cmd": "ChangeScene",
+   "to": "S4CoachList",
+   "args": [],
+   "action": "True8855",
+   "if": null
+  },
+  {
+   "from": "S4CoachInfo",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "True8940",
+   "if": null
+  },
+  {
+   "from": "S4CoachList",
+   "cmd": "ChangeScene",
+   "to": "S4CoachInfo",
+   "args": [],
+   "action": "A9487",
+   "if": null
+  },
+  {
+   "from": "S4CoachList",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "False9511",
+   "if": null
+  },
+  {
+   "from": "S4CoachList",
+   "cmd": "ChangeScene",
+   "to": "S4CoachComparison",
+   "args": [],
+   "action": "False9548",
+   "if": null
+  },
+  {
+   "from": "S4CoachList",
+   "cmd": "ChangeScene",
+   "to": "S4CareerAttributeEvolution",
+   "args": [],
+   "action": "True9506",
+   "if": null
+  },
+  {
+   "from": "S4Disclaimer",
+   "cmd": "ChangeScene",
+   "to": "S4Loading",
+   "args": [],
+   "action": "On",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionAIDifficulty",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionVenueSelect",
+   "args": [],
+   "action": "A10005",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionAIDifficulty",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionPlayerSelect",
+   "args": [],
+   "action": "B9991",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionAssignPad",
+   "cmd": "PushScene",
+   "to": "S4PSMoveCallibrattion",
+   "args": [
+    "true"
+   ],
+   "action": "False10016",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionAssignPad",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubExhibition",
+   "args": [],
+   "action": "False10109",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionConfig",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionVenueSelect",
+   "args": [],
+   "action": "GotFocus10400",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "PushScene",
+   "to": "S4PSMoveCallibrattion",
+   "args": [
+    "true"
+   ],
+   "action": "False10455",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "False10620",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionAssignPad",
+   "args": [],
+   "action": "False10885",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionAssignPad",
+   "args": [],
+   "action": "False10899",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubPZone",
+   "args": [],
+   "action": "False10904",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionCustomMainScreen",
+   "args": [],
+   "action": "False10931",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionAIDifficulty",
+   "args": [],
+   "action": "False10956",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "SpawnedAction10924",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionCustomMainScreen",
+   "args": [],
+   "action": "True10586",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4UpDownLobby",
+   "args": [],
+   "action": "True10618",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "True10876",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_AssignPad",
+   "args": [],
+   "action": "True10896",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4UpDownCustomMainScreen",
+   "args": [],
+   "action": "True10929",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionVenueSelect",
+   "args": [],
+   "action": "True10942",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_AIDifficulty",
+   "args": [],
+   "action": "True10951",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionVenueSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionConfig",
+   "args": [],
+   "action": "False11300",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionVenueSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionAIDifficulty",
+   "args": [],
+   "action": "False11320",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionVenueSelect",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionParameters",
+   "args": [],
+   "action": "True11290",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionVenueSelect",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_Config",
+   "args": [],
+   "action": "True11297",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionVenueSelect",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionCustomMainScreen",
+   "args": [],
+   "action": "True11306",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionVenueSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionPlayerSelect",
+   "args": [],
+   "action": "True11310",
+   "if": null
+  },
+  {
+   "from": "S4ExhibitionVenueSelect",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_AIDifficulty",
+   "args": [],
+   "action": "True11315",
+   "if": null
+  },
+  {
+   "from": "S4InGameFinalMenu",
+   "cmd": "PushScene",
+   "to": "S4InGameMatchStatistics",
+   "args": [
+    "true"
+   ],
+   "action": "Case12130",
+   "if": null
+  },
+  {
+   "from": "S4InGameFinalMenu",
+   "cmd": "ChangeScene",
+   "to": "S4InGameIntro",
+   "args": [],
+   "action": "False12108",
+   "if": null
+  },
+  {
+   "from": "S4InGameFinalMenu",
+   "cmd": "ChangeScene",
+   "to": "S4InGameIntro",
+   "args": [],
+   "action": "True11585",
+   "if": null
+  },
+  {
+   "from": "S4InGameFinalMenu",
+   "cmd": "ChangeScene",
+   "to": "S4InGameIntro",
+   "args": [],
+   "action": "True12072",
+   "if": null
+  },
+  {
+   "from": "S4InGameFinalMenu",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_WelcomeScreen",
+   "args": [],
+   "action": "True12106",
+   "if": null
+  },
+  {
+   "from": "S4InGameIntro",
+   "cmd": "ChangeScene",
+   "to": "S4InGameMatch",
+   "args": [],
+   "action": "True12493",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatch",
+   "cmd": "PushScene",
+   "to": "S4InGamePauseMenu",
+   "args": [
+    "false"
+   ],
+   "action": "Case12603",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatch",
+   "cmd": "PopScene",
+   "to": "OnlineFreeze",
+   "args": [],
+   "action": "Case12803",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatch",
+   "cmd": "PushScene",
+   "to": "S4InGamePauseMenu",
+   "args": [
+    "false"
+   ],
+   "action": "False12833",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatch",
+   "cmd": "PopScene",
+   "to": "0x98dd0128",
+   "args": [],
+   "action": "True12578",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatch",
+   "cmd": "ChangeScene",
+   "to": "S4InGameMatchStatistics",
+   "args": [],
+   "action": "True12678",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatch",
+   "cmd": "ChangeScene",
+   "to": "S4InGameMatchStatistics",
+   "args": [],
+   "action": "True12685",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatch",
+   "cmd": "ChangeScene",
+   "to": "S4InGameFinalMenu",
+   "args": [],
+   "action": "True12692",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatch",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_Ingame",
+   "args": [],
+   "action": "True12743",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatchStatistics",
+   "cmd": "ChangeScene",
+   "to": "S4InGameFinalMenu",
+   "args": [],
+   "action": "False13048",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatchStatistics",
+   "cmd": "ChangeScene",
+   "to": "S4InGameFinalMenu",
+   "args": [],
+   "action": "False13051",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatchStatistics",
+   "cmd": "ChangeScene",
+   "to": "S4InGameMatch",
+   "args": [],
+   "action": "False13059",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatchStatistics",
+   "cmd": "ChangeScene",
+   "to": "S4InGameFinalMenu",
+   "args": [],
+   "action": "False13096",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatchStatistics",
+   "cmd": "ChangeScene",
+   "to": "S4InGameFinalMenu",
+   "args": [],
+   "action": "False13099",
+   "if": null
+  },
+  {
+   "from": "S4InGameMatchStatistics",
+   "cmd": "ChangeScene",
+   "to": "S4InGameIntro",
+   "args": [],
+   "action": "True13107",
+   "if": null
+  },
+  {
+   "from": "S4InGamePauseMenu",
+   "cmd": "ChangeScene",
+   "to": "S4InGameIntro",
+   "args": [],
+   "action": "False13725",
+   "if": null
+  },
+  {
+   "from": "S4InGamePauseMenu",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_WelcomeScreen",
+   "args": [],
+   "action": "True13723",
+   "if": null
+  },
+  {
+   "from": "S4KingCourt_AIDifficulty",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionVenueSelect",
+   "args": [],
+   "action": "A14352",
+   "if": null
+  },
+  {
+   "from": "S4KingCourt_AIDifficulty",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionPlayerSelect",
+   "args": [],
+   "action": "B14340",
+   "if": null
+  },
+  {
+   "from": "S4KingCourt_AssignPad",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOffline",
+   "args": [],
+   "action": "False14404",
+   "if": null
+  },
+  {
+   "from": "S4KingCourt_Config",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionVenueSelect",
+   "args": [],
+   "action": "GotFocus14595",
+   "if": null
+  },
+  {
+   "from": "S4KingCourt_EndingScreen",
+   "cmd": "ChangeScene",
+   "to": "S4InGameFinalMenu",
+   "args": [],
+   "action": "A14664",
+   "if": null
+  },
+  {
+   "from": "S4KingCourt_Ingame",
+   "cmd": "ChangeScene",
+   "to": "S4InGameFinalMenu",
+   "args": [],
+   "action": "False14741",
+   "if": null
+  },
+  {
+   "from": "S4KingCourt_Ingame",
+   "cmd": "ChangeScene",
+   "to": "S4InGameMatch",
+   "args": [],
+   "action": "GotFocus14776",
+   "if": null
+  },
+  {
+   "from": "S4KingCourt_Ingame",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_EndingScreen",
+   "args": [],
+   "action": "True14761",
+   "if": null
+  },
+  {
+   "from": "S4KingCourt_WelcomeScreen",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_Ingame",
+   "args": [],
+   "action": "A14830",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelect",
+   "args": [],
+   "action": "Case15488",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelect",
+   "args": [],
+   "action": "Case15491",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelect",
+   "args": [],
+   "action": "Case15494",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelect",
+   "args": [],
+   "action": "Case15497",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelect",
+   "args": [],
+   "action": "Case15500",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_SportGear",
+   "args": [],
+   "action": "Case15503",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelectOthers",
+   "args": [],
+   "action": "Case15506",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelectOthers",
+   "args": [],
+   "action": "Case15509",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelectOthers",
+   "args": [],
+   "action": "Case15512",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelectOthers",
+   "args": [],
+   "action": "Case15515",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomSelect",
+   "args": [],
+   "action": "Case15518",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomMain",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Main",
+   "args": [],
+   "action": "True15376",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomSelect",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomMain",
+   "args": [],
+   "action": "GotFocus15957",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomSelectOthers",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomMain",
+   "args": [],
+   "action": "Case16237",
+   "if": null
+  },
+  {
+   "from": "S4LockerRoomSelectOthers",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomMain",
+   "args": [],
+   "action": "False16798",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubXboxLive",
+   "args": [],
+   "action": "Case17019",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOffline",
+   "args": [],
+   "action": "Case17048",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubPZone",
+   "args": [],
+   "action": "Case17083",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOffline",
+   "args": [],
+   "action": "Case17085",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4Xbox3DDisclaimer",
+   "args": [],
+   "action": "Case17087",
+   "if": "self.__Action_161()"
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4MoveTutorialMain",
+   "args": [],
+   "action": "Case17104",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4MoveVideoTutorial",
+   "args": [],
+   "action": "Case17106",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4Xbox3DDisclaimer",
+   "args": [],
+   "action": "Case17108",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4StartScreen",
+   "args": [],
+   "action": "False16967",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubXboxLive",
+   "args": [],
+   "action": "False17278",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubXboxLive",
+   "args": [],
+   "action": "False17281",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4PG_InGame",
+   "args": [],
+   "action": "GotFocus17238",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4UnlockOverview",
+   "args": [],
+   "action": "True17260",
+   "if": null
+  },
+  {
+   "from": "S4MainMenu",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOptions",
+   "args": [],
+   "action": "__Case170770",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubExhibition",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOffline",
+   "args": [],
+   "action": "False17310",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubExhibition",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionAssignPad",
+   "args": [],
+   "action": "GotFocus17393",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubExhibition",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubXboxLive",
+   "args": [],
+   "action": "True17308",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubExhibition",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionAssignPad",
+   "args": [],
+   "action": "__True173212",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubOffline",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "B17434",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubOffline",
+   "cmd": "ChangeScene",
+   "to": "S4KingCourt_AssignPad",
+   "args": [],
+   "action": "GotFocus17520",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubOffline",
+   "cmd": "ChangeScene",
+   "to": "S4SaveLoadPlayer",
+   "args": [],
+   "action": "GotFocus17540",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubOffline",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubExhibition",
+   "args": [],
+   "action": "GotFocus17543",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubOffline",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubExhibition",
+   "args": [],
+   "action": "True17441",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubOptions",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "B17568",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubOptions",
+   "cmd": "ChangeScene",
+   "to": "S4Options_IngameOptions",
+   "args": [],
+   "action": "Case17580",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubOptions",
+   "cmd": "ChangeScene",
+   "to": "S4Options_AudioOptions",
+   "args": [],
+   "action": "Case17582",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubOptions",
+   "cmd": "ChangeScene",
+   "to": "S4Options_IngameHelpers",
+   "args": [],
+   "action": "Case17584",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubPCreator",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubPZone",
+   "args": [],
+   "action": "False17681",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubPCreator",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOffline",
+   "args": [],
+   "action": "True17678",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubPZone",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "B17770",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubPZone",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionPlayerSelect",
+   "args": [],
+   "action": "GotFocus17879",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubPZone",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubPCreator",
+   "args": [],
+   "action": "True17816",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubPZone",
+   "cmd": "ChangeScene",
+   "to": "S4SaveLoadPlayer",
+   "args": [],
+   "action": "True17860",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubXboxLive",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "B18058",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubXboxLive",
+   "cmd": "ChangeScene",
+   "to": "S4OnLineUserRanking",
+   "args": [],
+   "action": "Case18082",
+   "if": null
+  },
+  {
+   "from": "S4MainMenuSubXboxLive",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubExhibition",
+   "args": [],
+   "action": "GotFocus18115",
+   "if": null
+  },
+  {
+   "from": "S4MoveTutorialMain",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "B18184",
+   "if": null
+  },
+  {
+   "from": "S4MoveTutorialMain",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "B18193",
+   "if": null
+  },
+  {
+   "from": "S4MoveTutorialMain",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "GotFocus18239",
+   "if": null
+  },
+  {
+   "from": "S4MoveTutorialMain",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "__A182360",
+   "if": null
+  },
+  {
+   "from": "S4MoveVideoTutorial",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "B18267",
+   "if": null
+  },
+  {
+   "from": "S4MoveVideoTutorial",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "Start18270",
+   "if": null
+  },
+  {
+   "from": "S4MoveVideoTutorial",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "True18262",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionPlayerSelect",
+   "args": [],
+   "action": "B18435",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "Case18300",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "SOnlineLobbyCG",
+   "args": [],
+   "action": "Case18302",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "Case18389",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "SOnlineLobbyCG",
+   "args": [],
+   "action": "Case18391",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionParameters",
+   "args": [],
+   "action": "Case18444",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionVenueSelect",
+   "args": [],
+   "action": "Case18448",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "SPadAssign",
+   "args": [],
+   "action": "False18412",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionVenueSelect",
+   "args": [],
+   "action": "True18344",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionCustomMainScreen",
+   "cmd": "ChangeScene",
+   "to": "SEPlayerSelect",
+   "args": [],
+   "action": "True18419",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionCustomMainScreen",
+   "args": [],
+   "action": "False18717",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionCustomMainScreen",
+   "args": [],
+   "action": "False18747",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionCustomMainScreen",
+   "args": [],
+   "action": "False18761",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionCustomMainScreen",
+   "args": [],
+   "action": "False18824",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionCustomMainScreen",
+   "args": [],
+   "action": "False18835",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4CareerFakeMatch",
+   "args": [],
+   "action": "False19529",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "True18715",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "True18745",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "True18759",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "True18822",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "True18833",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "PushScene",
+   "to": "S4OnExhibitionLobbyPopup",
+   "args": [
+    "false"
+   ],
+   "action": "True19351",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "PushScene",
+   "to": "S4OnExhibitionLobbyPopup",
+   "args": [
+    "false"
+   ],
+   "action": "True19355",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "PushScene",
+   "to": "S4OnExhibitionLobbyPopup",
+   "args": [
+    "false"
+   ],
+   "action": "True19365",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "PushScene",
+   "to": "S4OnExhibitionParameters",
+   "args": [
+    "true"
+   ],
+   "action": "True19465",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionLobby",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourFakeMatch",
+   "args": [],
+   "action": "True19527",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionParameters",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionSessionList",
+   "args": [],
+   "action": "Case20225",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionParameters",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionVenueSelect",
+   "args": [],
+   "action": "Case21225",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionParameters",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionCustomMainScreen",
+   "args": [],
+   "action": "Case21228",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionParameters",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "False20264",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionParameters",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "True20160",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionParameters",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "True20187",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionSessionList",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionParameters",
+   "args": [],
+   "action": "B21473",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionSessionList",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionParameters",
+   "args": [],
+   "action": "Case21418",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionSessionList",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionParameters",
+   "args": [],
+   "action": "Case21421",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionSessionList",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionParameters",
+   "args": [],
+   "action": "Case21424",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionSessionList",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionParameters",
+   "args": [],
+   "action": "Case21427",
+   "if": null
+  },
+  {
+   "from": "S4OnExhibitionSessionList",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "Case21454",
+   "if": null
+  },
+  {
+   "from": "S4OnLineUserRanking",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubXboxLive",
+   "args": [],
+   "action": "B21736",
+   "if": null
+  },
+  {
+   "from": "S4OnLineUserRanking",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubXboxLive",
+   "args": [],
+   "action": "True21733",
+   "if": null
+  },
+  {
+   "from": "S4Options_AudioOptions",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOptions",
+   "args": [],
+   "action": "GotFocus22074",
+   "if": null
+  },
+  {
+   "from": "S4Options_AudioOptions",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOptions",
+   "args": [],
+   "action": "GotFocus22083",
+   "if": null
+  },
+  {
+   "from": "S4Options_IngameHelpers",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOptions",
+   "args": [],
+   "action": "GotFocus22120",
+   "if": null
+  },
+  {
+   "from": "S4Options_IngameHelpers",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOptions",
+   "args": [],
+   "action": "GotFocus22129",
+   "if": null
+  },
+  {
+   "from": "S4Options_IngameOptions",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOptions",
+   "args": [],
+   "action": "GotFocus22295",
+   "if": null
+  },
+  {
+   "from": "S4Options_IngameOptions",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOptions",
+   "args": [],
+   "action": "GotFocus22302",
+   "if": null
+  },
+  {
+   "from": "S4PG_InGame",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "Case22393",
+   "if": null
+  },
+  {
+   "from": "S4PG_InGame",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "False22375",
+   "if": null
+  },
+  {
+   "from": "S4PG_Invitation",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "GotFocus22527",
+   "if": null
+  },
+  {
+   "from": "S4PG_Invitation",
+   "cmd": "ChangeScene",
+   "to": "S4MoveTutorialMain",
+   "args": [],
+   "action": "GotFocus22528",
+   "if": null
+  },
+  {
+   "from": "S4PG_Invitation",
+   "cmd": "ChangeScene",
+   "to": "S4MoveVideoTutorial",
+   "args": [],
+   "action": "GotFocus22529",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4CareerAttributeEvolution",
+   "args": [],
+   "action": "Case22812",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubPZone",
+   "args": [],
+   "action": "Case22952",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4CareerMain",
+   "args": [],
+   "action": "Case22955",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4CareerEventConfirm",
+   "args": [],
+   "action": "Case22958",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4CareerTournamentMain",
+   "args": [],
+   "action": "Case22961",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "Case22964",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSparringPartnerMain",
+   "args": [],
+   "action": "Case22969",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourMain",
+   "args": [],
+   "action": "Case22972",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourTournamentMain",
+   "args": [],
+   "action": "Case22975",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourDirectMatchMain",
+   "args": [],
+   "action": "Case22978",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4CoachList",
+   "args": [],
+   "action": "False22856",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "PushScene",
+   "to": "S4CareerInfoCenterMyPlayerMain",
+   "args": [
+    "true"
+   ],
+   "action": "True22877",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "PushScene",
+   "to": "S4WorldTourInfoCenterMyPlayerMain",
+   "args": [
+    "true"
+   ],
+   "action": "True22893",
+   "if": null
+  },
+  {
+   "from": "S4PlayerArea",
+   "cmd": "ChangeScene",
+   "to": "S4CoachInfo",
+   "args": [],
+   "action": "__False228295",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Behaviour",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Main",
+   "args": [],
+   "action": "GotFocus23122",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Face",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_FacePresets",
+   "args": [],
+   "action": "A23336",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Face",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Main",
+   "args": [],
+   "action": "GotFocus23354",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_FaceAdvanced",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_FaceFeatures",
+   "args": [],
+   "action": "A23401",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_FaceAdvanced",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_FacePresets",
+   "args": [],
+   "action": "B23393",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_FaceFeatures",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_FaceAdvanced",
+   "args": [],
+   "action": "False23452",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_FacePresets",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Face",
+   "args": [],
+   "action": "GotFocus23738",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_FacePresets",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_FreeForm",
+   "args": [],
+   "action": "GotFocus23744",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_FacePresets",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_FaceAdvanced",
+   "args": [],
+   "action": "GotFocus23745",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_FacePresets",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Main",
+   "args": [],
+   "action": "GotFocus23747",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_FreeForm",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_FacePresets",
+   "args": [],
+   "action": "False23852",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_IDinfo",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Main",
+   "args": [],
+   "action": "GotFocus24237",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Main",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Face",
+   "args": [],
+   "action": "Case24515",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Main",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Morphology",
+   "args": [],
+   "action": "Case24518",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Main",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomMain",
+   "args": [],
+   "action": "Case24521",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Main",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_TennisStyle",
+   "args": [],
+   "action": "Case24528",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Main",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_IDinfo",
+   "args": [],
+   "action": "Case24531",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Main",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Behaviour",
+   "args": [],
+   "action": "Case24534",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Main",
+   "cmd": "ChangeScene",
+   "to": "S4SaveLoadPlayer",
+   "args": [],
+   "action": "True24307",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_Morphology",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Main",
+   "args": [],
+   "action": "GotFocus24650",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_SportGear",
+   "cmd": "ChangeScene",
+   "to": "S4LockerRoomMain",
+   "args": [],
+   "action": "GotFocus25557",
+   "if": null
+  },
+  {
+   "from": "S4PlayerCreator_TennisStyle",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Main",
+   "args": [],
+   "action": "GotFocus25782",
+   "if": null
+  },
+  {
+   "from": "S4PlayerLoadingIndicator",
+   "cmd": "ChangeScene",
+   "to": "S4PG_InGame",
+   "args": [],
+   "action": "GotFocus25829",
+   "if": null
+  },
+  {
+   "from": "S4ProChallengeMain",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "Case26473",
+   "if": null
+  },
+  {
+   "from": "S4ProChallengeMain",
+   "cmd": "ChangeScene",
+   "to": "S4OnExhibitionLobby",
+   "args": [],
+   "action": "Case26485",
+   "if": null
+  },
+  {
+   "from": "S4ProChallengeMain",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionPlayerSelect",
+   "args": [],
+   "action": "Case26639",
+   "if": null
+  },
+  {
+   "from": "S4ProChallengeMain",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeRanking",
+   "args": [],
+   "action": "Case26641",
+   "if": null
+  },
+  {
+   "from": "S4ProChallengeRanking",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "B27126",
+   "if": null
+  },
+  {
+   "from": "S4ProChallengeRanking",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "True27049",
+   "if": null
+  },
+  {
+   "from": "S4SaveLoadPlayer",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "Case28168",
+   "if": null
+  },
+  {
+   "from": "S4SaveLoadPlayer",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectCharacter",
+   "args": [],
+   "action": "Case28278",
+   "if": null
+  },
+  {
+   "from": "S4SaveLoadPlayer",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubOffline",
+   "args": [],
+   "action": "Case28717",
+   "if": null
+  },
+  {
+   "from": "S4SaveLoadPlayer",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubPZone",
+   "args": [],
+   "action": "Case28720",
+   "if": null
+  },
+  {
+   "from": "S4SaveLoadPlayer",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerCreator_Main",
+   "args": [],
+   "action": "Case28723",
+   "if": null
+  },
+  {
+   "from": "S4SaveLoadPlayer",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectCharacter",
+   "args": [],
+   "action": "Case28726",
+   "if": null
+  },
+  {
+   "from": "S4SaveLoadPlayer",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubPCreator",
+   "args": [],
+   "action": "False28047",
+   "if": null
+  },
+  {
+   "from": "S4SaveLoadPlayer",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenuSubPCreator",
+   "args": [],
+   "action": "True27947",
+   "if": null
+  },
+  {
+   "from": "S4StartScreen",
+   "cmd": "ChangeScene",
+   "to": "S4PG_InGame",
+   "args": [],
+   "action": "GotFocus28917",
+   "if": null
+  },
+  {
+   "from": "S4StartScreen",
+   "cmd": "ChangeScene",
+   "to": "S4AttractMode",
+   "args": [],
+   "action": "True28874",
+   "if": null
+  },
+  {
+   "from": "S4StartScreen",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "True29014",
+   "if": null
+  },
+  {
+   "from": "S4UnlockOverview",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "B29027",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourDirectMatchMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "B29465",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourDirectMatchMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "B29552",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourDirectMatchMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourMain",
+   "args": [],
+   "action": "Case29364",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourDirectMatchMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourMain",
+   "args": [],
+   "action": "Case29369",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourDirectMatchMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourMain",
+   "args": [],
+   "action": "Case29378",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourDirectMatchMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourInfoCenterLeaderboards",
+   "args": [],
+   "action": "Case29470",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourDirectMatchMain",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "Case29480",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourDirectMatchMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourLobby",
+   "args": [],
+   "action": "False29327",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourTournamentMain",
+   "args": [],
+   "action": "Case29684",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "Case29687",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "Case29690",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "Case29693",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "Case29699",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "Case29706",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "Case29709",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4ProChallengeMain",
+   "args": [],
+   "action": "Case29712",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourFakeMatch",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "True29718",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourInfoCenterLeaderboards",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourInfoCenterRanking",
+   "args": [],
+   "action": "A29833",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourInfoCenterLeaderboards",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourMain",
+   "args": [],
+   "action": "Case29816",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourInfoCenterLeaderboards",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourTournamentMain",
+   "args": [],
+   "action": "Case29819",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourInfoCenterLeaderboards",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourDirectMatchMain",
+   "args": [],
+   "action": "Case29822",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourInfoCenterLeaderboards",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSparringPartnerMain",
+   "args": [],
+   "action": "Case29825",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourInfoCenterLeaderboards",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "False29830",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourInfoCenterRanking",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourInfoCenterLeaderboards",
+   "args": [],
+   "action": "B30714",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourInfoCenterRanking",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourInfoCenterLeaderboards",
+   "args": [],
+   "action": "True30635",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourLobby",
+   "cmd": "PopScene",
+   "to": "UserQuitLobby",
+   "args": [],
+   "action": "Case32233",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourLobby",
+   "cmd": "PopScene",
+   "to": "UserQuitLobby",
+   "args": [],
+   "action": "Case32235",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourLobby",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "False32346",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourLobby",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourFakeMatch",
+   "args": [],
+   "action": "True31942",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourLobby",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourDirectMatchMain",
+   "args": [],
+   "action": "True32342",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "A33035",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourInfoCenterLeaderboards",
+   "args": [],
+   "action": "Case32883",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourMain",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "Case32895",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectCharacter",
+   "args": [],
+   "action": "SpawnedAction32572",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectCharacter",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourMain",
+   "args": [],
+   "action": "False33506",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectCharacter",
+   "cmd": "ChangeScene",
+   "to": "S4SaveLoadPlayer",
+   "args": [],
+   "action": "False33720",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectCharacter",
+   "cmd": "ChangeScene",
+   "to": "S4SaveLoadPlayer",
+   "args": [],
+   "action": "True33440",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectTournament",
+   "cmd": "ChangeScene",
+   "to": "S4CareerSparringSelect",
+   "args": [],
+   "action": "A34297",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectTournament",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourMain",
+   "args": [],
+   "action": "Case33877",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectTournament",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourMain",
+   "args": [],
+   "action": "GotFocus34185",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectTournament",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourDirectMatchMain",
+   "args": [],
+   "action": "True33858",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectTournament",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourTournamentMain",
+   "args": [],
+   "action": "True33867",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectTournament",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourTournamentMain",
+   "args": [],
+   "action": "True34049",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSelectTournament",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourDirectMatchMain",
+   "args": [],
+   "action": "True34231",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSparringPartnerMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerSparringSelect",
+   "args": [],
+   "action": "B34514",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSparringPartnerMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerSparringSelect",
+   "args": [],
+   "action": "B34523",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSparringPartnerMain",
+   "cmd": "ChangeScene",
+   "to": "S4CareerSparringSelect",
+   "args": [],
+   "action": "B34567",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSparringPartnerMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourInfoCenterLeaderboards",
+   "args": [],
+   "action": "Case34530",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSparringPartnerMain",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "Case34540",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourSparringPartnerMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourFakeMatch",
+   "args": [],
+   "action": "True34509",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "B35387",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourSelectTournament",
+   "args": [],
+   "action": "B35527",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourInfoCenterLeaderboards",
+   "args": [],
+   "action": "Case35363",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4PlayerArea",
+   "args": [],
+   "action": "Case35375",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourLobby",
+   "args": [],
+   "action": "False35165",
+   "if": null
+  },
+  {
+   "from": "S4WorldTourTournamentMain",
+   "cmd": "ChangeScene",
+   "to": "S4WorldTourMain",
+   "args": [],
+   "action": "GotFocus35439",
+   "if": null
+  },
+  {
+   "from": "S4Xbox3DDisclaimer",
+   "cmd": "ChangeScene",
+   "to": "S4MainMenu",
+   "args": [],
+   "action": "GotFocus35748",
+   "if": null
+  },
+  {
+   "from": "SUnloadPadAssign",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionAssignPad",
+   "args": [],
+   "action": "On",
+   "if": null
+  },
+  {
+   "from": "SUnloadPlayerSelect",
+   "cmd": "ChangeScene",
+   "to": "S4ExhibitionPlayerSelect",
+   "args": [],
+   "action": "On",
+   "if": null
+  },
+  {
+   "from": "T4CareerSmallLogoRow",
+   "cmd": "ChangeScene",
+   "to": "S4CareerCalendar",
+   "args": [],
+   "action": "B584",
+   "if": null
+  }
+ ]
+}

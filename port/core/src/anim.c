@@ -168,9 +168,12 @@ static int32_t sector_clip(const Ts4Core *c, int32_t ms, int sector, float *fram
 static int key_ok(const Ts4Core *c, int32_t clip, int slot, int vidx)
 {
     uint32_t have;
-    if (vidx < 0) return 1;
-    if (slot < 0 || vidx > 31) return 0;
+    /* match_key (332e57c4, ref anim_select.c leaf_key): vidx -1 = key not part of this query; -2 = key unset, which
+     * wants an unconstrained clip; a set key passes an unconstrained clip or one carrying the bit */
+    if (vidx == -1) return 1;
+    if (slot < 0 || vidx > 31) return vidx == -2;
     have = ts4_le32(clip_at(c, clip) + 20 + 4 * (uint32_t)slot);
+    if (vidx == -2) return have == 0;
     return have == 0 || ((have >> vidx) & 1u);
 }
 
@@ -249,7 +252,7 @@ void ts4_anim_swing(Ts4Core *c, int player, uint32_t stroke, int volley, int sma
                         ((stroke & TS4_BTN_SLICE) && (stroke & TS4_BTN_RISK)) ? "DropShot" : (stroke & TS4_BTN_SLICE) ? "Slice" :
                         (stroke & TS4_BTN_TOPSPIN) ? "TopSpin" : "Flat", &q.vidx[2]);
     q.slot[3] = qlookup(c, "MoveToNet", "Yes", &v_move);
-    q.vidx[3] = (p->in.buttons & TS4_BTN_SPRINT) ? v_move : -1;     /* MoveToNet key only when following to the net */
+    q.vidx[3] = (p->in.buttons & TS4_BTN_SPRINT) ? v_move : -2;     /* MoveToNet set when following to the net, else unset */
     if (q.slot[3] < 0) q.vidx[3] = -1;
     q.dive_slot = qlookup(c, "Properties", "Spectacular", &q.dive_v);
     /* dive volley (fn_886BCE88, G6): local x, singles, skill SpectacularVolleys, two TimingState thresholds */

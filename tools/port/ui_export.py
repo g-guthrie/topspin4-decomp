@@ -5,8 +5,8 @@
       [--out work/port/assets/ui] [--archives Core,OnlineExhibition,...] [--no-textures] [--raw work/ui/raw]
 
 Reads the user's own disc image in place and writes only below --out (git-ignored). Nothing produced
-here may be committed (AGENTS.md); the committed, game-free summaries live in data/ui/ and are made with
-``--summary data/ui`` (names, counts, flow edges and hashes only, no text, no images).
+here may be committed (AGENTS.md); the committed, game-free summaries live in data/gameplay/ui/ and are made with
+``--summary data/gameplay/ui`` (names, counts, flow edges and hashes only, no text, no images).
 
 Output (docs/port/ui.md section 6):
 
@@ -566,10 +566,10 @@ class Exporter:
 
 
 def write_summary(ex, outdir):
-    """Game-free readable summaries for data/ui/: names, counts, edges, hashes. No text, no images."""
+    """Game-free readable summaries for data/gameplay/ui/: names, counts, edges, hashes. No text, no images."""
     os.makedirs(outdir, exist_ok=True)
     src = {a: i["sha256"] for a, i in ex.manifest["archives"].items()}
-    cmd = "python3 tools/port/ui_export.py --iso <disc> --summary data/ui (python %s)" % sys.version.split()[0]
+    cmd = "python3 tools/port/ui_export.py --iso <disc> --summary data/gameplay/ui (python %s)" % sys.version.split()[0]
     screens = []
     for name, rec in sorted(ex.scenes.items()):
         nt = {}
@@ -616,7 +616,7 @@ def main(argv=None):
     ap.add_argument("--archives", help="comma separated archive names (default: the UI set)")
     ap.add_argument("--no-textures", action="store_true", help="skip texture decoding (fast)")
     ap.add_argument("--raw", help="also dump the raw members here (git-ignored work/ folder)")
-    ap.add_argument("--summary", help="write the committed, game-free summaries (data/ui)")
+    ap.add_argument("--summary", help="write the committed, game-free summaries (data/gameplay/ui)")
     a = ap.parse_args(argv)
     Exporter(a).run()
 

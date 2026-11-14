@@ -8,6 +8,7 @@
   * the WebAssembly build + a Node smoke test that must reproduce the host state hash (skipped when the
     wasm-capable clang, wasm-ld or node are missing)
 """
+import json
 import math
 import os
 import random
@@ -261,9 +262,10 @@ class DataFormatTests(CoreCase):
             r = subprocess.run([sys.executable, str(tool), "check", "--data", str(ROOT / "data" / "gameplay")],
                                capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr[-400:])
-            m = re.search(r"(\d+)/(\d+) ports bound", r.stdout)
-            self.assertIsNotNone(m, r.stdout[-400:])
-            self.assertEqual(m.group(1), m.group(2))
+            rep = json.loads(r.stdout)["report"]
+            self.assertEqual(rep["bind"]["unbound"], 0)
+            self.assertEqual(rep["bind"]["bound"], rep["bind"]["ports"])
+            self.assertEqual(rep["shot_classes"], 33)
             subprocess.run([sys.executable, str(tool), "pack", "--data", str(ROOT / "data" / "gameplay"),
                             "--out", str(out)], check=True, capture_output=True)
             a = self.run_bin("--match", out, "7", "20000").stdout
