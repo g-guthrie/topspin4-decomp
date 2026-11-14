@@ -108,8 +108,15 @@ TOP_SPEED_REF = 7.5          # m/s: v_req is divided by the player's top speed; 
 UNSET_PTS = 0.4             # still moving at contact (set_f < 6)
 INSIDE_BONUS = -0.4         # inside the court with time (depth_x < -150 and frames >= 60)
 GRADE_EDGES = [0.8, 2.0, 3.4, 5.0]          # VeryGood | Good | Normal | Bad | VeryBad
-TEEOFF = {"pace_max": 52.0, "h_lo": 80.0, "h_hi": 140.0, "frames_min": 80, "run_max": 150.0,
-          "set_min": 15, "depth_max": 150.0, "score_max": 0.5}
+# Tee-off (owner's conditions, all required; thresholds from engine values, spec section 4):
+#   slow ball at arrival   contact pace <= 52 km/h (S+0x770, needs its writer); a neutral rally ball arrives at 60-75
+#   waist to shoulder      contact height 95..145 cm (Ball+0x344)
+#   time                   >= 60 frames since the opponent's hit (S+0xCF0 >= 60, as AutoSwing graph 179)
+#   no reach               required run speed < 3.5 m/s (PT+0x1B0, the FlatGoodReach threshold), not stretched
+#   feet set               within 100 cm of the hit point and arrived >= 20 frames before contact
+#   not backing up         own contact point not more than 150 cm behind the baseline and not moving back
+TEEOFF = {"pace_max": 52.0, "h_lo": 95.0, "h_hi": 145.0, "frames_min": 60, "vreq_max": 3.5, "run_max": 100.0,
+          "set_min": 20, "depth_max": 150.0}
 
 
 def grade_points(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick=0.0, volley=False):
@@ -140,9 +147,9 @@ def grade_of(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick=
         return "VeryBad", q, pts
     q = max(0.0, sum(pts.values()))
     t = TEEOFF
-    if (q <= t["score_max"] and pace <= t["pace_max"] and t["h_lo"] <= height <= t["h_hi"]
-            and frames >= t["frames_min"] and run_cm <= t["run_max"] and set_f >= t["set_min"]
-            and depth_x <= t["depth_max"] and not stretch):
+    if (pace <= t["pace_max"] and t["h_lo"] <= height <= t["h_hi"] and frames >= t["frames_min"]
+            and v_req < t["vreq_max"] and not stretch and run_cm <= t["run_max"] and set_f >= t["set_min"]
+            and depth_x <= t["depth_max"]):
         return "Tee-off", q, pts
     for g, edge in zip(GRADES[1:], GRADE_EDGES):
         if q < edge:
@@ -185,8 +192,13 @@ E_FLOAT = 1.12                # floating ball: apex well above the net and slow 
 RT_CURVE = [(200, 0.22), (250, 0.32), (300, 0.45), (350, 0.58), (400, 0.70), (450, 0.80), (500, 0.88), (550, 0.94),
             (650, 1.0)]
 # Direct term: the opponent's last timing grade (owner's change of brief).  Sized with the rally simulation.
-OPP_TIMING_FX = {"Perfect": 0.88, "Good": 1.0, "Poor": 1.12, "Mistimed": 1.25}
-OPP_FX_CAP = (0.85, 1.30)     # the direct factor is clamped to this range; it never compounds across shots
+# Direct opponent-timing term (owner decision): its own input, separate from every ball-derived input, scaling both
+# windows.  Five levels of the hitter's release: Perfect (inside his Perfect window), Good (inner half of the Good
+# band), Average (outer half), Poor, Mistimed.  Ball effects stack on top; the product of the ball ease and this
+# term is floored at TOTAL_FLOOR of the normal window (before the rating factor).
+OPP_TIMING_FX = {"Perfect": 0.85, "Good": 0.93, "Average": 1.0, "Poor": 1.15, "Mistimed": 1.30}
+OPP_FX_CAP = (0.80, 1.40)     # range of the scaled term in the sizing sweep; it never compounds across shots
+TOTAL_FLOOR = 0.60
 
 
 def reaction_factor(react_ms):
@@ -213,7 +225,7 @@ def rating_factor(stat):
 
 
 def window_halfwidths(pace_kmh, react_ms, height, kick=0.0, v_req=0.0, set_f=0, stretch=False,
-                      dist_net_cm=1200.0, floating=False, stat=0.5, opp_timing="Good", opp_scale=1.0):
+                      dist_net_cm=1200.0, floating=False, stat=0.5, opp_timing="Average", opp_scale=1.0):
     """(perfect half-width, good half-width, total ease multiplier) in frames.
     opp_scale scales the direct opponent term's distance from 1 (1.0 = the proposal, 0 = off)."""
     f = ease_factors(pace_kmh, react_ms, height, kick, v_req, set_f, stretch, dist_net_cm, floating)
@@ -222,7 +234,7 @@ def window_halfwidths(pace_kmh, react_ms, height, kick=0.0, v_req=0.0, set_f=0, 
         e *= v
     opp = 1.0 + (OPP_TIMING_FX[opp_timing] - 1.0) * opp_scale
     opp = clamp(opp, *OPP_FX_CAP)
-    e *= opp * rating_factor(stat)
+    e = max(TOTAL_FLOOR, e * opp) * rating_factor(stat)
     return (clamp(PERFECT_HALF_BASE * e, PERFECT_MIN, PERFECT_MAX),
             clamp(GOOD_HALF_BASE * e, GOOD_MIN, GOOD_MAX), e)
 
@@ -237,15 +249,20 @@ def p_window(half, sigma=None):
     return math.erf((half + 0.5) / (sigma * math.sqrt(2.0)))
 
 
-def timing_outcome(rng, perfect_half, good_half, sigma=None):
+def timing_outcome(rng, perfect_half, good_half, sigma=None, fine=False):
+    """Coarse grade Perfect | Good | Poor | Mistimed; with fine=True also the five-level grade the opponent's
+    window reads (Good split into Good = inner half of the band and Average = outer half)."""
     e = abs(rng.gauss(0.0, HUMAN_SIGMA_F if sigma is None else sigma))
     if e <= perfect_half + 0.5:
-        return "Perfect"
-    if e <= good_half + 0.5:
-        return "Good"
-    if e <= good_half + 4.5:
-        return "Poor"
-    return "Mistimed"
+        c = f = "Perfect"
+    elif e <= good_half + 0.5:
+        c = "Good"
+        f = "Good" if e <= 0.5 * (perfect_half + good_half) + 0.5 else "Average"
+    elif e <= good_half + 4.5:
+        c = f = "Poor"
+    else:
+        c = f = "Mistimed"
+    return (c, f) if fine else c
 
 
 # =========================================================================== speed stack (forehand launch mph)
@@ -407,7 +424,7 @@ def policy_forehand(rng, p, sit, grade, overcharge_try=0.8):
     return cls, hold
 
 
-def forehand_shot(rng, p, sit, opp_timing="Good", opp_scale=1.0, overcharge_try=0.8):
+def forehand_shot(rng, p, sit, opp_timing="Average", opp_scale=1.0, overcharge_try=0.8):
     vr = sit.v_req * TOP_SPEED_REF / (RALLY["max_run_base"] + RALLY["max_run_speed"] * p.s["speed"])
     g, q, _ = grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
                        sit.stretch, sit.kick)
@@ -474,21 +491,21 @@ def serve_react_ms(v_mph):
     return 500.0 * (200.0 / kmh(v_mph)) ** 0.9
 
 
-def return_quality(rng, ret, serve_mph, placement=0.5, opp_timing="Good", opp_scale=1.0, second=False):
+def return_quality(rng, ret, serve_mph, placement=0.5, opp_timing="Average", opp_scale=1.0, second=False):
     """Returner outcome: 'unreturned' | 'weak' | 'neutral' | 'good', and the return's timing grade."""
     rt = serve_react_ms(serve_mph)
     pace_contact = kmh(serve_mph) * 0.62
     hp, hg, e = window_halfwidths(pace_contact, rt, 115.0, 0.35 if second else 0.1, 1.5 + 3.0 * placement, 4,
                                   placement > 0.75, 1300.0, False, ret.s["ret"], opp_timing, opp_scale)
-    t = timing_outcome(rng, hp, hg)
+    t, tf = timing_outcome(rng, hp, hg, fine=True)
     reach = 0.97 - 0.40 * max(0.0, placement - 0.5) / 0.5 * (1.15 - 0.3 * ret.s["speed"])
     if rng.random() > reach:
-        return "unreturned", t
+        return "unreturned", tf
     err = {"Perfect": 0.03, "Good": 0.12, "Poor": 0.45, "Mistimed": 0.85}[t] * clamp(1.9 - 1.5 * e, 0.4, 1.8)
     err += 0.30 * ret.floor["ret"]
     if rng.random() < err:
-        return "unreturned", t
-    return ({"Perfect": "good", "Good": "neutral", "Poor": "weak", "Mistimed": "weak"}[t]), t
+        return "unreturned", tf
+    return ({"Perfect": "good", "Good": "neutral", "Poor": "weak", "Mistimed": "weak"}[t]), tf
 
 
 # =========================================================================== rally / match simulation
@@ -605,7 +622,7 @@ def hit(rng, p, b, at_net, prm):
         hp *= 0.5
     if hold == "Rushed":
         hp, hg = hp * 0.7, hg * 0.8
-    t = timing_outcome(rng, hp, hg)
+    t, tf = timing_outcome(rng, hp, hg, fine=True)
     power_stat = p.s["power"]
     v, _ = stack_speed(cls, g, hold, t, power_stat, stat, p.vigor, "pace" in p.skills, rng.gauss(0.0, NOISE_MPH))
     if at_net:
@@ -625,7 +642,7 @@ def hit(rng, p, b, at_net, prm):
     if at_net and sit.height < 50:            # half-volley / ball at the feet
         err += 0.08 * (1.2 - stat)
     p.spend(R["vigor_cost"][hold] + R["run_cost"] * sit.v_req)
-    info = {"grade": g, "timing": t, "cls": cls, "hold": hold, "mph": v}
+    info = {"grade": g, "timing": t, "fine": tf, "cls": cls, "hold": hold, "mph": v}
     if rng.random() < err:
         return "error", None, info
     if at_net and t in ("Perfect", "Good"):
@@ -638,7 +655,7 @@ def hit(rng, p, b, at_net, prm):
                   + (0.10 if at_net else 0.0), 0.0, 1.0)
     kick = R["kick"][cls] * fx["spin"] + (R["kick_hand"] * stat * fx["spin"] if cls == "TopSpin" else 0.0)
     short = depth < 0.12 and not at_net
-    nb = Ball(v, depth, width, kick, cls == "Slice", t if t else "Good", short, at_net)
+    nb = Ball(v, depth, width, kick, cls == "Slice", tf, short, at_net)
     return "in", nb, info
 
 
@@ -647,7 +664,7 @@ def play_point(rng, server, receiver, prm):
     p_eff = prm.get("serve_effort", 0.4)
     big_eff = rng.random() < server.style.get("max_serve", 0.0)
     e = 1.0 if big_eff else clamp(rng.betavariate(2, 3) * (p_eff / 0.4), 0.0, 1.0)
-    g = timing_outcome(rng, *window_halfwidths(60, 700, 130, 0, 0, 30, False, 1200, True, server.s["serve"])[:2])
+    g, gf = timing_outcome(rng, *window_halfwidths(60, 700, 130, 0, 0, 30, False, 1200, True, server.s["serve"])[:2], fine=True)
     v, ok, cost, _ = first_serve(rng, server, e, server.vigor, g)
     server.spend(cost * 0.004)
     second = False
@@ -658,7 +675,7 @@ def play_point(rng, server, receiver, prm):
         if not ok:
             return receiver, 1, "df", None
     placement = clamp(rng.random() * (0.8 if second else 1.0) * (0.75 + 0.25 * server.s["serve"]) + 0.15 * server.s["serve"], 0.0, 1.0)
-    q, rt = return_quality(rng, receiver, v, placement, g, prm.get("opp_scale", 1.0), second)
+    q, rt = return_quality(rng, receiver, v, placement, gf if not second else "Average", prm.get("opp_scale", 1.0), second)
     if q == "unreturned":
         return server, 1, "ace_unret", rt
     # a slow serve can be attacked: the return gains pace, depth and angle (through the ball, spec s8)
@@ -677,6 +694,8 @@ def play_point(rng, server, receiver, prm):
         out, nb, info = hit(rng, hitter, ball, at_net[hitter], prm)
         if "trace" in prm:
             prm["trace"].append((ball.timing, info["timing"], out))
+        if "grades" in prm and info.get("timing") is not None:
+            prm["grades"][(info["grade"], at_net[hitter])] += 1
         if out == "unreached":
             return other, shots, "winner", None
         if out == "putaway":
@@ -701,7 +720,7 @@ def play_match(rng, a, b, prm, sets_to_win=2, games_per_set=6):
     a.vigor = b.vigor = 1.0
     sets = {a: 0, b: 0}
     stats = {"points": 0, "shots": 0, "timing_err": 0, "err": 0, "winners": 0, "ace_unret": 0, "df": 0,
-             "srv_won": 0}
+             "srv_won": 0, "sets": 0}
     server, receiver = a, b
 
     def point(sv, rc):
@@ -749,6 +768,7 @@ def play_match(rng, a, b, prm, sets_to_win=2, games_per_set=6):
             if max(games.values()) >= games_per_set and abs(games[a] - games[b]) >= 2:
                 break
         sets[a if games[a] > games[b] else b] += 1
+        stats["sets"] += 1
         for pl in (a, b):
             pl.vigor = min(pl.vmax(), pl.vigor + RALLY["recover_set"])
     return (a if sets[a] > sets[b] else b), stats
@@ -808,13 +828,25 @@ def depth_shortfall(grade, timing):
     return max(0.0, GRADE_FX[grade]["depth_cm"] + DEPTH_TIMING_CM[timing]), DEPTH_SD_CM
 
 
-STICK_MARGIN = [(0.4, 0.55), (0.6, 0.75), (0.8, 0.90), (1.0, 1.0)]   # stick magnitude -> fraction of the quad reach
-STICK_ERR = [(0.4, 0.70), (0.6, 0.80), (0.8, 0.92), (1.0, 1.0)]      # and the error multiplier it buys
+# Aim settle (owner decision): the stick stays direction-only; a push to the rim is never penalised.  Closeness to the
+# lines is earned through the aim score as in retail, with one new input: frames the current stick direction has been
+# held for this ball, counted from the opponent's contact (reset each shot) to the commit (release, or the 12-frame
+# auto-commit, after which aim is frozen).  The value multiplies the usable reach toward the lines (aim quad
+# efficiency): a late flick stays nearer the middle, an early, steady aim settles outward.  A direction change of
+# more than 30 degrees restarts the count (judgement).
+AIM_SETTLE = [(0, 0.55), (6, 0.60), (12, 0.70), (20, 0.82), (30, 0.93), (40, 1.0)]
+AIM_RESTART_DEG = 30.0
 
 
-def stick_margin(mag):
-    """(quad-efficiency cap, error multiplier) for a stick push of magnitude mag (0.4 dead zone .. 1)."""
-    return pwl(STICK_MARGIN, mag), pwl(STICK_ERR, mag)
+def aim_settle(frames_held):
+    """Fraction of the line reach usable after holding one direction for frames_held frames before the commit."""
+    return pwl(AIM_SETTLE, frames_held)
+
+
+def frames_held_typical(frames_to_contact, react_frames=15, commit_lead=12):
+    """Frames a player who picks a direction react_frames after the opponent's contact and keeps it can hold it
+    before the commit."""
+    return max(0, frames_to_contact - commit_lead - react_frames)
 
 
 def angle_access(depth_x_cm, grade, hand_stat):

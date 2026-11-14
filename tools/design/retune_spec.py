@@ -368,11 +368,19 @@ def sec_grade(a):
             ["stretch (SwingCategory reach #0698037d, or v_req > 5.2 m/s felt)", "%g" % M.STRETCH_PTS, ""],
             ["not set (planted < 6 frames at contact)", "%g" % M.UNSET_PTS, "groundstrokes only"]]
     out.append(md(["input (engine field)", "points (x:points, linear between, clamped)", "note"], rows))
-    out += ["", "Grade from the sum Q: VeryGood < %g <= Good < %g <= Normal < %g <= Bad < %g <= VeryBad. **Tee-off**: Q <= %g and pace <= %g km/h "
-            "and contact %g-%g cm and >= %d frames and run <= %g cm and planted >= %d frames and not deeper than %g cm behind the baseline "
-            "(volley Tee-off = put-away: Q <= 0.5, pace <= 75 km/h, contact >= 110 cm, >= 30 frames)." % (
-                tuple(M.GRADE_EDGES) + (M.TEEOFF["score_max"], M.TEEOFF["pace_max"], M.TEEOFF["h_lo"], M.TEEOFF["h_hi"], M.TEEOFF["frames_min"],
-                                         M.TEEOFF["run_max"], M.TEEOFF["set_min"], M.TEEOFF["depth_max"])), ""]
+    out += ["", "Grade from the sum Q: VeryGood < %g <= Good < %g <= Normal < %g <= Bad < %g <= VeryBad." % tuple(M.GRADE_EDGES), "",
+            "**Tee-off** is a separate gate, every condition required (the Q score is not one of them, so a ball the player stands still "
+            "for is VeryGood unless the ball itself is weak):", ""]
+    T = M.TEEOFF
+    out.append(md(["condition", "threshold", "engine value it is set from"], [
+        ["slow ball at arrival", "contact pace <= %g km/h" % T["pace_max"], "S+0x770 incoming pace (needs its writer); a neutral rally ball arrives at 60-75 km/h"],
+        ["contact between waist and shoulder", "%g-%g cm" % (T["h_lo"], T["h_hi"]), "Ball+0x344; Fatality clips are shoulder height"],
+        ["about a second since the opponent's hit", ">= %d frames" % T["frames_min"], "S+0xCF0 >= 60, the AutoSwing test (graph 179)"],
+        ["no reach swing", "required run speed < %g m/s, not stretched" % T["vreq_max"], "PT+0x1B0 = 3.5 m/s, the FlatGoodReach threshold; reach qualifier #0698037d"],
+        ["feet set", "within %g cm of the hit point, arrived >= %d frames before contact" % (T["run_max"], T["set_min"]), "S+0x7A0 run distance; planner arrival frame"],
+        ["not backing up", "contact not more than %g cm behind the baseline, not moving back" % T["depth_max"], "contact x; Mover velocity S+0x9xx (3-frame mean)"],
+    ]))
+    out += ["", "Volley Tee-off = the put-away: Q <= 0.5, pace <= 75 km/h, contact >= 110 cm, >= 30 frames.", ""]
     out += ["### 4b. What each grade gives *(proposal)*", ""]
     rows = []
     for g in M.GRADES:
@@ -453,22 +461,53 @@ def sec_oppterm(a):
             if own is None:
                 continue
             after[(inc, own)] += 1
+        pool = {"Average": "Good"}
+        after = collections.Counter()
+        for inc, own, outc in trace:
+            if own is not None:
+                after[(pool.get(inc, inc), own)] += 1
         def p_perf(inc):
             t = sum(after[(inc, o)] for o in ("Perfect", "Good", "Poor", "Mistimed"))
             return after[(inc, "Perfect")] / t if t else 0.0
         def p_err(inc):
-            t = sum(1 for i, o, oc in trace if i == inc and o is not None)
-            e = sum(1 for i, o, oc in trace if i == inc and oc == "error")
+            t = sum(1 for i, o, oc in trace if pool.get(i, i) == inc and o is not None)
+            e = sum(1 for i, o, oc in trace if pool.get(i, i) == inc and oc == "error")
             return e / t if t else 0.0
-        rows.append([f1(sc), "%.2f" % max(M.OPP_FX_CAP[0], 1.0 + (M.OPP_TIMING_FX["Perfect"] - 1) * sc) + " / %.2f / %.2f" % (
-            min(M.OPP_FX_CAP[1], 1.0 + (M.OPP_TIMING_FX["Poor"] - 1) * sc), min(M.OPP_FX_CAP[1], 1.0 + (M.OPP_TIMING_FX["Mistimed"] - 1) * sc)),
+        fac = lambda k: M.clamp(1.0 + (M.OPP_TIMING_FX[k] - 1) * sc, *M.OPP_FX_CAP)
+        rows.append([f1(sc), " / ".join("%.2f" % fac(k) for k in ("Perfect", "Good", "Average", "Poor", "Mistimed")),
             f2(tot["shots"] / P), f3(tot["timing_err"] / P), f3(tot["err"] / P), f3(tot["winners"] / P),
             f3(p_perf("Perfect")), f3(p_perf("Good")), f3(p_perf("Poor")), f3(p_err("Perfect")), f3(p_err("Poor"))])
-    out.append(md(["scale", "factor after Perfect / Poor / Mistimed", "shots per point", "points ended by a timing error",
+    out.append(md(["scale", "factor after Perfect / Good / Average / Poor / Mistimed", "shots per point", "points ended by a timing error",
                    "points ended by any error", "winners", "P(Perfect) after opp. Perfect", "after opp. Good", "after opp. Poor",
                    "P(error) after opp. Perfect", "after opp. Poor"], rows))
-    out += ["", "Scale 1.0 is the proposal (Perfect x%.2f, Poor x%.2f, Mistimed x%.2f, clamp %.2f..%.2f)." % (
-        M.OPP_TIMING_FX["Perfect"], M.OPP_TIMING_FX["Poor"], M.OPP_TIMING_FX["Mistimed"], M.OPP_FX_CAP[0], M.OPP_FX_CAP[1])]
+    out += ["", "Scale 1.0 is the owner's starting sizes (%s); ball ease x this term floored at %.2f of the normal window; "
+            "'after opp. Good' pools the opponent's Good and Average releases." % (
+        ", ".join("%s x%.2f" % kv for kv in M.OPP_TIMING_FX.items()), M.TOTAL_FLOOR)]
+    return "\n".join(out)
+
+
+def sec_teeoff(a):
+    nm = 20 if a.quick else 120
+    out = ["### 4d. Tee-off frequency in matches between equals *(computed, %d best-of-3 matches per row)*" % nm, ""]
+    rows = []
+    for name in ("average pro", "elite all-rounder"):
+        rng = random.Random(41)
+        G = collections.Counter()
+        tot = collections.Counter()
+        for _ in range(nm):
+            p = M.MatchPlayer("a", M.ARCH[name], {"flat": 0.35})
+            q = M.MatchPlayer("b", M.ARCH[name], {"flat": 0.35})
+            w, st = M.play_match(rng, p, q, {"grades": G})
+            tot.update(st)
+        ground = sum(v for (g, net), v in G.items() if not net)
+        tee_g = G[("Tee-off", False)]
+        tee_v = G[("Tee-off", True)]
+        vg = G[("VeryGood", False)]
+        sets = tot["sets"]
+        rows.append([name, "%.0f" % (ground / sets / 2), f1(tee_g / sets / 2), f1(tee_v / sets / 2), f3(tee_g / max(1, ground)),
+                     f3(vg / max(1, ground))])
+    out.append(md(["players", "groundstrokes per player per set", "Tee-off groundstrokes per player per set",
+                   "volley put-aways (Tee-off) per player per set", "Tee-off share of groundstrokes", "VeryGood share"], rows))
     return "\n".join(out)
 
 
@@ -499,10 +538,17 @@ def sec_placement(a):
         rows.append([g] + ["%.0f" % M.depth_shortfall(g, t)[0] for t in ("Perfect", "Good", "Poor", "Mistimed")])
     out.append(md(["grade", "Perfect", "Good", "Poor", "Mistimed"], rows))
     out += ["", "Mean shortfall in cm; sd %.0f cm around it (retail: uniform 0..310 cm whatever the shot, mean 155)." % M.DEPTH_SD_CM, ""]
-    out += ["### 7b. Stick push as margin *(proposal)*", ""]
-    out.append(md(["stick magnitude", "0.4 (just past dead zone)", "0.6", "0.8", "1.0"],
-                  [["quad-efficiency cap (how close to the lines)"] + [f2(M.stick_margin(m)[0]) for m in (0.4, 0.6, 0.8, 1.0)],
-                   ["error multiplier"] + [f2(M.stick_margin(m)[1]) for m in (0.4, 0.6, 0.8, 1.0)]]))
+    out += ["### 7b. Aim settle: how long the direction has been held *(proposal; the stick stays direction-only)*", ""]
+    pts = [x for x, _ in M.AIM_SETTLE]
+    out.append(md(["frames held before the commit"] + ["%d" % x for x in pts] + ["%d+" % (pts[-1] + 10)],
+                  [["usable reach toward the lines"] + [f2(y) for _, y in M.AIM_SETTLE] + ["1.00"]]))
+    out += ["", "Typical holds (direction picked %d frames after the opponent's contact and kept; commit %d frames before contact):" % (15, M.AUTO_COMMIT), ""]
+    rows = []
+    for lab, fr in (("neutral rally ball", 78), ("hard flat drive", 58), ("short floater (Tee-off)", 100), ("return of a 120 mph serve", 31),
+                    ("return of a 145 mph serve", 26), ("first volley off a hard pass", 22), ("late flick on a rally ball (aim set 8 frames before the commit)", None)):
+        h = 8 if fr is None else M.frames_held_typical(fr)
+        rows.append([lab, "-" if fr is None else fr, h, f2(M.aim_settle(h))])
+    out.append(md(["ball", "frames to contact", "frames held", "usable reach"], rows))
     out += ["", "### 7c. Angle access (fraction of the sideline reach usable) *(proposal)*", ""]
     rows = []
     for dx, lab in ((-400, "4 m inside"), (-150, "1.5 m inside"), (0, "on the baseline"), (200, "2 m behind"), (400, "4 m behind")):
@@ -672,7 +718,7 @@ def sec_movement(a):
     return "\n".join(out)
 
 
-SECTIONS = {"speed": sec_speed, "serve": sec_serve, "flight": sec_flight, "grade": sec_grade, "window": sec_window,
+SECTIONS = {"speed": sec_speed, "serve": sec_serve, "flight": sec_flight, "grade": sec_grade, "teeoff": sec_teeoff, "window": sec_window,
             "oppterm": sec_oppterm, "power": sec_power, "placement": sec_placement, "net": sec_net, "stats": sec_stats,
             "abuse": sec_abuse, "robust": sec_robust, "movement": sec_movement}
 
