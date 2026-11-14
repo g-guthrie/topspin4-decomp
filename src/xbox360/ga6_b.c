@@ -43,7 +43,7 @@ void ga6_release_or_forward_886D9668(void *owner, struct Ga6Counted *item, int a
 
 /* ---- self-relative array element wrappers ---- */
 void fn_886DF020(void *owner, void *entry);
-void fn_886D9698(ts4_word a, void *entry, ts4_word b);
+void ga6_apply_hold_886D9698(ts4_word a, void *entry, ts4_word b);
 
 struct Ga6Block34 {
     char pad_00[0xC];
@@ -73,5 +73,5 @@ struct Ga6Indexed {
 void ga6_dispatch_indexed_entry_886DA810(struct Ga6Indexed *self, int *hdr, ts4_word a, ts4_word b)
 {
     char *entry = (char *)hdr + *hdr + self->index * 0x1C;
-    fn_886D9698(a, entry, b);
+    ga6_apply_hold_886D9698(a, entry, b);
 }

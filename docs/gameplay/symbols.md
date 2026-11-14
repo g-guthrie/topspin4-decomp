@@ -39,6 +39,8 @@ use seen in the code, written as C; argument names are ours. Older symbol tables
 | `fn_881899D8` | `RangeCurve_Eval` | `float (RangeList *r, float x)` | clamped ramp over a `{InStart, InStop, OutStart, OutStop}` list | C | timing-and-fatigue s1 |
 | `fn_88661B60` | `TimingState_ResetOnLaunch` | `void (PlayerController *)` | resets TimingState at the opponent's launch | C | timing-and-fatigue s1 |
 | `fn_886B3CF8` | `SwingRequest_Update` | `void (PlayerController *)` | request state machine; commits ManualShotTiming at 3 sites | C | controls s4 |
+| `fn_8865E430` | `Repositioning_UpdateSprint` | `void (PlayerController *)` | S+0xA2C = Rush && vigor >= 0.1; RequiredAmplitude S+0xA10 = 1 | C | OPEN 3.1 |
+| `fn_8866FB60` | `MoveSpeed_Query` | `void (Mover *, float *speed, bool *valid, bool *sprint)` | speed by move state hash (`0xA73FFF84` override S+0xDE8, `0x7652DEC8` RequiredAmplitude + sprint, `0x77579282` this+0x34) | C | OPEN 3.1 |
 | `fn_886902E8` | `Fatigue_Init` | `void (PlayerController *)` | vigor = recovery = VigorMax = 1, constant graphs | C | timing-and-fatigue s2 |
 | `fn_88690540` | `Fatigue_Update` | `void (PlayerController *)` | per-frame load and CurrentVigor | C | timing-and-fatigue s2 |
 | `fn_8866ECA8` | `Fatigue_AddAnimationCosts` | `void (PlayerController *)` | animation-event costs from `PT+0x618` into `S+0xF28` | C | timing-and-fatigue s2 |

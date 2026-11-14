@@ -5956,6 +5956,14 @@
       "src/xbox360/ga4_c.cpp": {
         "status": "Matching",
         "source": "xbox360/ga4_c.cpp"
+      },
+      "src/xbox360/ga5_b.c": {
+        "status": "Matching",
+        "source": "xbox360/ga5_b.c"
+      },
+      "src/xbox360/ga6_q.c": {
+        "status": "Matching",
+        "source": "xbox360/ga6_q.c"
       }
     }
   }

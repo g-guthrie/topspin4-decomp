@@ -47,7 +47,7 @@ behaviour.
 
 | # | item | raised in | settle | status |
 |---|---|---|---|---|
-| 3.1 | How sprint (RB) reaches the locomotion keys | movement-and-animation s5.7 | follow `@Rush` S+0x4DD (`fn_8865E430`), `@ReqFastRepos` S+0x4E2 (`fn_8868C218`, `fn_8869B928`) into the planner and AnimationSelection | open |
+| 3.1 | How sprint (RB) reaches the locomotion keys | movement-and-animation s5.7 | follow `@Rush` S+0x4DD (`fn_8865E430`), `@ReqFastRepos` S+0x4E2 (`fn_8868C218`, `fn_8869B928`) into the planner and AnimationSelection | **partly** (C, GE1): `fn_8865E430` (called each frame by `fn_886BB0A8 +0x438` while the point is live) sets `RePositioningState.#1cd155e8` S+0xA2C = `@Rush && CurrentVigor >= 0.1` and `RequiredAmplitude` S+0xA10 = 1.0. The move-speed query `fn_8866FB60` returns, in move state `0x7652DEC8`, speed = RequiredAmplitude plus that sprint flag; with the flag set its callers `fn_88691C40 +0x124` and `fn_886BEEE8 +0xBC` skip the computed speed `fn_88691B38`, so **sprint = full amplitude 1.0, refused below vigor 0.1**. Open: what `0x7652DEC8` is (I: the repositioning move), the effect of `S+0xA2D` (selects `+0x2C` vs `+0x28` in `fn_886BEEE8`), and the `@ReqFastRepos` readers |
 | 3.2 | About 12 movement predicates and exit conditions of planner states 10-18 (L/I) | gp3 s9, movement-and-ai A.3/D | transcribe `fn_886A9678`, `fn_886877A8`, `fn_8869A4D0`, `fn_886A58F0`, `fn_886A26E0`, `fn_886A33C0`, `fn_88678548`, `fn_886A2BE8`, `fn_8865DBA8`, `fn_88699FC0`, `fn_88688948`, `fn_886887C0` | open (some V in movement-and-ai A.4) |
 | 3.3 | Sector angle rounding, Back look-side rule, blend curve, root-motion mirroring, retarget angle tests | movement-and-animation s5.6 | read the locomotion selector and `fn_886D3AD8` | open (I) |
 | 3.4 | Vivacity source of the transition speed | movement-and-animation s5.6 | graph binding of Vivacity (graph 14) to the transition lerp | open |
@@ -129,3 +129,4 @@ gameplay words (GE1, `crc32`) found none of them; the G5b/G4c searches are wider
   `tools/ts4data/ps_layout.py` prints any reflected type with absolute offsets and names.
 * GE1, 2026-11-14: closed 1.8 (TimingValue, read from code + data) and 5.1 (vigor, read from
   code); both in `timing-and-fatigue.md`, with `ref/gameplay/timing.c` and `ref/gameplay/fatigue.c`.
+* GE1: 3.1 partly (sprint flag and its vigor gate, read from code); `baaa713d` located (PT+0x740 = 12, auto-commit lead).

@@ -100,7 +100,8 @@ sets it to `lerp(lerp(0.5, 0.65, Stamina), 1, ramp(#cfd8dd5d 1..5))`: a low-stam
 recover only to about 0.5-0.65 until the ramp input grows. CurrentVigor feeds the fault graphs
 (`ramp(vigor 0..0.2..0.4: -0.3 -> -0.1 -> 0)` in the control sum), RushSpeedCoef and
 SwingSpeedCoef (movement and swing animation speed), Vivacity (transition speed), IsTired, the
-wood graph 280 and the serve window.
+wood graph 280 and the serve window. In code it also gates the sprint: RB sets the sprint flag only while `CurrentVigor >= 0.1`
+(`fn_8865E430`, `g_ts4_script_constants+0x2AC`; OPEN 3.1).
 
 Tuning: capacity and per-point recovery are the FatigueConst / `80ce1a10` graph keys
 (`ts4_analyser_patch.py`); the rest multipliers and the animation cost table are in

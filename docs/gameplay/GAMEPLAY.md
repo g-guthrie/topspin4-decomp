@@ -146,7 +146,8 @@ the most; the drop shot misses 30-40 % at `|t| = 0.3`. OutcomeNet sends low-cont
   `CurrentVigor = max(0, 1 - (carried + cost) / (2 x capacity))`. At the end of each point
   `vigor = min(vigor + recovery rate x rest, VigorMax)` with rest 1 / 2 / 3 (I: point / game /
   set). VigorMax = `lerp(lerp(0.5, 0.65, Stamina), 1, ...)`. Vigor feeds the fault graphs,
-  movement and swing speed, transitions and the serve window.
+  movement and swing speed, transitions and the serve window, and **below 0.1 the RB sprint is
+  refused** (code `fn_8865E430`; sprint otherwise runs at full amplitude 1.0).
 
 ## 10. AI difficulty
 

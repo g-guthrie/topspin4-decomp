@@ -10,7 +10,7 @@ struct Ga6Node { int type; };
 struct Ga6Node *ts4_find_by_id_886C3DC0(void *owner, ts4_word id);
 void ts4_tailcall_fn_88584548_8857AFE8(int arg);
 void fn_886D2E78(void *self);
-void fn_886D7C28(void *a, ts4_word b);
+void ga6_run_hold_set_886D7C28(void *a, ts4_word b);
 void ga6_wait_loop_886D7970(void *a);
 void fn_886DADB8(void *self);
 void ts4_clear_rec8c_values_886C50D0(void *self);
@@ -38,7 +38,7 @@ struct Ga6TaskOwner { char pad_00[0x10]; struct Ga6TaskInfo *info; };
 /* Advance the owner's task by 0x1F4 ticks; then hand the task to the busy or idle path. */
 void ga6_step_task_886D9000(struct Ga6TaskOwner *self)
 {
-    fn_886D7C28(self->info->task, self->info->w48 + 0x1F4);
+    ga6_run_hold_set_886D7C28(self->info->task, self->info->w48 + 0x1F4);
     if (self->info->task->busy)
         ga6_wait_loop_886D7970(self->info->task);
     else

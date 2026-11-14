@@ -45238,3 +45238,28 @@ src/xbox360/ga4_b.c:
 src/xbox360/ga4_c.cpp:
 	.pdata      start:0x88124288 end:0x88124290
 	.text       start:0x8869F428 end:0x8869F510
+
+src/xbox360/ga5_b.c:
+	.pdata      start:0x881247D0 end:0x881247D8
+	.pdata      start:0x881247E0 end:0x881247E8
+	.pdata      start:0x88124AE0 end:0x88124AE8
+	.pdata      start:0x88124B60 end:0x88124B68
+	.text       start:0x886B6230 end:0x886B62E0
+	.text       start:0x886B6348 end:0x886B63B8
+	.text       start:0x886C6048 end:0x886C6098
+	.text       start:0x886C7230 end:0x886C7284
+	.text       start:0x886C85C0 end:0x886C8674
+	.text       start:0x886C9A68 end:0x886C9AC0
+	.text       start:0x886CBFF8 end:0x886CC054
+
+src/xbox360/ga6_q.c:
+	.pdata      start:0x88124E78 end:0x88124E80
+	.pdata      start:0x88124F88 end:0x88124F90
+	.pdata      start:0x88124FF0 end:0x88124FF8
+	.pdata      start:0x881250B0 end:0x881250B8
+	.pdata      start:0x88125250 end:0x88125258
+	.text       start:0x886D36D8 end:0x886D37BC
+	.text       start:0x886D7C28 end:0x886D7D04
+	.text       start:0x886D9698 end:0x886D9784
+	.text       start:0x886DBE90 end:0x886DBF40
+	.text       start:0x886E2BF8 end:0x886E2C7C

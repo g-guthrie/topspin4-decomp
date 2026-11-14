@@ -28,7 +28,7 @@ struct Ts4HitPointScorerVtbl {
     void *slot0;
     void *slot1;
     void *evaluate;                                               /* +0x08 fn_88692040 */
-    void (*bind)(struct Ts4HitPointScorer *self, Ts4ScorerGraphs *graphs); /* +0x0C fn_886B6348 */
+    void (*bind)(struct Ts4HitPointScorer *self, Ts4ScorerGraphs *graphs); /* +0x0C ts4_scorer_bind_graphs_886B6348 */
 };
 
 struct Ts4HitPointScorer {

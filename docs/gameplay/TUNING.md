@@ -119,6 +119,7 @@ Surfaces do not change ball physics; a per-surface bounce needs a code hook (sur
 | capacity, recovery rate, VigorMax | graphs FatigueConst, `80ce1a10` (VigorMax = `lerp(lerp(0.5, 0.65, Stamina), 1, ...)`) | Expressions |
 | this point's cost from the sums | graph FatigueIngame | Expressions |
 | movement threshold | acceleration > 0.02 | code (`g_ts4_script_constants+0x408`) |
+| sprint cut-off | vigor >= 0.1 to sprint | code (`fn_8865E430`, `g_ts4_script_constants+0x2AC`) |
 | what vigor does | fault graph fatigue term, RushSpeedCoef, SwingSpeedCoef, Vivacity, IsTired, wood graph 280, serve window | the graphs that read CurrentVigor |
 
 `ref/gameplay/fatigue.c` runs the integration for a given cost and capacity.
