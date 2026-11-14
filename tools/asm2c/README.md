@@ -90,3 +90,16 @@ Findings worth knowing
   An ordinary C++ virtual call does not use r12, so only these thunks need it.
 - Volatile stores reproduce the original store order of constructor-style
   initialisers; a signed compare (cmpwi) needs an `int` operand type.
+
+Round T1 additions (see docs/asm2c-large-functions.md; tests in tests/test_asm2c_frame.py and
+tests/test_asm2c_t1.py)
+- `frame.py` + variant letter `F`: stack word arrays split into per-slot typed locals; the plan
+  whose compiled frame (size and local offsets) equals the original's is picked by a batched early
+  frame check (`run.frame_select`). MSVC sorts locals by size, then use count, then first
+  reference; declaration order does not matter (`probe.py` measures this).
+- loop-exit join in the structurizer (variant letter `x` restores the old behaviour).
+- flag sets `Oc`, `O1Oc` (the game was built with /Oc); `--changed-only` checks only texts the
+  pre-T1 translator did not produce.
+- xforms: `uncse_all`, `ldswap_all`, `exprcse_all`, `blockcse_all` (perm.py deterministic queue).
+- `generate.py`: compiling C for every unmatched function into a scratch dir (manifest + summary),
+  no byte check; `diag.py`: frame/size classification of scratch files; `probe.py`: compile and list.
