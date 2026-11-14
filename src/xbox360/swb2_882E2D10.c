@@ -20,7 +20,7 @@ struct Obj {
     Hooks *hooks_b;         /* 0x1b8 */
 };
 
-void fn_882E2AE8(Obj *o);
+void ts4_jpeg_default_decompress_parms_882E2AE8(Obj *o);
 
 int ts4_state_step_882E2D10(Obj *o)
 {
@@ -35,7 +35,7 @@ int ts4_state_step_882E2D10(Obj *o)
     case 201:
         result = o->hooks_b->step0(o);
         if (result == 1) {
-            fn_882E2AE8(o);
+            ts4_jpeg_default_decompress_parms_882E2AE8(o);
             o->state = 202;
         }
         break;

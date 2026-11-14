@@ -8,7 +8,7 @@ enum { EX8_JERR_NOT_COMPILED = 0x30 };
 
 void ex8_jpeg_fdct_islow_88307368(short *data); /* jpeg_fdct_islow */
 void ex8_jpeg_fdct_ifast_88307068(short *data); /* jpeg_fdct_ifast */
-void fn_88306220(float *data); /* jpeg_fdct_float */
+void ts4_jpeg_fdct_float_88306220(float *data); /* jpeg_fdct_float */
 void fn_882FEB48(ex8_jcomp *cinfo, ex8_jcinfo *compptr, ex8_jsamparray sample_data,
                                     ex8_jblockrow coef_blocks, unsigned int start_row, unsigned int start_col,
                                     unsigned int num_blocks);
@@ -109,7 +109,7 @@ void ex8_jinit_forward_dct_882FF558(ex8_jcomp *cinfo)
         break;
     case 2:
         fdct->pub.forward_DCT = fn_882FEB48;
-        fdct->do_float_dct = fn_88306220;
+        fdct->do_float_dct = ts4_jpeg_fdct_float_88306220;
         break;
     default:
         EX8_ERREXIT(cinfo, EX8_JERR_NOT_COMPILED);

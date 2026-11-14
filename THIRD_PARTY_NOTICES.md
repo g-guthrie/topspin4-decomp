@@ -148,7 +148,7 @@ Files: `src/xbox360/ex6_png.h`, `ex6_png_misc.c`, `ex6_png_xform.c`, and later
 
 ## IJG JPEG library
 
-Files: `src/xbox360/ex6_jpeg_err.c`, the `rm3_jpeg*` and `jp1_*` sources, and later `ex*_jpeg*` sources that carry
+Files: `src/xbox360/ex6_jpeg_err.c`, the `rm3_jpeg*`, `jp1_*` and `jp2_*` sources, and later `ex*_jpeg*` sources that carry
 an IJG header line. Upstream: https://www.ijg.org/ (release 6b).
 
 > This software is based in part on the work of the Independent JPEG Group.

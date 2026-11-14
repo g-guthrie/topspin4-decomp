@@ -77,7 +77,7 @@ void fn_882EE920(void);
 void ts4_jpeg_h2v1_fancy_upsample_882F9460(void);
 void ts4_jpeg_h2v2_fancy_upsample_882F9548(void);
 void ts4_jpeg_h2v2_merged_upsample_882FABC0(void);
-void fn_883000A0(void);
+void ts4_jpeg_h2v2_downsample_883000A0(void);
 void fn_88309E28(void);
 void fn_883164D8(void);
 void fn_88319F40(void);
@@ -272,7 +272,7 @@ TS4_FORWARD(882EF808, fn_882EE920)
 TS4_FORWARD(882F96B0, ts4_jpeg_h2v1_fancy_upsample_882F9460)
 TS4_FORWARD(882F96B8, ts4_jpeg_h2v2_fancy_upsample_882F9548)
 TS4_FORWARD(882FAD98, ts4_jpeg_h2v2_merged_upsample_882FABC0)
-TS4_FORWARD(883006A8, fn_883000A0)
+TS4_FORWARD(883006A8, ts4_jpeg_h2v2_downsample_883000A0)
 TS4_FORWARD(8830D2C8, fn_88309E28)
 TS4_FORWARD(88315998, fn_8831A618)
 TS4_FORWARD(883159A0, fn_8831AF18)

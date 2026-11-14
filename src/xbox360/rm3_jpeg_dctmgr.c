@@ -13,11 +13,11 @@ static const double lbl_88026B58[8] = {
 };
 
 void ts4_get_u32_off50_883061E0(void); /* jpeg_idct_1x1 */
-void fn_88305C08(void);                /* jpeg_idct_2x2 */
-void fn_883058D0(void);                /* jpeg_idct_4x4 */
-void fn_88305428(void);                /* jpeg_idct_islow */
-void fn_88304F98(void);                /* jpeg_idct_ifast */
-void fn_88304B48(void);                /* jpeg_idct_float */
+void ts4_jpeg_idct_2x2_88305C08(void);                /* jpeg_idct_2x2 */
+void ts4_jpeg_idct_4x4_883058D0(void);                /* jpeg_idct_4x4 */
+void ts4_jpeg_idct_islow_88305428(void);                /* jpeg_idct_islow */
+void ts4_jpeg_idct_ifast_88304F98(void);                /* jpeg_idct_ifast */
+void ts4_jpeg_idct_float_88304B48(void);                /* jpeg_idct_float */
 
 enum {
     TS4_JERR_BAD_DCTSIZE = 0x07,
@@ -42,11 +42,11 @@ void ts4_jpeg_idct_start_pass_882F8A78(struct ts4_jpeg_decomp *cinfo)
             method = 0;
             break;
         case 2:
-            method_ptr = fn_88305C08;
+            method_ptr = ts4_jpeg_idct_2x2_88305C08;
             method = 0;
             break;
         case 4:
-            method_ptr = fn_883058D0;
+            method_ptr = ts4_jpeg_idct_4x4_883058D0;
             method = 0;
             break;
         case 8:
@@ -54,17 +54,17 @@ void ts4_jpeg_idct_start_pass_882F8A78(struct ts4_jpeg_decomp *cinfo)
             case 0:
             case 3:
             case 5:
-                method_ptr = fn_88305428;
+                method_ptr = ts4_jpeg_idct_islow_88305428;
                 method = 0;
                 break;
             case 1:
             case 4:
             case 6:
-                method_ptr = fn_88304F98;
+                method_ptr = ts4_jpeg_idct_ifast_88304F98;
                 method = 1;
                 break;
             case 2:
-                method_ptr = fn_88304B48;
+                method_ptr = ts4_jpeg_idct_float_88304B48;
                 method = 2;
                 break;
             default:

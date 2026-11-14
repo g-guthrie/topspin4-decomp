@@ -3556,6 +3556,38 @@
       "src/xbox360/pc4_c.c": {
         "status": "Matching",
         "source": "xbox360/pc4_c.c"
+      },
+      "src/xbox360/pc1_o1_script_pool.c": {
+        "status": "Matching",
+        "source": "xbox360/pc1_o1_script_pool.c"
+      },
+      "src/xbox360/pc1_pool.c": {
+        "status": "Matching",
+        "source": "xbox360/pc1_pool.c"
+      },
+      "src/xbox360/jp2_jpeg_capi.c": {
+        "status": "Matching",
+        "source": "xbox360/jp2_jpeg_capi.c"
+      },
+      "src/xbox360/jp2_jpeg_csample.c": {
+        "status": "Matching",
+        "source": "xbox360/jp2_jpeg_csample.c"
+      },
+      "src/xbox360/jp2_jpeg_fdct.c": {
+        "status": "Matching",
+        "source": "xbox360/jp2_jpeg_fdct.c"
+      },
+      "src/xbox360/jp2_jpeg_idct.c": {
+        "status": "Matching",
+        "source": "xbox360/jp2_jpeg_idct.c"
+      },
+      "src/xbox360/jp2_jpeg_memmgr.c": {
+        "status": "Matching",
+        "source": "xbox360/jp2_jpeg_memmgr.c"
+      },
+      "src/xbox360/jp2_jpeg_memsys.c": {
+        "status": "Matching",
+        "source": "xbox360/jp2_jpeg_memsys.c"
       }
     }
   }
