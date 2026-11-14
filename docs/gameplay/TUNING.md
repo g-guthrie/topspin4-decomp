@@ -107,6 +107,7 @@ Surfaces do not change ball physics; a per-surface bounce needs a code hook (sur
 | run speed limit (AI) | 4, 5, 6, 8, 9..10 m/s by level | `00_AI.yaml` `/AISettings/51b273d0/AIStyle[s]/Difficulty[d]/41d66350` |
 | walk vs run override | table PT+0x34C | `02_PlayerSettings.yaml` |
 | reach | `ReachBall` 8.0 / 300.0 | `08_DoubleSettings.yaml` |
+| no-drift-wide rule | 40 frames, 100 cm off centre (x 1.0), sideways 60-120 deg | `04_RepositioningSettings.yaml` `/29eac4a0/35f11e7b` (0xAA4), `/29eac4a0/d446f64c` (0xAA8); TU1 adds `/29eac4a0/e26ae391` (latched form); angles are code constants (OPEN 6.5) |
 | RB fast reposition zone | x > -500 cm, events every 5 frames | `04_RepositioningSettings.yaml` `/RepositioningPointSettings/8154a27b` (0xA98), `/7440a9da` (0xA8C) |
 | RB near-net speed scale | 1.15 | graph 37 `VolleySpeedCoef` (CONST; writes S+0x39C, whose State image starts at 1.0) |
 | serve position limits | `ServiceConstraint` MinZ 40 / MaxZ 375 cm | `05_MoveConstraintsSettings.yaml` |

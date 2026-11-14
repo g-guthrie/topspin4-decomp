@@ -64,6 +64,7 @@ python3 -m unittest tests.test_player_data
      `(world+0x28)+0xE8C`, then `+ slot*0x274`.
    * The value is therefore a **runtime** float, not a disc constant.
    * Its writer is not located. The likely writer is the reaction graph at `brain+0x1E0`, chosen by the AI level (I).
+   * *GE1 (C, ai-inputs s5b):* `brain+0x28` is the AI record, so `+0x1DC` is `FinalPositioningComponents.#79b99b60`, written by the positioning component copy `fn_886B81E0`.
 5. **Movement speeds are data tables of slack, not fixed velocities** (V for the code, values in YAML):
    * The mode tables `PT+0x270/284/298` map (distance, slack ticks) to a validity. In the shipped data, validity is 1 up to
      a distance-dependent slack and then falls to 0. Rush is chosen when time is short; Jog when there is slack.

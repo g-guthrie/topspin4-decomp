@@ -176,7 +176,7 @@ an IJG header line. Upstream: https://www.ijg.org/ (release 6b).
 
 ## libogg and libvorbis (Xiph.Org)
 
-Files: the `lib2_ogg_*`, `lib2_vorbis_*` and `aud1_vorbis*` sources, `lib2_ogg.h` and
+Files: the `lib2_ogg_*`, `lib2_vorbis_*`, `aud1_vorbis*` and `lb3_vorbis_*` sources, `lib2_ogg.h` and
 `aud1_vorbis.h`. These
 reconstruct the libogg 1.2.x and libvorbis 1.2.3 copies inside the FMOD Ex
 library of `Swing_DLL.xex` (allocating calls take a leading context argument).
@@ -214,7 +214,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## libFLAC
 
-Files: the `lib2_flac_*` sources (except `lib2_flac_md5.c`, below) and
+Files: the `lib2_flac_*` and `lb3_flac_*` sources (except `lib2_flac_md5.c`, below) and
 `lib2_flac.h`. These reconstruct the libFLAC 1.2.1 copy inside FMOD Ex.
 
 ```
@@ -255,12 +255,15 @@ see the file header).
 
 ## CELT
 
-Files: the `aud1_celt_*` sources and `aud1_celt.h`. These reconstruct the CELT
-0.6.1 copy inside FMOD Ex. Upstream: https://gitlab.xiph.org/xiph/celt
+Files: the `aud1_celt_*` and `lb3_celt_*` sources, `aud1_celt.h` and `lb3_celt.h`.
+These reconstruct the CELT 0.6.1 copy inside FMOD Ex (release tarball
+celt-0.6.1.tar.gz, sha256 a991dff4a9e0772ede0881d81cdc7ac559148c2194885cbdd534fe4af43779da,
+from https://downloads.xiph.org/releases/celt/). Upstream: https://gitlab.xiph.org/xiph/celt
 
 ```
-Copyright (C) 2007-2009 Jean-Marc Valin, CSIRO
-Copyright (C) 2008 Gregory Maxwell
+Copyright (C) 2001-2009 Jean-Marc Valin, CSIRO
+Copyright (C) 2001-2008 Timothy B. Terriberry
+Copyright (C) 2008-2009 Gregory Maxwell
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -288,6 +291,41 @@ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+
+The `lb3_celt_kiss_fft.c` functions derive from CELT's copy of KISS FFT, which
+carries its own notice:
+
+```
+Copyright (c) 2003-2004, Mark Borgerding
+Lots of modifications by JMV
+Copyright (c) 2005-2007, Jean-Marc Valin
+Copyright (c) 2008,      Jean-Marc Valin, CSIRO
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the author nor the names of any contributors may be used to
+      endorse or promote products derived from this software without specific
+      prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
 ## trio

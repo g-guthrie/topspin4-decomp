@@ -81,6 +81,25 @@ The AI's timing does not come from here: the difficulty's `TimingExpression` gra
 `ShotContext.ManualShotTiming` (`graphs-decoded.md` 4.2), and the FinalEfficiency graph is the
 difficulty's `7bcf55ee` (`aiming.md` s4).
 
+## 5b. Repositioning and positioning components (C; GE1, OPEN 4.2)
+
+* **Copies.** `fn_886BADA0` copies `RepositioningComponents` (+0xDC..+0xF4) to
+  `FinalRepositioningComponents` (+0x1E0..+0x1F8); `fn_886B81E0` copies `PositioningComponents`
+  (+0xCC..+0xD8) to `FinalPositioningComponents` (+0x1D0..+0x1DC). `fn_886A4260` re-evaluates the
+  repositioning list (`fn_88694030`, `fn_88693FA8`) and copies it the same way.
+* **fn_886A4260 (AI repositioning after a shot):** `volley = U[0,1] < Final.Volley`;
+  `@ReqFastRepos (S+0x4E2) = U[0,1] < Final.RushRepositioning`; then it picks the next mode
+  `P+0x40` (3/4 or 5/6 by the volley draw and a doubles-partner position test).
+* **fn_886A3DF0 (AI stop):** when `Final.#2b4b4baa >= 0.5` or `Final.StopMoving > 0.5`, and the
+  hit-point value `ReceiverState.#c7b7bdac.#2c63ee31` (S+0xC24) is below `Final.#2ac5965a`, it
+  zeroes the move command (aim mode `0x9E51242B` with a zero vector): the AI stands still.
+* **Reaction delay:** planner state 0 waits `((ctx+0x50)+0x28)+0x1DC` frames after the
+  opponent's hit (`fn_886B8468 +0x4D0`). With the AI record layout that word is
+  **`FinalPositioningComponents.#79b99b60`**, so the reaction delay is a positioning component
+  written by the difficulty's positioning mix graphs (this answers the "writer not located" of
+  player-and-movement s1 item 4).
+* `Final.#6e33662f` (+0x1F8) is read by `fn_886BB0A8` (human/AI input update; use not traced).
+
 ## 6. Consequences for tuning
 
 * The AI's shot choice, aim, risk and approach rates are the **component mix graphs** of each

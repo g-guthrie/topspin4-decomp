@@ -142,7 +142,7 @@ regime: states 21/22 run fn_88688678: every `cfg+0x3ec` frames (period) the stor
 `bb+0xde8/0xdec`; step = curve(`cfg+0x3b0`)(distance, ...); walk/sprint thresholds are data. `P+0x121/0x122` are cleared when a regime is chosen.
 
 ### A.7 Reaction delay (V)
-1. State 0 waits `profile+0x1dc` frames after the opponent's last hit (stamp `(opp team+0x24)+0x68`), unless the opponent mode is 2.
+1. State 0 waits `profile+0x1dc` frames (GE1: `FinalPositioningComponents.#79b99b60` of the AI record, ai-inputs s5b) after the opponent's last hit (stamp `(opp team+0x24)+0x68`), unless the opponent mode is 2.
 2. State 1 enter runs graph `P+0x1e0` that outputs the reaction window `bb+0xdf4/0xdf8`; `P+0x2a0` records the start frame when the move
    intensity `bb+0x9d4` exceeds a constant before `now - last_hit < bb+0xdf8`; the plan stays committed while `now - P+0x2a0 <= bb+0xdf4`.
 3. Timing grade (Good/Medium/Bad) is rolled once per plan (gp2 6.4).

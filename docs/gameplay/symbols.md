@@ -34,6 +34,9 @@ use seen in the code, written as C; argument names are ours. Older symbol tables
 | `fn_88682290`, `fn_8867EB98` | `AI_DrawAxis` | `float (float a, float b, float c)` | weighted draw returning -1 / 0 / +1 | C | ai-inputs s3 |
 | `fn_8867EA10` | `AI_DrawRallyStroke` | `int (float s, float t, float f, float l, float d)` | weighted draw over 5 strokes | C | ai-inputs s3 |
 | `fn_886B7208` | `AIShot_Decide` | `void (AIController *)` | rally stroke, aim, Risk, follow to net, power | C | ai-inputs s5 |
+| `fn_886A4260` | `AIReposition_Decide` | `void (AIController *)` | evaluates RepositioningComponents, draws volley and `@ReqFastRepos` | C | ai-inputs s5b |
+| `fn_886A3DF0` | `AIReposition_StopTest` | `void (AIController *)` | StopMoving / #2b4b4baa rule zeroes the move command | C | ai-inputs s5b |
+| `fn_886BADA0`, `fn_886B81E0` | `AI_CopyRepositioning`, `AI_CopyPositioning` | `void (AIController *)` | component copies to the Final blocks | C | ai-inputs s5b |
 | `fn_8861E598` | `Rand_Uniform` | `float (float lo, float hi)` | game RNG | C (role) | ai-inputs s1 |
 | `fn_8867DF68` | `TimingState_Update` | `void (PlayerController *)` | frames to the ball, TimingValue S+0xD08 | C | timing-and-fatigue s1 |
 | `fn_881899D8` | `RangeCurve_Eval` | `float (RangeList *r, float x)` | clamped ramp over a `{InStart, InStop, OutStart, OutStop}` list | C | timing-and-fatigue s1 |
@@ -41,7 +44,7 @@ use seen in the code, written as C; argument names are ours. Older symbol tables
 | `fn_886B3CF8` | `SwingRequest_Update` | `void (PlayerController *)` | request state machine; commits ManualShotTiming at 3 sites | C | controls s4 |
 | `fn_8865E430` | `Repositioning_UpdateSprint` | `void (PlayerController *)` | S+0xA2C = Rush && vigor >= 0.1; RequiredAmplitude S+0xA10 = 1 | C | OPEN 3.1 |
 | `fn_8866FB60` | `MoveSpeed_Query` | `void (Mover *, float *speed, bool *valid, bool *sprint)` | speed by move state hash (`0xA73FFF84` override S+0xDE8, `0x7652DEC8` RequiredAmplitude + sprint, `0x77579282` this+0x34) | C | OPEN 3.1 |
-| `fn_886629C8` | `ShotSpecific_Fill` | `void (PlayerCtx *, ShotDefEntry *)` | copies ShotResolution grades into ShotSpecific by the Power/Control keys; serve variant fills ServeSpecific | C | OPEN 1.9 |
+| `fn_886629C8` | `ShotSpecific_Fill` | `void (ShotContext *sc, ShotDefRef *def)` | copies ShotResolution grades into ShotSpecific by the Power/Control keys (serve variant fills ServeSpecific), then sets `SC+0x100` = the EvaluateList entry keyed by ResolutionConfig | C | OPEN 1.5, 1.9 |
 | `fn_8826DD20`, `fn_8826DDF8` | `GradeRange_Get` (8 / 16-byte grades) | `void (const void *table, const uint32 *grade, void *out)` | VeryGood/Good/Normal/Bad/VeryBad select +0/8/0x10/0x18/0x20 (x2 for 16-byte) | C | OPEN 1.9 |
 | `fn_8865AC08` | `Grade_Value` | `float (const uint32 *grade)` | VeryGood 1, Good 0.75, Normal 0.5, Bad 0.25, else 0 | C | OPEN 1.9 |
 | `fn_8865EB60` | `PlayerCtx_IsReturnOfServe` | `bool (PlayerCtx *)` | serve phase, other team serving, this is the receiving slot | C | OPEN 1.11 |

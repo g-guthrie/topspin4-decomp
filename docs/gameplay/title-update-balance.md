@@ -215,6 +215,18 @@ TU1 data and code also have no reference).
     stick component passes a threshold.
   - Its TU1 replacement (`0x88679CD8`) takes a new latched path when the flag is set (new byte
     `this+0x16E`).
+  - *GE1 decode (C for both forms; I for the meaning of the stamp):* the rule runs when
+    `(world+0x28)+0x9C` is clear, the opponent is not in mode 2 and `QualityOfPlay.#0e765502`
+    (S+0x1048, S+0x1058 in TU1) is non-zero. With `d = wrap(MoveState RequiredMove.LocalDirection)`
+    and `z` = the player's lateral position, it zeroes the three move powers (`RequiredMove`,
+    `#b21d6f76`, `ConstrainedMove`) when `d` is in (-2.095, -1.047) rad and `z > 100 x /d446f64c`
+    (= 100 cm), or `d` is in (1.047, 2.095) and `z < -100 cm`: a sideways push further out from more
+    than 1 m off centre is cancelled (consts+0x4DC..0x4E8 = -60/-120/+60/+120 deg).
+    **Disc:** active on every frame of the first `/35f11e7b` = 40 frames after the stamp
+    `(ctx+0x84)+0x10`. **TU1 with `e26ae391`:** active on the stamp frame itself, and inside the
+    40 frames only while the latch `this+0x16E` is set; the latch is cleared each run and set only
+    when the rule fires. So TU1 keeps the block only for a push that started at the stamp and never
+    let go; releasing the stick frees the player for the rest of the window.
   - This is a repositioning rule for the human player. The exact behavior is not decoded, but it
     plausibly belongs with D-pad control or with fast reposition (RB). Confidence: low for the
     behavior; high that the flag gates the new code path.

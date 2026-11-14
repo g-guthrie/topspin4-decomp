@@ -165,7 +165,10 @@ level five behaviour lists (shot, return, serve, repositioning, positioning comp
 graphs (TimingExpression, FinalEfficiency `7bcf55ee`, two hit-point scores, a selection output,
 SwingReactionTime) and a run-speed limit of 4..10 m/s (stats-coaches-career s5,
 player-and-movement s1). So a harder AI times better, aims closer to the lines, reacts faster and
-accepts faster runs; it does not get different physics ([ai-inputs.md](ai-inputs.md) s6).
+accepts faster runs; it does not get different physics ([ai-inputs.md](ai-inputs.md) s6). Its reaction delay is the
+positioning component `#79b99b60` (frames), its net rushes are random draws on the
+repositioning components Volley and RushRepositioning, and StopMoving makes it stand still
+([ai-inputs.md](ai-inputs.md) s5b).
 
 ## 11. Rules, crowd and rewards
 
@@ -181,7 +184,9 @@ accepts faster runs; it does not get different physics ([ai-inputs.md](ai-inputs
 ## 12. Title Update 1
 
 TU1 (April and May 2011 balancing) retunes four serve graphs, three skills and enables D-pad
-movement; its `Settings.bin`/`Expressions.bin` replace the disc copies when installed. The
+movement; its `Settings.bin`/`Expressions.bin` replace the disc copies when installed. It also
+loosens a code rule that cancels a sideways push further out from more than 1 m off centre in
+the 40 frames after a stamp: TU1 holds it only while the push continues (OPEN 6.5). The
 September 2011 changes are not in TU1 (title-update-balance).
 
 ## 13. Reference models

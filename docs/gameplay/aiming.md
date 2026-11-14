@@ -109,7 +109,9 @@ a diagonal at a corner. Only the direction matters.
 
 ## 4. Where the efficiency comes from (C for the wiring, D for the values)
 
-`fn_88695C48`, when the shot-class entry `SC+0x100` exists:
+`fn_88695C48`, when the shot-class entry `SC+0x100` exists (set by `fn_886629C8` to the
+EvaluateList entry keyed by the row's `ResolutionConfig`, or its Return config on a return of
+serve; OPEN 1.5):
 1. If the player is human, or not serving: run the class's **aiming graph** (entry `+0x18`,
    `ShotResolutionSettings.00236a48.EvaluateList[].#3f9c096b`; graphs 188-237, list in
    `graphs-decoded.md` s5). It writes **`AimingState.Efficiency` (S+0xD88)** and
@@ -194,8 +196,8 @@ The zone centre (no stick) is (720, -12): 7.2 m past the net, in the middle.
 All configs: VolleyDistance 300, BaselineDistance 1300 (1200 for FlatRisky), CenterDistance 0.
 Quad 2 of every groundstroke zone is the singles court (x 616..1188, z -411..414). Quad 3 is
 about 3 m outside (x 549..1488, z +-710). The serve quad 2 is the service box (x 384..646,
-z 0..414). The flag `5ed23100` (+0x94) is read by none of the functions above; a whole-module reader
-search was not done (open).
+z 0..414). The flag `5ed23100` (+0x94) is read by none of the functions above, nor by the selector
+init or the debug quad drawer (GE1 scan, OPEN 1.16; I: unused in retail).
 
 ## 6. Tuning
 

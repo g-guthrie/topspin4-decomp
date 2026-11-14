@@ -433,6 +433,19 @@ def stub_source(names: list[str], code_names: set[str]) -> tuple[str, dict[str, 
     return "\n".join(lines) + "\n", alias
 
 
+def parse_context(entry: str) -> tuple[str, list[str], Path]:
+    """`[nogl:][flags(/Ob1 /Oc):]path` -> (mode, extra cl flags, path)."""
+    mode, own = "gl", []
+    while True:
+        if entry.startswith("nogl:"):
+            mode, entry = "nogl", entry[5:]
+        elif entry.startswith("flags(") and "):" in entry:
+            inner, entry = entry[6:].split("):", 1)
+            own += inner.split()
+        else:
+            return mode, own, Path(entry)
+
+
 UNRESOLVED = re.compile(r"unresolved external symbol (\S+)")
 
 
@@ -441,16 +454,15 @@ def build(primary: Path, contexts: list[str], flags: list[str], includes: list[s
           verbose: bool = True) -> tuple[Image, list[MapSymbol], dict[str, str]]:
     cl, link = toolchain / "cl.exe", toolchain / "link.exe"
     objects = []
-    sources = [("gl", primary)] + [
-        ("nogl", Path(c[5:])) if c.startswith("nogl:") else ("gl", Path(c)) for c in contexts
-    ]
-    incdirs = {ROOT / "src" / "xbox360"} | {s.resolve().parent for _k, s in sources}
+    sources = [("gl", [], primary)] + [parse_context(c) for c in contexts]
+    incdirs = {ROOT / "src" / "xbox360"} | {s.resolve().parent for _k, _f, s in sources}
     inc = ["/I" + os.path.relpath(d, workdir) for d in sorted(incdirs)]
-    for index, (mode, source) in enumerate(sources):
+    for index, (mode, own_flags, source) in enumerate(sources):
         local = workdir / f"u{index}_{source.name}"
         shutil.copyfile(source, local)
         gl = ["/GL"] if mode == "gl" else []
-        result = run([str(wibo), str(cl), *BASE_FLAGS, *gl, *flags, *inc, local.name], workdir)
+        result = run([str(wibo), str(cl), *BASE_FLAGS, *gl, *flags, *own_flags, *inc, local.name],
+                     workdir)
         obj = local.with_suffix(".obj")
         if result.returncode or not obj.is_file():
             sys.stdout.write(result.stdout + result.stderr)
@@ -572,7 +584,8 @@ def main() -> int:
     parser.add_argument("source", type=Path, nargs="?")
     parser.add_argument("mappings", nargs="*", help="candidate_name=target_name_or_0xaddr")
     parser.add_argument("--context", action="append", default=[],
-                        help="extra source in the same link (prefix nogl: to compile without /GL)")
+                        help="extra source in the same link; prefixes: nogl: (compile without /GL), "
+                             "flags(/Ob1 ...): (extra cl flags for this source only)")
     parser.add_argument("--flags", nargs="*", default=[], help="extra cl flags for every /GL source")
     parser.add_argument("--no-include", action="store_true",
                         help="do not force the mapped functions with /INCLUDE")

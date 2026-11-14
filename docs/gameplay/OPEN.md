@@ -18,7 +18,7 @@ behaviour.
 | 1.2 | `S+0xD78` (In depth pull-back) value | ball-physics s14.4, s16 | find its writer | **closed** (aiming.md s4): DeepDeviation, output of each aiming graph, 0..310 cm from DeviationSystem.Random |
 | 1.3 | `S+0xD8C/0xD90` Out margin | ball-physics s7, s14.4 | name and writers | **closed**: OutEfficiency (fault graph) and QuadEfficiency (= FinalEfficiency, aiming.md) |
 | 1.4 | `fn_88693280/fn_88693040/fn_886935A0/fn_8867D150` described, not ported | ball-physics s14.5 | port | **closed**: `ref/gameplay/aim.c` (`fn_88693280` clip itself is still only described) |
-| 1.5 | Consumer of the control-graph list `ShotResolutionSettings.00236a48` | controls s12.6 | find who maps a template row to its EvaluateList entry | **partly**: the entry lives at `SC+0x100` (SC = `PC+0x70`) and is run by `fn_88659AA0` (Element graphs) and `fn_88695C48` (aiming graph `+0x18`, FinalEfficiency); the writer of `SC+0x100` was not located |
+| 1.5 | Consumer of the control-graph list `ShotResolutionSettings.00236a48` | controls s12.6 | find who maps a template row to its EvaluateList entry | **closed** (GE1, C): `fn_886629C8` (shot context `SC`, `SC+4 = S`) ends by walking the entry list `SC+0x10..0x14` and storing in `SC+0x100` the entry whose key `+0x10` equals `ShotSpecific.ResolutionConfig` (S+0x6DC: the row's `ResolutionConfig`, or its `Return...` config on a return of serve), else NULL (`0x88662B48/0x88662B54`). `fn_88659AA0` and `fn_88695C48` then run that entry's graphs |
 | 1.6 | Inside-out geometry: the two side tests of `fn_886AE528 +0x78..+0x3B4`, stick window direction | controls s12.5, s15.4 | transcribe the side tests | **partly** (GE1, C; controls s15.4 step 2): two lines through the hitter and through the ball are intersected with the ball's travel line (`fn_881896F8`), mirrored by the side tag, and compared in z; inside-out = the sides differ. The stick window is 50 deg around pi/2 (s15.4 step 3). Open (I): the exact line set-up inside `fn_881896F8` and which ball vectors `+0x100/+0x110` are |
 | 1.7 | Skill linked to the inside-out bonus (control graphs, SkillList link r67) | controls s12.6, s15.3 | resolve the link port's skill id | **closed** (read from data by G4b, `data/gameplay/traits_skills.yaml`): graph 188 register 67 = `skill[InsideOutMaster]` (crc `2fc17958`), +0.2 on inside-out shots in 23 graphs (aiming efficiency 11, PowerfulFactor 8; traits-and-skills s3 row 10) |
 | 1.8 | Groundstroke TimingValue `S+0xD08`: computation and early/late asymmetry | controls s12.9 | read the TimingState analyser graphs (BaselineTimingAbility, VolleyTimingAbility, `39cfdeba`) and the code that feeds them | **closed** ([timing-and-fatigue.md](timing-and-fatigue.md) s1): code `fn_8867DF68` maps frames-to-ball through `SwingTimingSelectionList` curves; perfect = commit 20 frames before arrival; worst/best curves identical in retail so TimingAbility has no effect; the asymmetry is in the fault graphs, not the curve |
@@ -29,7 +29,7 @@ behaviour.
 | 1.13 | `b50/b51` meaning, gate `G` bytes `match+0x328/0x329`, `DebugConfig+0x784` | gp4b s10, ball-physics s8 | transcribed by G3b; names of the match bytes | partly (formula C, names U) |
 | 1.14 | Risk hold value `S+0xE08` reader (TU1 xexp?) | controls s12.7 | scan the TU1 code delta | open |
 | 1.15 | Risky rows reachable only by the debug override | controls s6.1 | closed by G2b | closed |
-| 1.16 | AimingConfig flag `5ed23100` (+0x94, true on serve configs) | aiming s5 | whole-module reader search | open |
+| 1.16 | AimingConfig flag `5ed23100` (+0x94, true on serve configs) | aiming s5 | whole-module reader search | **partly** (GE1, C for the scan, I for the conclusion): the aim path (`fn_88693040`, `fn_886935A0`), the selector init `fn_886707C8` and both callers of `fn_88660F70` (`0x886930B0` aim, `0x886A096C` in the debug quad drawer `fn_886A0850`) never read `+0x94`; the eight `lbz ..., 0x94(...)` sites in the gameplay window use other bases. I: unused in retail |
 
 ## 2. Ball flight and bounce
 
@@ -66,7 +66,7 @@ behaviour.
 | # | item | raised in | settle | status |
 |---|---|---|---|---|
 | 4.1 | How the AI turns ShotComponents and ServeComponents into inputs | controls s10, movement-and-ai B.2 | read the AI decision functions | **closed** ([ai-inputs.md](ai-inputs.md)): weighted random draws into ShotTriggers, Stick_Aiming, Risk, FollowToNet, power |
-| 4.2 | RepositioningComponents / PositioningComponents consumers | analyser-graphs s6.5 | same method as 4.1 | open |
+| 4.2 | RepositioningComponents / PositioningComponents consumers | analyser-graphs s6.5 | same method as 4.1 | **partly** (GE1, C; ai-inputs s5b): Volley and RushRepositioning are random draws in `fn_886A4260` (RushRepositioning sets `@ReqFastRepos`); StopMoving / `#2b4b4baa` / `#2ac5965a` make the AI stand still in `fn_886A3DF0`; `FinalPositioningComponents.#79b99b60` is the **reaction delay** in frames read by planner state 0. Open: Positioning Volley / BaseLine / InsideOut consumers, `#6e33662f` use in `fn_886BB0A8` |
 | 4.3 | Names of AI style groups `824ec12e`, `75c6d60c`, `PositioningComponents.#79b99b60`, expression keys `bfc9cc2c`, `2836a60f` | player-and-movement s9.3, stats-coaches-career s6 | crc preimage | open (name only) |
 
 ## 5. Fatigue, skills, stats
@@ -87,7 +87,7 @@ behaviour.
 | 6.2 | Doubles: rotation arithmetic, serve order, positioning | rules-and-scoring s7, brief | read `0x88674ED0`, `0x88674D58`, the doubles AI | open (aim widening closed in aiming.md) |
 | 6.3 | Rally judge `fn_886A84C0` skimmed | rules-and-scoring s7 | transcribe | open |
 | 6.4 | Initial server choice | rules-and-scoring s7 | find a toss step | open |
-| 6.5 | TU1 `RepositioningSettings/29eac4a0` flag and `fn_886795C8` | title-update-balance s6.2 | read `fn_886795C8` and its TU1 form | open |
+| 6.5 | TU1 `RepositioningSettings/29eac4a0` flag and `fn_886795C8` | title-update-balance s6.2 | read `fn_886795C8` and its TU1 form | **closed** (GE1, C; title-update-balance s3.4): both forms cancel a sideways push further out (direction 60-120 deg either side) when the player is more than 100 cm off centre. The disc applies it on every frame of the 40 frames after a stamp `(ctx+0x84)+0x10`; TU1 with `e26ae391` applies it at the stamp and then only while the push continues (latch `+0x16E`). I: the stamp is the last hit; the gate `QualityOfPlay.#0e765502` is unnamed |
 
 ## 7. Data formats and infrastructure
 
@@ -133,4 +133,4 @@ gameplay words (GE1, `crc32`) found none of them; the G5b/G4c searches are wider
 * GE1: 3.2 partly (four planner predicates transcribed, `ref/gameplay/movement.c` helpers with tests).
 * GE1: 1.6 partly (inside-out side test transcribed), 1.7 closed (already resolved in traits_skills.yaml); 3.1 RB fast reposition read.
 * GE1: 1.9 closed (ShotSpecific copy and grade selector; only Good rows are used in retail), 3.5 partly.
-* GE1: 1.11 closed (HandAttributeQuality rule); 3.6 and 1.10 partly (no readers / writers found by scans; likely dead or constant fields).
+* GE1: 6.5 closed (TU1 repositioning rule, both forms read); 4.2 partly (AI repositioning draws, stop rule, reaction delay = positioning component); 1.5 closed (SC+0x100 writer); 1.16 partly (no reader); 1.11 closed (HandAttributeQuality rule); 3.6 and 1.10 partly (no readers / writers found by scans; likely dead or constant fields).

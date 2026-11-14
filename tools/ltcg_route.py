@@ -154,14 +154,19 @@ def build_units(rebuilt_dir: Path, split_dir: Path, symbols_txt: Path, wibo: Pat
 
 
 def absolute_context(entry: str) -> str:
-    """A context entry with its repository-relative path made absolute."""
-    prefix = "nogl:" if entry.startswith("nogl:") else ""
-    return prefix + str(ROOT / entry.removeprefix("nogl:"))
+    """A context entry (`[nogl:][flags(...):]path`) with its path made absolute."""
+    import fn_check_ltcg as L
+
+    mode, flags, path = L.parse_context(entry)
+    prefix = ("nogl:" if mode == "nogl" else "") + (f"flags({' '.join(flags)}):" if flags else "")
+    return prefix + str(ROOT / path)
 
 
 def context_paths(units: list[dict] | None = None) -> list[str]:
     units = load_units() if units is None else units
-    return sorted({c.removeprefix("nogl:") for u in units for c in u.get("context", [])})
+    import fn_check_ltcg as L
+
+    return sorted({str(L.parse_context(c)[2]) for u in units for c in u.get("context", [])})
 
 
 if __name__ == "__main__":
@@ -206,8 +211,10 @@ def register(spec: dict, symbol_sizes: dict[str, int], path: Path = UNITS_PATH) 
     units = load_units(path)
     if any(u["source"] == spec["source"] for u in units):
         raise SystemExit(f"{spec['source']} is already an LTCG unit")
+    import fn_check_ltcg as L
+
     for entry in spec.get("context", []):
-        if not (ROOT / entry.removeprefix("nogl:")).is_file():
+        if not (ROOT / L.parse_context(entry)[2]).is_file():
             raise SystemExit(f"missing context source {entry}")
     unit = {"source": spec["source"], "object": Path(spec["source"]).stem + ".obj",
             "context": spec.get("context", []), "flags": spec.get("flags", []),
