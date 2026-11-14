@@ -6,6 +6,12 @@ EQ1, 2026-11-14. Tool: `tools/fn_equiv.py` (checker version string `fn_equiv/1`)
 works, what it measured on the remaining code, and how the tier should enter the project.
 Section 8 lists the inputs and the commands that reproduce every number.
 
+**Status: partial.** The batch runs were stopped at the coordinator's request so the native-build boots get the CPU.
+Complete: the matched ground truth (300 functions, checker `58667366...`), mutation testing (149
+mutants) and the near-miss set (69 functions, final checker). Partial: the final-checker rerun of
+the matched set (223 of 300, 0 DIFFERENT) and the asm2c sample (261 of 332 compiled translations
+checked, mixed checker versions; see 4).
+
 ## 1. Why a second tier
 
 "Matched" means our C compiles to the original bytes. That standard stops being reachable on
@@ -190,6 +196,14 @@ by wall-clock, so on a loaded machine a large function can end with fewer trials
 this moved two functions near the threshold from EQUIVALENT to UNCHECKED. It never produced a
 DIFFERENT. For a reproducible verdict, use `--time 0`, which means trials only.
 
+**Which checker version.** The table above is the last *complete* run, made with checker sha256
+`58667366bba2e8e6cc6891de22334540b0a231d67ea6840de46ec34b8d66747f`. Fixes 6-8 below came after it.
+All three only relax comparisons (a no-op hint no longer counts as a read; pure out-parameters and
+unset or variadic argument slots are no longer compared), so they cannot add a DIFFERENT to a
+matched function. A rerun with the final checker was stopped at the coordinator's request (CPU
+needed for the native-build boots) after **223 of the 300** functions: 173 EQUIVALENT, **0 DIFFERENT**,
+50 UNCHECKED (all of 0-256 bytes, 43/57 of 256-512, 22/33 of 512-1024, 8/60 above 1 KB).
+
 **Checker bugs this found and fixed** (each was a DIFFERENT on a matched function in an earlier
 run): (1) recursion executed the original's own body instead of intercepting the call, while the
 candidate's recursive `bl` went to the image (2 functions); (2) temporaries used to compute an
@@ -244,6 +258,11 @@ is not a test.
 
 Excluding the four equivalent mutants, the detection rate is 141/145 = 97%.
 
+(Run with checker `58667366...`, like the complete table in 3.1. The rerun with the final checker
+was stopped before it reached the mutation step. Fixes 6-8 relax only argument and frame-object
+comparisons; the one mutant category they can affect is a dropped argument to a variadic call,
+which none of these 149 mutants is.)
+
 Checker improvements that came out of earlier rounds of this experiment, and that the table
 already includes: stack arguments 9+ (a dropped argument in a 13-argument call was missed),
 seeded jump-table case values and an explicit boundary phase (a `which_tbl >= 4` -> `>= 5` was
@@ -253,11 +272,70 @@ model (a `start < 1` flip in Lua's `str_sub` was missed because the length came 
 
 ## 4. What the tier could cover: asm2c translations
 
-RESULTS_ASM2C
+**PARTIAL: stopped at the coordinator's request.** Of the 332 compiled translations, 261 have a
+checker result; the other 71, all in the later a2c groups, were not run.
+
+Sample: `python3 tools/decomp_survey.py sample --lo L --hi H -n N --seed 1` for the classes
+0-256 (260), 256-512 (200), 512-1024 (160) and 1024-2048 (120), keeping only `game:` buckets
+(Havok, FMOD core, Xbox SDK and Bink are other buckets), which gives 428 functions. Each was translated
+with `tools/asm2c` (used read-only, variant `10w`) and built in groups of 25 with base flags.
+Translations that do not compile were dropped one by one from their group.
+
+| class (bytes) | sampled | translate fail | compile fail | EQUIVALENT | DIFFERENT | UNCHECKED | not run |
+|---|---|---|---|---|---|---|---|
+| 0-256 | 154 | 18 | 3 | 54 | 21 | 32 | 26 |
+| 256-512 | 119 | 11 | 5 | 34 | 14 | 35 | 20 |
+| 512-1024 | 90 | 27 | 2 | 10 | 9 | 28 | 14 |
+| 1024-2048 | 65 | 25 | 5 | 1 | 8 | 15 | 11 |
+| all | 428 | 81 | 15 | **99** (27,320 bytes) | **52** | 110 | 71 |
+
+Results mix three checker versions: 180 from the run with `58667366...`; 57 DIFFERENT results from
+it re-checked with fixes 6 and 7 plus the stack-slot part of 8 (7 of them flipped: 3 to
+EQUIVALENT, 4 to UNCHECKED); and 24 from the final checker. 8 of the 52 DIFFERENT involve a variadic
+callee (`ts4_format_text` and similar) and were not re-checked after the varargs rule. Some of
+those 8 may be false and should be treated as unconfirmed, so the confirmed DIFFERENT count is 44.
+
+- Translator failures (81): `read r` (a register read before any write, 20), `mfcr` (9), VMX
+  instructions (`vsldoi`, `read v`, `stvewx`, `vpk`, ...: about 20), struct arguments (5), irregular
+  exits (5), and other shapes.
+- DIFFERENT (52), by first difference: return value 31 (typically the translation returns its
+  input pointer, or 0, where callers read a computed value), call argument 12, stack object
+  passed to a callee 4, call sequence 3, callee-saved registers 1 (a copy loop that overruns its
+  frame buffer), outcome 1. The ones read by hand were real translator errors: dropped returns,
+  dropped pointer increments, swapped sign extension.
+- UNCHECKED (110): coverage below 90% (59), too few valid trials (33), VMX in the original (18).
+
+Reading: about one compiled translation in three is EQUIVALENT under this check (99 of the 261
+checked), and about one in five is demonstrably wrong (44 to 52). The rest cannot be judged
+automatically. asm2c output must never be accepted without this check.
 
 ## 5. Hand-written near misses
 
-RESULTS_NEAR
+**Complete, final checker.** Sources: `work/army/GA3-nearmiss/`, `work/army/ga6_scratch/`,
+`work/army/LB3.drafts/`, and the `src` files named by `work/army/*.failed.md` entries. Only functions
+that are not matched are included, which gives 72 jobs in 36 files. Fragments that do not compile
+alone were retried with the source they belong to prepended (`work/eq1/near_ctx/`, 12 functions
+recovered). Per function, the best outcome:
+
+| origin | functions | EQUIVALENT | DIFFERENT | UNCHECKED | does not compile |
+|---|---|---|---|---|---|
+| all | 69 | **16** (5,020 bytes) | 1 | 28 | 24 |
+
+(By origin, counting rows: GA3-nearmiss 5 EQUIVALENT of 9; LB3.drafts 1 of 8; context retries 6
+of 12; failed.md sources 4 of 32; ga6_scratch 1 of 23.) The 16 EQUIVALENT drafts include
+`ga3_controller_init`, `ga3_next_state`, `ga3_reset_controller`,
+`lib2_read_residual_partitioned_rice`, `lib2__packetout`, `aud1_res0_look`, `aud1_floor1_look`,
+`aud1_render_line` and `lb3_celt_mix_pitch_and_residual`: hand-written, typed C that missed the
+byte match but behaves like the original, which is exactly what this tier is for.
+
+- DIFFERENT (1): `lib4_trio_wide_TrioWriteNumber` is genuinely wrong. Its buffer index uses
+  `sizeof(buffer)` (bytes) on a wide-char array, so `*pointer-- = NIL` writes 768 bytes past the
+  array into the frame, and the candidate then loops 400+ times.
+- UNCHECKED (28): coverage (18), "candidate function not defined" (7: the draft no longer contains
+  the function), `_blkmov` unresolved (2: the struct-copy helper is not in `symbols.txt`), too few
+  valid trials (1).
+- Does not compile (24): 22 of them are `ga6_scratch` bodies whose struct definitions were never
+  saved, so they cannot be recovered.
 
 ## 6. How the tier enters the project
 
@@ -377,13 +455,13 @@ Inputs (nothing from them is in the repository):
 | symbols | `work/matching-b45/analysis/symbols.txt` + committed `symbols.txt` (b45: 30,430 matched functions) |
 | emulator | unicorn 2.1.4 (pip), Python 3.13.18 |
 | compiler | the project's MSVC 16.00.10224 via `fn_check.compile_candidate` (base flags `/O2 /Oi`, per-file exceptions) |
-| checker | `tools/fn_equiv.py`, version string `fn_equiv/1`, sha256 CHECKER_SHA |
+| checker | `tools/fn_equiv.py`, version string `fn_equiv/1`, sha256 `082aff678b3695657221636b489a01057e114614483176ecf28dcd8c198157dd` (final); the complete runs in 3.1/3.2 used `58667366...` (see 3.1) |
 
 Commands (scratch scripts live in `work/eq1/`, outside the repository's tracked tree; each
 writes JSON lines, one result per function):
 
 ```sh
-python3 -m unittest tests.test_fn_equiv                  # 15 tests, synthetic code only
+python3 -m unittest tests.test_fn_equiv                  # 16 tests, synthetic code only
 # 3.1  matched ground truth (job list: 300 functions stratified by size, LTCG units excluded)
 NPROC=2 KW='{"trials":300,"time_budget":40}' python3 work/eq1/harness.py work/eq1/jobs_matched.json work/eq1/res_matched.jsonl
 python3 work/eq1/summarize.py work/eq1/res_matched.jsonl
