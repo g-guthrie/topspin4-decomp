@@ -3,15 +3,15 @@
 extern void fn_8843AE88(void *buffer);
 extern void fn_884430E8(void *buffer, int flag);
 extern void fn_884748C0(void *buffer, int flag);
-extern void fn_88437200(void);
+extern void ts4_hk_finish_loaded_object_88437200(void);
 extern void ts4_if_call_seq_fn_884430E8_88437B28(void);
-extern void fn_88437C50(void);
-extern void fn_88438190(void);
+extern void ts4_hk_finish_loaded_object_88437C50(void);
+extern void ts4_hk_finish_loaded_object_88438190(void);
 extern void ts4_if_call_seq_fn_884748C0_88469918(void);
-extern void fn_884A1230(void);
-extern void fn_884A13F0(void);
-extern void fn_884A1578(void);
-extern void fn_884A1830(void);
+extern void ts4_hk_finish_loaded_object_884A1230(void);
+extern void ts4_hk_finish_loaded_object_884A13F0(void);
+extern void ts4_hk_finish_loaded_object_884A1578(void);
+extern void ts4_hk_finish_loaded_object_884A1830(void);
 extern char lbl_88044D70[];
 extern char lbl_88044DE0[];
 extern char lbl_88044E10[];
@@ -55,7 +55,7 @@ void ts4_init_static_88AF48B0(void)
     int *base = &lbl_88D232B4;
     fn_8843AE88(local);
     lbl_88D232B4 = (int)(long)lbl_880468F4;
-    base[1] = (int)(long)fn_88437200;
+    base[1] = (int)(long)ts4_hk_finish_loaded_object_88437200;
     base[2] = (int)(long)ts4_vcall0_thunk_884371E8;
     base[3] = (int)(long)lbl_880800E8;
 }
@@ -77,7 +77,7 @@ void ts4_init_static_88AF5160(void)
     int *base = &lbl_88D235C4;
     fn_8843AE88(local);
     lbl_88D235C4 = (int)(long)lbl_880467B8;
-    base[1] = (int)(long)fn_88437C50;
+    base[1] = (int)(long)ts4_hk_finish_loaded_object_88437C50;
     base[2] = (int)(long)ts4_vcall0_thunk_88437C38;
     base[3] = (int)(long)lbl_88080874;
 }
@@ -88,7 +88,7 @@ void ts4_init_static_88AF5758(void)
     int *base = &lbl_88D237D4;
     fn_8843AE88(local);
     lbl_88D237D4 = (int)(long)lbl_88046704;
-    base[1] = (int)(long)fn_88438190;
+    base[1] = (int)(long)ts4_hk_finish_loaded_object_88438190;
     base[2] = (int)(long)ts4_vcall0_thunk_88438178;
     base[3] = (int)(long)lbl_88080C2C;
 }
@@ -110,7 +110,7 @@ void ts4_init_static_88AFA7A8(void)
     int *base = &lbl_88D25A64;
     fn_8843AE88(local);
     lbl_88D25A64 = (int)(long)lbl_88044E74;
-    base[1] = (int)(long)fn_884A1230;
+    base[1] = (int)(long)ts4_hk_finish_loaded_object_884A1230;
     base[2] = (int)(long)ts4_vcall0_thunk_884A1218;
     base[3] = (int)(long)lbl_88087AD4;
 }
@@ -121,7 +121,7 @@ void ts4_init_static_88AFA8F8(void)
     int *base = &lbl_88D25AD4;
     fn_8843AE88(local);
     lbl_88D25AD4 = (int)(long)lbl_88044E10;
-    base[1] = (int)(long)fn_884A13F0;
+    base[1] = (int)(long)ts4_hk_finish_loaded_object_884A13F0;
     base[2] = (int)(long)ts4_vcall0_thunk_884A13D8;
     base[3] = (int)(long)lbl_88087BDC;
 }
@@ -132,7 +132,7 @@ void ts4_init_static_88AFA9D0(void)
     int *base = &lbl_88D25B14;
     fn_8843AE88(local);
     lbl_88D25B14 = (int)(long)lbl_88044DE0;
-    base[1] = (int)(long)fn_884A1578;
+    base[1] = (int)(long)ts4_hk_finish_loaded_object_884A1578;
     base[2] = (int)(long)ts4_vcall0_thunk_884A1560;
     base[3] = (int)(long)lbl_88087C60;
 }
@@ -143,7 +143,7 @@ void ts4_init_static_88AFAC70(void)
     int *base = &lbl_88D25BC4;
     fn_8843AE88(local);
     lbl_88D25BC4 = (int)(long)lbl_88044D70;
-    base[1] = (int)(long)fn_884A1830;
+    base[1] = (int)(long)ts4_hk_finish_loaded_object_884A1830;
     base[2] = (int)(long)ts4_vcall0_thunk_884A1818;
     base[3] = (int)(long)lbl_88087E8C;
 }

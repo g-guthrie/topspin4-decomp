@@ -3376,6 +3376,18 @@
       "src/xbox360/ex8_png_write.c": {
         "status": "Matching",
         "source": "xbox360/ex8_png_write.c"
+      },
+      "src/xbox360/fam1_hk_class_register.c": {
+        "status": "Matching",
+        "source": "xbox360/fam1_hk_class_register.c"
+      },
+      "src/xbox360/fam1_hk_finish_loaded_object.c": {
+        "status": "Matching",
+        "source": "xbox360/fam1_hk_finish_loaded_object.c"
+      },
+      "src/xbox360/fam1_singleton_dtor.c": {
+        "status": "Matching",
+        "source": "xbox360/fam1_singleton_dtor.c"
       }
     }
   }
