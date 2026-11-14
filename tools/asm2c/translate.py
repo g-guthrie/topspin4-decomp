@@ -349,7 +349,7 @@ class Gen:
         if unrelocated(lines):
             raise Skip('unrelocated original')
         self.lines = annotate(lines, env)
-        self.insns = self.fuse_fpr_saves(self.fuse_varargs(self.fuse_switches(self.fuse_copies(self.fuse_atomics(cfg.decode(self.lines, parse))))))
+        self.insns = self.fuse_vr_saves(self.fuse_fpr_saves(self.fuse_varargs(self.fuse_switches(self.fuse_copies(self.fuse_atomics(cfg.decode(self.lines, parse)))))))
         self.order, self.blocks = cfg.build_blocks(self.insns)
         self.preds = cfg.preds_of(self.blocks)
         self.has_ctr_loop = any(i.mn in ('bdnz', 'bdz') for i in self.insns)
@@ -487,6 +487,19 @@ class Gen:
         for i in insns:
             if i.mn == 'bl' and (i.sym or '').startswith(('__savefpr', '__restfpr')) and out \
                     and out[-1].mn == 'subi' and out[-1].ops[:2] == ['r12', 'r1']:
+                out.pop(); continue
+            out.append(i)
+        return out
+
+    @staticmethod
+    def fuse_vr_saves(insns):
+        """`li r12,-N; stvx128 vX,r1,r12` (prologue) and `li r0,-N; lvx128 vX,r1,r0` (epilogue)
+        save and restore a non-volatile vector register below the register save area: dropped."""
+        out = []
+        for i in insns:
+            if i.mn in ('stvx128', 'stvx', 'lvx128', 'lvx') and len(i.ops) == 3 and i.ops[1] == 'r1' and out \
+                    and out[-1].mn == 'li' and out[-1].ops[0] == i.ops[2] and i.ops[2] in ('r12', 'r0') \
+                    and out[-1].ops[1].startswith('-') and (i.mn.startswith('st')) == (i.ops[2] == 'r12'):
                 out.pop(); continue
             out.append(i)
         return out
@@ -1760,7 +1773,10 @@ class Gen:
             c3 = ops[3] if len(ops) > 3 else ops[0]
             self.vset(st, out, ops[0], f'{VTRI[b]}({self.vrd(st, ops[1])}, {self.vrd(st, ops[2])}, {self.vrd(st, c3)})'); return
         if b in VIMM:
-            self.vset(st, out, ops[0], f'{VIMM[b]}({self.vrd(st, ops[1])}, {num(ops[2])})'); return
+            n_ = num(ops[2])
+            if b == 'vupkd3d':
+                n_ >>= 2        # the disassembly shows the field shifted left by 2 (__vupkd3d(v, 1) is 0x4)
+            self.vset(st, out, ops[0], f'{VIMM[b]}({self.vrd(st, ops[1])}, {n_})'); return
         if b == 'vspltisw':
             self.vset(st, out, ops[0], f'__vspltisw({num(ops[-1])})'); return   # vspltisw128 vD, v0, imm
         if b == 'vrlimi':
@@ -1854,6 +1870,9 @@ class Gen:
                 fslots = set(hs)
                 for j in hs:
                     args[j] = '__fslot'
+        hs = [j for j, a in enumerate(args) if isinstance(a, tuple) and a[0] == 'hi']
+        if not nf and hs and hs[0] >= 1 and not sa:
+            args = args[:hs[0]]   # a `lis` temporary: it and the registers after it are no arguments
         if any(isinstance(a, tuple) for a in args):
             raise Skip('hi arg')
         fargs = []

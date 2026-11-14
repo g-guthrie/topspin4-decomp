@@ -444,10 +444,31 @@ def t_stswap(b, rng=None):
     return _pick(stswap_all(b), rng)
 
 
+def ptrtemp_all(b):
+    """a parameter offset `(aK + N)` used twice or more becomes a pointer temporary set at
+    the start (the compiler then addresses through the temporary: `addi r4,r3,N; lwz 4(r4)`)"""
+    out = []
+    lines = b.split('\n')
+    first = _first_stmt(lines)
+    for e in dict.fromkeys(re.findall(r'\((a\d+) \+ (\d+)\)', b)):
+        x = f'({e[0]} + {e[1]})'
+        if b.count(x) < 2 or re.search(r'^\s*' + e[0] + r' = ', b, re.M):
+            continue
+        h = _newname(b, 'h')
+        L = [l.replace(x, h) for l in lines]
+        L.insert(first, f'    {h} = (ts4_word){x};')
+        out.append(_add_decl('\n'.join(L), f'    ts4_word {h};'))
+    return out
+
+
+def t_ptrtemp(b, rng=None):
+    return _pick(ptrtemp_all(b), rng)
+
+
 # (transform, weight) for perm.py; t_sv is added there because it needs the target's sites
 TRANSFORMS = [(t_bool, 2), (t_strlen, 2), (t_strl_cse, 1), (t_compound, 2), (t_nz, 1), (t_unvol, 2),
               (t_homecopy, 1), (t_locsize, 2), (t_locperm, 2), (t_earlyinv, 2), (t_cse, 2), (t_hoist, 2),
-              (t_ldfirst, 3), (t_idx, 3), (t_stswap, 2)]
+              (t_ldfirst, 3), (t_idx, 3), (t_stswap, 2), (t_ptrtemp, 1)]
 
 
 def deterministic(b, sites=()):
@@ -468,5 +489,5 @@ def deterministic(b, sites=()):
         out += [x] if x else []
         out += hoist_all(s)[:3] + ldfirst_all(s, 3)
     out += sv_all(b, sites)
-    out += hoist_all(b)[:4] + ldfirst_all(b, 4) + idx_all(b)[:4] + stswap_all(b)[:4]
+    out += ptrtemp_all(b)[:3] + hoist_all(b)[:4] + ldfirst_all(b, 4) + idx_all(b)[:4] + stswap_all(b)[:4]
     return list(dict.fromkeys(x for x in out if x and x != b))

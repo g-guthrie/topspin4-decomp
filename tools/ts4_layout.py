@@ -129,8 +129,9 @@ def resolve(types, type_crc, offset, depth=0):
 def walk(types, buf, type_crc, addr, visit, path=(), depth=0):
     """Visit every primitive member of the struct at ``addr`` (lists are followed).
 
-    ``visit(path, address, field)`` gets the member-name path (list elements appear as ints in
-    brackets, e.g. ``"[3]"``)."""
+    ``visit(path, address, field)`` gets the member-name path (list elements appear as strings in
+    brackets, e.g. ``"[3]"``).  Lists whose element type has no record are read as polymorphic
+    8-byte links ``{rel, type}`` and the first word of each target is visited."""
     t = types.get(type_crc)
     if t is None or depth > 48:
         return
@@ -150,7 +151,14 @@ def walk(types, buf, type_crc, addr, visit, path=(), depth=0):
             et = types.get(f.type)
             for k in range(cnt):
                 if et is None:
-                    visit(p + ("[%d]" % k,), a + rel + 4 * k, f)
+                    # element type without a record: polymorphic 8-byte links {s32 rel, u32 type};
+                    # visit the first word of each linked node
+                    e = a + rel + 8 * k
+                    if e + 8 > len(buf):
+                        break
+                    r2 = struct.unpack_from(">i", buf, e)[0]
+                    if r2 != -1 and 0 <= e + r2 <= len(buf) - 4:
+                        visit(p + ("[%d]" % k,), e + r2, f)
                 else:
                     walk(types, buf, f.type, a + rel + k * et.size, visit, p + ("[%d]" % k,), depth + 1)
         else:

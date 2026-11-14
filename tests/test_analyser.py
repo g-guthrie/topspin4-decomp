@@ -73,7 +73,8 @@ def node_record(img, kind, **f):
         img.u32(0x14, len(f["keys"]), len(f["keys"]), f["in"], f["out"] & 0xFFFFFFFF)
         for k in f["keys"]:
             img.f32(*k[:4])
-            img.u32(k[4] if len(k) > 4 else 0)
+            # word +0x10 is the segment end value y1; default: the value the slope reaches at x1
+            img.f32(k[4] if len(k) > 4 else k[2] + k[3] * (k[1] - k[0]))
     elif kind in ("SUB", "DIV"):
         img.u32(f["a"], f["b"], f["out"])
     elif kind in ("LERP", "INVLERP"):
@@ -336,3 +337,137 @@ class HelperTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SlopeFixupTests(unittest.TestCase):
+    """fn_88179740: slope = (y1 - y0) / (x1 - x0), 0 for a zero-width key; applied at load time."""
+
+    def test_slope_fixup_values(self):
+        self.assertEqual(A.slope_fixup(500.0, 3000.0, 80.0, 135.0), A.f32(55.0 / 2500.0))
+        self.assertEqual(A.slope_fixup(1.0, 1.0, 5.0, 9.0), 0.0)
+        self.assertEqual(A.slope_fixup(0.0, 2.0, 4.0, 4.0), 0.0)
+
+    def _image(self):
+        # on-disc layout: slope word 0.0, y1 at +0x10 (as in the retail file)
+        g = dict(name=A.crc("Ramp"), nregs=2, inputs=[(0x1BF15200, 0, 3, [0x11111111])], outputs=[(0x1BF15200, 1, 4, [0x22222222])],
+                 nodes=[("CURVE", dict(**{"in": 0}, out=1, keys=[(0.0, 10.0, 0.0, 0.0, 1.0), (10.0, 20.0, 1.0, 0.0, 0.0)]))])
+        return build_expressions([g])
+
+    def test_parse_applies_runtime_fixup(self):
+        g = A.parse_expressions(self._image())[0]
+        keys = g.nodes[0].fields["keys"]
+        self.assertEqual([k[3] for k in keys], [A.f32(0.1), A.f32(-0.1)])
+        self.assertEqual(g.nodes[0].fields["disc_slopes"], [0.0, 0.0])
+        self.assertAlmostEqual(A.evaluate(g, [5.0])[0], 0.5, places=6)     # ramp, not a step
+        self.assertAlmostEqual(A.evaluate(g, [15.0])[0], 0.5, places=6)
+        self.assertEqual(A.evaluate(g, [-3.0]), [0.0])
+        self.assertAlmostEqual(A.evaluate(g, [99.0])[0], 0.0, places=6)   # single-precision fma
+
+    def test_disc_slopes_give_steps(self):
+        g = A.parse_expressions(self._image(), fixup=False)[0]
+        self.assertEqual(A.evaluate(g, [5.0]), [0.0])
+        self.assertEqual(A.evaluate(g, [15.0]), [1.0])
+
+    def test_readable_dump_lists_y1_and_formula(self):
+        import io
+        g = A.parse_expressions(self._image())
+        out = io.StringIO()
+        A.dump_readable(g, out, names={A.crc("Ramp"): ("Ramp", "high")}, header=["synthetic"])
+        text = out.getvalue()
+        self.assertIn("# synthetic", text)
+        self.assertIn("name: Ramp", text)
+        self.assertIn("- [0.0, 10.0, 0.0, 1.0]", text)
+        self.assertIn("r1 = curve1(", text)
+        self.assertIn("OUT 0 = r1", text)
+
+
+class LayoutTests(unittest.TestCase):
+    """tools/ts4_layout.py on a synthetic Layoutall-style image."""
+
+    T_OUTER, T_INNER, T_LIST = 0x0A0A0A0A, 0x0B0B0B0B, 0x0C0C0C0C
+    FLOAT = 0xC692C255
+
+    def _layout(self):
+        from tools import ts4_layout as L
+        img = Image()
+        img.u32(0, 0, 0, 0)                       # padding so no record starts at 0
+
+        def record(prims, structs, tcrc, size):
+            rec = img.here()
+            img.u32(0, len(prims), len(prims), 0, len(structs), len(structs), tcrc, size, 4)
+            if prims:
+                img.set_rel(rec, img.here())
+                for name, off in prims:
+                    img.u32(self.FLOAT, 0x40000, 0, off, self.FLOAT, name, 4)
+            if structs:
+                img.set_rel(rec + 0xC, img.here())
+                for name, off, ty, kind, sz in structs:
+                    img.u32(0, sz << 16, 0, 0, kind, name, off, 4, 0)
+                for name, off, ty, kind, sz in structs:
+                    img.u32(ty)
+                    if kind == L.KIND_LIST:
+                        img.u32(0)
+            img.u32(0, 0, 0)
+        record([(A.crc("x"), 0), (A.crc("y"), 4)], [], self.T_INNER, 8)
+        record([(A.crc("a"), 0), (A.crc("b"), 4)],
+               [(A.crc("sub"), 8, self.T_INNER, L.KIND_STRUCT, 8), (A.crc("lst"), 0x10, self.T_INNER, L.KIND_LIST, 12)],
+               self.T_OUTER, 0x1C)
+        return L, bytes(img.b)
+
+    def test_parse_and_resolve(self):
+        L, buf = self._layout()
+        types = L.parse_layout(buf)
+        outer = types[self.T_OUTER]
+        self.assertEqual(outer.size, 0x1C)
+        self.assertEqual([(f.name, f.offset) for f in outer.fields],
+                         [(A.crc("a"), 0), (A.crc("b"), 4), (A.crc("sub"), 8), (A.crc("lst"), 0x10)])
+        self.assertTrue(outer.fields[3].is_list())
+        self.assertEqual(outer.fields[3].type, self.T_INNER)
+        chain = L.resolve(types, self.T_OUTER, 0xC)
+        self.assertEqual([(f.name, o) for f, o in chain], [(A.crc("sub"), 8), (A.crc("y"), 0xC)])
+        self.assertEqual(L.resolve(types, self.T_OUTER, 0x40), [])
+
+    def test_walk_and_settings_references(self):
+        L, buf = self._layout()
+        types = L.parse_layout(buf)
+        data = Image()
+        data.f32(1.0, 2.0, 3.0)
+        data.u32(A.crc("Alpha"))                  # sub.y holds a graph name hash
+        desc = data.here()
+        data.u32(0, 2, 2)
+        data.u32(0)                               # pad to 0x1C
+        data.set_rel(desc, data.here())
+        data.f32(5.0)
+        data.u32(A.crc("Beta"))
+        data.f32(7.0, 8.0)
+        seen = []
+        L.walk(types, bytes(data.b), self.T_OUTER, 0, lambda p, a, f: seen.append((p, a)))
+        self.assertEqual(len(seen), 8)
+        self.assertEqual(seen[-1][0], (A.crc("lst"), "[1]", A.crc("y")))
+        # settings_references takes a whole XBin: prepend a header whose root link points at the data
+        xb = Image()
+        xb.u32(*A.EXPRESSIONS_SIGNATURE)
+        xb.u32(0x10, 0, 0xFFFFFFFF)
+        xb.u32(8, self.T_OUTER)
+        off = xb.here()
+        body = bytes(data.b)
+        refs = A.settings_references(bytes(xb.b) + body, types, {A.crc("Alpha"), A.crc("Beta")})
+        self.assertEqual(refs[A.crc("Alpha")], [(A.crc("sub"), A.crc("y"))])
+        self.assertEqual(refs[A.crc("Beta")], [(A.crc("lst"), "[0]", A.crc("y"))])
+        self.assertEqual(off, 0x1C)
+
+    def test_name_table_drops_wrong_preimages(self):
+        import json
+        import os
+        import tempfile
+        fd, path = tempfile.mkstemp(suffix=".json")
+        os.close(fd)
+        with open(path, "w") as fh:
+            json.dump({"%08x" % A.crc("Good"): ["Good", "medium"], "12345678": ["Wrong", "high"]}, fh)
+        t = A.load_name_table(path)
+        os.unlink(path)
+        self.assertEqual(t, {A.crc("Good"): ("Good", "medium")})
+        nm = A.Namer(t)
+        self.assertEqual(nm(A.crc("Good")), "Good?")
+        self.assertEqual(nm(A.crc("Good"), mark=False), "Good")
+        self.assertEqual(nm(0x12345678), "#12345678")

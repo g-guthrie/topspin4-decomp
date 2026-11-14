@@ -138,6 +138,7 @@ def main():
     ap.add_argument('--variants', default='10,10v,10V,10L,20,20v,20V,11,10u', help='mode+orient digits; u = no signed-type inference, v/V/L = volatile stores / loads+stores / loads')
     ap.add_argument('--flagsets', default=',O1', help='comma list of compiler flag sets: "" (base), O1')
     ap.add_argument('--skip-addrs', default='', help='file of extra addresses (hex per line) to skip, e.g. ones already matched elsewhere')
+    ap.add_argument('--only-addrs', default='', help='file of addresses (hex per line): verification passes try only these')
     ap.add_argument('--fresh', action='store_true')
     ap.add_argument('--no-final', action='store_true', help='only the verification passes')
     ap.add_argument('--final-only', action='store_true', help='skip the verification passes, only write files for the cached matches')
@@ -155,13 +156,14 @@ def main():
         exclude[0].update(int(x, 16) for x in Path(a.skip_addrs).read_text().split())
     cands = source.candidates(a.max_size, exclude=exclude)
     if a.limit: cands = cands[:a.limit]
+    only = {int(x, 16) for x in Path(a.only_addrs).read_text().split()} if a.only_addrs else None
     print(f'{len(cands)} candidates, {sum(c[2] for c in cands):#x} bytes', flush=True)
     matched = state['matched']
     lastfail = {}
     for fs in ([] if a.final_only else a.flagsets.split(',')):
         flags = FLAGSETS[fs]
         for v in a.variants.split(','):
-            todo = [c for c in cands if c[1] not in matched]
+            todo = [c for c in cands if c[1] not in matched and (only is None or c[1] in only)]
             res, fails = translate_all(todo, dis, env, v)
             lastfail.update({ad: ('translate', r) for ad, r in fails.items() if lastfail.get(ad, ('translate',))[0] == 'translate'})
             fresh = {}

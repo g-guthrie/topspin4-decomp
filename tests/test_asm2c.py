@@ -1101,6 +1101,36 @@ class K6Tests(unittest.TestCase):
         t = ["lha r11,0x1c(r3)", "std r11,-0x10(r1)", "lfd f0,-0x10(r1)", "fcfid f0,f0", "frsp f1,f0", "blr"]
         self.assertIn("((float)((double)((ts4_s64)(*(short *)((char *)(ts4_word)(a0) + 28)))))", gen(t, mode=2)["body"])
 
+    def test_vupkd3d_immediate_is_unshifted(self):
+        r = gen(["lvx128 v63,r0,r3", "vupkd3d128 v62,v63,0x4", "stvx128 v62,r0,r4", "blr"], mode=2)
+        self.assertIn("__vupkd3d(vv1, 1)", r["body"])
+
+    def test_lis_temporary_ends_vcall_arguments(self):
+        t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x60(r1)", "lis r4, 0x88c7   ; REFHI lbl_88C6B4AC", "li r10,7",
+             "lis r5, 0x880d   ; REFHI lbl_880D5BAC", "addi r5,r5,0x5bac   ; REFLO lbl_880D5BAC", "stw r5,0(r3)",
+             "stw r10, -0x4b54(r4)   ; REFLO lbl_88C6B4AC", "lwz r11,0(r3)", "lwz r10,0x5c(r11)", "mtctr r10", "bctrl",
+             "addi r1,r1,0x60", "lwz r12,-0x8(r1)", "mtlr r12", "blr"]
+        self.assertIn("+ 92))))((ts4_word)a0);", gen(t, mode=2)["body"])
+
+    def test_fresh_names_follow_renamed_symbols(self):
+        old = emit._CUR
+        emit._CUR = ({"ts4_handle_forward_88150770", "lbl_88000000"}, {0x88150770: "ts4_handle_forward_88150770"})
+        try:
+            r = {"body": "    t1 = fn_88150770((ts4_word)a0);\n", "protos": {"fn_88150770": 1}, "externs": []}
+            r2 = emit.fresh_names(r)
+        finally:
+            emit._CUR = old
+        self.assertEqual(r2["body"], "    t1 = ts4_handle_forward_88150770((ts4_word)a0);\n")
+        self.assertEqual(r2["protos"], {"ts4_handle_forward_88150770": 1})
+
+    def test_xforms_pointer_temporary(self):
+        import xforms
+        b = ("    ts4_word t1;\n\n    t1 = *(ts4_word *)((char *)(ts4_word)((a0 + 20)) + 4);\n"
+             "    f((ts4_word)(a0 + 20));\n    return t1;\n")
+        out = xforms.ptrtemp_all(b)[0]
+        self.assertIn("    h1 = (ts4_word)(a0 + 20);\n    t1 = *(ts4_word *)((char *)(ts4_word)(h1) + 4);", out)
+        self.assertIn("    ts4_word h1;", out)
+
     def test_xforms_bool_temporary(self):
         import xforms
         body = ("    ts4_word p1;\n    ts4_word p2;\n\n    if ((int)a0 == 0) {\n        p1 = (ts4_word)1;\n"

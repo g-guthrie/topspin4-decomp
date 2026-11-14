@@ -91,6 +91,50 @@ def vthunk_name(a, off):
 _A2N = None
 
 
+_CUR = None
+
+
+def _current_symbols():
+    """(set of current symbol names, {address: name}) from the matching directory."""
+    global _CUR
+    if _CUR is None:
+        import source
+        names, at = set(), {}
+        for n, sec, a, _ in source.load_symbols():
+            names.add(n)
+            if sec == '.text' or a not in at:
+                at[a] = n
+        _CUR = (names, at)
+    return _CUR
+
+
+_SUFFIXED = re.compile(r'\b[A-Za-z_]\w*_([0-9A-F]{8})\b')
+
+
+def fresh_names(r):
+    """Result r with callee/data names that were renamed since it was translated (the
+    name ends in the symbol's address) replaced by the current names."""
+    names, at = _current_symbols()
+    ren = {}
+    keys = ' '.join([r.get('body', '')] + list(r.get('protos', {})) + list(r.get('externs', [])))
+    for m in _SUFFIXED.finditer(keys):
+        n = m.group(0)
+        if n not in names and n not in ren:
+            new = at.get(int(m.group(1), 16))
+            if new and new != n and _SUFFIXED.fullmatch(new) and new.endswith(m.group(1)):
+                ren[n] = new
+    if not ren:
+        return r
+    f = lambda x: _SUFFIXED.sub(lambda m: ren.get(m.group(0), m.group(0)), x)
+    r = dict(r, body=f(r.get('body', '')))
+    for k in ('protos', 'rtypes', 'fprotos'):
+        if k in r:
+            r[k] = {ren.get(a, a): b for a, b in r[k].items()}
+    if 'externs' in r:
+        r['externs'] = type(r['externs'])(ren.get(e, e) for e in r['externs'])
+    return r
+
+
 def _symbol_names():
     global _A2N
     if _A2N is None:
@@ -115,6 +159,7 @@ def build(res, group, path, cpp=False):
     Returns ([(name, addr)], {addr: (first_line, last_line)}). """
     # Callees are declared unprototyped (`ts4_word f();`) so that call sites with
     # different argument counts never conflict; every argument is a ts4_word.
+    res = {a: fresh_names(res[a]) for a in group}
     protos, kept = {}, list(group)
     for a in group:
         protos.update(res[a]['protos'])

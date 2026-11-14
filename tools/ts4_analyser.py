@@ -675,7 +675,9 @@ def load_name_table(path):
     """{crc: (name, confidence)} from a JSON {hex: [name, confidence]} table; entries whose crc does
     not match their name are dropped."""
     out = {}
-    for k, v in json.load(open(path)).items():
+    with open(path) as fh:
+        table = json.load(fh)
+    for k, v in table.items():
         name, conf = (v, "high") if isinstance(v, str) else (v[0], v[1])
         if crc(name) == int(k, 16):
             out[int(k, 16)] = (name, conf)
@@ -701,9 +703,7 @@ def _g(v):
             t = "%.*g" % (p, v)
             if f32(float(t)) == v:
                 break
-        if "e" not in t and "." not in t and "n" not in t:
-            t += ".0"
-        return t
+        return repr(float(t))
     return str(v)
 
 
@@ -711,7 +711,7 @@ class Namer:
     def __init__(self, table=None):
         self.table = dict(table or {})
         for k, v in known_names().items():
-            self.table.setdefault(k, (v, "high"))
+            self.table[k] = (v, "high")
 
     def __call__(self, h, mark=True):
         if h is None:
@@ -873,8 +873,8 @@ def main():
         table = load_name_table(a.name_table)
     for k, v in table.items():
         names.setdefault(k, v[0])
-    for k, v in names.items():
-        table.setdefault(k, (v, "high"))
+    for k, v in names.items():          # built-in names and --names dictionaries are vouched for
+        table[k] = (v, "high")
     if a.module:
         print(framework_module_summary(open(a.module, "rb").read()))
     if a.list:

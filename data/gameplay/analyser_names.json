@@ -1,0 +1,3150 @@
+{
+"00615077": [
+"Weight",
+"high"
+],
+"007925f4": [
+"WoodUp",
+"medium"
+],
+"01291ade": [
+"SwingType",
+"high"
+],
+"0140379f": [
+"IsClassicServe",
+"high"
+],
+"014d8cbc": [
+"IsTraining",
+"medium"
+],
+"026da510": [
+"Prop1",
+"high"
+],
+"02cfdf80": [
+"CurrentSet",
+"medium"
+],
+"0340a26e": [
+"RushSpeedCoef",
+"medium"
+],
+"041a0da5": [
+"EndOfPointType",
+"high"
+],
+"04aae254": [
+"MoveController",
+"medium"
+],
+"04cda578": [
+"Inputs",
+"high"
+],
+"054d7860": [
+"ReturnServeStyle",
+"low"
+],
+"0555f89c": [
+"OutcomeNet",
+"high"
+],
+"056ed6e7": [
+"BounceConfig",
+"medium"
+],
+"05a55e14": [
+"MissCollision",
+"high"
+],
+"05b33830": [
+"PressX",
+"high"
+],
+"05cf120a": [
+"BreakPoints",
+"medium"
+],
+"05d0b6d2": [
+"Cutscene_BallHit_WarmingUp",
+"high"
+],
+"05efe4ba": [
+"BaseDropTime",
+"low"
+],
+"06d19b84": [
+"Length",
+"high"
+],
+"06f187fa": [
+"ServeFlatFinesse",
+"medium"
+],
+"072e880a": [
+"IsMoving",
+"medium"
+],
+"07c159a2": [
+"Head",
+"high"
+],
+"084d61e2": [
+"Force60",
+"medium"
+],
+"084d7ee1": [
+"LastIndex",
+"medium"
+],
+"0a74a62e": [
+"TeamList",
+"medium"
+],
+"0a894fee": [
+"SafeMode",
+"medium"
+],
+"0aff8b55": [
+"IsMateHuman",
+"low"
+],
+"0b213966": [
+"OutEfficiency",
+"medium"
+],
+"0b2f5adc": [
+"ThrowSlice",
+"high"
+],
+"0b352785": [
+"Shot",
+"high"
+],
+"0cad532f": [
+"MatchClock",
+"medium"
+],
+"0cf9a732": [
+"RequestedState",
+"medium"
+],
+"0dabf7a1": [
+"Movement",
+"high"
+],
+"0dd16adc": [
+"BallCorridor",
+"medium"
+],
+"0dd77382": [
+"FirstBouncePoint",
+"low"
+],
+"0f9bfc83": [
+"DeviationXMax",
+"low"
+],
+"0fa3067f": [
+"Animation",
+"medium"
+],
+"11453f46": [
+"MatchState",
+"high"
+],
+"116b7885": [
+"Fatigue",
+"high"
+],
+"1197dfe3": [
+"Random",
+"high"
+],
+"12027d2b": [
+"AimingSideLeft",
+"medium"
+],
+"12094e80": [
+"AimingLengthShort",
+"medium"
+],
+"1234b383": [
+"Preference",
+"high"
+],
+"1293ff81": [
+"RequireFinesse",
+"medium"
+],
+"129921af": [
+"SenderPlayer",
+"medium"
+],
+"1299e106": [
+"AvgSpeed",
+"medium"
+],
+"12b2b329": [
+"ModeBaseLine",
+"high"
+],
+"137aec09": [
+"PolarStick_3",
+"high"
+],
+"137ef575": [
+"SliceRisk",
+"medium"
+],
+"140989c6": [
+"RiskyShot",
+"medium"
+],
+"141cebfc": [
+"Reachable",
+"high"
+],
+"141d93dd": [
+"Timing",
+"high"
+],
+"14acc560": [
+"PlayerInfo",
+"high"
+],
+"150da21d": [
+"WoodUpCompliant",
+"high"
+],
+"15a5bd88": [
+"MoveVector",
+"medium"
+],
+"15cfe647": [
+"MaxSpeed",
+"high"
+],
+"164b73de": [
+"AlternateIntensity",
+"medium"
+],
+"168d15cd": [
+"Attitude",
+"high"
+],
+"1693c2a3": [
+"RepositioningSpeed",
+"medium"
+],
+"16fb12fc": [
+"TopSpinPower",
+"medium"
+],
+"18807849": [
+"Dirty",
+"high"
+],
+"1902e0b3": [
+"DistanceLateral",
+"medium"
+],
+"19280e4e": [
+"From",
+"high"
+],
+"19e5a8dd": [
+"RequirePowerful",
+"medium"
+],
+"19e91dd3": [
+"Input",
+"high"
+],
+"1a685db8": [
+"MaxAngle",
+"high"
+],
+"1aef7246": [
+"FlipY",
+"medium"
+],
+"1b153e59": [
+"PlayerStates",
+"high"
+],
+"1b74362d": [
+"LocalPosX",
+"low"
+],
+"1b78ca9a": [
+"WeightDropTime",
+"low"
+],
+"1bf15200": [
+"PlayerState",
+"high"
+],
+"1c33c293": [
+"Settings",
+"high"
+],
+"1c664ab6": [
+"BallEvents",
+"medium"
+],
+"1cca65d4": [
+"IsB",
+"medium"
+],
+"1ceb5268": [
+"EOPServiceType",
+"high"
+],
+"1ceefd8b": [
+"ReturnServe",
+"high"
+],
+"1d6ea51b": [
+"Exercice",
+"medium"
+],
+"1da0ffc0": [
+"LetHeight",
+"medium"
+],
+"1de220e2": [
+"VolleySpectacular",
+"high"
+],
+"1ed340d0": [
+"Visibility",
+"high"
+],
+"1ede04f6": [
+"VideoChallenge",
+"medium"
+],
+"1f536d49": [
+"PressAndHold",
+"high"
+],
+"1f7310f3": [
+"SynchroInitialized",
+"medium"
+],
+"1f85cdb1": [
+"SparringPartner",
+"medium"
+],
+"1ff9490d": [
+"CorridorLock",
+"medium"
+],
+"2033d177": [
+"WantedPlayerState",
+"low"
+],
+"205d20f3": [
+"AttackCountFirst",
+"low"
+],
+"20d7985e": [
+"Swing",
+"high"
+],
+"219276c2": [
+"AskPrevious",
+"high"
+],
+"219e4d10": [
+"AutoLocked",
+"medium"
+],
+"219f289f": [
+"HitPointLocal",
+"medium"
+],
+"21b9063d": [
+"GameLogic",
+"medium"
+],
+"2202fddf": [
+"FinalScore",
+"medium"
+],
+"221e130f": [
+"Cutscene_BallBounce",
+"high"
+],
+"226615d7": [
+"Control",
+"high"
+],
+"22703895": [
+"Withdrawal",
+"high"
+],
+"22f80d49": [
+"BounceFrom",
+"medium"
+],
+"23c79a10": [
+"Random2",
+"medium"
+],
+"23e632e5": [
+"OutStart",
+"high"
+],
+"2406d18d": [
+"ProfileFactor",
+"medium"
+],
+"2410280f": [
+"NetRulesInfo",
+"low"
+],
+"24167e8f": [
+"ChangeTeamSide",
+"high"
+],
+"24723f4b": [
+"HumanState",
+"medium"
+],
+"25eee9e5": [
+"ReturnSlicePower",
+"medium"
+],
+"26296dd2": [
+"Normal",
+"high"
+],
+"26730f5c": [
+"SecondBounce",
+"medium"
+],
+"26930c3a": [
+"CoefHeight",
+"medium"
+],
+"26ad9b07": [
+"PlayStyle",
+"high"
+],
+"28a61b0e": [
+"ReturnLobState",
+"low"
+],
+"2906f362": [
+"HitPositionSelection",
+"low"
+],
+"293eed8b": [
+"InputNotation",
+"high"
+],
+"29899e83": [
+"BeginPoint",
+"medium"
+],
+"299da1c5": [
+"VolleySlice",
+"medium"
+],
+"29a86f3b": [
+"IsRaised",
+"medium"
+],
+"2abd43f2": [
+"Id",
+"high"
+],
+"2adccd7e": [
+"ShootTarget",
+"medium"
+],
+"2adef05c": [
+"BallShot",
+"medium"
+],
+"2b3ec93a": [
+"LetCommands",
+"medium"
+],
+"2b7f6e10": [
+"ShootAction",
+"medium"
+],
+"2ca5d513": [
+"AutoPositioning",
+"medium"
+],
+"2ce33943": [
+"Default",
+"high"
+],
+"2cecf817": [
+"Type",
+"high"
+],
+"2d10970e": [
+"NbHit",
+"medium"
+],
+"2d5c7fc7": [
+"ReleaseX",
+"high"
+],
+"2d5c84d3": [
+"SideDeviation",
+"medium"
+],
+"2d9d0b21": [
+"ServeFlatMedium",
+"medium"
+],
+"2de0bce2": [
+"Context",
+"high"
+],
+"2e20a34e": [
+"Service",
+"high"
+],
+"2f0bad69": [
+"Infos",
+"high"
+],
+"30511531": [
+"MoveMode",
+"medium"
+],
+"3073a530": [
+"ShotEditor_Reset",
+"high"
+],
+"30983d16": [
+"IsServiceBall",
+"low"
+],
+"30b4e680": [
+"ContextQuality",
+"medium"
+],
+"30cd2dc3": [
+"AutoNext",
+"medium"
+],
+"30e9ae30": [
+"Handed",
+"medium"
+],
+"319dc754": [
+"TunnelStep",
+"high"
+],
+"32446762": [
+"UseTransition",
+"medium"
+],
+"326b73d3": [
+"ServerState",
+"medium"
+],
+"328a2512": [
+"ServeComponents",
+"medium"
+],
+"32a41e36": [
+"WrongFoot",
+"high"
+],
+"32e0626e": [
+"IsFarMiss",
+"low"
+],
+"332232af": [
+"IsTriggered",
+"high"
+],
+"33473503": [
+"InputState",
+"high"
+],
+"3356d746": [
+"NetHeight",
+"medium"
+],
+"3396c3da": [
+"DeviationXMin",
+"low"
+],
+"33a1f763": [
+"Deep",
+"high"
+],
+"340dd477": [
+"TeamStates",
+"medium"
+],
+"35453bdd": [
+"NearBall",
+"medium"
+],
+"359e4dab": [
+"OrderId",
+"medium"
+],
+"35cc98e1": [
+"ReceiverStateId",
+"low"
+],
+"35ebe491": [
+"ServingDeuceBlend",
+"low"
+],
+"36785da4": [
+"ReturnFlatFinesse",
+"medium"
+],
+"3689ab7e": [
+"Dive",
+"high"
+],
+"36f815e5": [
+"TiredInputsWalking",
+"low"
+],
+"370e7a9e": [
+"Norm",
+"high"
+],
+"38393442": [
+"OnRaiseReqBaselineRepos",
+"high"
+],
+"38453afd": [
+"ManualShotTiming",
+"low"
+],
+"387665e4": [
+"TimingValue",
+"medium"
+],
+"38a338dd": [
+"UIPoints",
+"medium"
+],
+"38f589f1": [
+"FinalRepositioningComponents",
+"medium"
+],
+"3a02f593": [
+"CorridorState",
+"medium"
+],
+"3a3d8fbc": [
+"ShowActions",
+"medium"
+],
+"3a87b7b4": [
+"SpeedLength",
+"medium"
+],
+"3ad97621": [
+"ServeState",
+"medium"
+],
+"3af89709": [
+"MatchStateId",
+"low"
+],
+"3b5cf1c2": [
+"CustomAttribute",
+"medium"
+],
+"3b698329": [
+"SwingSelection",
+"medium"
+],
+"3ba8f989": [
+"PointQuality",
+"medium"
+],
+"3c0ae117": [
+"BaselineLeft",
+"medium"
+],
+"3ca900ab": [
+"ReturnSliceFinesse",
+"medium"
+],
+"3cd06b6c": [
+"Radius",
+"high"
+],
+"3da1977b": [
+"Ratio",
+"high"
+],
+"3dda9771": [
+"ThrowTopSpin",
+"high"
+],
+"3e8100b1": [
+"AnimId",
+"medium"
+],
+"3e968134": [
+"AimingEfficiency",
+"medium"
+],
+"3f270ae0": [
+"Condition",
+"high"
+],
+"3f921f47": [
+"RotationQuat",
+"medium"
+],
+"3f9beac4": [
+"LastPoint",
+"medium"
+],
+"3fcc49dd": [
+"TimingExpressionInputs",
+"low"
+],
+"40030515": [
+"LeftLine",
+"medium"
+],
+"406089a4": [
+"Action",
+"high"
+],
+"406fb6dc": [
+"ServingTeamIndex",
+"low"
+],
+"40b26607": [
+"OutStop",
+"high"
+],
+"40ffdf15": [
+"OutRatio",
+"medium"
+],
+"4168ad7e": [
+"FrameDropTime",
+"low"
+],
+"418be115": [
+"IsPrepared",
+"medium"
+],
+"41c32aca": [
+"Target",
+"high"
+],
+"41ca436e": [
+"WonSet",
+"medium"
+],
+"41f06e0b": [
+"IsDeuce",
+"medium"
+],
+"4203f666": [
+"To",
+"high"
+],
+"42902a3e": [
+"VolleyDrop",
+"medium"
+],
+"42d0b982": [
+"SideAngle",
+"medium"
+],
+"432b7e51": [
+"FirstServe",
+"medium"
+],
+"44401377": [
+"CurrentSpeed",
+"medium"
+],
+"4463883a": [
+"XPath",
+"high"
+],
+"44a6d4ab": [
+"RotationDegree",
+"high"
+],
+"45169d3c": [
+"PositionList",
+"medium"
+],
+"45d026bf": [
+"SimplePreference",
+"medium"
+],
+"45f80a27": [
+"Advanced",
+"high"
+],
+"45fffb93": [
+"Backhand",
+"high"
+],
+"4637fcf0": [
+"SliceMedium",
+"medium"
+],
+"4658271d": [
+"Expr",
+"high"
+],
+"46c3c143": [
+"InternalCount",
+"medium"
+],
+"46c67428": [
+"SuccessFactor",
+"high"
+],
+"4704e178": [
+"MassSquare",
+"medium"
+],
+"475cee12": [
+"Center",
+"high"
+],
+"48242e16": [
+"UseDelay",
+"medium"
+],
+"48315650": [
+"ServeContext",
+"medium"
+],
+"48533deb": [
+"ParentFlag",
+"medium"
+],
+"485bb638": [
+"Rules",
+"high"
+],
+"4882ebbb": [
+"ExpressionComponents",
+"medium"
+],
+"48b79674": [
+"Expert",
+"high"
+],
+"48bfa002": [
+"Tired",
+"high"
+],
+"48e2c874": [
+"VolleyLeft",
+"medium"
+],
+"4937d707": [
+"ReleaseA",
+"high"
+],
+"4a4fa42e": [
+"EndOfMatch",
+"high"
+],
+"4aad7d5d": [
+"IsValid",
+"medium"
+],
+"4ad0cf31": [
+"B",
+"high"
+],
+"4b304524": [
+"PolarResult",
+"medium"
+],
+"4b5608f3": [
+"IsLetShot",
+"low"
+],
+"4bb34bbb": [
+"PlayLob",
+"medium"
+],
+"4d4d5ba8": [
+"SpeedStat",
+"medium"
+],
+"4d5014db": [
+"StickOverride",
+"medium"
+],
+"4d8a66da": [
+"NetDropTime",
+"low"
+],
+"4dc61afb": [
+"Valid",
+"high"
+],
+"4eabebea": [
+"IsVolley",
+"medium"
+],
+"4eb93f3d": [
+"RequireMedium",
+"medium"
+],
+"4ee9bfa6": [
+"Short",
+"high"
+],
+"4eea9393": [
+"Profile",
+"high"
+],
+"4f914da9": [
+"ReplayId",
+"medium"
+],
+"4fa695a1": [
+"WoodDown",
+"medium"
+],
+"4fcb3f83": [
+"IsFH",
+"medium"
+],
+"4fcc3eb8": [
+"VolleySpeedCoef",
+"medium"
+],
+"4fd4c7a4": [
+"IsTired",
+"medium"
+],
+"5019f055": [
+"StartReachability",
+"medium"
+],
+"504448a9": [
+"Opponent",
+"high"
+],
+"5087b12a": [
+"HitPositionZone",
+"low"
+],
+"50b89452": [
+"BounceSpeed",
+"medium"
+],
+"51860d95": [
+"RB",
+"high"
+],
+"5246754d": [
+"Range",
+"high"
+],
+"52f0ca6b": [
+"TypeList",
+"medium"
+],
+"533fe6b7": [
+"AutoSwingEvaluation",
+"low"
+],
+"53613cad": [
+"ReturnServeZone",
+"medium"
+],
+"53a7fcce": [
+"ShotContext",
+"high"
+],
+"53b0c153": [
+"First",
+"high"
+],
+"53b10c90": [
+"ConditionList",
+"medium"
+],
+"53d880a8": [
+"ServeDone",
+"medium"
+],
+"54457ad3": [
+"LetSettings",
+"medium"
+],
+"54c0aa86": [
+"Random3",
+"medium"
+],
+"54cf6df3": [
+"IsServeFault",
+"low"
+],
+"550171d1": [
+"Rush",
+"high"
+],
+"5564f5d6": [
+"HighTopSpin",
+"high"
+],
+"55d982ab": [
+"VeryEasy",
+"high"
+],
+"5611b5b5": [
+"CurrentValue",
+"medium"
+],
+"5648f470": [
+"TeamEvents",
+"medium"
+],
+"57260913": [
+"IsMatchPoint",
+"low"
+],
+"5763b46e": [
+"ShotEditor_Launch",
+"high"
+],
+"57a6f54c": [
+"DebugFlags",
+"medium"
+],
+"58988870": [
+"LeftFoot",
+"high"
+],
+"592ed0e1": [
+"RallyStop",
+"medium"
+],
+"593387a2": [
+"AimingState",
+"medium"
+],
+"5949e5da": [
+"PositioningInfo",
+"high"
+],
+"59bc5767": [
+"Z",
+"high"
+],
+"59f2984f": [
+"Generic",
+"high"
+],
+"5a5b4f51": [
+"ReleaseY",
+"high"
+],
+"5ace7bda": [
+"InfoHitZone",
+"low"
+],
+"5b60cab3": [
+"LastRulesInfo",
+"low"
+],
+"5b7700a4": [
+"AimingSideRight",
+"medium"
+],
+"5b9d834b": [
+"OnRaiseReqVolleyRepos",
+"high"
+],
+"5bb9da0d": [
+"ShotSelection",
+"high"
+],
+"5c43341d": [
+"ReqBaselineRepos",
+"high"
+],
+"5cb5abf9": [
+"CurrentRecovery",
+"high"
+],
+"5d90675b": [
+"DropTime",
+"medium"
+],
+"5db80ab0": [
+"AtFrame",
+"medium"
+],
+"5dc9adef": [
+"HitPosition",
+"medium"
+],
+"5e0b54d0": [
+"IsServing",
+"medium"
+],
+"5e8c67d5": [
+"SpeedEvaluation",
+"medium"
+],
+"5e8f94a1": [
+"Qualifier",
+"high"
+],
+"5ec4cede": [
+"WinnerIndex",
+"medium"
+],
+"5ed42dcd": [
+"ReqFastRepos",
+"high"
+],
+"5efbf54f": [
+"AvgSpeedStat",
+"low"
+],
+"5f096fa1": [
+"SwingReactionTime",
+"low"
+],
+"601d2acb": [
+"AnimationState",
+"medium"
+],
+"6086515f": [
+"Base",
+"high"
+],
+"60d93c07": [
+"LocalPlayerPosition",
+"low"
+],
+"6127b0ec": [
+"Hard",
+"high"
+],
+"6157a8b2": [
+"PositionReached",
+"medium"
+],
+"61d890f0": [
+"PressA",
+"high"
+],
+"6252fdff": [
+"State",
+"high"
+],
+"628ff1c4": [
+"IsWoodDown",
+"high"
+],
+"62b97670": [
+"ReceiverContext",
+"medium"
+],
+"63199a64": [
+"AIStyle",
+"medium"
+],
+"6348717a": [
+"Commands",
+"high"
+],
+"63c89d57": [
+"IsHuman",
+"medium"
+],
+"64222a1e": [
+"Stick_3",
+"high"
+],
+"6491450b": [
+"SimulationFrame",
+"medium"
+],
+"64d20921": [
+"Team",
+"high"
+],
+"64e10b49": [
+"AimingInfo",
+"medium"
+],
+"6670ee95": [
+"RandomValue",
+"medium"
+],
+"66d530f9": [
+"RepositioningDir",
+"medium"
+],
+"6775d135": [
+"CoefDistance",
+"medium"
+],
+"685aaa3f": [
+"OpponentShotBall",
+"low"
+],
+"689a410f": [
+"InvertPaddle",
+"high"
+],
+"68b9aafe": [
+"PercentSpinLost",
+"low"
+],
+"68d16e42": [
+"IsAdvanced",
+"medium"
+],
+"6a126eca": [
+"HeapMode",
+"medium"
+],
+"6a219e04": [
+"SideMinMax",
+"low"
+],
+"6a4b2ea4": [
+"Power",
+"high"
+],
+"6a79e41f": [
+"GameStart",
+"medium"
+],
+"6a9eb33f": [
+"BallInfoEvent",
+"low"
+],
+"6ad94881": [
+"IsSetPoint",
+"low"
+],
+"6ada0327": [
+"AIInfo",
+"medium"
+],
+"6aef98af": [
+"CollisionPriority",
+"medium"
+],
+"6b2b0e68": [
+"PercentSpeedLost",
+"low"
+],
+"6b2f980b": [
+"ExpectedHitPoint",
+"low"
+],
+"6b433a31": [
+"Intensity",
+"high"
+],
+"6bd1fbab": [
+"FatigueConst",
+"medium"
+],
+"6c67fb3c": [
+"TeamState",
+"medium"
+],
+"6c7306bb": [
+"LocalPosY",
+"low"
+],
+"6cb36fd3": [
+"RacketSmash",
+"high"
+],
+"6ccfc298": [
+"FinalEfficiency",
+"medium"
+],
+"6cede640": [
+"BaseLineInterpolator",
+"medium"
+],
+"6d2a6170": [
+"IsLeftLine",
+"low"
+],
+"6d8755ac": [
+"UpdateState",
+"medium"
+],
+"6da19641": [
+"ReturnFlatPower",
+"medium"
+],
+"6de2774f": [
+"FHStyle",
+"medium"
+],
+"6de842d0": [
+"FlipX",
+"medium"
+],
+"6edb51d3": [
+"InfoRepositioningZone",
+"low"
+],
+"6f1b374c": [
+"ShotFailed",
+"medium"
+],
+"6fb7c161": [
+"DPad",
+"high"
+],
+"6fd67e1d": [
+"SmashPrepared",
+"medium"
+],
+"701be1cb": [
+"StopMoving",
+"medium"
+],
+"70252f1f": [
+"IsWithdrawal",
+"medium"
+],
+"703acde8": [
+"MethodId",
+"medium"
+],
+"70d81e2f": [
+"WoodSide",
+"medium"
+],
+"7113871b": [
+"LT",
+"high"
+],
+"71198650": [
+"Volley",
+"high"
+],
+"71215a86": [
+"Player1",
+"medium"
+],
+"714b21ad": [
+"AttitudeStyle",
+"medium"
+],
+"72603db6": [
+"IsRight",
+"medium"
+],
+"726056bf": [
+"SequencerClock",
+"medium"
+],
+"729975e2": [
+"PowerfulBall",
+"high"
+],
+"72b408a6": [
+"PressY",
+"high"
+],
+"7300948e": [
+"IsActive",
+"high"
+],
+"73fca7f2": [
+"Surface",
+"high"
+],
+"7401bd45": [
+"ServeClass",
+"medium"
+],
+"742625b1": [
+"DeepPosition",
+"medium"
+],
+"743644e7": [
+"AutoVolleySwing",
+"medium"
+],
+"743674bf": [
+"BaselineRight",
+"medium"
+],
+"750b5a10": [
+"Right",
+"high"
+],
+"751ae5eb": [
+"ReviewTransition",
+"medium"
+],
+"75616454": [
+"IntensityContext",
+"medium"
+],
+"75e645cb": [
+"PrepaPrecision",
+"high"
+],
+"76b64248": [
+"SumAcceleration",
+"medium"
+],
+"76ca9628": [
+"HandAttributeQuality",
+"low"
+],
+"76da3cdb": [
+"VolleyRadius",
+"medium"
+],
+"7712db42": [
+"VisibilityFlag",
+"medium"
+],
+"7753a6aa": [
+"ContextModifiers",
+"medium"
+],
+"78264ea8": [
+"MinTiming",
+"medium"
+],
+"793e59f5": [
+"SpecialShotDetected",
+"high"
+],
+"79501e5e": [
+"PlayerEvents",
+"medium"
+],
+"79a7b49d": [
+"Raise",
+"high"
+],
+"79d86836": [
+"IsSmash",
+"high"
+],
+"79e10e38": [
+"ShotDesc",
+"medium"
+],
+"79e1e491": [
+"RepositioningZone",
+"medium"
+],
+"7a33a213": [
+"AnticipationScore",
+"medium"
+],
+"7a34f0d1": [
+"AnimationSelection",
+"medium"
+],
+"7a5e9f81": [
+"FinalServeComponents",
+"medium"
+],
+"7a7060e5": [
+"Reachability",
+"high"
+],
+"7b12b796": [
+"SplitSteps",
+"high"
+],
+"7b2baf46": [
+"Started",
+"medium"
+],
+"7b91be7d": [
+"PlayerId",
+"medium"
+],
+"7c521831": [
+"Classic",
+"high"
+],
+"7d2d9508": [
+"EventsFlags",
+"medium"
+],
+"7d730cef": [
+"PolarStick",
+"high"
+],
+"7d9a260c": [
+"VigorMax",
+"medium"
+],
+"7e04871f": [
+"IsAdvancedServe",
+"high"
+],
+"7e1cd630": [
+"DeepDeviationTarget",
+"low"
+],
+"7ea0c084": [
+"IsSuperTieBreak",
+"medium"
+],
+"7eb30f90": [
+"Smash",
+"medium"
+],
+"7ef0be7d": [
+"InfoEffect",
+"medium"
+],
+"7f50fe07": [
+"IsGamePoint",
+"low"
+],
+"7f556e96": [
+"Stick_MovePolar",
+"high"
+],
+"7f6a439f": [
+"ReqSpeedSwing",
+"high"
+],
+"7f6c2523": [
+"Preparation",
+"high"
+],
+"7f93b9b9": [
+"InfoPowerful",
+"medium"
+],
+"7fba9196": [
+"Clock",
+"medium"
+],
+"7fe28028": [
+"AttributeQuality",
+"medium"
+],
+"80421316": [
+"VectorSum",
+"medium"
+],
+"8057b34b": [
+"PowerfulFactor",
+"medium"
+],
+"807b1f3b": [
+"IsInsideOut",
+"medium"
+],
+"82587b50": [
+"FrameCount",
+"high"
+],
+"82728379": [
+"LooserTeamIndex",
+"high"
+],
+"838fbb49": [
+"RightLine",
+"medium"
+],
+"83b3b48b": [
+"Side",
+"high"
+],
+"84217e08": [
+"ShootSide",
+"medium"
+],
+"84ed1e36": [
+"FaultProbability",
+"medium"
+],
+"85c3346e": [
+"IsA",
+"medium"
+],
+"85c7324a": [
+"LB",
+"high"
+],
+"85de32a1": [
+"EffectConfig",
+"medium"
+],
+"85f4c811": [
+"BaselineTimingAbility",
+"medium"
+],
+"860f3051": [
+"ProStyle",
+"high"
+],
+"8692ef2b": [
+"TimingState",
+"medium"
+],
+"869394f0": [
+"CurrentVisible",
+"medium"
+],
+"86d78d83": [
+"Shots",
+"high"
+],
+"86db8562": [
+"IsBackward",
+"medium"
+],
+"8702411f": [
+"RequiredDeepOffset",
+"low"
+],
+"870aff1d": [
+"OppShotDifficulty",
+"low"
+],
+"870eec51": [
+"AimY",
+"medium"
+],
+"87b1920f": [
+"EndOfPoint",
+"high"
+],
+"87b755bf": [
+"InStop",
+"high"
+],
+"87c5be7a": [
+"StartCalled",
+"medium"
+],
+"8883d2e1": [
+"ShotComponents",
+"medium"
+],
+"88a970f8": [
+"StartPosition",
+"medium"
+],
+"88d6c67e": [
+"OffsetPosition",
+"medium"
+],
+"89408a2f": [
+"ReceiverState",
+"medium"
+],
+"8a2c4b32": [
+"Stick_1",
+"high"
+],
+"8a548d35": [
+"SlicePower",
+"medium"
+],
+"8abf585e": [
+"LookLeft",
+"high"
+],
+"8add300f": [
+"ErrorMissFatiguePenalty",
+"low"
+],
+"8ae955a2": [
+"LocalRotation",
+"medium"
+],
+"8b28bf9c": [
+"ReceiverMoveState",
+"low"
+],
+"8b7ee5dd": [
+"AimingSideCenter",
+"medium"
+],
+"8c1eaca7": [
+"ShotSpecific",
+"medium"
+],
+"8c2438f6": [
+"AdvancedServe",
+"medium"
+],
+"8c872b2c": [
+"BallTrail",
+"medium"
+],
+"8c9b26e0": [
+"DefaultAttributes",
+"medium"
+],
+"8caae668": [
+"MaxDelta",
+"medium"
+],
+"8cae3d42": [
+"MoveToNet",
+"high"
+],
+"8ce1bc2a": [
+"Buttons",
+"high"
+],
+"8d0184b8": [
+"WonGames",
+"medium"
+],
+"8d6da66a": [
+"ServeHitZone",
+"low"
+],
+"8dc6b132": [
+"TopSpinFinesse",
+"medium"
+],
+"8e526e33": [
+"Throw",
+"high"
+],
+"8efd67a5": [
+"Element",
+"high"
+],
+"8f308499": [
+"Efficiency",
+"high"
+],
+"8fc790e7": [
+"DebugY",
+"medium"
+],
+"9008c8e4": [
+"CoefAvgSpeed",
+"low"
+],
+"912faaa2": [
+"Powerful",
+"high"
+],
+"915c9049": [
+"Reset",
+"high"
+],
+"92672f1b": [
+"MatchAnalyser",
+"medium"
+],
+"926eef1b": [
+"VolleyZone",
+"medium"
+],
+"927a7e18": [
+"IsBreakPoint",
+"low"
+],
+"927c11e3": [
+"AnimBones",
+"high"
+],
+"93a12c54": [
+"TargetHit",
+"medium"
+],
+"93e5ba75": [
+"Apologize",
+"high"
+],
+"93ee10df": [
+"FirstPoint",
+"medium"
+],
+"94d49772": [
+"ReachabilitySpeed",
+"medium"
+],
+"950d8b1e": [
+"AimingLengthCenter",
+"medium"
+],
+"956312f1": [
+"ReturnServeState",
+"medium"
+],
+"959a9407": [
+"EOP",
+"high"
+],
+"95a01c3b": [
+"Gravity",
+"high"
+],
+"9600eb45": [
+"BallLet",
+"medium"
+],
+"96019b92": [
+"NbDrop",
+"medium"
+],
+"96793e47": [
+"BHType",
+"high"
+],
+"96afac38": [
+"IsY",
+"high"
+],
+"96fe1e55": [
+"Repositioning",
+"high"
+],
+"976d55d1": [
+"Expression",
+"high"
+],
+"97f7e6b0": [
+"RallyContinue",
+"medium"
+],
+"980f79dc": [
+"Stick_Aiming",
+"high"
+],
+"99030041": [
+"SideLeft",
+"medium"
+],
+"990377a5": [
+"DropShot",
+"high"
+],
+"991df89e": [
+"AskNext",
+"high"
+],
+"9922d5ca": [
+"RequestChallenge",
+"high"
+],
+"99365b30": [
+"Min",
+"high"
+],
+"999f0b51": [
+"DeviationZMin",
+"low"
+],
+"99ad535c": [
+"BHStyle",
+"medium"
+],
+"9a0c0937": [
+"IsWood",
+"high"
+],
+"9a40281e": [
+"AverageTiming",
+"medium"
+],
+"9a4dc172": [
+"CurrentNormSpeed",
+"low"
+],
+"9a5085e9": [
+"ServePosition",
+"medium"
+],
+"9a6e86c1": [
+"MinReachabilitySpeed",
+"low"
+],
+"9a81c5dc": [
+"SumPowerfulFactor",
+"low"
+],
+"9b14362c": [
+"RightFoot",
+"high"
+],
+"9b64f4aa": [
+"Prop2",
+"high"
+],
+"9ba50656": [
+"Long",
+"high"
+],
+"9bfeb677": [
+"TopSpinSchool",
+"high"
+],
+"9cab08b1": [
+"ReceiverNumberStage",
+"low"
+],
+"9cafb633": [
+"Wood",
+"high"
+],
+"9cbdc1bf": [
+"PositioningSpeed",
+"medium"
+],
+"9d734117": [
+"Vivacity",
+"high"
+],
+"9d7c7c58": [
+"BallState",
+"medium"
+],
+"9d8d66d3": [
+"IsWin",
+"medium"
+],
+"9d914a30": [
+"InsideOutRequested",
+"medium"
+],
+"9deb41b3": [
+"PerfectShot",
+"medium"
+],
+"9e119d06": [
+"Stomp",
+"high"
+],
+"9e7c2282": [
+"ToDisplay",
+"high"
+],
+"9f375bfe": [
+"SpecialShot",
+"high"
+],
+"9f448218": [
+"Enabled",
+"high"
+],
+"9f9c9249": [
+"Int1",
+"medium"
+],
+"9fb57f53": [
+"Player",
+"high"
+],
+"9ff498ef": [
+"HeavyStomp",
+"high"
+],
+"9ffccb73": [
+"Skill",
+"high"
+],
+"a0323a39": [
+"Return",
+"high"
+],
+"a04840c3": [
+"ButtonAutoSwing",
+"low"
+],
+"a06fa4ee": [
+"MatchInfo",
+"medium"
+],
+"a0ee1282": [
+"HandPreference",
+"medium"
+],
+"a0f3af10": [
+"PerfectShotEvaluation",
+"low"
+],
+"a0f9ac74": [
+"VolleyRight",
+"medium"
+],
+"a1816bed": [
+"HitPoint",
+"medium"
+],
+"a1a40991": [
+"InfoRepositioningTime",
+"low"
+],
+"a2ec93e9": [
+"MoveDirPower",
+"low"
+],
+"a3e09dbc": [
+"ExpressionInputsOutputs",
+"low"
+],
+"a3e7c851": [
+"PositioningShortGraph",
+"low"
+],
+"a413297b": [
+"TopSpinMedium",
+"medium"
+],
+"a41dbf02": [
+"Next",
+"high"
+],
+"a42c93be": [
+"Emergency",
+"medium"
+],
+"a43884fa": [
+"FirstIndex",
+"high"
+],
+"a48e3ab0": [
+"Frequency",
+"high"
+],
+"a4aa01b0": [
+"CurrentAcceleration",
+"medium"
+],
+"a504b5bc": [
+"RequiredSpeed",
+"high"
+],
+"a53b6469": [
+"Max",
+"high"
+],
+"a552b8c4": [
+"RT",
+"high"
+],
+"a5545e36": [
+"GlobalClock",
+"medium"
+],
+"a5923408": [
+"DeviationZMax",
+"low"
+],
+"a5ec893b": [
+"FirstFrameReachability",
+"low"
+],
+"a64b9bd4": [
+"LocalOrientation",
+"medium"
+],
+"a67c95de": [
+"SpeedInfo",
+"medium"
+],
+"a6a1b2ae": [
+"Serve",
+"high"
+],
+"a6a6a055": [
+"ShotEfficiency",
+"medium"
+],
+"a6dfabaa": [
+"VolleyTimingAbility",
+"medium"
+],
+"a7bb958f": [
+"AI",
+"high"
+],
+"a870834b": [
+"RequiredNetHeight",
+"low"
+],
+"a877942e": [
+"FirstBounce",
+"medium"
+],
+"a8e01c55": [
+"StartPositions",
+"medium"
+],
+"a8f7119a": [
+"DistanceToNet",
+"medium"
+],
+"a945b47d": [
+"EndOfSet",
+"high"
+],
+"a98d3737": [
+"Exp1",
+"medium"
+],
+"aa631972": [
+"DirectionSelected",
+"medium"
+],
+"aa7aebc4": [
+"TunnelBagSound",
+"high"
+],
+"aaf71cb0": [
+"ServeStyle",
+"medium"
+],
+"aafc2374": [
+"MoveStateId",
+"low"
+],
+"ac0e0da7": [
+"CurrentVigor",
+"high"
+],
+"ad09351e": [
+"IsDefenseShot",
+"low"
+],
+"ad4ba1ab": [
+"SwingCategory",
+"high"
+],
+"ad6468a3": [
+"Debug",
+"high"
+],
+"adb6ffce": [
+"Positioning",
+"high"
+],
+"addd20e9": [
+"Quota",
+"medium"
+],
+"adfee929": [
+"ReleasePrecision",
+"high"
+],
+"aea55abe": [
+"Cutscene_BallBounce_WarmingUp",
+"high"
+],
+"aef32f14": [
+"FinalPositioningComponents",
+"medium"
+],
+"af0dbd78": [
+"OpponentIndex",
+"medium"
+],
+"af5d1e2e": [
+"BaseLine",
+"high"
+],
+"af62f9b9": [
+"HeavyRacketHit",
+"high"
+],
+"afb7ca81": [
+"RemainingTime",
+"medium"
+],
+"afd868db": [
+"PlayerStateId",
+"low"
+],
+"b0043514": [
+"FlatFinesse",
+"medium"
+],
+"b0322374": [
+"BallSpeedInfo",
+"low"
+],
+"b0afa566": [
+"MissInfo",
+"medium"
+],
+"b185d3ba": [
+"Shoot",
+"medium"
+],
+"b1cc94c4": [
+"Effect",
+"high"
+],
+"b20fbff1": [
+"AnimationSpeedFactor",
+"high"
+],
+"b2388bb1": [
+"Spin",
+"high"
+],
+"b2529619": [
+"Lateral",
+"high"
+],
+"b26101ee": [
+"ServeSpinFinesse",
+"medium"
+],
+"b27b798a": [
+"CrossNet",
+"medium"
+],
+"b2fd713e": [
+"Activated",
+"medium"
+],
+"b3ee33f3": [
+"MoveState",
+"medium"
+],
+"b49931f5": [
+"PlayerInputConfigState",
+"medium"
+],
+"b50dd1c5": [
+"Visible",
+"high"
+],
+"b56a13cb": [
+"StateEditor",
+"medium"
+],
+"b5c698af": [
+"InfoRisk",
+"medium"
+],
+"b5cff9b7": [
+"SwingSpeedCoef",
+"medium"
+],
+"b5e795b1": [
+"TopSpinRisk",
+"medium"
+],
+"b69ae742": [
+"PaddleId",
+"medium"
+],
+"b6a528dd": [
+"ServeSpinMedium",
+"medium"
+],
+"b6bccec4": [
+"MatchPlan",
+"medium"
+],
+"b70a03f3": [
+"VolleyStandard",
+"medium"
+],
+"b797ce6b": [
+"SelectionScore",
+"medium"
+],
+"b79d9c05": [
+"AccuracyCrossAce",
+"low"
+],
+"b7b2364b": [
+"X",
+"high"
+],
+"b848a48a": [
+"Transition",
+"high"
+],
+"b86cffdf": [
+"FollowToNet",
+"medium"
+],
+"b873c3ab": [
+"RunBack",
+"medium"
+],
+"b8c9a9fa": [
+"PositioningComponents",
+"medium"
+],
+"b9dd933b": [
+"ShotInfo",
+"medium"
+],
+"ba26eeae": [
+"RepositioningState",
+"medium"
+],
+"baacf8f3": [
+"BallHeight",
+"medium"
+],
+"bab436f1": [
+"IsClay",
+"medium"
+],
+"bab5b3f4": [
+"TimingExpression",
+"medium"
+],
+"bacecbaa": [
+"Random1",
+"medium"
+],
+"bb3b0a79": [
+"Conditions",
+"high"
+],
+"bb9aea01": [
+"Match",
+"high"
+],
+"bc06cec7": [
+"IsPowerful",
+"high"
+],
+"bc0f931c": [
+"ReturnTopSpinFinesse",
+"medium"
+],
+"bcbb5310": [
+"Direction",
+"high"
+],
+"bccd3f05": [
+"Down",
+"high"
+],
+"bd8ea388": [
+"InsideOut",
+"high"
+],
+"bdd29cad": [
+"LetProbability",
+"medium"
+],
+"bde68066": [
+"WantedMatchState",
+"low"
+],
+"be02d81e": [
+"FlatMedium",
+"medium"
+],
+"be9a22cd": [
+"PlayPower",
+"medium"
+],
+"bf298a20": [
+"Item",
+"high"
+],
+"bf5a86a3": [
+"Position",
+"high"
+],
+"bfb447e4": [
+"ControlValues",
+"medium"
+],
+"bfb9d8c0": [
+"VolleyPower",
+"medium"
+],
+"c015cb95": [
+"GoodVolleySwing",
+"medium"
+],
+"c0b506dd": [
+"Y",
+"high"
+],
+"c1406a0d": [
+"Angle",
+"high"
+],
+"c180b237": [
+"IsSchool",
+"medium"
+],
+"c1965e5c": [
+"InitialSpeed",
+"medium"
+],
+"c1df4081": [
+"Medium",
+"high"
+],
+"c222a5e0": [
+"Miss",
+"high"
+],
+"c223687f": [
+"BallDifficulty",
+"medium"
+],
+"c233d70f": [
+"SimulationDone",
+"medium"
+],
+"c38f5ceb": [
+"ServeAndVolley",
+"high"
+],
+"c3c896c0": [
+"Outputs",
+"high"
+],
+"c3d48ae1": [
+"RushRepositioning",
+"medium"
+],
+"c4413aa3": [
+"SuddenDeath",
+"medium"
+],
+"c44826ea": [
+"ServeSpinPowerful",
+"medium"
+],
+"c4811ae4": [
+"IsMiss",
+"medium"
+],
+"c4ceeec0": [
+"Receiver",
+"high"
+],
+"c4eba473": [
+"PlayerSettings",
+"medium"
+],
+"c51ec0b8": [
+"ShotTriggers",
+"high"
+],
+"c67f3bb4": [
+"AnimEvents",
+"medium"
+],
+"c6a73dcf": [
+"ReachTime",
+"medium"
+],
+"c7139f2f": [
+"IsRallyRunning",
+"low"
+],
+"c718daaa": [
+"Lob",
+"high"
+],
+"c729b208": [
+"StateIndex",
+"medium"
+],
+"c73640cd": [
+"ServerReceiverIndex",
+"low"
+],
+"c7392216": [
+"RequiredMove",
+"medium"
+],
+"c83e24ed": [
+"AimingLengthLong",
+"medium"
+],
+"c86cc9f3": [
+"ConstrainedMove",
+"medium"
+],
+"c8dffc00": [
+"AttitudeType",
+"high"
+],
+"c9238771": [
+"Let",
+"high"
+],
+"c982ea5a": [
+"BaseEffect",
+"medium"
+],
+"c9d71b97": [
+"ServeReset",
+"medium"
+],
+"ca16d50e": [
+"LocalOpponentPosition",
+"medium"
+],
+"ca370ec4": [
+"LightRacketHit",
+"high"
+],
+"ca824eb7": [
+"ShotDetected",
+"medium"
+],
+"caa7531f": [
+"Net",
+"high"
+],
+"caf5c873": [
+"Actions",
+"high"
+],
+"cb19850e": [
+"IsForehand",
+"medium"
+],
+"cb7211a8": [
+"Output",
+"high"
+],
+"cbe44a9b": [
+"FatigueIngame",
+"medium"
+],
+"cc20baea": [
+"AutoSwing",
+"medium"
+],
+"cc31f458": [
+"Mass",
+"high"
+],
+"cc32f1d4": [
+"InputFilter",
+"medium"
+],
+"cc8b4430": [
+"LocalDirection",
+"medium"
+],
+"cd1ea66d": [
+"TargetPosition",
+"high"
+],
+"cdbd7fde": [
+"Break",
+"high"
+],
+"cdc967fc": [
+"RecordReplay",
+"high"
+],
+"cde235ac": [
+"OpponentPositionZone",
+"low"
+],
+"ce04b0b5": [
+"TimingZone",
+"medium"
+],
+"ce9068e0": [
+"SmashZone",
+"medium"
+],
+"cee7d1f2": [
+"Speed",
+"high"
+],
+"cef9b8ec": [
+"HitPositionLocal",
+"low"
+],
+"cf00ed91": [
+"TunnelBreathingOutMen",
+"high"
+],
+"cf010c55": [
+"Precision",
+"high"
+],
+"cfa6c602": [
+"ReachabilitySpeedList",
+"low"
+],
+"cfdb99a1": [
+"InfoRepositioning",
+"medium"
+],
+"cfdbd245": [
+"GoodTiming",
+"medium"
+],
+"d00afaa7": [
+"Rotation",
+"high"
+],
+"d03e86bd": [
+"ReleaseB",
+"high"
+],
+"d0cb6659": [
+"Finesse",
+"high"
+],
+"d0f027ec": [
+"StepIndex",
+"high"
+],
+"d0fbcd62": [
+"NormSpeedInfo",
+"low"
+],
+"d212c1ef": [
+"IsLob",
+"high"
+],
+"d27647f3": [
+"ShotEfficiencyContext",
+"low"
+],
+"d3d99e8b": [
+"A",
+"high"
+],
+"d3f7df83": [
+"Applause",
+"high"
+],
+"d4905279": [
+"EOPVictoryGrunt",
+"high"
+],
+"d4ef592c": [
+"IsTieBreak",
+"medium"
+],
+"d4f120cb": [
+"FromSmash",
+"medium"
+],
+"d5973f7e": [
+"TunnelJump",
+"high"
+],
+"d5fd9684": [
+"CoefRemainingTime",
+"low"
+],
+"d610cad2": [
+"Up",
+"high"
+],
+"d6c2c506": [
+"SpeedFactor",
+"high"
+],
+"d6f0e7d1": [
+"BadContext",
+"high"
+],
+"d6f18e08": [
+"ServeStick",
+"medium"
+],
+"d72225ee": [
+"ThrowFlat",
+"high"
+],
+"d73cccf9": [
+"Segment",
+"high"
+],
+"d7401ddc": [
+"GamePoints",
+"medium"
+],
+"d8330191": [
+"SkillList",
+"high"
+],
+"d9347a7f": [
+"Risk",
+"high"
+],
+"d986778a": [
+"LoadPoint",
+"medium"
+],
+"d9e063b8": [
+"MainBallState",
+"medium"
+],
+"d9fa1b37": [
+"TopSpin",
+"high"
+],
+"da2afc2c": [
+"ServiceRequested",
+"medium"
+],
+"da472ec6": [
+"BounceCount",
+"medium"
+],
+"da4adcac": [
+"PointIndex",
+"medium"
+],
+"da554856": [
+"Left",
+"high"
+],
+"da6877c2": [
+"EOPFRustrationGrunt",
+"high"
+],
+"db57c3ec": [
+"DebugInfo",
+"medium"
+],
+"dc9bfaa7": [
+"CurrentTarget",
+"medium"
+],
+"dcb67730": [
+"Value",
+"high"
+],
+"dcc919da": [
+"IsNetShot",
+"low"
+],
+"dd1cdd18": [
+"ReturnTopSpinPower",
+"medium"
+],
+"dd446c94": [
+"SlowDown",
+"medium"
+],
+"dda048f3": [
+"ShotDifficulty",
+"medium"
+],
+"ddae07ee": [
+"VeryHard",
+"high"
+],
+"ddde0ae8": [
+"FlatPower",
+"medium"
+],
+"de266211": [
+"ServeFlatPowerful",
+"medium"
+],
+"de27764e": [
+"EvaluationOutputs",
+"medium"
+],
+"de59633c": [
+"Set",
+"high"
+],
+"de84474d": [
+"BallOut",
+"medium"
+],
+"deb3800a": [
+"OverrideShot",
+"medium"
+],
+"ded10611": [
+"Hips",
+"high"
+],
+"df24cad5": [
+"Stick_Move",
+"high"
+],
+"df7eaf66": [
+"FromContext",
+"medium"
+],
+"df95b584": [
+"Misc",
+"high"
+],
+"df97c57b": [
+"IsRisk",
+"high"
+],
+"dfafc628": [
+"CartesianStick",
+"high"
+],
+"e080c8ea": [
+"LocalSpeed",
+"medium"
+],
+"e12bfcbc": [
+"DeepDeviation",
+"medium"
+],
+"e1a89cae": [
+"IsX",
+"medium"
+],
+"e241b13b": [
+"MaskSurface",
+"medium"
+],
+"e2b5c565": [
+"Bias",
+"high"
+],
+"e2f99a63": [
+"IsDouble",
+"medium"
+],
+"e38df344": [
+"ShadowPosition",
+"medium"
+],
+"e4aac35a": [
+"PlacingClosedBack",
+"low"
+],
+"e5b929a6": [
+"LocalPosition",
+"medium"
+],
+"e5cfa4b4": [
+"RepositioningPointSingle",
+"low"
+],
+"e5e4f8d7": [
+"Distance",
+"high"
+],
+"e5f05652": [
+"SwingEffect",
+"high"
+],
+"e630e16b": [
+"Forehand",
+"high"
+],
+"e69b0c68": [
+"InStart",
+"high"
+],
+"e6e54e96": [
+"MatchEvents",
+"medium"
+],
+"e787877e": [
+"TimingBaseFrame",
+"low"
+],
+"e8280b3c": [
+"Player2",
+"medium"
+],
+"e8ad3080": [
+"InputsServe",
+"medium"
+],
+"e8bc4cd8": [
+"HitZone",
+"medium"
+],
+"e8e37d7a": [
+"WantedValue",
+"medium"
+],
+"e95035a9": [
+"Easy",
+"high"
+],
+"e95c1ab2": [
+"Amplitude",
+"high"
+],
+"e9f37a3a": [
+"Players",
+"high"
+],
+"ea0c2a9e": [
+"ServiceRunning",
+"high"
+],
+"ea94e936": [
+"Factor",
+"high"
+],
+"eae9069e": [
+"Last",
+"high"
+],
+"eb588ef3": [
+"BehaviorSectors",
+"medium"
+],
+"eb8b4345": [
+"NetRatio",
+"medium"
+],
+"ec9edd11": [
+"PosVolleyQualifier",
+"low"
+],
+"ec9f4233": [
+"TimingAbility",
+"medium"
+],
+"ecc6c7e8": [
+"Exist",
+"high"
+],
+"ed7ecda7": [
+"Locked",
+"high"
+],
+"edb67670": [
+"PreviousPosition",
+"medium"
+],
+"ede209b8": [
+"AnimationTime",
+"medium"
+],
+"ee0f0a46": [
+"FinalShotComponents",
+"medium"
+],
+"ee6de1ff": [
+"ReturnServeComponents",
+"medium"
+],
+"eea3d342": [
+"BiasMinMax",
+"low"
+],
+"ef823202": [
+"Effort",
+"high"
+],
+"f009dcc7": [
+"AimX",
+"medium"
+],
+"f084c272": [
+"PositionOnCourt",
+"high"
+],
+"f144d2d8": [
+"IsFirstDeuce",
+"low"
+],
+"f14c0d01": [
+"FlatRisk",
+"medium"
+],
+"f209c690": [
+"ReqVolleyRepos",
+"high"
+],
+"f271f3c8": [
+"IsTopSpin",
+"high"
+],
+"f27c976e": [
+"Style",
+"high"
+],
+"f29ccdbc": [
+"BestHitPoint",
+"low"
+],
+"f2e1e039": [
+"Height",
+"high"
+],
+"f31cf093": [
+"IsMale",
+"medium"
+],
+"f324b589": [
+"QuadEfficiency",
+"medium"
+],
+"f3581855": [
+"Score",
+"high"
+],
+"f3676e90": [
+"OnlineCommand",
+"medium"
+],
+"f36e8bec": [
+"AllowOpenStance",
+"low"
+],
+"f3af49a6": [
+"MinSpeed",
+"high"
+],
+"f3dbba7e": [
+"IsFlat",
+"medium"
+],
+"f42ab603": [
+"Request",
+"high"
+],
+"f431f5e8": [
+"Stamina",
+"high"
+],
+"f4366c3f": [
+"Difficulty",
+"high"
+],
+"f5319033": [
+"BehaviorStyle",
+"medium"
+],
+"f578057a": [
+"Flat",
+"high"
+],
+"f6915570": [
+"ConstraintsInfo",
+"medium"
+],
+"f69b899f": [
+"SideRight",
+"medium"
+],
+"f74ecf4f": [
+"SliceFinesse",
+"medium"
+],
+"f753cc9c": [
+"FrameLeftCount",
+"low"
+],
+"f7f8c318": [
+"MissType",
+"high"
+],
+"f8c0a071": [
+"DebugX",
+"medium"
+],
+"f8d1c14a": [
+"PressB",
+"high"
+],
+"f8e9a69c": [
+"SelectionScoreList",
+"low"
+],
+"f95ff5cc": [
+"SecondServe",
+"medium"
+],
+"f9818c0e": [
+"BallEffect",
+"medium"
+],
+"f9878301": [
+"HasPrepared",
+"medium"
+],
+"fb043007": [
+"IsSlice",
+"high"
+],
+"fb182f9a": [
+"OutLimits",
+"medium"
+],
+"fbbab1a4": [
+"PointEvents",
+"medium"
+],
+"fc08f259": [
+"MinAngle",
+"high"
+],
+"fc6f57a1": [
+"Slice",
+"high"
+],
+"fca4ef82": [
+"PlayerSide",
+"medium"
+],
+"fcd367bc": [
+"RepositioningComponents",
+"medium"
+],
+"fcf54229": [
+"EndPoint",
+"medium"
+],
+"fd119356": [
+"Ace",
+"high"
+],
+"fdd82b26": [
+"DiffAttributesGain",
+"low"
+],
+"fe11d138": [
+"Name",
+"high"
+],
+"fe6d2d3b": [
+"IsMedium",
+"high"
+],
+"ff3a7b97": [
+"Category",
+"high"
+]
+}
