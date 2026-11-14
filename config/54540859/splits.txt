@@ -39964,3 +39964,91 @@ src/xbox360/png2_zlib_trees.c:
 src/xbox360/png2_zlib_zutil.c:
 	.pdata      start:0x88111E98 end:0x88111EA0
 	.text       start:0x88304058 end:0x883040B4
+
+src/xbox360/aud1_celt_modes.c:
+	.pdata      start:0x88113FF8 end:0x88114000
+	.pdata      start:0x88114018 end:0x88114020
+	.pdata      start:0x88114020 end:0x88114028
+	.text       start:0x88399B40 end:0x88399E18
+	.text       start:0x8839A4E0 end:0x8839A71C
+
+src/xbox360/aud1_vorbis_block.c:
+	.pdata      start:0x88114610 end:0x88114618
+	.pdata      start:0x88114618 end:0x88114620
+	.pdata      start:0x88114638 end:0x88114640
+	.text       start:0x883BBDD8 end:0x883BBE94
+	.text       start:0x883BBE98 end:0x883BBF50
+	.text       start:0x883BC5F8 end:0x883BC664
+	.text       start:0x883BC668 end:0x883BC6B8
+	.text       start:0x883BD068 end:0x883BD0F0
+
+src/xbox360/aud1_vorbis_codebook.c:
+	.pdata      start:0x88114688 end:0x88114690
+	.pdata      start:0x88114690 end:0x88114698
+	.pdata      start:0x881146A8 end:0x881146B0
+	.text       start:0x883BE2A8 end:0x883BE644
+	.text       start:0x883BE648 end:0x883BE81C
+	.text       start:0x883BEA60 end:0x883BEC9C
+
+src/xbox360/aud1_vorbis_floor1.c:
+	.pdata      start:0x88114898 end:0x881148A0
+	.text       start:0x883C5EF8 end:0x883C6218
+
+src/xbox360/aud1_vorbis_info.c:
+	.pdata      start:0x881142F0 end:0x881142F8
+	.pdata      start:0x881142F8 end:0x88114300
+	.pdata      start:0x88114300 end:0x88114308
+	.pdata      start:0x88114308 end:0x88114310
+	.pdata      start:0x88114310 end:0x88114318
+	.pdata      start:0x88114318 end:0x88114320
+	.pdata      start:0x88114320 end:0x88114328
+	.pdata      start:0x88114328 end:0x88114330
+	.text       start:0x883AAD18 end:0x883AADD0
+	.text       start:0x883AADF0 end:0x883AB18C
+	.text       start:0x883AB190 end:0x883AB394
+	.text       start:0x883AB398 end:0x883AB764
+	.text       start:0x883AB768 end:0x883AB9B0
+
+src/xbox360/aud1_vorbis_mapping0.c:
+	.pdata      start:0x88114830 end:0x88114838
+	.text       start:0x883C43B8 end:0x883C4634
+
+src/xbox360/aud1_vorbis_res0.c:
+	.pdata      start:0x88114848 end:0x88114850
+	.pdata      start:0x88114850 end:0x88114858
+	.pdata      start:0x88114860 end:0x88114868
+	.pdata      start:0x88114868 end:0x88114870
+	.text       start:0x883C4C10 end:0x883C4CE4
+	.text       start:0x883C4CE8 end:0x883C4F0C
+	.text       start:0x883C51B0 end:0x883C5434
+	.text       start:0x883C5438 end:0x883C5494
+	.text       start:0x883C5498 end:0x883C54F4
+	.text       start:0x883C54F8 end:0x883C56F8
+
+src/xbox360/aud1_vorbis_synthesis.c:
+	.pdata      start:0x881145F0 end:0x881145F8
+	.pdata      start:0x881145F8 end:0x88114600
+	.pdata      start:0x88114600 end:0x88114608
+	.text       start:0x883BB9E0 end:0x883BBBAC
+	.text       start:0x883BBBB0 end:0x883BBCB4
+	.text       start:0x883BBCB8 end:0x883BBD80
+
+src/xbox360/aud1_vorbisfile.c:
+	.pdata      start:0x88114238 end:0x88114240
+	.pdata      start:0x88114240 end:0x88114248
+	.pdata      start:0x88114248 end:0x88114250
+	.pdata      start:0x88114250 end:0x88114258
+	.pdata      start:0x88114268 end:0x88114270
+	.pdata      start:0x88114270 end:0x88114278
+	.pdata      start:0x88114280 end:0x88114288
+	.pdata      start:0x88114298 end:0x881142A0
+	.pdata      start:0x881142A0 end:0x881142A8
+	.pdata      start:0x881142D8 end:0x881142E0
+	.text       start:0x883A8020 end:0x883A80EC
+	.text       start:0x883A80F0 end:0x883A83B4
+	.text       start:0x883A85D0 end:0x883A891C
+	.text       start:0x883A8920 end:0x883A8A38
+	.text       start:0x883A8F28 end:0x883A8FF0
+	.text       start:0x883A9440 end:0x883A958C
+	.text       start:0x883A9598 end:0x883A9634
+	.text       start:0x883AA9E0 end:0x883AAC28

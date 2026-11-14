@@ -3800,6 +3800,42 @@
       "src/xbox360/png2_zlib_zutil.c": {
         "status": "Matching",
         "source": "xbox360/png2_zlib_zutil.c"
+      },
+      "src/xbox360/aud1_celt_modes.c": {
+        "status": "Matching",
+        "source": "xbox360/aud1_celt_modes.c"
+      },
+      "src/xbox360/aud1_vorbis_block.c": {
+        "status": "Matching",
+        "source": "xbox360/aud1_vorbis_block.c"
+      },
+      "src/xbox360/aud1_vorbis_codebook.c": {
+        "status": "Matching",
+        "source": "xbox360/aud1_vorbis_codebook.c"
+      },
+      "src/xbox360/aud1_vorbis_floor1.c": {
+        "status": "Matching",
+        "source": "xbox360/aud1_vorbis_floor1.c"
+      },
+      "src/xbox360/aud1_vorbis_info.c": {
+        "status": "Matching",
+        "source": "xbox360/aud1_vorbis_info.c"
+      },
+      "src/xbox360/aud1_vorbis_mapping0.c": {
+        "status": "Matching",
+        "source": "xbox360/aud1_vorbis_mapping0.c"
+      },
+      "src/xbox360/aud1_vorbis_res0.c": {
+        "status": "Matching",
+        "source": "xbox360/aud1_vorbis_res0.c"
+      },
+      "src/xbox360/aud1_vorbis_synthesis.c": {
+        "status": "Matching",
+        "source": "xbox360/aud1_vorbis_synthesis.c"
+      },
+      "src/xbox360/aud1_vorbisfile.c": {
+        "status": "Matching",
+        "source": "xbox360/aud1_vorbisfile.c"
       }
     }
   }

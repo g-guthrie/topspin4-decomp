@@ -32872,6 +32872,96 @@ MATCHING_UNITS = (
         "extra_flags": ["/Os"],
         "symbols": {"png2_zlib_zcalloc_88304058": 92},
     },
+    {
+        "source": "src/xbox360/aud1_celt_modes.c",
+        "object": "aud1_celt_modes.obj",
+        "symbols": {
+            "aud1_compute_ebands_88399B40": 728,
+            "aud1_celt_mode_destroy_8839A4E0": 408,
+            "aud1_check_mode_8839A678": 164,
+        },
+    },
+    {
+        "source": "src/xbox360/aud1_vorbis_block.c",
+        "object": "aud1_vorbis_block.obj",
+        "symbols": {
+            "aud1__vorbis_block_alloc_883BBDD8": 188,
+            "aud1__vorbis_block_ripcord_883BBE98": 184,
+            "aud1_vorbis_synthesis_restart_883BC5F8": 108,
+            "aud1_vorbis_synthesis_init_883BC668": 80,
+            "aud1_vorbis_synthesis_pcmout_883BD068": 136,
+        },
+    },
+    {
+        "source": "src/xbox360/aud1_vorbis_codebook.c",
+        "object": "aud1_vorbis_codebook.obj",
+        "symbols": {
+            "aud1_vorbis_staticbook_unpack_883BE2A8": 924,
+            "aud1_decode_packed_entry_number_883BE648": 468,
+            "aud1_vorbis_book_decodev_add_883BEA60": 572,
+        },
+    },
+    {
+        "source": "src/xbox360/aud1_vorbis_floor1.c",
+        "object": "aud1_vorbis_floor1.obj",
+        "symbols": {"aud1_floor1_inverse1_883C5EF8": 800},
+    },
+    {
+        "source": "src/xbox360/aud1_vorbis_info.c",
+        "object": "aud1_vorbis_info.obj",
+        "symbols": {
+            "aud1_vorbis_comment_clear_883AAD18": 184,
+            "aud1_vorbis_info_init_883AADF0": 104,
+            "aud1_vorbis_info_clear_883AAE58": 504,
+            "aud1__vorbis_unpack_info_883AB050": 316,
+            "aud1__vorbis_unpack_comment_883AB190": 516,
+            "aud1__vorbis_unpack_books_883AB398": 972,
+            "aud1_vorbis_synthesis_idheader_883AB768": 224,
+            "aud1_vorbis_synthesis_headerin_883AB848": 360,
+        },
+    },
+    {
+        "source": "src/xbox360/aud1_vorbis_mapping0.c",
+        "object": "aud1_vorbis_mapping0.obj",
+        "symbols": {"aud1_mapping0_unpack_883C43B8": 636},
+    },
+    {
+        "source": "src/xbox360/aud1_vorbis_res0.c",
+        "object": "aud1_vorbis_res0.obj",
+        "symbols": {
+            "aud1_res0_free_look_883C4C10": 212,
+            "aud1_res0_unpack_883C4CE8": 548,
+            "aud1__01inverse_883C51B0": 644,
+            "aud1_res0_inverse_883C5438": 92,
+            "aud1_res1_inverse_883C5498": 92,
+            "aud1_res2_inverse_883C54F8": 512,
+        },
+    },
+    {
+        "source": "src/xbox360/aud1_vorbis_synthesis.c",
+        "object": "aud1_vorbis_synthesis.obj",
+        "symbols": {
+            "aud1_vorbis_synthesis_883BB9E0": 460,
+            "aud1_vorbis_synthesis_trackonly_883BBBB0": 260,
+            "aud1_vorbis_packet_blocksize_883BBCB8": 200,
+        },
+    },
+    {
+        "source": "src/xbox360/aud1_vorbisfile.c",
+        "object": "aud1_vorbisfile.obj",
+        "symbols": {
+            "aud1__get_data_883A8020": 204,
+            "aud1__seek_helper_883A80F0": 128,
+            "aud1__get_next_page_883A8170": 224,
+            "aud1__get_prev_page_883A8250": 356,
+            "aud1__fetch_headers_883A85D0": 844,
+            "aud1__initial_pcmoffset_883A8920": 280,
+            "aud1__make_decode_ready_883A8F28": 200,
+            "aud1_ov_clear_883A9440": 332,
+            "aud1_ov_pcm_total_883A9598": 156,
+            "aud1__ov_open1_883AA9E0": 584,
+        },
+    },
 )
 
 
