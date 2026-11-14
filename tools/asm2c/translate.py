@@ -2432,6 +2432,12 @@ class Gen:
                 if X1 in L and X1 != h and self._flows_to(X2, X1, L, h, brk=True):
                     J = X1
                     break
+            else:
+                # neither arm is the join: the first loop block both arms reach (or break)
+                for C in sorted(b for b in L if b > 0 and b != h and b not in (A, B)):
+                    if self._flows_to(A, C, L, h, brk=True) and self._flows_to(B, C, L, h, brk=True):
+                        J = C
+                        break
         if J in absorbed:
             raise Skip('fold join')
         X = self.exits[-1] if self.exits else None

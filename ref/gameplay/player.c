@@ -44,7 +44,7 @@ float pl_table2d(const PlTable2D *t, float row_value, float col_value)
     return a + f * (b - a);
 }
 
-/* fn_8817A688 (analyser curves). */
+/* fn_8817A688 (analyser curves); slope from the fn_88179740 fixup unless PL_CURVE_STEP. */
 float pl_curve20(const PlKey20 *k, int n, float x, PlCurveMode mode)
 {
     if (n <= 0)
@@ -56,7 +56,7 @@ float pl_curve20(const PlKey20 *k, int n, float x, PlCurveMode mode)
     float w = s->x1 - s->x0;
     float d = clampf(x - s->x0, 0.0f, w > 0.0f ? w : 0.0f);
     float slope = s->slope;
-    if (mode == PL_CURVE_RAMP_Y1 && w > 0.0f)
+    if (mode == PL_CURVE_RAMP && w > 0.0f)
         slope = (s->y1 - s->y0) / w;
     return s->y0 + slope * d;
 }

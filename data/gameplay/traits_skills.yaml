@@ -13,7 +13,7 @@
 notes:
   - "Skill names/descriptions: StringTable key crc32('Ability<Code>Name') / crc32('Ability<Code>Text') (V)."
   - "In-match a skill is PlayerState.Profile.SkillList[Id == crc32(code)].Value (S+0x640 list, 1.0 = owned)."
-  - "graph_consumers: analyser graphs (Expressions.bin) with a link port Profile.SkillList.Skill[Id].Value; formula_slice lists the nodes that depend on the skill, operands the nodes (two levels back) that define the other inputs of the nodes reading the skill directly; curves are [x0, x1, y0, y1] (runtime ramp)."
+  - "graph_consumers: analyser graphs (Expressions.bin) with a link port Profile.SkillList.Skill[Id].Value; formula_slice lists the nodes that depend on the skill, operands the nodes (two levels back) that define the other inputs of the nodes reading the skill directly; curves are [x0, x1, y_start, y_end]: a ramp from y0 at x0 to y1 at x1 (load-time slope fixup fn_8890DFC8 -> fn_88179740, V per G1 graphs-decoded.md; --curve-mode step writes y_end = y0)."
   - "code_consumers: lis/ori of crc32(code) in Swing_DLL (HasSkill = fn_8868F0D8)."
   - "unlock_step: CoachList Ability.Efficiency (0..4), the coach step at which the skill becomes active (I)."
 skills:

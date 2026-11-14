@@ -1,8 +1,9 @@
 # Top Spin 4 (Xbox 360) controller-to-shot values: shot-selection tree, rows, input map,
 # power curves and tier graphs.  Generated; do not edit by hand.
-# Generator: python3 tools/ts4data/shot_tree.py --settings work/disc/core/334e7e0d.bin --expressions work/disc/core/fa94f637.bin --layout work/disc/Layoutall.bin --out data/gameplay/shot_tree.yaml
+# Generator: python3 tools/ts4data/shot_tree.py --settings work/disc/core/334e7e0d.bin --expressions work/disc/core/fa94f637.bin --layout work/disc/Layoutall.bin --interface work/disc/core_all/f26cdc20.bin --input-map data/gameplay/input_map.yaml --out data/gameplay/shot_tree.yaml
 # Python 3.13.18
 # Source Settings.bin: 286492 bytes, sha256 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
+# Source GameplayInterface.bin: 5748 bytes, sha256 8d4f3685bd5ca2246525e983bebfd9176a247d5dca1b0f8374786fefe2c5dd83
 # Source Expressions.bin: 581988 bytes, sha256 fd3bc49b44ca4b77deebc58acaefe67763a273538f4901266f949e9ec9dedee9
 # Source Layoutall.bin: 760816 bytes, sha256 67793f5b7dc771f8fde298ef07e8976d9362c864ac577a4c9db6b2bf874788c5
 # Docs: docs/gameplay/controls-and-shot-selection.md
@@ -40,6 +41,8 @@ node 30 f271f3c8 l14d5efaa:16 n31
 node 31 fb043007 n32 l0ec41ecf:19
 node 32 df97c57b l8ff66130:18 lf6f13a21:17
 power_curve 0.0 1.25 0.0 1.0
+risk_curve 0.0 1.0 0.0 1.0
+frequency 60
 tier Finesse 0.0 0.15
 tier Medium 0.15 0.7
 tier Powerful 0.7 1.0

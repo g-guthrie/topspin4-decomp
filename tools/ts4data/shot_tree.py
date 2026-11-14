@@ -79,6 +79,15 @@ def _names():
     for c in ("IsWoodDown", "IsWood", "IsClassicServe", "IsAdvancedServe", "IsSmash", "IsBaseLine",
               "IsPowerful", "IsMedium", "IsTopSpin", "IsSlice", "IsLob", "IsRisk", "IsFlat"):
         words.append(c)
+    # Serve leaves (G2b, crc32-verified): classic serve stroke x tier, advanced serve per stroke.
+    for stroke in ("Flat", "TopSpin", "Slice"):
+        words += ["Serve_%s%s" % (stroke, t) for t in ("Finesse", "Medium", "Powerful")]
+        words.append("Serve_Advanced" + stroke)
+    # PlayerState / GameplayInterface member names used by the notes (crc32-verified).
+    words += ["RequirePowerful", "RequireMedium", "RequireFinesse", "ShotTriggerDetected", "ShotDetected",
+              "ManualShotTiming", "TimingValue", "FrameCount", "Value", "ReceiverState", "InstantRocket",
+              "PSMoveConfig", "IsPSMove", "InsideOutRequested", "InvertPaddle", "ServeClass", "Risk",
+              "EngineConfig", "Frequency", "Throw", "ShotFailed", "IsAdvanced", "MinPower"]
     return {crc(w): w for w in words}
 
 
@@ -292,13 +301,33 @@ def read_input_mapper(b: Buf, layout=None):
                     o["scale"] = b.f32(rec + 0x18)
                     o.update(path_info(rec + 0x1C))
                 else:
-                    # +0/+4: two words (0x28 or -1); meaning not decoded (smoothing per
-                    # input-to-shot.md s2.3, unverified), kept raw
-                    o["header_words"] = [b.i32(rec), b.i32(rec + 4)]
+                    # Item record (0x30 bytes, loader fn_88910038 +0x860.., G2b):
+                    #   +0 / +4  optional {rel -> rel -> path} of the X / Y invert bool (-1 = none);
+                    #            the shipped data binds both to "@InvertPaddle".  When that bool is 1
+                    #            the raw axis is multiplied by -1 (fn_88910F50 +0x11C..+0x174).
+                    #   +8 / +C  rel -> output path (X / Power, Y / Angle)
+                    #   +10/+14  cartesian: output scale X, Y; polar: angle range [lo, hi]
+                    #   +18/+1C  polar: power range [lo, hi]; cartesian: 0
+                    #   +20      int (1 or 10 in data; the runtime averaging filter length, M)
+                    #   +24      cartesian: int 30; polar: flag bytes
+                    def opt(a):
+                        if b.i32(a) == -1:
+                            return None
+                        ref = b.rel(a)
+                        return path_info(ref)["path"] if b.i32(ref) != -1 else None
+                    o["invert_x"] = opt(rec)
+                    o["invert_y"] = opt(rec + 4)
                     o["first"] = path_info(rec + 8)
                     o["second"] = path_info(rec + 0xC)
-                    o["range"] = [b.f32(rec + 0x10), b.f32(rec + 0x14)]
-                    o["extra"] = [b.f32(rec + 0x18), b.f32(rec + 0x1C)]
+                    if kind == "polar":
+                        o["angle_range"] = [b.f32(rec + 0x10), b.f32(rec + 0x14)]
+                        o["power_range"] = [b.f32(rec + 0x18), b.f32(rec + 0x1C)]
+                        o["word_0x20"] = b.i32(rec + 0x20)
+                        o["flags_0x24"] = "0x%08x" % b.u32(rec + 0x24)
+                    else:
+                        o["scale"] = [b.f32(rec + 0x10), b.f32(rec + 0x14)]
+                        o["filter_0x20"] = b.i32(rec + 0x20)
+                        o["word_0x24"] = b.i32(rec + 0x24)
                 ent["outputs"].append(o)
             cfg["sticks"].append(ent)
         out.append(cfg)
@@ -449,6 +478,8 @@ def tree_flat(nodes, power, intervals):
          child = n<node index> | l<shot id hex>:<row index or -1>
          power_curve <x0> <x1> <y0> <y1>        (cfg+0x8FC, curve16 key)
          tier <Finesse|Medium|Powerful> <lo> <hi>  (power interval where that tier graph is > 0.5)
+         risk_curve <x0> <x1> <y0> <y1>         (cfg+0x908: Risk hold value S+0xE08, no reader found)
+         frequency <D>                          (GameplayInterface EngineConfig/@Frequency, the divisor)
     """
     def ch(c):
         if c is None:
@@ -460,6 +491,10 @@ def tree_flat(nodes, power, intervals):
            for n in nodes]
     for k in power.get("power_curve_default_cfg_0x8fc", []):
         out.append("power_curve %s %s %s %s" % tuple(_scalar(v) for v in k))
+    for k in power.get("power2_curve_default_cfg_0x908", []):
+        out.append("risk_curve %s %s %s %s" % tuple(_scalar(v) for v in k))
+    if power.get("frequency_D") is not None:
+        out.append("frequency %d" % power["frequency_D"])
     for name, ivs in intervals.items():
         for lo, hi in ivs:
             out.append("tier %s %s %s" % (name, _scalar(lo), _scalar(hi)))
@@ -470,7 +505,61 @@ def sha256(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def extract(settings: bytes, expressions: bytes | None, layout_bytes: bytes | None):
+def read_frequency(interface: bytes):
+    """GameplayInterface.bin (Core.arc f26cdc20): header {magic, type 5e16cf76, root rel 0x10 from
+    file 0x4}; the typed root therefore starts at file 0x14 and GameplayInputs.EngineConfig.Frequency
+    is its first int (60).  fn_8869D720 divides frame counts by this int
+    (*(*(PlayerCtx+0x48)+0x44) = the root)."""
+    b = Buf(interface)
+    if b.u32(0x4) != 0x5E16CF76:
+        return None
+    return b.i32(0x4 + b.u32(0x8))
+
+
+def input_map(mapper, frequency=None):
+    """Flatten the InputMapper config into one record per control (input_map.yaml)."""
+    out = {"buttons": [], "sticks": []}
+    for cfg in mapper:
+        for e in cfg["buttons"]:
+            ctl = {"control": e["control"] or "0x%08x" % e["key"], "pad_key": "0x%08x" % e["key"],
+                   "threshold": "value > 0x80 of 0xFF (trigger)" if e["control"] in ("LT", "RT")
+                   else "value != 0", "outputs": []}
+            for o in e["outputs"]:
+                r = {"edge": o["kind"], "path": o.get("path")}
+                if "invert" in o:
+                    r["invert"] = o["invert"]
+                if o.get("playerstate_offset") is not None:
+                    r["playerstate_offset"] = "0x%x" % o["playerstate_offset"]
+                ctl["outputs"].append(r)
+            out["buttons"].append(ctl)
+        for e in cfg["sticks"]:
+            ch = {"axes": [e["axis_x"], e["axis_y"]], "dead_zone": e["dead_zone"],
+                  "dead_zone_shape": "radial: |v| <= dz*32767 -> 0, else (min(|v|/32767,1) - dz)/(1 - dz)",
+                  "outputs": []}
+            for o in e["outputs"]:
+                r = {"kind": o["kind"]}
+                for k in ("direction", "threshold", "scale", "angle_range", "power_range", "invert_x",
+                          "invert_y", "filter_0x20", "word_0x24", "word_0x20", "flags_0x24"):
+                    if k in o and o[k] is not None:
+                        r[k] = o[k]
+                if "path" in o:
+                    r["path"] = o["path"]
+                    if o.get("playerstate_offset") is not None:
+                        r["playerstate_offset"] = "0x%x" % o["playerstate_offset"]
+                for k in ("first", "second"):
+                    if k in o:
+                        r[k] = o[k]["path"]
+                        if o[k].get("playerstate_offset") is not None:
+                            r[k + "_offset"] = "0x%x" % o[k]["playerstate_offset"]
+                ch["outputs"].append(r)
+            out["sticks"].append(ch)
+        out["root_floats_0x30"] = cfg["root_floats"]
+        out["root_words_0x38"] = cfg["root_words"]
+    return out
+
+
+def extract(settings: bytes, expressions: bytes | None, layout_bytes: bytes | None,
+            interface: bytes | None = None):
     b = Buf(settings)
     layout = Layout(layout_bytes) if layout_bytes else None
     rows = read_rows(b)
@@ -490,6 +579,14 @@ def extract(settings: bytes, expressions: bytes | None, layout_bytes: bytes | No
         "power2_curve_alt_cfg_0x920": read_curve16(b, CFG + 0x920),
         "cfg_0xc70": b.f32(CFG + 0xC70),
         "cfg_0xc74": b.f32(CFG + 0xC74),
+        # human swing/serve timing words of PlayerTuning (cfg+0x180): PT+0x740 swing lead (planner
+        # runs when contact frame - now <= it), PT+0x744 serve lead, PT+0x74C release countdown
+        "swing_lead_frames_cfg_0x8c0": b.i32(CFG + 0x8C0),
+        "serve_lead_frames_cfg_0x8c4": b.i32(CFG + 0x8C4),
+        "release_countdown_frames_cfg_0x8cc": b.i32(CFG + 0x8CC),
+        "serve_input_delay_frames_cfg_0x9a8": b.i32(CFG + 0x9A8),
+        "serve_auto_frames_cfg_0x9ac": b.i32(CFG + 0x9AC),
+        "frequency_D": read_frequency(interface) if interface else None,
     }
     data = {"tree_text": tree_text(nodes), "tree_nodes": nodes, "tree_leaves": leaves, "rows": rows,
             "power": power, "input_mapper": read_input_mapper(b, layout)}
@@ -578,6 +675,8 @@ def main(argv=None):
     ap.add_argument("--settings", help="Settings.bin (Core.arc entry 334e7e0d)")
     ap.add_argument("--expressions", help="Expressions.bin (Core.arc entry fa94f637)")
     ap.add_argument("--layout", help="Layoutall.bin (disc root) for PlayerState offsets")
+    ap.add_argument("--interface", help="GameplayInterface.bin (Core.arc entry f26cdc20): frequency D")
+    ap.add_argument("--input-map", help="also write the flattened InputMapper table here (YAML)")
     ap.add_argument("--out", default="data/gameplay/shot_tree.yaml")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args(argv)
@@ -589,8 +688,11 @@ def main(argv=None):
     settings = open(a.settings, "rb").read()
     expr = open(a.expressions, "rb").read() if a.expressions else None
     lay = open(a.layout, "rb").read() if a.layout else None
-    data = extract(settings, expr, lay)
+    itf = open(a.interface, "rb").read() if a.interface else None
+    data = extract(settings, expr, lay, itf)
     src = {"Settings.bin": {"path": a.settings, "size": len(settings), "sha256": sha256(settings)}}
+    if itf:
+        src["GameplayInterface.bin"] = {"path": a.interface, "size": len(itf), "sha256": sha256(itf)}
     if expr:
         src["Expressions.bin"] = {"path": a.expressions, "size": len(expr), "sha256": sha256(expr)}
     if lay:
@@ -611,6 +713,15 @@ def main(argv=None):
     with open(flat, "w") as f:
         f.write("\n".join(head) + "\n" + "\n".join(
             tree_flat(data["tree_nodes"], data["power"], data.get("tier_intervals_on_power", {}))) + "\n")
+    if a.input_map:
+        im = input_map(data["input_mapper"])
+        ih = [h.replace("power curves and tier graphs.", "InputMapper (pad -> InputState).")
+              .replace("controller-to-shot values: shot-selection tree, rows, input map,",
+                       "input map: every control, edge, threshold, output path and offset")
+              for h in head]
+        with open(a.input_map, "w") as f:
+            f.write("\n".join(ih) + "\n" + to_yaml(im) + "\n")
+        print("wrote %s" % a.input_map)
     print("wrote %s (%d nodes, %d leaves, %d rows)" % (a.out, len(data["tree_nodes"]),
                                                        len(data["tree_leaves"]), len(data["rows"])))
     return 0

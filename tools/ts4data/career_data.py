@@ -311,7 +311,8 @@ def player_list(buf, layout):
         out.append({"code": r["code"], "gender": r.get("gender"), "plays": r.get("plays"),
                     "ratings": [r.get(a) for a in ATTRS],
                     "skills": [s for s in skills if s and s != "00000000"],
-                    "ai_style": r.get(H_PROFILE_AI), "play_style": r.get(H_PLAYSTYLE_AI)})
+                    "ai_style": r.get("ProfileAI", r.get(H_PROFILE_AI)),
+                    "play_style": r.get("PlayStyleAI", r.get(H_PLAYSTYLE_AI))})
     return out
 
 
@@ -356,6 +357,23 @@ def player_evolution(buf, layout):
 
 
 # ------------------------------------------------------------------------------------------- AI difficulty
+
+# AI style group keys of the AI difficulty table (cfg+0xF0).  V = crc32 of the name matches the key;
+# I = named by the players that use it (PlayerList AttributeList.ProfileAI); U = unnamed.
+AI_STYLE_NAMES = {
+    "c3e11a56": ("AIStyle_BaselineAttacker", "V", "crc32"),
+    "8c1c3a3b": ("AIStyle_ServeAndVolley", "V", "crc32"),
+    "ea55dbac": ("AIStyle_AllRounder", "V", "crc32"),
+    "824ec12e": ("baseline controller group", "I",
+                 "ProfileAI of the pros with PlayStyleAI BaselineController (and None); "
+                 "crc32('AIStyle_BaselineController') = 529c7951 is a different key (Style struct member only)"),
+    "75c6d60c": ("default / generic group", "I", "value of the per-player field a017b472 of every PlayerList entry"),
+    "ad2283af": ("Ralley1 style", "I", "ProfileAI of PlayerList player Ralley1 (rally-partner players)"),
+    "1182486a": ("Ralley2 style", "I", "ProfileAI of PlayerList player Ralley2"),
+    "0a8ac661": ("Ralley3 style", "I", "ProfileAI of PlayerList player Ralley3"),
+    "d858c9fb": ("Ralley4 style", "I", "ProfileAI of PlayerList player Ralley4"),
+}
+
 
 def ai_table(settings, layout, graphs_by_hash, bind, namer):
     t = Tree(settings, layout)
@@ -411,7 +429,10 @@ def ai_table(settings, layout, graphs_by_hash, bind, namer):
                 lists["l%02x" % off] = rows
             rec["lists"] = lists
             levels.append(rec)
-        out.append({"style": s.get("style"), "levels": levels})
+        st = s.get("style")
+        nmc = AI_STYLE_NAMES.get(st) or AI_STYLE_NAMES.get("%08x" % zlib.crc32(str(st).encode()),
+                                                            (None, "U", "no candidate matched"))
+        out.append({"style": st, "name": nmc[0], "confidence": nmc[1], "evidence": nmc[2], "levels": levels})
     roles = {"l%02x" % off: sorted(v) for off, v in sorted(list_role.items())}
     return out, roles
 
@@ -480,7 +501,7 @@ def forward_slice(g, seeds):
     return dep, nodes
 
 
-def skill_consumers(expr, bind, namer):
+def skill_consumers(expr, bind, namer, curve_mode="ramp"):
     graphs = A.parse_expressions(expr)
     by_skill = {}
     other_links = []
@@ -518,8 +539,10 @@ def skill_consumers(expr, bind, namer):
         for n in g.nodes:
             if n.kind == "CURVE":
                 cn += 1
-                curves[id(n)] = ("curve%d" % cn, [[round(x, 6) for x in (key[0], key[1], key[2], key[4])]
-                                                  for key in n.fields["keys"]])
+                # ramp (default, fn_88179740 fixup): y0 at x0 -> y1 at x1; step: flat y0
+                curves[id(n)] = ("curve%d" % cn, [[round(x, 6) for x in (
+                    key[0], key[1], key[2], key[4] if curve_mode == "ramp" else key[2])]
+                    for key in n.fields["keys"]])
         out_labels = [A.port_label(p, bind, namer) for p in g.outputs]
         writer = {}
         for n in g.nodes:
@@ -617,6 +640,8 @@ def main(argv=None):
     ap.add_argument("--dll", default=None)
     ap.add_argument("--names", default=os.path.join(ROOT, "data/gameplay/analyser_names.json"))
     ap.add_argument("--out-dir", default="data/gameplay")
+    ap.add_argument("--curve-mode", choices=("ramp", "step"), default="ramp",
+                    help="curve keys as runtime ramps (default; fixup fn_88179740, graphs-decoded.md) or stored steps")
     a = ap.parse_args(argv)
 
     layout_buf = open(a.layout, "rb").read()
@@ -647,7 +672,7 @@ def main(argv=None):
     st = string_table(st_buf, layout)
     ability_defs, coaches = coach_list(coach, layout, st)
     pros = player_list(plist, layout)
-    by_skill, other_links, graphs = skill_consumers(expr, bind, namer)
+    by_skill, other_links, graphs = skill_consumers(expr, bind, namer, a.curve_mode)
     ai, roles = ai_table(settings, layout, {g.name: g for g in graphs}, bind, namer)
     evolution = player_evolution(evo, layout)
     sites = code_sites(dll) if dll else []
@@ -681,7 +706,7 @@ def main(argv=None):
             "Skill names/descriptions: StringTable key crc32('Ability<Code>Name') / crc32('Ability<Code>Text') (V).",
             "In-match a skill is PlayerState.Profile.SkillList[Id == crc32(code)].Value (S+0x640 list, 1.0 = owned).",
             "graph_consumers: analyser graphs (Expressions.bin) with a link port Profile.SkillList.Skill[Id].Value; "
-            "formula_slice lists the nodes that depend on the skill, operands the nodes (two levels back) that define the other inputs of the nodes reading the skill directly; curves are [x0, x1, y0, y1] (runtime ramp).",
+            "formula_slice lists the nodes that depend on the skill, operands the nodes (two levels back) that define the other inputs of the nodes reading the skill directly; curves are [x0, x1, y_start, y_end]: a ramp from y0 at x0 to y1 at x1 (load-time slope fixup fn_8890DFC8 -> fn_88179740, V per G1 graphs-decoded.md; --curve-mode step writes y_end = y0).",
             "code_consumers: lis/ori of crc32(code) in Swing_DLL (HasSkill = fn_8868F0D8).",
             "unlock_step: CoachList Ability.Efficiency (0..4), the coach step at which the skill becomes active (I).",
         ],

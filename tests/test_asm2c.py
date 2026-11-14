@@ -1140,6 +1140,15 @@ class K6Tests(unittest.TestCase):
         self.assertIn("t4 = fn_88002000((ts4_word)a0, vv3);", r["body"])
         self.assertEqual(r["fprotos"], {"fn_88002000": ["ts4_word", "__vector4"]})
 
+    def test_loop_join_where_one_arm_may_break(self):
+        b = lambda m, i: f"{m} 0x0 -> {tgt(i)}"
+        t = ["add r9,r4,r5", "cmplw cr6,r4,r9", b("bge cr6,", 13), "lbz r11,0(r4)", "cmplwi cr6,r11,1", b("blt cr6,", 9),
+             b("bne cr6,", 13), "stw r5,0(r3)", b("b", 10), "stw r6,4(r3)", "addi r4,r4,16", "cmplw cr6,r4,r9",
+             b("blt cr6,", 3), "blr"]
+        body = gen(t, mode=2)["body"]
+        self.assertIn("            if ((ts4_word)t2 != 1) {\n                break;\n            }\n", body)
+        self.assertIn("        } else {\n            *(ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)a3;\n        }\n", body)
+
     def test_xforms_bool_temporary(self):
         import xforms
         body = ("    ts4_word p1;\n    ts4_word p2;\n\n    if ((int)a0 == 0) {\n        p1 = (ts4_word)1;\n"

@@ -30,11 +30,15 @@ typedef struct { PlCurve16 curve; float key; } PlRow;
 typedef struct { const PlRow *rows; int count; } PlTable2D;
 
 /* Curve20 key {x0, x1, y0, slope, y1} used by the analyser graphs
- * (fn_8817A688).  The game reads slope (+0xC); the retail data stores 0 there
- * and the end value in +0x10.  Whether a load-time fixup turns them into
- * ramps is open (analyser-graphs.md s4), so both readings are offered. */
+ * (fn_8817A688).  The game reads slope (+0xC).  The retail data stores 0 there
+ * and the end value y1 in +0x10; the load-time fixup fn_8890DFC8 -> fn_88179740
+ * sets slope = (y1 - y0) / (x1 - x0) (V, G1, graphs-decoded.md), so the curves
+ * are ramps.  PL_CURVE_RAMP is the default (value 0); PL_CURVE_STEP keeps the
+ * stored slope (the old "as stored" reading) for comparison only. */
 typedef struct { float x0, x1, y0, slope, y1; } PlKey20;
-typedef enum { PL_CURVE_AS_STORED = 0, PL_CURVE_RAMP_Y1 = 1 } PlCurveMode;
+typedef enum { PL_CURVE_RAMP = 0, PL_CURVE_STEP = 1 } PlCurveMode;
+#define PL_CURVE_RAMP_Y1 PL_CURVE_RAMP     /* older names */
+#define PL_CURVE_AS_STORED PL_CURVE_STEP
 
 float pl_curve16(const PlCurve16 *c, float x);
 float pl_table2d(const PlTable2D *t, float row_value, float col_value);

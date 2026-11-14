@@ -25,8 +25,8 @@ static void test_curves(void)
     CHECK(near(pl_table2d(&t, 300, 5), 10));   /* above last key: last row */
 
     PlKey20 s[] = {{30, 50, 0.0f, 0.0f, 0.2f}, {50, 80, 0.2f, 0.0f, 0.8f}};
-    CHECK(near(pl_curve20(s, 2, 40, PL_CURVE_AS_STORED), 0.0f));  /* step reading */
-    CHECK(near(pl_curve20(s, 2, 40, PL_CURVE_RAMP_Y1), 0.1f));    /* ramp reading */
+    CHECK(near(pl_curve20(s, 2, 40, PL_CURVE_STEP), 0.0f));  /* step reading (option) */
+    CHECK(near(pl_curve20(s, 2, 40, PL_CURVE_RAMP), 0.1f));    /* ramp reading (default) */
     CHECK(near(pl_curve20(s, 2, 10, PL_CURVE_RAMP_Y1), 0.0f));    /* below first key */
     CHECK(near(pl_curve20(s, 2, 200, PL_CURVE_RAMP_Y1), 0.8f));   /* flat after last x1 */
 }
@@ -42,7 +42,7 @@ static void test_stats(void)
     PlStatCurve cur[PL_STAT_COUNT];
     for (int i = 0; i < PL_STAT_COUNT; ++i) { cur[i].keys = k; cur[i].count = 1; }
     float r[PL_STAT_COUNT] = {50, 60, 70, 80, 90, 100, 30, 40}, p[PL_STAT_COUNT];
-    pl_profile_from_ratings(r, cur, PL_CURVE_AS_STORED, p);
+    pl_profile_from_ratings(r, cur, PL_CURVE_RAMP, p);
     CHECK(near(p[0], 0.5f) && near(p[6], 0.3f));
     CHECK(pl_side_preference(80, 70, 1, 9, 0.5f) == 1);
     CHECK(pl_side_preference(80, 70, 9, 1, 0.5f) == 0);

@@ -1,0 +1,333 @@
+# Top Spin 4 (Xbox 360) input map: every control, edge, threshold, output path and offset
+# InputMapper (pad -> InputState).  Generated; do not edit by hand.
+# Generator: python3 tools/ts4data/shot_tree.py --settings work/disc/core/334e7e0d.bin --expressions work/disc/core/fa94f637.bin --layout work/disc/Layoutall.bin --interface work/disc/core_all/f26cdc20.bin --input-map data/gameplay/input_map.yaml --out data/gameplay/shot_tree.yaml
+# Python 3.13.18
+# Source Settings.bin: 286492 bytes, sha256 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
+# Source GameplayInterface.bin: 5748 bytes, sha256 8d4f3685bd5ca2246525e983bebfd9176a247d5dca1b0f8374786fefe2c5dd83
+# Source Expressions.bin: 581988 bytes, sha256 fd3bc49b44ca4b77deebc58acaefe67763a273538f4901266f949e9ec9dedee9
+# Source Layoutall.bin: 760816 bytes, sha256 67793f5b7dc771f8fde298ef07e8976d9362c864ac577a4c9db6b2bf874788c5
+# Docs: docs/gameplay/controls-and-shot-selection.md
+buttons:
+  - control: A
+    pad_key: 0x31dfdd4f
+    threshold: "value != 0"
+    outputs:
+      - edge: level
+        path: "ShotTriggers/Shot[@Id=\"Flat\"]/@Raise"
+        invert: 0
+        playerstate_offset: 0x418
+      - edge: release
+        path: "Shots/Shot[@Id=\"Flat\"]/@Raise"
+        playerstate_offset: 0x40c
+      - edge: level
+        path: "Serve/Classic/@ThrowFlat"
+        invert: 0
+        playerstate_offset: 0x482
+      - edge: release
+        path: "Serve/Classic/@Flat"
+        playerstate_offset: 0x485
+      - edge: level
+        path: "Buttons/@A"
+        invert: 0
+        playerstate_offset: 0x470
+      - edge: press
+        path: "Buttons/@PressA"
+        playerstate_offset: 0x474
+      - edge: release
+        path: "Buttons/@ReleaseA"
+        playerstate_offset: 0x478
+  - control: B
+    pad_key: 0xa8d68cf5
+    threshold: "value != 0"
+    outputs:
+      - edge: level
+        path: "ShotTriggers/Shot[@Id=\"TopSpin\"]/@Raise"
+        invert: 0
+        playerstate_offset: 0x418
+      - edge: release
+        path: "Shots/Shot[@Id=\"TopSpin\"]/@Raise"
+        playerstate_offset: 0x40c
+      - edge: level
+        path: "Serve/Classic/@ThrowTopSpin"
+        invert: 0
+        playerstate_offset: 0x484
+      - edge: release
+        path: "Serve/Classic/@TopSpin"
+        playerstate_offset: 0x487
+      - edge: level
+        path: "Buttons/@B"
+        invert: 0
+        playerstate_offset: 0x471
+      - edge: press
+        path: "Buttons/@PressB"
+        playerstate_offset: 0x475
+      - edge: release
+        path: "Buttons/@ReleaseB"
+        playerstate_offset: 0x479
+  - control: X
+    pad_key: 0xdfd1bc63
+    threshold: "value != 0"
+    outputs:
+      - edge: level
+        path: "ShotTriggers/Shot[@Id=\"Slice\"]/@Raise"
+        invert: 0
+        playerstate_offset: 0x418
+      - edge: release
+        path: "Shots/Shot[@Id=\"Slice\"]/@Raise"
+        playerstate_offset: 0x40c
+      - edge: level
+        path: "Serve/Classic/@ThrowSlice"
+        invert: 0
+        playerstate_offset: 0x483
+      - edge: release
+        path: "Serve/Classic/@Slice"
+        playerstate_offset: 0x486
+      - edge: level
+        path: "Buttons/@X"
+        invert: 0
+        playerstate_offset: 0x472
+      - edge: press
+        path: "Buttons/@PressX"
+        playerstate_offset: 0x476
+      - edge: release
+        path: "Buttons/@ReleaseX"
+        playerstate_offset: 0x47a
+  - control: Y
+    pad_key: 0x41b529c0
+    threshold: "value != 0"
+    outputs:
+      - edge: level
+        path: "ShotTriggers/Shot[@Id=\"Lob\"]/@Raise"
+        invert: 0
+        playerstate_offset: 0x418
+      - edge: release
+        path: "Shots/Shot[@Id=\"Lob\"]/@Raise"
+        playerstate_offset: 0x40c
+      - edge: level
+        path: "@SpecialShotDetected"
+        invert: 0
+        playerstate_offset: 0x4dc
+      - edge: release
+        path: "@SpecialShot"
+        playerstate_offset: 0x4db
+      - edge: level
+        path: "Buttons/@Y"
+        invert: 0
+        playerstate_offset: 0x473
+      - edge: press
+        path: "Buttons/@PressY"
+        playerstate_offset: 0x477
+      - edge: release
+        path: "Buttons/@ReleaseY"
+        playerstate_offset: 0x47b
+  - control: RightStickClick
+    pad_key: 0x60e09989
+    threshold: "value != 0"
+    outputs:
+      - edge: press
+        path: "@ShotEditor_Reset"
+        playerstate_offset: 0x4e8
+  - control: Start
+    pad_key: 0x5eb87a8b
+    threshold: "value != 0"
+    outputs:
+      - edge: press
+        path: "@ShotEditor_Launch"
+        playerstate_offset: 0x4e7
+  - control: Back
+    pad_key: 0xcdfc6e09
+    threshold: "value != 0"
+    outputs:
+      - edge: press
+        path: "@RequestChallenge"
+        playerstate_offset: 0x4e6
+  - control: LT
+    pad_key: 0x7335bdad
+    threshold: "value > 0x80 of 0xFF (trigger)"
+    outputs:
+      - edge: level
+        path: "Buttons/@LT"
+        invert: 0
+        playerstate_offset: 0x47e
+      - edge: level
+        path: "@Risk"
+        invert: 0
+        playerstate_offset: 0x4d8
+      - edge: press
+        path: "@AskNext"
+        playerstate_offset: 0x4e9
+  - control: RT
+    pad_key: 0x658d33d7
+    threshold: "value > 0x80 of 0xFF (trigger)"
+    outputs:
+      - edge: level
+        path: "Buttons/@RT"
+        invert: 0
+        playerstate_offset: 0x47f
+      - edge: level
+        path: "@Risk"
+        invert: 0
+        playerstate_offset: 0x4d8
+      - edge: press
+        path: "@AskPrevious"
+        playerstate_offset: 0x4ea
+  - control: LB
+    pad_key: 0xea3cec17
+    threshold: "value != 0"
+    outputs:
+      - edge: level
+        path: "Buttons/@LB"
+        invert: 0
+        playerstate_offset: 0x47c
+      - edge: level
+        path: "@ReqSpeedSwing"
+        invert: 0
+        playerstate_offset: 0x4e1
+      - edge: level
+        path: "@ReqBaselineRepos"
+        invert: 0
+        playerstate_offset: 0x4de
+      - edge: press
+        path: "@OnRaiseReqBaselineRepos"
+        playerstate_offset: 0x4e3
+  - control: RB
+    pad_key: 0xfc84626d
+    threshold: "value != 0"
+    outputs:
+      - edge: level
+        path: "Buttons/@RB"
+        invert: 0
+        playerstate_offset: 0x47d
+      - edge: level
+        path: "@ReqFastRepos"
+        invert: 0
+        playerstate_offset: 0x4e2
+      - edge: level
+        path: "@Rush"
+        invert: 0
+        playerstate_offset: 0x4dd
+      - edge: level
+        path: "@ReqVolleyRepos"
+        invert: 0
+        playerstate_offset: 0x4df
+      - edge: press
+        path: "@OnRaiseReqVolleyRepos"
+        playerstate_offset: 0x4e4
+sticks:
+  - axes: [LeftX, LeftY]
+    dead_zone: 0.4
+    dead_zone_shape: "radial: |v| <= dz*32767 -> 0, else (min(|v|/32767,1) - dz)/(1 - dz)"
+    outputs:
+      - kind: cartesian
+        scale: [1.0, 1.0]
+        invert_x: "@InvertPaddle"
+        invert_y: "@InvertPaddle"
+        filter_0x20: 1
+        word_0x24: 30
+        first: "Stick_Aiming/@X"
+        first_offset: 0x430
+        second: "Stick_Aiming/@Y"
+        second_offset: 0x434
+      - kind: cartesian
+        scale: [1.0, 1.0]
+        invert_x: "@InvertPaddle"
+        invert_y: "@InvertPaddle"
+        filter_0x20: 10
+        word_0x24: 30
+        first: "Stick_Move/@X"
+        first_offset: 0x448
+        second: "Stick_Move/@Y"
+        second_offset: 0x44c
+      - kind: polar
+        angle_range: [-3.141592, 3.141592]
+        power_range: [0.0, 1.0]
+        invert_x: "@InvertPaddle"
+        invert_y: "@InvertPaddle"
+        word_0x20: 0
+        flags_0x24: 0x01010000
+        first: "Stick_MovePolar/@Power"
+        first_offset: 0x440
+        second: "Stick_MovePolar/@Angle"
+        second_offset: 0x444
+  - axes: [DPadX, DPadY]
+    dead_zone: 0.4
+    dead_zone_shape: "radial: |v| <= dz*32767 -> 0, else (min(|v|/32767,1) - dz)/(1 - dz)"
+    outputs:
+      - kind: cartesian
+        scale: [25.0, 25.0]
+        invert_x: "@InvertPaddle"
+        invert_y: "@InvertPaddle"
+        filter_0x20: 1
+        word_0x24: 30
+        first: "Stick_1/@X"
+        first_offset: 0x450
+        second: "Stick_1/@Y"
+        second_offset: 0x454
+      - kind: direction
+        direction: Up
+        threshold: 0.5
+        scale: 1.0
+        path: "DPad/@Up"
+        playerstate_offset: 0x429
+      - kind: direction
+        direction: Down
+        threshold: 0.5
+        scale: 1.0
+        path: "DPad/@Down"
+        playerstate_offset: 0x42a
+      - kind: direction
+        direction: Left
+        threshold: 0.5
+        scale: 1.0
+        path: "DPad/@Left"
+        playerstate_offset: 0x42c
+      - kind: direction
+        direction: Right
+        threshold: 0.5
+        scale: 1.0
+        path: "DPad/@Right"
+        playerstate_offset: 0x42b
+  - axes: [RightX, RightY]
+    dead_zone: 0.4
+    dead_zone_shape: "radial: |v| <= dz*32767 -> 0, else (min(|v|/32767,1) - dz)/(1 - dz)"
+    outputs:
+      - kind: cartesian
+        scale: [25.0, 25.0]
+        invert_x: "@InvertPaddle"
+        invert_y: "@InvertPaddle"
+        filter_0x20: 1
+        word_0x24: 30
+        first: "Stick_3/@X"
+        first_offset: 0x460
+        second: "Stick_3/@Y"
+        second_offset: 0x464
+      - kind: cartesian
+        scale: [10.0, 10.0]
+        filter_0x20: 1
+        word_0x24: 30
+        first: "Serve/Advanced/CartesianStick/@X"
+        first_offset: 0x490
+        second: "Serve/Advanced/CartesianStick/@Y"
+        second_offset: 0x494
+      - kind: polar
+        angle_range: [-3.141592, 3.141592]
+        power_range: [0.0, 1.0]
+        word_0x20: 0
+        flags_0x24: 0x00010000
+        first: "Serve/Advanced/PolarStick/@Power"
+        first_offset: 0x488
+        second: "Serve/Advanced/PolarStick/@Angle"
+        second_offset: 0x48c
+      - kind: polar
+        angle_range: [-3.141592, 3.141592]
+        power_range: [0.0, 1.0]
+        invert_x: "@InvertPaddle"
+        invert_y: "@InvertPaddle"
+        word_0x20: 0
+        flags_0x24: 0x00010000
+        first: "PolarStick_3/@Power"
+        first_offset: 0x468
+        second: "PolarStick_3/@Angle"
+        second_offset: 0x46c
+root_floats_0x30: [0.55, 0.8]
+root_words_0x38: [1, 0]

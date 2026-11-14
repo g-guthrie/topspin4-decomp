@@ -368,7 +368,60 @@ PLAYER_GRAPHS = ["DefaultAttributes", 0x075A2137, "RushSpeedCoef", "SwingSpeedCo
                  "VolleyTimingAbility", 0x39CFDEBA, "ShotDifficulty", "InputFiltering"]
 
 
-def graphs_block(expr, names, extra_hashes):
+# Curve keys.  The data stores slope 0 at +0xC and y1 at +0x10; the load-time fixup fn_8890DFC8 -> fn_88179740
+# sets slope = (y1 - y0) / (x1 - x0) (V, G1: docs/gameplay/graphs-decoded.md), so the runtime curves are ramps.
+# "ramp" (default) writes that runtime slope; "step" keeps the stored slope (the old as-stored reading).
+KEY_FORMAT = {"ramp": "x0, x1, y0, slope (runtime: (y1-y0)/(x1-x0), fixup fn_88179740), y1(+0x10)",
+              "step": "x0, x1, y0, slope(+0xC as stored), y1(+0x10)"}
+
+
+def curve_key(k, mode="ramp", disc_slope=0.0):
+    """k = (x0, x1, y0, slope, y1) from ts4_analyser (y1 as float; older versions gave its f32 bits)."""
+    y1 = k[4] if isinstance(k[4], float) else ts4_analyser.bits_to_f32(k[4])
+    if mode == "ramp":
+        slope = ts4_analyser.slope_fixup(k[0], k[1], k[2], y1)
+    else:
+        slope = disc_slope
+    return [r6(k[0]), r6(k[1]), r6(k[2]), r6(slope), r6(y1)]
+
+
+def eval_curve(keys, x):
+    """fn_8817A688 on keys [x0, x1, y0, slope, y1] (slope already chosen by curve_key)."""
+    if not keys:
+        return 0.0
+    s = keys[0]
+    for k in keys:
+        if k[0] <= x:
+            s = k
+    w = s[1] - s[0]
+    d = min(max(x - s[0], 0.0), max(w, 0.0))
+    return s[2] + s[3] * d
+
+
+# Stat-curve input cells (V via G1's State bindings; player-and-movement.md s2.2)
+CELL_STAT = {40: "Backhand", 41: "Stamina", 42: "Forehand", 43: "Speed", 44: "Power", 45: "Volley",
+             46: "Return", 47: "Serve"}
+PROFILE_GRAPHS = (0x8C9B26E0, 0x075A2137)
+
+
+def profile_from_rating(graphs, curve_mode):
+    """Rating (0..100) -> Profile value for each stat curve of DefaultAttributes and its sibling."""
+    out = []
+    for g in graphs:
+        if int(g["name_hash"], 16) not in PROFILE_GRAPHS:
+            continue
+        j = g["graph"]
+        slot_cell = {i["slot"]: i["index"] for i in j.get("inputs", []) if i.get("index") in CELL_STAT}
+        for node in j.get("nodes", []):
+            if "keys" in node and node.get("in") in slot_cell:
+                cell = slot_cell[node["in"]]
+                out.append({"graph": g["name"] or g["name_hash"], "stat": CELL_STAT[cell], "cell": cell,
+                            "mode": curve_mode,
+                            "samples": {r: r6(eval_curve(node["keys"], float(r))) for r in range(30, 101, 10)}})
+    return out
+
+
+def graphs_block(expr, names, extra_hashes, curve_mode="ramp"):
     graphs = ts4_analyser.parse_expressions(expr)
     for g in graphs:
         GRAPH_HASHES.add(g.name)
@@ -386,9 +439,9 @@ def graphs_block(expr, names, extra_hashes):
                 j = g.to_json(gn)
                 for node in j.get("nodes", []):
                     if "keys" in node:  # {x0, x1, y0, slope, +0x10 word = y1 as f32 bits} (analyser-graphs.md s4)
-                        node["keys"] = [[r6(k[0]), r6(k[1]), r6(k[2]), r6(k[3]),
-                                         r6(ts4_analyser.bits_to_f32(k[4]))] for k in node["keys"]]
-                        node["key_format"] = "x0, x1, y0, slope(+0xC), y1(+0x10)"
+                        ds = node.pop("disc_slopes", None) or [0.0] * len(node["keys"])
+                        node["keys"] = [curve_key(k, curve_mode, d) for k, d in zip(node["keys"], ds)]
+                        node["key_format"] = KEY_FORMAT[curve_mode]
                 out.append({"index": idx, "name_hash": "%08x" % h, "name": gn.get(h), "graph": j})
     return out, gn
 
@@ -531,6 +584,8 @@ def main(argv=None):
     ap.add_argument("--core", default="work/disc/core_all", help="folder with extracted Core.arc members (<hash>.bin)")
     ap.add_argument("--dll", default="orig/54540859/Swing_DLL.dll", help="optional, adds identifier names")
     ap.add_argument("--out", default="data/gameplay/player.yaml")
+    ap.add_argument("--curve-mode", choices=("ramp", "step"), default="ramp",
+                    help="analyser curve slope: runtime ramp (default, fn_88179740) or the stored step")
     ap.add_argument("--clips-out", default="data/gameplay/animation_clips.yaml",
                     help="the clip catalogue is large; written to its own file")
     a = ap.parse_args(argv)
@@ -567,15 +622,17 @@ def main(argv=None):
             for gr in rec["graphs"].values():
                 if gr["in_expressions"]:
                     ai_graph_hashes.add(int(gr["hash"], 16))
-    graphs, _ = graphs_block(expr, names, ai_graph_hashes)
+    graphs, _ = graphs_block(expr, names, ai_graph_hashes, a.curve_mode)
 
     doc = {
-        "generated_by": "python3 -I tools/ts4data/player_data.py --core %s" % a.core,
+        "generated_by": "python3 -I tools/ts4data/player_data.py --core %s%s" % (
+            a.core, "" if a.curve_mode == "ramp" else " --curve-mode " + a.curve_mode),
         "sources_sha256": sources,
         "notes": "Field roles and code addresses: docs/gameplay/player-and-movement.md. Units: cm, 60 Hz ticks, m/s.",
         "player_tuning": player_tuning(sb, names),
         "ai_levels": levels,
         "settings_blocks": settings_blocks(sb, names),
+        "profile_from_rating": profile_from_rating(graphs, a.curve_mode),
         "graphs": graphs,
     }
     clips = animation_clips(db, names)

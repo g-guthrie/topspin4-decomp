@@ -1,8 +1,9 @@
 # Top Spin 4 (Xbox 360) controller-to-shot values: shot-selection tree, rows, input map,
 # power curves and tier graphs.  Generated; do not edit by hand.
-# Generator: python3 tools/ts4data/shot_tree.py --settings work/disc/core/334e7e0d.bin --expressions work/disc/core/fa94f637.bin --layout work/disc/Layoutall.bin --out data/gameplay/shot_tree.yaml
+# Generator: python3 tools/ts4data/shot_tree.py --settings work/disc/core/334e7e0d.bin --expressions work/disc/core/fa94f637.bin --layout work/disc/Layoutall.bin --interface work/disc/core_all/f26cdc20.bin --input-map data/gameplay/input_map.yaml --out data/gameplay/shot_tree.yaml
 # Python 3.13.18
 # Source Settings.bin: 286492 bytes, sha256 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
+# Source GameplayInterface.bin: 5748 bytes, sha256 8d4f3685bd5ca2246525e983bebfd9176a247d5dca1b0f8374786fefe2c5dd83
 # Source Expressions.bin: 581988 bytes, sha256 fd3bc49b44ca4b77deebc58acaefe67763a273538f4901266f949e9ec9dedee9
 # Source Layoutall.bin: 760816 bytes, sha256 67793f5b7dc771f8fde298ef07e8976d9362c864ac577a4c9db6b2bf874788c5
 # Docs: docs/gameplay/controls-and-shot-selection.md
@@ -11,6 +12,10 @@ sources:
     path: work/disc/core/334e7e0d.bin
     size: 286492
     sha256: 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
+  GameplayInterface.bin:
+    path: work/disc/core_all/f26cdc20.bin
+    size: 5748
+    sha256: 8d4f3685bd5ca2246525e983bebfd9176a247d5dca1b0f8374786fefe2c5dd83
   Expressions.bin:
     path: work/disc/core/fa94f637.bin
     size: 581988
@@ -31,36 +36,36 @@ tree_text:
   - "            IsTopSpin ?"
   - "              T:"
   - "                IsMedium ?"
-  - "                  T: 0xb31b5ee0 (row 20)"
+  - "                  T: Serve_TopSpinMedium (row 20)"
   - "                  F:"
   - "                    IsPowerful ?"
-  - "                      T: 0x17c6bfe3 (row 21)"
-  - "                      F: 0xea0cf389 (row 22)"
+  - "                      T: Serve_TopSpinPowerful (row 21)"
+  - "                      F: Serve_TopSpinFinesse (row 22)"
   - "              F:"
   - "                IsSlice ?"
   - "                  T:"
   - "                    IsMedium ?"
-  - "                      T: 0x5f8e74c3 (row 23)"
+  - "                      T: Serve_SliceMedium (row 23)"
   - "                      F:"
   - "                        IsPowerful ?"
-  - "                          T: 0x72d4edc1 (row 24)"
-  - "                          F: 0x488717d1 (row 25)"
+  - "                          T: Serve_SlicePowerful (row 24)"
+  - "                          F: Serve_SliceFinesse (row 25)"
   - "                  F:"
   - "                    IsMedium ?"
-  - "                      T: 0x6bbc9a88 (row 26)"
+  - "                      T: Serve_FlatMedium (row 26)"
   - "                      F:"
   - "                        IsPowerful ?"
-  - "                          T: 0x26eb8042 (row 27)"
-  - "                          F: 0xa9bdbd27 (row 28)"
+  - "                          T: Serve_FlatPowerful (row 27)"
+  - "                          F: Serve_FlatFinesse (row 28)"
   - "          F:"
   - "            IsAdvancedServe ?"
   - "              T:"
   - "                IsTopSpin ?"
-  - "                  T: 0xfa212c96 (row 29)"
+  - "                  T: Serve_AdvancedTopSpin (row 29)"
   - "                  F:"
   - "                    IsSlice ?"
-  - "                      T: 0xc1e2aa62 (row 30)"
-  - "                      F: 0xa010111f (row 31)"
+  - "                      T: Serve_AdvancedSlice (row 30)"
+  - "                      F: Serve_AdvancedFlat (row 31)"
   - "              F:"
   - "                IsSmash ?"
   - "                  T: SmashNormal (row 33)"
@@ -175,7 +180,7 @@ tree_nodes:
     if_true:
       leaf: 2
       id: 0xb31b5ee0
-      name: null
+      name: Serve_TopSpinMedium
       row: 20
     if_false:
       node: 5
@@ -188,12 +193,12 @@ tree_nodes:
     if_true:
       leaf: 3
       id: 0x17c6bfe3
-      name: null
+      name: Serve_TopSpinPowerful
       row: 21
     if_false:
       leaf: 4
       id: 0xea0cf389
-      name: null
+      name: Serve_TopSpinFinesse
       row: 22
   - index: 6
     file_offset: 0xe5c
@@ -214,7 +219,7 @@ tree_nodes:
     if_true:
       leaf: 5
       id: 0x5f8e74c3
-      name: null
+      name: Serve_SliceMedium
       row: 23
     if_false:
       node: 8
@@ -227,12 +232,12 @@ tree_nodes:
     if_true:
       leaf: 6
       id: 0x72d4edc1
-      name: null
+      name: Serve_SlicePowerful
       row: 24
     if_false:
       leaf: 7
       id: 0x488717d1
-      name: null
+      name: Serve_SliceFinesse
       row: 25
   - index: 9
     file_offset: 0xeec
@@ -243,7 +248,7 @@ tree_nodes:
     if_true:
       leaf: 8
       id: 0x6bbc9a88
-      name: null
+      name: Serve_FlatMedium
       row: 26
     if_false:
       node: 10
@@ -256,12 +261,12 @@ tree_nodes:
     if_true:
       leaf: 9
       id: 0x26eb8042
-      name: null
+      name: Serve_FlatPowerful
       row: 27
     if_false:
       leaf: 10
       id: 0xa9bdbd27
-      name: null
+      name: Serve_FlatFinesse
       row: 28
   - index: 11
     file_offset: 0xf54
@@ -282,7 +287,7 @@ tree_nodes:
     if_true:
       leaf: 11
       id: 0xfa212c96
-      name: null
+      name: Serve_AdvancedTopSpin
       row: 29
     if_false:
       node: 13
@@ -295,12 +300,12 @@ tree_nodes:
     if_true:
       leaf: 12
       id: 0xc1e2aa62
-      name: null
+      name: Serve_AdvancedSlice
       row: 30
     if_false:
       leaf: 13
       id: 0xa010111f
-      name: null
+      name: Serve_AdvancedFlat
       row: 31
   - index: 14
     file_offset: 0xfe4
@@ -563,51 +568,51 @@ tree_leaves:
     row: 35
   - leaf: 2
     id: 0xb31b5ee0
-    name: null
+    name: Serve_TopSpinMedium
     row: 20
   - leaf: 3
     id: 0x17c6bfe3
-    name: null
+    name: Serve_TopSpinPowerful
     row: 21
   - leaf: 4
     id: 0xea0cf389
-    name: null
+    name: Serve_TopSpinFinesse
     row: 22
   - leaf: 5
     id: 0x5f8e74c3
-    name: null
+    name: Serve_SliceMedium
     row: 23
   - leaf: 6
     id: 0x72d4edc1
-    name: null
+    name: Serve_SlicePowerful
     row: 24
   - leaf: 7
     id: 0x488717d1
-    name: null
+    name: Serve_SliceFinesse
     row: 25
   - leaf: 8
     id: 0x6bbc9a88
-    name: null
+    name: Serve_FlatMedium
     row: 26
   - leaf: 9
     id: 0x26eb8042
-    name: null
+    name: Serve_FlatPowerful
     row: 27
   - leaf: 10
     id: 0xa9bdbd27
-    name: null
+    name: Serve_FlatFinesse
     row: 28
   - leaf: 11
     id: 0xfa212c96
-    name: null
+    name: Serve_AdvancedTopSpin
     row: 29
   - leaf: 12
     id: 0xc1e2aa62
-    name: null
+    name: Serve_AdvancedSlice
     row: 30
   - leaf: 13
     id: 0xa010111f
-    name: null
+    name: Serve_AdvancedFlat
     row: 31
   - leaf: 14
     id: 0xe8b7486e
@@ -855,7 +860,7 @@ rows:
     id: 0xb31b5ee0
     template: 0x471a198a
     ball_0x360: 0x1e48
-    name: null
+    name: Serve_TopSpinMedium
     template_name: ServeNormal
     reachable_from_tree: true
   - index: 21
@@ -863,7 +868,7 @@ rows:
     id: 0x17c6bfe3
     template: 0x471a198a
     ball_0x360: 0x1ed4
-    name: null
+    name: Serve_TopSpinPowerful
     template_name: ServeNormal
     reachable_from_tree: true
   - index: 22
@@ -871,7 +876,7 @@ rows:
     id: 0xea0cf389
     template: 0x471a198a
     ball_0x360: 0x1f60
-    name: null
+    name: Serve_TopSpinFinesse
     template_name: ServeNormal
     reachable_from_tree: true
   - index: 23
@@ -879,7 +884,7 @@ rows:
     id: 0x5f8e74c3
     template: 0xa4e4dc7f
     ball_0x360: 0x1fec
-    name: null
+    name: Serve_SliceMedium
     template_name: ServeSlice
     reachable_from_tree: true
   - index: 24
@@ -887,7 +892,7 @@ rows:
     id: 0x72d4edc1
     template: 0xa4e4dc7f
     ball_0x360: 0x2078
-    name: null
+    name: Serve_SlicePowerful
     template_name: ServeSlice
     reachable_from_tree: true
   - index: 25
@@ -895,7 +900,7 @@ rows:
     id: 0x488717d1
     template: 0xa4e4dc7f
     ball_0x360: 0x2104
-    name: null
+    name: Serve_SliceFinesse
     template_name: ServeSlice
     reachable_from_tree: true
   - index: 26
@@ -903,7 +908,7 @@ rows:
     id: 0x6bbc9a88
     template: 0x471a198a
     ball_0x360: 0x2190
-    name: null
+    name: Serve_FlatMedium
     template_name: ServeNormal
     reachable_from_tree: true
   - index: 27
@@ -911,7 +916,7 @@ rows:
     id: 0x26eb8042
     template: 0x471a198a
     ball_0x360: 0x221c
-    name: null
+    name: Serve_FlatPowerful
     template_name: ServeNormal
     reachable_from_tree: true
   - index: 28
@@ -919,7 +924,7 @@ rows:
     id: 0xa9bdbd27
     template: 0x471a198a
     ball_0x360: 0x22a8
-    name: null
+    name: Serve_FlatFinesse
     template_name: ServeNormal
     reachable_from_tree: true
   - index: 29
@@ -927,7 +932,7 @@ rows:
     id: 0xfa212c96
     template: 0x60f2096d
     ball_0x360: 0x2334
-    name: null
+    name: Serve_AdvancedTopSpin
     template_name: ServeAdvanced
     reachable_from_tree: true
   - index: 30
@@ -935,7 +940,7 @@ rows:
     id: 0xc1e2aa62
     template: 0x60f2096d
     ball_0x360: 0x23c0
-    name: null
+    name: Serve_AdvancedSlice
     template_name: ServeAdvanced
     reachable_from_tree: true
   - index: 31
@@ -943,7 +948,7 @@ rows:
     id: 0xa010111f
     template: 0x60f2096d
     ball_0x360: 0x244c
-    name: null
+    name: Serve_AdvancedFlat
     template_name: ServeAdvanced
     reachable_from_tree: true
   - index: 32
@@ -993,6 +998,12 @@ power:
   power2_curve_alt_cfg_0x920: [[0.0, 0.9, 0.0, 1.0]]
   cfg_0xc70: 0.4
   cfg_0xc74: 0.7
+  swing_lead_frames_cfg_0x8c0: 12
+  serve_lead_frames_cfg_0x8c4: 12
+  release_countdown_frames_cfg_0x8cc: 40
+  serve_input_delay_frames_cfg_0x9a8: 30
+  serve_auto_frames_cfg_0x9ac: 480
+  frequency_D: 60
 input_mapper:
   - file_offset: 0x2c110
     root_floats: [0.55, 0.8]
@@ -1198,49 +1209,58 @@ input_mapper:
         dead_zone: 0.4
         outputs:
           - kind: cartesian
-            header_words: [40, 40]
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
             first:
               path: "Stick_Aiming/@X"
               playerstate_offset: 0x430
             second:
               path: "Stick_Aiming/@Y"
               playerstate_offset: 0x434
-            range: [1.0, 1.0]
-            extra: [0.0, 0.0]
+            scale: [1.0, 1.0]
+            filter_0x20: 1
+            word_0x24: 30
           - kind: cartesian
-            header_words: [40, 40]
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
             first:
               path: "Stick_Move/@X"
               playerstate_offset: 0x448
             second:
               path: "Stick_Move/@Y"
               playerstate_offset: 0x44c
-            range: [1.0, 1.0]
-            extra: [0.0, 0.0]
+            scale: [1.0, 1.0]
+            filter_0x20: 10
+            word_0x24: 30
           - kind: polar
-            header_words: [40, 40]
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
             first:
               path: "Stick_MovePolar/@Power"
               playerstate_offset: 0x440
             second:
               path: "Stick_MovePolar/@Angle"
               playerstate_offset: 0x444
-            range: [-3.141592, 3.141592]
-            extra: [0.0, 1.0]
+            angle_range: [-3.141592, 3.141592]
+            power_range: [0.0, 1.0]
+            word_0x20: 0
+            flags_0x24: 0x01010000
       - axis_x: DPadX
         axis_y: DPadY
         dead_zone: 0.4
         outputs:
           - kind: cartesian
-            header_words: [40, 40]
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
             first:
               path: "Stick_1/@X"
               playerstate_offset: 0x450
             second:
               path: "Stick_1/@Y"
               playerstate_offset: 0x454
-            range: [25.0, 25.0]
-            extra: [0.0, 0.0]
+            scale: [25.0, 25.0]
+            filter_0x20: 1
+            word_0x24: 30
           - kind: direction
             direction: Up
             threshold: 0.5
@@ -1270,45 +1290,55 @@ input_mapper:
         dead_zone: 0.4
         outputs:
           - kind: cartesian
-            header_words: [40, 40]
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
             first:
               path: "Stick_3/@X"
               playerstate_offset: 0x460
             second:
               path: "Stick_3/@Y"
               playerstate_offset: 0x464
-            range: [25.0, 25.0]
-            extra: [0.0, 0.0]
+            scale: [25.0, 25.0]
+            filter_0x20: 1
+            word_0x24: 30
           - kind: cartesian
-            header_words: [-1, -1]
+            invert_x: null
+            invert_y: null
             first:
               path: "Serve/Advanced/CartesianStick/@X"
               playerstate_offset: 0x490
             second:
               path: "Serve/Advanced/CartesianStick/@Y"
               playerstate_offset: 0x494
-            range: [10.0, 10.0]
-            extra: [0.0, 0.0]
+            scale: [10.0, 10.0]
+            filter_0x20: 1
+            word_0x24: 30
           - kind: polar
-            header_words: [-1, -1]
+            invert_x: null
+            invert_y: null
             first:
               path: "Serve/Advanced/PolarStick/@Power"
               playerstate_offset: 0x488
             second:
               path: "Serve/Advanced/PolarStick/@Angle"
               playerstate_offset: 0x48c
-            range: [-3.141592, 3.141592]
-            extra: [0.0, 1.0]
+            angle_range: [-3.141592, 3.141592]
+            power_range: [0.0, 1.0]
+            word_0x20: 0
+            flags_0x24: 0x00010000
           - kind: polar
-            header_words: [40, 40]
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
             first:
               path: "PolarStick_3/@Power"
               playerstate_offset: 0x468
             second:
               path: "PolarStick_3/@Angle"
               playerstate_offset: 0x46c
-            range: [-3.141592, 3.141592]
-            extra: [0.0, 1.0]
+            angle_range: [-3.141592, 3.141592]
+            power_range: [0.0, 1.0]
+            word_0x20: 0
+            flags_0x24: 0x00010000
 tier_graphs:
   Finesse:
     inputs:
@@ -1325,7 +1355,8 @@ tier_graphs:
       - kind: CURVE
         in: 0
         out: 1
-        keys: ["(0.0, 0.15000000596046448, 1.0, 0.0, 1065353216)", "(0.15000000596046448, 1.0, 0.0, 0.0, 0)"]
+        keys: ["(0.0, 0.15000000596046448, 1.0, 0.0, 1.0)", "(0.15000000596046448, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0]
   Medium:
     inputs:
       - domain: 1bf15200
@@ -1341,7 +1372,8 @@ tier_graphs:
       - kind: CURVE
         in: 0
         out: 1
-        keys: ["(0.0, 0.15000000596046448, 0.0, 0.0, 0)", "(0.15000000596046448, 0.699999988079071, 1.0, 0.0, 1065353216)", "(0.699999988079071, 1.0, 0.0, 0.0, 0)"]
+        keys: ["(0.0, 0.15000000596046448, 0.0, 0.0, 0.0)", "(0.15000000596046448, 0.699999988079071, 1.0, 0.0, 1.0)", "(0.699999988079071, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0, 0.0]
   Powerful:
     inputs:
       - domain: 1bf15200
@@ -1357,7 +1389,8 @@ tier_graphs:
       - kind: CURVE
         in: 0
         out: 1
-        keys: ["(0.0, 0.699999988079071, 0.0, 0.0, 0)", "(0.699999988079071, 1.0, 1.0, 0.0, 1065353216)"]
+        keys: ["(0.0, 0.699999988079071, 0.0, 0.0, 0.0)", "(0.699999988079071, 1.0, 1.0, 0.0, 1.0)"]
+        disc_slopes: [0.0, 0.0]
   PowerfulBall:
     inputs:
       - domain: 1bf15200
@@ -1373,7 +1406,8 @@ tier_graphs:
       - kind: CURVE
         in: 0
         out: 1
-        keys: ["(0.0, 15.0, 0.0, 0.0, 0)", "(15.0, 20.0, 1.0, 0.0, 1065353216)"]
+        keys: ["(0.0, 15.0, 0.0, 0.0, 0.0)", "(15.0, 20.0, 1.0, 0.0, 1.0)"]
+        disc_slopes: [0.0, 0.0]
   GoodTiming:
     inputs:
       - domain: 1bf15200
@@ -1393,11 +1427,13 @@ tier_graphs:
       - kind: CURVE
         in: 1
         out: 3
-        keys: ["(-1.0, -0.800000011920929, 0.0, 0.0, 0)", "(-0.800000011920929, 0.800000011920929, 1.0, 0.0, 1065353216)", "(0.800000011920929, 1.0, 0.0, 0.0, 0)"]
+        keys: ["(-1.0, -0.800000011920929, 0.0, 0.0, 0.0)", "(-0.800000011920929, 0.800000011920929, 1.0, 0.0, 1.0)", "(0.800000011920929, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0, 0.0]
       - kind: CURVE
         in: 1
         out: 0
-        keys: ["(-1.0, -0.30000001192092896, 0.0, 0.0, 0)", "(-0.30000001192092896, 0.30000001192092896, 1.0, 0.0, 1065353216)", "(0.30000001192092896, 1.0, 0.0, 0.0, 0)"]
+        keys: ["(-1.0, -0.30000001192092896, 0.0, 0.0, 0.0)", "(-0.30000001192092896, 0.30000001192092896, 1.0, 0.0, 1.0)", "(0.30000001192092896, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0, 0.0]
       - kind: LERP
         a: 0
         b: 3
@@ -1434,15 +1470,18 @@ tier_graphs:
       - kind: CURVE
         in: 2
         out: 11
-        keys: ["(30.0, 60.0, 1.0, 0.0, 1056964608)", "(60.0, 70.0, 0.5, 0.0, 0)"]
+        keys: ["(30.0, 60.0, 1.0, -0.01666666753590107, 0.5)", "(60.0, 70.0, 0.5, -0.05000000074505806, 0.0)"]
+        disc_slopes: [0.0, 0.0]
       - kind: CURVE
         in: 12
         out: 13
-        keys: ["(-1.0, -0.15000000596046448, 1.0, 0.0, 1065353216)", "(-0.15000000596046448, 0.15000000596046448, 0.0, 0.0, 0)", "(0.15000000596046448, 1.0, 1.0, 0.0, 1065353216)"]
+        keys: ["(-1.0, -0.15000000596046448, 1.0, 0.0, 1.0)", "(-0.15000000596046448, 0.15000000596046448, 0.0, 0.0, 0.0)", "(0.15000000596046448, 1.0, 1.0, 0.0, 1.0)"]
+        disc_slopes: [0.0, 0.0, 0.0]
       - kind: CURVE
         in: 2
         out: 10
-        keys: ["(30.0, 60.0, 0.800000011920929, 0.0, 1053609165)", "(60.0, 70.0, 0.4000000059604645, 0.0, 0)"]
+        keys: ["(30.0, 60.0, 0.800000011920929, -0.013333333656191826, 0.4000000059604645)", "(60.0, 70.0, 0.4000000059604645, -0.03999999910593033, 0.0)"]
+        disc_slopes: [0.0, 0.0]
       - kind: LERP
         a: 11
         b: 10
@@ -1451,11 +1490,13 @@ tier_graphs:
       - kind: CURVE
         in: 0
         out: 6
-        keys: ["(0.0, 1.0, 0.0, 0.0, 1053609165)"]
+        keys: ["(0.0, 1.0, 0.0, 0.4000000059604645, 0.4000000059604645)"]
+        disc_slopes: [0.0]
       - kind: CURVE
         in: 0
         out: 4
-        keys: ["(0.0, 1.0, 0.0, 0.0, 1045220557)"]
+        keys: ["(0.0, 1.0, 0.0, 0.20000000298023224, 0.20000000298023224)"]
+        disc_slopes: [0.0]
       - kind: LERP
         a: 6
         b: 4
@@ -1468,7 +1509,8 @@ tier_graphs:
       - kind: CURVE
         in: 8
         out: 9
-        keys: ["(-1.0, 0.0, 1.0, 0.0, 1065353216)", "(0.0, 1.0, 0.0, 0.0, 0)"]
+        keys: ["(-1.0, 0.0, 1.0, 0.0, 1.0)", "(0.0, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0]
       - kind: PRODUCT
         slots: [9, 13]
         out: 14

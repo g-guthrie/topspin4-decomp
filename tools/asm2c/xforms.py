@@ -270,7 +270,7 @@ def t_locsize(b, rng=None):
     t, n, s = d
     ix = [int(x) for x in re.findall(r'\b' + n + r'\[(\d+)\]', b)]
     mn, s = (max(ix) if ix else 0) + 1, int(s)
-    z = rng.choice([mn, max(mn, s - 1), max(mn, s - 2), s + 1, s + 2, max(mn, s // 2)]) if rng else mn
+    z = rng.choice([mn, max(mn, s - 1), max(mn, s - 2), s + 1, s + 2, max(mn, s // 2), s + 4, s + 8, s + 12]) if rng else mn
     if z == s:
         return None
     return re.sub(r'^    ' + re.escape(t) + ' ' + n + r'\[' + str(s) + r'\];$', f'    {t} {n}[{z}];', b, flags=re.M)
