@@ -513,7 +513,14 @@ def extend_for_neighbours(chosen, img, refs, max_span=0x400):
     Returns (new list, merges, dropped entries)."""
     starts = [a for a, _ in chosen]
     size = dict(chosen)
-    drop = set()
+    parent = list(range(len(starts)))  # union of index ranges that must become one function
+
+    def root(k):
+        while parent[k] != k:
+            parent[k] = parent[parent[k]]
+            k = parent[k]
+        return k
+
     merges = 0
     for i, a in enumerate(starts):
         for site, tgt, cond in branch_targets(img, a, size[a]):
@@ -522,16 +529,29 @@ def extend_for_neighbours(chosen, img, refs, max_span=0x400):
             j = bisect.bisect_right(starts, tgt) - 1
             if j < 0 or abs(j - i) > 2 or tgt == starts[j] or tgt >= starts[j] + size[starts[j]]:
                 continue
-            lo, hi = (a, starts[j]) if starts[j] > a else (starts[j], a)
-            new_end = max(lo + size[lo], hi + size[hi])
-            if new_end - lo > size[lo] + max_span:
+            lo, hi = min(i, j), max(i, j)
+            if starts[hi] + size[starts[hi]] - starts[lo] > size[starts[lo]] + max_span:
                 continue
-            for k in starts[min(i, j) + 1:max(i, j) + 1]:
-                if k not in refs:
-                    drop.add(k)
-            size[lo] = new_end - lo
+            for k in range(lo + 1, hi + 1):
+                if root(k) != root(lo):
+                    parent[root(k)] = root(lo)
             merges += 1
-    return [(a, size[a]) for a in starts if a not in drop], merges, len(drop)
+    groups = collections.defaultdict(list)
+    for k in range(len(starts)):
+        groups[root(k)].append(k)
+    out, dropped = [], 0
+    for r, members in groups.items():
+        members.sort()
+        first = starts[members[0]]
+        end = max(starts[k] + size[starts[k]] for k in members)
+        out.append((first, end - first))
+        for k in members[1:]:
+            if starts[k] in refs:
+                out.append((starts[k], size[starts[k]]))  # keep a separate (overlapping) entry
+            else:
+                dropped += 1
+    out.sort()
+    return out, merges, dropped
 
 
 def select_functions(fns, helpers, img):

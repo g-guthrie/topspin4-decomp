@@ -192,6 +192,20 @@ class ConfigOutput(unittest.TestCase):
         self.assertEqual(fns[0x82010000][1], 0x20)
         self.assertEqual(objs[0x82000000], ('tbl', 8, '.rdata'))
 
+    def test_split_loop_is_merged(self):
+        # fn A: li; loop body ...; B (a bogus split) branches back into A's body
+        bdnz_back = lambda disp: (16 << 26) | (16 << 21) | (disp & 0xFFFC)
+        words = [li(3, 0), addi(3, 3, 1), rc.NOP, bdnz_back(-8), BLR,   # A = 0..0x14
+                 bdnz_back(-12), BLR]                                  # B = 0x14..0x1C (refers back)
+        img = rc.Image.from_sections([('.text', TEXT, pack(words), True)])
+        chosen = [(TEXT, 0x14), (TEXT + 0x14, 0x8)]
+        out, merges, dropped = rc.extend_for_neighbours(chosen, img, refs=set())
+        self.assertEqual(out, [(TEXT, 0x1C)])
+        self.assertEqual((merges, dropped), (1, 1))
+        out, merges, dropped = rc.extend_for_neighbours(chosen, img, refs={TEXT + 0x14})
+        self.assertEqual(out, [(TEXT, 0x1C), (TEXT + 0x14, 0x8)])
+        self.assertEqual(dropped, 0)
+
     def test_reachable_skips_table_words(self):
         words, table = absolute_switch_fn(TEXT, 3)
         img = rc.Image.from_sections([('.text', TEXT, pack(words), True)])

@@ -22,11 +22,19 @@ git-ignored. Every claim is tagged:
 2. **Only 0.15% of instructions are unhandled. [here]** 3,866 instruction sites, in 1,056
    functions (2.2%), are unhandled. All of them are reachable code. Most are plain PowerPC forms
    that XenonRecomp has not implemented: update-form loads and stores (`stfsu`, `lfsu`, `sthu`,
-   `lhzu`, `*ux`: 2,280), `bdzf` (876, an MSVC switch-by-CTR idiom), and `eqv`, `subfze`, `addc`
+   `lhzu`, `*ux`: 2,235), `bdzf` (876, an MSVC switch-by-CTR idiom), and `eqv`, `subfze`, `addc`
    and `addme`. **VMX128 is nearly complete.** 75,971 VMX128 instructions of 59 kinds occur, and
    only `vsel128` (366), `vpkswss128` (60), `vcfpuxws128` (1) and 20 `vpkd3d128` float16_4 packs
    are missing. Every missing form is a few lines in `recompiler.cpp`.
-3. **The generated C++ compiles. [here]** COMPILE_RESULT
+3. **The generated C++ compiles. [here]**
+   - **First run:** clang 18 `-O2 -march=x86-64-v3` compiled 183 of the 185 generated `.cpp` files
+     cleanly. The other 2 failed on 3 `goto`s to labels in a neighbouring function: loops that
+     Jeff split into two symbols.
+   - **Fix:** `recomp_config.py` now merges such adjacent splits (46 merges, 38 unreferenced inner
+     entries dropped). After it, a label check over all 47,039 functions finds 0 undeclared gotos,
+     and the three affected files compile. Out-of-function branches fell from 71 to 28.
+   - **Size:** 37.0 MB of x86-64 machine code (`size -t`: text 36,976,884, data 796,384) from
+     10.2 MB of PowerPC.
 4. **A complete open runtime already exists. [doc]** ReXGlue SDK (BSD-3-Clause, 2026, derived from
    Xenia) provides:
    - a codegen whose config is a superset of XenonRecomp's, including `is_dll`, switch tables and
@@ -49,7 +57,7 @@ git-ignored. Every claim is tagged:
    - D3DX: 21;
    - Havok: 174 (Animation 24, Physics 43, Base 37, mixed and utils 62, Compat 8);
    - FMOD: 31;
-   - Bink: about 15.
+   - Bink: about 12.
 
    Virtual calls are not included (section 4).
 7. **What could kill the approach. [inf]**
@@ -95,6 +103,12 @@ existence says the approach copes with this class of game. It says nothing about
   and patches for frame-rate independence.
 - **ReXGlue ports** reuse Xenia's GPU emulation, so they need little renderer work. The
   per-title work is mostly hooks, fixes and the config.
+- **ReXGlue's direction.** Its founder's interview says the graphics system is "an abstract
+  interface injected at build time". The plan is to replace Xenia's GPU, audio and input with
+  native implementations over time. Each port has to work out how its game used the Xenos GPU.
+  Blue Dragon is the pilot title and already runs faster than on the console
+  ([interview](https://readonlymemo.com/rexglue-xbox-360-recompilation-interview/)) [web]. That
+  injection point is where our own renderer would plug in [inf].
 
 ## 2. Run it
 
@@ -217,7 +231,38 @@ three image ranges do not overlap. A runtime must implement `XexLoadImage`,
 
 ### 2.4 Does the generated C++ compile? [here]
 
-COMPILE_SECTION
+Command (per file, 4 in parallel):
+`clang++ -std=c++20 -O2 -march=x86-64-v3 -fno-strict-aliasing -I ppc -I ../XenonRecomp/thirdparty/simde -c ppc/ppc_recomp.N.cpp`.
+
+**First config (`work/recomp/swing`):**
+
+- 183 of 185 files compiled with no errors and no warnings promoted to errors.
+- `ppc_recomp.62.cpp` and `.63.cpp` failed on three `goto loc_X` whose label lies in the previous
+  symbol: `sub_88562DFC` → 0x88562DE4, `sub_8856AB20` → 0x8856AB08, `sub_8856ABC0` → 0x8856ABB0.
+  - All three are hand-written CRT loops (around `memset` 0x8856ABA0) whose `bdnzf` loop bottom was
+    split into its own symbol.
+  - XenonRecomp checks function bounds for `b`/`bc` but not for the CTR-decrementing forms.
+- One file takes 5.6 s on an idle core, and the largest (4.2 MB) about 30 s. The whole set took
+  about 30 minutes on this 4-core container, which was shared with other jobs (load average 8-17).
+- Object code: text 36,976,884 bytes, data 796,384 bytes (`size -t obj/*.o`), 53 MB of `.o` files.
+
+**Second config (`work/recomp/swing5`, merge enabled):**
+
+- `recomp_config.py config` now merges a function with a neighbour (up to two symbols away, at most
+  0x400 bytes of growth) when one branches into the other's body. An inner entry survives as a
+  separate, overlapping function only if a direct call, tail call or data word references it.
+  - 46 merges; 38 inner entries dropped; 46,692 functions supplied, 47,039 emitted.
+- An undeclared-label scan over every generated function finds **0**, against 3 before.
+  `// ERROR` (dropped out-of-function branches) fell from 71 sites to **28 sites, 17 targets**:
+  - XDK CRT and XAudio2/XHV 0x88562D78-0x885DABF8;
+  - the Bink asm target 0x88B14AA8.
+
+  They need explicit entries or a XenonRecomp change.
+- The three files holding the merged functions (`ppc_recomp.24/62/63.cpp`) compile cleanly. The
+  full recompile of this config was started; its result is under section 2.5.
+
+**Not done here:** a full link. The objects reference the 248 import functions (`__imp__<Name>`),
+which a runtime must define. Section 2.5 is the smoke test that supplies stubs.
 
 ### 2.5 Smoke run [here]
 
@@ -424,7 +469,7 @@ the videos. Visually identical.
 | Stage | Work | Rough effort (agent rounds) [inf] | Feeds from existing assets |
 |---|---|---|---|
 | 0 (done) | Recompiler built, Swing translated, config generator, census | — | `symbols.txt`, Jeff jump tables, `decomp_survey.py` ranges |
-| 1 | **Close translation gaps:** add the ~40 missing instruction forms (or switch codegen to ReXGlue's, which lists all of them in `src/codegen` [doc]); fix the 71 cross-function branches; emit `switch` on `.u32`; full Loader symbol set from the Jeff split; run Xenia's PPC instruction tests through the chosen codegen | 1-2 | Jeff split for Loader |
+| 1 | **Close translation gaps:** add the ~40 missing instruction forms (or switch codegen to ReXGlue's: of 15 mnemonics checked by name, its `src/codegen` handles all but `lhbrx` and `lvehx` [doc]); fix the remaining 28 cross-function branches; emit `switch` on `.u32`; full Loader symbol set from the Jeff split; run Xenia's PPC instruction tests through the chosen codegen | 1-2 | Jeff split for Loader |
 | 2 | **First boot, the first milestone on screen:** default.xex → Loader_DLL → Swing_DLL on ReXGlue's runtime, natively on Linux/Windows, user-supplied ISO. Target: the Loader's logo and loading screens, then the Swing front end rendered by Xenia's GPU path | 2-4 | XEX headers, `tools/xdvdfs.py` |
 | 3 | **Gameplay parity:** play a match; trace the ball state (`ball+0x4C0..0x4DC`) and shot-outcome rolls against `src/xbox360/drafts/gp4b_ball_model.c` and the documented analyser graphs; apply the owner's retune as data patches (`docs/data-patching.md`) | 1-2 | `docs/gameplay/*`, `data/gameplay/` |
 | 4 | **Replace game functions with clean C:** override the weak `sub_*` with matched or drafted C, starting with gameplay (ball model, shot error, reach) | continuous | 30k matched functions in `src/` (needs a big-endian guest-memory accessor layer: `be<T>`/guest-pointer types like Unleashed's), drafts, names in `symbols.txt` |
