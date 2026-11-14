@@ -60,6 +60,13 @@ def main() -> int:
             fail("forced link snapshot map count differs from its input count")
     else:
         for key, expected in expected_forced.items():
+            if key == "map_matching_public_functions":
+                # tools/link_probe.py counts file-local (static) matched functions
+                # separately; together they must cover every matching function.
+                reached = forced.get(key, 0) + forced.get("map_matching_static_functions", 0)
+                if reached != expected:
+                    fail(f"forced link probe map public+static functions is {reached}, expected {expected}")
+                continue
             if forced.get(key) != expected:
                 fail(f"forced link probe {key} is {forced.get(key)!r}, expected {expected}")
 
