@@ -54,6 +54,12 @@ Checks on the table:
 * The Tee-off test is all of: incoming pace slow; contact waist to shoulder; 60 or more frames
   since the opponent's contact (the engine's own AutoSwing test, graph 179); arrived 20 or more
   frames early within about 1 m; no reach swing; not moving away from the net.
+  Also: the contact point is no more than about 1 m behind the baseline. A slow ball taken from
+  deep behind the baseline is VeryGood, not Tee-off (owner question, 2026-11-14: the deep moonball).
+* Contact height is measured at the hit point the planner chose, not at the top of the bounce. A
+  high-bouncing ball that the player has time and room to let drop is struck in the strike zone and
+  scores 0 for height. Height only costs points when the player is forced, or chooses, to take the
+  ball high or low: pinned by a heavy kick, taking it early on the rise, or a skidding low ball.
 
 Pace check: a top pace build's full-charge flat forehand is 145 km/h (90 mph) in retail at Good.
 Times 1.18 for Tee-off is 106 mph; the overcharge (section 5) adds about 4%: 110 mph, the ceiling.
