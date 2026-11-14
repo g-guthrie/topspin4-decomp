@@ -422,8 +422,17 @@ def export_animdb(ctx, clip_rows):
     records = build_animation_records(takes)
     linked = 0
     if ctx.args.clip_map:
-        with open(ctx.args.clip_map) as fh:
-            linked = link_records(records, [c["id"] for c in clip_rows], json.load(fh))
+        if ctx.args.clip_map == "auto":  # tools/port/clip_map.py output (docs/port/clip-map.md)
+            cm_path = os.path.join(ctx.out, "clip_map.json")
+            if not os.path.exists(cm_path):
+                subprocess.run([sys.executable, os.path.join(HERE, "clip_map.py"), "--iso", ctx.need_iso(),
+                                "--out", ctx.out, "--cache", ctx.cache], check=True)
+            with open(cm_path) as fh:
+                clip_map = json.load(fh)["map"]
+        else:
+            with open(ctx.args.clip_map) as fh:
+                clip_map = json.load(fh)
+        linked = link_records(records, [c["id"] for c in clip_rows], clip_map)
     doc = {
         "schema": 1,
         "notes": {
@@ -620,7 +629,8 @@ def build_parser():
     ap.add_argument("--core-clips", default="0-31", help="Core clip indices to export as glTF: '0-31', '0,5,9', 'all', 'none'")
     ap.add_argument("--skeleton", type=int, default=0, help="Core skeleton the clips are exported against (default 0)")
     ap.add_argument("--raw-additive", action="store_true", help="export additive clips as raw deltas")
-    ap.add_argument("--clip-map", help="JSON {record name | 8-hex id | '#index': 'core:<n>'} linking AnimationsDB records to clips")
+    ap.add_argument("--clip-map", help="JSON {record name | 8-hex id | '#index': 'core:<n>'} linking AnimationsDB records to clips, or "
+                    "'auto' to use work/port/assets/clip_map.json from tools/port/clip_map.py (run on demand)")
     ap.add_argument("--max-gb", type=float, default=10.0, help="stop writing clips after this many GB (default 10)")
     ap.add_argument("--assets-args", nargs=argparse.REMAINDER, help="extra arguments passed to tools/ts4_assets.py (must be last)")
     ap.add_argument("--strict", action="store_true", help="stop and re-raise on the first part that fails")
