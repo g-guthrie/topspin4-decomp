@@ -64,7 +64,8 @@ SitBase StandBase WalkBase JogBase FaultLeft FaultRight Player01 Player02 HKXPat
 ApplauseLow ApplauseLowIn ApplauseLowLoop ApplauseLowOut ApplauseAverage ApplauseAverageIn ApplauseAverageLoop
 ApplauseAverageOut ApplauseStrong ApplauseStrongIn ApplauseStrongLoop ApplauseStrongOut ApplauseWild ApplauseWildIn
 ApplauseWildLoop ApplauseWildOut DeceptionLow DeceptionLowIn DeceptionAverage DeceptionAverageIn
-Huge Medium Tiny Playground Small Big Large Man Woman FaultLeft2 FaultRight2 SitBase2
+Huge Medium Tiny Playground Small Big Large Man Woman Sunny Cloudy Clear GrandSlam Masters Major Minor Special Center Side
+FaultLeft2 FaultRight2 SitBase2
 """.split()}
 KNOWN_NAMES.update({crc("Idle%02d" % i): "Idle%02d" % i for i in range(30)})
 KNOWN_NAMES.update({crc("Flourish_%02d_%02d" % (i, j)): "Flourish_%02d_%02d" % (i, j) for i in range(30) for j in range(6)})
@@ -265,28 +266,30 @@ def court_line_edges(positions_m, tol=0.004):
     return {"x": cluster([abs(p[0]) for p in positions_m]), "z": cluster([abs(p[2]) for p in positions_m])}
 
 
-def court_line_check(edges):
-    """Pair each ITF line with the nearest line (edge pair) and compare with the gameplay bounds."""
+def court_line_check(edges, window=0.25):
+    """Find each line's quad around its ITF value and compare with the gameplay in/out bounds.
+
+    Court lines are textured quads wider than the painted line (docs/port/venues-and-crowd.md 3.3), so the
+    line centre is the midpoint of the quad's two outer edges: the pair (lo < want < hi) within ``window``
+    whose midpoint is closest to the ITF value.  ``gameplay_minus_centre_cm`` is the gameplay bound minus that
+    centre (the game's half line width before the 2 x radius tolerance)."""
+    bounds = {"baseline_x": GAMEPLAY_BOUNDS_CM["rally_xmax"], "service_x": GAMEPLAY_BOUNDS_CM["serve_xmax"],
+              "singles_z": GAMEPLAY_BOUNDS_CM["singles_zmax"], "doubles_z": GAMEPLAY_BOUNDS_CM["doubles_zmax"]}
     res = {}
     for key, axis in (("baseline_x", "x"), ("service_x", "x"), ("singles_z", "z"), ("doubles_z", "z")):
         want = ITF_LINES_M[key]
         e = edges.get(axis, [])
-        near = sorted(e, key=lambda v: abs(v - want))[:2]
-        if len(near) < 2:
+        los = [v for v in e if want - window <= v < want]
+        his = [v for v in e if want < v <= want + window]
+        if not los or not his:
             res[key] = {"itf_m": want, "found": None}
             continue
-        lo, hi = sorted(near)
-        res[key] = {"itf_m": want, "inner_edge_m": lo, "outer_edge_m": hi, "centre_m": round((lo + hi) / 2, 4),
-                    "width_cm": round((hi - lo) * 100, 2)}
-    gb = GAMEPLAY_BOUNDS_CM
-    if res.get("baseline_x", {}).get("found", 1) is not None and "outer_edge_m" in res.get("baseline_x", {}):
-        res["baseline_x"]["gameplay_xmax_m"] = gb["rally_xmax"] / 100
-    if "outer_edge_m" in res.get("service_x", {}):
-        res["service_x"]["gameplay_xmax_m"] = gb["serve_xmax"] / 100
-    if "outer_edge_m" in res.get("singles_z", {}):
-        res["singles_z"]["gameplay_zmax_m"] = gb["singles_zmax"] / 100
-    if "outer_edge_m" in res.get("doubles_z", {}):
-        res["doubles_z"]["gameplay_zmax_m"] = gb["doubles_zmax"] / 100
+        lo, hi = min(((l, h) for l in los for h in his), key=lambda p: abs((p[0] + p[1]) / 2 - want))
+        c = (lo + hi) / 2
+        res[key] = {"itf_m": want, "quad_m": [lo, hi], "centre_m": round(c, 4),
+                    "centre_minus_itf_cm": round((c - want) * 100, 2),
+                    "gameplay_bound_m": bounds[key] / 100,
+                    "gameplay_minus_centre_cm": round(bounds[key] - c * 100, 2)}
     return res
 
 
@@ -400,17 +403,6 @@ def parse_venue_desc(buf, iso):
             v = KNOWN_NAMES.get(v, "%08x" % v)
         out[k] = v
     return out
-
-
-def venue_archives(iso):
-    """Names of the venue archives on the disc: every .arc that holds a Crowd*.bin or a TrackSide.hkx."""
-    import ts4_arc
-    import xdvdfs
-    x = xdvdfs.XDVDFS(iso)
-    out = []
-    for name in sorted(n for n in x.list_names() if n.endswith(".arc")) if hasattr(x, "list_names") else []:
-        out.append(name)
-    return out, x
 
 
 # --------------------------------------------------------------------------------------------- trackside export
@@ -621,8 +613,8 @@ def hierarchy_extras(hier):
         g = M.mat4_mul(M.mat4_mul(mir, world), mir)
         pos = [g[12] * SCALE, g[13] * SCALE, g[14] * SCALE]
         if node.name in ("Light", "LightTarget"):
-            (lights if node.name == "Light" else targets).append({"name": node.attrs.get("Name"), "pos": [round(v, 4) for v in pos],
-                                                                  "dir": [round(-g[8], 4), round(-g[9], 4), round(-g[10], 4)]})
+            (lights if node.name == "Light" else targets).append({"name": node.attrs.get("Name"),
+                                                                  "pos": [round(v, 4) for v in pos]})
         if node.name == "Geometry":
             up = node.find("UserProperties")
             if up is None:
@@ -636,6 +628,13 @@ def hierarchy_extras(hier):
             trackside.append({"name": node.attrs.get("Name"), "mesh": node.attrs.get("Mesh"),
                               "material": node.attrs.get("Material"), "setup": setup_name(path),
                               "behaviours": extra, "matrix": g2})
+    # directional lights shine from their position toward their LightTarget (<name>_Target), else the origin
+    tmap = {t["name"]: t["pos"] for t in targets}
+    for L in lights:
+        aim = tmap.get((L["name"] or "") + "_Target", [0.0, 0.0, 0.0])
+        d = [aim[i] - L["pos"][i] for i in range(3)]
+        n = math.sqrt(sum(x * x for x in d)) or 1.0
+        L["dir"] = [round(x / n, 5) for x in d]
     return lights, targets, trackside
 
 
@@ -827,27 +826,73 @@ def export_venue(ar, out, iso, dir_hash=None, include_all=False, crowd_lod=2, of
 
 # --------------------------------------------------------------------------------------------- CLI
 
-def cmd_inventory(a):
+def classify_archive(leaf_names):
+    """Role of an archive from its member names: 'venue' (has Crowd*.bin or TrackSide.hkx), else None."""
+    names = set(leaf_names)
+    if any(n.startswith("Crowd") and n.endswith(".bin") and not n.startswith("Crowd_") for n in names) \
+            or "TrackSide.hkx" in names:
+        return "venue"
+    return None
+
+
+def inventory(iso, log=None):
+    """Every venue archive on the disc with its Desc record, scene directory, crowd and light summary."""
     import ts4_assets as A
-    iso = iso_path(a.iso)
     import xdvdfs
     x = xdvdfs.XDVDFS(iso)
-    names = [e for e in x.listdir("") if e.lower().endswith(".arc")] if hasattr(x, "listdir") else []
+    arcs = sorted(p for p, e in x.walk() if p.endswith(".arc") and "/" not in p)
     gar = A.Archive("Global.arc", iso)
-    rows = []
+    descs = {}
     for e in gar.arc.entries:
         ln = gar.leaf(e)
-        if not ln or not ln.endswith("Desc.bin"):
+        if ln and ln.endswith("Desc.bin"):
+            descs[ln[:-len("Desc.bin")]] = parse_venue_desc(gar.read(e), iso)
+    rows = []
+    for name in arcs:
+        if name.startswith(("Baked_", "PlayerCreator", "CutScenes")):
             continue
-        d = parse_venue_desc(gar.read(e), iso)
-        rows.append({"desc": ln, "code": d.get("CodeName"), "surface": d.get("SurfaceKey"),
-                     "inout": d.get("e4e9cc69"), "capacity": d.get("CapacityKey"), "weather": d.get("WeatherKey"),
-                     "type": d.get("TypeKey"), "spectators": d.get("spectators")})
-    rows.sort(key=lambda r: r["desc"])
-    print(json.dumps(rows, indent=1) if a.json else "\n".join(
-        "%-26s %-14s %-8s %-8s cap=%-10s weather=%-10s spectators=%d" % (
-            r["desc"], r["code"], r["surface"], r["inout"], r["capacity"], r["weather"], len(r["spectators"] or []))
-        for r in rows))
+        try:
+            ar = A.Archive(name, iso)
+        except Exception:
+            continue
+        leaves = [ar.leaf(e) or "" for e in ar.arc.entries]
+        if classify_archive(leaves) != "venue":
+            continue
+        venue = name[:-4]
+        row = {"archive": name, "venue": venue, "members": len(leaves)}
+        try:
+            dh = A.pick_scene_dir(ar)
+            f = ar.dirs[dh]
+            row["scene_directory"] = "%08x" % dh
+            row["scene_meshes_bytes"] = f["PackedMeshes.xbin"][2]
+            row["has_lights"] = "PackedLights.bin" in f
+        except Exception:
+            row["scene_directory"] = None
+        cn = next((n for n in leaves if n.startswith("Crowd") and n.endswith(".bin") and not n.startswith("Crowd_")), None)
+        row["crowd_file"] = cn
+        if cn:
+            c = parse_crowd(ar.read(ar.find_name(cn)))
+            row["crowd_count"] = len(c["spectators"])
+            row["crowd_groups"] = c["groups"]
+            row["crowd_models"] = sorted({s["model"] for s in c["spectators"]})
+        row["crowd_sound"] = sorted({n.rsplit(".", 1)[0] for n in leaves if n.startswith("Crowd_") and n.endswith(".fsb")})
+        d = descs.get(venue) or {}
+        row.update({"surface": d.get("SurfaceKey"), "inout": d.get("e4e9cc69"), "capacity": d.get("CapacityKey"),
+                    "weather": d.get("WeatherKey"), "type": d.get("TypeKey"), "has_umpire": d.get("HasUmpire"),
+                    "desc_spectators": d.get("spectators")})
+        rows.append(row)
+        if log:
+            log("%-20s %-7s %-8s cap=%-10s crowd=%5s scene=%s" % (venue, row["surface"], row["inout"], row["capacity"],
+                                                                row.get("crowd_count"), row["scene_directory"]))
+    return {"venues": rows, "desc_only": sorted(set(descs) - {r["venue"] for r in rows})}
+
+
+def cmd_inventory(a):
+    inv = inventory(iso_path(a.iso), log=None if a.json else print)
+    if a.json:
+        print(json.dumps(inv, indent=1))
+    else:
+        print("Desc records without a venue archive:", ", ".join(inv["desc_only"]))
 
 
 def cmd_crowd(a):

@@ -12,6 +12,7 @@ import {
 } from "./helpers.js";
 import { fetchJson, fmt } from "./config.js";
 import { loadGltfRobust } from "./gltfload.js";
+import { attachGameAnimation, gameDrive } from "./players/play_hook.js";
 
 const NAMES = ["You", "CPU"];
 const BTN_SHOT = 1 | 2 | 4 | 8;
@@ -89,6 +90,7 @@ export class PlayMode {
       await this.lib.preload();
       this.anims = this.rigs.map((r) => (r.mixer ? new RigAnimator(r, this.lib) : null));
     }
+    if (cfg.anim === "game") await attachGameAnimation(this);
     this.refreshTunables();
     return true;
   }
@@ -234,9 +236,10 @@ export class PlayMode {
       const p = view.players[i], rig = this.rigs[i];
       rig.root.position.set(p.pos[0] * CM, 0, p.pos[2] * CM);
       rig.root.rotation.y = -p.heading;
-      rig.root.scale.z = (p.flags & 2) ? -1 : 1;              // left-handed: mirror the rig
+      rig.root.scale.z = (p.flags & 2) && !this.game ? -1 : 1; // left-handed: mirror the rig (game driver mirrors poses)
       const an = this.anims[i];
-      if (an) {
+      if (this.game?.[i]) gameDrive(this, i, dt, p);
+      else if (an) {
         const s = this.sw[i];
         const cur = ses.cur.players[i];
         let windUp = null;

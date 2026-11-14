@@ -309,6 +309,50 @@ static void launch_plan(Ts4Core *c, int shooter, const Ts4ShotPlan *plan, int se
     predict(c);
 }
 
+/* shooter-local frame (own baseline at x < 0): LocalPosition S+0x8E0/0x8E8, LocalOpponentPosition S+0x910/0x918 */
+static void write_shot_fields(Ts4Core *c, int i, const float contact[3], float power)
+{
+    Ts4SimPlayer *p = &c->pl[i], *o = &c->pl[i ^ 1];
+    float m = -own_sign(c, i), bv[3] = {0.0f, 0.0f, 0.0f};
+    int k;
+    if (!ts4_bound(c)) return;
+    PS_SET(p, 0xE00, power);
+    PS_SET(p, 0x8E0, contact[0] * m); PS_SET(p, 0x8E8, contact[2] * m);
+    PS_SET(p, 0x910, o->pos[0] * m); PS_SET(p, 0x918, o->pos[2] * m);
+    if (c->ball_live) ts4_ball_world_vel(&c->ball, bv);
+    PS_SET(p, 0x770, sqrtf(bv[0] * bv[0] + bv[1] * bv[1] + bv[2] * bv[2]) * 0.036f);   /* #1407106c km/h (I) */
+    PS_SET(p, 0x7A0, p->run_dist_cm);                                                 /* #03d2be3d run cm (I) */
+    PS_SET(p, 0x7D0, (c->last_hitter == (i ^ 1) && (c->pl[i ^ 1].swing_buttons & TS4_BTN_SLICE) &&
+                      has_skill(c, i ^ 1, SKILL_POISONED_SLICES)) ? 1.0f : 0.0f);      /* PoisonedSlices, receiver */
+    PS_SET(p, 0x6BC, TUN_HAS(c, SHOTDEF_POW_MIN) ? TUN(c, SHOTDEF_POW_MIN) : 0.0f);
+    PS_SET(p, 0x6C0, TUN_HAS(c, SHOTDEF_POW_MAX) ? TUN(c, SHOTDEF_POW_MAX) : 1.0f);
+    for (k = 0; k < 2; k++) {
+        PS_SET(p, 0x6C4 + 8 * (uint32_t)k, TUN_HAS(c, SHOTDEF_AIM_MIN) ? TUN(c, SHOTDEF_AIM_MIN) : 0.0f);
+        PS_SET(p, 0x6C8 + 8 * (uint32_t)k, TUN_HAS(c, SHOTDEF_AIM_MAX) ? TUN(c, SHOTDEF_AIM_MAX) : 1.0f);
+    }
+    PS_SET(p, 0x6D4, TUN_HAS(c, SHOTDEF_ERR_MIN) ? TUN(c, SHOTDEF_ERR_MIN) : 0.0f);
+    PS_SET(p, 0x6D8, TUN_HAS(c, SHOTDEF_ERR_MAX) ? TUN(c, SHOTDEF_ERR_MAX) : 1.0f);
+    ts4_fset(c->match_img, 0x334, (float)c->rally_shots);                              /* #8beb922e rally length */
+    ts4_ball_img_sync(c);
+    ts4_fset(c->ball_img, 0x340, contact[0]); ts4_fset(c->ball_img, 0x344, contact[1]); ts4_fset(c->ball_img, 0x348, contact[2]);
+}
+
+/* ManualShotTiming (S+0x544): AI = the difficulty's TimingExpression graph (g40); human = commit lead (policy) */
+static void shot_timing(Ts4Core *c, int i)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    const uint8_t *rec = ts4_ai_record(c, c->extra[i].ai_style, c->extra[i].ai_level);
+    float t = 0.0f;
+    if (!ts4_bound(c)) return;
+    if (!p->setup.human && rec && ts4_bgraph_h(c, ts4_le32(rec + TS4_AI_G40), i)) {
+        ts4_bgraph_h(c, ts4_le32(rec + TS4_AI_G44), i);   /* FinalEfficiency */
+        return;
+    }
+    if (TUN_HAS(c, TIMING_IDEAL) && TUN(c, TIMING_SCALE) > 0.0f)
+        t = clampf((TUN(c, TIMING_IDEAL) - (float)p->charge_commit_lead) / TUN(c, TIMING_SCALE), -1.0f, 1.0f);
+    PS_SET(p, 0x544, t);
+}
+
 static void do_serve(Ts4Core *c, int i, uint32_t buttons, float power, float aim_fwd, float aim_side)
 {
     Ts4SimPlayer *p = &c->pl[i];
@@ -318,7 +362,11 @@ static void do_serve(Ts4Core *c, int i, uint32_t buttons, float power, float aim
     contact[0] = p->pos[0];
     contact[1] = TUN(c, SERVE_CONTACT_H_CM);
     contact[2] = p->pos[2];
-    make_request(c, buttons, power, 0, 1, &rq);
+    c->rally_shots = 0;
+    write_shot_fields(c, i, contact, power);
+    PS_SET(p, 0x670, power);                         /* PressAndHold */
+    make_request(c, i, buttons, power, 0, 1, &rq);
+    c->hit_is_return = 0;
     if (ts4_shot_plan(c, p, &rq, contact, own_sign(c, i), aim_fwd, aim_side, power, 1, c->serve_target_z_sign, &plan) != TS4_OK) {
         end_point(c, RULES_END_SERVE, i ^ 1, TS4_REASON_FAULT);
         return;
@@ -326,6 +374,8 @@ static void do_serve(Ts4Core *c, int i, uint32_t buttons, float power, float aim
     ts4_ev(c, TS4_EV_SERVE, i, (int32_t)c->serve_second, 0, 0);
     p->swing_state = 2;
     p->swing_end_tick = (int32_t)c->tick + (int32_t)TUN(c, SWING_RECOVERY);
+    p->toss_tick = -1;
+    c->rally_shots = 1;
     launch_plan(c, i, &plan, 1);
     if (c->ball_live) c->serve_flight = 1;
 }
@@ -354,51 +404,149 @@ static void perform_hit(Ts4Core *c, int i)
         ts4_ev(c, TS4_EV_WHIFF, i, 0, 0, 0);
         return;
     }
-    make_request(c, p->swing_buttons, p->swing_power, type, 0, &rq);
+    write_shot_fields(c, i, bp, p->swing_power);
+    shot_timing(c, i);
+    make_request(c, i, p->swing_buttons, p->swing_power, type, 0, &rq);
+    c->hit_is_return = c->rally_shots == 1;
     if (ts4_shot_plan(c, p, &rq, bp, own_sign(c, i), p->swing_aim_x, p->swing_aim_z, p->swing_power, 0, 0.0f, &plan) != TS4_OK) {
         ts4_ev(c, TS4_EV_WHIFF, i, 1, 0, 0);
         return;
     }
+    c->rally_shots++;
     launch_plan(c, i, &plan, 0);
 }
 
-/* A shot button was released: start the swing, or serve. */
-static void on_release(Ts4Core *c, int i, uint32_t buttons, float power, float aim_fwd, float aim_side)
+/* first predicted sample at or after tick t0 that the player can reach (receiver side, after the serve bounce) */
+static int32_t find_contact(const Ts4Core *c, int i, int32_t t0, float fx, float fz)
+{
+    const Ts4SimPlayer *p = &c->pl[i];
+    GpWindowParams wp;
+    uint32_t k;
+    float reach;
+    window_params(c, p, &wp);
+    reach = wp.reach_radius + TUN(c, SWING_SLACK_CM);
+    for (k = 0; k < c->pred_n; k++) {
+        const Ts4PredSample *sm = &c->pred[k];
+        float dx, dz;
+        if (sm->tick < t0) continue;
+        if (c->serve_flight && sm->bounce == 0) continue;
+        if (sm->pos[0] * own_sign(c, i) <= TUN(c, REACH_NET_MARGIN)) continue;
+        if (classify(&wp, sm->pos, sm->bounce) == wp.id_none) continue;
+        dx = sm->pos[0] - fx; dz = sm->pos[2] - fz;
+        if (sqrtf(dx * dx + dz * dz) <= reach) return sm->tick;
+    }
+    return -1;
+}
+
+/* the swing animation starts `lead` ticks before contact (G2b: planner and row choice 12 frames before contact) */
+static void start_swing(Ts4Core *c, int i)
 {
     Ts4SimPlayer *p = &c->pl[i];
-    if (c->phase == TS4_PHASE_SERVE) {
-        if (i == c->server) do_serve(c, i, buttons, power, aim_fwd, aim_side);
+    GpWindowParams wp;
+    float bp[3] = {0.0f, 0.0f, 0.0f};
+    uint32_t type = GP_ID_BASELINE, k;
+    float rs = right_sign(c, i);
+    window_params(c, p, &wp);
+    for (k = 0; k < c->pred_n; k++)
+        if (c->pred[k].tick == p->swing_contact_tick) { bp[0] = c->pred[k].pos[0]; bp[1] = c->pred[k].pos[1]; bp[2] = c->pred[k].pos[2];
+                                                          type = classify(&wp, bp, c->pred[k].bounce); break; }
+    p->swing_state = 1;
+    p->swing_buttons = p->charge_buttons;
+    p->swing_power = p->charge_power;
+    p->vars[TS4_V_SWING_SPEED_COEF] = 1.0f;
+    if (ts4_bound(c)) ts4_bgraph_h(c, ts4_crc32("SwingSpeedCoef"), i);
+    else ts4_role_run(c, TS4_R_SWING_SPEED_COEF, p->vars);
+    {
+        int fh = ((bp[2] * rs) >= (p->pos[2] * rs)) != (p->setup.left_handed != 0);
+        ts4_anim_swing(c, i, p->swing_buttons, type == GP_ID_VOLLEY, type == GP_ID_SMASH, fh, c->rally_shots == 1,
+                       p->swing_contact_tick - (int32_t)c->tick);
+    }
+}
+
+/* shot button pressed during a rally: latch and start the charge counter (fn_88698538), choose the contact */
+static void on_press(Ts4Core *c, int i, uint32_t buttons)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    int32_t lead = lead_ticks(c), hit;
+    if (c->phase != TS4_PHASE_RALLY || p->swing_state != 0 || p->charging || !c->ball_live || c->last_hitter == i) return;
+    if (!p->setup.human && p->commit_valid) hit = p->commit_tick;
+    else {
+        float t = (float)lead * TICK_DT;
+        hit = find_contact(c, i, (int32_t)c->tick + lead, p->pos[0] + p->vel[0] * t, p->pos[2] + p->vel[2] * t);
+        if (hit < 0) hit = (int32_t)c->tick + lead;
+    }
+    p->charging = 1;
+    p->charge_frames = 0;
+    p->charge_committed = 0;
+    p->charge_buttons = buttons;
+    p->swing_contact_tick = hit;
+}
+
+/* per tick while charging: count, commit on release or when contact - now <= lead (fn ts4_charge_update) */
+static void charge_update(Ts4Core *c, int i, int released, uint32_t buttons_now)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    int32_t lead = lead_ticks(c), to_contact = p->swing_contact_tick - (int32_t)c->tick;
+    if (!p->charging) return;
+    if (!p->charge_committed) {
+        p->charge_frames++;
+        p->charge_buttons |= buttons_now & (SHOT_BUTTONS | TS4_BTN_RISK);
+        if (released || to_contact <= lead) {
+            float sx = clampf(p->in.stick_x, -1.0f, 1.0f), sz = clampf(p->in.stick_z, -1.0f, 1.0f);
+            float mag = sqrtf(sx * sx + sz * sz);
+            p->charge_committed = 1;
+            p->charge_commit_lead = to_contact;
+            p->charge_power = charge_power(c, i, p->charge_frames);
+            p->swing_aim_x = sx;
+            p->swing_aim_z = sz;
+            ts4s_aim_from_stick(sz, sx, p->setup.left_handed != 0, &p->aim_angle, &p->aim_depth);
+            /* LT forced side commit -> InsideOutRequested (S+0x5DC) */
+            p->inside_out = TUN_HAS(c, LT_COMMIT_POWER) &&
+                            ts4s_lt_forced_commit((p->charge_buttons & TS4_BTN_RISK) != 0, mag, atan2f(sx, sz), 0,
+                                                  p->setup.left_handed != 0, TUN(c, LT_COMMIT_POWER), TUN(c, LT_COMMIT_ANGLE));
+            if (ts4_bound(c)) { PS_SET(p, 0x5DC, p->inside_out ? 1.0f : 0.0f); PS_SET(p, 0x7C8, p->inside_out ? 1.0f : 0.0f); }
+        }
+    }
+    if (p->charge_committed && to_contact <= lead) {
+        p->charging = 0;
+        start_swing(c, i);
+    }
+}
+
+/* serve (G2b): input ignored for serve.input_delay ticks; press = toss; release = swing; automatic toss after
+ * serve.auto ticks; contact countdown + lead after the toss; power = release fraction of the countdown;
+ * timing (S+0x66C) = serve timing curve of frames release -> contact */
+static void serve_input(Ts4Core *c, int i, int pressed, int released, uint32_t buttons)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    int32_t cd = TUN_HAS(c, SERVE_COUNTDOWN) ? (int32_t)TUN(c, SERVE_COUNTDOWN) : 0;
+    int32_t lead = TUN_HAS(c, SERVE_LEAD) ? (int32_t)TUN(c, SERVE_LEAD) : 0, contact;
+    if (i != c->server || p->swing_state != 0) return;
+    if (!cd) {                                       /* earlier policy: release serves at once */
+        if (released) do_serve(c, i, p->held_buttons, clampf((float)p->held_ticks / TUN(c, SHOT_CHARGE_TICKS), 0.0f, 1.0f),
+                               clampf(p->in.stick_x, -1.0f, 1.0f), clampf(p->in.stick_z, -1.0f, 1.0f));
         return;
     }
-    if (c->phase != TS4_PHASE_RALLY || p->swing_state != 0 || !c->ball_live || c->last_hitter == i) return;
-    {
-        float vx = p->vel[0], vz = p->vel[2];
-        float t_delay = TUN(c, SWING_CONTACT_DELAY);
-        float fx = p->pos[0] + vx * (t_delay * TICK_DT), fz = p->pos[2] + vz * (t_delay * TICK_DT);
-        GpWindowParams wp;
-        uint32_t k;
-        float reach;
-        int32_t t0 = (int32_t)c->tick + (int32_t)t_delay, hit_tick = t0;
-        window_params(c, p, &wp);
-        reach = wp.reach_radius + TUN(c, SWING_SLACK_CM);
-        for (k = 0; k < c->pred_n; k++) {
-            const Ts4PredSample *s = &c->pred[k];
-            float dx, dz;
-            if (s->tick < t0) continue;
-            if (c->serve_flight && s->bounce == 0) continue;
-            if (s->pos[0] * own_sign(c, i) <= TUN(c, REACH_NET_MARGIN)) continue;
-            if (classify(&wp, s->pos, s->bounce) == wp.id_none) continue;
-            dx = s->pos[0] - fx; dz = s->pos[2] - fz;
-            if (sqrtf(dx * dx + dz * dz) <= reach) { hit_tick = s->tick; break; }
+    if (p->toss_tick < 0) {
+        int auto_toss = TUN_HAS(c, SERVE_AUTO) && c->phase_tick >= (uint32_t)TUN(c, SERVE_AUTO);
+        if (TUN_HAS(c, SERVE_INPUT_DELAY) && c->phase_tick < (uint32_t)TUN(c, SERVE_INPUT_DELAY)) return;
+        if (pressed || auto_toss) {
+            p->toss_tick = (int32_t)c->tick;
+            p->serve_release_tick = -1;
+            p->charge_buttons = auto_toss && !pressed ? TS4_BTN_FLAT : buttons;
         }
-        p->swing_state = 1;
-        p->swing_contact_tick = hit_tick;
-        p->swing_buttons = buttons;
-        p->swing_power = power;
-        p->swing_aim_x = aim_fwd;
-        p->swing_aim_z = aim_side;
-        p->vars[TS4_V_SWING_SPEED_COEF] = 1.0f;
-        ts4_role_run(c, TS4_R_SWING_SPEED_COEF, p->vars);
+        return;
+    }
+    contact = p->toss_tick + cd + lead;
+    if (released && p->serve_release_tick < 0) p->serve_release_tick = (int32_t)c->tick;
+    if ((int32_t)c->tick >= contact) {
+        int rel = p->serve_release_tick >= 0;
+        float power = ts4s_serve_power(p->serve_release_tick, p->toss_tick, cd, rel), timing = 1.0f;
+        uint32_t ty, n;
+        const uint8_t *k = ts4_curve_find(c, ts4_crc32("serve.timing"), &ty, &n);
+        if (rel && k && ty == 0) timing = ts4_curve16_le(k, n, (float)(contact - p->serve_release_tick));
+        if (ts4_bound(c)) PS_SET(p, 0x66C, timing);
+        do_serve(c, i, p->charge_buttons, power, clampf(p->in.stick_x, -1.0f, 1.0f), clampf(p->in.stick_z, -1.0f, 1.0f));
     }
 }
 
@@ -569,18 +717,19 @@ static void player_update(Ts4Core *c, int i)
     float mx, mz, mag, speed, dvx, dvz, dv, maxdv, vx, vz;
     float half_len = TUN(c, COURT_HALF_LENGTH_CM), w = TUN(c, COURT_HALF_WIDTH_S_CM);
 
-    /* shot button: hold = charge, release = swing / serve */
+    /* shot buttons (G2b): press latches the charge counter, release or the auto commit 12 ticks before contact
+     * commits the shot; serve: press = toss, release = swing */
     if (down) {
         p->held_buttons |= down;
         p->held_ticks++;
-    } else if (was) {
-        float power = clampf((float)p->held_ticks / TUN(c, SHOT_CHARGE_TICKS), 0.0f, 1.0f);
-        uint32_t buttons = p->held_buttons | (in->buttons & TS4_BTN_RISK) | (p->prev_buttons & TS4_BTN_RISK);
-        float aim_fwd = clampf(in->stick_x, -1.0f, 1.0f), aim_side = clampf(in->stick_z, -1.0f, 1.0f);
-        p->held_ticks = 0;
-        p->held_buttons = 0;
-        on_release(c, i, buttons, power, aim_fwd, aim_side);
     }
+    if (c->phase == TS4_PHASE_SERVE) {
+        serve_input(c, i, down && !was, !down && was, down | (in->buttons & TS4_BTN_RISK));
+    } else {
+        if (down && !was) on_press(c, i, down | (in->buttons & TS4_BTN_RISK));
+        charge_update(c, i, !down && was, in->buttons);
+    }
+    if (!down) { p->held_ticks = 0; p->held_buttons = 0; }
     p->prev_buttons = in->buttons;
 
     /* locomotion: stick = direction, regime = speed (Rush with the sprint button, Jog above half stick, else walk) */

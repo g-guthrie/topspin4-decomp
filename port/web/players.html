@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Player Viewer</title>
+<style>
+  :root { --bg: #15181c; --fg: #e8e8e8; --panel: rgba(0,0,0,.55); }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 13px/1.4 system-ui, sans-serif; overflow: hidden; }
+  canvas { display: block; }
+  #hud { position: fixed; left: 12px; top: 12px; background: var(--panel); padding: 8px 10px; border-radius: 6px; white-space: pre; max-width: calc(100vw - 48px); overflow: hidden; }
+  #ctl { position: fixed; right: 12px; top: 12px; background: var(--panel); padding: 8px 10px; border-radius: 6px; }
+  #ctl label { display: block; margin: 2px 0; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="hud">loading...</div>
+<div id="ctl">
+  <label>sweat <input id="sweat" type="range" min="0" max="3" step="1" value="0"></label>
+  <label>surface <select id="surface"><option>hard</option><option>clay</option><option>grass</option></select></label>
+  <label><input id="pause" type="checkbox"> pause</label>
+</div>
+<script type="module" src="src/players/demo.js"></script>
+</body>
+</html>

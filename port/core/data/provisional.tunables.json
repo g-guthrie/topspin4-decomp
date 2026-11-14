@@ -290,12 +290,12 @@
    "source": "port"
   },
   "shot.tier_medium": {
-   "value": 0.4,
-   "source": "doc shot-to-template s3"
+   "value": 0.15,
+   "source": "Medium analyser graph edge (G2b); cfg+0xC70 is not a tier (G6b)"
   },
   "shot.tier_powerful": {
    "value": 0.7,
-   "source": "doc shot-to-template s3"
+   "source": "Powerful analyser graph edge (G2b); cfg+0xC74 is not a tier (G6b)"
   },
   "swing.contact_delay_ticks": {
    "value": 18,

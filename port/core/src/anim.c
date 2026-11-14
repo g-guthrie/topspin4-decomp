@@ -7,7 +7,9 @@
  *   - the transition matrix subgroup -> subgroup -> rule, rule blend frames and vivacity speeds,
  *   - the play rate formula (lo_play_rate), the swing time scaling to the EventRacket contact frame (gp7),
  *   - swing qualifiers (Category, PositionOnCourt, SwingType, SwingEffect, SwingCategory, Properties),
- *   - the dive volley (VolleySpectacular) trigger of fn_886BCE88 and the put-away (SwingCategory Fatality).
+ *   - the dive volley (VolleySpectacular) trigger of fn_886BCE88,
+ *   - the swing-category rule walk with the Fatality put-away gate (src/swingcat.c, G6b) and the exact
+ *     match_key filter of ref/gameplay/anim_select.c (an unconstrained clip passes any set key).
  * Port policy (not decoded): which clip of a subgroup plays (the selection-procedure DSL needs gameplay keys the
  * core does not model: first clip), the clip-fit cost (needs Havok root motion: replaced by the smallest time
  * scaling), the per-clip speed coefficient (1.0), and the male clip set only.
@@ -161,61 +163,150 @@ static int32_t sector_clip(const Ts4Core *c, int32_t ms, int sector, float *fram
     return clip;
 }
 
+/* match_key leaf of ref/gameplay/anim_select.c (updated G6b rules): an unset key (vidx < 0) passes; an
+ * unconstrained clip (no bit of the type set) passes any key; else the key bit must be present. */
+static int key_ok(const Ts4Core *c, int32_t clip, int slot, int vidx)
+{
+    uint32_t have;
+    if (vidx < 0) return 1;
+    if (slot < 0 || vidx > 31) return 0;
+    have = ts4_le32(clip_at(c, clip) + 20 + 4 * (uint32_t)slot);
+    return have == 0 || ((have >> vidx) & 1u);
+}
+
+typedef struct SwingQuery {
+    const Ts4Core *c;
+    int s_cat, v_swing, slot[5], vidx[5];   /* PositionOnCourt, SwingType, SwingEffect, MoveToNet, Properties(dive) */
+    int s_scat, s_pref, dive_slot, dive_v, dive;
+    float want;                              /* contact frame wanted at rate 1 */
+    const uint32_t *occ;
+    int32_t best;
+} SwingQuery;
+
+static int swing_ok(const SwingQuery *q, int32_t i)
+{
+    const uint8_t *cl = clip_at(q->c, i);
+    int k;
+    if (!clip_has(q->c, i, q->s_cat, q->v_swing)) return 0;          /* as_swing_matches: Category = Swing */
+    if (ts4_lef32(cl + 12) < 0.0f || ts4_lef32(cl + 4) <= 0.0f) return 0;
+    for (k = 0; k < 4; k++) if (!key_ok(q->c, i, q->slot[k], q->vidx[k])) return 0;
+    if (q->dive_slot >= 0 && q->dive_v >= 0 && q->dive != clip_has(q->c, i, q->dive_slot, q->dive_v)) return 0;
+    return 1;
+}
+
+/* the clip query of one (SwingCategory, SwingPreferenceLevel): 0 = a clip starts (best time scaling kept), -1 none */
+static int swing_query(void *user, uint32_t category, uint32_t level)
+{
+    SwingQuery *q = (SwingQuery *)user;
+    const Ts4Core *c = q->c;
+    char lv[2] = {0, 0};
+    int v_cat = -1, v_lvl = -1, s_cat = -1, s_lvl, k;
+    uint32_t i;
+    float best_cost = 1e30f;
+    q->best = -1;
+    for (i = 0; i < c->ext.an_nqv; i++) {   /* value index of the category hash */
+        const uint8_t *e = A(c) + c->ext.an_qv + 12 * i;
+        if (ts4_le32(e) == ts4_crc32("SwingCategory") && ts4_le32(e + 4) == category) { s_cat = e[8]; v_cat = e[9]; }
+    }
+    if (s_cat < 0) return -1;
+    lv[0] = (char)('0' + (int)level);
+    s_lvl = qlookup(c, "SwingPreferenceLevel", lv, &v_lvl);
+    for (i = 0; i < c->ext.an_nclips; i++) {
+        const uint8_t *cl = clip_at(c, (int32_t)i);
+        float cost;
+        if (!swing_ok(q, (int32_t)i) || !clip_has(c, (int32_t)i, s_cat, v_cat)) continue;
+        if (s_lvl >= 0 && !key_ok(c, (int32_t)i, s_lvl, v_lvl)) continue;
+        cost = fabsf(ts4_lef32(cl + 12) * ts4_lef32(cl + 4) - q->want);   /* policy fit: least time scaling */
+        for (k = 0; k < 8; k++) if (q->occ[k] == ts4_le32(cl) && cl[17] == 1) cost += 1000.0f;
+        if (cost < best_cost) { best_cost = cost; q->best = (int32_t)i; }
+    }
+    return q->best >= 0 ? 0 : -1;
+}
+
 void ts4_anim_swing(Ts4Core *c, int player, uint32_t stroke, int volley, int smash, int forehand, int is_return,
                     int32_t ticks_to_contact)
 {
     Ts4SimPlayer *p = &c->pl[player];
     Ts4AnimState *s = &p->anim;
-    int s_cat, v_swing, s_pos, v_pos, s_type, v_type, s_eff, v_eff, s_scat, v_fat = -1, v_spec = -1, s_prop, v_dive = -1;
-    int dive = 0, putaway = 0;
-    uint32_t i;
-    int32_t best = -1;
-    float best_cost = 1e30f, gcoef = TUN_HAS(c, ANIM_SPEED_COEF) ? TUN(c, ANIM_SPEED_COEF) : 1.0f;
+    SwingQuery q;
+    Ts4ScInputs in;
+    uint32_t shot_id, category = 0;
+    int started = 0, cls, v_move = -1;
+    float gcoef = TUN_HAS(c, ANIM_SPEED_COEF) ? TUN(c, ANIM_SPEED_COEF) : 1.0f;
     if (!ts4_anim_ready(c)) return;
-    s_cat = qlookup(c, "Category", "Swing", &v_swing);
-    s_pos = qlookup(c, "PositionOnCourt", is_return ? "Return Serve" : (volley ? "Volley" : "Baseline"), &v_pos);
-    s_type = qlookup(c, "SwingType", forehand ? "FH" : "BH", &v_type);
-    s_eff = qlookup(c, "SwingEffect", smash ? "Smash" : (stroke & TS4_BTN_LOB) ? "Lob" :
-                    ((stroke & TS4_BTN_SLICE) && (stroke & TS4_BTN_RISK)) ? "DropShot" : (stroke & TS4_BTN_SLICE) ? "Slice" :
-                    (stroke & TS4_BTN_TOPSPIN) ? "TopSpin" : "Flat", &v_eff);
-    s_scat = qlookup(c, "SwingCategory", "Fatality", &v_fat);
-    (void)qlookup(c, "SwingCategory", "VolleySpectacular", &v_spec);
-    s_prop = qlookup(c, "Properties", "Spectacular", &v_dive);
+    memset(&q, 0, sizeof q);
+    q.c = c;
+    q.best = -1;
+    q.occ = s->occ;
+    q.want = (float)ticks_to_contact * gcoef;
+    shot_id = ts4_crc32(smash ? "Smash" : (stroke & TS4_BTN_LOB) ? "Lob" :
+                        ((stroke & TS4_BTN_SLICE) && (stroke & TS4_BTN_RISK)) ? "DropShot" :
+                        (stroke & TS4_BTN_SLICE) ? "Slice" : (stroke & TS4_BTN_TOPSPIN) ? "TopSpin" : "Flat");
+    q.s_cat = qlookup(c, "Category", "Swing", &q.v_swing);
+    q.slot[0] = qlookup(c, "PositionOnCourt", is_return ? "Return Serve" : (volley ? "Volley" : "Baseline"), &q.vidx[0]);
+    q.slot[1] = qlookup(c, "SwingType", forehand ? "FH" : "BH", &q.vidx[1]);
+    q.slot[2] = qlookup(c, "SwingEffect", smash ? "Smash" : (stroke & TS4_BTN_LOB) ? "Lob" :
+                        ((stroke & TS4_BTN_SLICE) && (stroke & TS4_BTN_RISK)) ? "DropShot" : (stroke & TS4_BTN_SLICE) ? "Slice" :
+                        (stroke & TS4_BTN_TOPSPIN) ? "TopSpin" : "Flat", &q.vidx[2]);
+    q.slot[3] = qlookup(c, "MoveToNet", "Yes", &v_move);
+    q.vidx[3] = (p->in.buttons & TS4_BTN_SPRINT) ? v_move : -1;     /* MoveToNet key only when following to the net */
+    if (q.slot[3] < 0) q.vidx[3] = -1;
+    q.dive_slot = qlookup(c, "Properties", "Spectacular", &q.dive_v);
     /* dive volley (fn_886BCE88, G6): local x, singles, skill SpectacularVolleys, two TimingState thresholds */
     if (volley && c->ext.skil) {
         uint32_t k, n = ts4_le32(c->ext.skil);
         int has = 0;
         for (k = 0; k < n && k < 32; k++)
             if (ts4_le32(c->ext.skil + 4 + 4 * k) == 0x1E8D4F10u && ((c->extra[player].skill_mask >> k) & 1u)) has = 1;
-        dive = has && PS_GET(p, 0x8E0) > TUN(c, DIVE_X_MIN) && PS_GET(p, 0xD00) > TUN(c, DIVE_D00_MIN) &&
-               PS_GET(p, 0xCF0) < TUN(c, DIVE_CF0_MAX);
+        q.dive = has && PS_GET(p, 0x8E0) > TUN(c, DIVE_X_MIN) && PS_GET(p, 0xD00) > TUN(c, DIVE_D00_MIN) &&
+                 PS_GET(p, 0xCF0) < TUN(c, DIVE_CF0_MAX);
     }
-    putaway = smash && s_scat >= 0;   /* put-away = the Fatality swing category of an overhead (policy: every smash) */
-    for (i = 0; i < c->ext.an_nclips; i++) {
-        const uint8_t *cl = clip_at(c, (int32_t)i);
-        float frames = ts4_lef32(cl + 4), ph = ts4_lef32(cl + 12), cf, cost;
-        uint32_t k;
-        int miss = 0;
-        if (!clip_has(c, (int32_t)i, s_cat, v_swing) || !clip_has(c, (int32_t)i, s_type, v_type)) continue;
-        if (ph < 0.0f || frames <= 0.0f) continue;
-        if (!clip_has(c, (int32_t)i, s_pos, v_pos)) miss += 4;
-        if (!clip_has(c, (int32_t)i, s_eff, v_eff)) miss += 2;
-        if (putaway && !clip_has(c, (int32_t)i, s_scat, v_fat)) miss += 1;
-        if (!putaway && clip_has(c, (int32_t)i, s_scat, v_fat)) miss += 8;
-        if (dive != clip_has(c, (int32_t)i, s_prop, v_dive)) miss += dive ? 1 : 8;
-        for (k = 0; k < 8; k++) if (s->occ[k] == ts4_le32(cl) && cl[17] == 1) miss += 1;   /* max occurrence 1 */
-        cf = ph * frames;
-        cost = (float)miss * 10000.0f + fabsf(cf - (float)ticks_to_contact * gcoef);
-        if (cost < best_cost) { best_cost = cost; best = (int32_t)i; }
+    /* swing category walk (fn_886AFDF8, G6b): writes S+0x360, Fatality = put-away gate */
+    memset(&in, 0, sizeof in);
+    in.is_human = p->setup.human != 0;
+    in.sticky_rb = (p->in.buttons & TS4_BTN_SPRINT) != 0;
+    in.in_net_zone = (p->pos[2] < 300.0f && p->pos[2] > -300.0f);
+    in.power = PS_GET(p, 0xE00);
+    in.perfect_eval = PS_GET(p, 0x7D4);
+    in.volley_release = PS_GET(p, 0x7B8);
+    in.slow_down = PS_GET(p, 0x7CC);
+    in.manual_timing = PS_GET(p, 0x544);
+    in.timing_value = PS_GET(p, 0xD08);
+    in.min_speed_left = PS_GET(p, 0xA5C);
+    in.min_speed_right = PS_GET(p, 0xABC);
+    in.volley_spectacular = q.dive;
+    in.is_fast_ball = PS_GET(p, 0x5DD) != 0.0f;   /* byte flags read as words: zero unless written */
+    in.is_inside_out = p->inside_out != 0;
+    in.shot_id = shot_id;
+    in.local_x = PS_GET(p, 0x8E0);
+    in.skill_ok = 1;
+    cls = ts4_sc_class(volley, smash, shot_id, PS_GET(p, 0x3D4) > 0.5f);
+    if (c->ext.scat) category = ts4_sc_walk(c, cls, &in, swing_query, &q, &started);
+    if (category) __builtin_memcpy(p->ps + 0x360, &category, 4);
+    if (!started) {
+        /* no row started a clip (or no SCAT): any category, relaxed keys, least time scaling (policy) */
+        uint32_t i;
+        float best_cost = 1e30f;
+        q.best = -1;
+        for (i = 0; i < c->ext.an_nclips; i++) {
+            const uint8_t *cl = clip_at(c, (int32_t)i);
+            float cost;
+            int k;
+            if (!clip_has(c, (int32_t)i, q.s_cat, q.v_swing) || !key_ok(c, (int32_t)i, q.slot[1], q.vidx[1])) continue;
+            if (ts4_lef32(cl + 12) < 0.0f || ts4_lef32(cl + 4) <= 0.0f) continue;
+            cost = fabsf(ts4_lef32(cl + 12) * ts4_lef32(cl + 4) - q.want);
+            for (k = 0; k < 4; k++) if (k != 1 && !key_ok(c, (int32_t)i, q.slot[k], q.vidx[k])) cost += 10000.0f;
+            if (cost < best_cost) { best_cost = cost; q.best = (int32_t)i; }
+        }
     }
-    if (best < 0) return;
+    if (q.best < 0) return;
     {
-        const uint8_t *cl = clip_at(c, best);
+        const uint8_t *cl = clip_at(c, q.best);
         float cf = ts4_lef32(cl + 12) * ts4_lef32(cl + 4);
         float rate = ticks_to_contact > 0 ? cf / (float)ticks_to_contact : gcoef;   /* contact frame lands on contact */
         memmove(&s->occ[1], &s->occ[0], 7 * sizeof s->occ[0]);
         s->occ[0] = ts4_le32(cl);
-        play(c, s, TS4_ANIM_SWING, best, 0.0f, rate);
+        play(c, s, TS4_ANIM_SWING, q.best, 0.0f, rate);
         s->contact_frame = cf;
         s->moveset = -1;
     }

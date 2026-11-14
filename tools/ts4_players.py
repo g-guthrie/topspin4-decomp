@@ -921,6 +921,68 @@ def anim_rules_json(db, sa):
             "notes": "AnimationsDB records (index = record index) and move sets; docs/gameplay/movement-and-animation.md"}
 
 
+
+# =========================================================================== AOD clips (CutScenes.arc) for the browser
+
+def record_chains(clip_map, records):
+    """clip_map.json (tools/port/clip_map.py, with cutscenes) -> {record: {"core": n | None, "aod": key | None}}
+    for the single-chain records: Core only, AOD only, or Core lead-in then AOD (pure)."""
+    out = {}
+    rows = {r.get("index"): r for r in clip_map.get("records", []) if isinstance(r, dict)}
+    for rec in records:
+        r = rows.get(rec)
+        if r and r.get("variants"):
+            v = r["variants"][0]
+            core = v.get("core_index") if v.get("kind") in ("core", "core+aod") else None
+            aod = v.get("aod_key") if v.get("kind") in ("aod", "core+aod") else None
+            if core is not None or aod:
+                out[rec] = {"core": core, "aod": aod, "kind": v.get("kind")}
+            continue
+        m = clip_map.get("map", {}).get("#%d" % rec)
+        if isinstance(m, str) and m.startswith("core:"):
+            out[rec] = {"core": int(m[5:]), "aod": None, "kind": "core"}
+    return out
+
+
+def cmd_aodclips(a):
+    import classes
+    import gltf_export
+    import packfile
+    import scan_arcs
+    import skeleton
+    import xdvdfs
+    cm = json.load(open(a.clip_map))
+    recs = [int(x) for x in re.split(r"[,\s]+", open(a.records).read().strip()) if x] if a.records else []
+    chains = record_chains(cm, recs)
+    want = sorted({c["aod"] for c in chains.values() if c["aod"]})
+    x = xdvdfs.XDVDFS(iso_path(a))
+    arc = scan_arcs.NilArc(x.open_slice("CutScenes.arc"))
+    by_key = {e[0]: e for e in arc.entries}
+    files = {}
+    for key in want:
+        k = int(key, 16) if isinstance(key, str) else int(key)
+        out = os.path.join(a.out, "clips", "aod_%08x.gltf" % k)
+        if not os.path.exists(out):
+            e = by_key.get(k)
+            if not e:
+                continue
+            arc.f.seek(arc.data_start + e[1])
+            data = arc.f.read(e[2])
+            pf = packfile.Packfile(data)
+            reg = classes.Registry.from_packfile(pf)
+            skels, anims = skeleton.load(pf, reg)
+            clips = [skeleton.load_clip(pf, reg, anims[0], 0)]
+            gltf_export.export(out, skels[0], clips, 0.01, True, name="aod_%08x" % k)
+        files["%08x" % k] = "clips/aod_%08x.gltf" % k
+    lead = sorted({c["core"] for c in chains.values() if c["core"] is not None})
+    idx = {"chains": {str(r): c for r, c in sorted(chains.items())}, "aod_files": files, "core_needed": lead,
+           "generated_by": "python3 tools/ts4_players.py aodclips --records FILE"}
+    os.makedirs(os.path.join(a.out, "players"), exist_ok=True)
+    with open(os.path.join(a.out, "players", "clip_chains.json"), "w") as f:
+        json.dump(idx, f, indent=1)
+    print("%d records: %d AOD clips exported, %d Core clips needed (export them with tools/port/export_assets.py "
+          "--only havok animdb --core-clips %s)" % (len(chains), len(files), len(lead), ",".join(map(str, lead))))
+
 # =========================================================================== CLI
 
 def main(argv=None):
@@ -949,10 +1011,15 @@ def main(argv=None):
     p.add_argument("--out", default="work/port/assets/players/anim_rules.json")
     p.add_argument("--layout", default=os.path.join(ROOT, "work", "disc", "root", "Layoutall.bin"))
     p.add_argument("--names", default=os.path.join(ROOT, "work", "disc", "values", "names.json"))
+    p = sub.add_parser("aodclips")
+    p.add_argument("--records", help="file with record indexes (comma / space separated)")
+    p.add_argument("--clip-map", default=os.path.join(ROOT, "work", "port", "assets", "clip_map.json"))
+    p.add_argument("--out", default=os.path.join(ROOT, "work", "port", "assets"))
     a = ap.parse_args(argv)
     if a.cmd == "export" and not a.arcs and not a.all:
         ap.error("export: name archives or pass --all")
-    {"roster": cmd_roster, "creator": cmd_creator, "export": cmd_export, "animrules": cmd_animrules}[a.cmd](a)
+    {"roster": cmd_roster, "creator": cmd_creator, "export": cmd_export, "animrules": cmd_animrules,
+     "aodclips": cmd_aodclips}[a.cmd](a)
 
 
 if __name__ == "__main__":

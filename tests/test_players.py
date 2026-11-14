@@ -184,5 +184,17 @@ class Yaml(unittest.TestCase):
         self.assertEqual(P.parse_roster_handedness(blk)["Baked_Nadal0.arc"], {"plays": "LeftHanded", "height_cm": 185})
 
 
+class Chains(unittest.TestCase):
+    def test_record_chains(self):
+        cm = {"records": [{"index": 5, "variants": [{"kind": "core+aod", "core_index": 12, "aod_key": "0026b42b"}]},
+                          {"index": 6, "variants": [{"kind": "aod", "aod_key": "00000001"}]}],
+              "map": {"#7": "core:3"}}
+        c = P.record_chains(cm, [5, 6, 7, 8])
+        self.assertEqual(c[5], {"core": 12, "aod": "0026b42b", "kind": "core+aod"})
+        self.assertEqual(c[6]["core"], None)
+        self.assertEqual(c[7], {"core": 3, "aod": None, "kind": "core"})
+        self.assertNotIn(8, c)
+
+
 if __name__ == "__main__":
     unittest.main()

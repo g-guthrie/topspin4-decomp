@@ -34,26 +34,45 @@ export function recordToCore(clipMap) {
 }
 
 export class ClipStore {
-  /** loader: GLTFLoader; base: assets URL; animDb: animations.json ({clips: [{index, file}]}); rec2core: Map */
-  constructor(loader, base, animDb, rec2core) {
+  /** loader: GLTFLoader; base: assets URL; animDb: animations.json ({clips: [{index, file}]}); rec2core: Map;
+   *  chains: players/clip_chains.json (tools/ts4_players.py aodclips): AOD-only and Core lead-in + AOD records */
+  constructor(loader, base, animDb, rec2core, chains = null) {
     this.loader = loader; this.base = base; this.rec2core = rec2core;
+    this.chains = chains?.chains || {}; this.aodFiles = chains?.aod_files || {};
     this.files = new Map((animDb?.clips || []).map((c) => [c.index, c.file]));
     this.raw = new Map(); this.byKey = new Map(); this.rootSpeed = new Map(); this.missing = new Set(); this.mirrors = new WeakMap();
   }
-  playable(record) { const c = this.rec2core.get(record); return c != null && !!this.files.get(c); }
+  playable(record) {
+    const ch = this.chains[record];
+    if (ch && ch.aod) return !!this.aodFiles[ch.aod] && (ch.core == null || !!this.files.get(ch.core));
+    const c = this.rec2core.get(record); return c != null && !!this.files.get(c);
+  }
   async preload(records) {
     const q = [...new Set(records)].filter((r) => this.playable(r));
     const worker = async () => { for (let r = q.shift(); r !== undefined; r = q.shift()) await this.loadRecord(r); };
     await Promise.all([worker(), worker(), worker()]);
   }
+  async _gltfClip(file) {
+    for (let k = 0; k < 4; k++) {
+      try { return (await this.loader.loadAsync(this.base + file)).animations[0] || null; }
+      catch (e) { if (k === 3) throw e; await new Promise((r) => setTimeout(r, 150 * (k + 1))); }
+    }
+    return null;
+  }
   async loadRecord(record) {
-    const ci = this.rec2core.get(record);
+    const ch = this.chains[record];
+    const ci = ch && ch.aod ? "r" + record : this.rec2core.get(record);
     if (ci == null || this.raw.has(ci)) return;
-    const file = this.files.get(ci);
-    if (!file) { this.missing.add(record); return; }
+    if (ch && ch.aod) this.rec2core.set(record, ci);
+    const file = ch && ch.aod ? null : this.files.get(ci);
+    if (!file && !(ch && ch.aod)) { this.missing.add(record); return; }
     try {
-      const g = await this.loader.loadAsync(this.base + file);
-      const clip = g.animations[0];
+      let clip;
+      if (ch && ch.aod) {
+        const aod = await this._gltfClip(this.aodFiles[ch.aod]);
+        const lead = ch.core != null ? await this._gltfClip(this.files.get(ch.core)) : null;
+        clip = lead && aod ? concatClips(lead, aod) : aod;
+      } else clip = await this._gltfClip(file);
       if (!clip) return;
       // the skinned export is z-mirrored into a right-handed frame (docs/assets.md s7): mirror the Havok tracks the same way
       for (const t of clip.tracks) {
@@ -82,6 +101,26 @@ export class ClipStore {
     if (!this.byKey.has(key)) this.byKey.set(key, mirrorAnimationClip(clip, rigMirror(rig, this.mirrors)));
     return this.byKey.get(key);
   }
+}
+
+/** Core lead-in then AOD clip (record frames = Core frames + AOD frames, clip-map.md): one clip, the second part
+ *  offset by the first's duration plus one 60 Hz frame; a track missing on one side holds the other's end value */
+export function concatClips(a, b) {
+  const off = a.duration + 1 / 60;
+  const names = new Set([...a.tracks, ...b.tracks].map((t) => t.name));
+  const tracks = [];
+  for (const n of names) {
+    const ta = a.tracks.find((t) => t.name === n), tb = b.tracks.find((t) => t.name === n);
+    const src = ta || tb, size = src.getValueSize();
+    const ia = ta ? ta : null, ib = tb ? tb : null;
+    const timesA = ia ? Array.from(ia.times) : [0, a.duration];
+    const valsA = ia ? Array.from(ia.values) : [...Array.from(ib.values.slice(0, size)), ...Array.from(ib.values.slice(0, size))];
+    const timesB = ib ? Array.from(ib.times, (t) => t + off) : [off, off + b.duration];
+    const last = valsA.slice(valsA.length - size);
+    const valsB = ib ? Array.from(ib.values) : [...last, ...last];
+    tracks.push(new src.constructor(n, [...timesA, ...timesB], [...valsA, ...valsB]));
+  }
+  return new THREE.AnimationClip(a.name + "+" + b.name, off + b.duration, tracks);
 }
 
 /** rest locals / parents of a rig's skeleton (bone order = scene traversal of B_* nodes) -> pose mirror */

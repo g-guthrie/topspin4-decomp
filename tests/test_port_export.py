@@ -241,8 +241,14 @@ class TreeAndRows(unittest.TestCase):
         ball = ex.read_ball_defaults(b"")
         g = bw.game_tunables(self.settings, b"", ball)
         self.assertEqual(g["shot.net_aim_cm"][0], 80.0)
-        self.assertAlmostEqual(g["shot.tier_powerful"][0], 0.7, places=5)
+        self.assertNotIn("shot.tier_powerful", g)            # cfg+0xC70/0xC74 are not tier thresholds (G6b)
         self.assertIsNotNone(g["ball.radius_cm"][1])          # documented default, so flagged provisional
+        from types import SimpleNamespace as NS
+        curve = lambda lo: NS(kind="CURVE", fields={"keys": [(0.0, lo, 0.0, 0.0, 0.0), (lo, 1.0, 1.0, 0.0, 1.0)]})
+        graphs = [NS(name=bw.crc32("Medium"), nodes=[curve(0.15)]), NS(name=bw.crc32("Powerful"), nodes=[curve(0.7)])]
+        g = bw.game_tunables(self.settings, b"", ball, graphs)
+        self.assertAlmostEqual(g["shot.tier_medium"][0], 0.15, places=5)   # edges come from the tier graphs
+        self.assertAlmostEqual(g["shot.tier_powerful"][0], 0.7, places=5)
 
 
 class GraphRecords(unittest.TestCase):

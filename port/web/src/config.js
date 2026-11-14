@@ -7,6 +7,7 @@
 //   ?meshes=URL   folder of tools/ts4_assets.py exports (default ../../work/assets/)
 //   ?venue=NAME   venue export folder under meshes (default venue_Amsterdam; 'none' = procedural court)
 //   ?p0=NAME ?p1=NAME  player export folders (default player_Federer0 / player_Safina1; 'none' = bone drawing)
+//   ?anim=game    game animation driver (src/players/; use with ?meshes=../../work/port/assets/players/&p0=Baked_Federer0)
 const q = new URLSearchParams(location.search);
 const slash = (s) => (s.endsWith("/") ? s : s + "/");
 
@@ -18,6 +19,8 @@ export const cfg = {
   meshes: slash(q.get("meshes") || "../../work/assets/"),
   venue: q.get("venue") || "venue_Amsterdam",
   players: [q.get("p0") || "player_Federer0", q.get("p1") || "player_Safina1"],
+  // ?anim=game: drive players with src/players/ (the game's move sets, sectors, time warp, pose mirroring; agent A4)
+  anim: q.get("anim") || "legacy",
 };
 cfg.blob = cfg.blob || cfg.assets + "gameplay/ts4core.dat";
 

@@ -7,8 +7,8 @@ evaluation:
   TPLS  verbatim copy of Settings.bin (big endian) with the row table location
   TREE  the shot request decision tree at Settings.bin 0x24, flattened, leaf ids resolved to row indices
   GRPH  analyser graphs from Expressions.bin in the normalised layout of section 5
-  TUNE  scalar tunables the game data defines (ball block of State.bin, aim heights and tier thresholds in
-        Settings.bin) merged under port-invented values from --tunables (port/core/data/provisional.tunables.json
+  TUNE  scalar tunables the game data defines (ball block of State.bin, aim heights in Settings.bin, tier edges
+        from the Medium/Powerful analyser graphs of Expressions.bin) merged under port-invented values from --tunables (port/core/data/provisional.tunables.json
         when present, flagged provisional)
 
 ROLE (graph-to-variable binding) and CURV (movement margin tables) are research output of the core agent and are
@@ -218,7 +218,25 @@ def registry_names(path=TUNABLE_DEF):
     return out
 
 
-def game_tunables(settings, state, ball_defaults):
+def tier_edges(graphs):
+    """Tier edges on S+0xE00 from the Medium and Powerful analyser graphs (G2b: Finesse < 0.15 <= Medium < 0.70 <=
+    Powerful): the x0 of the first CURVE key whose output is 1. Settings cfg+0xC6C..0xC74 (0.3/0.4/0.7) are NOT tier
+    thresholds (Objective8AllAround fields; only +0xC74 is read, for the Risky "powerful" byte, G6b)."""
+    out = {}
+    for g in graphs or []:
+        name = {crc32("Medium"): "shot.tier_medium", crc32("Powerful"): "shot.tier_powerful"}.get(g.name)
+        if not name:
+            continue
+        for n in g.nodes:
+            if n.kind == "CURVE":
+                for k in n.fields["keys"]:
+                    if k[2] > 0.5:
+                        out.setdefault(name, float(k[0]))
+                        break
+    return out
+
+
+def game_tunables(settings, state, ball_defaults, graphs=None):
     """Tunables whose value is read from game data, with provenance strings."""
     vals = {}
     src = ball_defaults.get("source", "")
@@ -229,15 +247,13 @@ def game_tunables(settings, state, ball_defaults):
     vals["ball.net_restitution"] = (0.2, None)          # pool+0x10C, a code constant (gp4.md 1.4)
     try:
         aim = struct.unpack_from(">2f", settings, 0x158)
-        tiers = struct.unpack_from(">2f", settings, TREE_ROOT_OFF + 0xC70)
         if 10 < aim[0] < 200 and 10 < aim[1] < 200:
             vals["shot.net_aim_cm"] = (aim[0], None)
             vals["shot.let_aim_cm"] = (aim[1], None)
-        if 0 < tiers[0] < tiers[1] <= 1:
-            vals["shot.tier_medium"] = (tiers[0], None)
-            vals["shot.tier_powerful"] = (tiers[1], None)
     except struct.error:
         pass
+    for name, v in tier_edges(graphs).items():
+        vals[name] = (v, None)
     return vals
 
 
@@ -353,11 +369,12 @@ def write_blob(path, ctx=None, rows=None, ball=None, members=None, tunables=PROV
     settings, state, expr = members["Settings.bin"], members["State.bin"], members["Expressions.bin"]
     import export_assets
     ball = ball or export_assets.read_ball_defaults(state)
+    graphs = ts4_analyser.parse_expressions(expr)
     sections = {
         "TPLS": build_tpls(settings),
         "TREE": build_tree(settings),
-        "GRPH": build_grph(ts4_analyser.parse_expressions(expr)),
-        "TUNE": build_tune(game_tunables(settings, state, ball), load_provisional(tunables)),
+        "GRPH": build_grph(graphs),
+        "TUNE": build_tune(game_tunables(settings, state, ball, graphs), load_provisional(tunables)),
     }
     blob = assemble(sections)
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)

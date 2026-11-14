@@ -316,7 +316,7 @@ def enc_skil(skills):
 
 # ============================================================================== ANIM
 ANIM_QTYPES = ("PositionOnCourt", "Category", "SwingType", "SwingEffect", "Timing", "Power", "Control", "MoveToNet",
-               "SwingCategory", "Properties", "Effort")
+               "SwingCategory", "Properties", "Effort", "SwingPreferenceLevel")
 
 
 def anim_tables(anim, setup="Men"):
@@ -578,6 +578,28 @@ def curves(docs):
     return cs
 
 
+# ============================================================================== SCAT (swing category rules, G6b)
+SC_MODES = ("Normal", "AutoSwingGood", "AutoSwingBad")
+SC_CLASSES = ("FlatPower", "FlatFinesse", "Slice", "VolleyStandard", "VolleyPower", "Smash")   # sc_class() order
+
+
+def enc_scat(rules):
+    """shot_tree.yaml swing_category_rules -> SCAT: u32 n_modes, u32 n_classes, (mode, class) x {u32 n, u32 off},
+    rows {u32 value, u32 alt, u32 cond, u32 skill, u8 easy_autoswing, 3 pad}; names as crc32 (0 = none)."""
+    h = lambda v: 0 if v is None else hexname(v)
+    head = struct.pack("<II", len(SC_MODES), len(SC_CLASSES))
+    d, body = b"", b""
+    base = 8 + 8 * len(SC_MODES) * len(SC_CLASSES)
+    for m in SC_MODES:
+        for cl in SC_CLASSES:
+            rows = ((rules.get("modes") or {}).get(m) or {}).get(cl) or []
+            d += struct.pack("<II", len(rows), base + len(body))
+            for r in rows:
+                body += struct.pack("<IIIIB3x", h(r["value"]), h(r.get("alt")), h(r.get("condition") or "None"),
+                                    h(r.get("skill_id")), int(r.get("easy_autoswing") or 0))
+    return head + d + body
+
+
 # ============================================================================== SCLS (shot classes)
 CLASS_TABLE_DOC = os.path.join(ROOT, "docs", "gameplay", "graphs-catalogue.md")
 
@@ -683,6 +705,8 @@ def pack(data_dir):
         if classes and "tree" in docs:
             b.extra.append((b"SCLS", enc_scls(classes, docs["graphs"], docs["tree"]["rows"])))
             report["shot_classes"] = len(classes)
+    if "tree" in docs and docs["tree"].get("swing_category_rules"):
+        b.extra.append((b"SCAT", enc_scat(docs["tree"]["swing_category_rules"])))
     b.curves = curves(docs) or ts4d.synthetic_curves()
     if "career" in docs:
         b.extra.append((b"AIDF", enc_aidf(docs["career"]["ai_difficulty"]["styles"])))

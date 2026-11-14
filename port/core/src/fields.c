@@ -33,6 +33,7 @@ int32_t ts4_ext_section(Ts4Core *c, const uint8_t *tag, const uint8_t *p, uint32
     if (tag_eq(tag, "SKIL")) { e->skil = p; e->skil_n = n; return 1; }
     if (tag_eq(tag, "ANIM")) { e->anim = p; e->anim_n = n; return 1; }
     if (tag_eq(tag, "SCLS")) { e->scls = p; e->scls_n = n; return 1; }
+    if (tag_eq(tag, "SCAT")) { e->scat = p; e->scat_n = n; return 1; }
     return 0;
 }
 
@@ -107,6 +108,14 @@ int32_t ts4_ext_resolve(Ts4Core *c)
         for (i = 0; i < nc; i++)
             if (ts4_le32(e->scls + 4 + 64 * i + 12) > 12) return TS4_ERR_BAD_BLOB;
         e->n_classes = nc; e->n_class_rows = nr;
+    }
+    if (e->scat) {
+        uint32_t nm, nc;
+        if (e->scat_n < 8) return TS4_ERR_BAD_BLOB;
+        nm = ts4_le32(e->scat); nc = ts4_le32(e->scat + 4);
+        if (nm > 8 || nc > 16 || !fits(8, 8 * nm * nc, e->scat_n)) return TS4_ERR_BAD_BLOB;
+        for (i = 0; i < nm * nc; i++)
+            if (!fits(ts4_le32(e->scat + 12 + 8 * i), 20 * ts4_le32(e->scat + 8 + 8 * i), e->scat_n)) return TS4_ERR_BAD_BLOB;
     }
     if (e->anim) {
         const uint8_t *a = e->anim;

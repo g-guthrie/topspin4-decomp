@@ -14,8 +14,11 @@ Output (docs/port/ui.md section 6):
   scenes/<Name>.json             one per RUI scene: {"name", "archives", "scene" (Scenes.<Name> table:
                                  Controls, LayerList, TexturePackList, ...), "data" (SceneData: node graph
                                  with decoded PositioningInfo, NodeTypes, Templates), "actions" (decoded
-                                 .actions scripts), "anims" (timeline names), "lua_closures" (disassembly
-                                 of the scene's __Action_N closures)}
+                                 .actions scripts), "anims" (timeline names), "lua" (pseudo-Lua of the
+                                 scene's closures), "action_closures" (__Action_N -> closure),
+                                 "closure_writes" (static stores into currentScene/currentControl, e.g. list
+                                 Items), "geometry" (expanded node path -> 2-D triangles + uv from PackedMeshes.xbin,
+                                 matched through the scene's Hierarchy.xdt)}
   packages/<Name>.json           GUI packages (Boot, Common, InGame, OnlineExhib, ...): scenes, templates, fonts
   libs/<Name>.json               Lua libraries (CommonLib, MatchSettingsLib, ExhibitionLib, ...): globals + listing
   strings/<lang>.json            {key hex: text} for en/fr/de/es/it, plus strings/keys.json {key hex: name or null}
@@ -42,6 +45,8 @@ for p in (HERE, TOOLS):
     if p not in sys.path:
         sys.path.insert(0, p)
 
+from struct import error as struct_error  # noqa: E402
+
 import lua50  # noqa: E402
 import ui_actions  # noqa: E402
 import ui_formats  # noqa: E402
@@ -54,6 +59,7 @@ UI_ARCHIVES = [
     "PlayerCreator", "LockerRoom", "TopSpinAcademy", "KingOfTheCourtMenus", "KingOfTheCourt",
     "OnlineProChallenge", "OnlineWorldTour",
 ]
+UI_MESH_SIG = bytes.fromhex("6912b1b83f65f116")   # PackedMeshes.xbin of UI meshes (docs/assets.md 4)
 LUA_EXT = (".scene", ".sceneData", ".package", ".lua")
 LUA_BIN = ("Lib.bin", "UnlockTrigger.bin")
 LANG_ORDER = ("en", "fr", "de", "es", "it")
@@ -89,24 +95,94 @@ def find_iso(explicit=None):
 # ------------------------------------------------------------------------------------------ pure helpers
 
 def eval_lua(data):
-    """Evaluate a chunk: (globals as JSON, list of closure listings by path)."""
+    """Evaluate a chunk: (globals as JSON, {closure path: pseudo-Lua lines}, calls, proto)."""
     f = lua50.load(data)
     g, calls = lua50.evaluate(f)
     glob = {k: ui_formats.scene_to_json(lua50.to_json(v), lua50.to_json) for k, v in g.items()}
     closures = {}
     for i, p in enumerate(f.p):
-        closures["main.%d" % i] = lua50.disassemble(p, path="main.%d" % i)
+        closures["main.%d" % i] = lua50.decompile(p, "function main_%d" % i)
     return glob, calls, closures, f
 
 
+def closure_writes(f):
+    """Run every top-level closure symbolically with a fresh ``currentScene``/``currentControl`` and keep
+    the stores into them (static list contents such as ``Controls["|MainMenu"].Items``, ItemMapping,
+    text ids).  Returns {closure path: [[path, value], ...]} for closures that store something."""
+    out = {}
+    for i, p in enumerate(f.p):
+        w = []
+        env = {"currentScene": lua50.LuaTable("currentScene"), "currentControl": lua50.LuaTable("currentControl")}
+        try:
+            lua50.evaluate(p, max_steps=20000, env=env, args=[lua50.Ref("self")], vivify=True, writes=w)
+        except (lua50.LuaFormatError, IndexError, TypeError, RecursionError):
+            continue
+        keep = [[k, lua50.to_json(v)] for k, v in w if k.startswith(("currentScene", "currentControl"))]
+        if keep:
+            out["main.%d" % i] = keep
+    return out
+
+
+def action_closures(scene_table):
+    """{"__Action_N": "main.M"} from the Scenes.<Name> table."""
+    out = {}
+    if isinstance(scene_table, dict):
+        for k, v in scene_table.items():
+            if k.startswith("__Action_") and isinstance(v, dict) and "$function" in v:
+                out[k] = v["$function"]
+    return out
+
+
+def mesh_to_2d(m):
+    """UI mesh record (ts4_mesh.Mesh) -> {"pos": [[x, y]...], "uv": [[u, v]...], "tris": [[a, b, c]...]}.
+
+    UI meshes lie in the x/z plane (y = 0); z is the screen's up axis (uv v = 0 at +z)."""
+    pos = [[round(p[0], 3), round(p[2], 3)] for p in m.attrs.get("position", [])]
+    uvk = next((k for k in m.attrs if k.startswith("uv")), None)
+    uv = [[round(t[0], 5), round(t[1], 5)] for t in m.attrs[uvk]] if uvk else []
+    tris = []
+    for g in m.groups:
+        tris.extend(list(t) for t in g.triangles())
+    return {"pos": pos, "uv": uv, "tris": tris}
+
+
+GEOMETRY_TYPES = ("Mesh", "UntexturedMesh", "Text", "ScrollText", "PamVideoPlayer", "PamWorldPosNode")
+DRAWN_TYPES = ("Mesh", "UntexturedMesh", "PamVideoPlayer", "PamWorldPosNode")
+
+
+def expanded_geometry_nodes(graph, load_template):
+    """Depth-first walk of a scene graph with Template nodes expanded in place (the template's Graph
+    children are visited where the Template node stands).  Yields (path, node) for every node whose type
+    carries geometry; ``path`` is the child-index path, e.g. "1/0/2/t0/1" ("t" = inside a template).
+
+    This order equals the order of the Geometry elements of the scene's Hierarchy.xdt (verified on all
+    76 UI hierarchies of Core, PracticeGroundPart, PlayerBackGround and OnlineExhibition: same count)."""
+    out = []
+
+    def walk(n, path, depth):
+        if not isinstance(n, dict) or depth > 64:
+            return
+        if "NodeNumber" in n:
+            if n.get("Type") in GEOMETRY_TYPES:
+                out.append((path, n))
+            if n.get("Type") == "Template":
+                t = load_template(n.get("TemplateName"))
+                if t:
+                    for i, c in enumerate(((t.get("data") or {}).get("Graph") or {}).get("Children") or []):
+                        walk(c, "%s/t%d" % (path, i) if path else "t%d" % i, depth + 1)
+        for i, c in enumerate(n.get("Children") or []):
+            walk(c, "%s/%d" % (path, i) if path else str(i), depth + 1)
+
+    walk(graph or {}, "", 0)
+    return out
+
+
 def closure_summary(listing):
-    """Short form of a closure: the string constants and global/method names it touches."""
+    """Short form of a closure: the quoted names and globals it touches."""
     names = []
     for line in listing:
-        m = re.search(r'(GETGLOBAL|SELF|GETTABLE|LOADK)\s.*?(K\()?"([^"]+)"', line)
-        if m:
-            names.append(m.group(3))
-    return names
+        names.extend(re.findall(r'"([A-Za-z_][\w|.]*)"', line))
+    return sorted(set(names))
 
 
 def flow_edges(scene, actions):
@@ -124,10 +200,10 @@ def flow_edges(scene, actions):
 
 
 def collect_text_ids(obj, out):
-    """Every TextID / *Text* string field in a scene tree (localisation keys)."""
+    """Every TextID-like string field in a scene tree (localisation keys)."""
     if isinstance(obj, dict):
         for k, v in obj.items():
-            if isinstance(v, str) and ("TextID" in k or k in ("StringID", "Text", "Key")):
+            if isinstance(v, str) and ("TextID" in k or k in ("StringID", "textID", "Key")):
                 out.add(v)
             else:
                 collect_text_ids(v, out)
@@ -139,7 +215,7 @@ def collect_text_ids(obj, out):
 def node_types(obj, out):
     if isinstance(obj, dict):
         t = obj.get("Type")
-        if isinstance(t, str):
+        if isinstance(t, str) and "NodeNumber" in obj:
             out[t] = out.get(t, 0) + 1
         for v in obj.values():
             node_types(v, out)
@@ -167,6 +243,8 @@ class Exporter:
         self.text_ids = set()
         self.lua_strings = set()
         self.raw = {}
+        self.ui_meshes = {}   # "Crc%X" -> 2-D mesh
+        self.hierarchies = {}  # scene name -> [mesh name per Geometry element, in order]
 
     def log(self, *m):
         print(*m, flush=True)
@@ -215,7 +293,7 @@ class Exporter:
             dh, leaf = ln
             stem, ext = os.path.splitext(leaf)
             want = ext in LUA_EXT or ext in (".actions", ".anims", ".abc") or leaf.endswith(LUA_BIN) \
-                or leaf == "StringTable.bin"
+                or leaf in ("StringTable.bin", "PackedMeshes.xbin", "Hierarchy.xdt")
             is_pack = leaf == "Textures.xpr" and len(dirs.get(dh, [])) == 1
             if not (want or (is_pack and not self.a.no_textures)):
                 continue
@@ -240,6 +318,10 @@ class Exporter:
                     self.string_tables.append((aname, "%08x" % e[0], ui_formats.parse_string_table(data)))
                 elif is_pack:
                     self.read_textures(aname, dh, data)
+                elif leaf == "PackedMeshes.xbin" and data[:8] == UI_MESH_SIG:
+                    self.read_ui_meshes(data)
+                elif leaf == "Hierarchy.xdt" and data[:8] == b"PAM-XDT\0":
+                    self.read_hierarchy(data)
             except (lua50.LuaFormatError, ui_formats.UiDataError, ui_actions.UiFormatError, ValueError) as ex:
                 self.log("  warn %s/%s: %s" % (aname, leaf, ex))
         for stem, parts in groups.items():
@@ -281,7 +363,9 @@ class Exporter:
             self.lua_strings.update(lua50.all_strings(f))
             sc = glob.get("Scenes", {})
             rec["scene"] = sc.get(stem, sc) if isinstance(sc, dict) else sc
-            rec["lua_closures"] = closures
+            rec["lua"] = closures
+            rec["action_closures"] = action_closures(rec["scene"])
+            rec["closure_writes"] = closure_writes(f)
         if ".sceneData" in parts and lua50.is_lua(parts[".sceneData"]):
             glob, _c, _cl, f = eval_lua(parts[".sceneData"])
             rec["data"] = glob.get("SceneData", glob)
@@ -293,6 +377,51 @@ class Exporter:
         if ".anims" in parts:
             rec["anims"] = ui_actions.parse_anims(parts[".anims"])
         self.scenes[key] = rec
+
+    def read_ui_meshes(self, data):
+        import ts4_mesh
+        for off in ts4_mesh.mesh_records(data):
+            try:
+                m = ts4_mesh.parse_mesh(data, off)
+            except (KeyError, ValueError, IndexError, struct_error):
+                continue
+            self.ui_meshes.setdefault(m.name, mesh_to_2d(m))
+
+    def read_hierarchy(self, data):
+        import ts4_mesh
+        try:
+            root = ts4_mesh.parse_xdt(data)
+        except (KeyError, ValueError, IndexError, struct_error):
+            return
+        name = root.attrs.get("Name")
+        if isinstance(name, str):
+            self.hierarchies.setdefault(name, [g.attrs.get("Mesh") for g in root.walk() if g.name == "Geometry"])
+
+    def attach_geometry(self):
+        """Give every drawn node of every top-level scene its UI mesh (by Hierarchy.xdt order)."""
+        found = missing = mismatched = 0
+        load = lambda n: self.scenes.get(n)  # noqa: E731
+        for key, rec in self.scenes.items():
+            order = self.hierarchies.get(rec["name"])
+            if not order or "@" in key:
+                continue
+            nodes = expanded_geometry_nodes((rec.get("data") or {}).get("Graph"), load)
+            if len(nodes) != len(order):
+                mismatched += 1
+                continue
+            geo = {}
+            for (path, node), mesh in zip(nodes, order):
+                if node.get("Type") not in DRAWN_TYPES:
+                    continue
+                m = self.ui_meshes.get(mesh)
+                if m:
+                    geo[path] = m
+                    found += 1
+                else:
+                    missing += 1
+            rec["geometry"] = geo
+        return {"resolved": found, "missing": missing, "scenes_count_mismatch": mismatched,
+                "hierarchies": len(self.hierarchies)}
 
     def read_textures(self, aname, dh, data):
         import ts4_texture
@@ -317,6 +446,7 @@ class Exporter:
     def finish(self):
         out = self.out
         os.makedirs(out, exist_ok=True)
+        self.manifest["geometry"] = dict(self.attach_geometry(), ui_meshes=len(self.ui_meshes))
         flow = []
         for name, rec in sorted(self.scenes.items()):
             write_json(os.path.join(out, "scenes", name + ".json"), rec, compact=True)

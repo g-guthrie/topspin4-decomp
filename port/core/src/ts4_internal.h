@@ -172,8 +172,8 @@ typedef struct Ts4SimPlayer {
 } Ts4SimPlayer;
 
 typedef struct Ts4Ext {
-    const uint8_t *bind, *sini, *aidf, *skil, *anim, *scls;
-    uint32_t bind_n, sini_n, aidf_n, skil_n, anim_n, scls_n;
+    const uint8_t *bind, *sini, *aidf, *skil, *anim, *scls, *scat;
+    uint32_t bind_n, sini_n, aidf_n, skil_n, anim_n, scls_n, scat_n;
     uint32_t graph_bind[TS4_MAX_GRAPHS];   /* 1 + byte offset of the graph's port list in BIND, 0 = not bound */
     uint32_t n_bound;
     uint32_t ai_styles, ai_levels;
@@ -211,7 +211,8 @@ struct Ts4Core {
     Ts4PlayerExtra extra[2];
     uint8_t match_img[TS4_MATCH_SIZE];
     uint8_t ball_img[TS4_BALLIMG_SIZE];   /* BallState mirror for bound graphs; let block 0x480..0x4C0 is ours */
-    uint32_t rally_shots;
+    uint32_t rally_shots;      /* shots in the current point (serve = 1) */
+    uint32_t hit_is_return;    /* the shot being planned returns the serve */
     /* match */
     uint32_t started;
     uint32_t tick, phase, phase_tick;
@@ -297,6 +298,21 @@ void ts4_anim_tick(Ts4Core *c, int player);
 void ts4_anim_swing(Ts4Core *c, int player, uint32_t stroke_buttons, int volley, int smash, int forehand,
                     int is_return, int32_t ticks_to_contact);
 float ts4_anim_qual(const Ts4Core *c, int player, uint32_t qtype, uint32_t qvalue);
+
+/* ---- swingcat.c: copy of ref/gameplay/swing_category.c (G6b) -------------------------------------------- */
+typedef struct {
+    int is_human, sticky_rb, in_net_zone, ai_net_request;
+    float power, perfect_eval, volley_release, slow_down, manual_timing, timing_value, min_speed_left, min_speed_right;
+    int volley_spectacular, is_fast_ball, is_baseline_fast_ball, is_inside_out;
+    uint32_t shot_id;
+    float local_x;
+    int team_mode_2, skill_ok;
+} Ts4ScInputs;
+int ts4_sc_class(int is_volley, int is_smash, uint32_t shot_id, int require_finesse);
+typedef int (*Ts4ScQuery)(void *user, uint32_t category, uint32_t level);
+/* walk the SCAT rows of (mode 0 = Normal, class); returns the category written to S+0x360 (0 = no row), *started
+ * = a query started a clip */
+uint32_t ts4_sc_walk(const Ts4Core *c, int cls, const Ts4ScInputs *in, Ts4ScQuery q, void *user, int *started);
 
 /* ---- shotsel.c: copies of ref/gameplay/shot_select.c and ball.c pieces (G2b, G3) -------------------------- */
 typedef struct Ts4Bounds { float xmax, zmin, zmax; } Ts4Bounds;
