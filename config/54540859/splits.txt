@@ -35785,3 +35785,30 @@ src/xbox360/ex5_xmltok_ref_16.c:
 	.pdata      start:0x8812E160 end:0x8812E168
 	.text       start:0x8889BDB8 end:0x8889C060
 	.text       start:0x8889C890 end:0x8889CB28
+
+src/xbox360/ex6_jpeg_err.c:
+	.pdata      start:0x88111610 end:0x88111618
+	.text       start:0x882E5530 end:0x882E564C
+	.text       start:0x882E5668 end:0x882E56D8
+
+src/xbox360/ex6_png_misc.c:
+	.pdata      start:0x88111698 end:0x881116A0
+	.pdata      start:0x881116A0 end:0x881116A8
+	.pdata      start:0x881116B0 end:0x881116B8
+	.pdata      start:0x881116D8 end:0x881116E0
+	.text       start:0x882E70F8 end:0x882E7134
+	.text       start:0x882E7138 end:0x882E71A0
+	.text       start:0x882E7240 end:0x882E7388
+	.text       start:0x882E7408 end:0x882E746C
+	.text       start:0x882E7DC8 end:0x882E7E2C
+	.text       start:0x882E8310 end:0x882E834C
+	.text       start:0x882E8458 end:0x882E8498
+	.text       start:0x882E89D8 end:0x882E8A30
+
+src/xbox360/ex6_png_xform.c:
+	.pdata      start:0x881116F0 end:0x881116F8
+	.text       start:0x882E8110 end:0x882E821C
+	.text       start:0x882E8350 end:0x882E8454
+	.text       start:0x882E84A8 end:0x882E879C
+	.text       start:0x882E8A30 end:0x882E8CF4
+	.text       start:0x882E98A0 end:0x882E99D0

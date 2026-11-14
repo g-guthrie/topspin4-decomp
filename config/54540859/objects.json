@@ -2588,6 +2588,18 @@
       "src/xbox360/ex5_xmltok_ref_16.c": {
         "status": "Matching",
         "source": "xbox360/ex5_xmltok_ref_16.c"
+      },
+      "src/xbox360/ex6_jpeg_err.c": {
+        "status": "Matching",
+        "source": "xbox360/ex6_jpeg_err.c"
+      },
+      "src/xbox360/ex6_png_misc.c": {
+        "status": "Matching",
+        "source": "xbox360/ex6_png_misc.c"
+      },
+      "src/xbox360/ex6_png_xform.c": {
+        "status": "Matching",
+        "source": "xbox360/ex6_png_xform.c"
       }
     }
   }

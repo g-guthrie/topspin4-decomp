@@ -117,3 +117,57 @@ distributed under the BSD 3-Clause license:
 > CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 > OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 > OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## libpng
+
+Files: `src/xbox360/ex6_png.h`, `ex6_png_misc.c`, `ex6_png_xform.c`, and later
+`ex*_png*` sources that carry a libpng header line. Upstream: http://www.libpng.org/
+(1.2.x). Distributed under the libpng license:
+
+> Copyright (c) 1998-2008 Glenn Randers-Pehrson
+> (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
+> (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
+>
+> The PNG Reference Library is supplied "AS IS". The Contributing Authors and
+> Group 42, Inc. disclaim all warranties, expressed or implied, including,
+> without limitation, the warranties of merchantability and of fitness for any
+> purpose. The Contributing Authors and Group 42, Inc. assume no liability for
+> direct, indirect, incidental, special, exemplary, or consequential damages,
+> which may result from the use of the PNG Reference Library, even if advised
+> of the possibility of such damage.
+>
+> Permission is hereby granted to use, copy, modify, and distribute this source
+> code, or portions hereof, for any purpose, without fee, subject to the
+> following restrictions:
+>
+> 1. The origin of this source code must not be misrepresented.
+> 2. Altered versions must be plainly marked as such and must not be
+>    misrepresented as being the original source.
+> 3. This Copyright notice may not be removed or altered from any source or
+>    altered source distribution.
+
+## IJG JPEG library
+
+Files: `src/xbox360/ex6_jpeg_err.c`, and later `ex*_jpeg*` sources that carry
+an IJG header line. Upstream: https://www.ijg.org/ (release 6b).
+
+> This software is based in part on the work of the Independent JPEG Group.
+>
+> Copyright (C) 1991-1998, Thomas G. Lane. All Rights Reserved except as
+> specified below. Permission is hereby granted to use, copy, modify, and
+> distribute this software (or portions thereof) for any purpose, without fee,
+> subject to these conditions: (1) If any part of the source code for this
+> software is distributed, then this README file must be included, with this
+> copyright and no-warranty notice unaltered; and any additions, deletions, or
+> changes to the original files must be clearly indicated in accompanying
+> documentation. (2) If only executable code is distributed, then the
+> accompanying documentation must state that "this software is based in part
+> on the work of the Independent JPEG Group". (3) Permission for use of this
+> software is granted only if the user accepts full responsibility for any
+> undesirable consequences; the authors accept NO LIABILITY for damages of any
+> kind. The software is provided "AS IS", without warranty of any kind, either
+> express or implied, with respect to its quality, accuracy, merchantability,
+> or fitness for a particular purpose.
+>
+> Changes: the derived functions are rewritten to reproduce the Swing_DLL.xex
+> object code; each such file is marked "Altered to match Swing_DLL.xex".
