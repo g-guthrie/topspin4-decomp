@@ -312,6 +312,11 @@ def dst_regs(insns):
             out.update(i.ops[3:]); continue
         if i.mn == 'ts4vastart':
             out.update(i.ops[1:]); continue
+        if i.mn.endswith('ux') and len(i.ops) == 3 and i.mn[0] in 'ls':
+            out.add(i.ops[1])        # indexed update form: the base register is written
+            if i.mn[0] == 'l' and not i.mn.startswith('lf'):
+                out.add(i.ops[0])
+            continue
         if i.mn in UPD and not i.ops[1].endswith('(r1)'):
             m = re.search(r'\((r\d+)\)', i.ops[1])
             out.add(m.group(1))
@@ -332,6 +337,7 @@ class Gen:
     executing, then render C.  See `gen()`."""
 
     cjoin = False     # variant letter J: arms that return early still join at their shared tail
+    ljoin = False     # retry after 'irregular exit': inside loops, arms whose other paths return join at their shared block
     rbrk = False      # variant letter R: a break to a loop exit that only returns is written as the return
     vret = False      # variant letter w: returns and tail calls are void
 
@@ -1033,6 +1039,17 @@ class Gen:
             setr(ops[0], v)
             st['cmps']['cr0'] = (f'(int){v}', '0', False)
             return
+        if mn == 'lwa':
+            self.step(type(ins)(ins.addr, 'lwz', ops, rk, sym, ins.tgt, ins.ln), st, out)
+            self.step(type(ins)(ins.addr, 'extsw', [ops[0], ops[0]], None, None, None, ins.ln), st, out)
+            return
+        if mn in ('lwzux', 'lbzux', 'lhzux', 'lhaux', 'ldux', 'lfsux', 'lfdux', 'stwux', 'stbux', 'sthux', 'stdux', 'stfsux', 'stfdux') \
+                and ops[1] != 'r1' and ops[1] != ops[0]:
+            # indexed update forms: access base + index, then base += index
+            a = rd(ops[1]); b = rd(ops[2]); nohi(a, b)
+            setr(ops[1], f'({a} + {b})')
+            self.step(type(ins)(ins.addr, mn[:-2], [ops[0], f'0({ops[1]})'], rk, sym, ins.tgt, ins.ln), st, out)
+            return
         if mn in UPD and ops[1].endswith('(r1)') is False:
             mo = re.match(r'(-?\w+)\((r\d+)\)', ops[1]); base = mo.group(2)
             if base == ops[0] and mn in LD_U:
@@ -1289,8 +1306,30 @@ class Gen:
             setr(ops[0], e); return
         if mn == 'neg':
             a = rd(ops[1]); nohi(a); setr(ops[0], f'(-(int){a})'); return
-        if mn in ('twllei', 'twi', 'tweqi', 'twlgti'):
+        if mn in ('twllei', 'twi', 'tweqi', 'twlgti', 'tdi', 'tdllei', 'tdlgti', 'tdeqi'):
             return      # compiler-inserted division traps (divide by zero, INT_MIN % -1)
+        if mn in ('mulld', 'divd', 'divdu'):
+            # 64-bit arithmetic (the 64-bit divisions come with tdi traps, dropped above)
+            a = rd(ops[1]); b = rd(ops[2]); nohi(a, b)
+            setr(ops[0], {'mulld': f'((ts4_s64){a} * (ts4_s64){b})', 'divd': f'((ts4_s64){a} / (ts4_s64){b})',
+                          'divdu': f'((ts4_u64){a} / (ts4_u64){b})'}[mn]); return
+        if mn == 'sradi':
+            a = rd(ops[1]); nohi(a); setr(ops[0], f'((ts4_s64){a} >> {num(ops[2])})'); return
+        if mn in ('dcbt', 'dcbf', 'dcbzl', 'dcbst'):
+            # cache-control intrinsics: __dcbt(offset, base)
+            if ops[0] == 'r0':
+                o_, b_ = '0', rd(ops[1])
+            else:
+                o_, b_ = rd(ops[0]), rd(ops[1])
+            nohi(o_, b_)
+            fn_ = {'dcbt': '__dcbt', 'dcbf': '__dcbf', 'dcbzl': '__dcbz128', 'dcbst': '__dcbst'}[mn]
+            self.intrinsics.add(fn_)
+            out.append(f'{fn_}((int)({o_}), (void *)({b_}));'); return
+        if mn in ('lwsync', 'sync', 'eieio') and not ops:
+            self.intrinsics.add('__emit')
+            out.append(f'__emit({ {"lwsync": "0x7C2004AC", "sync": "0x7C0004AC", "eieio": "0x7C0006AC"}[mn]});'); return
+        if mn == 'twui' and ops == ['r0', '0x16']:
+            self.intrinsics.add('__debugbreak'); out.append('__debugbreak();'); return
         if mn == 'mulli':
             a = rd(ops[1]); nohi(a); setr(ops[0], f'((int){a} * {num(ops[2])})'); return
         if mn == 'subfic':
@@ -1857,7 +1896,7 @@ class Gen:
 
     def exec_insns(self, insns, st, out):
         self.nsteps += len(insns)
-        if self.nsteps > 2500:     # arms that never rejoin duplicate the code behind them
+        if self.nsteps > 6000:     # arms that never rejoin duplicate the code behind them
             raise Skip('too big')
         for ins in insns:
             self.step(ins, st, out)
@@ -2232,6 +2271,41 @@ class Gen:
                 return C
         return cfg.EXIT
 
+    def _loop_common_join(self, A, B, L, h):
+        """Inside loop L (header h): the lowest-addressed block C of L (not h) that both arms
+        reach while every other path of theirs returns (no back edge, no break), or None."""
+        def paths_ok(start, C):
+            stack, seen, hit = [start], set(), False
+            while stack:
+                b = stack.pop()
+                if b == C:
+                    hit = True
+                    continue
+                if b in seen:
+                    continue
+                seen.add(b)
+                if b == h or b == cfg.EXIT or b not in self.blocks:
+                    return False
+                if self.exits and b == self.exits[-1]:
+                    return False
+                bb = self.blocks[b]
+                if bb.term[0] in ('ret', 'tail', 'ctr'):
+                    continue
+                if bb.term[0] == 'switch':
+                    return False
+                stack.extend(cfg.succs(bb))
+            return hit
+        for C in sorted(b for b in L if b > 0 and b != h):
+            if C == A:
+                if paths_ok(B, C):
+                    return C
+            elif C == B:
+                if paths_ok(A, C):
+                    return C
+            elif paths_ok(A, C) and paths_ok(B, C):
+                return C
+        return None
+
     def _flows_to(self, start, target, L, h, brk=False):
         """Every path from `start` either returns or reaches `target` (staying inside loop L
         and not taking the back edge to h), and some path reaches it.  With `brk`, paths
@@ -2272,6 +2346,20 @@ class Gen:
                 and J != (self.exits[-1] if self.exits else None) \
                 and not self._leads_to_exit(J, self.loops[self.active[-1]]):
             J = cfg.EXIT      # the arms leave the loop for good: no join to merge at
+        if self.ljoin and self.active and J != cfg.EXIT and J in self.loops[self.active[-1]]:
+            # (retry) J post-dominates only because the loop never exits normally: an arm that
+            # takes the back edge without passing J means J is no join
+            h = self.active[-1]; L = self.loops[h]
+            for X in (A, B):
+                stack, seen = [X], set()
+                while stack:
+                    b = stack.pop()
+                    if b == J or b in seen or b not in L:
+                        continue
+                    if b == h:
+                        J = cfg.EXIT; stack = []
+                        break
+                    seen.add(b); stack.extend(cfg.succs(self.blocks[b]))
         if self.cjoin and not self.active and J == cfg.EXIT:
             J = self._common_join(A, B, stop)
         if self.active and J == cfg.EXIT:
@@ -2281,6 +2369,11 @@ class Gen:
                 if X1 in L and X1 != h and self._flows_to(X2, X1, L, h):
                     J = X1
                     break
+        if self.ljoin and self.active and J == cfg.EXIT:
+            # (retry) the first loop block both arms reach while every other path returns
+            C = self._loop_common_join(A, B, self.loops[self.active[-1]], self.active[-1])
+            if C is not None:
+                J = C
         if self.active and self.exits and J == self.exits[-1]:
             # an arm may break out of the loop: join inside the loop where the other paths meet
             h = self.active[-1]; L = self.loops[h]
@@ -2319,6 +2412,12 @@ class Gen:
             for k in sk:
                 st[k] = sk[k]
             return rk
+        if rA == 'cont' and rB == 'cont' and sA is not None and sB is not None:
+            # both arms end the iteration (two back edges): merge their loop-carried values
+            # and continue; `_backedge` then assigns the loop variables once
+            self.merge_phi(st, [(sA, oA), (sB, oB)], None)
+            out.append(self._if(e, A, B, oA, oB))
+            return 'cont'
         for r in (rA, rB):
             if isinstance(r, str) or (r is not None and r != J):
                 raise Skip('irregular exit')
@@ -2834,6 +2933,19 @@ def _gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
     if off is not None:
         return dict(kind='vthunk', detail=[f'slot{off // 4}'], sig='', body='', externs=[], protos={},
                     vthunk=off)
+    try:
+        return _gen1(lines_all, env, mode, orient, infer_signed, vol)
+    except Skip as e:
+        if str(e) != 'irregular exit':
+            raise
+    Gen.ljoin = True
+    try:
+        return _gen1(lines_all, env, mode, orient, infer_signed, vol)
+    finally:
+        Gen.ljoin = False
+
+
+def _gen1(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
     strict = False
     try:
         g = Gen(lines_all, env, mode, orient, infer_signed=infer_signed, vol=vol)

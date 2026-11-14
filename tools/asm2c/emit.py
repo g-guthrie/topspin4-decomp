@@ -23,6 +23,12 @@ HOST_BUILTINS = {'memcpy', 'memset', 'memmove', 'memcmp', 'strlen', 'strcmp', 's
                  'calloc', 'realloc', 'sqrt', 'sqrtf', 'sin', 'cos', 'fabs', 'floor', 'ceil', 'pow', 'atan2'}
 
 
+# compiler intrinsics used as statements (translate.py records them in res['intrinsics'])
+INTRINSIC_DECLS = {'__dcbt': 'void __dcbt(int offset, void *base);', '__dcbf': 'void __dcbf(int offset, void *base);',
+                   '__dcbst': 'void __dcbst(int offset, void *base);', '__dcbz128': 'void __dcbz128(int offset, void *base);',
+                   '__emit': 'void __emit(unsigned int opcode);', '__debugbreak': 'void __debugbreak(void);'}
+
+
 def func_name(r, addr):
     """ts4_<kind>_<detail>_<ADDR> from a translation result."""
     d = r['detail']
@@ -123,7 +129,7 @@ def build(res, group, path, cpp=False):
     if any(res[a].get('vec') for a in kept):
         o.insert(len(o) - 1, '#include "ts4_vector.h"')
     ints = {{'xchg': '_InterlockedExchange', 'inc': '_InterlockedIncrement', 'dec': '_InterlockedDecrement',
-             'addi': '_InterlockedExchangeAdd', 'add': '_InterlockedExchangeAdd'}[k] for a in kept for k in res[a].get('intrinsics', []) if k not in ('mftb', 'sqrt', 'clz')}
+             'addi': '_InterlockedExchangeAdd', 'add': '_InterlockedExchangeAdd'}[k] for a in kept for k in res[a].get('intrinsics', []) if k in ('xchg', 'inc', 'dec', 'addi', 'add')}
     if any('mftb' in res[a].get('intrinsics', []) for a in kept):
         o.insert(len(o) - 1, 'extern ts4_u64 __mftb(void);')
         ints.add('__mftb')
@@ -133,8 +139,13 @@ def build(res, group, path, cpp=False):
     if any('clz' in res[a].get('intrinsics', []) for a in kept):
         o.insert(len(o) - 1, 'int _CountLeadingZeros(unsigned int);')
         ints.add('_CountLeadingZeros')
+    used = {k for a in kept for k in res[a].get('intrinsics', [])}
+    for n, decl in INTRINSIC_DECLS.items():
+        if n in used:
+            o.insert(len(o) - 1, decl)
+            ints.add(n)
     for n in sorted(ints):
-        if n not in ('__mftb', 'sqrt', '_CountLeadingZeros'):
+        if n not in ('__mftb', 'sqrt', '_CountLeadingZeros') and n not in INTRINSIC_DECLS:
             o.insert(len(o) - 1, f'extern long {n}(volatile long *value' + (', long v);' if n in ('_InterlockedExchange', '_InterlockedExchangeAdd') else ');'))
     if ints:
         o.insert(len(o) - 1, '#ifdef _MSC_VER'); o.insert(len(o) - 1, f'#pragma intrinsic({", ".join(sorted(ints))})'); o.insert(len(o) - 1, '#endif')
