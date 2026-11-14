@@ -233,6 +233,12 @@ class EquivTests(unittest.TestCase):
         self.assertEqual(self.check("orig_out", outparam_code(0x54))["verdict"], "EQUIVALENT")
         r = self.check("orig_out", outparam_code(0x54, extra=1))
         self.assertEqual(r["verdict"], "DIFFERENT", r)
+        # pre-initialising a pure out-parameter the original leaves unset is not a difference
+        def preinit(at):
+            body = prologue() + [li(5, 7), stw(5, 1, 0x54), addi(3, 1, 0x54)]
+            body.append(bl(at + 4 * len(body), CALLEE))
+            return body + [lwz(3, 1, 0x54), addi(3, 3, 0)] + epilogue()
+        self.assertEqual(self.check("orig_out", preinit)["verdict"], "EQUIVALENT")
 
     def test_read_only_data_is_not_mutated(self):
         # the original reads a constant from read-only image data; the candidate has the same
@@ -258,6 +264,11 @@ class DecodeTests(unittest.TestCase):
         self.assertEqual(F.decode(FADDS_F1, 0).writes, {33})
         self.assertEqual(F.decode(VADDFP, 0).kind, "vec")
         self.assertEqual(F.decode(bl(0x100, 0x200), 0x100).target, 0x200)
+
+    def test_or_self_is_a_nop(self):
+        ins = F.decode(xo(31, 8, 8, 8, 444), 0)          # mr r8, r8 (hint)
+        self.assertEqual((set(ins.reads), set(ins.writes)), (set(), set()))
+        self.assertEqual(F.decode(xo(31, 3, 4, 3, 444), 0).reads, {3})   # mr r4, r3: real
 
     def test_liveness(self):
         world = make_world({"f": (BASE + 0x100, [lwz(5, 3, 0), add(3, 5, 4), BLR]),

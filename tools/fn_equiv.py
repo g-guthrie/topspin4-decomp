@@ -1318,16 +1318,17 @@ class Machine:
             self.outcome = ("limit", "calls")
             uc.emu_stop()
             return
-        # out-parameters: a callee given a pointer into the function's own frame "stores" a
-        # seeded word there (only into bytes the function has not written, so neighbouring
-        # locals, laid out differently by the two compilations, are never clobbered)
+        # out-parameters: a callee given a word-aligned pointer into the function's own frame
+        # "stores" a seeded word there, so both runs read back the same value wherever their
+        # frames put the local (a sub-word local passed by pointer is the one case where this
+        # word can reach a neighbour; see docs/equivalence-tier.md 7.1)
         for j, reg in enumerate(GPR_ARGS):
             v = vals[j] & 0xFFFFFFFF
             if reg not in frame or v & 3 or not (STACK_LO <= v <= STACK_TOP - 4) or \
                     (args is not None and reg not in args):
                 continue
-            free = [x for x in range(v, v + 4) if x not in self.stack_touched]
-            if not free:
+            free = [x for x in range(v, v + 4) if not self._save_slot(x)]
+            if len(free) < 4:
                 continue
             ov = self.ret_ov.get((k, a, reg))
             if ov is None:
@@ -1520,7 +1521,10 @@ def compare(world, A, B, rkind, nonvol=True):
             if reg < 32:
                 x, y = x & 0xFFFFFFFF, y & 0xFFFFFFFF
             if reg in fa and reg in fb:
-                if fa[reg] != fb[reg] and (args is None or reg in args):
+                # an object the original never wrote is a pure out-parameter for it: what the
+                # candidate put there first is overwritten by the callee and not compared
+                if fa[reg] != fb[reg] and (args is None or reg in args) and \
+                        any(x is not None for x in fa[reg]):
                     return (f"call #{i + 1} to {world.label(ta)}: the stack object passed in {regname(reg)} differs "
                             f"(first {STACK_ARG_WINDOW} bytes written by the function: original "
                             f"{fmt_frame(fa[reg])}, candidate {fmt_frame(fb[reg])})")
