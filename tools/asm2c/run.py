@@ -69,9 +69,9 @@ PLANS = ('word', 'tight', 'fill')
 def frame_select(res, dis, a2name, work, tag, flags, jobs, chunk=200, stats=None):
     """Variant letter F (stack-frame model): every result with stack locals is rendered
     once per frame plan (frame.split), all plans are compiled in batches and the first
-    plan whose frame size and local offsets equal the original's is kept.  Results whose
-    frame cannot be made equal (no plan, nor the unsplit text) are dropped before
-    fn_check (the early frame-size rejection).  Results without stack locals pass."""
+    plan whose frame size and local offsets equal the original's is kept (the unsplit text
+    when it already agrees).  When no plan agrees the unsplit text is kept.  Results
+    without stack locals pass."""
     cands = {}            # addr -> [(plan, result)]
     keep = {}
     for a, r in res.items():
@@ -103,10 +103,15 @@ def frame_select(res, dis, a2name, work, tag, flags, jobs, chunk=200, stats=None
     for a, opts in cands.items():
         fc = ok.get(a, {})
         good = [k for k in sorted(fc) if fc[k][0]]
-        if good:
+        unsplit = next(k for k, (p, r) in enumerate(opts) if p == '-')
+        if unsplit in good:
+            keep[a] = opts[unsplit][1]; st['frame ok -'] += 1
+        elif good:
             keep[a] = opts[good[0]][1]; st['frame ok ' + opts[good[0]][0]] += 1
         else:
-            st['frame differs'] += 1
+            # no plan gives the original frame: keep the unsplit text (a near miss may differ
+            # only in the stwu immediate, which permutation can still fix)
+            keep[a] = opts[unsplit][1]; st['frame differs'] += 1
     if stats is not None:
         stats.update(st)
     return keep

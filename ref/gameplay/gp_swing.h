@@ -217,22 +217,29 @@ typedef struct GpClip {
 float gp_clip_contact_frame(const GpClip *c, uint32_t contact_id,
                             float start_frame, float playback_scale);
 
+/* Clip fit, fn_886D3AD8 0x886D4444..0x886D4710 (GE2, read from code).  AnimIface query
+ * (planner +0x150): +0x3D0 latest and +0x3D4 earliest contact tick, +0x3D8 / +0x3DC x / z
+ * tolerances (cm), +0x3C0 requested contact offset.  There are no weights: the planner keeps the
+ * sub-window with the smallest squared 3-D distance (strictly smaller wins) among those passing
+ * the two gates. */
 typedef struct GpFitParams {
-    float window_lo, window_hi; /* accepted contact-frame range             */
-    float w_timing, w_position, w_height, w_facing; /* weights from data    */
+    float latest, earliest;     /* AnimIface +0x3D0 / +0x3D4, ticks          */
+    float tol_x, tol_z;         /* AnimIface +0x3D8 / +0x3DC, cm             */
 } GpFitParams;
 
 typedef struct GpFitInput {
-    float contact_frame;       /* predicted by the clip */
-    float target_frame;        /* wanted by the ball track */
-    float pos_error;           /* clip contact point vs ball, metres */
-    float height_error;
-    float facing_error;        /* radians */
+    float contact_frame;        /* clip contact tick (marker mapping + 10)   */
+    float err_x, err_y, err_z;  /* clip racket point - requested point, cm   */
+    float root_distance;        /* |root displacement of the clip|, cm       */
+    int   has_racket_event;     /* record+0xC != -1 (EventRacket marker)     */
 } GpFitInput;
 
-/* Weighted sum of absolute errors; returns a negative value when the contact
- * frame is outside [window_lo, window_hi].  See the document: the term set
- * and weight source are NOT verified, this is a scaffold. */
+/* Tolerance of a clip without a racket event (Preparation marker): grows with the root
+ * displacement d: max(60 + 40 clamp((d - 150) / 450, 0, 1), data tolerance). */
+float gp_clip_prep_tolerance(float root_distance, float data_tol);
+
+/* Squared distance |err|^2 when earliest < frame < latest and |err_x| < tol_x and
+ * |err_z| < tol_z; -1 when rejected. */
 float gp_clip_fit_cost(const GpFitInput *in, const GpFitParams *p);
 
 #endif

@@ -17,6 +17,11 @@ code_constants:  # g_ts4_script_constants 0x880D0F70 + offset
   mover_tau_scale: {pool_offset: 0x1E0, value: 5.0, read_by: "fn_8866CDC8 0x8866CE60", meaning: "x mover_tau_factor = averaging window in frames"}
   doubles_ai_depth_split_x_cm: {pool_offset: 0x77C, value: -900.0, read_by: "fn_886A40A8 0x886A41A4", meaning: "doubles AI with no mode yet: local x below this -> baseline point, else net point"}
   deg_to_rad: {pool_offset: 0x184, value: 0.0174533, read_by: "fn_8869B928 0x8869BA7C", meaning: "degrees to radians"}
+  s15_volley_depth_cm: {pool_offset: 0x82C, value: 700.0, read_by: "fn_886B8468 0x886B9700", meaning: "state 15 human: nearest sample of neither type is a volley when |x| below this"}
+  s15_corridor_max: {pool_offset: 0x4EC, value: 225.0, read_by: "fn_886B8468 0x886B9738", meaning: "state 15 human: volley kept when |S+0xC6C| below this"}
+  s15_stick_power_min: {pool_offset: 0x118, value: 0.4, read_by: "fn_886B8468 0x886B9758", meaning: "state 15 human: stick decides when Stick_MovePolar.Power above this (window = Table2D PT+0x1EC)"}
+  s14_heading_max_rad: {pool_offset: 0x830, value: 1.5708, read_by: "fn_886B8468 0x886BA10C", meaning: "state 14: replan when the stand-point direction turned more than this from S+0x9D0"}
+  s17_zone_radius_cm: {pool_offset: 0xF0, value: 50.0, read_by: "fn_886B8468 0x886B9A58", meaning: "states 17/18: hold threshold 1 frame (inside) instead of 20 within this of the zone point"}
   stick_power_min: {pool_offset: 0x2AC, value: 0.1, read_by: "fn_8869B928 0x8869B9B8", meaning: "human approach needs move power S+0x9DC at least this"}
 doubles_points:  # team+0x160..+0x190, world cm [x, y, z, w]; written by fn_886BB0A8 when team+0x1A3 is clear
   near_side_0x317C51B7:

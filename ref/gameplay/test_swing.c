@@ -146,11 +146,17 @@ static void test_clip(void)
     GpClip c = {m, 2, 40.0f};
     CHECK(near(gp_clip_contact_frame(&c, 0x22222222u, 100.0f, 1.0f), 120.0f));
     CHECK(near(gp_clip_contact_frame(&c, 0x33333333u, 100.0f, 1.0f), -1.0f));
-    GpFitParams fp = {110.0f, 130.0f, 1.0f, 2.0f, 0.5f, 0.25f};
-    GpFitInput in = {120.0f, 121.0f, 0.5f, 0.2f, 0.4f};
-    CHECK(near(gp_clip_fit_cost(&in, &fp), 1.0f + 1.0f + 0.1f + 0.1f));
-    in.contact_frame = 140.0f;
+    GpFitParams fp = {20.0f, -5.0f, 60.0f, 60.0f};
+    GpFitInput in = {10.0f, 30.0f, 10.0f, 40.0f, 0.0f, 1};
+    CHECK(near(gp_clip_fit_cost(&in, &fp), 900.0f + 100.0f + 1600.0f));
+    in.contact_frame = 20.0f;                       /* latest is exclusive */
     CHECK(gp_clip_fit_cost(&in, &fp) < 0.0f);
+    in.contact_frame = 10.0f; in.err_z = 70.0f;     /* outside the z tolerance */
+    CHECK(gp_clip_fit_cost(&in, &fp) < 0.0f);
+    in.has_racket_event = 0; in.root_distance = 600.0f; /* preparation clip: 100 cm */
+    CHECK(gp_clip_fit_cost(&in, &fp) > 0.0f);
+    CHECK(near(gp_clip_prep_tolerance(375.0f, 15.0f), 80.0f));
+    CHECK(near(gp_clip_prep_tolerance(0.0f, 70.0f), 70.0f));
 }
 
 int main(void)

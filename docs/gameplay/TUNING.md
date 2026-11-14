@@ -106,10 +106,18 @@ Surfaces do not change ball physics; a per-surface bounce needs a code hook (sur
 | run speed limit (human) | 10 m/s | `02_PlayerSettings.yaml` `0x3D4 /HitPositionSelection/6b347916/Rush/Reachability/MaxSpeed` (PT+0x230) |
 | run speed limit (AI) | 4, 5, 6, 8, 9..10 m/s by level | `00_AI.yaml` `/AISettings/51b273d0/AIStyle[s]/Difficulty[d]/41d66350` |
 | walk vs run override | table PT+0x34C | `02_PlayerSettings.yaml` |
-| reach | `ReachBall` 8.0 / 300.0 | `08_DoubleSettings.yaml` |
+| reach | `ReachBall` 8.0 / 300.0 (GE2: no code reader of DoubleSettings 0xC24..0xC54 found, repositioning.md s4; I: unused) | `08_DoubleSettings.yaml` |
 | no-drift-wide rule | 40 frames, 100 cm off centre (x 1.0), sideways 60-120 deg | `04_RepositioningSettings.yaml` `/29eac4a0/35f11e7b` (0xAA4), `/29eac4a0/d446f64c` (0xAA8); TU1 adds `/29eac4a0/e26ae391` (latched form); angles are code constants (OPEN 6.5) |
 | RB fast reposition zone | x > -500 cm, events every 5 frames | `04_RepositioningSettings.yaml` `/RepositioningPointSettings/8154a27b` (0xA98), `/7440a9da` (0xA8C) |
 | RB near-net speed scale | 1.15 | graph 37 `VolleySpeedCoef` (CONST; writes S+0x39C, whose State image starts at 1.0) |
+| repositioning points (singles) | net (300, hit_z/6), baseline (1300, -hit_z/12); play mode 1: x from `/RepositioningPointSettings/00fb8872`, `/2c987b2e` | graph 116 `RepositioningPointSingle`; `04_RepositioningSettings.yaml` (file 0xA64/0xA68); `data/gameplay/repositioning.yaml` |
+| human net-rush rule | baseline box x -1100..-700, z -400..400; stick within 40 deg; net point farther than 175 cm (AI: arrived within 175 cm); no event under 20 frames | `04_RepositioningSettings.yaml` `/bad7533a/*`, `/324f5246`, `/0081913b`, `/98294782` (file 0x9E4..0xAAC) |
+| doubles wait points | net 300 cm and baseline 1200 cm from the net, z ±300 | **code constants** in `.rdata` 0x880FC9B0..0x880FCA20 (DLL patch; `DoubleSettings` has no reader) |
+| replan check | 40 cm lateral, along-line windows (-30, 0) / (-20, 30), 10 frames | code constants (pool +0x404/+0x79C/+0x42C/+0x134) |
+| state-15 volley choice | depth 700 cm, corridor 225, stick power 0.4, angle window table | code (pool +0x82C/+0x4EC/+0x118); table `02_PlayerSettings.yaml` PT+0x1EC (`InputNotation/e7c89177/Range`) |
+| Steps max speed | data value is lost: code writes 3.0 back into PT+0x210 after each raised (6.0) search | code (pool +0x4C / +0x1D8); change the code constant, not the data |
+| AI post-swing stand-still | `#6e33662f` frames (about 16-24) | the RepositioningComponents mix graphs (117..137) |
+| swing clip fit | contact window 0..20 ticks (reach), -5..15 (miss); racket-point box 60 x 60 cm (reach), 60 x 80 (miss); nearest clip wins (no weights); prep clips widen to 60..100 cm with root displacement 150..600 cm | `02_PlayerSettings.yaml` PT+0x3CC..0x3E8; widening constants in code (stats-swing-clipfit s4) |
 | serve position limits | `ServiceConstraint` MinZ 40 / MaxZ 375 cm | `05_MoveConstraintsSettings.yaml` |
 | animation speed with vigor | RushSpeedCoef, SwingSpeedCoef graphs | Expressions |
 
@@ -171,4 +179,7 @@ them on in retail. Each entry is **I** until a runtime check (OPEN.md s11) confi
 | Timing ability | `BestAbility` curves blended by the TimingAbility graphs | the worst and best curves are identical (timing-and-fatigue s1) | make `.../5ae85f27/BestAbility` differ from `848c2a13` (data only) |
 | Clip Tolerancy arrays | per-clip Up/Down/X/Z tolerances (cm) for the swing clip fit | copied into selector arrays but never read (OPEN 3.6) | a code change in the clip fit `fn_886D3AD8` to use them |
 | AimingConfig `#5ed23100` (+0x94) | a per-config flag, true on the serve configs | no reader (OPEN 1.16) | code that reads it; meaning unknown |
+| AI stop rule (`fn_886A3DF0`) | the AI stands still when `#2b4b4baa < 0.5` or StopMoving > 0.5 and its frames left are below `#2ac5965a` | every repositioning graph outputs `#2b4b4baa` = 1, StopMoving = 0, `#2ac5965a` = 0 (repositioning.md s3.2) | edit those graph outputs (data only) |
+| PositioningComponents Volley / BaseLine / InsideOut | AI positioning weights | copied to the Final record, never read (repositioning.md s3.4) | code |
+| `DoubleSettings`, `/AISettings/52945bdd/Double` | doubles positioning settings | no code reader; doubles points are code constants (repositioning.md s4) | code, or patch the `.rdata` points |
 | `#be5d458f`, `#aee2d90b`, `#693eedbe` (S+0x768/0x7D0/0x7D8) | inputs of control/aiming graphs | never written; State images 0 / 0 / 1000 (OPEN 1.10) | a code writer; or edit the State image (`data/gameplay/tunables/State/06_PlayerStates.yaml`) to a constant |

@@ -36,11 +36,11 @@ behaviour.
 | # | item | raised in | settle | status |
 |---|---|---|---|---|
 | 2.1 | Curves step or ramp | ball-physics s14.1, analyser-graphs | load-time fixup | **closed** by G1 (ramps; graphs-decoded s2). ball-physics s11 values are STEP readings with RAMP in brackets |
-| 2.2 | Serve sub-record `row+0x10` and stroke ranges `row+0x14` readers | ball-physics s14.2, shot-templates s8.1 | reader search | partly: no reader found by G3b (likely unused) |
+| 2.2 | Serve sub-record `row+0x10` and stroke ranges `row+0x14` readers | ball-physics s14.2, shot-templates s8.1 | reader search | partly: no reader found by G3b (likely unused). GE2: not settleable from code (the G3b propagation search already covered the row and tpl-relative paths); runtime check R14 |
 | 2.3 | Live ball keeps the State.bin image `+0x4C0..0x4E1`; net height | ball-physics s14.3, gp4 s5 | runtime dump (Xenia) | open (needs a runtime) |
 | 2.4 | Bounce rotation: the unclamped tilt weight `|5 spin_a|`, `1 - c40` speed factor, yaw kick | ball-physics s14.6, shot-templates s8.5 | runtime bounce dump, or a matched `fn_889C1C80` | open (code read H; physics meaning M) |
-| 2.5 | Kind routines `fn_888AC748/ACA68/ACDA8` only characterised | gp4 s5 | transcribe | partly (ported via the golden-vector reference of gp4b) |
-| 2.6 | Command `f4C` and spin blend distribution (S+0x778, S+0x774) | shot-templates s8.3 | evaluate the power graphs 198/238-273 | partly: both are graph outputs (ball-physics s16) |
+| 2.5 | Kind routines `fn_888AC748/ACA68/ACDA8` only characterised | gp4 s5 | transcribe | **closed** (GE2, C): one body with three metrics. The callee sequences of the three functions are identical except the metric: none for AverageSpeed, `fn_888AAB98` \|v(0)\|^2 for InitialSpeed, `fn_888AAA70` \|v(tau)\|^2 for BounceSpeed. Each runs two 20-step bisections, the 4 x 200 net-raise loop and `fn_888AC688`. Transcription: gp4b 5.2, `ref/gameplay/ball.c` `solve_speed`, `src/xbox360/bm_ball_model.c` |
+| 2.6 | Command `f4C` and spin blend distribution (S+0x778, S+0x774) | shot-templates s8.3 | evaluate the power graphs 198/238-273 | partly: both are graph outputs (ball-physics s16). GE2: the writers are known (power graph of each class into PowerfulFactor S+0x778, then graph 198; `#07902e50` S+0x774 = curve of PowerfulFactor in 241/242/246/247, serve graphs 255-257). Their distribution depends on the play inputs (charge, timing, ratings) and the repo has no graph evaluator, so it is a runtime measurement: R15 |
 | 2.7 | Net hit-test polarity | gp4 s5 | runtime | open |
 
 ## 3. Movement and animation
@@ -53,13 +53,13 @@ behaviour.
 | 3.4 | Vivacity source of the transition speed | movement-and-animation s5.6 | graph binding of Vivacity (graph 14) to the transition lerp | open |
 | 3.5 | Power/Control "VeryGood" swing keys never set by code, yet the 74 Fatality clips ask for VeryGood | movement-and-animation s5.1, s6.1 | does the swing query read `S+0x3B4/0x3B8` at all | **partly** (GE1, C): the keys are read by `fn_886629C8` to pick the ShotSpecific resolution grade and the 0.75 factors S+0x798/0x79C (OPEN 1.9); they stay Good. Whether the clip query filters on them (which would make the Fatality clips unreachable) is still open: read the `qualifier_sources` consumer in the swing selector The binding is an XPath (`SwingSelection/Output/Power`, `.../Control`) resolved at load, so a code scan cannot rule out the clip query reading it. Runtime check R2 (s11). |
 | 3.6 | Who reads the clip Tolerancy arrays | movement-and-animation s5.3 | reader of the record's Tolerancy offsets | **partly** (GE1, C for the scans, I for the conclusion): only the copy `fn_886D3310`, the debug editor `fn_886D7638` and the selector destructor at `0x886D36D8` touch the per-clip arrays (selector +0x40..+0x7C). Two scans over 0x88640000-0x88700000 (functions loading four or more of those offsets from one base; any such load feeding an `lfsx` within 8 instructions) found no reader. I: the Tolerancy values are dead at runtime; the clip fit uses the AnimIface tolerances `+0x3D8/+0x3DC` (gp7) instead Runtime check R3 (s11). |
-| 3.7 | TimingState field names `S+0xCF0` (3fe3a099), `S+0xD00` (1490306b) | movement-and-animation s5.5 | crc preimage | partly: meanings known (frames to contact; ball speed km/h), names U; see s9 |
+| 3.7 | TimingState field names `S+0xCF0` (3fe3a099), `S+0xD00` (1490306b) | movement-and-animation s5.5 | crc preimage | partly: meanings known (frames to contact; ball speed km/h), names U; see s9. GE2: crc32 search over all 1- and 2-word CamelCase combinations of the 5,703-word vocabulary of `names.yaml` plus timing words, and 3-word combinations of 68 timing words, found no preimage for `3fe3a099`, `1490306b` or their TimingState neighbours. Names only; no gameplay effect and no runtime check can recover them |
 | 3.8 | ReceiverState fields `S+0xC28/0xC2C/0xC38` | brief | names and writers | **closed** for meaning (GE1, C; names still U): the hit-point block `ReceiverState.#c7b7bdac` is filled by `fn_8868FCC0 +0x39C..+0x3C8`: `#2c63ee31` (C24) = frames from now to the chosen hit sample; `#8760acf5` (C28) = distance player-to-hit point (cm); `#420a6cfc` (C2C) = required run speed `dist x 0.01 / (frames / 60)` (m/s); `BallDifficulty` (C30) from a table; `ShotDifficulty` (C34) = S+0x7A8; `#2f6930a4` (C38) = a coordinate of the mirrored hit point (I: height); `Spin` (C3C); C40 = frames as float |
 | 3.9 | Reach/lunge, wait positions after a shot (second hashed machine, base profile `cfg+0x1F8`) | movement-and-ai A.5 | decode | **partly** (GE2, C + D; [repositioning.md](repositioning.md)): the wait positions after a shot are decoded. Singles uses graph 116: net point (300, hit_z/6) and baseline point (1300, -hit_z/12). Doubles uses four hard-coded points at 300/1200 cm and z ±300. They are chosen by the human stick rule or the AI Volley/BaseLine draw. Open: reach/lunge with base profile `cfg+0x1F8` |
 | 3.10 | `SpectacularVolleys` flag S+0x388 reader | traits-and-skills s5 | closed by G6b: the swing category condition VolleySpectacular | closed |
 | 3.11 | PlayerController vtable slot 21 caller (`fn_886B4B80`) | player-and-movement s9.1 | indirect-call trace | open |
 | 3.12 | PT+0x31C/0x32C/0x33C/0x37C and PT+0x450..0x5D3 readers | player-and-movement s9.4 | scan with other bases | open |
-| 3.13 | Clip-fit cost terms and weights (`fn_886D3AD8`) | stats-swing-clipfit s4 | VMX read | partly (structure V, G4b) |
+| 3.13 | Clip-fit cost terms and weights (`fn_886D3AD8`) | stats-swing-clipfit s4 | VMX read | **closed** (GE2, C; stats-swing-clipfit s4, `gp_clip_fit_cost` in `ref/gameplay/clip_fit.c`): no weights. The cost is the squared 3-D distance between the clip's racket point and the requested point. Gates: earliest < contact tick < latest, plus x / z boxes (widened with root displacement for clips without a racket event). The arg-min wins |
 
 ## 4. AI
 
@@ -94,7 +94,7 @@ behaviour.
 | # | item | raised in | settle | status |
 |---|---|---|---|---|
 | 7.1 | XBin signature check and archive first-match rule (TU precedence) | title-update-balance s6.1 | read the loader | open |
-| 7.2 | 0x8C animation record fields beyond the known ones | df s8.2 | correlate with names | partly (G6 decoded the qualifier masks) |
+| 7.2 | 0x8C animation record fields beyond the known ones | df s8.2 | correlate with names | **closed** (GE2, D: field names from `Layoutall.bin` type `AnimationDB::Animation` 0x66D79967; df s8 item 2; values in `data/gameplay/animation_clips.yaml`). `record+0xC` = PreEventIndirection.FirstIndex, which is -1 exactly when the clip has no EventRacket (1,546 / 3,184). The readers of AngleClamp, ServeDropTime, MaximumOccurency and Group were not searched |
 | 7.3 | InputMapper `+0x18/+0x24` gesture blocks, root floats 0.55/0.8 | controls s12.8 | reader search (PS Move code) | open (no gameplay effect for a pad) |
 | 7.4 | Polar stick angle +0.5 offset | controls s12.10 | runtime | open |
 | 7.5 | `Expressions.bin` in TU1 does not parse ("unexpected signature") | controls s16 | fix the parser or diff the bytes | open |
@@ -141,6 +141,11 @@ gameplay words (GE1, `crc32`) found none of them; the G5b/G4c searches are wider
   doubles points). 3.2 and 3.9 partly (replan check, volley-or-bounce tests, mode slack geometry,
   wait positions). New note `repositioning.md`, tool `tools/ts4data/repositioning.py` -> 
   `data/gameplay/repositioning.yaml`, models `mv_*`/`rp_*` in `ref/gameplay/movement.c`.
+* GE2: closed 2.5 (the three speed-kind routines have the same body and differ only in the metric:
+  callee sequence measured, none / `fn_888AAB98` / `fn_888AAA70`; transcribed in gp4b 5.2 and
+  `ref/gameplay/ball.c` `solve_speed`), 3.13 (clip-fit cost = squared distance, arg-min, no weights;
+  `gp_clip_fit_cost`), 7.2 (0x8C record names from Layoutall). 2.2 and 2.6 point at R14 and R15;
+  3.7 searched without result (names only).
 * GE2: closed 3.2 (planner cases 10-18 of `fn_886B8468` transcribed into `mv_next_state`; the human
   volley-or-bounce choice of state 15 and the side flags of 17/18; read from code).
 
@@ -163,4 +168,6 @@ Addresses are retail `Swing_DLL` (disc, no TU1). `S` = the PlayerState of the wa
 | R10 | 1.6 inside-out | log `InsideOut` S+0x7C8 and the two side flags at `fn_886AE528 +0x37C..+0x3A8` for run-around forehands with LT | confirms the reading "the ball crosses to the side the player is running around" |
 | R11 | 5.1 rest multipliers | log the match-info bytes `+0xD4/+0xD5/+0xDC` and the `rest` argument of `fn_8866EE48` at point, game and set ends | confirms rest 1 / 2 / 3 = point / game / set |
 | R12 | 3.1 sprint state | log the action hash read by `fn_8866FB60` (0x8866FB94) while RB is held, during a recovery run and while chasing a ball | expected `0x7653DEC8` ActionRepositioning during the recovery (sprint applies), `0xA740FF84` ActionReceiver while chasing (sprint ignored); a sprint seen while chasing would mean another path |
+| R14 | 2.2 template sub-records | read watch on `row+0x10` and `row+0x14` (and the floats they point to) of the 37 template rows (Settings file 0x137C + i x 0x8C) during serves and rallies | no read: unused data. A read: note the PC; it is the consumer |
+| R15 | 2.6 PowerfulFactor and spin blend | log S+0x778 and S+0x774 at `fn_886AE528 +0x594` / `+0x5A4` (command `C+0x4C`, `C+0x50`) for each shot, with the stroke, charge and timing | the distribution of the secondary weight `w = clamp01(1 - S+0x778)` and of the spin blend; decides how often the Apogee / DropTime stage matters (shot-templates s8.3) |
 | R13 | 3.2 replan check | log the return of `fn_886A9678` and the state change in `fn_886B8468` around the swing | 1 -> state 9 within 10 frames of contact, -1 -> 13 earlier (movement-and-ai A.4c) |

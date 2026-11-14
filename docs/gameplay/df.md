@@ -400,7 +400,17 @@ a raw-address disassembly through `work/ppcdis/target/release/ppcdis` on the PE 
 ## 8. Open items and first steps when data arrives
 1. **First file**: run `tools/ts4data/xbin.py info/scan` on `Animations.bin`. Expected: `w4` = file offset of a u32 table whose entries ascend and fall inside the file; `body+0x50` is a plausible `{rel,count}`; the count equals the number of records and `rel` lands inside the file.
    If the root is not at body+0, search with `scan` for the header whose target array has stride 0x8C (all `id@+0x84` values distinct).
-2. Record field names for the 0x8C records beyond id/ratio/slot/scale/annotations/segments are unknown (+0x00..+0x0B, +0x10, +0x18..+0x37, +0x48..+0x5B, +0x78..+0x83, +0x88); decode by correlating with clip names/ids from `AnimationsInterface.bin`.
+2. (GE2, D: closed from `Layoutall.bin` type `Pam::SwingAnimation::AnimationDB::Animation` 0x66D79967, size 0x8C.) Record
+   fields: +0x00 RuntimeParam {NextSpeedCoef, CurrentBlendCoef, StepIndex u16}; +0x0C PreEventIndirection {FirstIndex,
+   NormalIndex} (s16; FirstIndex != -1 on exactly the 1,638 records with an EventRacket annotation, so the clip-fit test
+   `record+0xC != -1` reads FirstIndex); +0x10 BallBouncePreEventIndirection.FirstIndex; +0x14 Properties: FrameCount,
+   +0x18 SpeedCoef, +0x1C Setup (CKey), +0x20 GroupIndex, +0x22 SubGroupIndex, +0x24/+0x26 Hand event range,
+   +0x28/+0x2A Facial event range, +0x2C NoMirror, +0x2D IgnoreSpeedCoef, +0x30..+0x44 TolerancyUp/Down/XPos/XNeg/ZPos/ZNeg
+   (the "Tolerancy arrays" of OPEN 3.6), +0x48/+0x4C AngleClampLeft/Right, +0x50 ServeDropTime, +0x54 MaximumOccurency;
+   +0x58 MotionData (Steps {From, To}); +0x64 AnimEventList {Id, Pos, Duration, Orientation}; +0x70 TransitionEventList
+   (0x28 rows: CyclePosition, BlendCyclePosition, Direction, Pace, Position, Duration, DefaultCyclePosition, ReactivityTag,
+   StartBlendTag, In, Out); +0x7C Element; +0x84 Id; +0x88 PlayCountStat. Values per clip in
+   `data/gameplay/animation_clips.yaml` (`group` .. `pre_event_normal`).
 3. `AnimationsInterface.bin`, `Global.bin`, `Behavior.bin`, `CoreTech_Xenon.bin` schemas: only loader entry points are known (fn_88773438, fn_8879A4F8..., fn_887F65B8, fn_889BD370); the typed-hash table in section 6 identifies which reader parses which node.
 4. The shot-template table's source file and the XData binding that fills `S+0x3C` were not found (4.1).
 5. `.arc`: FAT directory table, member compression flag, how `GameplayEOP.arc` members are named (hash only) - validate `tools/ts4data/arc.py list` on `Core.arc` first.

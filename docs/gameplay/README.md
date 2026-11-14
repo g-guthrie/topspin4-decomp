@@ -44,6 +44,7 @@ has a superseded passage it carries a pointer to the note that corrects it.
 | [timing-and-fatigue.md](timing-and-fatigue.md) | Timing and vigor (GE1) | TimingValue from frames-to-ball (perfect = 20 frames), TimingAbility inert in retail; vigor per frame and between points; `ref/gameplay/timing.c`, `fatigue.c` |
 | [shot-templates.md](shot-templates.md) | Shot template decoder | Template field meanings and what the numbers say |
 | [movement-and-ai.md](movement-and-ai.md) | Movement planner and opponent input | Planner states, AI input path (B.2 aim corrected by ai-inputs.md) |
+| [repositioning.md](repositioning.md) | Repositioning (GE2) | Wait points after a shot (graph 116, doubles code points), human net-rush rule, AI Volley/BaseLine draw and post-swing hold, inert stop rule and positioning components, Mover |
 | [rules-and-scoring.md](rules-and-scoring.md) | Rules and scoring | Standard scoring class, tie-break serving and ends, serve rules, umpire calls; `ref/gameplay/rules.c` |
 | [stats-swing-clipfit.md](stats-swing-clipfit.md) | Stats, swing window, clip fit | Stats application, swing-selection window, clip-fit cost |
 | [title-update-balance.md](title-update-balance.md) | Title Update 1 | April/May 2011 balance changes in data; September 2011 changes absent |

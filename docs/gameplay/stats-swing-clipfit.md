@@ -129,15 +129,29 @@ Phase windows are 0x28-byte rows (`+0x70`, count `+0x74`); `fn_886D4978` splits 
 `{record*, t0, t1, t0', t1', flags}` appended to the planner's list (I). The accepted contact frame must lie in
 `[tuning+0x3d0, tuning+0x3d4]` (one range of frames, V) and a second band `+0x3d8/+0x3dc` is read for the position test (I).
 
-**Open (U):** the cost terms (timing error, position error, height, facing) and their weights. The function is vector-heavy (VMX128 root-motion
-sampling via `fn_88644CE8`, rotation by `fn_881BD4B8`), the weights are disc data (records of `Animations.bin`/`AnimationsInterface.bin`, loaders
-`fn_88774300`, `fn_88773438`, record fields in gp7 s7), and the best cost is stored at planner `+0x170` (gp7 s6). `ref/gameplay/clip_fit.c`
-therefore only implements the verified marker -> contact frame mapping and a *scaffold* weighted sum clearly outside the verified set.
+**Cost (GE2, C; `fn_886D3AD8` 0x886D4444..0x886D4710, `gp_clip_fit_cost`).** There are no weights and no timing,
+height or facing terms. For each sub-window the planner computes:
+
+* the contact tick `f = n + 10 + (marker time - window start - pre-roll) x clip length` (`n` a frame count of the
+  query; the +10 is `addi r19, r8, 0xA`, I for `n`);
+* the error vector `e` = the clip's racket point (root displacement after `fn_88644CE8` / `fn_881BD4B8`, plus
+  the marker offset) minus the requested point (AnimIface `+0x3C0` relative to the position at `+0x564`), `w = 0`.
+
+The sub-window is accepted when `earliest < f < latest` (AnimIface `+0x3D4` / `+0x3D0`, both exclusive) and
+`|e.x| < tol_x`, `|e.z| < tol_z` (AnimIface `+0x3D8` / `+0x3DC`). For a clip without a racket event (record
+`+0xC == -1`, Preparation marker) each tolerance becomes `max(60 + 40 clamp((d - 150) / 450, 0, 1), data)`
+with `d` = |root displacement| (constants pool +0x15C = 60, +0x404 = 40, +0x470 = 450, +0x710 = 1/450,
+`lbl_880C8FD0` = 150). The cost is `|e|^2` (`vmsum3fp`). The **smallest** cost wins (strictly smaller), and
+the planner stores cost `+0x170`, record `+0x168`, window start `+0x178`, `+0x16C`, `+0x174` and the contact
+tick `+0x464 = +0x3FC + (int)f`. With AnimIface `+0x3E0` set, the other branches only write a debug point to
+the stack. The AnimIface values are copied from PlayerTuning per query: reach `fn_886A26E0` (PT+0x3CC/0x3D0
+window 0..20, PT+0x3DC/0x3E0 tolerances 60/60), miss `fn_886A58F0` (-5..15 ticks, 60/80 cm), see
+`data/gameplay/player.yaml`. So the clip choice is the nearest racket point inside a time window and a box.
 
 ## 5. Not found / next steps
 1. Writer of the eight rating floats and of the `+0x640` list (block copy or reflection setter; check `fn_888BA888`, `fn_8890B068` consumers of `PlayerInfoList`).
 2. Which graph consumes `S+0x74c` and the other ratings (needs the disc graph files; node type names).
-3. The clip-fit cost: decode the vector part of `fn_886D3AD8` (VMX128 is not supported by Ghidra 12.1.2 / capstone here: a local decoder was needed).
+3. (closed by GE2: the clip-fit cost is the squared distance, s4.)
 4. `fn_8868AF88` weights (`fn_88678C68` etc.) as in gp2.
 
 ## 6. Reproduction

@@ -31,6 +31,11 @@ POOL_VALUES = [
     ("approach_stick_window_deg", None, "fn_8869B928 0x8869BA78", "read from Settings (RepositioningPointSettings/324f5246), see settings"),
     ("doubles_ai_depth_split_x_cm", 0x77C, "fn_886A40A8 0x886A41A4", "doubles AI with no mode yet: local x below this -> baseline point, else net point"),
     ("deg_to_rad", 0x184, "fn_8869B928 0x8869BA7C", "degrees to radians"),
+    ("s15_volley_depth_cm", 0x82C, "fn_886B8468 0x886B9700", "state 15 human: nearest sample of neither type is a volley when |x| below this"),
+    ("s15_corridor_max", 0x4EC, "fn_886B8468 0x886B9738", "state 15 human: volley kept when |S+0xC6C| below this"),
+    ("s15_stick_power_min", 0x118, "fn_886B8468 0x886B9758", "state 15 human: stick decides when Stick_MovePolar.Power above this (window = Table2D PT+0x1EC)"),
+    ("s14_heading_max_rad", 0x830, "fn_886B8468 0x886BA10C", "state 14: replan when the stand-point direction turned more than this from S+0x9D0"),
+    ("s17_zone_radius_cm", 0xF0, "fn_886B8468 0x886B9A58", "states 17/18: hold threshold 1 frame (inside) instead of 20 within this of the zone point"),
     ("stick_power_min", 0x2AC, "fn_8869B928 0x8869B9B8", "human approach needs move power S+0x9DC at least this"),
 ]
 

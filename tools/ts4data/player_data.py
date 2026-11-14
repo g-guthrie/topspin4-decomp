@@ -187,6 +187,12 @@ class Bin:
     def u16(self, o):
         return struct.unpack_from(">H", self.b, o)[0]
 
+    def s16(self, o):
+        return struct.unpack_from(">h", self.b, o)[0]
+
+    def u8(self, o):
+        return self.b[o]
+
     def desc(self, o, stride=4, maxn=4096):
         """12-byte {rel,count,cap} descriptor -> (abs, count) or None."""
         if o < 0 or o + 12 > len(self.b):
@@ -584,6 +590,12 @@ def animation_clips(db, names):
             "i": i, "name": names.get(rid, "%08x" % rid), "id": "%08x" % rid, "frames": r6(frames),
             "seconds": r6(frames / 60.0), "slot": None if slot == 0xFFFF else slot, "tag": "%08x" % b.u32(r + 0x1C),
             "f18": r6(b.f32(r + 0x18)), "kind": POLY.get(b.u32(r + 0x60), "%08x" % b.u32(r + 0x60)),
+            # Animation.Properties names from Layoutall (type 0x66D79967, GE2, OPEN 7.2)
+            "group": b.s16(r + 0x20), "sub_group": b.s16(r + 0x22), "no_mirror": b.u8(r + 0x2C),
+            "ignore_speed_coef": b.u8(r + 0x2D),
+            "tolerancy": [r6(b.f32(r + o)) for o in (0x30, 0x34, 0x38, 0x3C, 0x40, 0x44)],
+            "angle_clamp": [r6(b.f32(r + 0x48)), r6(b.f32(r + 0x4C))], "serve_drop_time": r6(b.f32(r + 0x50)),
+            "max_occurrence": b.s32(r + 0x54), "pre_event_first": b.s16(r + 0x0C), "pre_event_normal": b.s16(r + 0x0E),
             "contact_phase": contact, "contact_frame": None if contact is None else r6(contact * frames),
             "preparation_phase": prep, "preparation_frame": None if prep is None else r6(prep * frames),
             "annotations": anns, "segments": segs,

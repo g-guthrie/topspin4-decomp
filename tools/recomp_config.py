@@ -470,6 +470,56 @@ def toml_switches(switches):
     return '\n'.join(out)
 
 
+def branch_targets(img, start, size):
+    """(site, target, conditional) for relative b/bc without link in [start, start+size)."""
+    out = []
+    code = img.read(start, size)
+    for off in range(0, size, 4):
+        w = struct.unpack_from('>I', code, off)[0]
+        op = w >> 26
+        if w & 1 or w & 2:
+            continue
+        site = start + off
+        if op == 18:
+            li = w & 0x03FFFFFC
+            if li & 0x02000000:
+                li -= 0x04000000
+            out.append((site, (site + li) & 0xFFFFFFFF, False))
+        elif op == 16:
+            out.append((site, (site + s16(w & 0xFFFC)) & 0xFFFFFFFF, True))
+    return out
+
+
+def extend_for_neighbours(chosen, img, max_span=0x400):
+    """Grow a function to cover a branch into the body (not the start) of an adjacent function.
+
+    Jeff/pdata sometimes split hand-written CRT loops or shared tails into two symbols; XenonRecomp
+    then drops the branch (`// ERROR`) or emits a goto to an undeclared label. The neighbour keeps
+    its own entry (functions may overlap in XenonRecomp's list), so direct calls to it still work.
+    Returns (new list, number of extensions)."""
+    starts = [a for a, _ in chosen]
+    size = dict(chosen)
+    n = 0
+    for i, (a, sz) in enumerate(chosen):
+        end = a + size[a]
+        for site, tgt, cond in branch_targets(img, a, sz):
+            if a <= tgt < a + sz:
+                continue
+            j = bisect.bisect_right(starts, tgt) - 1
+            if j < 0 or tgt == starts[j] or tgt >= starts[j] + size[starts[j]]:
+                continue  # tail call to a function start, or not inside a known function
+            b = starts[j]
+            if b > a and b + size[b] - end <= max_span and abs(j - i) <= 2:
+                end = max(end, b + size[b])
+            elif b < a and a + size[a] - (b + size[b]) <= max_span and abs(j - i) <= 2:
+                size[b] = max(size[b], a + size[a] - b)
+                n += 1
+        if end != a + size[a]:
+            size[a] = end - a
+            n += 1
+    return [(a, size[a]) for a in starts], n
+
+
 def select_functions(fns, helpers, img):
     """Non-overlapping code functions, minus the save/restore helpers XenonRecomp emits itself."""
     skip = set()
@@ -501,6 +551,9 @@ def cmd_config(args):
         if v:
             extra[k + '_address'] = int(v, 0)
     functions = select_functions(fns, helpers, img)
+    extended = 0
+    if not args.no_extend:
+        functions, extended = extend_for_neighbours(functions, img)
     switches, unresolved, sites, other, bctrl = scan_functions(img, fns)
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -515,6 +568,7 @@ def cmd_config(args):
     rep = {
         'functions_in_symbols': len(fns),
         'functions_emitted': len(functions),
+        'functions_extended_over_neighbour': extended,
         'helpers': {k: '0x%X' % v for k, v in sorted(helpers.items())},
         'switches': len(switches),
         'switch_kinds': dict(kinds),
@@ -721,6 +775,7 @@ def main(argv=None):
     c.add_argument('--out-dir', required=True)
     c.add_argument('--setjmp')
     c.add_argument('--longjmp')
+    c.add_argument('--no-extend', action='store_true', help='do not grow functions over split neighbours')
     c.add_argument('--opt', action='append', help='XenonRecomp optimisation flag to enable, e.g. skip_lr')
     b = sub.add_parser('boundary')
     b.add_argument('--image', required=True)

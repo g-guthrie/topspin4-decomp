@@ -2,9 +2,9 @@
  * Reference implementation: animation clip contact timing and fit scaffold.
  *
  * Source: Swing_DLL.xex planner 0x886D3AD8 / 0x886D4978 (part C of
- * docs/gameplay/stats-swing-clipfit.md).  Only the marker lookup, the
- * normalised-time to frame mapping and the acceptance window are verified.
- * The cost aggregate below is a scaffold, NOT the engine's formula.
+ * docs/gameplay/stats-swing-clipfit.md).  The marker lookup, the
+ * normalised-time to frame mapping, the acceptance gates and the cost (squared
+ * distance, arg-min; GE2) are read from code.
  */
 #include "gp_swing.h"
 
@@ -25,12 +25,25 @@ float gp_clip_contact_frame(const GpClip *c, uint32_t contact_id,
     return -1.0f;
 }
 
+float gp_clip_prep_tolerance(float root_distance, float data_tol)
+{
+    float t = root_distance - 150.0f;            /* lbl_880C8FD0 */
+    if (t < 0.0f) t = 0.0f;
+    if (t > 450.0f) t = 450.0f;                  /* pool +0x470 */
+    t = t * (1.0f / 450.0f) * 40.0f + 60.0f;     /* pool +0x710, +0x404, +0x15C */
+    return t > data_tol ? t : data_tol;
+}
+
 float gp_clip_fit_cost(const GpFitInput *in, const GpFitParams *p)
 {
-    if (in->contact_frame < p->window_lo || in->contact_frame > p->window_hi)
+    float tx = p->tol_x, tz = p->tol_z;
+    if (!(in->contact_frame < p->latest && in->contact_frame > p->earliest))
         return -1.0f;
-    return p->w_timing * absf(in->contact_frame - in->target_frame) +
-           p->w_position * absf(in->pos_error) +
-           p->w_height * absf(in->height_error) +
-           p->w_facing * absf(in->facing_error);
+    if (!in->has_racket_event) {
+        tx = gp_clip_prep_tolerance(in->root_distance, p->tol_x);
+        tz = gp_clip_prep_tolerance(in->root_distance, p->tol_z);
+    }
+    if (!(absf(in->err_x) < tx && absf(in->err_z) < tz))
+        return -1.0f;
+    return in->err_x * in->err_x + in->err_y * in->err_y + in->err_z * in->err_z;
 }

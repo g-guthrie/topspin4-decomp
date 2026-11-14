@@ -136,10 +136,26 @@ the most; the drop shot misses 30-40 % at `|t| = 0.3`. OutcomeNet sends low-cont
 * **Planner windows** (movement-and-ai A.4b): ReadyA when within 8.1 m of the net with more than
   40 frames left; a late Rush re-plan when the stick points back with power > 0.2 under 10
   frames before contact.
+* **Planner transitions** (GE2, C; movement-and-ai A.3/A.4c, `mv_next_state`): a replan
+  (state 9) or hold (13) follows when the position predicted 20 frames ahead is within 40 cm of
+  the stand-point line (`fn_886A9678`). Rush is valid only when the slack (frames left minus the
+  preparation table and the lead) is short: under 35 frames at 400 cm. In state 15 a human
+  chooses volley or bounce from the nearest ball sample's type, its depth (|x| < 700) and the move
+  stick (pushed within the PT+0x1EC angle window = volley); the other candidates become
+  unreachable. Steps raises `PT+0x210` to 6 m/s while searching and then writes back **3.0**, not
+  the data value.
+* **Repositioning** (GE2, [repositioning.md](repositioning.md)): after a shot the player walks to
+  a wait point: singles uses graph 116, net (300, hit_z/6) or baseline (1300, -hit_z/12) in the
+  opponent's hit frame. A human goes to the net when inside the baseline box or holding RB,
+  pushing within 40 deg of the net point, more than 175 cm from it, and with no event under 20
+  frames away. The RB sprint only applies during this repositioning action (`0x7653DEC8`), not
+  while chasing a ball (`0xA740FF84`).
 * **Locomotion clips** (movement-and-animation s2): move-set sectors, transition matrix (314 x
   314) and 128 rules; RushSpeedCoef from Speed and vigor.
 * **Swing** (gp7, stats-swing-clipfit): the planner writes the contact target; the clip is chosen
-  by geometric fit at the EventRacket annotation and time-scaled to the contact frame. Swing
+  by geometric fit at the EventRacket annotation and time-scaled to the contact frame (GE2, C: the
+  nearest racket point by squared distance among clips whose contact tick lies in the window and
+  whose x / z error is inside the box; no weights). Swing
   category rules decide Fatality, spectacular volleys and dives (controls s17, movement-and-animation s3).
 
 ## 9. Ratings, skills and fatigue
@@ -167,8 +183,12 @@ SwingReactionTime) and a run-speed limit of 4..10 m/s (stats-coaches-career s5,
 player-and-movement s1). So a harder AI times better, aims closer to the lines, reacts faster and
 accepts faster runs; it does not get different physics ([ai-inputs.md](ai-inputs.md) s6). Its reaction delay is the
 positioning component `#79b99b60` (frames), its net rushes are random draws on the
-repositioning components Volley and RushRepositioning, and StopMoving makes it stand still
-([ai-inputs.md](ai-inputs.md) s5b).
+repositioning components (net if `U[0, Volley + BaseLine] < Volley`; RushRepositioning gives
+its RB), and after its swing it stands still for `#6e33662f` frames (about 16-24). The stop rule
+(StopMoving) and the PositioningComponents Volley/BaseLine/InsideOut are inert in retail. In
+doubles the wait points are four hard-coded points per team (net 300 cm, baseline 1200 cm, z
+±300); the AI takes the half away from its partner, and humans are not moved
+([ai-inputs.md](ai-inputs.md) s5b, [repositioning.md](repositioning.md)).
 
 ## 11. Rules, crowd and rewards
 
@@ -196,6 +216,8 @@ September 2011 changes are not in TU1 (title-update-balance).
 ## 13. Reference models
 
 Portable C in `ref/gameplay/`, built and tested by `tests/test_gameplay_ref.py`: `rules.c` (with the doubles rotation),
-`movement.c` (with the planner window predicates) + `ai_driver.c`, `stats.c` + `swing_window.c` + `clip_fit.c`, `player.c`, `ball.c`,
+`movement.c` (with the planner window predicates, the full state machine `mv_next_state`, the
+replan check, line intersection, mode slack, the Mover average, the state-15 volley choice, the
+inside-out test and the `rp_*` repositioning rules) + `ai_driver.c`, `stats.c` + `swing_window.c` + `clip_fit.c`, `player.c`, `ball.c`,
 `shot_select.c`, `locomotion.c`, `anim_select.c`, `swing_category.c`, `aim.c`, `timing.c` +
 `fatigue.c`.
