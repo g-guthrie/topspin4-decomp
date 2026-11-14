@@ -51,7 +51,8 @@ sides run on the same emulator, so this only matters for absolute values.
 its relocations are resolved by name against `symbols.txt` (the matching split's and the
 committed one), `fn_/lbl_` names and `_XXXXXXXX` address suffixes; a candidate symbol that is a
 real image symbol (also a static whose name integration would give to a placeholder) resolves to
-the image address, so calls land on the same callee addresses as the original's and data
+the image address, and so does a function the candidate's own file defines under a name ending in
+an image function's address (a context copy of a callee, common in near-miss drafts), so calls land on the same callee addresses as the original's and data
 references read the same image bytes. When the candidate has exactly the original's relocation
 layout, names it gives to placeholders are mapped from the original's relocations (what
 `fn_check` reports as RENAME). Unresolved names make the function `UNCHECKED`.

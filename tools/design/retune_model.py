@@ -249,9 +249,9 @@ def timing_outcome(rng, perfect_half, good_half, sigma=HUMAN_SIGMA_F):
 
 # =========================================================================== speed stack (forehand launch mph)
 
-BASE_MPH = {"Flat": 75.5, "TopSpin": 70.5, "Slice": 61.0, "Lob": 50.0}
-RATING_MPH = (16.0, 5.0)      # mph per unit of (power stat - 0.40) and (hand stat - 0.40)
-HOLD_MPH = {"Finesse": -7.0, "Medium": 0.0, "Powerful": 5.0, "Rushed": -2.0, "Overcharge": 11.5}
+BASE_MPH = {"Flat": 74.0, "TopSpin": 69.0, "Slice": 60.0, "Lob": 49.0}
+RATING_MPH = (20.0, 5.0)      # mph per unit of (power stat - 0.50) and (hand stat - 0.50)
+HOLD_MPH = {"Finesse": -7.0, "Medium": 0.0, "Powerful": 5.0, "Rushed": -2.0, "Overcharge": 13.0}
 TIMING_MPH = {"Perfect": 3.0, "Good": 0.0, "Poor": -4.0, "Mistimed": -9.0}
 SKILL_MPH = 2.0               # a pace skill (InstantRocket / HighlyFlammable class) on Powerful+ swings
 FATIGUE_MPH = 6.0             # mph lost at vigor 0
@@ -264,7 +264,7 @@ def stack_speed(cls, grade, hold, timing, power_stat, hand_stat, vigor=1.0, skil
     """Launch speed (mph) of a groundstroke and the stack terms (dict).  noise = the execution draw (mph)."""
     terms = {
         "base": BASE_MPH[cls],
-        "ratings": RATING_MPH[0] * (power_stat - 0.40) + RATING_MPH[1] * (hand_stat - 0.40),
+        "ratings": RATING_MPH[0] * (power_stat - 0.50) + RATING_MPH[1] * (hand_stat - 0.50),
         "grade": GRADE_FX[grade]["pace"],
         "hold": HOLD_MPH[hold],
         "timing": TIMING_MPH[timing],
