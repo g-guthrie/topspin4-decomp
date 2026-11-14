@@ -577,8 +577,10 @@ G6b status (details in s17): items 2, 3, 4 answered; 1, 5, 6, 8 still open.
 7. **Risk hold value `S+0xE08`.** No reader found; check the TU1 code patch (`Swing_DLL.xexp`), which is
    not analysed.
 8. **InputMapper `+0x18/+0x24` blocks** (gesture tables, probably PS Move) and the root floats 0.55/0.8.
-9. **Groundstroke TimingValue (S+0xD08).** Its computation lives in the TimingState analysers; the
-   early/late asymmetry for groundstrokes needs those graphs evaluated (G1/G4b).
+9. **Groundstroke TimingValue (S+0xD08).** *Closed by GE1 (`timing-and-fatigue.md` s1):* no analyser
+   computes it; code `fn_8867DF68` maps frames-to-ball through the `SwingTimingSelectionList` curves
+   (0 = commit 20 frames before arrival). The early/late asymmetry is in the fault graphs
+   (`graphs-decoded.md` s11: late about twice early).
 10. **Polar stick angle offset.** The port uses `Angle = atan2(x, y)` (normalised angle + 0.5, which
     matches the pi/2 tests of `fn_886A3440` and gp2); confirm the +0.5 under Xenia.
 
@@ -725,7 +727,7 @@ planner (stroke-side selection), not in the shot tree.
 | 1 | LT and RT both set `@Risk`; Risk only turns Slice into drop shot / drop volley; LT + X also drops; inside-out reads `Buttons.LT` and forces the stroke side outside the tree | **Confirmed** (H). LT + X = drop shot. Inside-out: `fn_886BD690` (request), `fn_886AE528` (decision), `fn_886A3440` -> `fn_886A2E48` (side commit) |
 | 2 | RB = follow-to-net / fast reposition; RB on a serve = serve & volley; LB may be dead | **Partly confirmed.** RB -> `@Rush`, `@ReqFastRepos`, `@ReqVolleyRepos`; the sticky `PC+0x3D` drives the condition `GoToNet` (0x7E522D55: sticky RB and `|player z| < PlayerTuning+0x6F0` = 300) and blocks `Fatality` (0xC78C8F06: false when the AI has `S+0x4E0` set or when sticky RB holds in the same zone; otherwise power > 0.15; corrected by G6b, s17) in the swing-category rule list (`fn_886AFDF8` -> `fn_88697E98`, data at Settings file ~0x2AC00, category `0x1EB396F9`). `ReqVolleyRepos` is also read by the side filter `fn_8869A520 +0x210`. Serve & volley uses `S+0x4E0`; its human writer was not found (AI: `fn_886825A0`). RB's `@ReqFastRepos` 0x4E2 is read by `fn_8868C218` and `fn_8869B928`, `@Rush` 0x4DD by `fn_8865E430`. LB: `@ReqSpeedSwing` 0x4E1 is read by `fn_8868C660` and `fn_886BB0A8`, and the press edges `@OnRaiseReqBaselineRepos`/`@OnRaiseReqVolleyRepos` (0x4E3/0x4E4) by `fn_8866F9F0`; no reader of the level `@ReqBaselineRepos` 0x4DE was found. So LB is not dead in code even though the manual lists it as N/A (M) |
 | 3 | Control / Normal / Power = Finesse / Medium / Powerful by hold time | **Confirmed** (H): < 0.1875 s, 0.1875..0.875 s, >= 0.875 s. The rows differ in template speed (gp4b); power also feeds 25 aiming/control graphs. Error growth with timing per tier is in those graphs (G4b) |
-| 4 | Late timing penalised more than early | **Confirmed for the serve** (H, s9.3 table). For groundstrokes the control graphs' timing curves are symmetric in `ManualShotTiming` (graph 188); the TimingValue computation itself is in the TimingState analysers (not traced here) |
+| 4 | Late timing penalised more than early | **Confirmed for the serve** (H, s9.3 table). For groundstrokes the control graphs' timing curves are symmetric in `ManualShotTiming` (graph 188); **superseded:** the fault graphs (`graphs-decoded.md` s11, graph 292) punish late about twice as hard as early; TimingValue itself is symmetric in frames (`timing-and-fatigue.md` s1) |
 | 5 | Volleys ignore charge | **Confirmed for the row** (H): the volley branch (node 30) has no tier test, so the volley row is the same at any hold time. The charge counter still runs and S+0xE00 still feeds the analysers |
 
 ## 16. TU1 differences (H)

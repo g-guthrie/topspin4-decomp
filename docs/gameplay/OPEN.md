@@ -21,7 +21,7 @@ behaviour.
 | 1.5 | Consumer of the control-graph list `ShotResolutionSettings.00236a48` | controls s12.6 | find who maps a template row to its EvaluateList entry | **partly**: the entry lives at `SC+0x100` (SC = `PC+0x70`) and is run by `fn_88659AA0` (Element graphs) and `fn_88695C48` (aiming graph `+0x18`, FinalEfficiency); the writer of `SC+0x100` was not located |
 | 1.6 | Inside-out geometry: the two side tests of `fn_886AE528 +0x78..+0x3B4`, stick window direction | controls s12.5, s15.4 | transcribe the side tests | open |
 | 1.7 | Skill linked to the inside-out bonus (control graphs, SkillList link r67) | controls s12.6, s15.3 | resolve the link port's skill id | open |
-| 1.8 | Groundstroke TimingValue `S+0xD08`: computation and early/late asymmetry | controls s12.9 | read the TimingState analyser graphs (BaselineTimingAbility, VolleyTimingAbility, `39cfdeba`) and the code that feeds them | open |
+| 1.8 | Groundstroke TimingValue `S+0xD08`: computation and early/late asymmetry | controls s12.9 | read the TimingState analyser graphs (BaselineTimingAbility, VolleyTimingAbility, `39cfdeba`) and the code that feeds them | **closed** ([timing-and-fatigue.md](timing-and-fatigue.md) s1): code `fn_8867DF68` maps frames-to-ball through `SwingTimingSelectionList` curves; perfect = commit 20 frames before arrival; worst/best curves identical in retail so TimingAbility has no effect; the asymmetry is in the fault graphs, not the curve |
 | 1.9 | `ShotSpecific` grade (`S+0x6BC`, copy of `ShotDef[i].9b182896`): copy code and grade selector | graphs-decoded s10 | find the copy | open |
 | 1.10 | Writers of `#1407106c` (S+0x770), `#be5d458f` (0x768), `#693eedbe` (0x7D8), `#aee2d90b` (0x7D0), `#3c6beee9` (S+0xD84) | graphs-decoded s10 | store scan by offset off `S` | open |
 | 1.11 | `HandAttributeQuality` (S+0x74C) exact rule | graphs-decoded s10 | read the stores in `fn_88699xxx`, `fn_886BA254`, `fn_886BD4F0` | open |
@@ -73,7 +73,7 @@ behaviour.
 
 | # | item | raised in | settle | status |
 |---|---|---|---|---|
-| 5.1 | Vigor integration `S+0xF64` | brief | read the fatigue update (`fn_886BC1E0`, `fn_886BBC38`) | open |
+| 5.1 | Vigor integration `S+0xF64` | brief | read the fatigue update (`fn_886BC1E0`, `fn_886BBC38`) | **closed** ([timing-and-fatigue.md](timing-and-fatigue.md) s2): per-frame `fn_88690540` (movement + animation load, FatigueIngame), point end `fn_8866EE48` (recovery x rest 1/2/3, capped at VigorMax); meaning of match-info flags `+0xD4/+0xD5/+0xDC` is I |
 | 5.2 | Flammable counter `((world+0x50)+0x4C)[team].+0x30` incrementer | player-and-movement s9.5 | find the store | open |
 | 5.3 | MatchAnalyser trigger names (`b6b22409`, ...) | traits-and-skills s5 | crc | open (name only; writers known, G4c) |
 | 5.4 | Graph 22 for players 1-3; readers of ServePrecision/ServePower | graphs-decoded s10 | code read | open |
@@ -127,3 +127,5 @@ gameplay words (GE1, `crc32`) found none of them; the G5b/G4c searches are wider
 
 * GE1, 2026-11-14: closed 1.1-1.4 (aiming), 4.1 (AI inputs); partly 1.5, 3.7, 3.8. New tool
   `tools/ts4data/ps_layout.py` prints any reflected type with absolute offsets and names.
+* GE1, 2026-11-14: closed 1.8 (TimingValue, read from code + data) and 5.1 (vigor, read from
+  code); both in `timing-and-fatigue.md`, with `ref/gameplay/timing.c` and `ref/gameplay/fatigue.c`.

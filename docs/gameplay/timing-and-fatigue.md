@@ -36,7 +36,7 @@ in the retail game):
 | volley TimingValue | +1 | +0.6 | +0.3 | **0** | -0.3 | -0.6 | -1 |
 
 Positive is **late**, negative **early**. Perfect timing is a commit **20 frames (1/3 s) before
-the ball arrives**. The fault graphs forgive `|t| < 0.3` (`graphs-decoded.md` s11), which is
+the ball arrives**. Under normal conditions the fault graphs forgive `|t| < 0.3` (`graphs-decoded.md` s11), which is
 about 14.4 to 26 frames for a groundstroke: a 12-frame (0.2 s) window. A volley's window is
 15 to 25 frames.
 
@@ -105,8 +105,7 @@ Tuning: capacity and per-point recovery are the FatigueConst / `80ce1a10` graph 
 ## 3. Reproduction
 
 ```sh
-python3 tools/fn_asm.py fn_8867DF68 fn_88661B60 fn_886B3CF8 fn_88690540 fn_886902E8 fn_8866ECA8
-python3 work/disc/ppcd.py 8866EE48 0x154      # fn_8866EE48 (no symbol in fn_asm)
+python3 tools/fn_asm.py fn_8867DF68 fn_88661B60 fn_886B3CF8 fn_88690540 fn_886902E8 fn_8866ECA8 fn_8866EE48
 python3 tools/ts4data/ps_layout.py --range 0xCE0 0xD20      # TimingState
 python3 tools/ts4data/ps_layout.py --range 0xF20 0xF80      # Fatigue
 grep -n 'SwingTimingSelectionList\|/Fatigue/' data/gameplay/tunables/Settings/02_PlayerSettings.yaml
