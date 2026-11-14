@@ -630,6 +630,9 @@ class Gen:
             a = rd(ops[1]); nohi(a); n = num(ops[2])
             m = (1 << (32 - n)) - 1 if mn == 'clrlwi' else (0xFFFFFFFF << n) & 0xFFFFFFFF
             setr(ops[0], f'({a} & {hex(m)})'); return
+        if mn == 'clrlslwi':
+            a = rd(ops[1]); nohi(a); b, n = num(ops[2]), num(ops[3])
+            setr(ops[0], f'(({a} & {hex((1 << (32 - b)) - 1)}) << {n})'); return
         if mn == 'rotlwi':
             a = rd(ops[1]); nohi(a); n = num(ops[2])
             setr(ops[0], f'(({a} << {n}) | ({a} >> {32 - n}))' if n else a); return

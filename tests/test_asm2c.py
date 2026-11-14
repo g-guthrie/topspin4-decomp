@@ -257,6 +257,10 @@ class StructurizerTests(unittest.TestCase):
         self.assertIn("_InterlockedDecrement(", r["body"])
         self.assertEqual(r["intrinsics"], ["dec"])
 
+    def test_clrlslwi(self):
+        r = gen(["clrlslwi r3,r3,17,4", "blr"])
+        self.assertIn("& 0x7fff) << 4", r["body"])
+
     def test_typed_stack_locals(self):
         t = ["stfd f1,0x50(r1)", "lwz r3,0x54(r1)", "lbz r4,0x58(r1)", "stb r4,0x59(r1)", "blr"]
         r = gen(t)
