@@ -217,7 +217,7 @@ TU1 data and code also have no reference).
     `this+0x16E`).
   - *GE1 decode (C for both forms; I for the meaning of the stamp):* the rule runs when
     `(world+0x28)+0x9C` is clear, the opponent is not in mode 2 and `QualityOfPlay.#0e765502`
-    (S+0x1048, S+0x1058 in TU1) is non-zero. With `d = wrap(MoveState RequiredMove.LocalDirection)`
+    (S+0x1048, S+0x1058 in TU1; the rally shot count, OPEN 6.1) is non-zero. With `d = wrap(MoveState RequiredMove.LocalDirection)`
     and `z` = the player's lateral position, it zeroes the three move powers (`RequiredMove`,
     `#b21d6f76`, `ConstrainedMove`) when `d` is in (-2.095, -1.047) rad and `z > 100 x /d446f64c`
     (= 100 cm), or `d` is in (1.047, 2.095) and `z < -100 cm`: a sideways push further out from more

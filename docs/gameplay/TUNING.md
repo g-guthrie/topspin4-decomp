@@ -157,4 +157,4 @@ Surfaces do not change ball physics; a per-surface bounce needs a code hook (sur
 Crowd gain step table, cap by shot count and crowd events: `Settings` cfg+0x824 / +0x830 /
 +0x83C, inside `PlayerSettings` (`02_PlayerSettings.yaml`; readable in `data/gameplay/crowd.yaml`).
 Reward rules and points: gp1 s4 (offsets there use gp1's base; check against the YAML paths
-before editing). The applause-level computation is still open (OPEN 6.1).
+before editing). The excitement events reach the sound code through `fn_8888DD18` (OPEN 6.1).

@@ -83,11 +83,11 @@ behaviour.
 
 | # | item | raised in | settle | status |
 |---|---|---|---|---|
-| 6.1 | Where crowd excitement and applause level are computed (upstream of `fn_8888DD18`) | brief, gp1 | trace the callers of `fn_8888DD18` | open |
+| 6.1 | Where crowd excitement and applause level are computed (upstream of `fn_8888DD18`) | brief, gp1 | trace the callers of `fn_8888DD18` | **closed** (GE1, C): `fn_8888DD18` is the sound side's gameplay-event dispatcher (switch on the event hash: `SetExcitement` dcbb46e0 and `31217b4c` share one handler, `Applause` d3f7df83, `bcff8fb4`, `fdbe3ef7`, ...). The events are posted through the queue `fn_88683D78`/`fn_88181240` by the reward model of gp1: `fn_88683FA8` (per shot: `SetExcitement` with value `gauge+0x84 + gauge+0x88 x level`, the integer excitement level `+0xC0`), `fn_88684AE0` (reset), `fn_88686110` -> `fn_88685060` (end of point, `Applause` and `EndOfPoint`). The per-player crowd level 0..1 is `fn_8868EA30` (gp1 s6, values in `data/gameplay/crowd.yaml`); its rally ratio divides by `QualityOfPlay.#0e765502` (S+0x1048), which is the **shot count of the rally** (reset to 0 there) |
 | 6.2 | Doubles: rotation arithmetic, serve order, positioning | rules-and-scoring s7, brief | read `0x88674ED0`, `0x88674D58`, the doubles AI | open (aim widening closed in aiming.md) |
 | 6.3 | Rally judge `fn_886A84C0` skimmed | rules-and-scoring s7 | transcribe | open |
 | 6.4 | Initial server choice | rules-and-scoring s7 | find a toss step | open |
-| 6.5 | TU1 `RepositioningSettings/29eac4a0` flag and `fn_886795C8` | title-update-balance s6.2 | read `fn_886795C8` and its TU1 form | **closed** (GE1, C; title-update-balance s3.4): both forms cancel a sideways push further out (direction 60-120 deg either side) when the player is more than 100 cm off centre. The disc applies it on every frame of the 40 frames after a stamp `(ctx+0x84)+0x10`; TU1 with `e26ae391` applies it at the stamp and then only while the push continues (latch `+0x16E`). I: the stamp is the last hit; the gate `QualityOfPlay.#0e765502` is unnamed |
+| 6.5 | TU1 `RepositioningSettings/29eac4a0` flag and `fn_886795C8` | title-update-balance s6.2 | read `fn_886795C8` and its TU1 form | **closed** (GE1, C; title-update-balance s3.4): both forms cancel a sideways push further out (direction 60-120 deg either side) when the player is more than 100 cm off centre. The disc applies it on every frame of the 40 frames after a stamp `(ctx+0x84)+0x10`; TU1 with `e26ae391` applies it at the stamp and then only while the push continues (latch `+0x16E`). The gate `QualityOfPlay.#0e765502` (S+0x1048) is the rally shot count (6.1), so the rule needs at least one shot in the rally. I: the stamp is the last hit |
 
 ## 7. Data formats and infrastructure
 
@@ -133,4 +133,4 @@ gameplay words (GE1, `crc32`) found none of them; the G5b/G4c searches are wider
 * GE1: 3.2 partly (four planner predicates transcribed, `ref/gameplay/movement.c` helpers with tests).
 * GE1: 1.6 partly (inside-out side test transcribed), 1.7 closed (already resolved in traits_skills.yaml); 3.1 RB fast reposition read.
 * GE1: 1.9 closed (ShotSpecific copy and grade selector; only Good rows are used in retail), 3.5 partly.
-* GE1: 6.5 closed (TU1 repositioning rule, both forms read); 4.2 partly (AI repositioning draws, stop rule, reaction delay = positioning component); 1.5 closed (SC+0x100 writer); 1.16 partly (no reader); 1.11 closed (HandAttributeQuality rule); 3.6 and 1.10 partly (no readers / writers found by scans; likely dead or constant fields).
+* GE1: 6.1 closed (event chain to the sound dispatcher; S+0x1048 = rally shot count); 6.5 closed (TU1 repositioning rule, both forms read); 4.2 partly (AI repositioning draws, stop rule, reaction delay = positioning component); 1.5 closed (SC+0x100 writer); 1.16 partly (no reader); 1.11 closed (HandAttributeQuality rule); 3.6 and 1.10 partly (no readers / writers found by scans; likely dead or constant fields).

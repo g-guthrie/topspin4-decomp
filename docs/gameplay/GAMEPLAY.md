@@ -179,7 +179,9 @@ repositioning components Volley and RushRepositioning, and StopMoving makes it s
   let is replayed, double fault awards the point.
 * **Crowd and rewards** (gp1): each shot earns named rewards that fill an excitement gauge; point-
   end modifiers weight the point (rally length, winner type, importance); the level drives crowd
-  audio (`SetExcitement`). The upstream of the applause level is open (OPEN 6.1).
+  audio: `SetExcitement`, `Applause` and `EndOfPoint` events go through a queue to the sound
+  dispatcher `fn_8888DD18` (OPEN 6.1). The per-player crowd level 0..1 updates at rally end from
+  the average shot quality (`data/gameplay/crowd.yaml`).
 
 ## 12. Title Update 1
 

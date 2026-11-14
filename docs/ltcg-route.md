@@ -24,8 +24,9 @@ LT1, 2026-11-14. Every claim below comes with the command that reproduces it. Sc
   - `0x889CE9E0`: Lua `auxsort`, 860 bytes.
 
   zlib `deflate` (0x88876730) goes from 135 differing instructions to 4.
-- **Integration** needs four lines in `tools/matching.py`, which I was not allowed to edit. The patch is in
-  `docs/ltcg-route-pipeline.patch`; the design is in section 6.
+- **Integration** needs four lines in `tools/matching.py` plus small hooks in the integration tools
+  (`docs/ltcg-route-pipeline.patch`, design in section 6). The coordinator applied it in commit `cb9135a`,
+  and matching run b43 verified the first LTCG unit (`ga6_ltcg_b.c`).
 
 ## 2. Tool versions and inputs
 
@@ -292,8 +293,8 @@ Output is `MATCH`, `FAIL` with a side-by-side listing, `RENAME` lines (as in fn_
 
 **Writing the spec.** Use `work/specs/<ID>/<stem>.json` in the HS1 format, plus `"route": "ltcg"`,
 `"context"`, and `"include"` / `"no_include"` when used. Include only functions that MATCH in a final run
-of the exact command. Until the owner applies `docs/ltcg-route-pipeline.patch`, these specs cannot be
-integrated. Say "LTCG route" in your report.
+of the exact command. `tools/integrate_match.py` records such specs in `config/54540859/ltcg_units.json`.
+Say "LTCG route" in your report.
 
 **Pitfalls.**
 - Write float literals freely: pooled literals compare by value.
@@ -376,6 +377,7 @@ source shape.
 - `tools/ltcg_route.py`: pipeline hooks.
 - `tests/test_fn_check_ltcg.py`, `tests/test_ltcg_route.py`: synthetic tests.
 - `docs/ltcg-route-pipeline.patch`: the matching.py / integrate_match.py / sync_progress.py / link_probe.py
-  wiring, not applied.
+  wiring, applied in `cb9135a`. The later `"include"` key and the `flags(...):` context prefix live only in
+  `tools/ltcg_route.py` and `tools/fn_check_ltcg.py`, so matching.py needs no further change.
 - `docs/ltcg-ranges.json`: the range map.
 - `src/xbox360/lt1_msg_send_encrypted.c`, `src/xbox360/lt1_lua_auxsort.c`, and specs in `work/specs/LT1/`.
