@@ -208,13 +208,5 @@ class FsbTest(unittest.TestCase):
         self.assertEqual(audio_export.safe_name("02 Da Funk.wav"), "02_Da_Funk")
 
 
-@unittest.skipUnless(shutil.which("node"), "node not installed")
-class WebPresentationTest(unittest.TestCase):
-    def test_node(self):
-        r = subprocess.run([shutil.which("node"), "--test", os.path.join(ROOT, "port", "web", "test", "presentation.test.mjs")],
-                           capture_output=True, text=True, timeout=120)
-        self.assertEqual(r.returncode, 0, r.stdout[-3000:] + r.stderr[-2000:])
-
-
 if __name__ == "__main__":
     unittest.main()

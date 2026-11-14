@@ -12,6 +12,8 @@ and prints:
             relocated immediates and call targets are masked; tier 2: identical
             opcode sequence, registers and immediates ignored), plus clusters of
             unmatched functions that share a sequence with each other;
+  profile   unmatched bytes per bucket in functions that contain a bctr (switch),
+            VMX, floating point or 64-bit integer instructions;
   sample    a deterministic stratified sample of unmatched functions in a size
             window (for translator experiments), one hex address per line.
 
@@ -22,6 +24,7 @@ in docs/decomp-remaining.md.  Ranges are [lo, hi).
 
   python3 tools/decomp_survey.py buckets [--json out.json]
   python3 tools/decomp_survey.py dups [--min-size 128]
+  python3 tools/decomp_survey.py profile [--min-size 256]
   python3 tools/decomp_survey.py sample --lo 256 --hi 2048 -n 32 [--seed 1]
 """
 import argparse, collections, hashlib, json, random, re, struct, sys
@@ -38,8 +41,15 @@ RANGES = [
     (0x882A0000, 0x882A8000, 'xdk: PIX / D3D debug', 'sdk'),
     (0x882A8000, 0x882E25D8, 'xdk: D3DX9 texture/image loaders', 'sdk'),
     (0x882E25D8, 0x883089E0, 'lib: libpng 1.0.5 + libjpeg 6b + zlib 1.1.x', 'lib'),
-    (0x883089E0, 0x884014E0, 'fmod: FMOD Ex 4.32.02 + Event + codecs', 'sdk'),
-    (0x884014E0, 0x88562AB8, 'havok: 5.5.0 Animation + Physics + Base', 'sdk'),
+    (0x883089E0, 0x88399650, 'fmod: FMOD Ex 4.32.02 core, DSP, output', 'sdk'),
+    (0x88399650, 0x883C6218, 'lib: FMOD codecs (CELT, FLAC, Ogg, Vorbis)', 'lib'),
+    (0x883C6218, 0x884014E0, 'fmod: FMOD Ex 4.32.02 event/music system', 'sdk'),
+    (0x884014E0, 0x88418000, 'havok: 5.5.0 Animation (hka)', 'sdk'),
+    (0x88418000, 0x88436000, 'havok: 5.5.0 Base/Serialize (hk)', 'sdk'),
+    (0x88436000, 0x884C4000, 'havok: 5.5.0 Physics dynamics/collide (hkp)', 'sdk'),
+    (0x884C4000, 0x884E8000, 'havok: 5.5.0 Serialize/Compat (hk)', 'sdk'),
+    (0x884E8000, 0x88520000, 'havok: 5.5.0 mixed (anim compression, keycode, utils)', 'sdk'),
+    (0x88520000, 0x88562AB8, 'havok: 5.5.0 Physics agents/MOPP (hkp)', 'sdk'),
     (0x88562AB8, 0x88590000, 'xdk: C runtime + xapi', 'sdk'),
     (0x88590000, 0x885D8328, 'xdk: XAudio2 / XMA', 'sdk'),
     (0x885D8328, 0x885DC838, 'xdk: voice (XHV, Mic/Rmc)', 'sdk'),
@@ -274,6 +284,53 @@ def cmd_dups(fns, args):
             print(f"  {len(v):4d} x {v[0]['size']:5d} B  {v[0]['addr']:08X} {bucket_of(v[0]['addr'])[0]}")
 
 
+def features(words):
+    """Coarse code features of one function: jump table (bctr not preceded by a vcall load
+    pattern is not distinguished; any bctr counts), VMX/VMX128, floating point, 64-bit integer,
+    calls."""
+    f = collections.Counter()
+    for w in words:
+        op = w >> 26
+        if op in (4, 5, 6):
+            f['vmx'] += 1
+        elif op in (48, 49, 50, 51, 52, 53, 54, 55, 59, 63):
+            f['fp'] += 1
+        elif op == 19 and ((w >> 1) & 0x3FF) == 528 and not (w & 1):
+            f['bctr'] += 1
+        elif op == 18 and (w & 1):
+            f['bl'] += 1
+        elif op in (30, 58, 62) or (op == 31 and ((w >> 1) & 0x3FF) in (21, 27, 54, 73, 233, 457, 489, 794, 986)):
+            f['i64'] += 1
+    return f
+
+
+def cmd_profile(fns, args):
+    """Per bucket: unmatched bytes (functions >= min-size) that contain a bctr (switch
+    jump table or computed jump), VMX, floating point or 64-bit integer instructions."""
+    img = Image(args.image)
+    rows = collections.defaultdict(collections.Counter)
+    for f in fns:
+        if f['matched'] or f['size'] < args.min_size or f['sec'] != '.text':
+            continue
+        ft = features(img.words(f['addr'], f['size']))
+        r = rows[bucket_of(f['addr'])[0]]
+        r['fns'] += 1; r['bytes'] += f['size']
+        for k in ('bctr', 'vmx', 'fp', 'i64'):
+            if ft[k]:
+                r[k] += f['size']
+        if not (ft['vmx'] or ft['fp']):
+            r['intonly'] += f['size']
+    keys = ('fns', 'bytes', 'bctr', 'vmx', 'fp', 'i64', 'intonly')
+    print(f'unmatched .text functions >= {args.min_size} bytes; columns other than fns are bytes of functions containing the feature')
+    print('| Bucket | ' + ' | '.join(keys) + ' |')
+    print('|---|' + '---:|' * len(keys))
+    tot = collections.Counter()
+    for k, r in sorted(rows.items(), key=lambda kv: -kv[1]['bytes']):
+        print(f'| {k} | ' + ' | '.join(str(r[x]) for x in keys) + ' |')
+        tot.update(r)
+    print('| **total** | ' + ' | '.join(str(tot[x]) for x in keys) + ' |')
+
+
 def cmd_sample(fns, args):
     rng = random.Random(args.seed)
     pool = [f for f in fns if not f['matched'] and f['name'].startswith('fn_') and f['sec'] == '.text'
@@ -301,13 +358,14 @@ def main(argv=None):
     b = sub.add_parser('buckets'); b.add_argument('--json')
     d = sub.add_parser('dups'); d.add_argument('--min-size', type=int, default=128); d.add_argument('--top', type=int, default=15)
     d.add_argument('--fuzzy', type=float, default=0.0, help='also report tier 3 near duplicates at this difflib ratio (e.g. 0.9)')
+    pr = sub.add_parser('profile'); pr.add_argument('--min-size', type=int, default=256)
     s = sub.add_parser('sample')
     s.add_argument('--lo', type=int, default=256); s.add_argument('--hi', type=int, default=2048)
     s.add_argument('-n', type=int, default=32); s.add_argument('--seed', type=int, default=1)
     s.add_argument('--bare', action='store_true', help='addresses only (for asm2c --only-addrs)')
     a = ap.parse_args(argv)
     fns = load_functions(a.symbols, a.match)
-    {'buckets': cmd_buckets, 'dups': cmd_dups, 'sample': cmd_sample}[a.cmd](fns, a)
+    {'buckets': cmd_buckets, 'dups': cmd_dups, 'profile': cmd_profile, 'sample': cmd_sample}[a.cmd](fns, a)
 
 
 if __name__ == '__main__':

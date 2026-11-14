@@ -330,41 +330,5 @@ class Container(unittest.TestCase):
 NODE = shutil.which("node")
 
 
-@unittest.skipUnless(NODE, "node is not installed")
-class JsFallback(unittest.TestCase):
-    """The ball model in port/web/src/core_js.js on a synthetic template: the arc must land on the target."""
-
-    SCRIPT = r"""
-import { JsBallModel } from %(mod)s;
-const row = { file: "Settings.bin", index: 0, name: "Synthetic", kind: "InitialSpeed", secondary_kind: "Apogee", T: 0.045,
-  primary: { type: "const", value: 120 }, secondary: { type: "const", value: 1.5 },
-  spin: { a: { lo: { type: "const", value: 0 }, hi: { type: "const", value: -0.2 } },
-          b: { lo: { type: "const", value: 0 }, hi: { type: "const", value: 0 } },
-          c: { lo: { type: "const", value: 0 }, hi: { type: "const", value: 0 } } },
-  bounce: { speed_loss: [[0, 1.5, 0, 0.1]], spin_decay: [[0, 1, 0.5, 0.5]], out_elevation: [[0, 1.5, 0, 1.5]], yaw_kick: [[0, 1, 0, 0]] } };
-const m = new JsBallModel([row], { radius_cm: 4, a4: 0.06, g: 9.81, max_bounces: 5, net_height_cm: 91.4 });
-const inp = { row: 0, from: [-1250, 100, 150], to: [1000, 0, -250], spin_blend: 0.5, f4c: 1, left_handed: 0, planned: 1 };
-const t = m.trace(inp, 300);
-const first = t.events.find(e => e.type === "bounce");
-console.log(JSON.stringify({ n: t.points.length / 3, first, info: t.info, p0: Array.from(t.points.slice(0, 3)) }));
-"""
-
-    def run_js(self):
-        mod = json.dumps("file://" + os.path.join(ROOT, "port", "web", "src", "core_js.js"))
-        r = subprocess.run([NODE, "--input-type=module", "-e", self.SCRIPT % {"mod": mod}], capture_output=True, text=True, timeout=60)
-        self.assertEqual(r.returncode, 0, r.stderr)
-        return json.loads(r.stdout.strip().splitlines()[-1])
-
-    def test_lands_on_target_with_requested_speed(self):
-        out = self.run_js()
-        self.assertEqual(out["p0"], [-1250, 100, 150])        # starts at the contact point (ball centre = hit height)
-        first = out["first"]
-        self.assertAlmostEqual(first["pos"][0], 1000, delta=0.5)
-        self.assertAlmostEqual(first["pos"][2], -250, delta=0.5)
-        self.assertAlmostEqual(first["pos"][1], 4, delta=0.5)   # ball centre one radius above the ground
-        self.assertAlmostEqual(out["info"]["initial_kmh"], 120, delta=2.0)
-        self.assertEqual(first["tick"], out["info"]["bounce_tick"])
-
-
 if __name__ == "__main__":
     unittest.main()

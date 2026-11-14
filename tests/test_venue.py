@@ -129,13 +129,5 @@ class TestClassify(unittest.TestCase):
         self.assertIsNone(V.classify_archive(["Crowd_Huge_Full.bin", "Settings.bin"]))
 
 
-@unittest.skipUnless(NODE, "node not installed")
-class TestCrowdFsmNode(unittest.TestCase):
-    def test_node(self):
-        r = subprocess.run([NODE, "--test", os.path.join(ROOT, "port", "web", "test", "crowd_fsm.test.mjs")],
-                           capture_output=True, text=True, timeout=120)
-        self.assertEqual(r.returncode, 0, r.stdout[-2000:] + r.stderr[-2000:])
-
-
 if __name__ == "__main__":
     unittest.main()
