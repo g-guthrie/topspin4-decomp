@@ -98,6 +98,8 @@ KNEE_CM, WAIST_CM, SHOULDER_CM, HEAD_CM = 50.0, 95.0, 145.0, 185.0
 PACE_EDGES = (52.0, 78.0, 100.0)
 VOLLEY_PACE_EDGES = (52.0, 80.0, 100.0)
 LOW_VIGOR = 0.30
+VOLLEY_NET_CM = 91.0          # net height at the centre strap (0.914 m); volley height points: >= net + 20 cm: 0,
+                              # net - 15 .. net + 20 or above the head: 1, below net - 15: 2
 TOP_SPEED_REF = 7.5          # m/s: v_req is divided by the player's top speed; callers rescale v_req
 # Score -> grade (retune-systems s2): -1 or 0 VeryGood (Tee-off if the test passes at -1), 1-2 Good, 3 Normal,
 # 4-5 Bad, 6+ VeryBad.
@@ -139,7 +141,10 @@ def grade_points(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, k
     else:
         e = ARRIVAL_EDGES
         arrival = 0 if set_f >= e[0] else 1 if set_f >= e[1] else 2 if set_f >= e[2] else 3
-    if WAIST_CM <= height <= SHOULDER_CM:
+    if volley:          # judged against the net (retune-systems s2a), not the body
+        n = VOLLEY_NET_CM
+        h = 0 if n + 20.0 <= height <= HEAD_CM else 1 if (n - 15.0 <= height < n + 20.0 or height > HEAD_CM) else 2
+    elif WAIST_CM <= height <= SHOULDER_CM:
         h = 0
     elif KNEE_CM <= height <= HEAD_CM:
         h = 1
@@ -190,6 +195,20 @@ GRADE_FX = {
     "Bad": dict(pace_cap=0.82, aim_cap=0.59, aim_min=0.0, err_add=0.08, w_grade=0.90),
     "VeryBad": dict(pace_cap=0.70, aim_cap=0.35, aim_min=0.0, err_add=0.15, w_grade=0.85),
 }
+
+
+# Shot type scales the grade's effect (retune-systems s2a): share of the row's distance from Good applied, on both the
+# penalty and the bonus side.  Drop shot 1.2 on pace-related points (drop_quality).
+GRADE_SHARE = {"Flat": 1.00, "TopSpin": 0.80, "Slice": 0.50, "Lob": 0.50, "Drop": 1.20}
+AIM_KEY_CLASS = {"TopSpinMedium": "TopSpin", "FlatMedium": "Flat", "FlatFinesse": "Flat", "SliceMedium": "Slice",
+                 "FlatPower": "Flat", "DropShot": "Drop"}
+
+
+def row_fx(grade, cls, key):
+    """Row value for this shot type: Good + share x (row - Good)."""
+    k = GRADE_SHARE[cls]
+    good = GRADE_FX["Good"][key]
+    return good + k * (GRADE_FX[grade][key] - good)
 
 
 # =========================================================================== timing window
@@ -341,7 +360,7 @@ def good_row_mph(cls, tier, power_rating):
 def row_max_mph(cls, grade, hold, power_rating):
     """PowerResolution Max of this grade row for the tier reached (perfect timing)."""
     tier = "Full" if hold == "Overcharge" else hold
-    cap = GRADE_FX[grade]["pace_cap"]
+    cap = row_fx(grade, cls, "pace_cap")
     g = good_row_mph(cls, tier, power_rating)
     if cap >= 1.0:
         v = g * (1.0 + (cap - 1.0) * TIER_SHARE_UP[tier])
@@ -367,7 +386,7 @@ def stack_speed(cls, grade, hold, pos, power_stat, hand_stat, vigor=1.0, skill=F
 
 # =========================================================================== charge (frames), retail tiers kept
 
-CHARGE = {"medium_from": 12, "powerful_from": 53, "full_at": 75, "overcharge_past_full": 25}
+CHARGE = {"medium_from": 12, "powerful_from": 53, "full_at": 75, "overcharge_past_full": 10}
 RELEASE_LEAD = 20             # perfect release 20 frames before contact (kept)
 AUTO_COMMIT = 12              # retail auto-commit lead (PT+0x740)
 REACT_PRESS_F = 15            # a human presses about 15 frames after the opponent's contact (judgement)
@@ -566,21 +585,30 @@ def serve_react_ms(v_mph):
     return 500.0 * (200.0 / kmh(v_mph)) ** 0.9
 
 
-def return_grade(serve_mph, placement, vigor=1.0):
-    """Grade of a return from the same score: arrival (central serve: set late; wide: still moving; very wide: a
-    reach), strike-zone height, incoming pace at contact (0.62 of the launch speed)."""
-    arrival = 2 if placement < 0.5 else 3 if placement < 0.8 else 4
-    pace = kmh(serve_mph) * 0.62
-    pe = PACE_EDGES
-    pc = -1 if pace <= pe[0] else 0 if pace <= pe[1] else 1 if pace <= pe[2] else 2
-    score = arrival + pc + (1 if vigor < LOW_VIGOR else 0)
-    return grade_of_score(score)
+RETURN_FAMILY = {"slow_serve_mph": 90.0, "reach_placement": 0.80, "jam_share": 0.08}
+
+
+def return_grade(serve_mph, placement, vigor=1.0, rng=None):
+    """Return of serve as its own family (retune-systems s2a): no pace or arrival-time points.  Good by default; Bad
+    when stretched wide (reach swing) or jammed at the body; VeryGood on a slow serve in the strike zone (the
+    attackable second serve); never Tee-off.  Serve pace reaches the returner through W_react and W_opp only."""
+    F = RETURN_FAMILY
+    jam = rng is not None and placement < 0.5 and rng.random() < F["jam_share"]
+    if placement >= F["reach_placement"] or jam:
+        g = "Bad"
+    elif serve_mph <= F["slow_serve_mph"]:
+        g = "VeryGood"
+    else:
+        g = "Good"
+    if vigor < LOW_VIGOR:
+        g = GRADES[min(len(GRADES) - 1, GRADES.index(g) + 1)]
+    return g
 
 
 def return_quality(rng, ret, serve_mph, placement=0.5, opp_timing="Average", opp_scale=1.0, second=False):
     """Returner outcome: 'unreturned' | 'weak' | 'neutral' | 'good', and the return's timing grade."""
     rt = serve_react_ms(serve_mph)
-    g = return_grade(serve_mph, placement)
+    g = return_grade(serve_mph, placement, ret.vigor if hasattr(ret, "vigor") else 1.0, rng)
     hp, hg, w = window_halfwidths(g, ret.s["ret"], rt, opp_timing, opp_scale)
     t, tf, pos, tv = release(rng, hp, hg)
     reach = 0.97 - 0.40 * max(0.0, placement - 0.5) / 0.5 * (1.15 - 0.3 * ret.s["speed"])
@@ -755,13 +783,13 @@ def hit(rng, p, b, at_net, prm):
         if sit.height < NET_HEIGHT_CM:
             v = min(v, LOW_VOLLEY_CAP_MPH)
     fx = GRADE_FX[g]
-    margin = (R["pace_margin"][cls] + R["margin_hand"] * stat) * fx["pace_cap"]
+    margin = (R["pace_margin"][cls] + R["margin_hand"] * stat) * row_fx(g, cls, "pace_cap")
     if at_net:          # volley errors come mainly from overreach (owner direction)
         err = VOLLEY_BANDS[vb]["err"]
         if hold == "Powerful" and (sit.height < NET_HEIGHT_CM or sit.pace > 100.0):
             err += OVERREACH_ERR
     else:
-        err = timing_error(tv, hold) + R["pace_err"] * max(0.0, v - margin) + fx["err_add"] + R["base_err"]
+        err = timing_error(tv, hold) + R["pace_err"] * max(0.0, v - margin) + row_fx(g, cls, "err_add") + R["base_err"]
     if not at_net and sit.height < 60 and cls in ("Flat", "TopSpin"):   # driving a low ball: it must be lifted
         err += R["low_drive_err"] * max(0.0, v - 70.0) * (60.0 - sit.height) / 30.0
     if b.hitter_net and not at_net:     # passing: the lanes past a net player are narrow
@@ -776,6 +804,9 @@ def hit(rng, p, b, at_net, prm):
     p.spend(R["vigor_cost"][hold] + R["run_cost"] * sit.v_req)
     info = {"grade": g, "timing": t, "fine": tf, "cls": cls, "hold": hold, "mph": v, "band": vb, "rushed": rushed,
             "w": w}
+    if "classlog" in prm and not at_net:
+        prm["classlog"][(g, cls)] += 1
+        prm["classlog"][(g, cls, "err")] += err
     if rng.random() < err:
         return "error", None, info
     if at_net and rng.random() < VOLLEY_BANDS[vb]["putaway"] * (1.0 if hold == "Powerful" else 0.6):
@@ -790,7 +821,7 @@ def hit(rng, p, b, at_net, prm):
                   + rng.gauss(0.0, 0.12), 0.0, 1.0)
     if corner:
         depth = clamp(depth + 0.04, 0.0, 1.0)
-    sp = SPIN_ROW[g]
+    sp = 1.0 + GRADE_SHARE[cls] * (SPIN_ROW[g] - 1.0)
     kick = R["kick"][cls] * sp + (R["kick_hand"] * stat * sp if cls == "TopSpin" else 0.0)
     short = depth < 0.12 and not at_net
     floating = False
@@ -990,7 +1021,10 @@ def play_match(rng, a, b, prm, sets_to_win=2, games_per_set=6):
                 pts[point(server, receiver)] += 1
                 if max(pts.values()) >= 4 and abs(pts[server] - pts[receiver]) >= 2:
                     break
-            games[server if pts[server] > pts[receiver] else receiver] += 1
+            held = pts[server] > pts[receiver]
+            games[server if held else receiver] += 1
+            stats["svc_games_" + server.name] = stats.get("svc_games_" + server.name, 0) + 1
+            stats["svc_held_" + server.name] = stats.get("svc_held_" + server.name, 0) + held
             server, receiver = receiver, server
             if max(games.values()) >= games_per_set and abs(games[a] - games[b]) >= 2:
                 break
@@ -1073,7 +1107,8 @@ DEEP_MAX_CM = 310.0
 
 
 def aim_efficiency(cls_key, grade, timing_fine, hand_stat, pos=None):
-    lo, hi = AIM_GRADE_ROW[grade]
+    c = AIM_KEY_CLASS[cls_key]
+    lo, hi = row_fx(grade, c, "aim_min"), row_fx(grade, c, "aim_cap")
     tq = AIM_TIMING_Q[timing_fine] if pos is None else pos
     q = tq * (AIM_HAND[0] + AIM_HAND[1] * hand_stat)
     return min(EFF_MAX, AIM_CLASS_PEAK[cls_key] * (lo + (hi - lo) * q))
