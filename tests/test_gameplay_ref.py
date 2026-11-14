@@ -18,6 +18,7 @@ MODELS = {
     "locomotion": ["locomotion.c", "test_locomotion.c"],
     "anim_select": ["anim_select.c", "test_anim_select.c"],
     "swing_category": ["swing_category.c", "test_swing_category.c"],
+    "aim": ["aim.c", "test_aim.c"],
 }
 
 
