@@ -433,5 +433,140 @@ class EmitTests(unittest.TestCase):
         self.assertEqual(emit.func_name(r, 0x88167CF0), "ts4_get_u32_off8_88167CF0")
 
 
+class K5Tests(unittest.TestCase):
+    """Round K5: struct parameters, float call arguments/results, leaf register saves."""
+
+    def test_struct_param_home_slot(self):
+        # 12-byte struct by value in r4 + high half of r5, spilled to its home slots
+        r = gen(["lwz r11,0x24(r3)", "std r4,0x20(r1)", "lwz r10,0x24(r1)", "add r3,r11,r10",
+                 "std r5,0x28(r1)", "blr"])
+        self.assertEqual(r["sig"], "ts4_word NAME(ts4_word a0, ts4_args3 sp1)")
+        self.assertIn("sp1.w[1]", r["body"])
+        self.assertEqual(r["structs"], [3])
+
+    def test_struct_param_in_framed_function_and_address_taken(self):
+        t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x80(r1)", "std r4,0xa0(r1)", "std r5,0xa8(r1)",
+             "addi r4,r1,0xa0", "bl 0x0 -> 0x88001000   ; REL24 fn_88001000",
+             "addi r1,r1,0x80", "lwz r12,-0x8(r1)", "mtlr r12", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("ts4_args3 sp1", r["sig"])
+        self.assertIn("(ts4_word)&sp1", r["body"])
+
+    def test_struct_param_passed_on(self):
+        # lwz + rldicr rebuild the struct's register for a callee: the struct is passed as is
+        # f(a, b, struct {w0,w1,w2} s): s is in r5 + the high half of r6 but homed 16-aligned
+        # at F+0x20, so r6 goes to F+0x28 (the slot a word parameter in r5 would use)
+        t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x60(r1)", "std r6,0x88(r1)", "lwz r11,0x88(r1)",
+             "rldicr r6,r11,32,63", "li r7,7", "bl 0x0 -> 0x88001000   ; REL24 fn_88001000",
+             "addi r1,r1,0x60", "lwz r12,-0x8(r1)", "mtlr r12", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("ts4_args3 sp2", r["sig"])
+        self.assertIn("fn_88001000((ts4_word)a0, (ts4_word)a1, sp2, (ts4_word)7)", r["body"])
+
+    def test_struct_argument_built_on_stack(self):
+        t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x70(r1)", "li r11,0", "stw r11,0x50(r1)",
+             "rldicr r6,r11,32,31", "stw r3,0x54(r1)", "ld r5,0x50(r1)",
+             "bl 0x0 -> 0x88001000   ; REL24 fn_88001000",
+             "addi r1,r1,0x70", "lwz r12,-0x8(r1)", "mtlr r12", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("*(ts4_args3 *)&loc50[0]", r["body"])
+        self.assertIn("loc50[2] = (ts4_word)0;", r["body"])
+
+    def test_local_array_at_unaligned_offset_stays_under_16_bytes(self):
+        # frame fill would make loc58 six words; MSVC would 16-align that, so cap at three
+        t = ["mflr r12", "stw r12,-0x8(r1)", "std r31,-0x10(r1)", "stwu r1,-0x80(r1)",
+             "li r11,1", "stw r11,0x50(r1)", "addi r4,r1,0x50", "addi r3,r1,0x58",
+             "bl 0x0 -> 0x88001000   ; REL24 fn_88001000",
+             "addi r1,r1,0x80", "lwz r12,-0x8(r1)", "mtlr r12", "ld r31,-0x10(r1)", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("ts4_word loc58[3];", r["body"])
+
+    def test_address_taken_word_parameter(self):
+        # struct in r3/r4 at F+0x10, then a word parameter in r5 whose address is taken
+        t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x80(r1)", "std r3,0x90(r1)", "std r4,0x98(r1)",
+             "stw r5,0xa4(r1)", "addi r5,r1,0xa4", "addi r4,r1,0x90", "li r3,0",
+             "bl 0x0 -> 0x88001000   ; REL24 fn_88001000",
+             "addi r1,r1,0x80", "lwz r12,-0x8(r1)", "mtlr r12", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("ts4_args3 sp0, ts4_word a2", r["sig"])
+        self.assertIn("(ts4_word)&a2", r["body"])
+
+    def test_leaf_saves_callee_saved_register_in_red_zone(self):
+        r = gen(["std r31,-0x8(r1)", "lwz r31,4(r3)", "stw r31,8(r3)", "ld r31,-0x8(r1)", "blr"])
+        self.assertTrue(r["sig"].startswith("void NAME"))
+
+    def test_float_call_argument_takes_its_gpr_slot(self):
+        # g(a0, f, 3): the float in f1 fills argument position 1 (r4 is not set up)
+        t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x60(r1)", "lfs f1,0(r4)", "li r5,3",
+             "bl 0x0 -> 0x88001000   ; REL24 fn_88001000",
+             "addi r1,r1,0x60", "lwz r12,-0x8(r1)", "mtlr r12", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("fn_88001000((ts4_word)a0, t1, (ts4_word)3)", r["body"].replace("(*(float *)((char *)(ts4_word)(a1) + 0))", "t1"))
+        self.assertEqual(r["fprotos"], {"fn_88001000": ["ts4_word", "float", "ts4_word"]})
+
+    def test_float_call_result(self):
+        t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x60(r1)",
+             "bl 0x0 -> 0x88001000   ; REL24 fn_88001000", "frsp f1,f1",
+             "addi r1,r1,0x60", "lwz r12,-0x8(r1)", "mtlr r12", "blr"]
+        r = gen(t, mode=1)
+        self.assertTrue(r["sig"].startswith("float NAME"))
+        self.assertEqual(r["rtypes"], {"fn_88001000": "double"})
+        self.assertIn("double t1;", r["body"])
+
+    def test_float_register_set_in_one_arm_only_is_dead_after_join(self):
+        t = ["cmpwi cr6,r4,0", f"beq cr6, 0x14 -> {tgt(5)}", "lfs f0,0(r3)", "lfs f13,4(r3)", "stfs f0,8(r3)",
+             "li r11,1", "stb r11,0(r3)", "blr"]
+        r = gen(t)
+        self.assertTrue(r["sig"].startswith("void NAME"))
+
+    def test_emit_declares_struct_types_and_float_prototypes(self):
+        res = {0x88000000: {"kind": "x", "detail": ["d"], "sig": "void NAME(ts4_word a0, ts4_args3 sp1)",
+                            "body": "    fn_88001000((ts4_word)a0, 1.0);\n", "externs": [],
+                            "protos": {"fn_88001000": 2}, "structs": [3],
+                            "fprotos": {"fn_88001000": ["ts4_word", "double"]}, "rtypes": {"fn_88001000": "float"}}}
+        with tempfile.TemporaryDirectory() as d:
+            emit.build(res, [0x88000000], Path(d) / "x.c")
+            text = (Path(d) / "x.c").read_text()
+        self.assertIn("typedef struct ts4_args3 { ts4_word w[3]; } ts4_args3;", text)
+        self.assertIn("float fn_88001000(ts4_word, double);", text)
+
+
+class PermTests(unittest.TestCase):
+    """tools/asm2c/perm.py mutations (pure text transformations)."""
+    BODY = ("    ts4_word t1;\n    ts4_word t2;\n\n    t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 36);\n"
+            "    t2 = fn_1((ts4_word)(t1 + a1));\n    if ((int)t2 < 5) {\n        fn_2((ts4_word)1);\n"
+            "    } else {\n        fn_3((ts4_word)2);\n    }\n    return (t2 & a1);\n")
+
+    def test_commute_swaps_operands_of_one_binary_expression(self):
+        import perm
+        sites = perm.binop_sites("x = ((a + b) * c);")
+        self.assertEqual(len(sites), 2)
+        out = perm.m_commute("    x = (a + b);", "", __import__("random").Random(0))
+        self.assertEqual(out[0], "    x = (b + a);")
+
+    def test_ifinvert_swaps_arms_and_negates(self):
+        import perm
+        body, _ = perm.m_ifinvert(self.BODY, "", __import__("random").Random(0))
+        self.assertIn("if (!((int)t2 < 5)) {\n        fn_3((ts4_word)2);\n    } else {\n        fn_2((ts4_word)1);", body)
+
+    def test_inline_single_use_temporary(self):
+        import perm
+        body, _ = perm.m_inline(self.BODY, "", __import__("random").Random(0))
+        self.assertNotIn("t1", body)
+        self.assertIn("fn_1((ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 36)) + a1))", body)
+
+    def test_swap_respects_dependencies(self):
+        import perm
+        self.assertIsNone(perm.m_swap("    t1 = x;\n    y = t1;", "", __import__("random").Random(0)))
+        self.assertEqual(perm.m_swap("    a = 1;\n    b = 2;", "", __import__("random").Random(0))[0], "    b = 2;\n    a = 1;")
+
+    def test_score_of_parses_fn_check(self):
+        import perm
+        out = ("MATCH f1 vs fn_1 @ 1 size 0x8\nFAIL f2 vs fn_2 @ 2: 3 differing instruction(s), first at +0x4\n"
+               "FAIL f3 vs fn_3 @ 3: size 0x10 != target 0xc; 2 differing instruction(s)")
+        self.assertEqual(perm.score_of(out, {"f1": 1, "f2": 2, "f3": 3}), {1: 0, 2: 3, 3: 1000})
+        self.assertEqual(run.near_misses(out, {"f1": 1, "f2": 2, "f3": 3}), {2: 3})
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -174,7 +174,7 @@ ts4_word fn_887E94F8();
 ts4_word fn_887EA048();
 ts4_word fn_887EDF40();
 ts4_word fn_887EFAE8();
-ts4_word fn_8882ED00();
+ts4_word lib3_lua_dostring_8882ED00();
 ts4_word fn_888348A0();
 ts4_word fn_888AD568();
 ts4_word ts4_if_call_seq_fn_8817EA90_888D85B0();

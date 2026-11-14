@@ -7,14 +7,14 @@ typedef unsigned int u32;
 static const float g_ts4_script_constants[668] = {1.0f};
 #define POOLD(byteoff) (*(const double *)((const char *)g_ts4_script_constants + (byteoff)))
 
-extern const char *fn_8882EB20(void *L, int idx, u32 *len);
-extern const char *fn_8882EA30(void *L, int idx, u32 *len);
+extern const char *lib3_luaL_checklstring_8882EB20(void *L, int idx, u32 *len);
+extern const char *lib3_luaL_checklwstring_8882EA30(void *L, int idx, u32 *len);
 extern double ts4_lua_opt_number_default_8882EA98(void *L, int idx);
 /* Raises a Lua argument error; does not return. */
 #ifdef _MSC_VER
 __declspec(noreturn)
 #endif
-extern void fn_8882E6B8(void *L, int idx, const void *msg);
+extern void lib3_luaL_argerror_8882E6B8(void *L, int idx, const void *msg);
 extern char lbl_880E1A6C[];
 extern void ts4_lua_pushnumber_888240B8(void *L, double n);
 
@@ -29,7 +29,7 @@ typedef struct pc4_lua_state {
 int ts4_lua_string_byte_8882A178(pc4_lua_state *L)
 {
     u32 len;
-    const u8 *s = (const u8 *)fn_8882EB20(L, 1, &len);
+    const u8 *s = (const u8 *)lib3_luaL_checklstring_8882EB20(L, 1, &len);
     char *arg = L->base + 0x10;
     double d;
     int pos;
@@ -52,7 +52,7 @@ int ts4_lua_string_byte_8882A178(pc4_lua_state *L)
 int ts4_lua_wstring_byte_88832558(pc4_lua_state *L)
 {
     u32 len;
-    const u16 *s = (const u16 *)fn_8882EA30(L, 1, &len);
+    const u16 *s = (const u16 *)lib3_luaL_checklwstring_8882EA30(L, 1, &len);
     char *arg = L->base + 0x10;
     double d;
     int pos;
@@ -68,7 +68,7 @@ int ts4_lua_wstring_byte_88832558(pc4_lua_state *L)
         ts4_lua_pushnumber_888240B8(L, (double)s[pos - 1]);
         return 1;
     }
-    fn_8882E6B8(L, 2, lbl_880E1A6C);
+    lib3_luaL_argerror_8882E6B8(L, 2, lbl_880E1A6C);
     return 0;
 }
 

@@ -1,7 +1,7 @@
 /* Swing_DLL.xex 0x889CE9A8-0x889CF69C, executable version 0.0.0.3. */
 
 extern void fn_889C6888(void *, int *);
-extern int fn_8882E0D8(void *, char *, char *);
+extern int lib3_luaL_openlib_8882E0D8(void *, char *, char *);
 extern char lbl_880E17B0[];
 extern char lbl_880C9990[];
 extern double g_ts4_script_constants[];
@@ -21,7 +21,7 @@ extern void fn_88912090(void *);
 
 int ts4_call_889CE9A8(void *x)
 {
-    fn_8882E0D8(x, lbl_880E17B0, lbl_880C9990);
+    lib3_luaL_openlib_8882E0D8(x, lbl_880E17B0, lbl_880C9990);
     return 1;
 }
 

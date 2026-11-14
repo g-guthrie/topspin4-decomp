@@ -12,12 +12,12 @@ extern u8 lbl_88D4583D;
 extern u64 fn_885637C0(int);
 extern void ts4_call_seq_fn_8856CE60_885640E0(u32);
 extern int fn_88564110(void);
-extern int fn_88822888(void *L, int idx);
-extern void fn_8882E950(void *L, int idx, int arg);
+extern int lib3_lua_tostring_88822888(void *L, int idx);
+extern void lib3_luaL_typerror_8882E950(void *L, int idx, int arg);
 extern void fn_888246A8(void *L);
 extern void ts4_lua_pushnumber_888240B8(void *L, double n);
-extern void fn_88823E00(void *L, void *fn, int n);
-extern void fn_88828338(void);
+extern void lib3_lua_pushcclosure_88823E00(void *L, void *fn, int n);
+extern void lib3_gfind_aux_88828338(void);
 extern void fn_888313E0(void);
 extern int fn_888348A0(void *L, int idx);
 extern char lbl_880C9684[];
@@ -26,14 +26,14 @@ extern char lbl_880DC810[];
 extern void fn_888AF5C0(void *self);
 
 extern double ts4_lua_tonumber_88822420(void *L, int idx);
-extern int fn_88822650(void *L, int idx);
+extern int lib3_lua_isnumber_88822650(void *L, int idx);
 
 /* 0x8882EA98: read a Lua number; if it equals pool double 0x58 and arg is not set, apply default slot 3. */
 double ts4_lua_opt_number_default_8882EA98(void *L, int idx)
 {
     double v = ts4_lua_tonumber_88822420(L, idx);
-    if (v == POOLD(0x58) && !fn_88822650(L, idx))
-        fn_8882E950(L, idx, *(int *)(lbl_880C9684 + 0xC));
+    if (v == POOLD(0x58) && !lib3_lua_isnumber_88822650(L, idx))
+        lib3_luaL_typerror_8882E950(L, idx, *(int *)(lbl_880C9684 + 0xC));
     return v;
 }
 

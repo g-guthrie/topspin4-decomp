@@ -4056,6 +4056,46 @@
       "src/xbox360/port1_zero_struct_calls_83221F88.c": {
         "status": "Matching",
         "source": "xbox360/port1_zero_struct_calls_83221F88.c"
+      },
+      "src/xbox360/lib3_lua_api.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_api.c"
+      },
+      "src/xbox360/lib3_lua_auxlib.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_auxlib.c"
+      },
+      "src/xbox360/lib3_lua_auxlib2.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_auxlib2.c"
+      },
+      "src/xbox360/lib3_lua_auxlib3.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_auxlib3.c"
+      },
+      "src/xbox360/lib3_lua_dostring.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_dostring.c"
+      },
+      "src/xbox360/lib3_lua_strlib.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_strlib.c"
+      },
+      "src/xbox360/lib3_lua_strlib_bracket.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_strlib_bracket.c"
+      },
+      "src/xbox360/lib3_lua_wstr.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_wstr.c"
+      },
+      "src/xbox360/lib3_lua_wstrlib.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_wstrlib.c"
+      },
+      "src/xbox360/lib3_lua_wstrlib_bracket.c": {
+        "status": "Matching",
+        "source": "xbox360/lib3_lua_wstrlib_bracket.c"
       }
     }
   }

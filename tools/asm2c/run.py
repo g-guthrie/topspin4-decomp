@@ -68,9 +68,23 @@ def is_cpp(r):
     return 'vthunk' in r
 
 
-def check_chunks(res, addrs, work, tag, chunk, jobs, flags=()):
+def near_misses(out, n2a):
+    """{addr: differing-instruction count} for FAIL lines of a fn_check run whose
+    candidate has the target's size and relocation layout (permutation candidates)."""
+    res = {}
+    for l in out.splitlines():
+        m = re.match(r'FAIL (\S+) vs .*?: (.*)$', l)
+        if m and m.group(1) in n2a and 'size' not in m.group(2) and 'relocation layout' not in m.group(2):
+            d = re.search(r'(\d+) differing instruction', m.group(2))
+            if d:
+                res[n2a[m.group(1)]] = int(d.group(1))
+    return res
+
+
+def check_chunks(res, addrs, work, tag, chunk, jobs, flags=(), near=None):
     """Verify addrs in files of `chunk` (C and C++ results in separate files);
-    returns the set of matched addresses."""
+    returns the set of matched addresses.  `near` (a dict) collects near misses
+    {addr: differing-instruction count}."""
     groups = []
     for cpp in (False, True):
         sel = [a for a in addrs if is_cpp(res[a]) == cpp]
@@ -81,6 +95,8 @@ def check_chunks(res, addrs, work, tag, chunk, jobs, flags=()):
         out, maps = emit.run_group(res, grp, path, flags=flags, cpp=cpp)
         ok, _, _ = emit.parse_check(out)
         n2a = {n: a for n, a in maps}
+        if near is not None:
+            near.update(near_misses(out, n2a))
         return {n2a[n] for n in ok if n in n2a}
     with ThreadPoolExecutor(jobs) as ex:
         return set().union(*ex.map(one, range(len(groups)))) if groups else set()
@@ -150,7 +166,12 @@ def main():
                 key = (fs, digest(r))
                 if key not in state['tried'].setdefault(ad, set()):
                     state['tried'][ad].add(key); fresh[ad] = r
-            ok = check_chunks(fresh, sorted(fresh), a.work, f'v{v}{fs}', a.chunk, a.jobs, flags)
+            near = {}
+            ok = check_chunks(fresh, sorted(fresh), a.work, f'v{v}{fs}', a.chunk, a.jobs, flags, near)
+            nm = state.setdefault('near', {})   # addr -> (differing instructions, flag set, result)
+            for ad, nd in near.items():
+                if ad not in nm or nd < nm[ad][0]:
+                    nm[ad] = (nd, fs, fresh[ad])
             for ad in ok: matched[ad] = (fresh[ad], fs); lastfail.pop(ad, None)
             print(f'flags {fs or "base"} variant {v}: translated {len(res)}, new texts {len(fresh)}, '
                   f'matched {len(ok)} (total {len(matched)})', flush=True)

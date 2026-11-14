@@ -37,7 +37,7 @@ SOFTWARE.
 
 ## Lua
 
-Files: `src/xbox360/swa_lua_match_class_88824F38.c`, `ex3_lua_lzio.c`, `ex3_lua_lvm_strcmp.c`, and the `lu1_*` sources. Upstream: https://www.lua.org/
+Files: `src/xbox360/swa_lua_match_class_88824F38.c`, `ex3_lua_lzio.c`, `ex3_lua_lvm_strcmp.c`, the `lu1_*` sources, and the `lib3_lua_*` sources except `lib3_lua_wstr.c` (Lua 5.0.2 with LuaPlus-style changes; `lib3_lua_wstr.c` was reconstructed from disassembly only). Upstream: https://www.lua.org/
 
 Copyright (C) 1994-2008 Lua.org, PUC-Rio.
 

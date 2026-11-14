@@ -128,10 +128,10 @@ ts4_word fn_88636DC8();
 ts4_word fn_88638FC8();
 ts4_word fn_88803D00();
 ts4_word ts4_call_seq_fn_88804B18_88804B88();
-ts4_word fn_88822230();
+ts4_word lib3_lua_touserdata_88822230();
 ts4_word fn_88823D48();
-ts4_word fn_88824CF8();
-ts4_word fn_8882E368();
+ts4_word lib3_lua_load_buffer_88824CF8();
+ts4_word lib3_aux_do_8882E368();
 ts4_word fn_8883D798();
 ts4_word fn_888417A8();
 ts4_word ts4_call_seq_fn_88617D88_88855F10();
@@ -2747,14 +2747,14 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45B38_881AF610(void)
     return 0;
 }
 
-/* Swing_DLL.xex 0x881B1818: get fn_88822230, u32@0x6c, u32@0x0, vcall */
+/* Swing_DLL.xex 0x881B1818: get lib3_lua_touserdata_88822230, u32@0x6c, u32@0x0, vcall */
 ts4_word ts4_get_fn_88822230_881B1818(ts4_word a0)
 {
     ts4_word t1;
     ts4_word t2;
     ts4_word t4;
 
-    t1 = fn_88822230((ts4_word)a0, (ts4_word)-10002);
+    t1 = lib3_lua_touserdata_88822230((ts4_word)a0, (ts4_word)-10002);
     t2 = *(ts4_word *)((char *)(ts4_word)(a0) + 108);
     t4 = ((ts4_word (*)(ts4_word))((*(ts4_word *)((char *)(ts4_word)(t1) + 0))))((ts4_word)t2);
     return t4;
@@ -2802,7 +2802,7 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45B38_881B2CD8(void)
     return 0;
 }
 
-/* Swing_DLL.xex 0x881B2D30: get fn_88822230, fn_881B3548, u32@0x0, u32@0x6c, vcall */
+/* Swing_DLL.xex 0x881B2D30: get lib3_lua_touserdata_88822230, fn_881B3548, u32@0x0, u32@0x6c, vcall */
 ts4_word ts4_get_fn_88822230_881B2D30(ts4_word a0)
 {
     ts4_word t1;
@@ -2810,14 +2810,14 @@ ts4_word ts4_get_fn_88822230_881B2D30(ts4_word a0)
     ts4_word t3;
     ts4_word t5;
 
-    t1 = fn_88822230((ts4_word)a0, (ts4_word)-10002);
+    t1 = lib3_lua_touserdata_88822230((ts4_word)a0, (ts4_word)-10002);
     t2 = fn_881B3548((ts4_word)a0);
     t3 = *(ts4_word *)((char *)(ts4_word)(t1) + 0);
     t5 = ((ts4_word (*)(ts4_word, ts4_word))(t3))((ts4_word)t2, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 108)));
     return t5;
 }
 
-/* Swing_DLL.xex 0x881B2D88: get fn_88822230, u32@0x4, u32@0x6c, u32@0x0, vcall */
+/* Swing_DLL.xex 0x881B2D88: get lib3_lua_touserdata_88822230, u32@0x4, u32@0x6c, u32@0x0, vcall */
 ts4_word ts4_get_fn_88822230_881B2D88(ts4_word a0)
 {
     ts4_word t1;
@@ -2825,7 +2825,7 @@ ts4_word ts4_get_fn_88822230_881B2D88(ts4_word a0)
     ts4_word t3;
     ts4_word t5;
 
-    t1 = fn_88822230((ts4_word)a0, (ts4_word)-10002);
+    t1 = lib3_lua_touserdata_88822230((ts4_word)a0, (ts4_word)-10002);
     t2 = *(ts4_word *)((char *)(ts4_word)(t1) + 4);
     t3 = *(ts4_word *)((char *)(ts4_word)(a0) + 108);
     t5 = ((ts4_word (*)(ts4_word, ts4_word))(t2))((ts4_word)(*(ts4_word *)((char *)(ts4_word)(t1) + 0)), (ts4_word)t3);
@@ -2960,8 +2960,8 @@ ts4_word ts4_if_get_u32_lbl_88D45B1C_881B3778(ts4_word a0, ts4_word a1)
     loc58[1] = (ts4_word)t9;
     loc58[0] = (ts4_word)p13;
     t18 = *(ts4_word *)((char *)(ts4_word)(a0) + 0);
-    t19 = fn_88824CF8((ts4_word)t18, (ts4_word)(ts4_word)&loc58[0], (ts4_word)a1);
-    t20 = fn_8882E368((ts4_word)t18, (ts4_word)t19);
+    t19 = lib3_lua_load_buffer_88824CF8((ts4_word)t18, (ts4_word)(ts4_word)&loc58[0], (ts4_word)a1);
+    t20 = lib3_aux_do_8882E368((ts4_word)t18, (ts4_word)t19);
     fn_888860A0((ts4_word)p13);
     t22 = loc50[0];
     t23 = *(ts4_word *)((char *)(ts4_word)(t22) + 4);

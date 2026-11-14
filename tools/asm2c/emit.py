@@ -110,6 +110,9 @@ def build(res, group, path, cpp=False):
         protos.update(res[a]['protos'])
     ext = {e for a in kept for e in res[a]['externs']}
     o = list(HDR)
+    for nw in sorted({n for a in kept for n in res[a].get('structs', [])}):
+        # a struct parameter passed by value (registers spilled to their home slots)
+        o.insert(len(o) - 1, f'typedef struct ts4_args{nw} {{ ts4_word w[{nw}]; }} ts4_args{nw};')
     if any(res[a].get('vec') for a in kept):
         o.insert(len(o) - 1, '#include "ts4_vector.h"')
     ints = {{'xchg': '_InterlockedExchange', 'inc': '_InterlockedIncrement', 'dec': '_InterlockedDecrement',
@@ -130,6 +133,10 @@ def build(res, group, path, cpp=False):
                 o.append(f'ts4_word ({cls}::*ts4_pm_{a:08X})() = &{cls}::s{res[a]["vthunk"] // 4};')
                 vth[a] = (sym, start, len(o))
         o.append('extern "C" {')
+    rtypes, fprotos = {}, {}
+    for a in kept:
+        rtypes.update(res[a].get('rtypes', {}))
+        fprotos.update(res[a].get('fprotos', {}))
     for e in sorted(ext):
         if e not in protos:
             o.append(f'extern char {e}[];')
@@ -137,7 +144,11 @@ def build(res, group, path, cpp=False):
     for p, n in sorted(protos.items()):
         if p in HOST_BUILTINS and not cpp:  # keep gcc/clang from rejecting the prototype
             o += [f'#ifndef _MSC_VER', f'#define {p} ts4_host_{p}', '#endif']
-        o.append(f'ts4_word {p}({", ".join(["ts4_word"] * n)});' if cpp else f'ts4_word {p}();')
+        rt = rtypes.get(p, 'ts4_word')
+        if p in fprotos:     # float arguments: full prototype
+            o.append(f'{rt} {p}({", ".join(fprotos[p])});')
+        else:
+            o.append(f'{rt} {p}({", ".join(["ts4_word"] * n)});' if cpp else f'{rt} {p}();')
     o.append('')
     maps, rng = [], {}
     a2n = _symbol_names()

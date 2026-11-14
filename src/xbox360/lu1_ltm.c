@@ -7,7 +7,7 @@ struct lu1_State { char pad[0x14]; lu1_Global *l_G; };
 typedef struct lu1_Obj { char pad[0xc]; unsigned char flags; } lu1_Obj;
 
 void *fn_88811168(void *obj, int event, void *names);
-void *fn_88818240(void *a, void *b);
+void *lib3_luaO_rawequalObj_88818240(void *a, void *b);
 
 /* call_orderTM-style helper: both operands must share the same tag method. */
 void *lu1_call_orderTM_8880C480(lu1_State *L, lu1_Obj *p1, lu1_Obj *p2)
@@ -25,5 +25,5 @@ void *lu1_call_orderTM_8880C480(lu1_State *L, lu1_Obj *p1, lu1_Obj *p2)
     tm2 = fn_88811168(p2, 4, L->l_G->tmnames);
     if (tm2 == 0)
         return 0;
-    return fn_88818240(tm1, tm2) ? tm1 : 0;
+    return lib3_luaO_rawequalObj_88818240(tm1, tm2) ? tm1 : 0;
 }

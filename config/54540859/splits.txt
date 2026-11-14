@@ -40327,3 +40327,184 @@ src/xbox360/port1_zero_init_copy_8319CB50.c:
 
 src/xbox360/port1_zero_struct_calls_83221F88.c:
 	.text       start:0x885C89D0 end:0x885C8A14
+
+src/xbox360/lib3_lua_api.c:
+	.pdata      start:0x8812B560 end:0x8812B568
+	.pdata      start:0x8812B568 end:0x8812B570
+	.pdata      start:0x8812B570 end:0x8812B578
+	.pdata      start:0x8812B578 end:0x8812B580
+	.pdata      start:0x8812B590 end:0x8812B598
+	.pdata      start:0x8812B598 end:0x8812B5A0
+	.pdata      start:0x8812B5A0 end:0x8812B5A8
+	.pdata      start:0x8812B5A8 end:0x8812B5B0
+	.pdata      start:0x8812B5B0 end:0x8812B5B8
+	.pdata      start:0x8812B5B8 end:0x8812B5C0
+	.pdata      start:0x8812B5F8 end:0x8812B600
+	.pdata      start:0x8812B608 end:0x8812B610
+	.pdata      start:0x8812B650 end:0x8812B658
+	.pdata      start:0x8812B668 end:0x8812B670
+	.pdata      start:0x8812B6B8 end:0x8812B6C0
+	.pdata      start:0x8812B6D0 end:0x8812B6D8
+	.pdata      start:0x8812B6D8 end:0x8812B6E0
+	.text       start:0x88821F98 end:0x88822024
+	.text       start:0x88822028 end:0x888220D4
+	.text       start:0x888220D8 end:0x88822108
+	.text       start:0x888221B8 end:0x8882222C
+	.text       start:0x88822230 end:0x888222EC
+	.text       start:0x888222F0 end:0x88822398
+	.text       start:0x888224D8 end:0x8882264C
+	.text       start:0x88822650 end:0x888227A4
+	.text       start:0x888227A8 end:0x88822884
+	.text       start:0x88822888 end:0x88822958
+	.text       start:0x88822970 end:0x88822984
+	.text       start:0x88822F08 end:0x88823068
+	.text       start:0x888231A0 end:0x88823320
+	.text       start:0x88823BA8 end:0x88823C94
+	.text       start:0x88823E00 end:0x88823FBC
+	.text       start:0x88824958 end:0x88824AA8
+	.text       start:0x88824C48 end:0x88824D74
+
+src/xbox360/lib3_lua_auxlib.c:
+	.pdata      start:0x8812B5C0 end:0x8812B5C8
+	.pdata      start:0x8812B728 end:0x8812B730
+	.pdata      start:0x8812B730 end:0x8812B738
+	.pdata      start:0x8812B738 end:0x8812B740
+	.pdata      start:0x8812B740 end:0x8812B748
+	.pdata      start:0x8812B748 end:0x8812B750
+	.pdata      start:0x8812B750 end:0x8812B758
+	.pdata      start:0x8812B758 end:0x8812B760
+	.pdata      start:0x8812B760 end:0x8812B768
+	.pdata      start:0x8812B768 end:0x8812B770
+	.pdata      start:0x8812B780 end:0x8812B788
+	.pdata      start:0x8812B788 end:0x8812B790
+	.pdata      start:0x8812B7B0 end:0x8812B7B8
+	.pdata      start:0x8812B7B8 end:0x8812B7C0
+	.pdata      start:0x8812B7C0 end:0x8812B7C8
+	.pdata      start:0x8812B888 end:0x8812B890
+	.pdata      start:0x8812B898 end:0x8812B8A0
+	.pdata      start:0x8812B8A0 end:0x8812B8A8
+	.pdata      start:0x8812B8C0 end:0x8812B8C8
+	.pdata      start:0x8812B8C8 end:0x8812B8D0
+	.pdata      start:0x8812B8D8 end:0x8812B8E0
+	.pdata      start:0x8812B8E0 end:0x8812B8E8
+	.pdata      start:0x8812B8F0 end:0x8812B8F8
+	.pdata      start:0x8812B918 end:0x8812B920
+	.pdata      start:0x8812B938 end:0x8812B940
+	.pdata      start:0x8812B940 end:0x8812B948
+	.pdata      start:0x8812B970 end:0x8812B978
+	.pdata      start:0x8812B978 end:0x8812B980
+	.pdata      start:0x8812B980 end:0x8812B988
+	.pdata      start:0x8812B988 end:0x8812B990
+	.pdata      start:0x8812B9C8 end:0x8812B9D0
+	.pdata      start:0x8812B9D0 end:0x8812B9D8
+	.pdata      start:0x8812B9D8 end:0x8812B9E0
+	.pdata      start:0x8812B9E0 end:0x8812B9E8
+	.pdata      start:0x8812B9E8 end:0x8812B9F0
+	.pdata      start:0x8812B9F0 end:0x8812B9F8
+	.pdata      start:0x8812B9F8 end:0x8812BA00
+	.pdata      start:0x8812BA00 end:0x8812BA08
+	.pdata      start:0x8812BA08 end:0x8812BA10
+	.pdata      start:0x8812BA10 end:0x8812BA18
+	.pdata      start:0x8812BA18 end:0x8812BA20
+	.pdata      start:0x8812BA20 end:0x8812BA28
+	.pdata      start:0x8812BA38 end:0x8812BA40
+	.pdata      start:0x8812BA40 end:0x8812BA48
+	.pdata      start:0x8812BA48 end:0x8812BA50
+	.pdata      start:0x8812BA50 end:0x8812BA58
+	.pdata      start:0x8812BA58 end:0x8812BA60
+	.pdata      start:0x8812BA60 end:0x8812BA68
+	.pdata      start:0x8812BA70 end:0x8812BA78
+	.pdata      start:0x8812BA78 end:0x8812BA80
+	.text       start:0x88818240 end:0x888182A8
+	.text       start:0x88822988 end:0x88822A08
+	.text       start:0x88825638 end:0x88825834
+	.text       start:0x88825838 end:0x88825984
+	.text       start:0x88825988 end:0x88825A4C
+	.text       start:0x88825A50 end:0x88825C74
+	.text       start:0x88825D00 end:0x88826204
+	.text       start:0x88828338 end:0x888285DC
+	.text       start:0x888285E0 end:0x888286C4
+	.text       start:0x8882B3B8 end:0x8882B44C
+	.text       start:0x8882B490 end:0x8882B564
+	.text       start:0x8882B768 end:0x8882B994
+	.text       start:0x8882BDA0 end:0x8882BFCC
+	.text       start:0x8882C0A0 end:0x8882C19C
+	.text       start:0x8882C710 end:0x8882C7E0
+	.text       start:0x8882C9D0 end:0x8882CC04
+	.text       start:0x8882CFE0 end:0x8882D234
+	.text       start:0x8882D238 end:0x8882D29C
+	.text       start:0x8882DBA8 end:0x8882DDCC
+	.text       start:0x8882DDD0 end:0x8882DF0C
+	.text       start:0x8882DF10 end:0x8882E004
+	.text       start:0x8882E008 end:0x8882E0D4
+	.text       start:0x8882E0D8 end:0x8882E2CC
+	.text       start:0x8882E2D0 end:0x8882E364
+	.text       start:0x8882E368 end:0x8882E3E4
+	.text       start:0x8882E3E8 end:0x8882E4E0
+	.text       start:0x8882E560 end:0x8882E5EC
+	.text       start:0x8882E5F0 end:0x8882E6B4
+	.text       start:0x8882E6B8 end:0x8882E78C
+	.text       start:0x8882E790 end:0x8882E824
+	.text       start:0x8882E828 end:0x8882E89C
+	.text       start:0x8882E8F8 end:0x8882E94C
+	.text       start:0x8882E950 end:0x8882E9B4
+	.text       start:0x8882E9B8 end:0x8882E9E0
+
+src/xbox360/lib3_lua_auxlib2.c:
+	.text       start:0x8882E9E0 end:0x8882EA04
+	.text       start:0x8882EA08 end:0x8882EA30
+
+src/xbox360/lib3_lua_auxlib3.c:
+	.pdata      start:0x8812B798 end:0x8812B7A0
+	.pdata      start:0x8812B7A0 end:0x8812B7A8
+	.pdata      start:0x8812B7A8 end:0x8812B7B0
+	.pdata      start:0x8812B7C8 end:0x8812B7D0
+	.pdata      start:0x8812B7D0 end:0x8812B7D8
+	.pdata      start:0x8812B7D8 end:0x8812B7E0
+	.pdata      start:0x8812B7E0 end:0x8812B7E8
+	.pdata      start:0x8812BA80 end:0x8812BA88
+	.pdata      start:0x8812BA90 end:0x8812BA98
+	.pdata      start:0x8812BA98 end:0x8812BAA0
+	.pdata      start:0x8812BAA0 end:0x8812BAA8
+	.text       start:0x88827170 end:0x88828338
+	.text       start:0x888286C8 end:0x88828910
+	.text       start:0x8882EA30 end:0x8882EA94
+	.text       start:0x8882EB20 end:0x8882EB84
+	.text       start:0x8882EB88 end:0x8882EBE4
+	.text       start:0x8882EBF0 end:0x8882EC84
+
+src/xbox360/lib3_lua_dostring.c:
+	.pdata      start:0x8812BAB8 end:0x8812BAC0
+	.text       start:0x8882ED00 end:0x8882ED68
+
+src/xbox360/lib3_lua_strlib.c:
+	.pdata      start:0x8812B6E8 end:0x8812B6F0
+	.pdata      start:0x8812B700 end:0x8812B708
+	.pdata      start:0x8812B708 end:0x8812B710
+	.pdata      start:0x8812B710 end:0x8812B718
+	.pdata      start:0x8812B718 end:0x8812B720
+	.pdata      start:0x8812B720 end:0x8812B728
+	.text       start:0x88824DA0 end:0x88824E00
+	.text       start:0x88824E78 end:0x88824F38
+	.text       start:0x888253B8 end:0x8882557C
+	.text       start:0x88825580 end:0x888255EC
+	.text       start:0x888255F0 end:0x88825634
+
+src/xbox360/lib3_lua_strlib_bracket.c:
+	.pdata      start:0x8812B6F8 end:0x8812B700
+	.text       start:0x88825118 end:0x8882536C
+
+src/xbox360/lib3_lua_wstr.c:
+	.text       start:0x8882ED68 end:0x8882ED98
+	.text       start:0x8882EDF0 end:0x8882EE4C
+	.text       start:0x8882F0B0 end:0x8882F0F4
+
+src/xbox360/lib3_lua_wstrlib.c:
+	.pdata      start:0x8812BAD8 end:0x8812BAE0
+	.pdata      start:0x8812BAE0 end:0x8812BAE8
+	.pdata      start:0x8812BAE8 end:0x8812BAF0
+	.text       start:0x8882F488 end:0x8882F698
+
+src/xbox360/lib3_lua_wstrlib_bracket.c:
+	.pdata      start:0x8812BAD0 end:0x8812BAD8
+	.text       start:0x8882F1E8 end:0x8882F440

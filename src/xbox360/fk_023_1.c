@@ -10,7 +10,7 @@ typedef unsigned long long ts4_u64;
 #endif
 typedef unsigned long ts4_word;
 
-extern char fn_8882BEC0[];
+extern char lib3_auxwrap_8882BEC0[];
 extern char ts4_if_get_u32_off4_8882DB60[];
 extern char fn_88834E10[];
 extern char lbl_880C1320[];
@@ -115,30 +115,30 @@ ts4_word fn_88820468();
 ts4_word fn_888208A8();
 ts4_word fn_88820C30();
 ts4_word fn_88821878();
-ts4_word fn_88821F98();
-ts4_word fn_88822230();
-ts4_word fn_88822738();
-ts4_word fn_88822888();
-ts4_word fn_88823BA8();
+ts4_word lib3_lua_negindex_88821F98();
+ts4_word lib3_lua_touserdata_88822230();
+ts4_word lib3_lua_type_88822738();
+ts4_word lib3_lua_tostring_88822888();
+ts4_word lib3_lua_getglobal_top_88823BA8();
 ts4_word fn_88823C98();
-ts4_word fn_88823E00();
+ts4_word lib3_lua_pushcclosure_88823E00();
 ts4_word fn_88823FC0();
 ts4_word fn_88824188();
 ts4_word fn_88824438();
 ts4_word fn_888246A8();
-ts4_word fn_88824CF8();
-ts4_word fn_88825A50();
-ts4_word fn_88825EF0();
+ts4_word lib3_lua_load_buffer_88824CF8();
+ts4_word lib3_capture_to_close_88825A50();
+ts4_word lib3_match_88825EF0();
 ts4_word fn_8882AA90();
-ts4_word fn_8882B4F8();
+ts4_word lib3_has_fenv_8882B4F8();
 ts4_word fn_8882B6A8();
 ts4_word fn_8882D360();
-ts4_word fn_8882DBA8();
-ts4_word fn_8882DE88();
-ts4_word fn_8882E368();
-ts4_word fn_8882E6B8();
-ts4_word fn_8882E828();
-ts4_word fn_8882ED00();
+ts4_word lib3_adjuststack_8882DBA8();
+ts4_word lib3_emptybuffer_8882DE88();
+ts4_word lib3_aux_do_8882E368();
+ts4_word lib3_luaL_argerror_8882E6B8();
+ts4_word lib3_luaL_addlstring_8882E828();
+ts4_word lib3_lua_dostring_8882ED00();
 ts4_word fn_8882FA70();
 ts4_word fn_8882FEF8();
 ts4_word fn_888345F8();
@@ -243,12 +243,12 @@ ts4_word ts4_call_seq_fn_8881C130_8881C200(ts4_word a0)
     return t4;
 }
 
-/* Swing_DLL.xex 0x88834F08: call_seq fn_88822888, fn_88562EF8 */
+/* Swing_DLL.xex 0x88834F08: call_seq lib3_lua_tostring_88822888, fn_88562EF8 */
 ts4_word ts4_call_seq_fn_88822888_88834F08(ts4_word a0)
 {
     ts4_word t1;
 
-    t1 = fn_88822888((ts4_word)a0, (ts4_word)1);
+    t1 = lib3_lua_tostring_88822888((ts4_word)a0, (ts4_word)1);
     fn_88562EF8((ts4_word)t1);
     return -1;
 }

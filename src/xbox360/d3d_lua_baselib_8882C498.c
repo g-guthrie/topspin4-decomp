@@ -14,8 +14,8 @@ typedef Ts4LuaCall CallS;
 
 extern const char *lbl_880C9684[];
 extern char lbl_880E1C98[];
-extern TS4_NORETURN int fn_8882E950(lua_State *L, int narg, const char *tname);
-extern TS4_NORETURN int fn_8882E6B8(lua_State *L, int narg, const char *extramsg);
+extern TS4_NORETURN int lib3_luaL_typerror_8882E950(lua_State *L, int narg, const char *tname);
+extern TS4_NORETURN int lib3_luaL_argerror_8882E6B8(lua_State *L, int narg, const char *extramsg);
 extern int fn_8881E748(lua_State *L, CallS *c, int old_top, int ef);
 extern void ts4_lua_pushboolean_88823D48(lua_State *L, int b);
 extern void ts4_lua_insert_88824438(lua_State *L, int idx);
@@ -44,7 +44,7 @@ TS4_FORCEINLINE int lua_pcall_(lua_State *L, int nargs, int nresults, int errfun
 int ts4_lua_b_xpcall_8882C498(lua_State *L)
 {
     int status;
-    if (lua_type_(L, 2) == -1) fn_8882E6B8(L, 2, lbl_880E1C98);
+    if (lua_type_(L, 2) == -1) lib3_luaL_argerror_8882E6B8(L, 2, lbl_880E1C98);
     fn_888246A8(L, 2);
     ts4_lua_insert_88824438(L, 1);
     status = lua_pcall_(L, 0, -1, 1);
@@ -57,7 +57,7 @@ int ts4_lua_b_xpcall_8882C498(lua_State *L)
 int ts4_lua_b_pcall_8882C578(lua_State *L)
 {
     int status;
-    if (lua_type_(L, 1) == -1) fn_8882E6B8(L, 1, lbl_880E1C98);
+    if (lua_type_(L, 1) == -1) lib3_luaL_argerror_8882E6B8(L, 1, lbl_880E1C98);
     status = lua_pcall_(L, lua_gettop_(L) - 1, -1, 0);
     ts4_lua_pushboolean_88823D48(L, status == 0);
     ts4_lua_insert_88824438(L, 1);
@@ -69,7 +69,7 @@ int ts4_lua_b_type_8882C640(lua_State *L)
 {
     const char *s;
     int t;
-    if (lua_type_(L, 1) == -1) fn_8882E6B8(L, 1, lbl_880E1C98);
+    if (lua_type_(L, 1) == -1) lib3_luaL_argerror_8882E6B8(L, 1, lbl_880E1C98);
     t = lua_type_(L, 1);
     s = (t == -1) ? lbl_880E17A4 : lbl_880C9684[t];
     if (s == 0) ts4_lua_pushnil_88824188(L);
@@ -80,9 +80,9 @@ int ts4_lua_b_type_8882C640(lua_State *L)
 /* luaB_rawset */
 int ts4_lua_b_rawset_8882CE90(lua_State *L)
 {
-    if (lua_type_(L, 1) != 5) fn_8882E950(L, 1, lbl_880C9684[5]);
-    if (lua_type_(L, 2) == -1) fn_8882E6B8(L, 2, lbl_880E1C98);
-    if (lua_type_(L, 3) == -1) fn_8882E6B8(L, 3, lbl_880E1C98);
+    if (lua_type_(L, 1) != 5) lib3_luaL_typerror_8882E950(L, 1, lbl_880C9684[5]);
+    if (lua_type_(L, 2) == -1) lib3_luaL_argerror_8882E6B8(L, 2, lbl_880E1C98);
+    if (lua_type_(L, 3) == -1) lib3_luaL_argerror_8882E6B8(L, 3, lbl_880E1C98);
     ts4_lua_rawset_88823430(L, 1);
     return 1;
 }
@@ -90,8 +90,8 @@ int ts4_lua_b_rawset_8882CE90(lua_State *L)
 /* luaB_rawget */
 int ts4_lua_b_rawget_8882CF50(lua_State *L)
 {
-    if (lua_type_(L, 1) != 5) fn_8882E950(L, 1, lbl_880C9684[5]);
-    if (lua_type_(L, 2) == -1) fn_8882E6B8(L, 2, lbl_880E1C98);
+    if (lua_type_(L, 1) != 5) lib3_luaL_typerror_8882E950(L, 1, lbl_880C9684[5]);
+    if (lua_type_(L, 2) == -1) lib3_luaL_argerror_8882E6B8(L, 2, lbl_880E1C98);
     ts4_lua_rawget_88823AE8(L, 1);
     return 1;
 }

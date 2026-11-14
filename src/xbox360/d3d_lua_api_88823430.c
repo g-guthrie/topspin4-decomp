@@ -5,7 +5,7 @@
 typedef Ts4LuaValue TValue;
 typedef Ts4LuaState lua_State;
 
-extern TValue *fn_88821F98(lua_State *L, int idx);
+extern TValue *lib3_lua_negindex_88821F98(lua_State *L, int idx);
 extern TValue *fn_888122E8(lua_State *L, void *t, TValue *key);
 extern TValue *ts4_if_call_seq_u32_off0_88812188(void *t, TValue *key);
 extern Ts4LuaObject *fn_888131A0(lua_State *L, const char *s, u32 len);
@@ -36,7 +36,7 @@ TS4_FORCEINLINE TValue *acceptable_(lua_State *L, int idx)
         if (o >= L->top) return 0;
         else return o;
     }
-    return fn_88821F98(L, idx);
+    return lib3_lua_negindex_88821F98(L, idx);
 }
 extern void *ts4_if_call_seq_fn_889CE718_88813350(lua_State *L, u32 size);
 
@@ -65,7 +65,7 @@ double ts4_lua_tonumber_88822420(lua_State *L, int idx)
     if (idx > 0) {
         TValue *p = L->base + (idx - 1);
         o = (p < L->top) ? p : 0;
-    } else o = fn_88821F98(L, idx);
+    } else o = lib3_lua_negindex_88821F98(L, idx);
     n.tt = 0;
     n.u.gc = 0;
     if (o != 0 && (o->tt == 3 || (o = ts4_lua_v_tonumber_8880CAF0(L, o, &n)) != 0))
@@ -119,7 +119,7 @@ void ts4_lua_rawset_88823430(lua_State *L, int idx)
     TValue *t;
     TValue *slot;
     TValue *top;
-    t = (idx > 0) ? L->base + (idx - 1) : fn_88821F98(L, idx);
+    t = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     top = L->top;
     slot = fn_888122E8(L, t->u.p, top - 2);
     TS4_SETOBJ(L, slot, top - 1);
@@ -134,7 +134,7 @@ void ts4_lua_rawget_88823AE8(lua_State *L, int idx)
     TValue *t;
     TValue *o2;
     TValue *o1;
-    t = (idx > 0) ? L->base + (idx - 1) : fn_88821F98(L, idx);
+    t = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     o2 = ts4_if_call_seq_u32_off0_88812188(t->u.p, L->top - 1);
     o1 = L->top - 1;
     if (o2->tt >= 4) o2->u.gc->refs++;
@@ -155,7 +155,7 @@ int ts4_lua_getmetatable_88823768(lua_State *L, int idx)
     if (idx > 0) {
         TValue *o = L->base + (idx - 1);
         obj = (o < L->top) ? o : 0;
-    } else obj = fn_88821F98(L, idx);
+    } else obj = lib3_lua_negindex_88821F98(L, idx);
     switch (obj->tt) {
     case 5: mt = ((Ts4LuaTable *)obj->u.p)->metatable; break;
     case 7: mt = ((Ts4LuaUdata *)obj->u.p)->metatable; break;
@@ -211,7 +211,7 @@ void ts4_lua_pushnil_88824188(lua_State *L)
 /* lua_pushvalue */
 void ts4_lua_pushvalue_88824248(lua_State *L, int idx)
 {
-    TValue *o2 = (idx > 0) ? L->base + (idx - 1) : fn_88821F98(L, idx);
+    TValue *o2 = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     TValue *o1 = L->top;
     TS4_ADDREF(o2);
     TS4_RELEASE(L, o1);
@@ -223,7 +223,7 @@ void ts4_lua_pushvalue_88824248(lua_State *L, int idx)
 /* lua_replace */
 void ts4_lua_replace_88824340(lua_State *L, int idx)
 {
-    TS4_SETOBJ(L, (idx > 0) ? L->base + (idx - 1) : fn_88821F98(L, idx), L->top - 1);
+    TS4_SETOBJ(L, (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx), L->top - 1);
     L->top--;
     TS4_SETNIL(L, L->top);
 }
@@ -234,7 +234,7 @@ void ts4_lua_insert_88824438(lua_State *L, int idx)
     TValue *p;
     TValue *q;
     TValue *t;
-    p = (idx > 0) ? L->base + (idx - 1) : fn_88821F98(L, idx);
+    p = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     for (q = L->top; q > p; q--) {
         TValue *o2 = q - 1;
         TValue *o1 = q;
@@ -259,7 +259,7 @@ void ts4_lua_settable_88823580(lua_State *L, int idx)
 {
     TValue *t;
     TValue *top;
-    t = (idx > 0) ? L->base + (idx - 1) : fn_88821F98(L, idx);
+    t = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     top = L->top;
     fn_8880D278(L, t, top - 2, top - 1);
     L->top -= 2;
@@ -270,7 +270,7 @@ void ts4_lua_settable_88823580(lua_State *L, int idx)
 /* Push the global table visible to the function on top of the stack. */
 void ts4_lua_getglobals_88823670(lua_State *L)
 {
-    TValue *o = fn_88821F98(L, -1);
+    TValue *o = lib3_lua_negindex_88821F98(L, -1);
     TValue *g;
     TValue *top;
     if (o->tt == 6 && !((Ts4LuaClosure *)o->u.p)->isC)
@@ -306,7 +306,7 @@ void ts4_lua_rawgeti_888239E0(lua_State *L, int idx, int n)
 {
     TValue *o;
     TValue *r;
-    o = (idx > 0) ? L->base + (idx - 1) : fn_88821F98(L, idx);
+    o = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     r = fn_88811930(o->u.p, n);
     TS4_SETOBJ(L, L->top, r);
     TS4_INCR_TOP(L);
@@ -382,7 +382,7 @@ int ts4_lua_next_first_88824B68(lua_State *L)
 /* lua_remove(L, -2): drop the value just below the top. */
 void ts4_lua_remove_below_top_888245A8(lua_State *L)
 {
-    TValue *p = fn_88821F98(L, -2);
+    TValue *p = lib3_lua_negindex_88821F98(L, -2);
     while (++p < L->top) {
         TS4_SETOBJ(L, p - 1, p);
     }
@@ -396,7 +396,7 @@ void ts4_lua_rawseti_88823320(lua_State *L, int idx, int n)
     TValue *o;
     TValue *slot;
     TValue *top;
-    o = (idx > 0) ? L->base + (idx - 1) : fn_88821F98(L, idx);
+    o = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     top = L->top;
     slot = fn_88812968(L, o->u.p, n);
     TS4_SETOBJ(L, slot, top - 1);
