@@ -103,8 +103,10 @@ python3 -m unittest tests.test_player_data
 ## 2. Player ratings, skills and Profile values
 
 ### 2.1 Storage (V, from `stats-swing-clipfit.md` s1)
-* PlayerState `S` (stride 0x1070) holds eight floats at `S+0x64C..0x668`: Serve, Return, Forehand, Backhand, Volley,
-  Power, Speed, Stamina.
+* PlayerState `S` (stride 0x1070) holds the **raw ratings** at `S+0x620..0x63C` (`Profile.#3b91d48c`) and the
+  **Profile values 0..1** at `S+0x64C..0x668`. Both use the order Serve, Return, Forehand, Backhand, Volley, Power,
+  Speed, Stamina. The Profile values are written by the DefaultAttributes graph (G4b, V; full chain in
+  `stats-coaches-career.md` s1).
 * `S+0x640` is the skill list (`{id, value}` pairs). The first four entries with value 1.0 become Skill1..4 (`fn_8869DEF0`).
 * The external record (`fn_887AC0E0`) has 14 ints: Serve, Return, Reflex, Forehand, Backhand, Volley, Power, Speed,
   Stamina, Mental, Overall, Skill1..4. Reflex and Mental have no in-match float. They act only through the data (U).
@@ -112,9 +114,11 @@ python3 -m unittest tests.test_player_data
 ### 2.2 Rating -> Profile -> mechanic (V wiring, I roles)
 * Graph `DefaultAttributes` (`0x8C9B26E0`) and its twin `0x075A2137` each have one CURVE per rating, with inputs at
   `Profile.<3B91D48C>` cells 40..47.
-* The shipped curves map ratings of 30..100 to Profile values of 0..1. Keys are in `player.yaml: graphs`.
-* Under the "as stored" reading (slope 0) each key holds its `y0`, so the curve is a step. The ramp reading uses `y1`.
-  The two readings give different values between key ends. G1 owns this open question; `pl_curve20` implements both.
+* The shipped curves map ratings of 30..100 to Profile values of 0..1. Keys are in `player.yaml: graphs`, and
+  samples are in `player.yaml: profile_from_rating`.
+* **Curves are ramps (V, G1 `graphs-decoded.md` s1).** The load-time fixup `fn_8890DFC8 -> fn_88179740` sets
+  slope = (y1 - y0) / (x1 - x0). `pl_curve20` defaults to `PL_CURVE_RAMP`; `PL_CURVE_STEP` keeps the stored slope
+  0 for comparison. `player_data.py --curve-mode step` does the same for the YAML.
 * Profile consumers (`analyser-graphs.md` s6):
 
   | Profile cell | Read by | Effect (I) |
@@ -124,16 +128,18 @@ python3 -m unittest tests.test_player_data
   | 37 (volley) | `VolleyTimingAbility`, the volley zones | volley timing |
   | 18, 26, 49 | 31, 50 and 27 graphs | the widely used Profile values: InputFiltering, IsTired, ReturnServeZone ... |
 
-* The order of cells 40..47 versus `S+0x64C..0x668` is U. The pairing 41 -> 20 (stamina), 43 -> 29 (speed) and
-  45 -> 37 (volley) is inferred from the consumers.
+* **Cells 40..47 (V, G4b via G1's bindings):** 40 Backhand, 41 Stamina, 42 Forehand, 43 Speed, 44 Power, 45 Volley,
+  46 Return, 47 Serve. Each feeds the curve for the Profile value of the same stat. This agrees with the earlier
+  consumer inference 41 -> stamina, 43 -> speed, 45 -> volley.
 * **Per-stroke skill** `S+0x74C` is set on swing-state entry (`fn_88699300`). It takes Return for a return, Forehand or
   Backhand by `(handedness==Left) != S+0xBD1`, Forehand in states 0xA/0xB, and Volley in states 0xC/0x10. The serve path
   stores Serve (`fn_886BCE88`), then runs the analyser at `controller+0x504` (V). `pl_stroke_skill`.
 * **Side preference** `fn_8865B3B0`: the stronger side is preferred until its use share passes a threshold.
   `pl_side_preference` (I for the return values).
-* Coach skills, levels and XP: the strings `CoachBonusXP`, `SeriesBonusXP`, `T4CoachBonuse.anims` are UI/career data.
-  No match code reads a coach table. Coaches act only through the skill list `S+0x640`, which the graphs read through
-  `Profile.SkillList` link ports (389 ports, qualifier per skill U).
+* Coach skills, levels and XP are career data (CoachList, PlayerEvolution; `stats-coaches-career.md`). No match code
+  reads a coach table. Coaches act only through the ratings and the skill list `S+0x640`. 28 skills are read by graph
+  link ports `Profile.SkillList[Id].Value`, and 3 are tested in code. Every skill with its magnitude is in
+  `traits-and-skills.md`.
 
 ### 2.3 Fatigue (V wiring)
 * `FatigueIngame` (inputs `Fatigue.Input` cells 19/21/22 plus Profile 20) produces `Fatigue.Output` cell 188.
@@ -198,7 +204,14 @@ override from `PT+0x34C` (s1 item 5), not a heading.
 
 ### 3.3 Reaction delay and anticipation
 * State 0 waits until `now - (opp team+0x24)+0x68 >= ((ctx+0x50)+0x28)+0x1DC`, or until the opponent mode is 2.
-* State 1 enter runs the reaction graph (`brain+0x1E0`, chosen per AI level). It writes the window `S+0xDF4/0xDF8`.
+  **The delay float (G4b, V):** `(ctx+0x50)+0x28` is `brain+0x28`, the State AI record (type `0xD7C700B9`, 0x274
+  bytes, `fn_886B69F8`). `+0x1DC` is `FinalPositioningComponents.#79b99b60`, in ticks. It is written by the
+  positioning graphs of the AI level list `+0x30` (graph indices 141-150 and 155). Example, graph 141:
+  `lerp(curve(vigor) 15 -> 5, curve(vigor) 10 -> 0, Profile.Speed) × position factors`, so fast, fresh players react
+  sooner. Graph 147 is a constant 5; graph 148 ranges 0..60.
+* State 1 enter runs the `brain+0x1E0` graph. For a **human** this is InputFiltering, which writes the window
+  `S+0xDF4/0xDF8`. For the **AI** the slot holds the level record's `+0x44` graph (AimingState.FinalEfficiency), not a
+  reaction graph (G4b, V: `fn_886B6F2C` vs `fn_886BDB58`).
 * The plan is held while `0 <= now - P+0x2A0 <= S+0xDF4` (`fn_8865DB50`).
 * The selector `fn_886A9E48` uses pool 0.25 (`+0x29C`) and the 120 degree turn test (2.094 rad, `+0x554`).
 
@@ -324,14 +337,51 @@ override from `PT+0x34C` (s1 item 5), not a heading.
 | Height | Knee, Waist, Shoulder, OnBody |
 | Variant | Reflex, Fatality, Clay, player names (Nadal, Federer ...), numbers |
 
-### 4.3 Selection (V for structure; cost function U, as in gp7 s6)
+### 4.3 Selection and the clip-fit cost `fn_886D3AD8` (G4b decode; V structure, I where marked)
 * The query lists in the AnimationData root (`+0x94` for reach, `+0xA0` for normal) restrict the candidates by record id.
-* `fn_886D3AD8` samples each candidate's root motion at the warped EventRacket time, rotates it by the facing, and
-  compares it with `AnimIface+0x3C0` (target) inside the window `+0x3D0/0x3D4` and tolerances `+0x3D8/0x3DC`. The best
-  cost is stored at planner `+0x170`.
-* The seven criteria of `swinganimation.bin` (Timing, Power, Control, MoveToNet, PositionOnCourt, SwingEffect, SwingType)
-  are the likely axes that map onto the name grammar slots (Tier = Power, Position = Timing/PositionOnCourt,
-  Control, Movement = MoveToNet ...) (I). The weights are in that file (raw words dumped, roles U).
+* `fn_886D3AD8` (`0x886D3AD8..0x886D48C4`, VMX128; disassembled with ppcdis because capstone stops at VMX128
+  words) loops over the candidate clips. `fn_886D4978` is a helper after it. Per candidate (`r29` = clip record):
+  1. **Sample time.** `t_s = t0 + (f21 / len) * f19`. Here `t0` (`f27`) is the candidate start time and the ratio is
+     the warped EventRacket phase (time warp `fn_886D1408`, s4.4). Root motion is sampled at `t_s` by
+     `fn_88644CE8` (`0x886D42A4`).
+  2. **Root offset.** `m = (dx, dy * AnimIface(+0x3CC)+0x55C, dz) * scale` (`vmulfp128 v127` at `0x886D4308`; the
+     scale is the splatted word at `[+0x20]+r20`). When the clip's mirror/side id equals the wanted one
+     (`r30 == r25`), `m` is rotated in x/z by the facing angle `[+0x70]+0x48`: `fn_881BD4B8` returns sin/cos,
+     then `x' = x c - z s`, `z' = x s + z c`.
+  3. **Optional second offset.** When the clip has a linked offset entry (`r28 != -1`), an entry is taken from table
+     `(+0x10)+0x74 -> +0x90`, indexed by `(+0x28C) + r28`. It is scaled and rotated the same way (second
+     `fn_881BD4B8`, `0x886D43FC`) and added: `m += o` (`0x886D4440`).
+  4. **Contact position.** `p = m + base`. `base` (`v125`) is the player's current position, loaded at `0x886D3FE8`.
+  5. **Error.** `e = p - (target - ref)`. `target` = `AnimIface+0x3C0` (via planner `+0x150`); `ref` =
+     `[AnimIface+0x564]`. The cost is `c = |e|^2`, a 3-D squared distance (`vmsum3fp128` at `0x886D44A4`).
+  6. **Time gate.** `t_c = frame + 10 + (t_end - t0 - t_s) * f29`. The candidate passes only if
+     `+0x3D0 <= t_c <= +0x3D4` (sign-bit tests at `0x886D44B4..0x886D44E8`). `+0x3D0/+0x3D4` are the earliest and
+     latest contact frames.
+  7. **Position gate.** `|e.x| < tol_x` and `|e.z| < tol_z`, with tol = `+0x3D8` / `+0x3DC`. Without a linked offset
+     (`r28 == -1`) both tolerances are first reshaped from the root-motion length `|m|` (sqrt by `vrsqrtefp128` with
+     one Newton step). That reshaping is a chain of `fsel` clamps on `|m| - f24`, `f26`, `f23`, `f22` and `f25`, all
+     caller constants (I: the tolerance grows with clip travel, capped at the base tolerance).
+  8. **Best.** If both gates pass:
+     * when `+0x3E0` is set, the contact position `p + ref` is written out (`stvewx128`, `0x886D46C4..CC`);
+     * if `c` is below the best so far (`planner+0x170`, initialised to `pool+0x50`), the planner stores
+       `+0x170 = c`, `+0x168 = clip`, `+0x16C = r14` (variant), `+0x174 = f18`, `+0x178 = t0`;
+     * the contact frame `(int)t_c + (+0x3FC)` goes to `(+0x14)+0x464`. That is the planned frame that s4.4
+       time-scales the clip to (`0x886D4700..0x886D4738`).
+* So the **cost is purely positional**: the squared distance between where the clip's root motion puts the racket
+  contact and where the ball will be, subject to a contact-frame window and per-axis tolerances. Ratings and skills do
+  not enter this cost. They enter earlier, through the candidate lists, and later, through the time scale (I).
+* `swinganimation.bin` (85FF436E) has seven criteria: Timing, Power, Control, MoveToNet, PositionOnCourt, SwingEffect
+  and SwingType. They are the likely axes that map onto the name-grammar slots, as below. The weights are dumped raw
+  in `player.yaml: swing_animation`. **No reader of the file was traced, so the field roles stay U.** The criteria
+  do not appear in `fn_886D3AD8`.
+
+  | criterion | name-grammar slot (I) |
+  |---|---|
+  | Power | Tier |
+  | Timing, PositionOnCourt | Position |
+  | Control | Control |
+  | MoveToNet | Movement |
+
 * `SwingSpeedCoef` (Profile speed, fatigue, LocalPosition) writes the swing animation speed cell 201 (I: playback scale).
 
 ### 4.4 Time scaling (V formulas from gp7 s4/s5; C in `player.c`)
@@ -343,12 +393,16 @@ override from `PT+0x34C` (s1 item 5), not a heading.
 ## 5. AI (opponent) differences
 * Same pipeline, with the human flag `ctx+0x10 = (info+0x18 == crc32("Human"))`. See movement-and-ai B.1 for the five
   code differences.
-* New here: the AI level record (s1 item 3) supplies
-  * the scoring graphs `brain+0x158/0x19C`,
-  * the reaction graph `+0x1E0`,
-  * the skill speed limit that replaces `PT+0x230`.
-* The nine style groups are not named by any dictionary. The candidates AllRounder, BaselineAttacker,
-  BaselineController, PowerPlayer, VolleyPlayer, VolleyFinessePlayer and others did not match (U).
+* The AI level record (Settings type `0x59CCA053`, 0x5C bytes, 9 styles × 6 levels at cfg+0xF0) supplies
+  * five weighted component lists (shot, return, serve, repositioning, positioning),
+  * six graphs: timing `+0x40`, aiming efficiency `+0x44` -> brain +0x1E0, hit-point scores `+0x48/+0x4C` ->
+    brain +0x158/+0x19C, evaluation `+0x50` -> +0x224, swing reaction time `+0x54` -> +0x268,
+  * the run-speed limit `+0x58` that replaces `PT+0x230` (4..10 m/s by level).
+
+  Layout, element format and per-style values: `stats-coaches-career.md` s5 (G4b, V).
+* Style groups (G4b): AIStyle_BaselineAttacker, AIStyle_ServeAndVolley and AIStyle_AllRounder are crc32-verified.
+  `824ec12e` (baseline controllers), `75c6d60c` (generic default) and the four Ralley groups are named by the pros
+  that use them (I).
 * `pl_ai_lookup`.
 
 ## 6. Positioning, serve and return
@@ -382,10 +436,16 @@ override from `PT+0x34C` (s1 item 5), not a heading.
   SwingAnimationEngine Update `fn_886E5F50` (gp7 s3).
 
 ## 9. Open items
-1. Who writes the reaction float `brain+0x28 -> +0x1DC` (probably the reaction graph output) and the eight rating floats.
-2. Element layout of the five lists in the AI level record. Names of the nine style groups and of the six graphs.
-3. Roles of PT+0x00..0x9F, PT+0x110..0x14B, PT+0x3F8..0x62F (the generic dump has every value; readers not traced).
-   Readers of the speed records PT+0x31C..0x37C other than `+0x34C`.
-4. Clip-fit cost (`fn_886D3AD8`, VMX128) and the field roles of `swinganimation.bin`.
-5. The curve step/ramp question (G1). Every Profile value depends on it.
-6. Coach and career tables (outside `Core.arc` Settings; not searched).
+Resolved by G4b: the reaction float and rating writers (s2.1, s3.3), the AI record lists, graphs and style names
+(s5, `stats-coaches-career.md`), the clip-fit cost (s4.3), coach and career tables, and the order of cells 40..47.
+The curve question is settled: ramps (G1).
+
+Still open:
+1. The match-setup writer of the raw ratings S+0x620 and the skill list S+0x640. It is a data-driven backstage
+   request; no literal code store was found (I).
+2. Names of AI style groups `824ec12e` and `75c6d60c` and of `PositioningComponents.#79b99b60` (no crc candidate).
+3. Roles of PT+0x00..0x9F, PT+0x110..0x14B and PT+0x3F8..0x62F. Readers of the speed records PT+0x31C..0x37C other
+   than `+0x34C`. Not traced; the generic dump has every value.
+4. `swinganimation.bin` field roles: no reader traced. The tolerance reshaping constants `f22..f26` in the clip fit
+   come from the caller.
+5. The match-analyser counters that gate the skills (`traits-and-skills.md` s5).

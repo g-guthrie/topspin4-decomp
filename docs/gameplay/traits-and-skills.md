@@ -102,7 +102,7 @@ The two code-level effects that come closest to the ball:
 | PoisonedSlices | `0x88695B24` | `fn_88695640` (shot evaluation, called from `fn_886AE528`+0x444) | Block B = S+0x66C. Sets `B+0x164` (= S+0x7D0) = 1.0 when the incoming shot is a Slice (`+0x60 == 0xFC6F57A1`) from a player who has the skill (mode == 2, `+0x318 != 0x029EAAF4`). 23 receiver shot graphs read S+0x7D0 as `PlayerState.#7e28dbc0.#aee2d90b`, for example graph 188: `product(#aee2d90b, curve6(BallState.Commands.From))` with curve6 `[0..50: -0.3 -> -0.3 \| 50..100: -0.3 -> -0.2 \| 100..120: -0.2 -> 0]`. The low-ball penalty of up to -0.3 enters the receiver's aiming sum (I: `From` is the height at contact in cm). |
 | InstantRocket | `0x8869D750` | `fn_8869D720` | Power charge. cfg = Settings root, fatigue/charge block cfg+0x8F8. S+0xE00 = `curve(cfg+0x914)` instead of `curve(cfg+0x8FC)` of the tick count S+0xDFC/rate; both curves are `[0..1.25 -> 0..1]`, so this output is unchanged. S+0xE08 = `curve(cfg+0x920)` `[0..0.9 -> 0..1]` instead of `curve(cfg+0x908)` `[0..1 -> 0..1]` of S+0xE04/rate. **Full charge is reached about 11 % sooner.** S+0xE00 is `ReceiverState.#82526c5c.Value`, which 36 graphs read. |
 | SpectacularVolleys | `0x886BD564` | `fn_886BCE88` (stroke start) | `S+0x388` (bool) = has the skill && the geometric/volley conditions. The rule analysers at controller+0x1D4 then read it (I: unlocks the spectacular volley clip family). No graph reads the skill. |
-| Fatality (id) | `fn_88694030`, `fn_88697118`, `fn_88697E98`, `fn_886AE0E8`, `fn_886B7208` | | The crc32 `ad4ba1ab`... of `Fatality` doubles as a **SwingCategory** id (`#8ea88f9f.Qualifier` links "Fatality"). The generic condition case `0xC42EF3FE` in `fn_88697E98` calls HasSkill with a data id. `fn_88697118` is the reward tag tracker (Fatality reward, gp3 s4). The skill itself acts through 9 graphs (below). |
+| Fatality (id) | `fn_88694030`, `fn_88697118`, `fn_88697E98`, `fn_886AE0E8`, `fn_886B7208` | | crc32("Fatality") = `c78c8f06` doubles as a **SwingCategory** id (graph link ports `#8ea88f9f.Qualifier` with qualifier "Fatality", domain `ad4ba1ab`). The generic condition case `0xC42EF3FE` in `fn_88697E98` calls HasSkill with a data id. `fn_88697118` is the reward tag tracker (Fatality reward, gp3 s4). The skill itself acts through 9 graphs (below). |
 
 ## 3. Per-skill catalogue
 
@@ -156,8 +156,9 @@ The coach-only abilities (XP bonuses and attribute bonuses) are career effects, 
 
 ## 4. Check against the community reference (R1)
 
-R1's `docs/gameplay/community-reference.md` s4 lists 32 skill descriptions. `data/gameplay/skills_community.yaml`
-did not exist when this note was written; this check uses the markdown table.
+R1's `docs/gameplay/community-reference.md` s4 and `data/gameplay/skills_community.yaml` list 32
+skills. All 32 codes and display names match `traits_skills.yaml` exactly (V, scripted comparison).
+Public names map to codes one to one; for example Monster Defense = TenaciousCockroach.
 
 Marks:
 
@@ -210,6 +211,23 @@ Career claims from R1 s3.3, checked against `CoachList.bin`:
   15 / 13 / 15 for bronze / silver / gold.
 * Skills per coach: bronze 0, silver 1, gold 2. The claim "a few gold coaches have 3" is **not found**.
 * XP bonuses on bronze coaches: confirmed, but XP bonuses also appear on silver and gold coaches.
+
+### 4.1 R1 hypotheses on skills, fatigue and career (community-reference.md s8)
+
+| # | hypothesis | verdict | evidence |
+|---|---|---|---|
+| 11 | Fatigue rises with sprinting and power shots and lowers move speed, reaction time and precision; Stamina sets the drain; recovery is partial | **confirmed** (wiring); partial recovery between points I | FatigueIngame (graph 10) cost = stamina-weighted lerp of 0.2 + SumAcceleration and SumPowerfulFactor terms. FatigueConst `lerp(1100, 3300, Stamina)` and VigorMax `lerp(0.5, 0.65, Stamina)` (graph 12). Effects of vigor: RushSpeedCoef (move speed), `9c8607a7` ProfileFactor = Serve × vigor (aiming), and the AI reaction delay AI-record +0x1DC (graph 141: `lerp(curve(vigor) 15 -> 5, curve(vigor) 10 -> 0, Profile.Speed)` ticks, so low vigor gives a longer delay). Human side: IsTired (graph 16) into brain +0x19C. Graph facts: G1 `graphs-decoded.md` s6.2. Reaction-delay facts: `player-and-movement.md` s3.3 |
+| 12 | The September 2011 patch changes are data deltas | **not tested** | needs the TU1 `Settings.bin` / `Expressions.bin`, which are not extracted |
+| 14 | Instant rocket shortens the charge time (smaller divisor or scaled curve) | **confirmed, scaled curve** | `fn_8869D720` @`0x8869D750` swaps `cfg+0x908 [0..1]` for `cfg+0x920 [0..0.9]` on S+0xE08 (about 11 % sooner). The divisor (rate) is unchanged. S+0xE00 uses an identical curve pair |
+| 15 | Diesel/Invasion skills scale with counters | **confirmed** (counter identities I) | Longer, better!: `MatchState.#8beb922e`, 5..25. Diesel hard hitter: `MatchAnalyser.#ace1253a`, 2..6, a different counter. Diesel server/returner share `#b6b22409` (1..5 / 0..4). Slice/Topspin invasion: per-type counters `#7595a0b3` / `#125400f0`, 0..10 |
+| 16 | Score-state skills read the score | **confirmed** (input names I except IsGamePoint) | Monster Defense and Focus service read the same `MatchAnalyser.#689dc6f2`. Smell of blood reads `MatchAnalyser.IsGamePoint`. Highly flammable reads `#08950daa`. The 4-point threshold is not in the graphs |
+| 17 | Position-state skills | **confirmed** for Fatality (SideLeft/SideRight), Reach (reach swing category), Wrong foot (`#af13720a`); **I** for Passing shot sniper / Crushing passing shot (no "opponent at net" input in the skill slice; the gate is the passing-shot class) and Approach (qualifier `8cae3d42/4daa7349`) | s3 |
+| 18 | Shot counter / Return serve counter need Flat Finesse + good timing; extra speed from the incoming ball (graph `491e53f5`) | **different** | Graph `491e53f5` (index 238) and 8 siblings `lerp` between two ManualShotTiming curves. The skill widens the PowerfulFactor timing window (peak ±0.1 -> ±0.2, skirt 0.2 -> 0.4). No incoming-ball-speed operand is in the skill's slice; the output is PowerfulFactor mapped into `ShotSpecific.#033f32d0` Min..Max. Return serve counter: graph 258, same pattern |
+| 19 | Poisoned slices affects the opponent via the opponent's skill or an incoming-ball property | **confirmed** (the second form) | `fn_88695640` sets the receiver's S+0x7D0 when the incoming shot is the owner's Slice. 23 receiver graphs add `curve6(BallState.Commands.From)`, which is -0.3 for low balls |
+| 20 | Spectacular volleys gates animation; Fatality clips tied to Fatality | **confirmed** flag S+0x388 (`fn_886BCE88`); clip query not traced (G6). Fatality id = swing category `c78c8f06` (V) | s2 |
+| 21 | Return sixth sense / Emergency reactivity cut | **confirmed** | no graph port, no SkillList entry, no `lis/ori` of `7dcc9c04` / `ffd369ce` in Swing_DLL |
+| 22 | Coach budget 25/35/50, at most 15 per attribute, `unlock_step` 0-4 | **confirmed as maxima** (ranges 20..25 / 25..35 / 35..50) | s4 above |
+| 23 | Level cap 20 across the three tracks | **partly**: each `PlayerEvolution` pack has 20 levels (V). Scalars `9fd4f7b8` = 20 and `98645014` = 20 (I: cap). Thresholds 4/9/14/19 | `stats-coaches-career.md` s4 |
 
 ## 5. Open items
 

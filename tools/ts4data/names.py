@@ -431,6 +431,7 @@ def guess_siblings(names, layout, global_words, max_local=40):
                            "Delay", "Duration", "Radius", "Width", "Value", "List", "Index",
                            "1", "2", "3", "4", "0") if w not in lw]
         ws = [w.encode() for w in lw]
+        ws3 = set(ws[:12])
         wset = ws + [w.encode() for w in gw if w not in local]
         for a in ws:
             ca = zlib.crc32(a)
@@ -442,8 +443,8 @@ def guess_siblings(names, layout, global_words, max_local=40):
                 if cb in unk and names.add(cb, (a + b).decode(), "sibling"):
                     unk.discard(cb)
                     hits += 1
-                if b in ws:
-                    for c in ws:
+                if b in ws3:
+                    for c in ws3:
                         cc = zlib.crc32(c, cb)
                         if cc in unk and names.add(cc, (a + b + c).decode(), "sibling"):
                             unk.discard(cc)
@@ -545,6 +546,7 @@ def main(argv=None):
     ap.add_argument("--top", type=int, default=2500, help="words for unconstrained two-word guesses (0 = off)")
     ap.add_argument("--rounds", type=int, default=3)
     ap.add_argument("--out", required=True, help="JSON output (work/, all sources)")
+    ap.add_argument("--dump-strings", help="write the harvested strings here (one per line, work/ only)")
     ap.add_argument("--yaml", help="names.yaml to update (hand-added entries are kept)")
     a = ap.parse_args(argv)
 
@@ -572,6 +574,9 @@ def main(argv=None):
             except ValueError:
                 pass
         strs.update(strings_of(data))
+    if a.dump_strings:
+        with open(a.dump_strings, "w", encoding="utf-8") as o:
+            o.write("\n".join(sorted(x.replace("\n", " ") for x in strs)))
     for p in a.merge:
         for h, (n, src, conf, note) in load_merge(p).items():
             names.add(h, n, "merged", conf, note or src)

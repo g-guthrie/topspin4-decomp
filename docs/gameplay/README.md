@@ -25,6 +25,9 @@ the map, the note is newer and wins.
 | [graphs-decoded.md](graphs-decoded.md) | Every analyser graph (G1) | Curves are ramps: load-time slope fixup `fn_8890DFC8` → `fn_88179740` (templates: `fn_8867BB78`); every port bound to a named member via the 307-entry cell table; who runs each graph; shot error chain (FaultProbability, OutcomeNet, LetProbability); reader `tools/ts4_analyser.py`, values `data/gameplay/graphs.yaml` |
 | [graphs-catalogue.md](graphs-catalogue.md) | Generated per-graph catalogue | One entry per graph with ports, runner and formula shape; `tools/ts4_graph_catalogue.py` |
 | [player-and-movement.md](player-and-movement.md) | Player tuning, AI levels, movement modes, clip catalogue (G4) | Settings player block, AI difficulty table, speed override, 3,184 clips; `ref/gameplay/player.c`, `data/gameplay/player.yaml`, `animation_clips.yaml` |
+| [stats-coaches-career.md](stats-coaches-career.md) | Ratings, coaches, career, AI records (G4b) | Raw ratings → DefaultAttributes graph → Profile 0..1; reaction delay written by AI positioning graphs; AI record layout (5 weighted lists, 6 graphs, speed limit); 110 coaches with budgets; clip-fit cost decoded; `tools/ts4data/career_data.py`, `data/gameplay/coaches_career.yaml` |
+| [traits-and-skills.md](traits-and-skills.md) | Every skill/trait with magnitudes (G4b) | 30 working skills, 2 cut; all effects via shot-quality outputs (none touch ball parameters); checked against the community reference; `data/gameplay/traits_skills.yaml` |
+| [community-reference.md](community-reference.md) | Public documentation (R1) | Manual, patch notes, press and community claims with sources and confidence; 26 hypotheses for code verification; `data/gameplay/skills_community.yaml` |
 
 Readable C for understood but not yet byte-matching functions lives in
 `src/xbox360/drafts/`. Drafts are not part of the matching build and do not

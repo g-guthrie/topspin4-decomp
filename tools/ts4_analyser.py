@@ -47,6 +47,9 @@ CURVE_KEY_STRIDE = 0x14
 
 EXPRESSIONS_ROOT_TYPE = 0xD440C339
 EXPRESSIONS_SIGNATURE = (0x181AEDEE, 0xD2968089)
+# word 0 is a layout-version hash of the root type: it changes whenever any nested type layout changes.
+# Title Update #1 (its own Layoutall.bin) ships 0x1FAAB488; see docs/gameplay/title-update-balance.md.
+EXPRESSIONS_SIGNATURES = {EXPRESSIONS_SIGNATURE, (0x1FAAB488, 0xD2968089)}
 FRAMEWORK_MODULE_ROOT_TYPE = 0xB708811F
 
 # node type crc32 -> (kernel name, original kernel address); names of the crc preimages are unknown
@@ -337,7 +340,7 @@ def parse_expressions(buf, fixup=True):
         raise ValueError("file too small")
     if buf[0x10:0x14] != b"\xff\xff\xff\xff":
         raise ValueError("not an XBin image")
-    if (_u32(buf, 0), _u32(buf, 4)) != EXPRESSIONS_SIGNATURE:
+    if (_u32(buf, 0), _u32(buf, 4)) not in EXPRESSIONS_SIGNATURES:
         raise ValueError("unexpected signature")
     if _u32(buf, ROOT_OFF + 4) != EXPRESSIONS_ROOT_TYPE:
         raise ValueError("root type is not the expression table")

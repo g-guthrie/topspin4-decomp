@@ -453,14 +453,14 @@ def emit(o, db, sa, sources, cmd):
         w("    %d: [%s]\n" % (r, ", ".join("[%d, %d]" % c for c in lst)))
     w("\n# Animation groups (move families) and sub groups (qualifier-conditioned subsets).\nanim_groups:\n")
     for g in db["groups"]:
-        w("  - {setup: %s, index: %s, id: %s, first: %s, count: %s, allow_speed_coef: %s, foot: [%s]}\n" % (
+        head = "  - {setup: %s, index: %s, id: %s, first: %s, count: %s, allow_speed_coef: %s, foot: [%s]" % (
             q(g["setup"]), g["index"], q(g["id"]), g["first"], g["count"], g["allow_speed_coef"],
-            ", ".join(q(x) for x in g["foot"])))
+            ", ".join(q(x) for x in g["foot"]))
         if g["subgroups"]:
-            w("    subgroups:\n")
-            for s in g["subgroups"]:
-                w("      - {id: %s, condition: 0x%08x, first: %s, count: %s, abs: %s}\n" % (
-                    q(s["id"]), (s["condition"] or 0) & 0xFFFFFFFF, s["first"], s["count"], s["abs"]))
+            subs = ["{id: %s, condition: 0x%08x, first: %s, count: %s, abs: %s}" % (
+                q(s["id"]), (s["condition"] or 0) & 0xFFFFFFFF, s["first"], s["count"], s["abs"]) for s in g["subgroups"]]
+            head += ",\n     subgroups: [\n       " + ",\n       ".join(subs) + "]"
+        w(head + "}\n")
     # clip classes
     w("\n# Clip classes: number of animations carrying each qualifier value.\nclip_classes:\n")
     for qn in SPECIAL_QUALIFIERS:
@@ -492,17 +492,19 @@ def emit(o, db, sa, sources, cmd):
         parts.append("clamp: [%s]" % ", ".join(fnum(x) for x in a["clamp"]))
         if a["motion"]:
             parts.append("motion: [%s]" % ", ".join(q(m) for m in a["motion"]))
-        w("  - {%s}\n" % ", ".join(parts))
         if qd:
-            w("    q: {%s}\n" % ", ".join("%s: [%s]" % (q(k), ", ".join(q(x) for x in v)) for k, v in qd.items()))
+            parts.append("\n     q: {%s}" % ", ".join("%s: [%s]" % (q(k), ", ".join(q(x) for x in v)) for k, v in qd.items()))
         if a["events"]:
-            w("    ev: [%s]\n" % ", ".join("[%s, %s, %s, %s]" % (q(e[0]), fnum(e[1]), fnum(e[2]), fnum(e[3])) for e in a["events"]))
+            parts.append("\n     ev: [%s]" % ", ".join("[%s, %s, %s, %s]" % (q(e[0]), fnum(e[1]), fnum(e[2]), fnum(e[3]))
+                                                     for e in a["events"]))
         if a["transitions"]:
-            w("    tr: [%s]\n" % ", ".join("[%s]" % ", ".join(fnum(x) if not isinstance(x, bool) else str(int(x)) for x in t)
-                                          for t in a["transitions"]))
+            parts.append("\n     tr: [%s]" % ", ".join("[%s]" % ", ".join(fnum(x) if not isinstance(x, bool) else str(int(x))
+                                                                         for x in t) for t in a["transitions"]))
         if a["roty"]:
-            w("    roty: {%s}\n" % ", ".join("%s: {%s}" % (k, ", ".join("%s: %s" % (kk, fnum(vv)) for kk, vv in v.items()))
-                                            for k, v in a["roty"].items()))
+            parts.append("\n     roty: {%s}" % ", ".join("%s: {%s}" % (k, ", ".join("%s: %s" % (kk, fnum(vv))
+                                                                                    for kk, vv in v.items()))
+                                                      for k, v in a["roty"].items()))
+        w("  - {%s}\n" % ", ".join(parts))
     # swinganimation.bin
     w("\n# ------------------------------------------------------------------ swinganimation.bin (AnimationData root)\n")
     w("planner_parameters: {%s}\n" % ", ".join("%s: %s" % (q(k), fnum(v)) for k, v in sa["planner_parameters"].items()))
@@ -511,23 +513,29 @@ def emit(o, db, sa, sources, cmd):
     w("# match_key(_mask) = value read from gameplay through KeyXPath).  Exclusive = the clip must carry only that value.\n")
     w("selection_procedures:\n")
     for pid, terms in sa["selection_procedures"]:
-        w("  - id: %s\n" % q(pid))
+        w("  - id: %s\n    terms:\n" % q(pid))
         for head, fields in terms.items():
-            w("    - {node: %s, %s}\n" % (q(head), ", ".join("%s: %s" % (q(k), q(v) if isinstance(v, str) else fnum(v))
+            w("      - {node: %s, %s}\n" % (q(head), ", ".join("%s: %s" % (q(k), q(v) if isinstance(v, str) else fnum(v))
                                                              for k, v in fields.items())))
     w("\ncondition_procedures:\n")
     for cid, path in sa["condition_procedures"]:
         w("  - {id: %s, path: %s}\n" % (q(cid), q("/".join(path))))
 
+    def sector_flow(row, extra):
+        items = [q(row[0]), q(row[1])]
+        ex = []
+        for k, v in extra.items():
+            if k == "sub":
+                ex.append("sub: [%s]" % ", ".join(sector_flow(r, e) for r, e in v))
+            else:
+                ex.append("%s: %s" % (k, "true" if v is True else v))
+        if ex:
+            items.append("{%s}" % ", ".join(ex))
+        return "[%s]" % ", ".join(items)
+
     def emit_sectors(secs, ind):
         for row, extra in secs:
-            s = "%s- [%s, %s]" % (ind, q(row[0]), q(row[1]))
-            ex = ", ".join("%s: %s" % (k, v) for k, v in extra.items() if k != "sub")
-            if ex:
-                s += "  # " + ex
-            w(s + "\n")
-            if "sub" in extra:
-                emit_sectors(extra["sub"], ind + "  ")
+            w("%s- %s\n" % (ind, sector_flow(row, extra)))
     w("\n# Move sets: per locomotion family, the directional sectors [family key, direction/target] the\n")
     w("# animation engine picks from the move direction (8 x 45 deg; Volley_Repositioning has 16).\nmovesets:\n")
     for m in sa["movesets"]:

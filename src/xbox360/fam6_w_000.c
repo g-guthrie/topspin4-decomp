@@ -1,4 +1,4 @@
-#ifndef _MSC_VER
+#if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wmacro-redefined"
 #endif
 /* Small functions produced by the asm2c translator (FAM4/FAM5 fork) and verified
