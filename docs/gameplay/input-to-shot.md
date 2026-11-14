@@ -191,6 +191,9 @@ the machine requests the swing. This is where the **power tiers** are decided; t
 
 ## 5. Layer 5: aim target, InputNotation, command
 
+> **Superseded (GE1):** the shot target is `fn_886935A0` with `Stick_Aiming` and the AimingConfig
+> quads ([aiming.md](aiming.md)); `fn_8869C010` is the movement intent.
+
 * **Aim** `fn_8869C010` (0x228 B, H): the aim object (`this+0x14`) mode hash selects the source: `0x9E51242B` = **stick aim** (vector `(S+0x44C, 0, -S+0x448)`, forced to 0 for non-human players), `0x8999A0BF` = neutral (0,0),
   `0x487570E4` = **auto target** (`fn_8869BEF0`, ball-relative). Result written to `aim+0x30` (**lateral angle**, `atan2` of the stick vector plus `pi` when the court-side tag `a2eda1e7` is set, wrapped by `fn_8817B608`) and `aim+0x34`
   (**depth = clamp(stick forward, 0..1)**), then mirrored to `+0x38/+0x3C`. Callers: `fn_886A3DDC`, `fn_886A4098`, `fn_886A4244`, `fn_886A487C` (the mode siblings of `fn_886A3DF0`), `fn_886AA364`, `fn_886BB094`, `fn_886C0850`, `fn_886C15E4`.

@@ -77,7 +77,7 @@ reads `cfg+0xC74` (0.7, `Objective8AllAround`) as a Risky-row test `S+0xE00 > 0.
 * ServeNormal x6 = {kick 150 km/h, flat 190 km/h} x {3 tier leaves}; ServeSlice x3 = 140 km/h x 3 tier leaves; ServeAdvanced x3 = one leaf per kick/slice/flat, no tiers.
 * Serve vs return vs rally: serves are chosen by `IsClassicServe`/`IsAdvancedServe`; there is **no separate return row** (a return is a baseline stroke; `FlatReturn` is only the row *group* hash on the four Flat rows and a key in the aim table); first vs second serve is not in the tree
   (it is the kick/slice/flat input, section 4 of input-to-shot.md). Volley/smash/baseline use `IsBaseLine`/`IsSmash` (gp2's per-sample candidate type is separate and only feeds reach/selection).
-* Aim tables keyed by template **name**: `cfg` vectors at file `0x120` (15 entries, 0x70 bytes: per-stroke pairs of aim distances in cm, e.g. Flat 800/300..350/140..150) and `0x12C` (25 entries, 0xA0 bytes: `300, 1300, 350|550` plus 4 x,z aim-point lists; serve entries hold (x~485..535, z~145..180) cm service-box targets). Used by `X` (class 85B71A2B) for the landing target; meanings of individual numbers M/L.
+* Aim tables keyed by template **name**: `cfg` vectors at file `0x120` (15 entries, 0x70 bytes: per-stroke pairs of aim distances in cm, e.g. Flat 800/300..350/140..150) and `0x12C` (25 entries, 0xA0 bytes: `300, 1300, 350|550` plus 4 x,z aim-point lists; serve entries hold (x~485..535, z~145..180) cm service-box targets). Used by `X` (class 85B71A2B) for the landing target; meanings of individual numbers M/L. **Decoded by GE1 in [aiming.md](aiming.md)** (25 AimingConfig records, four zones of four quads; `data/gameplay/aim_tables.yaml`).
 
 ## 5. Risky rows and IsRisk (priority question)
 

@@ -136,7 +136,7 @@ embedded graph/curve objects (vtable 0x880D7600) at +0x108,0x14c,...,0x548 in th
 ### B.2 Decision flow per frame (V/I)
 planner (A.2) -> candidate scores -> arg-max commit (`bb+0xbc8/0xbd1`) -> move command `bb+0x9d0/9d4` + override `bb+0xde8` -> swing request
 (state 3/4 via fn_886A3440 with profile `cfg+0x1f8`) -> aim controller picks a mode (fn_886A3DF0 and siblings 886A3C98/40A8/4260): three modes by hash
-(stick aim, neutral, auto-target via fn_8869BEF0); AI gets neutral/auto because the stick is zero -> shot direction from the auto target.
+(stick aim, neutral, auto-target via fn_8869BEF0); AI gets neutral/auto because the stick is zero -> shot direction from the auto target. **Corrected by GE1 ([ai-inputs.md](ai-inputs.md)):** the AI writes `Stick_Aiming` from weighted draws over its AimingSide/AimingLength components; the shot target is `fn_886935A0` ([aiming.md](aiming.md)).
 Shot type = the animation family of the chosen candidate (profile record); power/timing come from the analyser graphs (gp8) and the grade roll; I found no
 separate "power" decision for the AI (L). Difficulty scaling lives in data: per-player graphs, the skill float of B.1(4), reaction frames `profile+0x1dc`, tuning curves.
 

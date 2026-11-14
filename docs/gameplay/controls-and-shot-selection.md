@@ -432,6 +432,11 @@ nodes, because the tree only branches on Risk under Slice.
 
 ## 8. Aim (H)
 
+> **Superseded for the shot target (GE1, [aiming.md](aiming.md)).** `fn_8869C010` below is the
+> planner's movement intent, called only by planner states. The landing target comes from the
+> selector's vtbl slot 4 `fn_886935A0`, which reads `Stick_Aiming` (S+0x430) and the AimingConfig
+> quads. The AI writes `Stick_Aiming` itself ([ai-inputs.md](ai-inputs.md)), so it is not zero.
+
 `fn_8869C010`. The mode hash is in `aim+0x5C`.
 - **Stick mode `0x9E51242B`.**
   - `(x, y) = Stick_Move (S+0x448, S+0x44C)`. Both are forced to 0 for non-human players.

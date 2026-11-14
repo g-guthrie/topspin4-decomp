@@ -22,6 +22,8 @@ Grades: **C** = read from code (`Swing_DLL.dll`, `tools/fn_asm.py`), **D** = rea
    `SwingTimingSelectionList/Baseline/5ae85f27/{848c2a13, BestAbility}` (`PT+0x5D4`, file 0x778 /
    0x784) when `Context.IsVolley` is 0, else `.../Volley/...` (`PT+0x5F0`). `TimingAbility` is
    the output of the timing graphs (BaselineTimingAbility, VolleyTimingAbility).
+   The curve evaluator is `fn_881899D8` (C): the last range with `InStart <= f` (else the first),
+   ramped and clamped, the same semantics as the analyser curves (`graphs-decoded.md` s2).
 5. The value is also copied to the GameplayInterface per-player block `+0x130` (HUD).
 
 The request state machine freezes it: each of the three commit sites of `fn_886B3CF8`
@@ -102,7 +104,15 @@ Tuning: capacity and per-point recovery are the FatigueConst / `80ce1a10` graph 
 (`ts4_analyser_patch.py`); the rest multipliers and the animation cost table are in
 `02_PlayerSettings.yaml` (`/Fatigue/...`).
 
-## 3. Reproduction
+## 3. Reference model
+
+`ref/gameplay/timing.c` (`ts4_range_curve`, `ts4_timing_value`, shipped curves) and
+`ref/gameplay/fatigue.c` (`ts4_fatigue_init`, `_add_acceleration`, `_update_vigor`,
+`_point_end`), tested by `ref/gameplay/test_timing_fatigue.c` (run by
+`tests/test_gameplay_ref.py`). The graph outputs (FatigueIngame cost, FatigueConst capacity and
+rates, TimingAbility) are inputs of the model.
+
+## 4. Reproduction
 
 ```sh
 python3 tools/fn_asm.py fn_8867DF68 fn_88661B60 fn_886B3CF8 fn_88690540 fn_886902E8 fn_8866ECA8 fn_8866EE48

@@ -358,7 +358,7 @@ other than these curves, and no surface term ([surfaces.md](surfaces.md)).
   2. Common tail `+0x874..+0x8C0`, for every outcome: `0 < x < 75 → 75`, `-75 < x < 0 → -75` (x = 0 is kept).
   3. Planner In case (`fn_886AE528 +0xEC8..+0xF44`): `fn_886805E0` pulls the target back toward the hitter by
      **`S+0xD78` cm** along the horizontal hitter→target direction (`0x8868075C`; `S+0xD78` has only a zeroing store,
-     `0x88695C10`, so its value is analyser/data output, 0 by default), then calls the selector's vtbl slot 8
+     `0x88695C10`, so its value is analyser/data output, 0 by default), then **[GE1: it is `AimingState.DeepDeviation`, written by each class's aiming graph, 0..310 cm from `DeviationSystem.Random`; aiming.md s4]** calls the selector's vtbl slot 8
      (`fn_88693280`: clip the hitter→target segment to the court polygon from `fn_88693040`).
   4. `x = max(x, 50)` (pool+0xF0, `+0xF00`), mirror to the world frame, `planned = 1`, probe.
   `ball_in_target`, `ball_in_shortfall`, `ball_target_min_depth`.
@@ -537,8 +537,8 @@ fill most of them, and the graphs can read the skill list `S+0x640` through `Pro
 | bounce (skid / low bounce) | template curves of the row only (`c40`, `c4C`, `c58`, `c64`) driven by `spin_a/spin_b`; `no_sidespin` `ball+0x4E1` | data | `fn_889C1C80` | through spin; `port_bounce_*` |
 | error roll | `S+0x718 + S+0x564`, `S+0x71C`, `S+0x720`, flags `S+0x56D/56E/572` | analysers / debug | `fn_886807C0` | `outcome` |
 | reach fan | `S+0x7DC`, `S+0x7E0`, `ctrl+0x44C`, `ctrl+0x450` | data | `fn_88671B10`, `fn_88662738` | `reach` |
-| In depth error | `S+0xD78` (pull-back, cm) | data (only a zeroing store) | `fn_886805E0 +0x17C` | `in_shortfall_cm` |
-| Out margin | `S+0xD8C` (+1 → `S+0xD90`) | data; DebugConfig `+0x214` at point end (`fn_886807C0 +0x150`) | `fn_886935A0` | `out_margin_cm` |
+| In depth error | `S+0xD78` (pull-back, cm) | DeepDeviation, aiming graph output (aiming.md s4) | `fn_886805E0 +0x17C` | `in_shortfall_cm` |
+| Out margin | `S+0xD8C` OutEfficiency (+1 → `S+0xD90` QuadEfficiency on the Out path; aiming.md) | data; DebugConfig `+0x214` at point end (`fn_886807C0 +0x150`) | `fn_886935A0` | `out_margin_cm` |
 | Net / Let aim height | `S+0x750/0x754` = cfg `+0x134/0x138` | planner | `fn_889C29E8` | `net_aim_cm`, `let_aim_cm` |
 | frame shot | IsWood `S+0x40A` → Wood box `ball+0x4C0..0x4CC` | analyser + ball image | `fn_886AE528 +0xA7C` | `is_wood`, `ball_config.disp_*` |
 
