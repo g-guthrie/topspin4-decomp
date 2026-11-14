@@ -91,12 +91,12 @@ GRADES = ["Tee-off", "VeryGood", "Good", "Normal", "Bad", "VeryBad"]
 ARRIVAL_EDGES = (30, 15, 1)
 # Volleys: nobody is "set" at the net, so the margin is the frames since the opponent's contact (S+0xCF0) on a
 # volley time scale (retune-systems s2 "volley time scale"; edges are this spec's tuned values).
-VOLLEY_ARRIVAL_EDGES = (44, 32, 22)
+VOLLEY_ARRIVAL_EDGES = (50, 36, 25)
 # Contact height (Ball+0x344), cm: knee, waist, shoulder, head (judgement for an adult player).
 KNEE_CM, WAIST_CM, SHOULDER_CM, HEAD_CM = 50.0, 95.0, 145.0, 185.0
 # Incoming pace at contact (S+0x770 once written), km/h: slow <= , normal <= , heavy <= , else near reflex limits.
 PACE_EDGES = (52.0, 78.0, 100.0)
-VOLLEY_PACE_EDGES = (52.0, 85.0, 110.0)
+VOLLEY_PACE_EDGES = (52.0, 80.0, 100.0)
 LOW_VIGOR = 0.30
 TOP_SPEED_REF = 7.5          # m/s: v_req is divided by the player's top speed; callers rescale v_req
 # Score -> grade (retune-systems s2): -1 or 0 VeryGood (Tee-off if the test passes at -1), 1-2 Good, 3 Normal,
@@ -602,14 +602,14 @@ RALLY = {
     "base_err": 0.05,                  # situation fault chance of every groundstroke (control-sum penalties: running,
                                        # fast ball, fatigue) beyond the timing and grade terms; model calibration
     "pace_margin": {"Flat": 81.0, "TopSpin": 84.0, "Slice": 68.0, "Lob": 60.0},   # mph where the pace term starts
-    "pace_err": 0.006,                 # error per mph above the margin speed
+    "pace_err": 0.003,                 # error per mph above the margin speed
     "margin_hand": 10.0,                # margin speed added per unit of hand stat
     "kick": {"Flat": 0.08, "TopSpin": 0.20, "Slice": 0.0, "Lob": 0.2},
     "kick_hand": 0.14,                  # topspin kick added per unit of hand stat (spin scales with FH/BH rating)
     "low": {"Slice": 1.0},              # slice stays low: the receiver's contact height drops
     "max_run_base": 5.7, "max_run_speed": 2.9,          # m/s reachable: base + per unit of Speed stat
     "floor_err": 0.20,                  # error added per unit of floor penalty of the stroke's rating
-    "pass_err": 0.03,                   # added error for a passing shot against a net player
+    "pass_err": 0.01,                   # added error for a passing shot against a net player
     "low_drive_err": 0.004,             # per mph above 70 when driving a ball below 60 cm (x depth below 60 / 30)
     "vigor_cost": {"Finesse": 0.002, "Medium": 0.004, "Powerful": 0.006, "Full": 0.006, "Overcharge": 0.009},
     "run_cost": 0.0012,                 # vigor per m/s of required run speed
@@ -626,7 +626,7 @@ SPIN_ROW = {"Tee-off": 1.10, "VeryGood": 1.05, "Good": 1.00, "Normal": 0.95, "Ba
 MOON = {"mph": 58.0, "depth": 0.85, "kick": 0.50, "bounce_cm": 175.0, "contact_ratio": 0.52, "extra_f": 30}
 DEPTH_BASE = 0.62         # rally-model depth of an In ball before the DeepDeviation pull (0 short .. 1 baseline)
 DEPTH_EFF = 0.30          # extra depth per unit of FinalEfficiency above 0.55 (outer quads reach deeper)
-SLICE_DROP_CM = 72.0      # a slice reaches the receiver this much lower than a neutral ball
+SLICE_DROP_CM = 50.0      # a slice reaches the receiver this much lower than a neutral ball
 
 
 class Ball:
