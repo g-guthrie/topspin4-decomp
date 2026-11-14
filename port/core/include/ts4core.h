@@ -284,6 +284,46 @@ TS4_API void *ts4_wasm_alloc(uint32_t n);
 TS4_API void ts4_wasm_reset(void);
 #endif
 
+/* ------------------------------------------------------------------------------------------------ */
+/* additions (API v1, appended; docs/port/web.md)                                                    */
+/* ------------------------------------------------------------------------------------------------ */
+/* Per-player extras that do not fit the fixed Ts4PlayerSetup. Kept across ts4_match_start(); may be set before
+ * or between matches. skill_mask bit i = skill i of the SKIL section (SkillList order, traits_skills.yaml).
+ * ai_style / ai_level index the AIDF records (9 style groups x 6 levels VeryEasy..; out of range = clamp). */
+typedef struct Ts4PlayerExtra {
+    uint32_t struct_size;          /* sizeof(Ts4PlayerExtra) */
+    uint32_t skill_mask;
+    uint32_t ai_style;
+    uint32_t ai_level;
+} Ts4PlayerExtra;
+TS4_API int32_t ts4_set_player_extra(Ts4Core *c, uint32_t player, const Ts4PlayerExtra *x);
+
+/* Animation state of one player for a renderer that drives the game's Havok clips (docs/havok.md).
+ * clip indexes the ANIM clip table (TS4_ERR_MISSING_DATA without an ANIM section); clip_hash = crc32(clip name). */
+enum { TS4_ANIM_IDLE = 0, TS4_ANIM_MOVE, TS4_ANIM_SWING, TS4_ANIM_SERVE };
+typedef struct Ts4AnimView {
+    uint32_t struct_size;          /* sizeof(Ts4AnimView) */
+    uint32_t layer;                /* TS4_ANIM_* */
+    int32_t clip;                  /* current clip index, -1 none */
+    uint32_t clip_hash;
+    float frame;                   /* current frame of the clip */
+    float rate;                    /* frames advanced per tick */
+    int32_t prev_clip;             /* clip being blended out, -1 none */
+    uint32_t prev_hash;
+    float prev_frame;
+    float blend;                   /* weight of `clip` (1 = no blend) */
+    int32_t group, subgroup;       /* anim group / absolute subgroup of `clip` */
+    uint32_t mirrored;             /* 1 = play mirrored (left-handed player) */
+    float contact_frame;           /* swing: frame of the EventRacket annotation, else -1 */
+    uint32_t reserved[2];
+} Ts4AnimView;                     /* 64 bytes */
+TS4_API int32_t ts4_anim_view(const Ts4Core *c, uint32_t player, Ts4AnimView *out);
+TS4_API uint32_t ts4_anim_view_size(void);
+
+/* Read one float of a player's PlayerState image (byte offset, graphs-decoded.md s3.3), for tools and tests.
+ * TS4_ERR_ARG when the offset is outside the image. */
+TS4_API int32_t ts4_player_field(const Ts4Core *c, uint32_t player, uint32_t offset, float *value);
+
 /* Test / tool hook: end the current point as the judges would. kind 0 rally, 1 serve, 2 let.
  * Returns the RULES_EV_* bit set of ref/gameplay/rules.h. */
 TS4_API uint32_t ts4_debug_end_point(Ts4Core *c, uint32_t kind, int32_t winner);

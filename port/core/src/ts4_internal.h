@@ -101,6 +101,28 @@ typedef struct Ts4BallEvents {
     float at[3];           /* world cm of the event */
 } Ts4BallEvents;
 
+/* ---- game-state images (fields.c): byte images laid out like the game objects, so bound graphs read and write
+ *      the same offsets as the original (graphs-decoded.md s3). Floats are host order. ---- */
+#define TS4_PS_SIZE 0x1070u      /* PlayerState */
+#define TS4_AI_SIZE 0x274u       /* UserAIState (E9CA839C) */
+#define TS4_TEAM_SIZE 0xC0u      /* TeamState */
+#define TS4_MATCH_SIZE 0x340u    /* MatchState */
+#define TS4_BALLIMG_SIZE 0x540u  /* BallState = Gp4bBall layout */
+#define TS4_MAX_GRAPHS 1024u
+enum { TS4_RG_NONE = 0, TS4_RG_SELF, TS4_RG_OPP, TS4_RG_BALL, TS4_RG_MATCH, TS4_RG_TEAM, TS4_RG_AI, TS4_RG_SKILL,
+       TS4_RG_QUAL, TS4_RG_PARTNER };
+
+typedef struct Ts4AnimState {
+    uint32_t layer;
+    int32_t clip, prev_clip;
+    float frame, prev_frame, rate, prev_rate;
+    float blend_t, blend_len;      /* ticks into the blend / blend length in ticks (0 = no blend) */
+    int32_t group, sub;
+    int32_t moveset;               /* current move set index, -1 none */
+    float contact_frame;
+    uint32_t occ[8];               /* last swing clips (max_occ policy) */
+} Ts4AnimState;
+
 typedef struct Ts4SimPlayer {
     Ts4PlayerSetup setup;
     float pos[3], vel[3];
@@ -126,7 +148,40 @@ typedef struct Ts4SimPlayer {
     uint32_t template_row;
     uint32_t ai_press;         /* AI: remaining ticks of the button press */
     uint32_t ai_buttons;
+    /* decoded shot flow (G2b) */
+    uint32_t charging;         /* shot button latched, charge counter running */
+    uint32_t charge_frames;    /* fn_88698538 counter: frames since the latch */
+    uint32_t charge_committed; /* released or auto-committed (contact - now <= lead) */
+    int32_t charge_commit_lead;/* contact - now at the commit */
+    uint32_t charge_buttons;
+    float charge_power;
+    float aim_angle, aim_depth;
+    uint32_t inside_out;       /* LT forced side commit (S+0x5DC) */
+    int32_t toss_tick;         /* serve: tick the toss started, -1 none */
+    int32_t serve_release_tick;
+    int32_t react_tick;        /* AI: tick from which the AI may move (reaction delay) */
+    uint32_t ai_stroke;        /* AI: chosen stroke buttons for the incoming ball */
+    float ai_power;            /* AI: PressAndHold */
+    float ai_aim_side, ai_aim_len;
+    float speed_override;      /* S+0xDE8 policy value, m/s */
+    float run_dist_cm;         /* distance run since the last shot (fatigue integrator) */
+    Ts4AnimState anim;
+    uint8_t ps[TS4_PS_SIZE];
+    uint8_t ai[TS4_AI_SIZE];
+    uint8_t team[TS4_TEAM_SIZE];
 } Ts4SimPlayer;
+
+typedef struct Ts4Ext {
+    const uint8_t *bind, *sini, *aidf, *skil, *anim, *scls;
+    uint32_t bind_n, sini_n, aidf_n, skil_n, anim_n, scls_n;
+    uint32_t graph_bind[TS4_MAX_GRAPHS];   /* 1 + byte offset of the graph's port list in BIND, 0 = not bound */
+    uint32_t n_bound;
+    uint32_t ai_styles, ai_levels;
+    uint32_t n_classes, n_class_rows;
+    /* ANIM header (offsets relative to anim) */
+    uint32_t an_nq, an_q, an_nqv, an_qv, an_nclips, an_clips, an_stride, an_ngroups, an_groups, an_nsubs, an_subs,
+             an_nms, an_ms, an_nrules, an_rules, an_msize, an_mat;
+} Ts4Ext;
 
 struct Ts4Core {
     uint32_t magic;
@@ -152,6 +207,11 @@ struct Ts4Core {
     uint32_t curv_n;
     uint32_t curv_size;
     uint32_t have_tune, have_tpls, have_tree;
+    Ts4Ext ext;
+    Ts4PlayerExtra extra[2];
+    uint8_t match_img[TS4_MATCH_SIZE];
+    uint8_t ball_img[TS4_BALLIMG_SIZE];   /* BallState mirror for bound graphs; let block 0x480..0x4C0 is ours */
+    uint32_t rally_shots;
     /* match */
     uint32_t started;
     uint32_t tick, phase, phase_tick;
@@ -199,6 +259,65 @@ const uint8_t *ts4_curve_find(const Ts4Core *c, uint32_t name_hash, uint32_t *ty
 int32_t ts4_role_run(Ts4Core *c, uint32_t role, float *vars);   /* 1 ran, 0 no binding / failed */
 int32_t ts4_graph_run(const Ts4Core *c, uint32_t index, const float *in, float *out, float *regs);
 uint32_t ts4_hash_name(const char *s);
+
+/* ---- fields.c ---------------------------------------------------------------------------------------------- */
+static inline float ts4_fget(const uint8_t *img, uint32_t off) { float f; __builtin_memcpy(&f, img + off, 4); return f; }
+static inline void ts4_fset(uint8_t *img, uint32_t off, float v) { __builtin_memcpy(img + off, &v, 4); }
+#define PS_GET(p, off) ts4_fget((p)->ps, (off))
+#define PS_SET(p, off, v) ts4_fset((p)->ps, (off), (v))
+#define TUN_HAS(c, id) ((c)->tun_have[TS4_T_##id] != 0)
+void ts4_ext_reset(Ts4Core *c);
+int32_t ts4_ext_section(Ts4Core *c, const uint8_t *tag, const uint8_t *p, uint32_t n);  /* 1 = consumed */
+int32_t ts4_ext_resolve(Ts4Core *c);     /* after GRPH: validate and index; TS4_OK or TS4_ERR_BAD_BLOB */
+int32_t ts4_bound(const Ts4Core *c);     /* 1 when graphs are wired by field (BIND present) */
+int32_t ts4_gfind(const Ts4Core *c, uint32_t hash);   /* first graph with this hash, -1 none */
+int32_t ts4_bgraph(Ts4Core *c, int32_t graph_index, int player);   /* 1 ran */
+int32_t ts4_bgraph_h(Ts4Core *c, uint32_t hash, int player);
+void ts4_images_init(Ts4Core *c);         /* SINI defaults into every image (match start) */
+void ts4_ball_img_sync(Ts4Core *c);       /* copy the live ball (except the let block) into ball_img */
+const uint8_t *ts4_ai_record(const Ts4Core *c, uint32_t style, uint32_t level);
+int32_t ts4_shot_class(const Ts4Core *c, uint32_t row, int is_return);   /* SCLS class index or -1 */
+int32_t ts4_class_run(Ts4Core *c, int32_t cls, int player);              /* run the class graphs; 1 ran */
+/* AIDF record layout (ts4yaml.py enc_aidf) */
+#define TS4_AI_REC_SIZE 72u
+#define TS4_AI_G40 4u
+#define TS4_AI_G44 8u
+#define TS4_AI_G48 12u
+#define TS4_AI_G4C 16u
+#define TS4_AI_G50 20u
+#define TS4_AI_G54 24u
+#define TS4_AI_SPEED 28u
+#define TS4_AI_LCOUNT 32u
+#define TS4_AI_LOFF 52u
+
+/* ---- anim.c ----------------------------------------------------------------------------------------------- */
+int32_t ts4_anim_ready(const Ts4Core *c);
+void ts4_anim_reset(Ts4Core *c, int player);
+void ts4_anim_tick(Ts4Core *c, int player);
+void ts4_anim_swing(Ts4Core *c, int player, uint32_t stroke_buttons, int volley, int smash, int forehand,
+                    int is_return, int32_t ticks_to_contact);
+float ts4_anim_qual(const Ts4Core *c, int player, uint32_t qtype, uint32_t qvalue);
+
+/* ---- shotsel.c: copies of ref/gameplay/shot_select.c and ball.c pieces (G2b, G3) -------------------------- */
+typedef struct Ts4Bounds { float xmax, zmin, zmax; } Ts4Bounds;
+float ts4s_curve16(const float key[4], float x);
+int ts4s_lt_forced_commit(int lt, float power, float angle, int alt, int mirrored, float pmin, float amax);
+void ts4s_aim_from_stick(float move_x, float move_y, int mirrored, float *angle, float *depth);
+float ts4s_serve_power(int release, int toss_start, int toss_len, int released);
+int ts4s_wood_down(float target[3], const float ref[3], int is_wood);
+void ts4s_court_bounds(const Ts4Core *c, int serve, int deuce_side, Ts4Bounds *o);
+int ts4s_target_out(const float p[3], const Ts4Bounds *bb);
+void ts4s_push_out(float p[3], const Ts4Bounds *bb, float margin);
+uint32_t ts4s_out_class(const Ts4Core *c, const float p[3], const Ts4Bounds *bb);
+void ts4s_target_min_depth(float p[3], float min_depth);
+void ts4s_in_target(float p[3], const Ts4Bounds *bb, float min_depth);
+void ts4s_in_shortfall(float p[3], const float from[3], float shortfall_cm);
+void ts4s_wood_target(const Ts4Core *c, float out[3], const float from[3], Ts4Rng *rng);
+void ts4s_reach_flags(const float p[3], const Ts4Bounds *bb, float len_a, float len_b, float ang1_deg, float ang2_deg,
+                      int point_end, int *b50, int *b51);
+uint32_t ts4s_out_nonforced(const Ts4Core *c, float p[3], const Ts4Bounds *bb, Ts4Rng *rng);
+#define TS4_HASH_OUT_FAR 0x2C59FAEAu
+#define TS4_HASH_OUT_VERY_FAR 0x280AE84Du
 
 /* ---- ball.c ---------------------------------------------------------------------------------------------- */
 typedef struct Ts4BallEnv {

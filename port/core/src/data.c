@@ -164,7 +164,7 @@ int32_t ts4_data_resolve(Ts4Core *c)
         c->mod_status[TS4_MOD_SHOT] = TS4_STATUS_MISSING_DATA;
     }
     if (!c->grph_n) c->mod_status[TS4_MOD_GRAPHS] = TS4_STATUS_DEGRADED;
-    if (c->mod_status[TS4_MOD_REACH] == TS4_STATUS_READY &&
+    if (c->mod_status[TS4_MOD_REACH] == TS4_STATUS_READY && !ts4_bound(c) &&
         (!c->roles[TS4_R_SELECTION_GROUND].present || !c->roles[TS4_R_SELECTION_VOLLEY].present ||
          !c->roles[TS4_R_SHOT_DIFFICULTY].present))
         c->mod_status[TS4_MOD_REACH] = TS4_STATUS_DEGRADED;
@@ -175,10 +175,10 @@ int32_t ts4_data_resolve(Ts4Core *c)
             !ts4_curve_find(c, ts4_crc32("move.table.jog"), &ty, &n))
             c->mod_status[TS4_MOD_MOVE] = TS4_STATUS_DEGRADED;
     }
-    if (c->mod_status[TS4_MOD_SHOT] == TS4_STATUS_READY &&
+    if (c->mod_status[TS4_MOD_SHOT] == TS4_STATUS_READY && !(ts4_bound(c) && c->ext.n_classes) &&
         (!c->roles[TS4_R_SHOT_ERROR].present || !c->roles[TS4_R_LET_PROBABILITY].present))
         c->mod_status[TS4_MOD_SHOT] = TS4_STATUS_DEGRADED;
-    if (c->mod_status[TS4_MOD_SWING] == TS4_STATUS_READY &&
+    if (c->mod_status[TS4_MOD_SWING] == TS4_STATUS_READY && !(ts4_bound(c) && ts4_gfind(c, ts4_crc32("DefaultAttributes")) >= 0) &&
         (!c->roles[TS4_R_DEFAULT_ATTRIBUTES].present))
         c->mod_status[TS4_MOD_SWING] = TS4_STATUS_DEGRADED;
     return TS4_OK;
@@ -188,7 +188,8 @@ int32_t ts4_data_load(Ts4Core *c, const uint8_t *blob, uint32_t size)
 {
     uint32_t nsec, i, id;
     const uint8_t *tune = 0, *tpls = 0, *tree = 0, *grph = 0, *role = 0, *curv = 0;
-    uint32_t tune_n = 0, tpls_n = 0, tree_n = 0, grph_n = 0, role_n = 0, curv_n = 0;
+    uint32_t tune_n = 0, tpls_n = 0, tree_n = 0, grph_n = 0, role_n = 0, curv_n = 0, n_ext = 0;
+    const uint8_t *ext_tags[64];
     if (!c || c->magic != TS4_MAGIC || !blob) return TS4_ERR_ARG;
     if (c->started) return TS4_ERR_ARG;
     if (size < 16 || !tag_is(blob, "TS4D") || ts4_le32(blob + 4) != 1u) return TS4_ERR_BAD_BLOB;
@@ -204,12 +205,15 @@ int32_t ts4_data_load(Ts4Core *c, const uint8_t *blob, uint32_t size)
         else if (tag_is(d, "GRPH")) { grph = blob + off; grph_n = len; }
         else if (tag_is(d, "ROLE")) { role = blob + off; role_n = len; }
         else if (tag_is(d, "CURV")) { curv = blob + off; curv_n = len; }
+        else ext_tags[n_ext++] = d;   /* BIND, SINI, AIDF, SKIL, ANIM, SCLS (fields.c) or unknown */
     }
     /* reset everything derived from a previous blob (runtime overrides stay) */
     c->blob = blob; c->blob_size = size;
     c->have_tune = c->have_tpls = c->have_tree = 0;
     c->grph = 0; c->grph_n = 0; c->curv = 0; c->curv_n = 0;
     for (id = 0; id < TS4_R_COUNT; id++) c->roles[id].present = 0;
+    ts4_ext_reset(c);
+    for (i = 0; i < n_ext; i++) ts4_ext_section(c, ext_tags[i], blob + ts4_le32(ext_tags[i] + 4), ts4_le32(ext_tags[i] + 8));
     for (id = 0; id < TS4_T_COUNT; id++) if (c->tun_have[id] == 1) { c->tun_have[id] = 0; c->tun_prov[id] = 0; }
 
     if (tune) {
@@ -300,6 +304,10 @@ int32_t ts4_data_load(Ts4Core *c, const uint8_t *blob, uint32_t size)
             }
         }
         c->curv = curv; c->curv_n = n; c->curv_size = curv_n;
+    }
+    {
+        int32_t r = ts4_ext_resolve(c);
+        if (r != TS4_OK) { ts4_ext_reset(c); return r; }
     }
     if (role) {
         uint32_t n, pos = 4, k;

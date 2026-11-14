@@ -578,6 +578,68 @@ def curves(docs):
     return cs
 
 
+# ============================================================================== SCLS (shot classes)
+CLASS_TABLE_DOC = os.path.join(ROOT, "docs", "gameplay", "graphs-catalogue.md")
+
+
+def shot_classes_from_doc(path=CLASS_TABLE_DOC):
+    """The 33-row shot-class table (Settings 40dd9ee9.00236a48.8c5e64b4, G1) as published in graphs-catalogue.md:
+    -> [(name, aiming_index, power_index or -1, [element indices, first live copy])]."""
+    out = []
+    if not os.path.exists(path):
+        return out
+    text = open(path, encoding="utf-8").read()
+    i = text.find("## Shot-class table")
+    if i < 0:
+        return out
+    for ln in text[i:].split("\n"):
+        m = re.match(r"\| (\d+) \| (\w+) \| (\d+) \| ([\d-]+) \| ([\d/, ]+) \|", ln)
+        if m:
+            els = [int(x.split("/")[0]) for x in m.group(5).split(",") if x.strip()]
+            out.append((m.group(2), int(m.group(3)), int(m.group(4)) if m.group(4) != "-" else -1, els))
+    return out
+
+
+def class_of_row(name):
+    """Template row name -> (class name, return-of-serve class name). Port policy: the ShotDef row -> class link
+    (Settings 761fdece.5f0108a7[i]) is not decoded, so rows are matched to classes by name."""
+    tiers = {"Finesse": "Finesse", "Medium": "Medium", "Powerful": "Power", "Normal": "Medium"}
+    for st in ("TopSpin", "Slice", "Flat"):
+        for t, ct in tiers.items():
+            if name == st + t:
+                ret = "Return%s%s" % (st, "Finesse" if t == "Finesse" else "Power")
+                return st + ct, ret
+        if name == st + "Risky":
+            return st + "Risk", None
+    if name.startswith("Lob"):
+        return ("Risk" if name.endswith("Risky") else "Lob"), None
+    m = re.match(r"Serve_(TopSpin|Slice|Flat)(Finesse|Medium|Powerful)$", name)
+    if m:
+        return "Serve%s%s" % ("Flat" if m.group(1) == "Flat" else "Spin", m.group(2)), None
+    if name.startswith("Serve_Advanced"):
+        return "AdvancedServe", None
+    return {"TopSpinVolley": "VolleyStandard", "FlatVolley": "VolleyPower", "SliceVolley": "VolleySlice",
+            "DropVolley": "VolleyDrop", "DropShotNormal": "DropShot", "SmashNormal": "Smash"}.get(name), None
+
+
+def enc_scls(classes, graphs, rows):
+    first = {}
+    for g in graphs:
+        first.setdefault(g["hash"], g["index"])
+    live = lambda i: first.get(graphs[i]["hash"], i) if 0 <= i < len(graphs) else -1   # duplicates: first copy runs
+    out = struct.pack("<I", len(classes))
+    names = [c[0] for c in classes]
+    for name, aim, powg, els in classes:
+        el = [live(e) for e in els][:12]
+        out += struct.pack("<IiiI", crc(name), live(aim), live(powg) if powg >= 0 else -1, len(el))
+        out += b"".join(struct.pack("<i", e) for e in el + [-1] * (12 - len(el)))
+    out += struct.pack("<I", len(rows))
+    for r in rows:
+        cn, rn = class_of_row(r["name"])
+        out += struct.pack("<ii", names.index(cn) if cn in names else -1, names.index(rn) if rn in names else -1)
+    return out
+
+
 # ============================================================================== pack
 FILES = {"graphs": "graphs.yaml", "skills": "traits_skills.yaml", "anim": "animation_rules.yaml",
          "ball": "ball_templates.yaml", "tree": "shot_tree.yaml", "input": "input_map.yaml", "player": "player.yaml",
@@ -617,6 +679,10 @@ def pack(data_dir):
         b.extra.append((b"SINI", enc_sini(defaults)))
         report["bind"] = {k: (len(v) if isinstance(v, list) else v) for k, v in rep.items()}
         report["unbound_examples"] = rep["unbound"][:8]
+        classes = shot_classes_from_doc()
+        if classes and "tree" in docs:
+            b.extra.append((b"SCLS", enc_scls(classes, docs["graphs"], docs["tree"]["rows"])))
+            report["shot_classes"] = len(classes)
     b.curves = curves(docs) or ts4d.synthetic_curves()
     if "career" in docs:
         b.extra.append((b"AIDF", enc_aidf(docs["career"]["ai_difficulty"]["styles"])))

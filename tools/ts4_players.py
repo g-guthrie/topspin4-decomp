@@ -3,8 +3,8 @@
 
 Commands (read the user's own disc image / extracted Core.arc members; nothing is written outside --out):
 
-  python3 tools/ts4_players.py roster   --out data/players/pro_roster.yaml
-  python3 tools/ts4_players.py creator  --out data/players/creator_options.yaml
+  python3 tools/ts4_players.py roster   --out data/gameplay/pro_roster.yaml
+  python3 tools/ts4_players.py creator  --out data/gameplay/creator_options.yaml
   python3 tools/ts4_players.py export   Baked_Federer0.arc [more arcs | --all] --out work/port/assets/players
   python3 tools/ts4_players.py animrules --out work/port/assets/players/anim_rules.json
 
@@ -830,19 +830,29 @@ def cmd_export(a):
 
 
 def parse_roster_handedness(text):
-    """Read arc -> {plays, height_cm, gender} back from pro_roster.yaml (the writer's flow format, pure)."""
-    out, cur = {}, None
+    """Read arc -> {plays, height_cm, gender} back from pro_roster.yaml (flow or block player_list, pure)."""
+    out, cur, inblock = {}, None, False
     for line in text.splitlines():
         m = re.match(r"^\s*- arc: (\S+)", line)
         if m:
-            cur = m.group(1)
+            cur, inblock = m.group(1), False
             out[cur] = {}
             continue
-        m = re.match(r"^\s+player_list: \{(.*)\}$", line)
-        if m and cur:
-            for k, v in re.findall(r"(\w+): ([^,{}\[\]]+)", m.group(1)):
-                if k in ("plays", "height_cm", "gender"):
-                    out[cur][k] = int(v) if v.strip().isdigit() else v.strip().strip('"')
+        if cur is None:
+            continue
+        m = re.match(r"^\s+player_list:\s*(\{.*\})?\s*$", line)
+        if m:
+            inblock = not m.group(1)
+            pairs = re.findall(r"(\w+): ([^,{}\[\]]+)", m.group(1) or "")
+        elif inblock and re.match(r"^\s{6,}\w+: ", line):
+            pairs = [re.match(r"^\s+(\w+): (.*)$", line).groups()]
+        else:
+            inblock = inblock and line.startswith("      ")
+            continue
+        for k, v in pairs:
+            v = v.strip().strip('"')
+            if k in ("plays", "height_cm", "gender"):
+                out[cur][k] = int(v) if v.isdigit() else v
     return out
 
 
@@ -921,14 +931,14 @@ def main(argv=None):
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("roster")
     p.add_argument("arcs", nargs="*")
-    p.add_argument("--out", default="data/players/pro_roster.yaml")
+    p.add_argument("--out", default="data/gameplay/pro_roster.yaml")
     p = sub.add_parser("creator")
-    p.add_argument("--out", default="data/players/creator_options.yaml")
+    p.add_argument("--out", default="data/gameplay/creator_options.yaml")
     p = sub.add_parser("export")
     p.add_argument("arcs", nargs="*")
     p.add_argument("--all", action="store_true")
     p.add_argument("--out", default="work/port/assets/players")
-    p.add_argument("--roster", default="data/players/pro_roster.yaml", help="handedness / height for index.json")
+    p.add_argument("--roster", default="data/gameplay/pro_roster.yaml", help="handedness / height for index.json")
     p.add_argument("--variants", action="store_true", help="also decode sweat / clay / grass texture variants (slow)")
     p.add_argument("--no-normal", action="store_true", help="skip the bump (normal) maps")
     p.add_argument("--skip-existing", action="store_true")

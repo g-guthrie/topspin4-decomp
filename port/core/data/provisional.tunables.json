@@ -308,6 +308,158 @@
   "swing.recovery_ticks": {
    "value": 24,
    "source": "port"
+  },
+  "shot.power_divisor_ticks": {
+   "value": 60.0,
+   "source": "G2b EngineConfig Frequency"
+  },
+  "shot.swing_lead_ticks": {
+   "value": 12.0,
+   "source": "G2b cfg+0x8C0"
+  },
+  "serve.lead_ticks": {
+   "value": 12.0,
+   "source": "G2b cfg+0x8C4"
+  },
+  "serve.input_delay_ticks": {
+   "value": 30.0,
+   "source": "G2b cfg+0x9A8"
+  },
+  "serve.auto_ticks": {
+   "value": 480.0,
+   "source": "G2b cfg+0x9AC"
+  },
+  "serve.release_countdown_ticks": {
+   "value": 40.0,
+   "source": "G2b cfg+0x8CC"
+  },
+  "serve.powerful_threshold": {
+   "value": 0.8,
+   "source": "G2b script constant"
+  },
+  "serve.medium_threshold": {
+   "value": 0.1,
+   "source": "G2b script constant"
+  },
+  "input.stick_dead_zone": {
+   "value": 0.4,
+   "source": "input_map.yaml"
+  },
+  "input.lt_commit_power": {
+   "value": 0.2,
+   "source": "G2b script constant"
+  },
+  "input.lt_commit_angle": {
+   "value": 0.8727,
+   "source": "G2b script constant"
+  },
+  "shot.wood_timing": {
+   "value": 0.1,
+   "source": "G2b"
+  },
+  "ball.skip_launch_step": {
+   "value": 1.0,
+   "source": "G3 ball block"
+  },
+  "ball.no_sidespin": {
+   "value": 1.0,
+   "source": "G3 ball block"
+  },
+  "shot.out_grade_w_cm": {
+   "value": 50.0,
+   "source": "G3"
+  },
+  "shot.out_grade_a_cm": {
+   "value": 100.0,
+   "source": "G3"
+  },
+  "shot.out_grade_b_cm": {
+   "value": 100.0,
+   "source": "G3"
+  },
+  "shot.out_grade_c_cm": {
+   "value": 200.0,
+   "source": "G3"
+  },
+  "shot.out_nonforced_max_cm": {
+   "value": 200.0,
+   "source": "G3"
+  },
+  "shot.out_demote_d2_cm2": {
+   "value": 40000.0,
+   "source": "G3"
+  },
+  "move.override_eps": {
+   "value": 0.4,
+   "source": "G4"
+  },
+  "anim.speed_coef": {
+   "value": 1.0,
+   "source": "G6"
+  },
+  "anim.blend_frames": {
+   "value": 15.0,
+   "source": "G6 lo_rule_defaults"
+  },
+  "anim.dive_x_min_cm": {
+   "value": -600.0,
+   "source": "G6"
+  },
+  "anim.dive_d00_min": {
+   "value": 60.0,
+   "source": "G6"
+  },
+  "anim.dive_cf0_max": {
+   "value": 45.0,
+   "source": "G6"
+  },
+  "timing.ideal_ticks": {
+   "value": 20.0,
+   "source": "port"
+  },
+  "timing.scale_ticks": {
+   "value": 20.0,
+   "source": "port"
+  },
+  "shotdef.error_res_min": {
+   "value": 0.0,
+   "source": "port (graphs-decoded 11.2: Good/Normal grade)"
+  },
+  "shotdef.error_res_max": {
+   "value": 1.0,
+   "source": "port (graphs-decoded 11.2)"
+  },
+  "shotdef.power_res_min": {
+   "value": 0.0,
+   "source": "port (State.bin default)"
+  },
+  "shotdef.power_res_max": {
+   "value": 1.0,
+   "source": "port (State.bin default)"
+  },
+  "shotdef.aim_res_min": {
+   "value": 0.0,
+   "source": "port"
+  },
+  "shotdef.aim_res_max": {
+   "value": 1.0,
+   "source": "port"
+  },
+  "fatigue.drain_per_m": {
+   "value": 0.0004,
+   "source": "port"
+  },
+  "fatigue.drain_per_shot": {
+   "value": 0.002,
+   "source": "port"
+  },
+  "fatigue.recover_per_point": {
+   "value": 0.05,
+   "source": "port"
+  },
+  "ai.reaction_ticks_per_unit": {
+   "value": 1.0,
+   "source": "port"
   }
  }
 }

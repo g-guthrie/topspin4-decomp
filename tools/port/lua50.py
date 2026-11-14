@@ -25,6 +25,7 @@ Commands (standard library only):
   python3 tools/port/lua50.py dis FILE          # listing with constants resolved
   python3 tools/port/lua50.py eval FILE         # JSON of the globals the main chunk builds
   python3 tools/port/lua50.py strings FILE      # every string constant
+  python3 tools/port/lua50.py lua FILE          # pseudo-Lua of every function (gotos for control flow)
 """
 from __future__ import annotations
 
@@ -326,17 +327,24 @@ def to_json(v, depth=0):
     return v
 
 
-def evaluate(f: Proto, max_steps=2_000_000):
+def evaluate(f: Proto, max_steps=2_000_000, env=None, args=(), vivify=False, writes=None):
     """Run the main chunk symbolically (straight-line code, tables, closures as values).
 
     Calls are not executed: their result is a Ref naming the call, and the call itself is
     recorded in ``calls`` (callee expression and evaluated arguments).  Conditional jumps are
     followed on the fall-through path only; loops are cut after ``max_steps`` instructions.
     Returns ``(globals, calls)``.
+
+    ``env`` pre-seeds the globals (e.g. ``currentScene``), ``args`` the parameters.  With ``vivify``
+    a missing field of a named table becomes a new named table (so ``a.b.c = v`` is kept), and every
+    store into a named table is appended to ``writes`` as ``(path, value)``.  ``tostring``,
+    ``towstring``, ``table.insert`` and ``table.getn`` are evaluated when their arguments are known.
     """
-    g = {}
+    g = env if env is not None else {}
     calls = []
     R = [None] * (f.maxstack + 8)
+    for i, v in enumerate(args[:f.numparams]):
+        R[i] = v
     pc = 0
     steps = 0
     code = f.code
@@ -384,7 +392,11 @@ def evaluate(f: Proto, max_steps=2_000_000):
             if isinstance(t, LuaTable):
                 v = t.get(k)
                 if v is None and t.name is not None:
-                    v = Ref("%s.%s" % (t.name, name(k)))
+                    if vivify:
+                        v = LuaTable("%s.%s" % (t.name, name(k)) if isinstance(k, str) else "%s[%s]" % (t.name, name(k)))
+                        t.set(k, v)
+                    else:
+                        v = Ref("%s.%s" % (t.name, name(k)))
                 R[a] = v
             else:
                 R[a] = Ref("%s[%s]" % (name(t), name(k)) if not isinstance(k, str)
@@ -397,6 +409,8 @@ def evaluate(f: Proto, max_steps=2_000_000):
             t = R[a]
             if isinstance(t, LuaTable):
                 t.set(rk(b), rk(c))
+                if writes is not None and t.name:
+                    writes.append(("%s.%s" % (t.name, name(rk(b))), rk(c)))
         elif op == OP["NEWTABLE"]:
             R[a] = LuaTable()
         elif op == OP["SELF"]:
@@ -451,9 +465,19 @@ def evaluate(f: Proto, max_steps=2_000_000):
             fn = R[a]
             nargs = (b - 1) if b else 0
             args = R[a + 1:a + 1 + nargs]
-            calls.append({"fn": name(fn) if not isinstance(fn, Closure) else fn.path,
-                          "args": [to_json(x) for x in args], "pc": pc - 1})
-            res = Ref("%s(...)" % (name(fn) if not isinstance(fn, Closure) else fn.path))
+            fname = name(fn) if not isinstance(fn, Closure) else fn.path
+            calls.append({"fn": fname, "args": [to_json(x) for x in args], "pc": pc - 1})
+            res = Ref("%s(...)" % fname)
+            if fname in ("tostring", "towstring") and args and isinstance(args[0], (str, float)):
+                res = args[0] if isinstance(args[0], str) else fmt_k(args[0])
+                if fname == "towstring":
+                    res = WStr(res)
+            elif fname == "table.insert" and len(args) == 2 and isinstance(args[0], LuaTable):
+                args[0].array.append(args[1])
+                if writes is not None and args[0].name:
+                    writes.append(("%s[+]" % args[0].name, args[1]))
+            elif fname == "table.getn" and args and isinstance(args[0], LuaTable):
+                res = float(len(args[0].array))
             if c != 1:
                 R[a] = res
             if op == OP["TAILCALL"]:
@@ -482,10 +506,175 @@ def evaluate(f: Proto, max_steps=2_000_000):
     return g, calls
 
 
+# ---------------------------------------------------------------- pseudo-Lua listing
+
+def _lit(v):
+    if v is None:
+        return "nil"
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    return fmt_k(v)
+
+
+def decompile(f: Proto, name="function", indent=""):
+    """Readable pseudo-Lua for one prototype (expression folding, gotos for control flow).
+
+    Not a full decompiler: conditional jumps become ``if <cond> then goto Lnn end`` and loops stay as
+    labels, but calls, table constructors, field accesses and constants are reconstructed, which is
+    what is needed to read the UI scripts (which C functions they call and with which arguments)."""
+    targets = set()
+    for pc, ins in enumerate(f.code):
+        op, a, b, c, bx = decode(ins)
+        if op in FMT_ASBX:
+            targets.add(pc + 1 + bx - BIAS_SBX)
+        elif op in (OP["EQ"], OP["LT"], OP["LE"], OP["TEST"]):
+            targets.add(pc + 2)
+        elif op == OP["LOADBOOL"] and c:
+            targets.add(pc + 2)
+    params = []
+    for i in range(f.numparams):
+        params.append(f.locvars[i][0] if i < len(f.locvars) and f.locvars[i][0] else "a%d" % i)
+    out = ["%s%s(%s)" % (indent, name, ", ".join(params + (["..."] if f.is_vararg else [])))]
+    R = {i: params[i] for i in range(len(params))}
+    ind = indent + "  "
+
+    def reg(i):
+        return R.get(i, "r%d" % i)
+
+    def rk(x):
+        return _lit(f.k[x - MAXSTACK]) if x >= MAXSTACK and x - MAXSTACK < len(f.k) else reg(x)
+
+    def key(t, k):
+        if isinstance(k, str) and k.startswith('"') and k[1:-1].replace("_", "a").isalnum() and not k[1].isdigit():
+            return "%s.%s" % (t, k[1:-1])
+        return "%s[%s]" % (t, k)
+
+    def emit(s):
+        out.append(ind + s)
+
+    tables = {}
+    pc = 0
+    n = len(f.code)
+    while pc < n:
+        if pc in targets:
+            emit("::L%d::" % pc)
+            R = {i: params[i] for i in range(len(params))}
+            tables = {}
+        op, a, b, c, bx = decode(f.code[pc])
+        o = OPNAMES[op] if op < len(OPNAMES) else "OP%d" % op
+        if op not in (OP["SETTABLE"], OP["SETGLOBAL"], OP["SETUPVAL"], OP["JMP"], OP["EQ"], OP["LT"],
+                      OP["LE"], OP["RETURN"], OP["SETLIST"], OP["SETLISTO"], OP["CLOSE"], OP["NEWTABLE"]):
+            tables.pop(a, None)          # register overwritten: no longer a table under construction
+            if op == OP["SELF"]:
+                tables.pop(a + 1, None)
+        if op == OP["MOVE"] and b in tables:
+            tables[a] = tables[b]
+        if op == OP["MOVE"]:
+            R[a] = reg(b)
+        elif op == OP["LOADK"]:
+            R[a] = _lit(f.k[bx])
+        elif op == OP["LOADBOOL"]:
+            R[a] = "true" if b else "false"
+            if c:
+                emit("r%d = %s; goto L%d" % (a, R[a], pc + 2))
+        elif op == OP["LOADNIL"]:
+            for i in range(a, b + 1):
+                R[i] = "nil"
+        elif op == OP["GETUPVAL"]:
+            R[a] = f.upvalues[b] if b < len(f.upvalues) and f.upvalues[b] else "upval%d" % b
+        elif op == OP["GETGLOBAL"]:
+            R[a] = str(f.k[bx])
+        elif op == OP["GETTABLE"]:
+            R[a] = key(reg(b), rk(c))
+        elif op == OP["SETGLOBAL"]:
+            emit("%s = %s" % (f.k[bx], reg(a)))
+        elif op == OP["SETUPVAL"]:
+            emit("%s = %s" % (f.upvalues[b] if b < len(f.upvalues) and f.upvalues[b] else "upval%d" % b, reg(a)))
+        elif op == OP["SETTABLE"]:
+            if a in tables:
+                tables[a].append("%s = %s" % (rk(b)[1:-1] if rk(b).startswith('"') else "[%s]" % rk(b), rk(c)))
+                R[a] = "{" + ", ".join(tables[a]) + "}"
+            else:
+                emit("%s = %s" % (key(reg(a), rk(b)), rk(c)))
+        elif op == OP["NEWTABLE"]:
+            R[a] = "{}"
+            tables[a] = []
+        elif op == OP["SELF"]:
+            obj = reg(b)
+            R[a + 1] = obj
+            m = rk(c)
+            R[a] = "%s:%s" % (obj, m[1:-1] if m.startswith('"') else m)
+            R[("self", a)] = True
+        elif op in ARITH:
+            R[a] = "(%s %s %s)" % (rk(b), ARITH[op], rk(c))
+        elif op == OP["UNM"]:
+            R[a] = "-%s" % reg(b)
+        elif op == OP["NOT"]:
+            R[a] = "not %s" % reg(b)
+        elif op == OP["CONCAT"]:
+            R[a] = " .. ".join(reg(i) for i in range(b, c + 1))
+        elif op == OP["JMP"]:
+            emit("goto L%d" % (pc + 1 + bx - BIAS_SBX))
+        elif op in (OP["EQ"], OP["LT"], OP["LE"]):
+            sym = {OP["EQ"]: ("==", "~="), OP["LT"]: ("<", ">="), OP["LE"]: ("<=", ">")}[op]
+            emit("if %s %s %s then goto L%d end" % (rk(b), sym[1] if a else sym[0], rk(c), pc + 2))
+        elif op == OP["TEST"]:
+            emit("if %s%s then goto L%d end" % ("" if c else "not ", reg(b), pc + 2))
+            R[a] = reg(b)
+        elif op in (OP["CALL"], OP["TAILCALL"]):
+            fn = reg(a)
+            is_self = R.pop(("self", a), False)
+            nargs = (b - 1) if b else None
+            if nargs is None:
+                args = [reg(i) for i in range(a + 1, a + 4) if i in R] + ["..."]
+            else:
+                args = [reg(i) for i in range(a + 1, a + 1 + nargs)]
+            if is_self and args:
+                args = args[1:]
+            call = "%s(%s)" % (fn, ", ".join(args))
+            if op == OP["TAILCALL"]:
+                emit("return " + call)
+            elif c == 1:
+                emit(call)
+            else:
+                R[a] = call
+                if c == 0 or c > 2:
+                    for i in range(a + 1, a + (c - 1 if c else 2)):
+                        R[i] = "%s[%d]" % (call, i - a + 1)
+        elif op == OP["RETURN"]:
+            vals = [reg(i) for i in range(a, a + b - 1)] if b else [reg(a) + ", ..."]
+            if pc != n - 1 or vals:
+                emit("return" + (" " + ", ".join(vals) if vals else ""))
+        elif op == OP["FORLOOP"]:
+            emit("for r%d += r%d while <= r%d: goto L%d" % (a, a + 2, a + 1, pc + 1 + bx - BIAS_SBX))
+        elif op == OP["TFORPREP"]:
+            emit("tforprep r%d; goto L%d" % (a, pc + 1 + bx - BIAS_SBX))
+        elif op == OP["TFORLOOP"]:
+            emit("r%d.. = r%d(r%d, r%d); if r%d == nil then goto L%d end" % (a + 2, a, a + 1, a + 2, a + 2, pc + 2))
+        elif op in (OP["SETLIST"], OP["SETLISTO"]):
+            cnt = bx % FIELDS_PER_FLUSH + 1
+            items = [reg(a + j) for j in range(1, cnt + 1)]
+            if a in tables:
+                tables[a].extend(items)
+                R[a] = "{" + ", ".join(tables[a]) + "}"
+        elif op == OP["CLOSE"]:
+            pass
+        elif op == OP["CLOSURE"]:
+            sub = f.p[bx]
+            R[a] = "<closure %d>" % bx
+            out.extend(decompile(sub, "local function r%d_%d" % (a, bx), ind)[0:])
+            pc += sub.nups
+        else:
+            emit("-- %s %d %d %d" % (o, a, b, c))
+        pc += 1
+    out.append(indent + "end")
+    return out
+
+
 def main(argv=None):
     import argparse
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["dis", "eval", "strings", "info"])
+    ap.add_argument("cmd", choices=["dis", "eval", "strings", "info", "lua"])
     ap.add_argument("file")
     a = ap.parse_args(argv)
     data = open(a.file, "rb").read()
@@ -495,6 +684,8 @@ def main(argv=None):
     elif a.cmd == "strings":
         for s in all_strings(f):
             print(fmt_k(s))
+    elif a.cmd == "lua":
+        print("\n".join(decompile(f, "function main")))
     elif a.cmd == "info":
         print(json.dumps(f.to_dict(), indent=1, ensure_ascii=False))
     else:

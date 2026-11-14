@@ -210,19 +210,76 @@ uint32_t ts4_debug_end_point(Ts4Core *c, uint32_t kind, int32_t winner)
 /* ================================================================================================ */
 /* shots                                                                                             */
 /* ================================================================================================ */
-static void make_request(const Ts4Core *c, uint32_t buttons, float power, uint32_t type_id, int serve, Ts4ShotRequest *rq)
+/* skill held by player i (SKIL list index of the skill whose crc32 is h) */
+static int has_skill(const Ts4Core *c, int i, uint32_t h)
 {
+    uint32_t k, n;
+    if (!c->ext.skil) return 0;
+    n = ts4_le32(c->ext.skil);
+    for (k = 0; k < n && k < 32; k++)
+        if (ts4_le32(c->ext.skil + 4 + 4 * k) == h) return (c->extra[i].skill_mask >> k) & 1u;
+    return 0;
+}
+#define SKILL_INSTANT_ROCKET 0x82E4BF1Au
+#define SKILL_POISONED_SLICES 0x55568E39u
+
+static int32_t lead_ticks(const Ts4Core *c)
+{
+    return TUN_HAS(c, SHOT_SWING_LEAD) ? (int32_t)TUN(c, SHOT_SWING_LEAD) : (int32_t)TUN(c, SWING_CONTACT_DELAY);
+}
+
+/* power of a charge of `frames` (G2b): curve16 cfg+0x8FC of frames / D; InstantRocket uses the alternative curve */
+static float charge_power(const Ts4Core *c, int i, uint32_t frames)
+{
+    uint32_t ty, n;
+    const uint8_t *k = 0;
+    if (has_skill(c, i, SKILL_INSTANT_ROCKET)) k = ts4_curve_find(c, ts4_crc32("shot.power_alt"), &ty, &n);
+    if (!k) k = ts4_curve_find(c, ts4_crc32("shot.power"), &ty, &n);
+    if (k && ty == 0 && TUN_HAS(c, SHOT_POWER_DIV) && TUN(c, SHOT_POWER_DIV) > 0.0f)
+        return ts4_curve16_le(k, n, (float)frames / TUN(c, SHOT_POWER_DIV));
+    return clampf((float)frames / TUN(c, SHOT_CHARGE_TICKS), 0.0f, 1.0f);   /* earlier policy */
+}
+
+/* tier flags: the Finesse/Medium/Powerful graphs on ReceiverState #82526c5c.Value (S+0xE00), read as > 0.5 (G2b) */
+static void tiers(Ts4Core *c, int i, float power, uint32_t *medium, uint32_t *powerful)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    if (ts4_bound(c) && ts4_gfind(c, ts4_crc32("Medium")) >= 0 && ts4_gfind(c, ts4_crc32("Powerful")) >= 0) {
+        PS_SET(p, 0xE00, power);
+        ts4_bgraph_h(c, ts4_crc32("Finesse"), i);
+        ts4_bgraph_h(c, ts4_crc32("Medium"), i);
+        ts4_bgraph_h(c, ts4_crc32("Powerful"), i);
+        *powerful = PS_GET(p, 0x3DC) > 0.5f;
+        *medium = !*powerful && PS_GET(p, 0x3D8) > 0.5f;
+        return;
+    }
+    *powerful = power > TUN(c, SHOT_TIER_POWERFUL);
+    *medium = !*powerful && power > TUN(c, SHOT_TIER_MEDIUM);
+}
+
+static void make_request(Ts4Core *c, int i, uint32_t buttons, float power, uint32_t type_id, int serve, Ts4ShotRequest *rq)
+{
+    Ts4SimPlayer *p = &c->pl[i];
     memset(rq, 0, sizeof *rq);
     rq->classic_serve = serve ? 1u : 0u;
     rq->topspin = (buttons & TS4_BTN_TOPSPIN) != 0;
     rq->slice = (buttons & TS4_BTN_SLICE) != 0;
     rq->lob = (buttons & TS4_BTN_LOB) != 0;
     rq->risk = (buttons & TS4_BTN_RISK) != 0;
-    rq->powerful = power > TUN(c, SHOT_TIER_POWERFUL);
-    rq->medium = !rq->powerful && power > TUN(c, SHOT_TIER_MEDIUM);
+    if (serve && TUN_HAS(c, SERVE_POWERFUL)) {          /* serve tiers from PressAndHold (G2b) */
+        rq->powerful = power > TUN(c, SERVE_POWERFUL);
+        rq->medium = !(power < TUN(c, SERVE_MEDIUM)) && !rq->powerful;
+    } else {
+        tiers(c, i, power, &rq->medium, &rq->powerful);
+    }
     if (!serve) {
         rq->baseline = type_id == GP_ID_BASELINE;
         rq->smash = type_id == GP_ID_SMASH;
+        /* Wood: armed by the Wood evaluation graph (S+0x3EC), fires when |ManualShotTiming| >= 0.1 (G2b) */
+        if (ts4_bound(c) && TUN_HAS(c, WOOD_TIMING) && ts4_bgraph_h(c, ts4_crc32("Wood"), i)) {
+            float t = PS_GET(p, 0x544);
+            rq->wood = PS_GET(p, 0x3EC) > 0.5f && (t >= TUN(c, WOOD_TIMING) || t <= -TUN(c, WOOD_TIMING));
+        }
     }
 }
 
