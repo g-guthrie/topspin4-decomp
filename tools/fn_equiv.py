@@ -460,7 +460,11 @@ class Analysis:
                 reads, writes = set(ins.reads), set(ins.writes)
                 if kind == "bl" or (kind in ("b", "bc") and not f.inside(ins.target)):
                     sub = self.live_in(ins.target, depth + 1)
-                    reads |= GPR_ARG_SET if sub is None else sub
+                    # a callee whose liveness is unknown (deep CRT chains into import thunks,
+                    # recursion cycles) is assumed to read r3 only: registers set up before the
+                    # call are not live-in anyway, and assuming all of r3-r10 made every caller
+                    # of such a chain "pass" its stale temporaries (false call-argument diffs)
+                    reads |= {3} if sub is None else sub
                     writes |= self.defs_of(ins.target, depth + 1)
                 elif kind == "bctrl" or (kind == "bctr" and i not in f.tables) or (kind == "bcctr"):
                     # indirect call: only r3 ('this') is assumed to be passed through from entry;

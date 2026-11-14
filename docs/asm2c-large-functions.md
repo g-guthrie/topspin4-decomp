@@ -81,7 +81,7 @@ cannot link files that reference `__imp_*` import data; the measurement removed 
 | Pass | Scope | Result | Spec |
 |---|---|---|---|
 | /Oc pass (`work/t1/oc_run.sh`, then perm.py `--max-diff 30 --rounds 25`) | 913 unmatched game/lib `fn_` <= 0x800 whose code has `divw`/`divwu` and no `tw`/`twi` (`work/t1/divsites.py`, 392,736 B); 797 translated; variants 10w,10wV,10wF,10wVF,20w,10,10wJ x flags Oc,O1Oc | 3 direct + 3 permuted = 6 functions, 632 B (0x886091E0 and 0x88609228 are codegen-idioms' "divw without tw") | `work/specs/T1/t1_oc_000.json` (integrated) |
-| changed-texts full pass (`work/t1/full_run.sh`, `--changed-only`) | 8,853 game/lib `fn_` <= 0x800 (SDK, Havok, FMOD core, Bink and the /Oc set skipped) | FULL_RESULT | FULL_SPEC |
+| changed-texts full pass (`work/t1/full_run.sh`, `--changed-only`) | 8,853 game/lib `fn_` <= 0x800 (SDK, Havok, FMOD core, Bink and the /Oc set skipped) | 10wVF base: 1,104 changed texts, frame check {word 999, unsplit 843, tight 11, fill 6, differs 1,620}, **9 matches** (1,568 B, all 124-192 B: the frame model alone fixed them), 106 near misses; 10wV and 10w at base and O1: 184 changed texts each, 0 matches; perm.py (`--max-diff 30 --rounds 20`): +1 (0x889D14C8). Total 10 functions, 1,708 B; 2 of them (0x8865E828, 0x88661638) have since been matched by other agents (dupcheck). 10wVF with O1 was not run (the project left byte matching). | `work/specs/T1/t1_000.json` |
 
 
 ## 3. What MSVC does with locals (measured with tools/asm2c/probe.py)

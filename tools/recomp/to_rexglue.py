@@ -46,7 +46,10 @@ def render(functions, switches, setjmp=None, longjmp=None):
         lines.append("")
         lines.append("[functions]")
         for a, s in functions:
-            lines.append('"0x%08X" = { size = 0x%X }' % (a, s))
+            if s:
+                lines.append('"0x%08X" = { size = 0x%X }' % (a, s))
+            else:
+                lines.append('"0x%08X" = {}' % a)
     for base, reg, labels in switches:
         real = [l for l in labels if l]
         if not real:
@@ -74,6 +77,9 @@ def main(argv=None):
     ap.add_argument("--functions", choices=["all", "none"], default="all")
     ap.add_argument("--only", help="comma-separated hex addresses: emit just these functions")
     ap.add_argument("--no-switches", action="store_true")
+    ap.add_argument("--missing-from", metavar="REGISTER_CPP",
+                    help="ReXGlue ts4_register.cpp from a previous codegen: add every function start "
+                         "it lacks, without a size, so ReXGlue's analysis sizes it")
     ap.add_argument("--setjmp", type=lambda x: int(x, 0))
     ap.add_argument("--longjmp", type=lambda x: int(x, 0))
     a = ap.parse_args(argv)
@@ -83,6 +89,13 @@ def main(argv=None):
     if a.only:
         want = {int(x, 16) for x in a.only.split(",")}
         funcs = [f for f in parse_functions(text) if f[0] in want]
+    if a.missing_from:
+        have = {int(x, 16) for x in re.findall(r"SetFunction\((0x[0-9A-Fa-f]+)", open(a.missing_from).read())}
+        keep = {f[0]: f for f in funcs}
+        for addr, size in parse_functions(text):
+            if addr not in have and addr not in keep:
+                keep[addr] = (addr, 0)
+        funcs = sorted(keep.values())
     sw = []
     if not a.no_switches:
         path = a.switches

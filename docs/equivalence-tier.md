@@ -59,7 +59,9 @@ layout, names it gives to placeholders are mapped from the original's relocation
 **Inputs per trial (identical for both runs).**
 - Argument registers: the r3-r10/f1-f13 the *original* reads before writing (static liveness over
   its CFG, calls included: a callee's own argument liveness, jump tables followed, register
-  save/restore helpers modelled). Integers are pointers into argument buffers (55%), 0, 1-15,
+  save/restore helpers modelled; a callee whose liveness cannot be computed, such as a CRT chain
+  ending in an import thunk or a recursion cycle, is assumed to read r3 only, because assuming
+  r3-r10 made every caller of `qsort` appear to pass its stale temporaries as arguments). Integers are pointers into argument buffers (55%), 0, 1-15,
   16-64, the original's comparison constants +-1, -1 or random words; floats include 0, -0, +-1,
   NaN, +-inf, +-1e30, 1e-30 and random values. Other volatile registers hold poison values
   (0xBAD000xx), r14-r31/f14-f31 hold canaries, r13 points into the heap.
