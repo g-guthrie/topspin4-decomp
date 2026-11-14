@@ -115,6 +115,8 @@ class Inputs:
         self.tu = tu
         self.paths = {k: os.path.join(work_root, v) for k, v in paths.items()}
         self.data = {k: open(p, "rb").read() for k, p in self.paths.items()}
+        self.disc_data = self.data if not tu else {
+            k: open(os.path.join(work_root, v), "rb").read() for k, v in DISC.items()}
 
     def provenance(self):
         rows = []
@@ -142,6 +144,21 @@ class GraphEnv:
         self.names = A.load_name_table(A.DEFAULT_NAME_TABLE)
         self.nm = A.Namer(self.names)
         self._labels = {}
+        self._canon = None
+        if inp.tu:
+            # TU1's State.bin inserts fields (ShotContext.IsForehand/IsSecondServe), so later offsets move.
+            # Translate every bound port to the disc offset of the same member path, so that F[] (disc
+            # numbering) stays valid for both data sets.
+            dg = A.parse_expressions(inp.disc_data["expressions"])
+            db = A.Bindings(inp.disc_data["state"], inp.disc_data["layout"])
+            self._canon = {}
+            for g in dg:
+                for p in list(g.inputs) + list(g.outputs):
+                    if p.index == -1:
+                        continue
+                    b = db.bind(p)
+                    if b:
+                        self._canon[(b["root"], tuple(b["member"]))] = b["root_offset"]
 
     def port_key(self, p):
         if p.index == -1:
@@ -152,6 +169,8 @@ class GraphEnv:
             return "link:" + "/".join(qn)
         b = self.bind.bind(p)
         if b:
+            if self._canon is not None:
+                return (b["root"], self._canon.get((b["root"], tuple(b["member"])), 0x10000 + b["root_offset"]))
             return (b["root"], b["root_offset"])
         return "unbound:%d" % p.slot
 
@@ -960,7 +979,7 @@ def sec_timing(c):
            [(o[2], o[1], o[3], o[4], o[5]) for o in OTHER]
     ts = (-1.0, -0.6, -0.45, -0.3, 0.0, 0.3, 0.45, 0.6, 1.0)
     for cls, idx, ch, sc, hand in allc:
-        cells = [cls]
+        cells = ["%s (row %d)" % (cls, idx)]
         for t in ts:
             b = c.base(idx, "median", hand=hand, charge=ch, timing=t, scen=sc)
             cells.append("%.2f" % c.p_error(cls, b)[0])
@@ -987,12 +1006,516 @@ def sec_timing(c):
     return "\n".join(out)
 
 
+# --------------------------------------------------------------------------- section 4: situation sensitivity
+
+SITU = [   # (situation, field or key, good value, bad value, note)
+    ("time available (frames from opponent's hit to contact, S+0xCF0)", "frames_to_contact", 80.0, 30.0, ""),
+    ("depth to cover (TimingState #d2797eb6, S+0xCF4, cm, I)", "depth_diff", 50.0, 350.0, ""),
+    ("run distance to the hit point (#03d2be3d, cm)", "run_dist", 0.0, 600.0, ""),
+    ("required run speed (#5cf9de02, m/s)", "run_speed", 0.0, 6.0, ""),
+    ("run far and fast together", ("run_dist", "run_speed"), (0.0, 0.0), (600.0, 6.0), ""),
+    ("stretch: reach-swing qualifier (SwingCategory #0698037d)", "link:SwingCategory/#0698037d", 0.0, 1.0, ""),
+    ("contact height low (cm)", "hit_y", 100.0, 40.0, ""),
+    ("contact height high (cm)", "hit_y", 100.0, 170.0, ""),
+    ("incoming pace (#1407106c, km/h; INERT in retail)", "ballspeed770", 0.0, 70.0, "would-be effect only"),
+    ("half-volley (#693eedbe frames since bounce; INERT, stays 1000)", "since_bounce", 1000.0, 5.0, "would-be effect only"),
+    ("court position: 3 m behind the baseline", "hit_x", -1188.0, -1500.0, ""),
+    ("court position: inside the court (6 m from net)", "hit_x", -1188.0, -600.0, ""),
+    ("opponent at the net (LocalOpponentPosition x)", "opp_x", 1200.0, 300.0, ""),
+    ("fatigue (CurrentVigor)", "vigor", 1.0, 0.2, ""),
+    ("pressure: trailing in the game (#689dc6f2), no skill", "trailing", 0.0, 1.0, ""),
+    ("rally length (#8beb922e strokes), no skill", "rally", 0.0, 25.0, ""),
+    ("full charge (0.85 -> 1.0)", "charge", 0.85, 1.0, ""),
+    ("hand stat (rating 100 -> 30)", "hand", 1.0, 0.0, ""),
+]
+SITU_CLASSES = [("Flat Powerful", 10, "FlatPower", 0.85, "ground_cc", "forehand"),
+                ("TopSpin Medium", 4, "TopSpinMedium", 0.5, "ground_cc", "forehand"),
+                ("Slice Finesse", 1, "SliceFinesse", 0.1, "ground_cc", "forehand"),
+                ("Return Flat", 10, "ReturnFlatFinesse", 0.85, "return", "return"),
+                ("Volley std", 19, "VolleyStandard", 0.5, "volley", "volley"),
+                ("Power volley", 16, "VolleyPower", 0.5, "volley", "volley")]
+
+
+def _apply(b, key, val):
+    if isinstance(key, tuple) and isinstance(key[0], str) and key[0] in F:
+        for k, v in zip(key, val):
+            b[k] = v
+    else:
+        b[key] = val
+
+
+def metrics(c, cls, idx, sc, b):
+    out = {}
+    for t in (0.45, 0.8, -0.6):
+        bb = dict(b)
+        bb["timing"] = t
+        out["err%+.2f" % t] = c.p_error(cls, bb)[0]
+    pf, bl = c.pf(cls, b)
+    d = c.tpl.fly(idx, *SCEN[sc], pf=pf, blend=bl)
+    out["kmh"] = d["launch_kmh"]
+    e, dev, _ = c.aim_mean(cls, b, n=10)
+    out["eff"], out["dev"] = e, dev
+    return out
+
+
+def sec_situ(c):
+    out = ["### 4a. Effect of each situation (good value -> bad value; median stats, fresh, other inputs at the "
+           "baseline scenario)", "",
+           "Each cell: change in P(error) at t = +0.45 (late, 13 frames) / at t = +0.8 (very late, 11 frames) / at t = -0.6 (early, 32 frames); "
+           "at t = 0 (perfect) every change is 0 for every class and situation; "
+           "change in launch speed (km/h); change in mean aim efficiency; change in mean DeepDeviation (cm, + = "
+           "lands shorter). '0' everywhere = the graphs of that class do not read the input. Computed from the model.", ""]
+    rows = []
+    for name, key, good, bad, note in SITU:
+        cells = [name]
+        for label, idx, cls, ch, sc, hand in SITU_CLASSES:
+            b = c.base(idx, "median", hand=hand, charge=ch, scen=sc)
+            bg, bb = dict(b), dict(b)
+            _apply(bg, key, good)
+            _apply(bb, key, bad)
+            mg, mb = metrics(c, cls, idx, sc, bg), metrics(c, cls, idx, sc, bb)
+            d = {k: mb[k] - mg[k] for k in mg}
+            if all(abs(v) < 5e-3 for v in d.values()):
+                cells.append("0")
+            else:
+                cells.append("err %+.2f/%+.2f/%+.2f; %+.0f km/h; eff %+.2f; dev %+.0f" % (
+                    d["err+0.45"], d["err+0.80"], d["err-0.60"], d["kmh"], d["eff"], d["dev"]))
+        rows.append(cells)
+    out.append(L.md_table(["situation"] + [s[0] for s in SITU_CLASSES], rows))
+
+    out += ["", "### 4b. Which shot graphs read each situational input at all (count over the 33 classes' "
+            "fault / net / power / aiming graphs, live copies)", ""]
+    sets = {"fault/net": set(), "power": set(), "aiming": set()}
+    for cls, (ag, ng, fg, pg) in CLASSES.items():
+        sets["fault/net"].update((ng, fg))
+        sets["power"].add(pg)
+        sets["aiming"].add(ag)
+    rows = []
+    for name, key, good, bad, note in SITU:
+        keys = key if (isinstance(key, tuple) and isinstance(key[0], str) and key[0] in F) else (key,)
+        kk = {F[k] if k in F else k for k in keys}
+        cells = [name]
+        for grp, gs in sets.items():
+            n = sum(1 for gi in gs if any(k2 in kk for k2, _, _ in c.env.input_names(gi)))
+            cells.append("%d / %d" % (n, len(gs)))
+        rows.append(cells)
+    out.append(L.md_table(["situation", "fault/net graphs", "power graphs", "aiming graphs"], rows))
+    return "\n".join(out)
+
+
+# --------------------------------------------------------------------------- section 5: stats and skills
+
+LIVE_MISC = {9: "AimingState ProfileFactor (serve x vigor)", 10: "FatigueIngame (point cost)",
+             12: "VigorMax / capacity", 13: "FatigueConst", 14: "Vivacity (transition speed)", 16: "IsTired",
+             17: "SwingSpeedCoef", 18: "RushSpeedCoef (run animation speed)", 22: "ServePrecision/ServePower",
+             38: "InputFiltering", 40: "TimingAbility (inert)", 41: "BaselineTimingAbility (inert)",
+             42: "VolleyTimingAbility (inert)", 178: "GoodTiming"}
+OUT_NAMES = {("player", 0x778): "PowerfulFactor", ("player", 0x718): "FaultProbability",
+             ("player", 0x720): "OutcomeNet", ("player", 0xD88): "AimEfficiency",
+             ("player", 0xD78): "DeepDeviation cm", ("player", 0xD8C): "OutEfficiency",
+             ("player", 0x774): "SpinBlend"}
+
+
+def class_of_graph():
+    m = {}
+    for cls, gs in CLASSES.items():
+        for gi in gs:
+            m.setdefault(gi, cls)
+    return m
+
+
+def class_base(c, cls, level="median", timing=0.0):
+    for label, idx, cl, ch in GROUND:
+        if cl == cls:
+            return c.base(idx, level, charge=ch, timing=timing), idx
+    for label, idx, cl, ch, sc, hand in OTHER:
+        if cl == cls:
+            return c.base(idx, level, hand=hand, charge=ch, scen=sc, timing=timing), idx
+    for label, idx, cl in SERVES:
+        if cl == cls:
+            return c.base(idx, level, hand="serve", scen="serve_T",
+                          extra={"serve_hold": SERVE_HOLD[serve_tier(label)], "serve_timing": timing}), idx
+    for prefix, row in (("ReturnFlat", 10), ("ReturnTopSpin", 8), ("ReturnSlice", 9)):
+        if cls.startswith(prefix):
+            return c.base(row, level, hand="return", charge=0.85, scen="return", timing=timing), row
+    return c.base(10, level, charge=0.5, timing=timing), 10
+
+
+def sec_stats(c):
+    env = c.env
+    out = ["### 5a. Rating -> stat (graph 23 DefaultAttributes) and the flat ranges", "",
+           "Read from data / evaluated with the analyser kernels. Ratings below 30 give 0 (flat).", ""]
+    rows = []
+    for st in STATS:
+        f = lambda r, st=st: rating_to_stat(env, st, r)
+        kn = L.knees(f, 30, 100, n=140)
+        rows.append((st, " ".join("%d:%.2f" % (r, f(r)) for r in (30, 40, 50, 60, 70, 80, 90, 100)),
+                     ", ".join("%.0f" % k for k in kn)))
+    out.append(L.md_table(["stat", "rating:stat", "knees (rating)"], rows))
+
+    out += ["", "### 5b. Every live consumer of each stat: output range over stat 0 -> 1 and the dead rating ranges", "",
+            "One-at-a-time sweep of the stat (others at the class's median-stat baseline, perfect timing unless "
+            "noted; fault graphs at t = +0.8 so the timing penalty is visible). 'flat ratings' = rating spans "
+            "(30..100) over which the output does not move. Computed from the model.", ""]
+    cog = class_of_graph()
+    stat_keys = {F[st]: st for st in STATS}
+    stat_keys[F["hand"]] = "hand (FH/BH/Return/Volley by stroke)"
+    rows = []
+    graphs = sorted(set(cog) | set(LIVE_MISC))
+    for gi in graphs:
+        cls = cog.get(gi)
+        is_fault = cls is not None and CLASSES[cls][2] == gi
+        b, _ = class_base(c, cls, timing=0.8 if is_fault else 0.0) if cls else (dict(vigor=1.0), 0)
+        if not cls:
+            b.update(c.stats("median"))
+        ins = {k for k, _, _ in env.input_names(gi)}
+        _, outs = env.port_info(gi)
+        for sk, stname in stat_keys.items():
+            if sk not in ins:
+                continue
+            for _, ok in outs:
+                if not isinstance(ok, tuple) or ok[1] < 0x100:
+                    continue
+
+                def f(x, sk=sk, ok=ok):
+                    s = dict(b)
+                    s[sk] = x
+                    return env.evaluate(gi, s).get(ok) or 0.0
+                mn, mx, _, _ = L.sweep(f, 0.0, 1.0, 40)
+                if mx - mn < 1e-4:
+                    rows.append((gi, cls or LIVE_MISC.get(gi), stname, OUT_NAMES.get(ok, "%s+0x%x" % ok),
+                                 "%.3f" % f(0.0), "%.3f" % f(1.0), "no effect", "30-100"))
+                    continue
+                st = stname if stname in STATS else {"Return": "return"}.get(cls[:6], None) if cls else None
+                if st is None:
+                    st = "volley" if cls and cls.startswith("Volley") else ("return" if cls and cls.startswith("Return")
+                                                                         else "forehand")
+                g = lambda r, f=f, st=st: f(rating_to_stat(env, st, r))
+                spans = [sp for sp in L.flat_spans(g, 30, 100, n=140, tol=1e-5) if sp[1] - sp[0] >= 5]
+                rows.append((gi, cls or LIVE_MISC.get(gi), stname, OUT_NAMES.get(ok, "%s+0x%x" % ok),
+                             "%.3f" % f(0.0), "%.3f" % f(1.0), "%.3f" % (mx - mn),
+                             ", ".join("%.0f-%.0f" % (a, bb) for a, bb, _ in sorted(spans)) or "none"))
+    out.append(L.md_table(["graph", "class / role", "stat", "output", "at stat 0", "at stat 1", "range",
+                           "flat ratings"], rows))
+    return "\n".join(out)
+
+
+def sec_skills(c):
+    env = c.env
+    cog = class_of_graph()
+    out = ["### 5c. Every skill: measured effect on each consumer graph", "",
+           "delta = output with the skill minus without; 'base' at the class's median-stat baseline (perfect "
+           "timing, fresh, no pressure), 'max'/'min' = the largest / smallest delta over a grid of the skill's "
+           "trigger inputs (each alone and in pairs over their curve domains, including timing). PF deltas: "
+           "1 PF point is about 75-80 km/h of launch speed on Flat Powerful (section 1e). Computed from the model.", ""]
+    rows = []
+    allsk = sorted({k[6:] for gi in range(len(env.graphs)) for k, _, _ in env.input_names(gi)
+                    if isinstance(k, str) and k.startswith("skill:")})
+    for sk in allsk:
+        for gi in range(len(env.graphs)):
+            if ("skill:" + sk) not in {k for k, _, _ in env.input_names(gi)}:
+                continue
+            cls = cog.get(gi)
+            if cls is None and gi not in LIVE_MISC:
+                continue
+            b, _ = class_base(c, cls) if cls else (dict(vigor=1.0, **c.stats("median")), 0)
+            _, outs = env.port_info(gi)
+            for _, ok in outs:
+                if not isinstance(ok, tuple) or ok[1] < 0x100 or ok not in OUT_NAMES and gi not in LIVE_MISC:
+                    continue
+                d0, mx, mn, trig = skill_effect(env, gi, sk, b, ok)
+                if max(abs(d0), abs(mx), abs(mn)) < 1e-4:
+                    eff = "none found"
+                else:
+                    eff = "base %+.3f, max %+.3f, min %+.3f" % (d0, mx, mn)
+                rows.append((sk, gi, cls or LIVE_MISC.get(gi), OUT_NAMES.get(ok, "%s+0x%x" % ok), eff,
+                             ", ".join(key_label(env, k) for k in trig[:6])))
+    if not FULL_SKILLS:
+        agg = {}
+        for sk, gi, cls, oname, eff, trig in rows:
+            a = agg.setdefault((sk, oname), {"n": 0, "live": [], "base": 0.0, "max": 0.0, "min": 0.0, "trig": set()})
+            a["n"] += 1
+            if eff != "none found":
+                d0, mx, mn = [float(x.split()[1]) for x in eff.split(", ")]
+                a["live"].append(str(cls))
+                a["base"] = max(a["base"], d0, key=abs)
+                a["max"], a["min"] = max(a["max"], mx), min(a["min"], mn)
+                a["trig"].update(t for t in trig.split(", ") if t)
+        rows = []
+        for (sk, oname), a in sorted(agg.items()):
+            live = sorted(set(a["live"]))
+            rows.append((sk, oname, "%d/%d" % (len(a["live"]), a["n"]),
+                         "none found" if not live else "%+.3f / %+.3f / %+.3f" % (a["base"], a["max"], a["min"]),
+                         ", ".join(live[:6]) + (" ..." if len(live) > 6 else ""),
+                         ", ".join(sorted(a["trig"]))[:90]))
+        out.append(L.md_table(["skill", "output", "graphs live/read", "base / max / min delta",
+                               "classes where live", "trigger inputs"], rows))
+        out.append("\n(Per-graph rows: `--full-skills`.)")
+    else:
+        out.append(L.md_table(["skill", "graph", "class", "output", "delta", "triggers searched"], rows))
+    out += ["", "Skills that act in code, not in graphs: PoisonedSlices (sets the receiver's #aee2d90b "
+            "S+0x7D0 = 1 for the owner's slices; its effect is the 'poisoned' input row below), InstantRocket "
+            "(charge curve: S+0xE00 curve identical in retail, only the unused S+0xE08 changes), "
+            "SpectacularVolleys (clip family flag S+0x388) (traits-and-skills s2).", ""]
+    rows = []
+    for label, idx, cls, ch, sc, hand in SITU_CLASSES[:4]:
+        b = c.base(idx, "median", hand=hand, charge=ch, scen=sc)
+        for t in (0.0, 0.45):
+            b0, b1 = dict(b, timing=t), dict(b, timing=t, poisoned=1.0, hit_y=40.0)
+            b0["hit_y"] = 40.0
+            e0, e1 = c.p_error(cls, b0)[0], c.p_error(cls, b1)[0]
+            a0, a1 = c.aim_mean(cls, b0, 10)[0], c.aim_mean(cls, b1, 10)[0]
+            rows.append((label, "%+.2f" % t, "%.2f -> %.2f" % (e0, e1), "%.2f -> %.2f" % (a0, a1)))
+    out.append("PoisonedSlices on the receiver (low ball, contact 40 cm):\n\n" +
+               L.md_table(["receiver class", "timing", "P(error)", "aim efficiency"], rows))
+    return "\n".join(out)
+
+
+# --------------------------------------------------------------------------- section 6: serve and return
+
+def window(f, lo=-2.0, hi=2.0, n=400, ok=lambda v: v < 0.5):
+    """Largest contiguous x-interval containing the best point where ok(f(x)).  Returns (a, b) or None."""
+    xs = [lo + (hi - lo) * i / n for i in range(n + 1)]
+    good = [ok(f(x)) for x in xs]
+    best, cur = None, None
+    for x, g in zip(xs, good):
+        if g:
+            cur = (cur[0], x) if cur else (x, x)
+            if best is None or cur[1] - cur[0] > best[1] - best[0]:
+                best = cur
+        else:
+            cur = None
+    return best
+
+
+def serve_base(c, label, level="median", vigor=1.0, timing=0.0, target=600.0):
+    idx = dict((l, i) for l, i, _ in SERVES)[label]
+    b = c.base(idx, level, hand="serve", scen="serve_T",
+               extra={"serve_hold": SERVE_HOLD[serve_tier(label)], "serve_timing": timing,
+                      "vigor": vigor, "serve_target": target})
+    return b, idx
+
+
+def sec_serve(c):
+    env = c.env
+    tag = "TU1" if c.inp.tu else "disc"
+    out = ["### 6a. Human serve faults (%s): the no-fault gauge window" % tag, "",
+           "Serve fault graphs 307 (Finesse), 308 (Medium), 309 (Powerful), 311 (Advanced) are a step for a "
+           "human server (graphs-decoded s11.2 item 6): fault = 0 or 1, no roll. The table gives the gauge-timing "
+           "interval (S+0x66C, the serve 'timing' value) with fault = 0, by Serve rating and vigor. "
+           "#3c6beee9 (S+0xD84) is 0 (its writer is not found). Computed from the model.", ""]
+    rows = []
+    for label in ("Flat Finesse", "Flat Medium", "Flat Powerful", "Advanced flat"):
+        cls = dict((l, k) for l, _, k in SERVES)[label]
+        fg = CLASSES[cls][2]
+        for lv in ("min", "median", "p90", "max"):
+            cells = []
+            for vig in (1.0, 0.8, 0.5, 0.2):
+                b, _ = serve_base(c, label, lv, vig)
+
+                def f(t, b=b):
+                    s = dict(b)
+                    s[F["serve_timing"]] = t
+                    return env.evaluate(fg, s).get(("player", 0x718), 0.0) or 0.0
+                w = window(f)
+                cells.append("never" if w is None else ("always" if w[0] <= -2 and w[1] >= 2 else
+                                                        "%+.2f..%+.2f" % w))
+            rows.append((label, fg, "%s (%d)" % (lv, c.level_rating["serve"][lv])) + tuple(cells))
+    out.append(L.md_table(["serve", "graph", "Serve rating", "vigor 1.0", "0.8", "0.5", "0.2"], rows))
+    # Target threshold
+    b, _ = serve_base(c, "Flat Powerful")
+
+    def ft(x):
+        s = dict(b)
+        s[F["serve_target"]] = x
+        return env.evaluate(CLASSES["ServeFlatPowerful"][2], s).get(("player", 0x718), 0.0) or 0.0
+    w = window(ft, 0, 1500, 300)
+    out += ["", "Target (S+0x840) no-fault interval at perfect gauge, median server: %s cm (outside it the "
+            "serve faults whatever the timing). Its writer and meaning are not traced (marked unknown)." %
+            ("%.0f..%.0f" % w if w else "none"), ""]
+    # gauge timing -> window frames: serve timing curve
+    out += ["Gauge-timing to frames: section 3a gives the serve timing curve (|t| < 0.3 = 13.5 frames). "
+            "The AI's fault is ShotContext #f089f55c (S+0x550) directly, set in code (not measured here).", ""]
+
+    out += ["### 6b. Serve speed and spin blend against Serve, Power, gauge timing and vigor (%s)" % tag, "",
+            "PowerfulFactor from graphs 255/256/257 (they also write the spin blend). Launch km/h from the "
+            "serve template at that PF (serve_T). Vigor is not an input of the serve power graphs; "
+            "#689dc6f2 (S+0xF88, 'trailing') and #ff9a119d (S+0x558) are. Computed from the model.", ""]
+    rows = []
+    for label in ("Flat Powerful", "Kick Powerful", "Advanced flat", "Flat Medium"):
+        cls = dict((l, k) for l, _, k in SERVES)[label]
+        for lv in ("min", "median", "p90", "max"):
+            cells = []
+            for t in (0.0, 0.3, 0.6, -0.3):
+                b, idx = serve_base(c, label, lv, timing=t)
+                pf, bl = c.pf(cls, b)
+                d = c.tpl.fly(idx, *SCEN["serve_T"], pf=pf, blend=bl)
+                cells.append("%.2f %s" % (pf, kmh(d["launch_kmh"])))
+            rows.append((label, lv) + tuple(cells))
+    out.append(L.md_table(["serve", "stats", "t=0: PF, launch", "t=+0.3", "t=+0.6", "t=-0.3"], rows))
+    for key in ("trailing", "ff9a119d"):
+        b, idx = serve_base(c, "Flat Powerful")
+        vals = []
+        for x in (0.0, 0.5, 1.0):
+            s = dict(b)
+            s[F[key]] = x
+            vals.append("%.2f" % c.pf("ServeFlatPowerful", s)[0])
+        out.append("\nFlat Powerful PF with %s (S+0x%X) = 0 / 0.5 / 1: %s" % (key, F[key][1], " / ".join(vals)))
+
+    out += ["", "### 6c. Serve placement: aim efficiency against the aiming value #3c6beee9 (%s)" % tag, "",
+            "Aiming graphs 215-221: Efficiency = curve8/9(#3c6beee9 (S+0xD84) + a random term), blended by Serve; "
+            "for a serve FinalEfficiency = Efficiency = QuadEfficiency (aiming.md s4), so 0 = the inner quad and "
+            "1 = the lines quad. The same #3c6beee9 enters the human fault step (fault when it pushes the sum "
+            "past 0.5). Its writer is not found (graphs-decoded s11.2), so its in-game range is UNKNOWN; at the "
+            "State.bin default 0 every serve has efficiency about 0. Cells: mean efficiency over the random roll "
+            "/ fault at perfect gauge (F = fault). Computed from the model.", ""]
+    rows = []
+    fault_of = lambda cls, b: (c.env.evaluate(CLASSES[cls][2], b).get(("player", 0x718), 0.0) or 0.0) >= 0.5
+    for label in ("Flat Medium", "Flat Powerful", "Kick Powerful", "Advanced flat"):
+        cls = dict((l, k) for l, _, k in SERVES)[label]
+        for lv in ("min", "max"):
+            for vig in (1.0, 0.5):
+                cells = []
+                for av in (0.3, 0.4, 0.45, 0.5, 0.55):
+                    bb, _ = serve_base(c, label, lv, vig)
+                    bb["aim3c6b"] = av
+                    e, dm, dx = c.aim_mean(cls, bb)
+                    cells.append("%.2f%s" % (e, " F" if fault_of(cls, bb) else ""))
+                rows.append((label, CLASSES[cls][0], lv, vig) + tuple(cells))
+    out.append(L.md_table(["serve", "graph", "stats", "vigor", "#3c6beee9=0.30", "0.40", "0.45", "0.50", "0.55"],
+                          rows))
+
+    out += ["", "### 6d. The returner (%s)" % tag, "",
+            "All returns use the Return*Finesse rows (template bc29d202) whatever the tier; the ReturnPower "
+            "graphs 261-263 are never selected (section 1). Incoming pace #1407106c (S+0x770) is never written, "
+            "so a 200 km/h serve and a 120 km/h serve are returned with the same error. Live inputs are frames to "
+            "contact S+0xCF0 and depth difference S+0xCF4. P(error) at median Return, t = +0.45 / +0.8:", ""]
+    rows = []
+    for cls, row in (("ReturnFlatFinesse", 10), ("ReturnTopSpinFinesse", 8), ("ReturnSliceFinesse", 9)):
+        for ftc in (10, 45):
+            for dd in (0, 200):
+                cells = []
+                for t in (0.45, 0.8):
+                    b = c.base(row, "median", hand="return", charge=0.85, scen="return", timing=t,
+                               extra={"frames_to_contact": float(ftc), "depth_diff": float(dd)})
+                    cells.append("%.2f" % c.p_error(cls, b)[0])
+                rows.append((cls, ftc, dd) + tuple(cells))
+    out.append(L.md_table(["class", "frames to contact", "depth diff cm", "P(err) t=+0.45", "t=+0.8"], rows))
+    b = c.base(10, "median", hand="return", charge=0.85, scen="return")
+    pf, bl = c.pf("ReturnFlatFinesse", b)
+    d = c.tpl.fly(10, *SCEN["return"], pf=pf, blend=bl)
+    out.append("\nReturn Flat at median stats: PF %.2f, launch %s, at the server's baseline %s." % (
+        pf, kmh(d["launch_kmh"]), kmh(d["baseline_kmh"])))
+    return "\n".join(out)
+
+
+# --------------------------------------------------------------------------- section 7: net play
+
+RECEIVER_FIELDS = [
+    (("player", 0xC24), "#2c63ee31 frames to the chosen hit sample (C24)"),
+    (("player", 0xC28), "#8760acf5 distance to the hit point, cm (C28)"),
+    (("player", 0xC2C), "#420a6cfc required run speed, m/s (C2C)"),
+    (("player", 0xC30), "BallDifficulty (C30)"),
+    (("player", 0xC34), "ShotDifficulty copy (C34)"),
+    (("player", 0xC38), "#2f6930a4 mirrored hit-point coordinate, height? (C38)"),
+    (("player", 0xC3C), "Spin (C3C)"),
+    (("player", 0xC40), "frames as float (C40)"),
+    (("player", 0x7A0), "#03d2be3d distance to the ball sample, m (S+0x7A0)"),
+    (("player", 0x7A4), "#5cf9de02 required speed, m/s (S+0x7A4)"),
+    (("player", 0x764), "BallDifficulty (S+0x764)"),
+    (("player", 0x7A8), "ShotDifficulty (S+0x7A8)"),
+    (("player", 0xCF0), "TimingState #3fe3a099 frames to contact (S+0xCF0)"),
+    (("player", 0xCF4), "TimingState #d2797eb6 depth difference (S+0xCF4)"),
+    (("ball", 0x344), "contact height, ball From.y (Ball+0x344)"),
+    (("player", 0x910), "LocalOpponentPosition.x (S+0x910)"),
+    (("player", 0x7D8), "#693eedbe frames since bounce (S+0x7D8, stays 1000)"),
+    (("player", 0x770), "#1407106c incoming pace (S+0x770, never written)"),
+]
+REACHABLE = {"FlatFinesse", "TopSpinFinesse", "SliceFinesse", "FlatMedium", "TopSpinMedium", "SliceMedium",
+             "FlatPower", "TopSpinPower", "SlicePower", "VolleyStandard", "VolleyPower", "VolleySlice",
+             "VolleyDrop", "DropShot", "Lob", "Smash", "ReturnFlatFinesse", "ReturnTopSpinFinesse",
+             "ReturnSliceFinesse", "ServeFlatFinesse", "ServeSpinFinesse", "ServeFlatMedium", "ServeSpinMedium",
+             "ServeFlatPowerful", "ServeSpinPowerful", "AdvancedServe"}
+
+
+def sec_net(c):
+    env = c.env
+    cog = class_of_graph()
+    role = {}
+    for cls, gs in CLASSES.items():
+        for r, gi in zip(("aim", "net", "fault", "power"), gs):
+            role.setdefault(gi, set()).add((cls, r))
+    out = ["### 7a. Which graphs read the reaction-time and ball-at-the-feet inputs", "",
+           "Every analyser graph scanned for each input (bound by the State.bin layout). 'reachable' = the "
+           "graph belongs to a shot class that a shipped row can select (Risk classes, Defensive and the "
+           "ReturnPower graphs are not). Read from data.", ""]
+    rows = []
+    for key, label in RECEIVER_FIELDS:
+        readers = [gi for gi in range(len(env.graphs)) if key in {k for k, _, _ in env.input_names(gi)}]
+        live = sorted({"%s.%s" % (cl, r) for gi in readers for cl, r in role.get(gi, ()) if cl in REACHABLE})
+        dead = sorted({"%s.%s" % (cl, r) for gi in readers for cl, r in role.get(gi, ()) if cl not in REACHABLE})
+        other = [str(gi) for gi in readers if gi not in role]
+        rows.append((label, len(readers), ", ".join(live)[:160] or "-", ", ".join(dead)[:80] or "-",
+                     ", ".join(other) or "-"))
+    out.append(L.md_table(["input", "graphs", "reachable class graphs", "unreachable class graphs",
+                           "other graphs"], rows))
+
+    out += ["", "### 7b. What the volleyer gets: P(error), PF and aim efficiency against contact height and "
+            "frames to contact", "",
+            "Median Volley stat, fresh. Volley timing grade from section 3 (|t| < 0.3 = 10 frames). "
+            "Computed from the model.", ""]
+    rows = []
+    for label, idx, cls in (("VolleyStandard (FlatVolley)", 19, "VolleyStandard"), ("VolleyPower", 16, "VolleyPower"),
+                            ("VolleySlice", 17, "VolleySlice"), ("VolleyDrop", 18, "VolleyDrop")):
+        for hy in (20.0, 50.0, 90.0, 140.0):
+            for t in (0.0, 0.45):
+                b = c.base(idx, "median", hand="volley", charge=0.5, scen="volley", timing=t,
+                           extra={"hit_y": hy, "frames_to_contact": 15.0})
+                pe = c.p_error(cls, b)
+                pf, _ = c.pf(cls, b)
+                e = c.aim_mean(cls, b, 10)[0]
+                rows.append((label, "%.0f" % hy, "%+.2f" % t, "%.2f" % pe[0], "%.2f" % pe[1], "%.2f" % pf,
+                             "%.2f" % e))
+    out.append(L.md_table(["class", "contact cm", "timing", "P(error)", "net share", "PF", "aim eff"], rows))
+    rows = []
+    for label, idx, cls in (("VolleyStandard", 19, "VolleyStandard"), ("VolleyPower", 16, "VolleyPower")):
+        for ftc in (5.0, 10.0, 20.0, 40.0):
+            for dd in (0.0, 150.0):
+                b = c.base(idx, "median", hand="volley", charge=0.5, scen="volley", timing=0.45,
+                           extra={"frames_to_contact": ftc, "depth_diff": dd, "hit_y": 90.0})
+                rows.append((label, "%.0f" % ftc, "%.0f" % dd, "%.2f" % c.p_error(cls, b)[0]))
+    out += ["", "Reaction time (frames to contact S+0xCF0) and depth to cover (S+0xCF4), t = +0.45, contact 90 cm:", "",
+            L.md_table(["class", "frames to contact", "depth diff cm", "P(error)"], rows)]
+
+    out += ["", "### 7c. What the passer gets: opponent position", "",
+            "Ground classes at median stats, t = +0.45 (late), opponent at the net (x = 300 cm from it) vs the "
+            "baseline (1200). Without skills the opponent's position changes nothing (section 4); the "
+            "passing-shot skills read it. Computed from the model.", ""]
+    rows = []
+    for label, idx, cls, ch in GROUND[:6]:
+        for sk in (None, "PassingShotSniper", "CrushingPassingShot"):
+            cells = []
+            for ox in (1200.0, 300.0):
+                b = c.base(idx, "median", charge=ch, timing=0.45, extra={"opp_x": ox})
+                if sk:
+                    b["skill:" + sk] = 1.0
+                pf, _ = c.pf(cls, b)
+                e, dm, _ = c.aim_mean(cls, b, 10)
+                cells.append("PF %.2f, eff %.2f, dev %.0f, err %.2f" % (pf, e, dm, c.p_error(cls, b)[0]))
+            rows.append((label, sk or "none") + tuple(cells))
+    out.append(L.md_table(["class", "skill", "opponent at baseline", "opponent at net"], rows))
+    return "\n".join(out)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--work", default=ROOT, help="repository root that holds work/ and orig/ (default: this repo)")
     ap.add_argument("--tu", action="store_true", help="use the Title Update #1 data files")
+    ap.add_argument("--full-skills", action="store_true", help="per-graph rows in the skills section")
     ap.add_argument("sections", nargs="+")
     a = ap.parse_args(argv)
+    global FULL_SKILLS
+    FULL_SKILLS = a.full_skills
     inp = Inputs(a.work, a.tu)
     c = Ctx(inp)
     secs = SECTIONS if a.sections == ["all"] else a.sections
@@ -1001,7 +1524,7 @@ def main(argv=None):
         print()
 
 
-SECTIONS = ["inputs", "speeds", "shape", "timing"]
+SECTIONS = ["inputs", "speeds", "shape", "timing", "situ", "stats", "skills", "serve", "net"]
 
 
 def sec_inputs(c):

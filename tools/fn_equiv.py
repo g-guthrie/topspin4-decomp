@@ -1138,7 +1138,7 @@ class Machine:
 
     def _on_read(self, uc, access, address, size, value, ud):
         a = address & 0xFFFFFFFF
-        if size in (1, 2, 4) and (a & (PAGE - 1)) + size <= PAGE and \
+        if size in (1, 2, 4, 8) and (a & (PAGE - 1)) + size <= PAGE and \
                 ((HEAP_LO <= a < HEAP_HI) or any(lo <= a < hi for lo, hi in self.w.writable)):
             h = self._host(a)
             if h is not None:
@@ -1483,7 +1483,10 @@ def compare(world, A, B, rkind, nonvol=True):
             if x == y:
                 continue
             if args is not None:
-                if reg in args:
+                # an original value that is poison is a register the original never computed (or a
+                # callee left behind): the callee's static liveness over-approximates there, and
+                # the original's behaviour cannot depend on it, so the candidate's value is free
+                if reg in args and not is_poison(reg, va[j]):
                     return (f"call #{i + 1} to {world.label(ta)}: argument {regname(reg)} original {x:#x}, "
                             f"candidate {y:#x}")
             elif not is_poison(reg, va[j]) and not is_poison(reg, vb[j]):
@@ -1647,10 +1650,25 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
     blocks = func.block_addrs()
     covered = set()
     corpus = []          # (run seed, state, trace) of trials that reached new blocks
+    rand_end = max(40, trials * 2 // 5)
+    boundary = None      # (register, constant) pairs for the boundary phase
     for t in range(trials):
         s = seed * 1_000_003 + t
-        if t < max(40, trials * 2 // 5) or not corpus:
+        if t == rand_end and corpus:
+            # boundary phase: each integer argument set to each of the code's comparison constants
+            # (+-1), on top of a valid trial, so x == limit / x == limit+1 paths are run on purpose
+            br = random.Random(seed ^ 0xB0B)
+            boundary = [(reg, c & 0xFFFFFFFF) for reg in GPR_ARGS if live is None or reg in live
+                        for c in consts]
+            br.shuffle(boundary)
+            boundary = boundary[: trials // 3]
+        if t < rand_end or not corpus:
             state, _ = make_state(s, live, consts)
+        elif boundary and t - rand_end < len(boundary):
+            reg, c = boundary[t - rand_end]
+            ps, pstate, _ = corpus[(t - rand_end) % len(corpus)]
+            state = dict(pstate, regs={**pstate["regs"], reg: c})
+            s = ps
         else:
             # coverage-guided phase: take a trial that reached new blocks and replace one value it
             # read (an argument, a loaded byte/halfword/word or a call's return value)
@@ -1697,7 +1715,8 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
             break
         if time.time() - t0 > time_budget:
             break
-        if t >= 60 and valid >= min_valid and t - last_new > max(150, trials // 4):
+        if t >= 60 and valid >= min_valid and t - last_new > max(150, trials // 4) and \
+                t >= rand_end + len(boundary or ()):
             # coverage stopped growing: stop early once every block has been seen
             covered = {b for b in blocks if any(a <= b < a + sz for a, sz in cov)}
             if len(covered) == len(blocks):

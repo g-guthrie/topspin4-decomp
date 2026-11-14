@@ -99,7 +99,10 @@ effect). `__savegprlr_*`, `__restgprlr_*`, `__savefpr_*`, `__restfpr_*` and `_Rt
 run for real.
 
 **Observables compared, in this order.** (1) the call sequence: callee, argument values (32-bit
-for integer registers, raw bits for floats), stack objects passed, memory delta at each call;
+for integer registers, raw bits for floats; an argument register in which the original passes a
+poison value, i.e. one it never computed or one a previous callee left behind, is not compared,
+because the callee's static liveness over-approximates there, typically through an unanalysable
+error-handler call), stack objects passed, memory delta at each call;
 (2) the outcome (return, trap, fault, did not finish); (3) the final memory delta: every byte
 outside the stack whose value changed, by absolute address (heap, image globals, BSS); (4) the
 return value: r3 (low 32 bits, or 64 for a 64-bit return type) and/or f1, chosen from how the
@@ -108,9 +111,13 @@ return type; then a caller returning r3/f1 untouched; a function that never writ
 calls returns nothing; otherwise r3); (5) callee-saved registers r1, r2, r13, r14-r31, f14-f31.
 
 **Trials.** Seeds `seed*1000003 + t`. The first 40% of the trials (at least 40) are drawn from
-the distributions above. The rest are coverage-guided: the checker keeps every trial that
+the distributions above. Then comes a boundary phase (up to a third of the trials): each integer
+argument register in turn is set to each of the original's comparison constants and their
+neighbours (immediates of `cmpwi`/`cmplwi`/... +-1, 0, 1, jump-table case values), on top of a
+valid earlier trial, so `x == limit` and `x == limit + 1` are run on purpose rather than by luck.
+The rest are coverage-guided: the checker keeps every trial that
 reached a new block of the original, takes one of them, replaces one or two of the values the
-original read in it (an argument, a loaded byte/halfword/word, a call's return value) by a
+original read in it (an argument, a loaded byte/halfword/word/doubleword, a call's return value) by a
 neighbour, 0, 1, a comparison constant or a fresh random value, and runs that as a new trial;
 each choice is a function of the trial seed, so the sequence is reproducible. Only values read
 from memory both programs share and may write (heap pages, `.data`, BSS) are ever replaced, by
@@ -123,7 +130,7 @@ are entered on every case. A trial in which the original still faults after poin
 resolution, or runs past 200,000 instructions, is discarded (the input breaks the original's
 precondition); a candidate that faults where the original did not, or needs more than four times
 the original's instruction count, is DIFFERENT. Default 400 trials and 60 s per function; it stops
-early once every block has been reached and coverage stopped growing.
+early once the boundary phase is done, every block has been reached and coverage stopped growing.
 
 **Coverage.** Basic blocks of the original (leaders: branch targets, instructions after a
 branch, jump-table targets; table words excluded). A block counts as covered when a valid trial
