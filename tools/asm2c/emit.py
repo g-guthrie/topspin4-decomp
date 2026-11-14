@@ -29,6 +29,10 @@ INTRINSIC_DECLS = {'__dcbt': 'void __dcbt(int offset, void *base);', '__dcbf': '
                    '__emit': 'void __emit(unsigned int opcode);', '__debugbreak': 'void __debugbreak(void);'}
 
 
+STRLEN_LINES = ['#ifdef _MSC_VER', '#ifdef __cplusplus', 'extern "C"', '#endif', 'unsigned int strlen(const char *);',
+                '#pragma intrinsic(strlen)', '#else', '#include <string.h>', '#endif']
+
+
 def func_name(r, addr):
     """ts4_<kind>_<detail>_<ADDR> from a translation result."""
     d = r['detail']
@@ -128,6 +132,11 @@ def build(res, group, path, cpp=False):
             o.insert(len(o) - 1, l)
     if any(res[a].get('vec') for a in kept):
         o.insert(len(o) - 1, '#include "ts4_vector.h"')
+    if any('strlen((const char *)' in res[a]['body'] for a in kept):
+        for l in STRLEN_LINES:     # strlen as an intrinsic (xforms.t_strlen)
+            o.insert(len(o) - 1, l)
+    if any('(ts4_sv *)' in res[a]['body'] for a in kept):
+        o.insert(len(o) - 1, 'typedef struct ts4_sv { ts4_word v; } ts4_sv; /* a one-word struct passed by value */')
     ints = {{'xchg': '_InterlockedExchange', 'inc': '_InterlockedIncrement', 'dec': '_InterlockedDecrement',
              'addi': '_InterlockedExchangeAdd', 'add': '_InterlockedExchangeAdd'}[k] for a in kept for k in res[a].get('intrinsics', []) if k in ('xchg', 'inc', 'dec', 'addi', 'add')}
     if any('mftb' in res[a].get('intrinsics', []) for a in kept):

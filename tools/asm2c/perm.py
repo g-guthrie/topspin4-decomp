@@ -23,7 +23,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import emit, run  # noqa: E402
+import emit, run, xforms  # noqa: E402
 
 OPS = [' + ', ' * ', ' & ', ' | ', ' ^ ', ' == ', ' != ']
 REL = {' < ': ' > ', ' > ': ' < ', ' <= ': ' >= ', ' >= ': ' <= '}
@@ -260,17 +260,43 @@ def m_temp(body, sig, rng):
     return '\n'.join(lines), sig
 
 
+def _wrap(t):
+    def f(body, sig, rng, sites=()):
+        x = t(body, rng)
+        return (x, sig) if x else None
+    f.__name__ = 'x_' + t.__name__
+    return f
+
+
+def m_sv(body, sig, rng, sites=()):
+    """pass an argument at a `clrrwi rK,rX,0` call site as a one-word struct (xforms.sv_all)"""
+    v = xforms.sv_all(body, sites)
+    return (rng.choice(v), sig) if v else None
+
+
+def m_u64(body, sig, rng=None, sites=()):
+    """a word parameter that is used as two halves `(ts4_u64)aN >> 32` / `(aN & 0xffffffff)` becomes a
+    ts4_u64 parameter; the low half is then a plain conversion (MSVC: `clrrwi rK,rX,0`)"""
+    ps = [p for p in dict.fromkeys(re.findall(r'\((a\d+) & 0xffffffff\)', body)) if re.search(r'\bts4_word ' + p + r'\b', sig)]
+    if not ps:
+        return None
+    p = rng.choice(ps) if rng else ps[0]
+    b = body.replace(f'({p} & 0xffffffff)', f'(ts4_word){p}').replace(f'(0xffffffff & {p})', f'(ts4_word){p}')
+    return b, re.sub(r'\bts4_word ' + p + r'\b', 'ts4_u64 ' + p, sig)
+
+
 MUTATIONS = [(m_commute, 3), (m_retype, 3), (m_volatile, 2), (m_swap, 3), (m_ifinvert, 1),
-             (m_inline, 2), (m_temp, 2), (m_declswap, 1)]
+             (m_inline, 2), (m_temp, 2), (m_declswap, 1), (m_sv, 1), (m_u64, 1)] + [(_wrap(t), w) for t, w in xforms.TRANSFORMS]
 
 
-def mutate(r, rng, steps=1):
-    """A copy of result r with 1..steps random mutations of its body/signature (or None)."""
+def mutate(r, rng, steps=1, sites=()):
+    """A copy of result r with 1..steps random mutations of its body/signature (or None).
+    `sites` are the (callee, argument) pairs for m_sv."""
     body, sig = r['body'], r['sig']
     done = 0
     for _ in range(steps * 4):
         f = rng.choices([m for m, w in MUTATIONS], [w for m, w in MUTATIONS])[0]
-        x = f(body, sig, rng)
+        x = f(body, sig, rng, sites) if f in (m_sv, m_u64) or f.__name__.startswith('x_') else f(body, sig, rng)
         if x is None:
             continue
         body, sig = x
@@ -311,6 +337,8 @@ def main():
     ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--skip-addrs', default='')
     ap.add_argument('--merge', action='store_true', help='copy perm matches into state.pkl and exit')
+    ap.add_argument('--asm', type=Path, help='pickle {name: fn_asm lines} of the targets (clrrwi sites for m_sv)')
+    ap.add_argument('--seed-perm', type=Path, help="another work dir's perm.pkl: start from its best variants")
     a = ap.parse_args()
     pf = a.work / 'perm.pkl'
     ps = pickle.load(open(pf, 'rb')) if pf.is_file() else {}
@@ -328,6 +356,28 @@ def main():
         if nd <= a.max_diff and ad not in state['matched'] and ad not in ps['perm_matched'] and ad not in skip:
             if ad not in ps['best'] or ps['best'][ad][1] > nd:
                 ps['best'][ad] = (r, nd, fs)
+    if a.seed_perm:
+        sp = pickle.load(open(a.seed_perm, 'rb'))
+        for ad, (r, sc, fs) in sp.get('best', {}).items():
+            if ad in ps['best'] and sc < ps['best'][ad][1]:
+                ps['best'][ad] = (r, sc, fs)
+                ps['tried'].setdefault(ad, set()).update(sp['tried'].get(ad, ()))
+    sites = {}
+    if a.asm:
+        A = pickle.load(open(a.asm, 'rb'))
+        for ad in ps['best']:
+            L = A.get(f'fn_{ad:08X}')
+            if L:
+                sites[ad] = xforms.clr_sites(L)
+    # deterministic rewrites (xforms.deterministic) are tried first, one per round
+    ps.setdefault('queue', {})
+    for ad, (r, sc, fs) in ps['best'].items():
+        if ad not in ps['queue'] and ad not in ps['perm_matched']:
+            q = [(b, r['sig']) for b in xforms.deterministic(r['body'], sites.get(ad, ()))]
+            u = m_u64(r['body'], r['sig'])
+            ps['queue'][ad] = ([u] if u else []) + q
+            if ps['queue'][ad]:
+                ps['stale'][ad] = 0
     rng = random.Random(a.seed)
     active = [ad for ad in ps['best'] if ad not in ps['perm_matched'] and ps['stale'].get(ad, 0) < a.patience]
     print(f'{len(active)} active near misses', flush=True)
@@ -338,8 +388,18 @@ def main():
         cand = {}
         for ad in active:
             r, sc, fs = ps['best'][ad]
+            q = ps['queue'].get(ad) or []
+            while q:
+                r2 = dict(r)
+                r2['body'], r2['sig'] = q.pop(0)
+                d = run.digest(r2)
+                if d not in ps['tried'].setdefault(ad, set()):
+                    ps['tried'][ad].add(d); cand[ad] = (r2, fs)
+                    break
+            if ad in cand:
+                continue
             for _ in range(6):
-                r2 = mutate(r, rng, steps=1 if rng.random() < 0.7 else 2)
+                r2 = mutate(r, rng, steps=1 if rng.random() < 0.7 else 2, sites=sites.get(ad, ()))
                 if r2 is None:
                     continue
                 d = run.digest(r2)
@@ -375,7 +435,8 @@ def main():
             else:
                 if sc == old and rng.random() < 0.5:
                     ps['best'][ad] = (r2, sc, fs)       # plateau move
-                ps['stale'][ad] = ps['stale'].get(ad, 0) + 1
+                if not ps['queue'].get(ad):             # deterministic rewrites still queued: not stale yet
+                    ps['stale'][ad] = ps['stale'].get(ad, 0) + 1
         pickle.dump(ps, open(pf, 'wb'))
         print(f'round {rnd}: {len(cand)} candidates, {nm} matched, {imp} improved, '
               f'total perm matches {len(ps["perm_matched"])}', flush=True)

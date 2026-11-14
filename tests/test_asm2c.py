@@ -1034,5 +1034,104 @@ class PermTests(unittest.TestCase):
         self.assertEqual(run.near_misses(out, {"f1": 1, "f2": 2, "f3": 3}), {2: 3})
 
 
+class K6Tests(unittest.TestCase):
+    """Round K6: cache/barrier intrinsics, 64-bit ops, indexed update forms, loop joins, xforms."""
+
+    def test_cache_and_barrier_intrinsics(self):
+        r = gen(["dcbt r0,r3", "lwz r3,0(r3)", "blr"], mode=2)
+        self.assertIn("__dcbt((int)(0), (void *)(a0));", r["body"])
+        self.assertIn("__dcbt", r["intrinsics"])
+        r = gen(["lwsync", "stw r4,0(r3)", "blr"], mode=2)
+        self.assertIn("__emit(0x7C2004AC);", r["body"])
+        r = gen(["twui r0,0x16", "blr"], mode=2)
+        self.assertIn("__debugbreak();", r["body"])
+
+    def test_emit_declares_used_intrinsics(self):
+        r = gen(["dcbt r4,r3", "lwsync", "blr"], mode=2)
+        with tempfile.TemporaryDirectory() as d:
+            emit.build({0x88000000: r}, [0x88000000], Path(d) / "x.c")
+            src = (Path(d) / "x.c").read_text()
+        self.assertIn("void __dcbt(int offset, void *base);", src)
+        self.assertIn("void __emit(unsigned int opcode);", src)
+        self.assertIn("#pragma intrinsic(__dcbt, __emit)", src)
+        self.assertNotIn("extern long __dcbt", src)
+
+    def test_64bit_divide_multiply_with_trap(self):
+        r = gen(["tdllei r4,0", "divdu r3,r3,r4", "blr"], mode=2)
+        self.assertIn("((ts4_u64)a0 / (ts4_u64)a1)", r["body"])
+        r = gen(["mulld r3,r3,r4", "blr"], mode=2)
+        self.assertIn("((ts4_s64)a0 * (ts4_s64)a1)", r["body"])
+        r = gen(["sradi r3,r3,3", "blr"], mode=2)
+        self.assertIn("((ts4_s64)a0 >> 3)", r["body"])
+
+    def test_lwa_sign_extends(self):
+        r = gen(["lwa r3,8(r3)", "blr"], mode=2)
+        self.assertIn("(int)(*(ts4_word *)((char *)(ts4_word)(a0) + 8))", r["body"])
+
+    def test_indexed_update_forms(self):
+        r = gen(["stwux r5,r3,r4", "stw r5,4(r3)", "blr"], mode=2)
+        self.assertIn("*(ts4_word *)((char *)(ts4_word)((a0 + a1)) + 4) = (ts4_word)a2;", r["body"])
+        r = gen(["lfsux f1,r3,r4", "blr"], mode=2)
+        self.assertIn("(*(float *)((char *)(ts4_word)((a0 + a1)) + 0))", r["body"])
+
+    def test_loop_common_join(self):
+        # in the loop, the arms (A at 6, B at 8) both reach C (11); B can also return
+        b = lambda m, i: f"{m} 0x0 -> {tgt(i)}"
+        t = ["li r4,0", "lwz r11,0(r3)", "cmpwi cr6,r11,0", b("beq cr6,", 13), "cmpwi cr6,r11,1", b("bne cr6,", 8),
+             "addi r4,r4,1", b("b", 11), "cmpwi cr6,r4,5", "beqlr cr6", "addi r4,r4,2", "addi r3,r3,4", b("b", 1),
+             "mr r3,r4", "blr"]
+        g = translate.Gen(prog(t), ENV, 2)
+        a = lambda i: BASE + 4 * i
+        self.assertEqual(g._loop_common_join(a(6), a(8), g.loops[a(1)], a(1)), a(11))
+        self.assertIn("while (", gen(t, mode=2)["body"])
+        self.assertFalse(translate.Gen.ljoin)
+
+    def test_xforms_bool_temporary(self):
+        import xforms
+        body = ("    ts4_word p1;\n    ts4_word p2;\n\n    if ((int)a0 == 0) {\n        p1 = (ts4_word)1;\n"
+                "    } else {\n        p2 = (ts4_word)0;\n        if ((int)a1 != 0) {\n            p2 = (ts4_word)1;\n"
+                "        }\n        p1 = (ts4_word)p2;\n    }\n    return p1;\n")
+        out = xforms.boolx(body)
+        self.assertIn("b80 = ((int)a0 == 0) || ((int)a1 != 0);", out)
+        self.assertIn("p1 = (ts4_word)b80;", out)
+        self.assertIn("    unsigned char b80;", out)
+        self.assertNotIn("p2", out)
+
+    def test_xforms_strlen(self):
+        import xforms
+        body = ("    ts4_word lv1;\n    int t2;\n    ts4_word p3;\n\n    lv1 = (ts4_word)a0;\n    do {\n"
+                "        t2 = *(char *)((char *)(ts4_word)(lv1) + 0);\n        p3 = (ts4_word)(lv1 + 1);\n"
+                "        lv1 = p3;\n    } while ((int)t2 != 0);\n    return ((lv1 - a0) + -1);\n")
+        out = xforms.t_strlen(body)
+        self.assertEqual(out, "\n    return (ts4_word)strlen((const char *)a0);\n")
+        with tempfile.TemporaryDirectory() as d:
+            r = {"kind": "x", "detail": [], "sig": "ts4_word NAME(ts4_word a0)", "body": out, "externs": [], "protos": {}}
+            emit.build({0x88000000: r}, [0x88000000], Path(d) / "x.c")
+            self.assertIn("#pragma intrinsic(strlen)", (Path(d) / "x.c").read_text())
+
+    def test_xforms_clrrwi_struct_argument(self):
+        import xforms
+        asm = ["88000000  00000000  clrrwi r4, r11, 0", "88000004  00000000  mr r3, r31",
+               "88000008  00000000  bl 0x0 -> 0x88001000   ; REL24 fn_88001000"]
+        self.assertEqual(xforms.clr_sites(asm), [("fn_88001000", 1)])
+        body = "    fn_88001000((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 8)));\n"
+        out = xforms.sv_all(body, [("fn_88001000", 1)])
+        self.assertEqual(out, ["    fn_88001000((ts4_word)a0, *(ts4_sv *)((char *)(ts4_word)(a1) + 8));\n"])
+
+    def test_perm_u64_parameter(self):
+        import perm
+        b, s = perm.m_u64("    f((ts4_word)((ts4_u64)a1 >> 32));\n    f((ts4_word)(a1 & 0xffffffff));\n",
+                          "void NAME(ts4_word a0, ts4_word a1)")
+        self.assertEqual(s, "void NAME(ts4_word a0, ts4_u64 a1)")
+        self.assertIn("f((ts4_word)(ts4_word)a1);", b)
+
+    def test_xforms_compound_and_earlyinv(self):
+        import xforms
+        b = "    *(ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4)) + 1);\n"
+        self.assertEqual(xforms.t_compound(b), "    *(ts4_word *)((char *)(ts4_word)(a0) + 4) += 1;\n")
+        b = "    if ((int)a0 == 0) {\n        return 0;\n    }\n    f();\n    return 1;"
+        self.assertEqual(xforms.t_earlyinv(b), "    if ((int)a0 != 0) {\n        f();\n        return 1;\n    }\n    return 0;")
+
+
 if __name__ == "__main__":
     unittest.main()
