@@ -247,10 +247,11 @@ class AnalyserPatchTests(unittest.TestCase):
     def test_patch_const_and_curve_keys(self):
         patch = {"ShotDifficulty": {"0": {"value": 4.5},
                                     "1": {"keys": {"0": {"y0": 11.0}, "1": {"slope": 2.0, "x1": 4.0}}}}}
-        out, rep = P.patch_expressions(self.buf, patch, probe=(0.0, 0.5, 2.0))
+        # disc reading: slope words as stored (the runtime would recompute them, see next test)
+        out, rep = P.patch_expressions(self.buf, patch, probe=(0.0, 0.5, 2.0), fixup=False)
         self.assertEqual(len(out), len(self.buf))
         self.assertEqual(rep["words_changed"], 4)
-        gs = A.parse_expressions(out)
+        gs = A.parse_expressions(out, fixup=False)
         self.assertEqual(gs[0].nodes[0].fields["value"], 4.5)
         k = gs[0].nodes[1].fields["keys"]
         self.assertEqual((k[0][2], k[1][3], k[1][1]), (11.0, 2.0, 4.0))
@@ -258,6 +259,18 @@ class AnalyserPatchTests(unittest.TestCase):
         ev = {e["input"]: e for e in rep["evaluations"]}
         self.assertEqual(ev[0.5]["before"], [2.0 + (10.0 + 5.0 * 0.5)])
         self.assertEqual(ev[0.5]["after"], [4.5 + (11.0 + 5.0 * 0.5)])
+
+    def test_patch_curve_runtime_reading(self):
+        # runtime reading: slope = (y1-y0)/(x1-x0) is recomputed at load, so y1 is the live field
+        patch = {"ShotDifficulty": {"1": {"keys": {"0": {"y0": 11.0, "y1": 19.0}}}}}
+        out, rep = P.patch_expressions(self.buf, patch, probe=(0.5,))
+        k = A.parse_expressions(out)[0].nodes[1].fields["keys"]
+        self.assertEqual((k[0][2], k[0][3], k[0][4]), (11.0, 8.0, 19.0))
+        self.assertEqual(rep["evaluations"][0]["after"], [2.0 + 15.0])
+        # a slope-only edit changes the disc word but not the runtime curve
+        out2, rep2 = P.patch_expressions(self.buf, {"ShotDifficulty": {"1": {"keys": {"0": {"slope": 9.0}}}}},
+                                         probe=(0.5,))
+        self.assertEqual(rep2["evaluations"][0]["before"], rep2["evaluations"][0]["after"])
 
     def test_selectors_hash_index_and_list_keys(self):
         for sel in ("%08x" % A.crc("ShotDifficulty"), "#0", "ShotDifficulty"):

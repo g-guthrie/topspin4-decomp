@@ -1131,6 +1131,15 @@ class K6Tests(unittest.TestCase):
         self.assertIn("    h1 = (ts4_word)(a0 + 20);\n    t1 = *(ts4_word *)((char *)(ts4_word)(h1) + 4);", out)
         self.assertIn("    ts4_word h1;", out)
 
+    def test_saved_vector_register_and_vector_argument(self):
+        t = ["mflr r12", "stw r12,-0x8(r1)", "li r12,-0x30", "stvx128 v127,r1,r12", "stwu r1,-0x60(r1)",
+             "lvx128 v127,r0,r4", "mr r31,r3", "bl 0x0 -> 0x88001000   ; REL24 fn_88001000", "vaddfp128 v1,v127,v127",
+             "mr r3,r31", "bl 0x0 -> 0x88002000   ; REL24 fn_88002000", "addi r1,r1,0x60", "li r0,-0x30",
+             "lvx128 v127,r1,r0", "lwz r12,-0x8(r1)", "mtlr r12", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("t4 = fn_88002000((ts4_word)a0, vv3);", r["body"])
+        self.assertEqual(r["fprotos"], {"fn_88002000": ["ts4_word", "__vector4"]})
+
     def test_xforms_bool_temporary(self):
         import xforms
         body = ("    ts4_word p1;\n    ts4_word p2;\n\n    if ((int)a0 == 0) {\n        p1 = (ts4_word)1;\n"

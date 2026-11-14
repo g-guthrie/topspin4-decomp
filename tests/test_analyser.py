@@ -382,37 +382,20 @@ class SlopeFixupTests(unittest.TestCase):
 
 
 class LayoutTests(unittest.TestCase):
-    """tools/ts4_layout.py on a synthetic Layoutall-style image."""
+    """tools/ts4_layout.py (over ts4_xbin.Layout) on a synthetic Layoutall image built by test_tunables."""
 
     T_OUTER, T_INNER, T_LIST = 0x0A0A0A0A, 0x0B0B0B0B, 0x0C0C0C0C
     FLOAT = 0xC692C255
 
     def _layout(self):
         from tools import ts4_layout as L
-        img = Image()
-        img.u32(0, 0, 0, 0)                       # padding so no record starts at 0
-
-        def record(prims, structs, tcrc, size):
-            rec = img.here()
-            img.u32(0, len(prims), len(prims), 0, len(structs), len(structs), tcrc, size, 4)
-            if prims:
-                img.set_rel(rec, img.here())
-                for name, off in prims:
-                    img.u32(self.FLOAT, 0x40000, 0, off, self.FLOAT, name, 4)
-            if structs:
-                img.set_rel(rec + 0xC, img.here())
-                for name, off, ty, kind, sz in structs:
-                    img.u32(0, sz << 16, 0, 0, kind, name, off, 4, 0)
-                for name, off, ty, kind, sz in structs:
-                    img.u32(ty)
-                    if kind == L.KIND_LIST:
-                        img.u32(0)
-            img.u32(0, 0, 0)
-        record([(A.crc("x"), 0), (A.crc("y"), 4)], [], self.T_INNER, 8)
-        record([(A.crc("a"), 0), (A.crc("b"), 4)],
-               [(A.crc("sub"), 8, self.T_INNER, L.KIND_STRUCT, 8), (A.crc("lst"), 0x10, self.T_INNER, L.KIND_LIST, 12)],
-               self.T_OUTER, 0x1C)
-        return L, bytes(img.b)
+        from tests.test_tunables import build_layout
+        buf = build_layout([
+            (self.T_INNER, 8, 4, [("x", self.FLOAT, 0, 4), ("y", self.FLOAT, 4, 4)], []),
+            (self.T_OUTER, 0x1C, 4, [("a", self.FLOAT, 0, 4), ("b", self.FLOAT, 4, 4)],
+             [("sub", self.T_INNER, L.KIND_STRUCT, 8), ("lst", self.T_INNER, L.KIND_LIST, 0x10)]),
+        ])
+        return L, buf
 
     def test_parse_and_resolve(self):
         L, buf = self._layout()

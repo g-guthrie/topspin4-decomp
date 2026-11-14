@@ -17,8 +17,13 @@ or "#N" for the N-th graph in file order.  Node keys are node indexes within the
     "1c2d3e4f": {"7": {"keys": [{"y0": 1.0}, {}, {"slope": 2.0}]}}   // list form: index = position
   }
 
-CURVE key fields: x0, x1 (segment start and end), y0 (value at x0), slope (per unit x).  The
-trailing u32 of a key is not touched.  Only CONST and CURVE nodes are patchable.
+CURVE key fields: x0, x1 (segment start and end), y0 (value at x0), slope (word +0xC), y1
+(word +0x10, value at x1).  Only CONST and CURVE nodes are patchable.
+
+Curve semantics (docs/gameplay/graphs-decoded.md): at load the game overwrites every key's slope
+word with (y1-y0)/(x1-x0) (fn_88179740), so on the real game a curve is a ramp y0 -> y1 and a
+patched `slope` has no effect: patch `y1` instead.  By default the re-evaluation uses that runtime
+reading; `--disc-slopes` (fixup=False) evaluates with the slope words as stored on disc.
 
   python3 tools/ts4_analyser_patch.py Expressions.bin patch.json OUT.bin [--probe 0.5]
 """
@@ -31,7 +36,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ts4_analyser as A  # noqa: E402
 
-KEY_FIELDS = {"x0": 0, "x1": 4, "y0": 8, "slope": 12}
+KEY_FIELDS = {"x0": 0, "x1": 4, "y0": 8, "slope": 12, "y1": 16}
 
 
 def resolve_graph(graphs, spec):
@@ -62,9 +67,9 @@ def _key_items(spec):
     return [(i, v) for i, v in enumerate(spec)]
 
 
-def plan(buf, patch):
+def plan(buf, patch, fixup=True):
     """Return (graphs, edits) where edits is [(file_offset, new_float, description)]."""
-    graphs = A.parse_expressions(buf)
+    graphs = A.parse_expressions(buf, fixup=fixup)
     edits = []
     for gspec, nodes in patch.items():
         gi = resolve_graph(graphs, gspec)
@@ -109,11 +114,11 @@ def _probe_eval(g, v):
         return None
 
 
-def patch_expressions(buf, patch, probe=(0.0, 0.5, 1.0)):
+def patch_expressions(buf, patch, probe=(0.0, 0.5, 1.0), fixup=True):
     """Apply `patch` to a copy of `buf`.  Returns (new_bytes, report dict).
 
     Raises ValueError/AssertionError if the patched image fails validation."""
-    graphs, edits = plan(buf, patch)
+    graphs, edits = plan(buf, patch, fixup)
     out = bytearray(buf)
     for off, val, _d in edits:
         struct.pack_into(">f", out, off, val)
@@ -126,7 +131,7 @@ def patch_expressions(buf, patch, probe=(0.0, 0.5, 1.0)):
     if stray:
         raise AssertionError("unexpected bytes changed at %s" % [hex(i) for i in stray[:8]])
     # 2. re-parse: same structure, patched values read back
-    new_graphs = A.parse_expressions(out)
+    new_graphs = A.parse_expressions(out, fixup=fixup)
     assert len(new_graphs) == len(graphs)
     for g0, g1 in zip(new_graphs, graphs):
         assert g0.name == g1.name and g0.nregs == g1.nregs and len(g0.nodes) == len(g1.nodes)
@@ -153,12 +158,15 @@ def main():
     ap.add_argument("out", help="output file (write under work/)")
     ap.add_argument("--probe", type=float, action="append",
                     help="input value used for every input port in the before/after evaluation (repeatable)")
+    ap.add_argument("--disc-slopes", action="store_true",
+                    help="evaluate with the on-disc slope words (the runtime recomputes them from y1)")
     a = ap.parse_args()
     if os.path.abspath(a.out) == os.path.abspath(a.expressions):
         ap.error("refusing to overwrite the input")
     buf = open(a.expressions, "rb").read()
     patch = json.load(open(a.patch))
-    out, rep = patch_expressions(buf, patch, tuple(a.probe) if a.probe else (0.0, 0.5, 1.0))
+    out, rep = patch_expressions(buf, patch, tuple(a.probe) if a.probe else (0.0, 0.5, 1.0),
+                                 fixup=not a.disc_slopes)
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     open(a.out, "wb").write(out)
     for off, val, d in rep["edits"]:

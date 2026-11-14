@@ -1,33 +1,31 @@
 #!/usr/bin/env python3
-"""Reader for the Pam engine type layouts in ``Layoutall.bin`` and a generic XBin walker.
+"""Field-name helpers over the Layoutall.bin type table (thin wrapper around ``ts4_xbin.Layout``).
 
-``Layoutall.bin`` (an XBin on the disc root) describes the reflected C++ types that the game's
-data files (``State.bin``, ``Settings.bin``, ``Expressions.bin`` ...) are laid out with.  The grammar
-below was recovered empirically (agent G1, 2026-11-14) and checked against code-verified offsets
-(PlayerState ``+0x64C..0x668`` = Serve..Stamina, ``+0x71C`` let chance, ``+0xF20`` Fatigue, the
-State root arrays at ``+0xE80/+0xE8C/+0xE98/+0xF58``).  All integers are big-endian.
+``tools/ts4_xbin.py`` (agent G5) holds the Layoutall.bin parser; this module only adapts its
+``Layout.types`` into ``TypeInfo``/``Field`` objects and adds the two helpers the analyser
+binding code needs: ``resolve`` (byte offset -> member chain) and ``walk`` (visit every primitive
+member of a struct in a data XBin, following lists).  Grammar summary, as decoded in ts4_xbin:
 
-Type record (9 words)::
+    type record (0x40 bytes, array at file +0x20): primitive chain {rel,n,n} at +0x18,
+    member chain {rel,m,m} at +0x24, type crc, size, align at +0x30..
+    primitive row (7 words)  [next_type, next_flags, next_name, OFFSET, TYPE, NAME, SIZE]
+    member row (9 words)     [next_type, next_flags, next_name, rel, KIND, NAME, OFFSET, ALIGN, 0]
+    KIND 0xD543463B inline struct, 0x33F5AD9F list {rel,count,cap}, 0x6D866019 pointer,
+    0xAAB84325 reference.  A member row's TYPE is carried by the previous row (chain words).
 
-    {s32 rel, u32 n, u32 n}   primitive members, 7-word rows, rel from this descriptor
-    {s32 rel, u32 m, u32 m}   struct/list members, 9-word rows, rel from this descriptor
-    u32 type crc, u32 byte size, u32 alignment
-
-Primitive row (7 words)  ``[t0, f0, next_name, OFFSET, TYPE, NAME, SIZE]``
-Struct row (9 words)     ``[t0, SIZE<<16, next_name, rel, KIND, NAME, OFFSET, ALIGN, 0]``;
-                          the member TYPE is the j-th word of the type list that follows the m rows.
-``KIND`` is 0xD543463B for an embedded struct and 0x33F5AD9F for a list (a 12-byte
-``{rel, count, cap}`` descriptor whose element type is the member type).
-
-Only the parts needed to name fields are decoded; the leading words of each row (``t0``, ``f0``,
-``next_name``) repeat information of the neighbouring row and are ignored.
+Checked against code-verified offsets (PlayerState +0x64C..0x668 = Serve..Stamina, +0x71C let
+chance, +0xF20 Fatigue, State root arrays at +0xE80/+0xE8C/+0xE98/+0xF58).  Big-endian throughout.
 """
+import os
 import struct
 import sys
 
-KIND_STRUCT = 0xD543463B
-KIND_LIST = 0x33F5AD9F
-KINDS = (KIND_STRUCT, KIND_LIST)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ts4_xbin as X  # noqa: E402
+
+KIND_STRUCT = X.KIND_INLINE
+KIND_LIST = X.KIND_LIST
+KINDS = (X.KIND_INLINE, X.KIND_LIST, X.KIND_PTR, X.KIND_REF)
 
 
 class Field:
@@ -44,59 +42,20 @@ class Field:
 
 
 class TypeInfo:
-    __slots__ = ("crc", "size", "align", "fields", "at")
+    __slots__ = ("crc", "size", "align", "fields")
 
-    def __init__(self, crc, size, align, fields, at):
-        self.crc, self.size, self.align, self.fields, self.at = crc, size, align, fields, at
-
-
-def _words(buf):
-    return struct.unpack(">%dI" % (len(buf) // 4), buf[:len(buf) // 4 * 4])
+    def __init__(self, crc, size, align, fields):
+        self.crc, self.size, self.align, self.fields = crc, size, align, fields
 
 
 def parse_layout(buf):
-    """Return {type crc: TypeInfo} for every type record that decodes consistently.
-
-    The records are found by scanning for the 9-word header; a candidate is accepted only when every
-    member row is in range, every struct row carries a known kind word and no member offset lies past
-    the type size.  The first consistent record of a type crc wins.
-    """
-    W = _words(buf)
-    n = len(W)
+    """{type crc: TypeInfo} for every type record of a Layoutall.bin image (via ts4_xbin.Layout)."""
+    lay = X.Layout(buf)
     types = {}
-    for i in range(n - 9):
-        r1, c1, p1, r2, c2, p2, t, size, align = W[i:i + 9]
-        if c1 != p1 or c2 != p2 or c1 > 4096 or c2 > 4096 or not (c1 or c2):
-            continue
-        if not (0 < size < 0x1000000) or align not in (1, 2, 4, 8, 16) or t in types:
-            continue
-        fields = []
-        ok = True
-        if c1:
-            a = (i * 4 + r1) & 0xFFFFFFFF
-            if a % 4 or a // 4 + 7 * c1 > n:
-                continue
-            a //= 4
-            for j in range(c1):
-                e = a + 7 * j
-                fields.append(Field(W[e + 5], W[e + 3], W[e + 4], W[e + 6], True))
-        if c2:
-            a = ((i + 3) * 4 + r2) & 0xFFFFFFFF
-            if a % 4 or a // 4 + 10 * c2 > n:
-                continue
-            a //= 4
-            tl = a + 9 * c2          # type list after the rows; a list member takes two words (element type, 0)
-            for j in range(c2):
-                e = a + 9 * j
-                if W[e + 4] not in KINDS or tl >= n:
-                    ok = False
-                    break
-                fields.append(Field(W[e + 5], W[e + 6], W[tl], W[e + 1] >> 16, False, W[e + 4]))
-                tl += 2 if W[e + 4] == KIND_LIST else 1
-        if not ok or any(f.offset > size for f in fields):
-            continue
+    for tc, (size, align, members) in lay.types.items():
+        fields = [Field(m.name, m.offset, m.type, m.size, bool(m.attr), m.kind) for m in members]
         fields.sort(key=lambda f: f.offset)
-        types[t] = TypeInfo(t, size, align, fields, i * 4)
+        types[tc] = TypeInfo(tc, size, align, fields)
     return types
 
 
@@ -120,7 +79,7 @@ def resolve(types, type_crc, offset, depth=0):
     if best is None:
         return []
     chain = [(best, best.offset)]
-    if not best.prim and not best.is_list():
+    if not best.prim and best.kind == KIND_STRUCT:
         for f, o in resolve(types, best.type, offset - best.offset, depth + 1):
             chain.append((f, o + best.offset))
     return chain
@@ -161,7 +120,7 @@ def walk(types, buf, type_crc, addr, visit, path=(), depth=0):
                         visit(p + ("[%d]" % k,), e + r2, f)
                 else:
                     walk(types, buf, f.type, a + rel + k * et.size, visit, p + ("[%d]" % k,), depth + 1)
-        else:
+        elif f.kind == KIND_STRUCT:
             walk(types, buf, f.type, a, visit, p, depth + 1)
 
 

@@ -786,7 +786,7 @@ class Gen:
     @staticmethod
     def newst():
         return dict(regs={}, written=set(), clobbered=set(), fregs={}, fwritten=set(), ctr=None,
-                    ctr_reg=None, cmps={}, stackargs={}, cnt=None, slots={}, vregs={}, vwritten=set())
+                    ctr_reg=None, cmps={}, stackargs={}, cnt=None, slots={}, vregs={}, vwritten=set(), vnew=set())
 
     @staticmethod
     def cp(st):
@@ -1729,7 +1729,7 @@ class Gen:
         nm = f'vv{self.ntmp}'
         self.vdecls.append(nm)
         out.append(f'{nm} = {e};')
-        st['vregs'][r] = nm; st['vwritten'].add(r)
+        st['vregs'][r] = nm; st['vwritten'].add(r); st['vnew'].add(r)
 
     def vmx_step(self, ins, st, out):
         mn, ops = ins.mn, ins.ops
@@ -1761,9 +1761,9 @@ class Gen:
                 out.append(f'*(__vector4 *)((ts4_word)({addr})) = {self.vrd(st, ops[0])};')
             return
         if b == 'vmr':
-            st['vregs'][ops[0]] = self.vrd(st, ops[1]); st['vwritten'].add(ops[0]); return
+            st['vregs'][ops[0]] = self.vrd(st, ops[1]); st['vwritten'].add(ops[0]); st['vnew'].add(ops[0]); return
         if b == 'vor' and ops[1] == ops[2]:
-            st['vregs'][ops[0]] = self.vrd(st, ops[1]); st['vwritten'].add(ops[0]); return
+            st['vregs'][ops[0]] = self.vrd(st, ops[1]); st['vwritten'].add(ops[0]); st['vnew'].add(ops[0]); return
         if b in VBIN:
             self.vset(st, out, ops[0], f'{VBIN[b]}({self.vrd(st, ops[1])}, {self.vrd(st, ops[2])})'); return
         if b in VUN:
@@ -1785,7 +1785,13 @@ class Gen:
 
     def call(self, ins, st, out):
         mn, sym, rk = ins.mn, ins.sym, ins.rk
+        vargs = []
         if self.has_vmx:
+            # vector arguments: v1, v2, ... set up since the previous call
+            k = 1
+            while f'v{k}' in st['vnew'] and st['vregs'].get(f'v{k}') not in (None, '__vclob') and k < 14:
+                vargs.append(('f', self.vrd(st, f'v{k}'), '__vector4')); k += 1
+            st['vnew'] = set()
             # volatile vector registers do not survive the call (a later read raises
             # 'vreg clobbered'); v14-v31 / v64-v127 keep their values
             for n in list(range(0, 14)) + list(range(32, 64)):
@@ -1896,6 +1902,10 @@ class Gen:
         if '__gap' in args:
             args = args[:args.index('__gap')]
         args = [vdbl[j] if a == f'__vdbl{j}' else a for j, a in enumerate(args)]
+        if vargs:
+            if any(isinstance(a, tuple) for a in args):
+                raise Skip('vector and float args')
+            args = args + vargs
         cav = ', '.join(self.argcast(a) for a in args)
         if mn == 'bl':
             self.protos[sym] = len(args); call = f'{sym}({cav})'; self.detail.append(sym)

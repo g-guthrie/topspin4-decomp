@@ -10183,10 +10183,15 @@ graphs:
   hash: 0x1ceefd8b
   name: ReturnServe
   name_confidence: high
-  referenced_by_settings: 15
+  referenced_by_settings: 27
   settings_paths:
+  - "#3f7bd49d.#c2ddc2e6.[].#1d9502ff.#c2ddc2e6.[].Id"
+  - "#3f7bd49d.#c2ddc2e6.[].Id"
+  - "#3fcc8ac9.#c2379436.#0c58aa02.[].Id"
   - "#3fcc8ac9.#f98d2c03.#25f3717a.[].Id"
+  - "#ded1baa5.#899c4c22.[].Id"
   - "AI.#99d2ac4e.#51b273d0.AIStyle.[].Difficulty.[].#0a7a82d5.#af3d703d.[].Expression"
+  - "TopSpinSchool.#80a85d9e.Exercice.[].Step.[].#89616a1a"
   registers: 4
   inputs:
   - reg: 1
@@ -20896,11 +20901,14 @@ graphs:
   hash: 0x96fe1e55
   name: Repositioning
   name_confidence: high
-  referenced_by_settings: 56
+  referenced_by_settings: 90
   settings_paths:
-  - "#3f7bd49d.#c2ddc2e6.[]"
+  - "#3f7bd49d.#c2ddc2e6.[].#1d9502ff.#c2ddc2e6.[].Id"
+  - "#3f7bd49d.#c2ddc2e6.[].#db36d34c.Action.[].Id"
+  - "#3f7bd49d.#c2ddc2e6.[].Id"
   - "#3fcc8ac9.#f98d2c03.#25f3717a.[].Id"
   - "AI.#99d2ac4e.#51b273d0.AIStyle.[].Difficulty.[].#ef9ce04a.#af3d703d.[].Expression"
+  - "TopSpinSchool.#80a85d9e.Exercice.[].Step.[].#89616a1a"
   registers: 1
   inputs: []
   outputs:
@@ -27209,9 +27217,10 @@ graphs:
   hash: 0xadb6ffce
   name: Positioning
   name_confidence: high
-  referenced_by_settings: 54
+  referenced_by_settings: 55
   settings_paths:
   - "AI.#99d2ac4e.#51b273d0.AIStyle.[].Difficulty.[].#0b4e23b3.#af3d703d.[].Expression"
+  - "TopSpinSchool.#80a85d9e.Exercice.[].Step.[].#89616a1a"
   registers: 1
   inputs: []
   outputs:
@@ -29142,12 +29151,14 @@ graphs:
   hash: 0x2ce33943
   name: Default
   name_confidence: high
-  referenced_by_settings: 51
+  referenced_by_settings: 53
   settings_paths:
+  - "#ded1baa5.#899c4c22.[].Id"
   - "AI.#99d2ac4e.#bf2c744c.#e3689da5.Shoot.[].Name"
   - "AI.#99d2ac4e.#d548d7b9.#20002705.[].#5fae94f3"
   - "AI.#99d2ac4e.#d548d7b9.#20002705.[].TimingExpression"
   - "PlayerSettings.#0b337596.Serve.Animation.[].Id"
+  - "TopSpinSchool.#80a85d9e.Exercice.[].Id"
   registers: 6
   inputs:
   - reg: 5
@@ -29983,8 +29994,10 @@ graphs:
   name: Volley
   name_confidence: high
   loaded_by_code: [fn_886BDB58 @0x886BDBE8]
-  referenced_by_settings: 122
+  referenced_by_settings: 125
   settings_paths:
+  - "AI.#99d2ac4e.#bcf5544e.#7198d44b.[].ConditionList.#3192be92.[].#e47ae035"
+  - "AI.#99d2ac4e.#bcf5544e.#7198d44b.[].ConditionList.#9ff530fe.[].#e47ae035"
   - "AI.#99d2ac4e.#bf2c744c.#f37f2a66.[].#3e63d005.Shoot.[].#51a15844.[].Condition.[].Value"
   - "AI.#99d2ac4e.#bf2c744c.#f37f2a66.[].#3e63d005.Shoot.[].#c46ec870.[].Condition.[].Value"
   - "AI.#99d2ac4e.#ce55641b.#407c5123.[].Context.#51a15844.[].Condition.[].Value"
@@ -30698,6 +30711,9 @@ graphs:
   name: Wood
   name_confidence: high
   loaded_by_code: [fn_886BF598 @0x886BF9D0]
+  referenced_by_settings: 1
+  settings_paths:
+  - "#761fdece.#5f0108a7.[].Id"
   registers: 15
   inputs:
   - reg: 2
