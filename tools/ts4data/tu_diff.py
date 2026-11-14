@@ -48,6 +48,11 @@ GAMEPLAY = [
     ("GameplayInterface.bin", "core", 0xF26CDC20),
     ("PlayerEvolution.bin", "venue", 0xE38F72F1),
 ]
+# names recovered while reading the TU (crc32 verified); used only when the name tables lack them
+EXTRA_NAMES = {0xF460CAE5: "IsSecondServe",       # ShotContext+112, written by fn_88695640 (TU) on serves
+               0x8C2438F6: "AdvancedServe", 0xDE266211: "ServeFlatPowerful", 0x2D9D0B21: "ServeFlatMedium",
+               0x06F187FA: "ServeFlatFinesse", 0xC44826EA: "ServeSpinPowerful", 0xB6A528DD: "ServeSpinMedium",
+               0xB26101EE: "ServeSpinFinesse"}
 EDITABLE = {"float", "int", "uint", "bool", "key", "u8", "s8", "u16", "s16", "u64", "word", "byte"}
 SHOT_CLASS_RE = re.compile(r"/00236a48/(?:8c5e64b4|EvaluateList)\[(\d+)\]/(3f9c096b|2c3e6b9c|Element\[(\d+)\]<78db636d>/Name)$")
 SHOT_CLASS_ID_RE = re.compile(r"/00236a48/(?:8c5e64b4|EvaluateList)\[(\d+)\]/Id$")
@@ -348,6 +353,9 @@ def main(argv=None):
     table = A.load_name_table(a.name_table) if a.name_table and os.path.exists(a.name_table) else {}
     for k, v in table.items():
         names.setdefault(k, v[0])
+    for k, v in EXTRA_NAMES.items():
+        names.setdefault(k, v)
+        table.setdefault(k, (v, "high"))
     namer = A.Namer(table)
     tu_arc_path = os.path.join(a.tu_dir, "TitleUpdate.arc")
     arc = ts4_arc.Arc(tu_arc_path)

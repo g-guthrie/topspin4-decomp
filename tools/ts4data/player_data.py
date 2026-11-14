@@ -298,15 +298,74 @@ def decode_field(b, a, kind, names):
     raise ValueError(kind)
 
 
-def player_tuning(sb, names):
+def player_tuning(sb, names, layout=None):
     named = {}
     for off, name, kind, ev in sorted(PT_FIELDS):
         named[name] = {"offset": "+0x%03x" % off, "value": decode_field(sb, PT + off, kind, names), "read_by": ev}
-    return {
+    out = {
         "source": "Settings.bin file 0x%X (cfg+0x180); PlayerCtx+0x2C" % PT,
         "named": named,
         "all_words": generic_block(sb, PT, PT_SIZE, names),
     }
+    if layout is not None:
+        out["layout"] = {
+            "source": "Layoutall.bin type %08x (Settings root %08x member c4eba473 @ +0x180), %d bytes"
+                      % (PT_TYPE, SETTINGS_ROOT_TYPE, layout.size_of(PT_TYPE) or 0),
+            "note": "member chain from the reflection table (G4c); hex = name not recovered. Lists are decoded "
+                    "generically (curve16 / table2d / f32) at the same offsets in all_words.",
+            "members": layout_members(sb, layout, PT_TYPE, PT, names),
+        }
+    return out
+
+
+# ------------------------------------------------------------------------------------------- layout-driven dump (G4c)
+SETTINGS_ROOT_TYPE = 0x9B4FB082   # Settings.bin root (cfg)
+PT_TYPE = 0x94729773              # cfg+0x180 member c4eba473
+KIND_INLINE, KIND_LIST = 3577955899, 871738783   # ts4_xbin member kinds
+LAYOUT_PRIM = {0xC692C255: "f32", 0x6543E2E6: "i32", 0x074696A9: "u32", 0x68BABFBD: "key", 0xF5E3B036: "bool"}
+
+
+def layout_members(sb, layout, tc, base, names, prefix="", rel=0, depth=0):
+    """Walk one reflected type: one row per scalar or list member, {offset, path, type, value}.
+
+    `layout` needs `types` {type crc: (size, align, [member])} with members carrying name, type, offset, size,
+    kind and attr (the ts4_xbin.Layout shape). Offsets are relative to the walked block."""
+    rows = []
+    for m in layout.types[tc][2]:
+        path = (prefix + "." if prefix else "") + nm(names, m.name)
+        off = rel + m.offset
+        a = base + off
+        if not m.attr and m.kind == KIND_INLINE and m.type in layout.types and depth < 12:
+            rows += layout_members(sb, layout, m.type, base, names, path, off, depth + 1)
+            continue
+        row = {"offset": "+0x%03x" % off, "path": path}
+        kind = LAYOUT_PRIM.get(m.type)
+        if not m.attr and m.kind == KIND_LIST:
+            row["type"] = "list"
+            row["value"] = decode_array(sb, a, names)
+        elif kind == "f32":
+            row["type"], row["value"] = kind, r6(sb.f32(a))
+        elif kind in ("i32", "u32"):
+            row["type"], row["value"] = kind, sb.s32(a) if kind == "i32" else sb.u32(a)
+        elif kind == "key":
+            row["type"], row["value"] = kind, nm(names, sb.u32(a))
+        elif kind == "bool":
+            row["type"], row["value"] = kind, sb.b[a]
+        else:
+            n = max(1, (m.size or 4) // 4)
+            row["type"] = nm(names, m.type)
+            row["value"] = [r6(sb.f32(a + 4 * i)) for i in range(n)]
+        rows.append(row)
+    return rows
+
+
+def load_layout(path):
+    """ts4_xbin.Layout of Layoutall.bin, or None when the file or the reader is missing."""
+    if not path or not os.path.exists(path):
+        return None
+    import ts4_xbin  # noqa: E402  (stdlib reader in tools/)
+    with open(path, "rb") as f:
+        return ts4_xbin.Layout(f.read())
 
 
 def ai_levels(sb, names, graph_names):

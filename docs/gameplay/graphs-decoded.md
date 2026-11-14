@@ -304,7 +304,7 @@ with `lis/ori` and handed to the **hit-point scorer**:
   - the PlayerCtx reset `fn_8869DEF0` (`0x8869E028..0x8869E0B0`), for the two scorers at `PlayerCtx+0xC0`
     and `+0xC4` (one per candidate side, I).
 - `fn_88692040` scores one **BallPrediction sample** (the 0x30-byte record of `gp2.md` section 2). It picks
-  graph `sample+0x28` (the sample's bounce state, 0..3) and fills the inputs in `S+0x880..` (domain
+  graph number `sample+0x28` (the sample's bounce state; `gp2.md` keeps samples with a value of 2 or less) and fills the inputs in `S+0x880..` (domain
   `8448B811`) before it calls `fn_8890E988`:
   - `+0x04` Height;
   - `+0x0C` `#1407106c`, a speed times 3.6 (pool `0x880D1214`), so km/h (I);
@@ -316,11 +316,12 @@ with `lis/ori` and handed to the **hit-point scorer**:
 - Graph 0 `36bde5fe` (`fn_886B62E0`, vtable `0x880F444C`) is the one-graph sibling. It rates by AvgSpeed and
   Distance.
 
-**The other 36 are dead data (V for the scan, I for "never run").** No data word, no code constant and no
-string crc reaches them. The only way left would be a hash computed from a string at run time, and no such
-lookup was found: every `fn_8866F028` caller takes its hash from a literal, a Settings field, the AI
-difficulty record `fn_886A0EC8` or `PlayerTuning+0x63C` (= Settings `PlayerSettings.Expr[]`). Most of them
-are earlier versions of graphs that do run:
+**The other 36 are dead data (V for the scan, I for "never run").** No data word and no code constant
+names them. All 68 callers of `fn_8866F028` take the hash either from a `lis/ori` literal or from a
+loaded data record: the AI difficulty record (`fn_886A0EC8`), `PlayerTuning+0x63C` (`fn_886B4700`, the
+PlayerSettings `Expr` list), or the lists read by `fn_886B6448`, `fn_886B7AF0` and `fn_886B7CF8`. A
+data-provided hash would show up in the file scan. The only way left would be a hash computed from a string
+at run time, and no caller does that. Most of the 36 are earlier versions of graphs that do run:
 
 | graphs | what they are | live counterpart |
 |---|---|---|
@@ -602,7 +603,7 @@ The search covered every store in both DLLs:
 
 - `gp8.md` 9.1 already found no store to `0x564/0x56D/0x56E/0x572` relative to the PlayerState.
 - A register scan of every `.text` store whose base came from `addi rX, rY, 0x500` or `0x4F0` within 40
-  instructions found only the stores above (`work`-local `scan564.py`, reproduced by the command in section 12).
+  instructions found only the stores above (`tools/ts4_graph_refs.py --stores`, section 12).
 - No graph port names `6906754b`. The hash occurs only in `Layoutall.bin`.
 
 So **`S+0x564` is 0 in normal play.** It is a debug or tuning hook that ships unused, and the error
@@ -703,13 +704,186 @@ python3 -m unittest tests.test_analyser tests.test_arc_write
 
 ## 10. Open items
 
-- **Unknown runners.** 40 graphs have no runner found. Candidates are the indirect loaders (`fn_886B4700`
-  via PlayerTuning+0x63C, `fn_886a0ec8`, `fn_886B7AF0/7178/6348`) and data tables not yet walked.
-- **Other curve evaluators.** Are the `0xF9F12A60` curves evaluated by `fn_888AB6C8` and `fn_889C1868`
-  fixed up? This matters for G3/G4 data. `fn_8867BB78` covers the template records only.
-- **Lookup structures.** What `PlayerCtx+0x6C` points to (the `fn_8867BB78` records), and which copy of a
-  duplicate graph the lookup returns.
-- **Graph 22.** Graph 22 `dc1d59b1` writes cells 204/205, which fall outside PlayerState.
-- **Unnamed members.** Many member hashes are still unnamed, for example `#1407106c`, `#03d2be3d`,
-  `#5cf9de02`, `#7bb6a318.From`, `#8ea88f9f` and `#07902e50`. Their roles in section 6 are inferred from use.
-- **Kernel names.** The kernel type-name preimages are not recovered.
+Closed by G1b: the 40 unknown runners (section 4.3), the other curve evaluators (2.4), `PlayerCtx+0x6C` and
+the duplicate lookup (4.4), graph 22's target (6.1), `075a2137` (dead), and the writer of `S+0x564` (6.9).
+Still open:
+
+- **Graph 22 for players 1-3.** Does the runtime resolve `CustomAttribute[Id]` per player, or does it use
+  player 0's raw offset? And who reads ServePrecision and ServePower?
+- **ShotSpecific grade.** `ShotSpecific` (S+0x6BC..) is a copy of one grade
+  (VeryGood/Good/Normal/Bad/VeryBad) of `Settings` `761fdece.ShotDef[i].9b182896`. The copy code and the
+  grade that selects the row were not traced (section 11, step 4).
+- **Code-written inputs.** The writers of `#1407106c` (S+0x770), `#be5d458f` (0x768), `#693eedbe` (0x7D8),
+  `#aee2d90b` (0x7D0) and `#3c6beee9` (S+0xD84, the serve roll) were not located. `HandAttributeQuality`
+  (S+0x74C) has literal stores in `fn_88699xxx`, `fn_886BA254` and `fn_886BD4F0`. Its exact rule (forehand
+  or backhand, volley) was not read.
+- **The State.bin template row** (2.4) is not fixed up. Is it ever used?
+- **Names.** `#1407106c`, `#03d2be3d`, `#5cf9de02`, `#07902e50`, `#7bb6a318`, `#8ea88f9f`, `#6906754b`, the
+  21-character `#7afa6edb`, the remaining 291 unnamed graph hashes, and the 11 kernel type names.
+- **`fn_889B4C10`** loads graphs `54F0F0FB` and `E99E34D2` from a second Expressions module. No such module is on
+  the disc or in TU1, so that path finds nothing in the shipped game (I).
+
+## 11. What decides whether a shot goes in (plain-language walkthrough, G1b)
+
+This section ties `gp4b.md` 10 (the roll), G2/G2b's controls note (`controls-and-shot-selection.md`) and the
+graphs together. Grades follow the rest of this file. "I" marks a step whose code was not read end to end.
+
+### 11.1 The one-line answer
+
+Before the ball is launched, the game rolls dice against three per-player numbers that the shot-class
+graphs have just computed:
+
+```
+P(error)       = clamp01(FaultProbability S+0x718)      (+ S+0x564, which is always 0: section 6.9)
+P(net | error) = OutcomeNet S+0x720                     (the rest of the errors go long or wide: Out)
+P(let)         = LetProbability S+0x71C                 (0.02, fading to 0 as its input goes 40 -> 60)
+```
+
+An "In" shot then still gets the uniform landing spread of the ball block (`gp4b.md` 10.3). The flight
+template never adds error. Which numbers go into the dice depends on these steps.
+
+### 11.2 Step by step
+
+1. **Ratings become stats (V).** `DefaultAttributes` (graph 23) maps each 30..100 rating to 0..1 with
+   3-4 ramps (section 6.1). For example, Forehand is `[30..50: 0->0.2 | 50..80: 0.2->0.8 | 80..100: 0.8->1]`.
+   The game then sets `HandAttributeQuality` (S+0x74C) to the stat of the hitting side by code (I). Serves
+   use `Profile.Serve`.
+2. **Buttons pick the shot class (V for the controls, I for the class lookup).**
+   - The stroke button gives Flat/TopSpin/Slice/Lob.
+   - The hold time gives the tier: Finesse below 0.1875 s, Medium to 0.875 s, Powerful after
+     (`power = min(frames/60, 1.25)/1.25`, G2b).
+   - The situation gives serve, return, volley or smash.
+   - The decision tree picks a template row. Its `ShotDef` entry (`Settings 761fdece.5f0108a7[i]`: `Id` =
+     the shot-class Id, `Aiming.939129fa` = the template row name) names one of the 33 rows of the
+     shot-class table (section 5). That row gives the **fault, net, power and aiming graphs**.
+   - **Risk** (LT/RT) only turns Slice into DropShot (class 30, graphs 331/332) or VolleyDrop (class 29,
+     graphs 329/330). The Risk classes 9-12 (graphs 298-305) are reachable only through the debug shot
+     override (G2b). So in retail, Risk changes the error **only** by turning the shot into a drop shot,
+     which is the most error-prone class (table below).
+3. **Timing gives the main input (V for the field, I for the sign).** `t = ManualShotTiming` (S+0x544, -1..1)
+   is copied from TimingState at the swing commit. Negative is early and positive is late. 0 is perfect.
+   For the AI, the difficulty's `TimingExpression` graph writes it instead (section 4.2).
+4. **The fault graph computes FaultProbability (V for the formula; FlatPower, graph 292, as the example).**
+   Every groundstroke and volley class has the same template with different curves:
+
+   ```
+   control c = clamp01( 0.8                                      base
+                        + lerp(0, ramp(dist 300..600 cm: 0 -> -0.5), ramp(speed 3..6 m/s: 0 -> 1))
+                                                                 having to run far and fast
+                        + lerp(...)(power 0.99..1: 0 -> -0.15)   full charge
+                        + ramp(#1407106c 40..60: 0 -> -0.6)      fast incoming ball (km/h, I)
+                        + ramp(vigor 0..0.2..0.4: -0.3 -> -0.1 -> 0)   fatigue
+                        + contact-point terms (depth From.x, height From.y), pressure (MatchAnalyser),
+                          skill links (SkillList) and #693eedbe / #aee2d90b / #8ea88f9f terms )
+   e = lerp( lerp(hard(t),  easy(t),  c),                        weak hand
+             lerp(hard2(t), easy2(t), c),  HandAttributeQuality)  strong hand
+       * rally(MatchState.#8beb922e)                             1, or 1 -> 0.6 over 5..15 shots with a skill
+   FaultProbability = dz( lerp(ErrorResolution.Min, ErrorResolution.Max, e) )
+                      dz(x) = 0 for x < 0.15, else x             a dead zone: small errors are forgiven
+   ```
+
+   Timing curves of graph 292 (value at |t| = 0 / 0.3 / 0.6 / 1; early side first):
+
+   | curve | early (t < 0) | late (t > 0) |
+   |---|---|---|
+   | easy (c = 1, weak hand) | 0 / 0 / 0.05 / 0.1 | 0 / 0 / 0.2 / 0.4 |
+   | hard (c = 0, weak hand) | 0 / 0.2 / 0.5 / 0.5 | 0 / 0.2 / 1.0 / 1.0 |
+   | easy2 (c = 1, strong hand) | 0 / 0 / 0.05 / 0.1 | 0 / 0 / 0.1 / 0.2 |
+   | hard2 (c = 0, strong hand) | 0 / 0.1 / 0.3 / 0.3 | 0 / 0.1 / 0.6 / 0.6 |
+
+   `ErrorResolution.Min/Max` come from the shot's `ShotDef` grade row (I for which grade). For most shots
+   and the Good/Normal grades it is 0 / 1 (0 / 0.8 to 0.9 for VeryGood/Good on some rows, 0.2 / 1 for
+   VeryBad).
+
+   So in words:
+   - **Inside |t| < 0.3 a groundstroke is safe** under normal conditions: every curve is 0 there.
+   - **Late is punished about twice as hard as early.**
+   - **The hand stat halves the timing penalty.**
+   - **Bad situations** (running far, a fast ball, full charge, fatigue, an awkward contact point) lower
+     `c` and move the curve toward the hard pair.
+   - The 0.15 dead zone makes small mistakes free and big ones jump straight to 15 % or more.
+5. **The net graph computes OutcomeNet (V).** For FlatPower (293):
+   `lerp(ErrMin, ErrMax, Short * ramp(contact height 90..100 cm: 1 -> 0) + Long * ramp(90..100 cm: 0.5 -> 0))`.
+   Errors from a low contact (below 90 cm) go into the net, all of them for a short aim and half for a deep
+   aim. From 1 m up every error goes long or wide.
+6. **Serves are a different, deterministic graph (V for the formula, I for `#3c6beee9`).** For a human
+   (`IsHuman` = 1), the serve fault graphs (307-311) output 0 or 1 (FlatPowerful = 309):
+
+   ```
+   fault = step( (#3c6beee9 - lerp(0.5, 0.5, Serve))                         an aiming value vs 0.5
+                 + window(gauge timing S+0x66C; window widens with Serve and vigor)
+                 + (Target < 450 ? 1 : 0) )
+   ```
+
+   - The gauge window is about -0.4..+0.8 for a good, fresh server, narrower when tired.
+   - `#3c6beee9` (AimingState S+0xD84) acts like a 0..1 roll or aim risk. Its writer was not found.
+   - For the AI, the fault value is `ShotContext.#f089f55c` directly (the `(1 - IsHuman)` branch).
+7. **The roll (V, `gp4b.md` 10.2).**
+   - Let is decided first, with `P = S+0x71C`, when net and let outcomes are enabled.
+   - Then `error = roll < P(error)`. A net error happens with `roll2 < S+0x720`; any other error is Out.
+   - Out moves the target 3 cm past the nearest line. Net aims the ball into the tape.
+   - Fatigue also feeds the *frame-shot* path: the Wood rule graph and the wood graphs 280-282 (frame
+     chance `lerp(0, 0.3, ramp(#1407106c 60..100))` times the template's WoodUp/Down/Side flag).
+
+### 11.3 Worked numbers
+
+`python3 tools/ts4_shot_error.py Expressions.bin State.bin Layoutall.bin --class ... --set ...` evaluates the
+real graphs. All inputs not named are 0: no skills, no pressure, link ports 0. Common settings:
+`err_max=1 hit_y=90 hit_x=-1188 aim_long=1`. Each cell is P(error):
+
+| scenario | class | t = -1 | -0.6 | -0.3 | 0 | +0.3 | +0.45 | +0.6 | +1 |
+|---|---|---|---|---|---|---|---|---|---|
+| A: hand 0.8, fresh, Medium charge | FlatPower | .17 | 0 | 0 | 0 | 0 | .16 | .29 | .37 |
+| | TopSpinMedium | .22 | 0 | 0 | 0 | 0 | 0 | .11 | .24 |
+| | SliceFinesse | .07 | 0 | 0 | 0 | 0 | 0 | .07 | .18 |
+| | DropShot | .61 | .53 | .30 | 0 | .40 | .70 | .73 | .81 |
+| | VolleyStandard | 0 | 0 | 0 | 0 | 0 | 0 | 0 | .12 |
+| B: hand 0.3 | FlatPower | .20 | .17 | 0 | 0 | 0 | .22 | .38 | .50 |
+| C: vigor 0.1 | FlatPower | .22 | .20 | 0 | 0 | 0 | .23 | .40 | .46 |
+| D: stretched (`#1407106c`=70, 500 cm at 5 m/s) | FlatPower | .34 | .34 | 0 | 0 | 0 | .40 | .68 | .68 |
+| | TopSpinMedium | .32 | .17 | 0 | 0 | 0 | .13 | .23 | .42 |
+
+What the numbers say:
+
+- **Timing is everything.** Inside |t| < 0.3 nothing else matters for groundstrokes.
+- **Flat and power classes are much less forgiving than topspin or slice.** Volleys almost never miss
+  from the error roll.
+- **The drop shot (the only retail use of Risk) misses 30-40 % even at |t| = 0.3.**
+- **A weak hand stat, fatigue or a stretched position each add 5-30 points** once the timing is off.
+
+### 11.4 Where to retune
+
+| lever | where | effect |
+|---|---|---|
+| timing window | the timing curves of each fault graph (`y1` of the keys) | the safe zone and how fast error grows |
+| dead zone | `dz` curve (last two curves of each fault graph) | forgiveness of small errors |
+| situational penalties | the constant 0.8 and the penalty curves in the `control` sum | how much running, fast balls and charge cost |
+| hand stat weight | the strong- and weak-hand curve pairs | stat value vs timing |
+| per-shot ceiling | `Settings 761fdece.ShotDef[i].9b182896.ErrorResolution` Min/Max per grade | per-shot error scale |
+| net vs out | the net graphs' height ramps | where errors land |
+| Risk | the shot tree (G2b) and the unreachable Risk classes 9-12 | a real risk/reward shot |
+
+Edit graphs with `tools/ts4_analyser_patch.py` (patch `y1`, not `slope`). Shadowed duplicate copies
+(246, 289-291, 247, 146) have no effect.
+
+## 12. Reproduction (G1b)
+
+```
+# references to every graph: data words (BE/LE) and lis/ori code constants
+python3 tools/ts4_graph_refs.py work/disc/core/fa94f637.bin \
+  --data work/disc/core_all work/disc/tu1_arc work/disc/lua_amst orig/54540859/tu1 \
+  --pe orig/54540859/Swing_DLL.dll orig/54540859/disc/Loader_DLL.dll --only-unreferenced
+# writers of S+0x564 and the forcing flags through a ShotContext base
+python3 tools/ts4_graph_refs.py work/disc/core/fa94f637.bin --pe orig/54540859/Swing_DLL.dll \
+  orig/54540859/disc/Loader_DLL.dll --stores 0x564,0x56d,0x56e,0x572
+# worked numbers of section 11.3 (scenario A)
+python3 tools/ts4_shot_error.py work/disc/core/fa94f637.bin work/disc/core/623d0979.bin work/disc/Layoutall.bin \
+  --class FlatPower --class TopSpinMedium --class SliceFinesse --class DropShot --class VolleyStandard \
+  --timing -1 -0.6 -0.3 0 0.3 0.45 0.6 1 --set hand=0.8 vigor=1 power=0.5 err_max=1 hit_y=90 hit_x=-1188 aim_long=1
+# regenerate graphs.yaml and the catalogue (names, list-payload binding, runners)
+python3 tools/ts4_analyser.py ...   # section 9 commands
+python3 -m unittest tests.test_g1b_graphs tests.test_analyser tests.test_arc_write
+```
+
+Disassembly addresses were read with capstone 5.0.7 through the `work/disc/ppcd.py` helper and a skipdata
+variant of it. `graphs.yaml` (2,256,439 bytes) and the catalogue were regenerated with the section 9 commands.

@@ -107,6 +107,15 @@ class GraphRefsTests(unittest.TestCase):
         far = [lis_r9] + [nop] * 12 + [ori]
         self.assertNotIn(0x3C58FC77, R.code_constants(far, 0))
 
+    def test_based_stores(self):
+        from tools import ts4_graph_refs as R
+        addi = (14 << 26) | (11 << 21) | (11 << 16) | 0x500       # addi r11, r11, 0x500
+        stfs = (52 << 26) | (31 << 21) | (11 << 16) | 0x64        # stfs f31, 0x64(r11)
+        stb = (38 << 26) | (31 << 21) | (11 << 16) | 0x6E         # stb r31, 0x6e(r11)
+        other = (52 << 26) | (31 << 21) | (12 << 16) | 0x64       # stfs f31, 0x64(r12): other base
+        got = R.based_stores([addi, stfs, stb, other], 0x2000, (0x500,), {0x564, 0x56E})
+        self.assertEqual(got, [(0x2004, 0x564), (0x2008, 0x56E)])
+
     def test_expressions_files_are_skipped(self):
         from tools import ts4_graph_refs as R
         head = Image()
