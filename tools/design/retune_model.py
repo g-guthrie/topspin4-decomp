@@ -105,7 +105,26 @@ GRADE_OF_SCORE = [(0, "VeryGood"), (2, "Good"), (3, "Normal"), (5, "Bad")]
 
 # Tee-off test (retune-systems s2, owner's conditions, all required)
 TEEOFF = {"pace_max": 52.0, "h_lo": WAIST_CM, "h_hi": SHOULDER_CM, "frames_min": 60, "vreq_max": 3.5,
-          "set_min": 20, "depth_max": 150.0}
+          "set_min": 20, "depth_max": 100.0}
+
+
+# Contact height is measured at the hit point the planner chose (retune-systems s2, owner clarification): a set
+# player with time lets a high-bouncing ball drop into the strike zone, paying with a deeper contact point.
+LET_DROP = {"set_min": 20, "frames_min": 60, "back_per_cm": 1.2, "cm_per_f": 6.0}
+
+
+def choose_contact(rng, s):
+    """Let a high ball drop when set with time: height into the upper strike zone, contact further back, fewer
+    frames set (stepping back).  Modifies the Situation in place; returns True when it did."""
+    L = LET_DROP
+    if s.height <= SHOULDER_CM or s.set_f < L["set_min"] or s.frames < L["frames_min"]:
+        return False
+    back = L["back_per_cm"] * (s.height - SHOULDER_CM)
+    s.height = rng.uniform(SHOULDER_CM - 25.0, SHOULDER_CM)
+    s.depth_x += back
+    s.dist_net_cm += back
+    s.set_f = int(max(0.0, s.set_f - back / L["cm_per_f"]))
+    return True
 
 
 def grade_points(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick=0.0, volley=False,
@@ -424,6 +443,7 @@ def sample_situation(rng, sit=SIT, opp_pace_mph=None):
     s.set_f = int(max(0.0, slack - 12))
     s.floating = short and pace < 55
     s.dist_net_cm = 1188.0 + s.depth_x
+    choose_contact(rng, s)
     return s
 
 
@@ -579,7 +599,7 @@ RETURN_ERR = {"Perfect": 0.03, "Good": 0.10, "Poor": 0.40, "Mistimed": 0.80}   #
 # =========================================================================== rally / match simulation
 
 RALLY = {
-    "base_err": 0.02,                  # situation fault chance of every groundstroke (control-sum penalties: running,
+    "base_err": 0.05,                  # situation fault chance of every groundstroke (control-sum penalties: running,
                                        # fast ball, fatigue) beyond the timing and grade terms; model calibration
     "pace_margin": {"Flat": 81.0, "TopSpin": 84.0, "Slice": 68.0, "Lob": 60.0},   # mph where the pace term starts
     "pace_err": 0.006,                 # error per mph above the margin speed
@@ -598,6 +618,12 @@ RALLY = {
 }
 
 
+# Spin available by row: the spin blend S+0x774 is a curve of the PowerfulFactor (OPEN 2.6), so it follows the
+# PowerResolution row (model term, values kept from the earlier draft).
+SPIN_ROW = {"Tee-off": 1.10, "VeryGood": 1.05, "Good": 1.00, "Normal": 0.95, "Bad": 0.85, "VeryBad": 0.70}
+# Moonball (test of the owner's question, section 4): a high, slow, deep topspin ball.  Launch ~58 mph, at contact
+# about 0.52 of launch (high arc, bounce), contact height at the top of the bounce ~175 cm, 0.5 s more flight.
+MOON = {"mph": 58.0, "depth": 0.85, "kick": 0.50, "bounce_cm": 175.0, "contact_ratio": 0.52, "extra_f": 30}
 DEPTH_BASE = 0.62         # rally-model depth of an In ball before the DeepDeviation pull (0 short .. 1 baseline)
 DEPTH_EFF = 0.30          # extra depth per unit of FinalEfficiency above 0.55 (outer quads reach deeper)
 SLICE_DROP_CM = 72.0      # a slice reaches the receiver this much lower than a neutral ball
@@ -605,12 +631,13 @@ SLICE_DROP_CM = 72.0      # a slice reaches the receiver this much lower than a 
 
 class Ball:
     __slots__ = ("pace", "depth", "width", "kick", "low", "timing", "short", "hitter_net", "corner", "share", "floating",
-                 "sv_first")
+                 "sv_first", "moon")
 
     def __init__(self, pace, depth, width, kick, low, timing, short=False, hitter_net=False):
         self.pace, self.depth, self.width, self.kick, self.low = pace, depth, width, kick, low
         self.timing, self.short, self.hitter_net = timing, short, hitter_net
         self.corner, self.share, self.floating, self.sv_first = False, CORNER_SHARE, False, False
+        self.moon = False
 
 
 def situation_from_ball(rng, b, at_net=False):
@@ -640,6 +667,11 @@ def situation_from_ball(rng, b, at_net=False):
         h = rng.gauss(112.0, 18.0)
     else:
         h = rng.gauss(100.0 + 70.0 * max(0.0, b.kick - 0.2), 22.0) - (SLICE_DROP_CM if b.low else 0.0)
+    if b.moon and not at_net:       # a moonball: deep, slow, bouncing above the shoulder
+        h = rng.gauss(MOON["bounce_cm"], 20.0)
+        s.pace = kmh(pace) * MOON["contact_ratio"]
+        s.frames += MOON["extra_f"]
+        s.react_ms = s.frames * 1000.0 / FPS
     s.height = clamp(h, 12.0, 230.0)
     s.depth_x = (-1188.0 + (SV_FIRST_DIST_CM if b.sv_first else 250.0) + rng.gauss(0, 80)) if at_net else (
         rng.gauss(-250.0, 100.0) if b.short else 30.0 + 260.0 * b.depth + rng.gauss(0.0, 60.0))
@@ -647,6 +679,8 @@ def situation_from_ball(rng, b, at_net=False):
     s.set_f = int(max(0.0, slack - 12))
     s.floating = (b.short and pace < 55) or b.floating
     s.dist_net_cm = 1188.0 + s.depth_x
+    if not at_net:
+        choose_contact(rng, s)
     return s
 
 
@@ -686,7 +720,7 @@ def hit(rng, p, b, at_net, prm):
         stat = 0.6 * stat + 0.4 * p.s["volley"]
         flo = 0.6 * flo + 0.4 * p.floor["volley"]
     st = p.style
-    rushed, commit = False, False
+    rushed, commit, moon = False, False, False
     if at_net:          # VolleyPower on good balls; an overreach on others at the style's rate
         power = g in ("Tee-off", "VeryGood") or rng.random() < st.get("net_power", 0.15)
         cls, hold = ("Flat", "Powerful") if power else ("Slice" if rng.random() < 0.5 else "Flat", "Medium")
@@ -697,6 +731,9 @@ def hit(rng, p, b, at_net, prm):
             cls = "TopSpin"
         if rng.random() < st.get("slice_more", 0.0) and cls != "Slice" and g not in ("Tee-off", "VeryGood"):
             cls = "Slice"
+        moon = rng.random() < st.get("moonball", 0.0) and g not in ("Tee-off", "VeryGood")
+        if moon:
+            cls, hold, commit, rushed = "TopSpin", "Medium", False, False
         if rushed:      # +1 grade point (retune-systems s5)
             g, q, _ = grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
                                stretch, sit.kick, rushed=True, vigor=p.vigor)
@@ -753,7 +790,8 @@ def hit(rng, p, b, at_net, prm):
                   + rng.gauss(0.0, 0.12), 0.0, 1.0)
     if corner:
         depth = clamp(depth + 0.04, 0.0, 1.0)
-    kick = R["kick"][cls] * fx["spin"] + (R["kick_hand"] * stat * fx["spin"] if cls == "TopSpin" else 0.0)
+    sp = SPIN_ROW[g]
+    kick = R["kick"][cls] * sp + (R["kick_hand"] * stat * sp if cls == "TopSpin" else 0.0)
     short = depth < 0.12 and not at_net
     floating = False
     if at_net:          # the band decides the reply: reach of the aim box, depth, float
@@ -763,7 +801,12 @@ def hit(rng, p, b, at_net, prm):
         depth = clamp(0.75 - bd["deep"] / 600.0 + rng.gauss(0.0, 0.08), 0.0, 1.0)
         short = vb >= 4
         floating = bd["apex"] >= 1.0
+    if moon:
+        v = MOON["mph"] + rng.gauss(0.0, 3.0)
+        depth = clamp(MOON["depth"] + rng.gauss(0.0, 0.08), 0.0, 1.0)
+        kick, short, width = MOON["kick"], False, width * 0.6
     nb = Ball(v, depth, width, kick, cls == "Slice", tf, short, at_net)
+    nb.moon = moon
     nb.floating = floating
     nb.corner, nb.share = corner, st.get("corner", CORNER_SHARE)
     return "in", nb, info

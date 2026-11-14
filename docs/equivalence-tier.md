@@ -158,8 +158,8 @@ coverage below the threshold. Every result also carries `abi_hazard`: volatile r
 candidate writes, the original leaves alone, and an image caller reads after the call (see 7.3).
 
 The 90% threshold: in the ground-truth run over byte-matched functions (section 3.1) the median
-function reaches full coverage; by size, 145 of 150 functions under 256 bytes reach 90%, 32 of 56
-at 256-512 bytes, 10 of 33 at 512-1024 and 10 of 60 above 1 KB. The unreached blocks are mostly
+function reaches full coverage; by size, 145 of 150 functions under 256 bytes reach 90%, 31 of 56
+at 256-512 bytes, 11 of 33 at 512-1024 and 11 of 60 above 1 KB. The unreached blocks are mostly
 error paths behind specific values (a magic number, a full table, a negative size, a callee
 returning a particular status) and, in large parsers, states that need a long, structured input.
 Below 90% too much code would be untested; raising it to 100% would reject correct functions for
@@ -181,28 +181,21 @@ to relocations, so any DIFFERENT is a checker bug. 300 trials, 40 s budget, seed
 |---|---|---|---|---|---|
 | 0-64 | 60 | 58 | 0 | 2 | 100% |
 | 64-256 | 90 | 87 | 0 | 3 | 100% |
-| 256-512 | 57 | 29 | 0 | 28 | 94% |
-| 512-1024 | 33 | 8 | 0 | 25 | 80% |
-| 1024-2048 | 47 | 3 | 0 | 44 | 52% |
-| 2048+ | 13 | 5 | 0 | 8 | 49% |
-| all | 300 | 190 (45,480 bytes) | **0** | 110 (104,432 bytes) | 100% |
+| 256-512 | 57 | 30 | 0 | 27 | 95% |
+| 512-1024 | 33 | 10 | 0 | 23 | 80% |
+| 1024-2048 | 47 | 5 | 0 | 42 | 52% |
+| 2048+ | 13 | 5 | 0 | 8 | 50% |
+| all | 300 | 195 (49,764 bytes) | **0** | 105 (100,148 bytes) | 100% |
 
-UNCHECKED reasons: coverage below 90% (92), too few valid trials (17: the original faults or runs
-past the instruction limit on almost every generated input; e.g. `lua3_luaG_errormsg` longjmps,
-the Huffman/jpeg table builders loop over seeded counts), VMX (1). No result had a non-empty
-`abi_hazard`. Median 152 valid trials and 4.8 s per function; the whole run took 50 CPU-minutes.
+Final checker (sha256 `082aff678b3695657221636b489a01057e114614483176ecf28dcd8c198157dd`), run at
+`nice -n 19` with one worker. UNCHECKED reasons: coverage below 90% (94), too few valid trials (10: the original faults or
+runs past the instruction limit on almost every generated input; e.g. `lua3_luaG_errormsg`
+longjmps, the Huffman/jpeg table builders loop over seeded counts), VMX (1). No result had a
+non-empty `abi_hazard`. Median 152 valid trials and 2.8 s per function; 34 CPU-minutes in all.
 Trials are deterministic, but the per-function time budget (40 s here) cuts long functions short
-by wall-clock, so on a loaded machine a large function can end with fewer trials. Between runs
-this moved two functions near the threshold from EQUIVALENT to UNCHECKED. It never produced a
-DIFFERENT. For a reproducible verdict, use `--time 0`, which means trials only.
-
-**Which checker version.** The table above is the last *complete* run, made with checker sha256
-`58667366bba2e8e6cc6891de22334540b0a231d67ea6840de46ec34b8d66747f`. Fixes 6-8 below came after it.
-All three only relax comparisons (a no-op hint no longer counts as a read; pure out-parameters and
-unset or variadic argument slots are no longer compared), so they cannot add a DIFFERENT to a
-matched function. A rerun with the final checker was stopped at the coordinator's request (CPU
-needed for the native-build boots) after **223 of the 300** functions: 173 EQUIVALENT, **0 DIFFERENT**,
-50 UNCHECKED (all of 0-256 bytes, 43/57 of 256-512, 22/33 of 512-1024, 8/60 above 1 KB).
+by wall-clock, so on a loaded machine a large function can end with fewer trials. Across the
+reruns this moved a few functions near the threshold between EQUIVALENT and UNCHECKED (190 to
+195 EQUIVALENT); it never produced a DIFFERENT. For a reproducible verdict use `--time 0`.
 
 **Checker bugs this found and fixed** (each was a DIFFERENT on a matched function in an earlier
 run): (1) recursion executed the original's own body instead of intercepting the call, while the
@@ -218,7 +211,7 @@ caller of `free` appeared to pass r8; (7) a pure out-parameter the candidate pre
 the original did not was reported; (8) stack-argument slots beyond the frame, or slots that the
 original never wrote, were compared, as were varargs registers (see 7.1). Items 4-8 gave false
 DIFFERENT verdicts in the near-miss and asm2c runs, found by reading every DIFFERENT report of
-the sample. After (3) was fixed, the run above has no DIFFERENT. Its coverage figures
+the sample. With all eight fixed, the run above has no DIFFERENT. Its coverage figures
 are honest. With the bug, the mutated jump tables had inflated coverage on switch functions, and
 that is why the fix also seeds jump-table case values.
 

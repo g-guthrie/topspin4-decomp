@@ -1342,11 +1342,14 @@ class Machine:
             sp = uc.reg_read(P.UC_PPC_REG_1) & 0xFFFFFFFF
             for j in range(8):
                 lo = sp + 0x54 + 8 * j
-                if not (STACK_LO <= lo and lo + 8 <= STACK_TOP) or \
-                        any(self._save_slot(x) for x in range(lo, lo + 8)):
-                    continue                 # outside the function's frame, or a save slot
-                if any(x in self.stack_since for x in range(lo, lo + 8)):
-                    sargs[j] = bytes(self.stack_buf[lo - STACK_LO: lo - STACK_LO + 8])
+                if not (STACK_LO <= lo and lo + 4 <= STACK_TOP):
+                    continue                 # outside the function's frame
+                # bytes holding a saved LR / register (the slot's second word can be the LR save
+                # word of a small frame) or lying above the frame are masked, not compared
+                own = [x for x in range(lo, lo + 8) if x < STACK_TOP and not self._save_slot(x)]
+                if any(x in self.stack_since for x in own):
+                    sargs[j] = tuple(self.stack_buf[x - STACK_LO] if x in own else None
+                                     for x in range(lo, lo + 8))
         self.stack_since = set()
         self.events.append((a, vals, args, self.delta(), frame, sargs))
         if len(self.events) > 400:
@@ -1555,7 +1558,7 @@ def compare(world, A, B, rkind, nonvol=True):
                  and not (variadic and k not in sb)]
         if diffj:
             j = min(diffj)
-            fmt = lambda b: "unset" if b is None else b.hex()
+            fmt = lambda b: "unset" if b is None else fmt_frame(b)
             return (f"call #{i + 1} to {world.label(ta)}: stack argument {9 + j} differs: original "
                     f"{fmt(sa.get(j))}, candidate {fmt(sb.get(j))}")
         for j, reg in enumerate(allregs):

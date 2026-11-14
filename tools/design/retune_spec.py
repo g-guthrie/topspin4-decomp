@@ -52,22 +52,10 @@ def f3(x):
 SPEC_STYLE = {"pace specialist": ({"pace"}, {"flat": 0.5}), "elite all-rounder": (set(), {"flat": 0.35}),
               "average pro": (set(), {"flat": 0.35})}
 
-# Retail launch speeds (km/h) at perfect timing, ground_cc, from retune-baseline.md 1b, at the rating levels
-# min 30 / median 54 / p90 75 / max 100 (Forehand = Power rating), keyed by class and tier.
-RETAIL_1B = {
-    ("Flat", "Finesse"): (110, 113, 117, 123), ("Flat", "Medium"): (121, 125, 127, 131),
-    ("Flat", "Powerful"): (126, 129, 130, 141), ("TopSpin", "Finesse"): (113, 114, 116, 118),
-    ("TopSpin", "Medium"): (114, 116, 117, 118), ("TopSpin", "Powerful"): (117, 119, 121, 124),
-    ("Slice", "Finesse"): (97, 98, 99, 100), ("Slice", "Medium"): (101, 102, 104, 108),
-    ("Slice", "Powerful"): (101, 103, 106, 109), ("Lob", "Finesse"): (102, 102, 102, 103),
-    ("Lob", "Medium"): (101, 102, 102, 102), ("Lob", "Powerful"): (101, 100, 99, 98),
-}
-RETAIL_LEVELS = (30, 54, 75, 100)
-
-
 def retail_speed(cls, hold, power_rating, timing):
-    tier = {"Overcharge": "Powerful", "Rushed": "Medium"}.get(hold, hold)
-    v = M.pwl(list(zip(RETAIL_LEVELS, RETAIL_1B[(cls, tier)])), power_rating)
+    """Retail launch (mph) for the same shot: the Good row (retune-baseline 1b / charge_table), retail timing loss."""
+    tier = {"Overcharge": "Full"}.get(hold, hold)
+    v = M.pwl(list(zip(M.GOOD_ROW_LEVELS, M.GOOD_ROW_KMH[(cls, tier)])), power_rating)
     v -= {"Perfect": 0.0, "Good": 1.5, "Poor": 3.0, "Mistimed": 5.0}[timing]   # retune-baseline 1e: <= 5 km/h
     return M.mph(v)
 
@@ -84,7 +72,7 @@ def mc_forehands(name, n, seed, sit=None, overcharge_try=0.8):
         v.append(o["mph"])
         vr.append(retail_speed(o["cls"], o["hold"], M.ARCH[name]["power"], o["timing"]))
         G[o["grade"]] += 1
-        H[o["hold"]] += 1
+        H["Rushed" if o["rushed"] else o["hold"]] += 1
         T[o["timing"]] += 1
     v.sort()
     vr.sort()
@@ -100,32 +88,27 @@ def sec_speed(a):
     out = ["### 2a. Stacking table: from the average rally ball to the absolute peak (forehand launch, mph) *(computed)*", ""]
     rows = []
     for name in ("average pro", "elite all-rounder", "pace specialist"):
-        p = M.Player(name, M.ARCH[name])
-        st = p.s
-        r = M.RATING_MPH[0] * (st["power"] - 0.5) + M.RATING_MPH[1] * (st["fh"] - 0.5)
-        sk = M.SKILL_MPH if name == "pace specialist" else 0.0
-        steps = [M.BASE_MPH["TopSpin"], M.BASE_MPH["Flat"], M.BASE_MPH["Flat"] + r,
-                 M.BASE_MPH["Flat"] + r + M.HOLD_MPH["Powerful"],
-                 M.BASE_MPH["Flat"] + r + M.HOLD_MPH["Powerful"] + M.GRADE_FX["VeryGood"]["pace"],
-                 M.BASE_MPH["Flat"] + r + M.HOLD_MPH["Powerful"] + M.GRADE_FX["Tee-off"]["pace"],
-                 M.BASE_MPH["Flat"] + r + M.HOLD_MPH["Powerful"] + M.GRADE_FX["Tee-off"]["pace"] + M.TIMING_MPH["Perfect"],
-                 M.BASE_MPH["Flat"] + r + M.HOLD_MPH["Overcharge"] + M.GRADE_FX["Tee-off"]["pace"] + M.TIMING_MPH["Perfect"],
-                 M.BASE_MPH["Flat"] + r + M.HOLD_MPH["Overcharge"] + M.GRADE_FX["Tee-off"]["pace"] + M.TIMING_MPH["Perfect"] + sk]
-        rows.append([name] + [f1(x) for x in steps])
-    out.append(md(["build", "rally topspin (Good, Medium, Good timing)", "flat drive", "+ ratings",
-                   "+ Powerful hold (+%g)" % M.HOLD_MPH["Powerful"], "+ VeryGood grade (+%g)" % M.GRADE_FX["VeryGood"]["pace"],
-                   "Tee-off instead (+%g)" % M.GRADE_FX["Tee-off"]["pace"], "+ Perfect timing (+%g)" % M.TIMING_MPH["Perfect"],
-                   "Overcharge instead of Powerful (+%g)" % M.HOLD_MPH["Overcharge"], "+ pace skill (+%g) = full-stack mean" % M.SKILL_MPH],
-                  rows))
-    out += ["", "Before the ceiling. Above %g mph the excess is halved and %g mph is a hard ceiling (backhand: knee %g, ceiling %g), "
-            "so the full stacks land at %s." % (M.CEILING["FH"]["knee"], M.CEILING["FH"]["max"], M.CEILING["BH"]["knee"], M.CEILING["BH"]["max"],
-                                               ", ".join("%.1f" % min(110.0, x if x <= 100 else 100 + (x - 100) * 0.5) for x in [float(r[-1]) for r in rows])),
-            "Full-stack mean is the centre of the peak; the execution spread (sd %.1f mph) puts the far tail on it. "
-            "Grade caps (soft, %d %% of the excess survives): %s." % (M.NOISE_MPH, round(M.CAP_SOFTNESS * 100),
-                                                                     ", ".join("%s %s" % (g, "none" if M.GRADE_FX[g]["cap"] is None else "%g" % M.GRADE_FX[g]["cap"]) for g in M.GRADES)), ""]
+        pr = M.ARCH[name]["power"]
+        sk = 1.0 + (M.SKILL_PACE if name == "pace specialist" else 0.0)
+        steps = [M.row_max_mph("TopSpin", "Good", "Medium", pr), M.row_max_mph("Flat", "Good", "Medium", pr),
+                 M.row_max_mph("Flat", "Good", "Full", pr), M.row_max_mph("Flat", "VeryGood", "Full", pr),
+                 M.row_max_mph("Flat", "Tee-off", "Powerful", pr), M.row_max_mph("Flat", "Tee-off", "Full", pr),
+                 M.row_max_mph("Flat", "Tee-off", "Overcharge", pr)]
+        steps.append(steps[-1] * sk)
+        steps.append(min(M.CEILING["FH"], steps[-1]))
+        rows.append([name, str(pr)] + [f1(x) for x in steps])
+    out.append(md(["build", "Power rating", "rally topspin (Good, Medium)", "flat drive (Good, Medium)", "Good, full charge = retail",
+                   "VeryGood, full (x%.2f)" % M.GRADE_FX["VeryGood"]["pace_cap"], "Tee-off, Powerful (53-74 frames)",
+                   "Tee-off, full (x%.2f)" % M.GRADE_FX["Tee-off"]["pace_cap"],
+                   "+ overcharge (x%.2f)" % M.OVERCHARGE_PACE, "+ pace skill (x%.2f)" % (1 + M.SKILL_PACE),
+                   "after the %g mph ceiling" % M.CEILING["FH"]], rows))
+    out += ["", "Row maxima at perfect timing (PowerResolution Max of the row). Timing picks the position: the row's Min is %d %% "
+            "lower (retail shape: a late t = +0.5 keeps about 75 %% of the top). Execution spread sd %.1f mph. Tier shares of the "
+            "cap above Good: %s; below Good the tier differences are halved." % (round(M.ROW_SPREAD * 100), M.NOISE_MPH,
+            ", ".join("%s %g" % kv for kv in M.TIER_SHARE_UP.items())), ""]
 
     out += ["### 2b. Monte Carlo over rally situations: forehand launch speed (mph) *(computed, %d forehands per build)*" % n, ""]
-    rows, rows2, freq = [], [], []
+    rows, rows2, freq, means = [], [], [], []
     for i, name in enumerate(("average pro", "elite all-rounder", "pace specialist")):
         v, vr, G, H, T = mc_forehands(name, n, 100 + i)
         mean = sum(v) / n
@@ -135,13 +118,14 @@ def sec_speed(a):
                      f1(rmean), f1(vr[-1])])
         rows2.append([name] + ["%.3g / %.2g" % (e, e * FH_PER_MATCH / 1000.0) for e in ex] +
                      ["%.2g" % (ex[-2] * FH_PER_SEASON / 1000.0)])
-        freq.append([name] + [f3(G[g] / n) for g in M.GRADES] + [f3(H[h] / n) for h in ("Finesse", "Medium", "Powerful", "Rushed", "Overcharge")]
+        freq.append([name] + [f3(G[g] / n) for g in M.GRADES] + [f3(H[h] / n) for h in ("Finesse", "Medium", "Powerful", "Full", "Rushed", "Overcharge")]
                     + [f3(T[t] / n) for t in ("Perfect", "Good", "Poor", "Mistimed")])
+        means.append((name, mean, rmean))
     out.append(md(["build", "mean", "p50", "p90", "p99", "p99.9", "max", "retail mean (same shots)", "retail max"], rows))
     out += ["", "Exceedances: per 1,000 forehands / per match (%d forehands); last column per season (%d forehands):" % (FH_PER_MATCH, FH_PER_SEASON), ""]
     out.append(md(["build", "> 100", "> 104", "> 106", "> 108", "> 109", "at the 110 cap (> 109.9)", "> 109 per season"], rows2))
     out += ["", "Resulting frequencies (share of forehands) of grade, hold and timing:", ""]
-    out.append(md(["build"] + M.GRADES + ["Finesse", "Medium", "Powerful", "Rushed", "Overcharge", "Perfect", "Good", "Poor", "Mistimed"], freq))
+    out.append(md(["build"] + M.GRADES + ["Finesse", "Medium", "Powerful", "Full", "Rushed", "Overcharge", "Perfect", "Good", "Poor", "Mistimed"], freq))
 
     out += ["", "### 2c. Sensitivity of the tail to the situation assumptions *(computed, %d forehands each)*" % (n // 3), ""]
     variants = [("as proposed", {}, 0.8, None), ("short balls x0.5", {"short_share": M.SIT["short_share"] * 0.5}, 0.8, None),
@@ -186,7 +170,7 @@ def sec_serve(a):
         sp, sp2, un, un2, ins, df, ex = [], [], 0, [], 0, 0, collections.Counter()
         for _ in range(n):
             e = 1.0 if rng.random() < maxe else rng.betavariate(2, 3)
-            g = M.timing_outcome(rng, *M.window_halfwidths(60, 700, 130, 0, 0, 30, False, 1200, True, p.s["serve"])[:2])
+            g = M.timing_outcome(rng, *M.window_halfwidths("Good", p.s["serve"], 1000.0)[:2])
             v, ok, c, _ = M.first_serve(rng, p, e, 1.0, g)
             sp.append(v)
             if ok:
@@ -346,97 +330,91 @@ def sec_flight(a):
 
 GRADE_CASES = [  # label, frames, v_req, run_cm, height, pace km/h at contact, depth_x, set_f, stretch, kick
     ("sitter: short floater, watched all the way", 100, 0.8, 60, 110, 45, -250, 40, False, 0.1),
-    ("neutral baseline rally ball", 78, 2.0, 150, 100, 68, 100, 15, False, 0.15),
-    ("deep heavy topspin to the backhand", 72, 2.2, 160, 165, 66, 250, 8, False, 0.45),
+    ("slow ball, set, but taken 2 m behind the baseline", 100, 0.8, 60, 120, 48, 200, 40, False, 0.1),
+    ("ordinary rally ball, player stood still for it", 80, 1.0, 40, 110, 68, 100, 32, False, 0.15),
+    ("neutral baseline rally ball", 78, 2.0, 150, 100, 68, 100, 20, False, 0.15),
+    ("deep heavy topspin taken high (no time to let it drop)", 72, 2.2, 160, 165, 66, 250, 8, False, 0.45),
     ("hard flat drive, little time", 58, 2.5, 180, 95, 92, 120, 4, False, 0.05),
     ("run wide, arrive late", 70, 5.8, 420, 85, 70, 150, 0, True, 0.15),
     ("low slice at the feet", 82, 1.8, 120, 40, 52, 80, 12, False, 0.0),
-    ("pushed 4 m behind the baseline", 75, 3.0, 220, 120, 70, 420, 6, False, 0.3),
+    ("blistering drive, still moving", 50, 3.0, 200, 90, 108, 150, 0, False, 0.05),
 ]
 
 
 def sec_grade(a):
-    out = ["### 4a. Penalty points per input *(proposal; judgement calls, see text)*", ""]
-    rows = [["frames from the opponent's contact (S+0xCF0)", " ".join("%g:%g" % k for k in M.P_TIME), "groundstrokes"],
-            ["same, volleys", " ".join("%g:%g" % k for k in M.P_TIME_VOLLEY), "volleys"],
-            ["required run speed / own top speed (S+0x7A4 / Speed)", " ".join("%g:%g" % k for k in M.P_RUN), "top speed = %g + %g x Speed stat m/s" % (M.RALLY["max_run_base"], M.RALLY["max_run_speed"])],
-            ["contact height low (Ball+0x344, cm)", " ".join("%g:%g" % k for k in M.P_LOW), ""],
-            ["contact height high (cm)", " ".join("%g:%g" % k for k in M.P_HIGH), ""],
-            ["incoming pace at contact (km/h; S+0x770 needs its writer)", " ".join("%g:%g" % k for k in M.P_PACE), "volleys: " + " ".join("%g:%g" % k for k in M.P_PACE_VOLLEY)],
-            ["own depth behind the baseline (cm)", " ".join("%g:%g" % k for k in M.P_DEEP), "inside the court with >= 60 frames: %g" % M.INSIDE_BONUS],
-            ["incoming kick (|spin_a|)", " ".join("%g:%g" % k for k in M.P_KICK), ""],
-            ["stretch (SwingCategory reach #0698037d, or v_req > 5.2 m/s felt)", "%g" % M.STRETCH_PTS, ""],
-            ["not set (planted < 6 frames at contact)", "%g" % M.UNSET_PTS, "groundstrokes only"]]
-    out.append(md(["input (engine field)", "points (x:points, linear between, clamped)", "note"], rows))
-    out += ["", "Grade from the sum Q: VeryGood < %g <= Good < %g <= Normal < %g <= Bad < %g <= VeryBad." % tuple(M.GRADE_EDGES), "",
-            "**Tee-off** is a separate gate, every condition required (the Q score is not one of them, so a ball the player stands still "
-            "for is VeryGood unless the ball itself is weak):", ""]
+    out = ["### 4a. The score: points per input *(structure from retune-systems.md s2; thresholds tuned here)*", ""]
+    ae, ve, pe, vpe = M.ARRIVAL_EDGES, M.VOLLEY_ARRIVAL_EDGES, M.PACE_EDGES, M.VOLLEY_PACE_EDGES
+    rows = [["arrival margin: frames planted at the hit point before contact (planner arrival)",
+             ">= %d: 0; %d-%d: 1; %d-%d: 2; still moving: 3; reach or lunge swing: 4" % (ae[0], ae[1], ae[0] - 1, ae[2], ae[1] - 1),
+             "volleys: frames since the opponent's contact (S+0xCF0): >= %d: 0; %d-%d: 1; %d-%d: 2; less: 3; stretched: 4" % (ve[0], ve[1], ve[0] - 1, ve[2], ve[1] - 1)],
+            ["contact height at the chosen hit point (Ball+0x344 / C38), cm",
+             "waist to shoulder (%g-%g): 0; knee to waist or shoulder to head (%g-%g): 1; beyond: 2" % (M.WAIST_CM, M.SHOULDER_CM, M.KNEE_CM, M.HEAD_CM),
+             "a set player with >= %d frames set and >= %d frames lets a high ball drop: contact in the upper strike zone, %.1f cm further back per cm of drop" % (
+                 M.LET_DROP["set_min"], M.LET_DROP["frames_min"], M.LET_DROP["back_per_cm"])],
+            ["incoming pace at contact (S+0x770, needs its writer), km/h",
+             "slow <= %g: -1; normal <= %g: 0; heavy <= %g: 1; faster: 2" % pe, "volleys: %g / %g / %g" % vpe],
+            ["self-inflicted", "rushed power swing: +1; vigor < %.1f: +1" % M.LOW_VIGOR, "section 6"]]
+    out.append(md(["input (engine value)", "points", "note"], rows))
+    out += ["", "Score to grade: -1 with the Tee-off test, Tee-off; -1 or 0, VeryGood; 1-2, Good; 3, Normal; 4-5, Bad; 6 or more, VeryBad.", "",
+            "**Tee-off test** (all required):", ""]
     T = M.TEEOFF
-    out.append(md(["condition", "threshold", "engine value it is set from"], [
-        ["slow ball at arrival", "contact pace <= %g km/h" % T["pace_max"], "S+0x770 incoming pace (needs its writer); a neutral rally ball arrives at 60-75 km/h"],
-        ["contact between waist and shoulder", "%g-%g cm" % (T["h_lo"], T["h_hi"]), "Ball+0x344; Fatality clips are shoulder height"],
-        ["about a second since the opponent's hit", ">= %d frames" % T["frames_min"], "S+0xCF0 >= 60, the AutoSwing test (graph 179)"],
-        ["no reach swing", "required run speed < %g m/s, not stretched" % T["vreq_max"], "PT+0x1B0 = 3.5 m/s, the FlatGoodReach threshold; reach qualifier #0698037d"],
-        ["feet set", "within %g cm of the hit point, arrived >= %d frames before contact" % (T["run_max"], T["set_min"]), "S+0x7A0 run distance; planner arrival frame"],
-        ["not backing up", "contact not more than %g cm behind the baseline, not moving back" % T["depth_max"], "contact x; Mover velocity S+0x9xx (3-frame mean)"],
+    out.append(md(["condition", "threshold", "engine value"], [
+        ["slow ball at arrival", "contact pace <= %g km/h (the -1 pace point)" % T["pace_max"], "S+0x770 (needs its writer); a neutral rally ball arrives at 60-75 km/h"],
+        ["contact waist to shoulder", "%g-%g cm at the chosen hit point" % (T["h_lo"], T["h_hi"]), "Ball+0x344; Fatality clips are shoulder height"],
+        ["time", ">= %d frames since the opponent's contact" % T["frames_min"], "S+0xCF0, as the AutoSwing test (graph 179)"],
+        ["feet set, no reach", "arrived >= %d frames before contact; required run < %g m/s; not stretched" % (T["set_min"], T["vreq_max"]), "planner arrival; PT+0x1B0 FlatGoodReach threshold; reach qualifier #0698037d"],
+        ["not deep, not backing up", "contact <= %g cm behind the baseline" % T["depth_max"], "contact x (owner clarification)"],
     ]))
-    out += ["", "Volley Tee-off = the put-away: Q <= 0.5, pace <= 75 km/h, contact >= 110 cm, >= 30 frames.", ""]
-    out += ["### 4b. What each grade gives *(proposal)*", ""]
+    out += ["", "Volley Tee-off (the volley put-away): score -1 (so a slow ball) and contact >= 110 cm, >= 30 frames since the opponent's contact, not stretched.", ""]
+    out += ["### 4b. What each row gives *(retune-systems.md s2 table, values tuned here)*", ""]
     rows = []
     for g in M.GRADES:
         fx = M.GRADE_FX[g]
-        rows.append([g, "%+g" % fx["pace"], "none (peak reachable)" if fx["cap"] is None else "%g (topspin %g)" % (fx["cap"], fx["cap"] - 4),
-                     "x%.2f" % fx["spin"], "%.2f-%.2f" % M.AIM_GRADE_ROW[g], "x%.1f %+.2f" % (fx["err"], fx["err_add"]), "%d" % fx["depth_cm"],
-                     "x%.2f" % fx["window"]])
-    out.append(md(["grade", "pace mph", "soft pace cap mph", "spin", "AimingResolution Min-Max (7a)", "error (x, +)", "DeepDeviation at Perfect, cm (7b)", "typical window"], rows))
-    out += ["", "### 4c. Worked situations *(computed)*", ""]
+        rows.append([g, "x%.2f" % fx["pace_cap"], "x%.2f" % fx["aim_cap"], "%.2f" % fx["aim_min"], "%+.2f" % fx["err_add"], "x%.2f" % fx["w_grade"],
+                     "x%.2f" % M.SPIN_ROW[g]])
+    out.append(md(["grade", "pace cap vs Good", "aim cap vs Good", "aim row Min", "error added", "W_grade", "spin (model term)"], rows))
+    out += ["", "Good is the retail row unchanged. Tee-off is the VeryGood row times a code multiplier (ShotResolution has five rows).", ""]
+    out += ["### 4c. Worked situations *(computed)*", ""]
     rows = []
     for c in GRADE_CASES:
-        g, q, pts = M.grade_of(*c[1:])
-        rows.append([c[0], c[1], f1(c[2]), c[4], c[5], c[6], f2(q), g, ", ".join("%s %.1f" % (k, v) for k, v in pts.items() if abs(v) > 0.05)])
-    out.append(md(["situation", "frames", "v_req m/s", "height cm", "pace km/h", "depth cm", "Q", "grade", "points"], rows))
+        g, sc, pts = M.grade_of(*c[1:])
+        rows.append([c[0], c[1], c[7], c[4], c[5], c[6], sc, g, ", ".join("%s %+d" % (k, v) for k, v in pts.items() if v)])
+    out.append(md(["situation", "frames", "frames set", "height cm", "pace km/h", "depth cm", "score", "grade", "points"], rows))
     return "\n".join(out)
 
 
 # --------------------------------------------------------------------------- section 5: window
 
-WINDOW_CASES = [  # label, pace km/h at contact, react ms, height, kick, v_req, set_f, stretch, dist_net, floating
-    ("baseline rally ball (72 mph shot, 1.3 s)", 68, 1300, 100, 0.15, 2.0, 15, False, 1290, False),
-    ("sitter: short floater", 45, 1650, 110, 0.1, 0.8, 40, False, 940, True),
-    ("heavy kick, shoulder high", 66, 1200, 170, 0.45, 2.2, 8, False, 1430, False),
-    ("hard flat drive, 0.95 s", 92, 950, 95, 0.05, 2.5, 4, False, 1310, False),
-    ("return of a 120 mph serve", 120, M.serve_react_ms(120), 115, 0.1, 2.5, 4, False, 1300, False),
-    ("return of a 145 mph serve", 145, M.serve_react_ms(145), 120, 0.1, 3.0, 2, False, 1300, False),
-    ("first volley off a good approach (weak pass, 0.62 s)", 70, 620, 110, 0.1, 1.0, 0, False, 350, False),
-    ("first volley off a bad approach (hard pass at the feet, 0.42 s)", 105, 420, 45, 0.25, 2.0, 0, False, 600, False),
-    ("put-away at the net (floater, 0.9 s)", 50, 900, 150, 0.0, 0.5, 20, False, 250, True),
-    ("ball run down from a drop shot", 35, 1500, 45, 0.0, 6.0, 0, True, 300, False),
+WINDOW_CASES = [  # label, grade, stat rating, react ms, opponent's release
+    ("retail (no factor)", "Good", 70, 1000, "Average"),
+    ("rally ball, opponent hit Good", "Good", 70, 1300, "Good"),
+    ("opponent Perfect, heavy ball (Normal)", "Normal", 70, 1100, "Perfect"),
+    ("volley against a clean pass: Perfect, 300 ms, Bad", "Bad", 70, 300, "Perfect"),
+    ("opponent mistimed, ball came back deep (Good)", "Good", 70, 1300, "Mistimed"),
+    ("opponent mistimed, sitter (Tee-off)", "Tee-off", 70, 1600, "Mistimed"),
+    ("opponent poor, easy ball (VeryGood)", "VeryGood", 70, 1300, "Poor"),
+    ("return of a 120 mph serve (Bad), rating 80", "Bad", 80, M.serve_react_ms(120), "Average"),
+    ("return of a 145 mph serve (VeryBad), rating 80", "VeryBad", 80, M.serve_react_ms(145), "Average"),
+    ("overcharge on a Tee-off ball, rating 95", "Tee-off", 95, 1900, "Average"),
 ]
 
 
 def sec_window(a):
-    out = ["### 5a. Perfect and Good windows in worked cases (frames) *(computed)*", "",
-           "Half-widths each side of the 20-frame target; width = 2 x half + 1 frame. P = probability for a human with release-error sd %.1f frames; "
-           "rating = the stroke's timing stat (hand stat / Volley / Return). Retail: Perfect |t| < 0.1 = 2 frames each side, Good |t| < 0.3 = 5.8, for every ball." % M.HUMAN_SIGMA_F, ""]
+    out = ["### 5a. W in worked cases *(computed; structure retune-systems.md s3)*", "",
+           "W = clamp(W_rating x W_opp x W_grade x W_react, %.2f, %.2f); Perfect half-width %g x W frames, Good %g x W; the zero-error band is "
+           "t %.2f..%+.2f at W = 1 (retail, 19 frames) and scales with W. P = probability for a human with release-error sd %.1f frames." % (
+               M.W_CLAMP[0], M.W_CLAMP[1], M.PERFECT_HALF_BASE, M.GOOD_HALF_BASE, M.ZERO_BAND_T[0], M.ZERO_BAND_T[1], M.HUMAN_SIGMA_F), ""]
     rows = []
-    for c in WINDOW_CASES:
-        cells = [c[0], "%.0f" % c[2]]
-        for stat_r in (50, 80, 100):
-            hp, hg, e = M.window_halfwidths(c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], c[9], M.new_stat(stat_r))
-            cells.append("%.1f / %.1f (P %.2f / %.2f)" % (hp, hg, M.p_window(hp), M.p_window(hg)))
-        rows.append(cells)
-    out.append(md(["case", "time ms", "rating 50: Perfect / Good half (P)", "rating 80", "rating 100"], rows))
-    out += ["", "Ease factors behind each case (rating 80):", ""]
-    rows = []
-    for c in WINDOW_CASES:
-        f = M.ease_factors(*c[1:])
-        rows.append([c[0]] + [f2(f[k]) for k in ("pace", "reaction", "height", "kick", "movement", "position", "floating")])
-    out.append(md(["case", "pace", "reaction", "height", "kick", "movement", "net with time", "floating"], rows))
-    out += ["", "### 5b. Reaction-time threshold *(proposal, anchored on sourced reaction data)*", ""]
-    out.append(md(["time from the opponent's contact (ms)"] + ["%d" % x for x, _ in M.RT_CURVE] + ["1000+"],
-                  [["window factor"] + [f2(y) for _, y in M.RT_CURVE] + ["1.00"]]))
-    out += ["", "Opponent's last timing grade (direct term, owner's change): " +
-            ", ".join("%s x%.2f" % (k, v) for k, v in M.OPP_TIMING_FX.items()) + "; clamp %.2f..%.2f; applied to this shot only." % M.OPP_FX_CAP]
+    for lab, g, r, rt, opp in WINDOW_CASES:
+        oc = lab.startswith("overcharge")
+        w, f = M.window_scale(g, M.new_stat(r), rt, opp, overcharge=oc)
+        hp, hg = M.PERFECT_HALF_BASE * w, M.GOOD_HALF_BASE * w
+        zl, zh = -M.ZERO_BAND_T[0] * 20 * w, M.ZERO_BAND_T[1] * 20 * w
+        rows.append([lab, "%.0f" % rt, " x ".join("%.2f" % f[k] for k in ("rating", "opp", "grade", "react")) + (" x 0.80" if oc else ""),
+                     f2(w), "%.1f (P %.2f)" % (hp, M.p_window(hp)), "%.1f (P %.2f)" % (hg, M.p_window(hg)), "%.1f early / %.1f late" % (zl, zh)])
+    out.append(md(["case", "time ms", "rating x opp x grade x react", "W", "Perfect half, frames", "Good half, frames", "zero-error band, frames"], rows))
+    out += ["", "W_rating: " + ", ".join("%d: %.2f" % kv for kv in M.W_RATING) + " (on the stroke's rating). W_react: " +
+            ", ".join("%d ms: %.2f" % kv for kv in M.W_REACT) + ". W_opp: " + ", ".join("%s %.2f" % kv for kv in M.OPP_TIMING_FX.items()) + "."]
     return "\n".join(out)
 
 
@@ -486,28 +464,74 @@ def sec_oppterm(a):
     return "\n".join(out)
 
 
+def _mirror_grades(name, nm, seed, style=None):
+    rng = random.Random(seed)
+    G = collections.Counter()
+    tot = collections.Counter()
+    for _ in range(nm):
+        p = M.MatchPlayer("a", M.ARCH[name], style or {"flat": 0.35})
+        q = M.MatchPlayer("b", M.ARCH[name], style or {"flat": 0.35})
+        w, st = M.play_match(rng, p, q, {"grades": G})
+        tot.update(st)
+    return G, tot
+
+
 def sec_teeoff(a):
     nm = 20 if a.quick else 120
     out = ["### 4d. Tee-off frequency in matches between equals *(computed, %d best-of-3 matches per row)*" % nm, ""]
     rows = []
-    for name in ("average pro", "elite all-rounder"):
-        rng = random.Random(41)
-        G = collections.Counter()
-        tot = collections.Counter()
-        for _ in range(nm):
-            p = M.MatchPlayer("a", M.ARCH[name], {"flat": 0.35})
-            q = M.MatchPlayer("b", M.ARCH[name], {"flat": 0.35})
-            w, st = M.play_match(rng, p, q, {"grades": G})
-            tot.update(st)
-        ground = sum(v for (g, net), v in G.items() if not net)
-        tee_g = G[("Tee-off", False)]
-        tee_v = G[("Tee-off", True)]
-        vg = G[("VeryGood", False)]
-        sets = tot["sets"]
-        rows.append([name, "%.0f" % (ground / sets / 2), f1(tee_g / sets / 2), f1(tee_v / sets / 2), f3(tee_g / max(1, ground)),
-                     f3(vg / max(1, ground))])
-    out.append(md(["players", "groundstrokes per player per set", "Tee-off groundstrokes per player per set",
-                   "volley put-aways (Tee-off) per player per set", "Tee-off share of groundstrokes", "VeryGood share"], rows))
+    variants = [("as proposed (contact <= 100 cm behind the baseline; high balls let drop when set)", {}),
+                ("Tee-off depth limit 150 cm", {"depth_max": 150.0}),
+                ("no letting high balls drop (height at the top of the bounce)", {"let_drop": False})]
+    for vlabel, ov in variants:
+        for name in ("average pro", "elite all-rounder"):
+            saved_t, saved_l = dict(M.TEEOFF), dict(M.LET_DROP)
+            if "depth_max" in ov:
+                M.TEEOFF["depth_max"] = ov["depth_max"]
+            if ov.get("let_drop") is False:
+                M.LET_DROP["set_min"] = 10 ** 6
+            try:
+                G, tot = _mirror_grades(name, nm, 41)
+            finally:
+                M.TEEOFF.clear(); M.TEEOFF.update(saved_t)
+                M.LET_DROP.clear(); M.LET_DROP.update(saved_l)
+            ground = sum(v for (g, net), v in G.items() if not net)
+            sets = tot["sets"]
+            rows.append([vlabel, name, "%.0f" % (ground / sets / 2), f1(G[("Tee-off", False)] / sets / 2), f1(G[("Tee-off", True)] / sets / 2),
+                         f3(G[("Tee-off", False)] / max(1, ground)), f3(G[("VeryGood", False)] / max(1, ground)),
+                         f2(tot["shots"] / tot["points"])])
+    out.append(md(["variant", "players", "groundstrokes per player per set", "Tee-off groundstrokes per player per set",
+                   "volley put-aways (Tee-off) per player per set", "Tee-off share of groundstrokes", "VeryGood share", "shots per point"], rows))
+    nm2 = 16 if a.quick else 100
+    out += ["", "### 4e. Moonballing as a tactic *(computed, elite all-rounder against the plain elite all-rounder, %d matches per row)*" % nm2, "",
+            "The moonballer hits, on balls graded Good or worse, a high slow deep topspin (launch %g mph, contact about %.2f of launch, bouncing to "
+            "about %g cm) instead of his normal shot, at the share in the first column." % (M.MOON["mph"], M.MOON["contact_ratio"], M.MOON["bounce_cm"]), ""]
+    rows = []
+    A = M.ARCH["elite all-rounder"]
+    for share in (0.0, 0.3, 0.6):
+        for vlabel, ov in (("as proposed", {}), ("depth limit 150 cm", {"depth_max": 150.0}), ("no letting drop", {"let_drop": False})):
+            if share == 0.0 and ov:
+                continue
+            saved_t, saved_l = dict(M.TEEOFF), dict(M.LET_DROP)
+            if "depth_max" in ov:
+                M.TEEOFF["depth_max"] = ov["depth_max"]
+            if ov.get("let_drop") is False:
+                M.LET_DROP["set_min"] = 10 ** 6
+            rng = random.Random(55)
+            wins = 0
+            G = collections.Counter()
+            try:
+                for m in range(nm2):
+                    p = M.MatchPlayer("moon", A, {"flat": 0.35, "moonball": share})
+                    q = M.MatchPlayer("plain", A, {"flat": 0.35})
+                    prm = {"grades": G}
+                    w, _ = M.play_match(rng, p, q, prm) if m % 2 == 0 else M.play_match(rng, q, p, prm)
+                    wins += w is p
+            finally:
+                M.TEEOFF.clear(); M.TEEOFF.update(saved_t)
+                M.LET_DROP.clear(); M.LET_DROP.update(saved_l)
+            rows.append(["%.0f %%" % (100 * share), vlabel, f3(wins / nm2)])
+    out.append(md(["moonball share", "rules", "moonballer's match win share"], rows))
     return "\n".join(out)
 
 
@@ -515,17 +539,25 @@ def sec_teeoff(a):
 
 def sec_power(a):
     c = M.CHARGE
-    out = ["### 6a. Charge, rushed swing and overcharge *(proposal)*", ""]
-    rows = [["Finesse (tap)", "< %d (retail < 12)" % c["medium_from"], "%+g mph" % M.HOLD_MPH["Finesse"], "normal", "%g" % M.RALLY["vigor_cost"]["Finesse"]],
-            ["Medium", "%d-%d (retail 12-52)" % (c["medium_from"], c["powerful_from"] - 1), "0", "normal", "%g" % M.RALLY["vigor_cost"]["Medium"]],
-            ["Powerful", ">= %d, full at %d (retail >= 53, full at 75)" % (c["powerful_from"], c["full_at"]), "%+g mph" % M.HOLD_MPH["Powerful"], "normal", "%g" % M.RALLY["vigor_cost"]["Powerful"]],
-            ["Rushed (the 12-frame auto-commit froze the meter below the tier aimed for)", "-", "%+g mph" % M.HOLD_MPH["Rushed"], "Perfect x0.7, Good x0.8", "%g" % M.RALLY["vigor_cost"]["Rushed"]],
-            ["Overcharge (meter full, planted and waiting >= %d frames; new state, retail has none)" % c["overcharge_wait"], ">= %d + %d" % (c["full_at"], c["overcharge_wait"]),
-             "%+g mph" % M.HOLD_MPH["Overcharge"], "Perfect x0.5, timing error x2", "%g" % M.RALLY["vigor_cost"]["Overcharge"]]]
-    out.append(md(["swing", "frames held (60/s)", "pace", "window / error", "vigor per swing (simulation units)"], rows))
-    out += ["", "Press-to-contact lead each needs (release %d frames before contact): Powerful %d, full %d, overcharge %d frames (%.2f s)." % (
-        M.RELEASE_LEAD, c["powerful_from"] + M.RELEASE_LEAD, c["full_at"] + M.RELEASE_LEAD, c["full_at"] + c["overcharge_wait"] + M.RELEASE_LEAD,
-        (c["full_at"] + c["overcharge_wait"] + M.RELEASE_LEAD) / 60.0)]
+    out = ["### 6a. Charge (retail tiers kept), rushed swing and overcharge *(structure retune-systems.md s5; values tuned here)*", ""]
+    pr = 75
+    rows = [["Finesse", "< %d" % c["medium_from"], f1(M.row_max_mph("Flat", "Good", "Finesse", pr)), f1(M.row_max_mph("Flat", "Tee-off", "Finesse", pr)), "retail", "%g" % M.RALLY["vigor_cost"]["Finesse"]],
+            ["Medium", "%d-%d" % (c["medium_from"], c["powerful_from"] - 1), f1(M.row_max_mph("Flat", "Good", "Medium", pr)), f1(M.row_max_mph("Flat", "Tee-off", "Medium", pr)), "retail", "%g" % M.RALLY["vigor_cost"]["Medium"]],
+            ["Powerful", "%d-%d" % (c["powerful_from"], c["full_at"] - 1), f1(M.row_max_mph("Flat", "Good", "Powerful", pr)), f1(M.row_max_mph("Flat", "Tee-off", "Powerful", pr)), "retail", "%g" % M.RALLY["vigor_cost"]["Powerful"]],
+            ["Full charge", ">= %d" % c["full_at"], f1(M.row_max_mph("Flat", "Good", "Full", pr)), f1(M.row_max_mph("Flat", "Tee-off", "Full", pr)), "retail", "%g" % M.RALLY["vigor_cost"]["Full"]],
+            ["Rushed: still holding at the 12-frame auto-commit, short of Powerful", "-", "tier reached", "tier reached",
+             "+1 grade point; commits %g frames late (t = +0.4 at W = 1)" % M.RUSHED_LATE_F, "as the tier"],
+            ["Overcharge: held >= %d frames past full, planted (new state)" % c["overcharge_past_full"], ">= %d" % (c["full_at"] + c["overcharge_past_full"]),
+             f1(M.row_max_mph("Flat", "Good", "Overcharge", pr)), f1(M.row_max_mph("Flat", "Tee-off", "Overcharge", pr)),
+             "W x %.2f; timing error x2 outside the zero-error band" % M.OVERCHARGE_W, "%g (1.5 x full)" % M.RALLY["vigor_cost"]["Overcharge"]]]
+    out.append(md(["swing", "frames held (60/s)", "flat row max, Good, Power 75 (mph)", "same, Tee-off", "timing", "vigor per swing (simulation units)"], rows))
+    out += ["", "Press-to-contact lead each needs when released %d frames before contact: Medium %d, Powerful %d, full %d, overcharge %d frames (%.2f s); "
+            "holding into the auto-commit gains %d frames. A human presses about %d frames after the opponent's contact, so a neutral rally ball "
+            "(about 80 frames) reaches Medium only, as intended. Of the swings that wanted Powerful and could not reach it, %d %% are held into "
+            "the auto-commit (judgement)." % (
+        M.RELEASE_LEAD, c["medium_from"] + M.RELEASE_LEAD, c["powerful_from"] + M.RELEASE_LEAD, c["full_at"] + M.RELEASE_LEAD,
+        c["full_at"] + c["overcharge_past_full"] + M.RELEASE_LEAD, (c["full_at"] + c["overcharge_past_full"] + M.RELEASE_LEAD) / 60.0,
+        M.RELEASE_LEAD - M.AUTO_COMMIT, M.REACT_PRESS_F, round(100 * M.RUSHED_SHARE))]
     return "\n".join(out)
 
 
@@ -545,13 +577,18 @@ def timing_sampler(rng):
     return "Mistimed"
 
 
+TF_T = {"Perfect": 0.05, "Good": 0.15, "Average": 0.25, "Poor": 0.45, "Mistimed": 0.8}   # representative |t| (late)
+
+
 def shot_error(cls, grade, tf, stat=0.76, mph=None):
-    """The rally model's error probability for a neutral ball (no run, no fatigue, no pass)."""
+    """The rally model's error probability for a neutral ball (no run, no fatigue, no pass); late releases."""
     c, hold, v = AIM_CLASS[cls]
-    v = mph if mph is not None else v + M.GRADE_FX[grade]["pace"]
+    v = mph if mph is not None else v * M.GRADE_FX[grade]["pace_cap"]
     fx = M.GRADE_FX[grade]
-    margin = M.RALLY["pace_margin"][c] + M.RALLY["margin_hand"] * stat
-    return fx["err"] * (M.RALLY["e_timing"][COARSE[tf]] + M.RALLY["pace_err"] * max(0.0, v - margin)) + fx["err_add"]
+    margin = (M.RALLY["pace_margin"][c] + M.RALLY["margin_hand"] * stat) * fx["pace_cap"]
+    hold = "Full" if hold == "Powerful" else hold
+    return (M.timing_error(TF_T[tf] / M.GRADE_FX[grade]["w_grade"], hold) + M.RALLY["pace_err"] * max(0.0, v - margin)
+            + fx["err_add"] + M.RALLY["base_err"])
 
 
 def sec_placement(a):
@@ -559,26 +596,27 @@ def sec_placement(a):
     n = 1500 if a.quick else 8000
     T5 = ("Perfect", "Good", "Average", "Poor", "Mistimed")
     out = ["### 7a. How the existing Efficiency is fed *(proposal; retail chain kept)*", "",
-           "Efficiency = class peak x lerp(AimingResolution.Min, .Max of the grade row, quality); quality = timing term x "
+           "Efficiency = class peak x lerp(AimingResolution.Min, .Max of the grade row, quality); quality = retail timing shape x "
            "(%.2f + %.2f x hand stat); capped at %.2f. Then retail graph 196 (FinalEfficiency, random roll) picks the quad." % (
                M.AIM_HAND[0], M.AIM_HAND[1], M.EFF_MAX), ""]
     out.append(md(["grade", "AimingResolution Min", "Max", "retail row values (Good used for every shot)"],
                   [[g, f2(M.AIM_GRADE_ROW[g][0]), f2(M.AIM_GRADE_ROW[g][1]),
                     {"Tee-off": "none (VeryGood row + code offset)", "VeryGood": "0-0.2 / 0.6-1", "Good": "0-0.2 / 0.6-1",
                      "Normal": "0 / 0.4-1", "Bad": "0 / 0.1-1", "VeryBad": "0 / 0.1-1"}[g]] for g in M.GRADES]))
-    out += ["", "Timing term against the new variable window: " + ", ".join("%s %.2f" % (t, M.AIM_TIMING_Q[t]) for t in T5) +
-            " (retail FlatMedium: 0.76 at t = 0, 0.40 at |t| = 0.3, 0.20 at 0.6, so the same shape). Class peaks (retail, kept): " +
+    out += ["", "Timing term (retail shape against t, t divided by W): |t| " + ", ".join("%g: %.2f" % kv for kv in M.T_SHAPE) +
+            "; representative values " + ", ".join("%s %.2f" % (t, M.AIM_TIMING_Q[t]) for t in T5) +
+            " (anchor: a late t = +0.5 FlatPower keeps about 75 % of its peak in retail, G8). Class peaks (retail, kept): " +
             ", ".join("%s %.2f" % kv for kv in M.AIM_CLASS_PEAK.items()) + ".", "",
             "Efficiency, FlatMedium, by grade and timing, hand 0.3 / 0.9 (retail: Good row only; hand 0.3 costs 0.03-0.05):", ""]
     rows = []
     for g in M.GRADES:
         rows.append([g] + ["%.2f / %.2f" % (M.aim_efficiency("FlatMedium", g, t, 0.3), M.aim_efficiency("FlatMedium", g, t, 0.9)) for t in T5])
     out.append(md(["grade"] + list(T5), rows))
-    out += ["", "### 7b. DeepDeviation by quality (replaces uniform 0..310 cm at perfect timing) *(proposal)*", ""]
-    rows = [[g] + ["%.0f" % min(M.DEEP_MAX_CM, M.DEEP_GRADE_CM[g] + M.DEEP_TIMING_CM[t]) for t in T5] for g in M.GRADES]
-    out.append(md(["grade"] + list(T5), rows))
-    out += ["", "Mean cm short of the aimed point along the hitter-to-target line; sd %.0f cm, capped at %.0f. Retail: uniform 0..310 cm "
-            "(mean 155) at perfect timing, 200-300 cm fixed when mistimed." % (M.DEEP_SD_CM, M.DEEP_MAX_CM), ""]
+    out += ["", "### 7b. DeepDeviation by timing (retune-systems.md s4; the only timing rule that changes) *(proposal)*", ""]
+    out.append(md(["release"] + list(T5), [["pull short of the aim, cm (uniform)"] + ["%.0f-%.0f" % M.DEEP_TIMING_RANGE[t] for t in T5]]))
+    out += ["", "Cm short of the aimed point along the hitter-to-target line. Good is split: inner half of the band 0-110, outer half 40-150. "
+            "Retail: uniform 0..310 cm (mean 155) inside the band, 200-300 cm outside it. The grade does not enter; a Tee-off ball "
+            "released late keeps the Perfect pull (no late-timing penalty).", ""]
     out += ["### 7c. Where corner aims land, on the retail aim quads *(computed, %d shots per row)*" % n, "",
             "Stick up-right (deep corner), hitter at (-1188, -50), FlatNormal / TopSpinNormal configs from `aim_tables.yaml`; timing mix "
             + ", ".join("%s %.0f%%" % (t, 100 * w) for t, w in TIMING_MIX) + " (a rating-80 player on neutral balls, section 5); hand 0.76. "
@@ -599,7 +637,7 @@ def sec_placement(a):
         pts = []
         for _ in range(n):
             tf = timing_sampler(rng)
-            eff = M.AIM_CLASS_PEAK[cls] * {"Perfect": 1.0, "Good": 0.85, "Average": 0.6, "Poor": 0.5, "Mistimed": 0.26}[tf]
+            eff = M.AIM_CLASS_PEAK[cls] * M.AIM_TIMING_Q[tf] * (M.AIM_HAND[0] + M.AIM_HAND[1] * 0.76)
             fe = M.final_efficiency(eff, rng.random())
             dd = rng.uniform(0, 310) if tf in ("Perfect", "Good", "Average") else rng.uniform(200, 300)
             pts.append(AIM.land(cfgs[cfgname], fe, dd, 1.0, 1.0))
@@ -654,9 +692,9 @@ def sec_net(a):
             ("deep to the corner, opponent stretched", 120, 85, 72, 66, 420)):
         vr = run / 100.0 / max(0.2, frames / 60.0 - 0.3)
         g, q, _ = M.grade_of(frames, vr, run, height, pace, depth_x, max(0, frames - 30 - int(run / 100 / 6 * 60)), vr > 5.2 or run > 380)
-        hp, hg, e = M.window_halfwidths(pace, frames * 1000 / 60.0, height, 0.1, vr, 10, vr > 5.2, 1188 + depth_x, False, 0.64)
-        rows.append([lab, frames, g, f2(q), "%.1f / %.1f" % (hp, hg), f2(M.aim_efficiency("FlatMedium", g, "Perfect", 0.64)), f2(M.angle_access(depth_x, g, 0.64))])
-    out.append(md(["approach", "passer's frames", "passer's grade", "Q", "Perfect / Good half (rating 70)", "passer's Efficiency (FlatMedium, Perfect)", "angle access"], rows))
+        hp, hg, e = M.window_halfwidths(g, 0.64, frames * 1000 / 60.0)
+        rows.append([lab, frames, g, str(q), "%.1f / %.1f" % (hp, hg), f2(M.aim_efficiency("FlatMedium", g, "Perfect", 0.64)), f2(M.angle_access(depth_x, g, 0.64))])
+    out.append(md(["approach", "passer's frames", "passer's grade", "score", "Perfect / Good half (rating 70)", "passer's Efficiency (FlatMedium, Perfect)", "angle access"], rows))
     out += ["", "### 8b. Volley quality bands: the cost of a hard volley is a weak reply *(proposal; judgement values)*", "",
             "Band = volley grade (Tee-off / VeryGood 1, Good / Normal 2, Bad 3, VeryBad 4) + timing (Poor +1, Mistimed +2), then one band "
             "better with probability (Volley stat - 0.5) / 0.5. Outputs are the volley classes' existing outputs.", ""]
@@ -765,13 +803,13 @@ def sec_robust(a):
     out = ["### 9c. Robustness: field share of the six styles when one rule moves by +-20 %% *(computed, %d matches per pair)*" % nm, ""]
     knobs = [("pace error per mph", M.RALLY, "pace_err"), ("slice drop", M, "SLICE_DROP_CM"), ("Speed stat run value", M.RALLY, "max_run_speed"),
              ("power-swing vigor cost", None, "vigor"), ("pass error vs net player", M.RALLY, "pass_err"), ("topspin kick per hand", M.RALLY, "kick_hand"),
-             ("floor error", M.RALLY, "floor_err")]
+             ("floor error", M.RALLY, "floor_err"), ("base situation error", M.RALLY, "base_err")]
     rows = []
     for label, obj, key in knobs:
         for f in (0.8, 1.2):
             if obj is None:
                 saved = dict(M.RALLY["vigor_cost"])
-                for h in ("Powerful", "Rushed", "Overcharge"):
+                for h in ("Powerful", "Full", "Overcharge"):
                     M.RALLY["vigor_cost"][h] = saved[h] * f
             elif obj is M:
                 saved = getattr(M, key)

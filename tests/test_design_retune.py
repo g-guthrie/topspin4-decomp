@@ -40,71 +40,90 @@ class Ratings(unittest.TestCase):
 
 
 class Grade(unittest.TestCase):
+    # grade_of(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick)
     def test_sitter_is_teeoff(self):
-        g, q, _ = M.grade_of(100, 0.8, 60, 110, 45, -250, 40, False, 0.1)
-        self.assertEqual(g, "Tee-off")
+        g, sc, _ = M.grade_of(100, 0.8, 60, 110, 45, -250, 40, False, 0.1)
+        self.assertEqual((g, sc), ("Tee-off", -1))
 
-    def test_ordinary_ball_standing_still_is_not_teeoff(self):
-        g, _, _ = M.grade_of(90, 0.0, 0, 110, 68, 80, 40, False, 0.1)
-        self.assertEqual(g, "VeryGood")
+    def test_ordinary_ball_standing_still_is_verygood(self):
+        g, sc, _ = M.grade_of(90, 0.0, 0, 110, 68, 80, 40, False, 0.1)
+        self.assertEqual((g, sc), ("VeryGood", 0))
 
-    def test_teeoff_needs_slow_ball(self):
-        g, _, _ = M.grade_of(100, 0.8, 60, 110, 70, -250, 40, False, 0.1)
-        self.assertNotEqual(g, "Tee-off")
+    def test_neutral_rally_ball_is_good(self):
+        g, sc, _ = M.grade_of(78, 2.0, 150, 100, 68, 100, 20, False, 0.15)
+        self.assertEqual((g, sc), ("Good", 1))
+
+    def test_teeoff_needs_slow_ball_and_short_contact(self):
+        self.assertNotEqual(M.grade_of(100, 0.8, 60, 110, 70, -250, 40, False, 0.1)[0], "Tee-off")
+        g, sc, _ = M.grade_of(100, 0.8, 60, 120, 48, 200, 40, False, 0.1)     # slow but taken 2 m deep
+        self.assertEqual((g, sc), ("VeryGood", -1))
 
     def test_stretched_run_is_bad(self):
         g, _, _ = M.grade_of(70, 5.8, 420, 85, 70, 150, 0, True, 0.15)
         self.assertIn(g, ("Bad", "VeryBad"))
 
-    def test_grade_order_monotone_in_time(self):
-        qs = [M.grade_of(f, 2.0, 150, 100, 68, 100, 15, False, 0.15)[1] for f in (40, 55, 70, 90)]
-        self.assertTrue(all(b <= a for a, b in zip(qs, qs[1:])))
+    def test_score_rows(self):
+        self.assertEqual([M.grade_of_score(x) for x in (-1, 0, 1, 2, 3, 4, 5, 6, 9)],
+                         ["VeryGood", "VeryGood", "Good", "Good", "Normal", "Bad", "Bad", "VeryBad", "VeryBad"])
+
+    def test_rushed_and_tired_add_points(self):
+        base = M.grade_of(78, 2.0, 150, 100, 68, 100, 20, False)[1]
+        self.assertEqual(M.grade_of(78, 2.0, 150, 100, 68, 100, 20, False, rushed=True)[1], base + 1)
+        self.assertEqual(M.grade_of(78, 2.0, 150, 100, 68, 100, 20, False, vigor=0.2)[1], base + 1)
+
+    def test_let_high_ball_drop(self):
+        s = M.Situation()
+        s.height, s.set_f, s.frames, s.depth_x, s.dist_net_cm = 190.0, 40, 90, 100.0, 1288.0
+        self.assertTrue(M.choose_contact(random.Random(1), s))
+        self.assertLessEqual(s.height, M.SHOULDER_CM)
+        self.assertGreater(s.depth_x, 150.0)
 
     def test_effects_ordered(self):
-        paces = [M.GRADE_FX[g]["pace"] for g in M.GRADES]
-        self.assertEqual(paces, sorted(paces, reverse=True))
-        self.assertIsNone(M.GRADE_FX["Tee-off"]["cap"])
-        self.assertTrue(all(M.GRADE_FX[g]["cap"] is not None for g in M.GRADES[1:]))
+        for k in ("pace_cap", "aim_cap", "w_grade"):
+            v = [M.GRADE_FX[g][k] for g in M.GRADES]
+            self.assertEqual(v, sorted(v, reverse=True))
+        self.assertEqual(M.GRADE_FX["Good"]["pace_cap"], 1.0)
+        self.assertEqual(M.GRADE_FX["Good"]["aim_cap"], 1.0)
 
 
 class Window(unittest.TestCase):
-    base = dict(pace_kmh=68, react_ms=1300, height=100, kick=0.15, v_req=2.0, set_f=15, stretch=False,
-                dist_net_cm=1290, floating=False, stat=0.6)
+    def test_retail_at_w1(self):
+        hp, hg, w = M.window_halfwidths("Good", M.new_stat(70), 1000)
+        self.assertAlmostEqual(w, 1.0, places=6)
+        self.assertAlmostEqual(hp, 2.0)
+        self.assertAlmostEqual(hg, 6.0)
 
-    def w(self, **kw):
-        a = dict(self.base)
-        a.update(kw)
-        return M.window_halfwidths(**a)
-
-    def test_easier_ball_wider(self):
-        self.assertGreater(self.w(pace_kmh=45)[1], self.w()[1])
-        self.assertLess(self.w(pace_kmh=110)[1], self.w()[1])
+    def test_design_note_cases(self):
+        self.assertAlmostEqual(M.window_scale("Good", M.new_stat(70), 1300, "Good")[0], 0.93, places=6)
+        self.assertAlmostEqual(M.window_scale("Normal", M.new_stat(70), 1100, "Perfect")[0], 0.8075, places=6)
+        self.assertAlmostEqual(M.window_scale("Bad", M.new_stat(70), 300, "Perfect")[0], 0.60, places=6)
+        self.assertAlmostEqual(M.window_scale("Tee-off", M.new_stat(70), 1600, "Mistimed")[0], 1.69, places=6)
 
     def test_reaction_threshold(self):
-        self.assertLess(self.w(react_ms=300)[0], self.w(react_ms=600)[0])
-        self.assertAlmostEqual(self.w(react_ms=1000)[0], self.w(react_ms=1500)[0])
+        self.assertLess(M.reaction_factor(300), M.reaction_factor(500))
+        self.assertEqual(M.reaction_factor(600), M.reaction_factor(1500))
+        self.assertAlmostEqual(M.reaction_factor(250), 0.70)
 
     def test_rating_widens(self):
-        self.assertGreater(self.w(stat=1.0)[1], self.w(stat=0.2)[1])
+        self.assertAlmostEqual(M.rating_factor(M.new_stat(40)), 0.90, places=6)
+        self.assertAlmostEqual(M.rating_factor(1.0), 1.10, places=6)
 
-    def test_clamps(self):
-        hp, hg, _ = self.w(pace_kmh=20, react_ms=3000, stat=1.0, floating=True, set_f=60)
-        self.assertLessEqual(hp, 4.5)
-        self.assertLessEqual(hg, 12.0)
-        hp, hg, _ = self.w(pace_kmh=200, react_ms=150, stat=0.0, stretch=True, v_req=7.5, height=15)
-        self.assertGreaterEqual(hp, 0.5)
-        self.assertGreaterEqual(hg, 2.0)
+    def test_clamp_and_overcharge(self):
+        self.assertEqual(M.window_scale("Tee-off", 1.0, 2000, "Mistimed", opp_scale=10.0)[0], M.W_CLAMP[1])
+        self.assertEqual(M.window_scale("VeryBad", 0.0, 100, "Perfect")[0], M.W_CLAMP[0])
+        w = M.window_scale("Good", 0.6, 1000)[0]
+        self.assertAlmostEqual(M.window_scale("Good", 0.6, 1000, overcharge=True)[0], w * M.OVERCHARGE_W)
 
-    def test_opponent_term_and_cap(self):
-        self.assertLess(self.w(opp_timing="Good")[1], self.w(opp_timing="Average")[1])
-        g = self.w(opp_timing="Average")[1]
-        self.assertLess(self.w(opp_timing="Perfect")[1], g)
-        self.assertGreater(self.w(opp_timing="Mistimed")[1], self.w(opp_timing="Poor")[1])
-        big = self.w(opp_timing="Mistimed", opp_scale=10.0)[1]
-        self.assertLessEqual(big / g, M.OPP_FX_CAP[1] + 1e-9)
-        # total floor: ball ease x opponent term never below TOTAL_FLOOR of the normal window
-        hp, hg, e = self.w(pace_kmh=160, react_ms=300, opp_timing="Perfect", stat=0.5)
-        self.assertGreaterEqual(e, M.TOTAL_FLOOR * M.rating_factor(0.5) - 1e-9)
+    def test_zero_error_band(self):
+        self.assertEqual(M.timing_error(0.40, "Full"), 0.0)        # retail band, 19 frames at W = 1
+        self.assertEqual(M.timing_error(-0.55, "Full"), 0.0)
+        self.assertGreater(M.timing_error(0.60, "Full"), M.timing_error(-0.75, "Full"))
+        self.assertAlmostEqual(M.timing_error(0.5, "Overcharge"), 2 * M.timing_error(0.5, "Full"))
+
+    def test_rushed_release_is_late(self):
+        c, f, pos, t = M.release(random.Random(1), 2.0, 6.0, rushed=True)
+        self.assertEqual(c, "Poor")
+        self.assertAlmostEqual(t, 0.4)
 
     def test_p_window(self):
         self.assertLess(M.p_window(1.0), M.p_window(3.0))
@@ -112,33 +131,35 @@ class Window(unittest.TestCase):
 
 
 class Speed(unittest.TestCase):
-    def test_stack_order(self):
-        a = M.stack_speed("Flat", "Good", "Medium", "Good", 0.5, 0.5)[0]
-        b = M.stack_speed("Flat", "Tee-off", "Overcharge", "Perfect", 1.0, 1.0)[0]
-        self.assertGreater(b, a + 20)
-        self.assertGreater(M.stack_speed("Flat", "Good", "Medium", "Good", 0.5, 0.5)[0],
-                           M.stack_speed("TopSpin", "Good", "Medium", "Good", 0.5, 0.5)[0])
+    def test_good_row_is_retail(self):
+        self.assertAlmostEqual(M.row_max_mph("Flat", "Good", "Full", 100), M.mph(145.2))
+        self.assertAlmostEqual(M.row_max_mph("Flat", "Good", "Medium", 54), M.mph(125.0))
 
-    def test_grade_cap_soft(self):
-        v = M.stack_speed("Flat", "Good", "Overcharge", "Perfect", 1.0, 1.0)[0]
-        cap = M.GRADE_FX["Good"]["cap"]
-        self.assertLess(v, cap + 10)
-        self.assertGreater(M.stack_speed("Flat", "Tee-off", "Overcharge", "Perfect", 1.0, 1.0)[0], v)
+    def test_ceiling_arithmetic(self):
+        self.assertAlmostEqual(M.row_max_mph("Flat", "Tee-off", "Full", 100), M.mph(145.2) * 1.18)
+        self.assertGreater(M.row_max_mph("Flat", "Tee-off", "Overcharge", 100), 110.0)       # clipped by the ceiling
+        self.assertTrue(95.0 <= M.row_max_mph("Flat", "Tee-off", "Overcharge", 54) <= 99.5)
+
+    def test_tier_steps_grow_above_good(self):
+        def step(g):
+            return M.row_max_mph("Flat", g, "Full", 75) / M.row_max_mph("Flat", g, "Medium", 75)
+        self.assertGreater(step("Tee-off"), step("Good"))
+        self.assertLess(step("Bad"), step("Good"))
 
     def test_hold_reached(self):
-        c = M.CHARGE
-        lead = M.RELEASE_LEAD
+        c, lead = M.CHARGE, M.RELEASE_LEAD
         self.assertEqual(M.hold_reached(lead + 2, 30), "Finesse")
         self.assertEqual(M.hold_reached(lead + c["powerful_from"] + 1, 30), "Powerful")
-        self.assertEqual(M.hold_reached(lead + c["full_at"] + c["overcharge_wait"] + 2, 40), "Overcharge")
-        self.assertEqual(M.hold_reached(lead + c["full_at"] + c["overcharge_wait"] + 2, 10), "Powerful")
+        self.assertEqual(M.hold_reached(lead + c["full_at"] + 1, 30), "Full")
+        self.assertEqual(M.hold_reached(lead + c["full_at"] + c["overcharge_past_full"] + 2, 60), "Overcharge")
+        self.assertEqual(M.hold_reached(lead + c["full_at"] + c["overcharge_past_full"] + 2, 10), "Full")
 
-    def test_forehand_ceiling(self):
-        v = M.stack_speed("Flat", "Tee-off", "Overcharge", "Perfect", 1.0, 1.0, skill=True, noise=30.0)[0]
+    def test_ceiling(self):
+        v = M.stack_speed("Flat", "Tee-off", "Overcharge", 1.0, 1.0, 1.0, skill=True, noise=30.0)[0]
         self.assertEqual(v, 110.0)
-        vb = M.stack_speed("Flat", "Tee-off", "Overcharge", "Perfect", 1.0, 1.0, skill=True, noise=30.0, stroke="BH")[0]
+        vb = M.stack_speed("Flat", "Tee-off", "Overcharge", 1.0, 1.0, 1.0, skill=True, noise=30.0, stroke="BH")[0]
         self.assertEqual(vb, 105.0)
-        self.assertAlmostEqual(M.stack_speed("Flat", "Good", "Medium", "Good", 0.5, 0.5)[0], 74.0)
+        self.assertLess(M.stack_speed("Flat", "Good", "Medium", 0.5, 0.6, 0.6)[0], M.stack_speed("Flat", "Good", "Medium", 1.0, 0.6, 0.6)[0])
 
 
 class Movement(unittest.TestCase):
@@ -211,8 +232,9 @@ class Aim(unittest.TestCase):
         self.assertAlmostEqual(M.final_efficiency(1.0, 1.0), 1.0)
 
     def test_deep_deviation(self):
-        self.assertLess(M.depth_shortfall("Good", "Perfect")[0], 60)
-        self.assertGreater(M.depth_shortfall("Good", "Mistimed")[0], 200)
+        self.assertLessEqual(M.depth_shortfall("Good", "Perfect")[0], 20)
+        self.assertGreater(M.depth_shortfall("Good", "Poor")[0], 200)
+        self.assertEqual(M.depth_shortfall("Bad", "Perfect"), M.depth_shortfall("Tee-off", "Perfect"))   # timing only
 
 
 class Sim(unittest.TestCase):
@@ -225,7 +247,7 @@ class Sim(unittest.TestCase):
     def test_spec_tables_run(self):
         class A:
             quick = True
-        for name in ("grade", "window", "power", "placement", "stats", "movement"):
+        for name in ("grade", "window", "power", "stats", "movement"):
             self.assertIn("|", S.SECTIONS[name](A()))
 
 
