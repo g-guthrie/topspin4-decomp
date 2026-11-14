@@ -144,6 +144,32 @@ python3 -m unittest discover -s tests && python3 tools/validate_link_status.py \
   `tools/asm2c/README.md`.
 - **Agent briefs.** Briefs for subagents are in `docs/agents/`.
 
+### Permutation search
+
+When a function misses an exact match by a few instructions of scheduling or
+register allocation, mark the variants in comments and let `tools/permute.py`
+search them (it scores with `fn_check`'s own comparison, compiles `-j 4` at a
+time, and never edits the input):
+
+```sh
+python3 tools/permute.py src/xbox360/foo.c ts4_name=0xADDR [--flags /GS-] [--flags-sweep] [-j 4] [-n 400] [--time 900]
+TS4_MATCHING_DIR=work/loader python3 tools/permute.py src/loader/foo.c name=0x83...   # Loader
+python3 tools/permute.py src/xbox360/foo.c ts4_name=0xADDR --info                      # show the search space only
+```
+
+Markers (all comments, so the file still compiles unchanged):
+`/* PERM_BEGIN */ s1; s2; /* PERM_END */` (reorder independent statements;
+`PERM_BEGIN(strict|free)` change the dependency check), `/* PERM_DECLS */ ...
+/* PERM_DECLS_END */` (declaration order), `/* PERM_ALT(i++|++i) */i++/* PERM_ALT_END */`
+(inline alternatives: operand swaps, loop forms, `__forceinline|`, even whole
+statements without the `;`), `/* PERM_TYPE(int|unsigned|short) */ int x;`,
+`/* PERM_VOLATILE */` (inserts `volatile `), and `--flags-sweep ["/O1" ...]`
+for compiler flags. Small spaces are enumerated; larger ones are searched by
+randomised hill climbing on the differing-instruction count within the
+`-n`/`--time` budget. The winner is written to `work/permute-out/<stem>.perm.c`
+(else the best near-miss to `<stem>.best.c`); confirm it with the printed
+`fn_check` command. Read `python3 tools/permute.py --help` for the full syntax.
+
 ## 6. Pitfalls we hit (read before integrating)
 
 - **Same-file callees get inlined.** After `fix_refs.py`, a call to a function
@@ -173,6 +199,12 @@ python3 -m unittest discover -s tests && python3 tools/validate_link_status.py \
   functions listed in `docs/matching-build.md` (case blocks that were split off
   as separate `fn_` symbols): refresh those lines from a fresh analysis before
   `integrate_match.py`. See `src/xbox360/jt_switch_flags.c` for a worked example.
+- **Compact switch tables.** Small switches can compile to an 8/16-bit offset
+  table in `.rdata` that MSVC names `$T<n>` (the target has a `jumptable_*` data
+  symbol). `fn_check.py` accepts the `$T` relocation when the table's bytes equal
+  the target's, and resolves `$LN<address>` case labels from the name when
+  `symbols.txt` lacks them. zlib 1.1.x `inflate`, `inflate_blocks` and
+  `inflate_codes` (both modules, `/O1`) are worked examples.
 - **`__vector4`/VMX128** used to block the ball-flight functions. Solved: include
   `src/xbox360/ts4_vector.h`, which is our own declaration of a `passinreg` 16-byte
   struct plus `#pragma intrinsic` prototypes. Dereferencing a `__vector4 *` emits

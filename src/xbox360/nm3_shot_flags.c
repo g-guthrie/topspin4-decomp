@@ -54,7 +54,7 @@ void fn_886629C8(struct nm3_gp8_ShotEval *eval, void *shot_record);
 #ifdef _MSC_VER
 #define NM3_INLINE static __forceinline
 #else
-#define NM3_INLINE static inline
+#define NM3_INLINE static inline __attribute__((unused))
 #endif
 
 NM3_INLINE void nm3_set_shot_flags(struct nm3_gp8_ShotEval *eval, unsigned int kind_a, unsigned int kind_b)

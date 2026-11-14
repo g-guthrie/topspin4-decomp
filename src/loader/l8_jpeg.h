@@ -8,6 +8,26 @@ typedef unsigned int ts4l_u32;
 typedef unsigned char ts4l_joctet;
 
 typedef struct ts4l_jcinfo ts4l_jcinfo;
+typedef struct ts4l_jinputctl {
+    char pad0[8];
+    void (*start_input_pass)(ts4l_jcinfo *cinfo);
+    char pad1[4];
+    int has_multiple_scans;
+} ts4l_jinputctl;
+typedef struct ts4l_jprogress {
+    void (*progress_monitor)(ts4l_jcinfo *cinfo);
+    long pass_counter;
+    long pass_limit;
+    int completed_passes;
+    int total_passes;
+} ts4l_jprogress;
+typedef struct ts4l_jmaster {
+    char pad0[0xc];
+    int pass_number;
+    int using_merged_upsample;
+    void *quantizer_1pass;
+    void *quantizer_2pass;
+} ts4l_jmaster;
 typedef struct ts4l_jquant {
     unsigned short quantval[64];
     int sent_table;
@@ -35,6 +55,8 @@ typedef struct ts4l_jerr {
 typedef struct ts4l_jmem {
     void *(*alloc_small)(ts4l_jcinfo *cinfo, int pool, unsigned int size);
     void *(*alloc_large)(ts4l_jcinfo *cinfo, int pool, unsigned int size);
+    char pad0[0x10];
+    void (*realize_virt_arrays)(ts4l_jcinfo *cinfo);
 } ts4l_jmem;
 
 typedef struct ts4l_jsrc {
@@ -68,20 +90,44 @@ struct ts4l_jcomp {
     int quant_tbl_no;
     int dc_tbl_no;
     int ac_tbl_no;
-    char pad0[0x38];
+    ts4l_u32 width_in_blocks;
+    ts4l_u32 height_in_blocks;
+    int DCT_scaled_size;
+    ts4l_u32 downsampled_width;
+    ts4l_u32 downsampled_height;
+    int component_needed;
+    char pad0[0x18];
+    void * quant_table;
+    char pad1[0x4];
 };
 
 struct ts4l_jcinfo {
     ts4l_jerr * err;
     ts4l_jmem * mem;
-    char pad0[0x10];
+    ts4l_jprogress * progress;
+    char pad0[0xc];
     ts4l_jsrc * src;
     ts4l_u32 image_width;
     ts4l_u32 image_height;
     int num_components;
-    char pad1[0x6c];
+    char pad1[0x18];
+    int buffered_image;
+    int raw_data_out;
+    char pad2[0xc];
+    int quantize_colors;
+    char pad3[0x4];
+    int two_pass_quantize;
+    char pad4[0x4];
+    int enable_1pass_quant;
+    int enable_external_quant;
+    int enable_2pass_quant;
+    char pad5[0x8];
+    int out_color_components;
+    char pad6[0xc];
+    void * colormap;
+    char pad7[0x8];
     ts4l_u32 input_scan_number;
-    char pad2[0x10];
+    char pad8[0x10];
     ts4l_jquant * quant_tbl_ptrs[4];
     void * dc_huff_tbl_ptrs[4];
     void * ac_huff_tbl_ptrs[4];
@@ -89,26 +135,32 @@ struct ts4l_jcinfo {
     ts4l_jcomp * comp_info;
     int progressive_mode;
     int arith_code;
-    char pad3[0x34];
+    char pad9[0x34];
     int saw_JFIF_marker;
     ts4l_u8 JFIF_major_version;
     ts4l_u8 JFIF_minor_version;
     ts4l_u8 density_unit;
-    char pad4[0x1];
+    char pad10[0x1];
     unsigned short X_density;
     unsigned short Y_density;
-    char pad5[0xc];
+    char pad11[0xc];
     ts4l_jsaved * marker_list;
-    char pad6[0x14];
+    int max_h_samp_factor;
+    int max_v_samp_factor;
+    int min_DCT_scaled_size;
+    ts4l_u32 total_iMCU_rows;
+    ts4l_u8 * sample_range_limit;
     int comps_in_scan;
     ts4l_jcomp * cur_comp_info[4];
-    char pad7[0x34];
+    char pad12[0x34];
     int Ss;
     int Se;
     int Ah;
     int Al;
     int unread_marker;
-    char pad8[0x14];
+    ts4l_jmaster * master;
+    char pad13[0xc];
+    ts4l_jinputctl * inputctl;
     ts4l_jmarker * marker;
 };
 
@@ -152,6 +204,10 @@ struct ts4l_jcinfo {
 #define TS4L_ERREXIT1(cinfo, code, p1)                                                         \
     ((cinfo)->err->msg_code = (code), (cinfo)->err->msg_parm[0] = (p1),                        \
      (*(cinfo)->err->error_exit)(cinfo))
+
+#define TS4L_ERREXIT2(cinfo, code, p1, p2)                                                     \
+    ((cinfo)->err->msg_code = (code), (cinfo)->err->msg_parm[0] = (p1),                        \
+     (cinfo)->err->msg_parm[1] = (p2), (*(cinfo)->err->error_exit)(cinfo))
 
 #define TS4L_TRACEMS(cinfo, lvl, code)                                                         \
     ((cinfo)->err->msg_code = (code), (*(cinfo)->err->emit_message)(cinfo, (lvl)))

@@ -84,6 +84,35 @@ def compile_candidate(source: Path, flags: list[str]) -> Path:
     return obj
 
 
+def target_data(name: str) -> bytes | None:
+    """Bytes of a data symbol (e.g. a compact `jumptable_*` in .rdata) from the split objects."""
+    from fn_asm import SPLIT, coff
+
+    entry = next((e for e in load_symbols() if e[0] == name), None)
+    if entry is None or not entry[3]:
+        return None
+    for path in sorted(SPLIT.rglob("*.obj")):
+        try:
+            unit = coff(path)
+        except Exception:
+            continue
+        for symbol in unit.symbols:
+            if symbol.name == name and symbol.section > 0:
+                data = unit.sections[symbol.section - 1].data
+                return data[symbol.value : symbol.value + entry[3]]
+    return None
+
+
+def candidate_data(obj, name: str, size: int) -> bytes | None:
+    for symbol in obj.symbols:
+        if symbol.name == name and symbol.section > 0:
+            section = obj.sections[symbol.section - 1]
+            if any(symbol.value <= r.offset < symbol.value + size for r in section.relocs):
+                return None  # a table with relocations is not a compact offset table
+            return section.data[symbol.value : symbol.value + size]
+    return None
+
+
 def masked_words(code: bytes, relocs) -> list[int]:
     words = [int.from_bytes(code[i : i + 4], "big") for i in range(0, len(code), 4)]
     for reloc in relocs:
@@ -163,6 +192,12 @@ def main() -> int:
                                                obj.symbol_section(actual_name))
                              if c_base is not None else None)
                     t_addr = text_address.get(t_sym)
+                    if t_addr is None and t_sym.startswith(LOCAL_LABEL_PREFIX):
+                        # Jeff names case-block labels `$LN<address>`.
+                        try:
+                            t_addr = int(t_sym[len(LOCAL_LABEL_PREFIX):], 16)
+                        except ValueError:
+                            t_addr = None
                     if c_off is None or c_base is None or t_addr is None:
                         problems.append(f"reloc +{r.offset:#x}: cannot resolve label {c_sym} / {t_sym}")
                     elif c_off - c_base != t_addr - address:
@@ -175,6 +210,15 @@ def main() -> int:
                     continue
                 # Aliases at one address, e.g. __savegprlr / __savegprlr_14.
                 if c_sym in text_address and text_address.get(t_sym) == text_address[c_sym]:
+                    continue
+                if c_sym.startswith("$T") and t_sym.startswith(("jumptable_", "lbl_")):
+                    # Compact (8/16-bit offset) switch table emitted as a local
+                    # data symbol: accept it when its bytes equal the target's.
+                    t_data = target_data(t_sym)
+                    c_data = candidate_data(obj, c_sym, len(t_data)) if t_data else None
+                    if t_data and c_data == t_data:
+                        continue
+                    problems.append(f"reloc +{r.offset:#x}: table {c_sym} differs from {t_sym}")
                     continue
                 if c_sym.startswith("?") or c_sym.startswith("__real@") or c_sym.startswith("$"):
                     problems.append(f"reloc +{r.offset:#x}: candidate uses {c_sym}, target {t_sym}")

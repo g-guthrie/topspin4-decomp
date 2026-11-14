@@ -1,4 +1,7 @@
 /* SM2: small object helpers (string-size, refcount, byte swap, loops). */
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 extern void fn_88470870(void *a, void *b);
 
 /* bytes needed for a name: strlen + 2 (just 2 for a null name) */

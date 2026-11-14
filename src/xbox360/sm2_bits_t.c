@@ -1,4 +1,7 @@
 /* SM2: bitfield setters on 24-byte records plus a small vec4 accumulate. */
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 typedef unsigned long long ts4_u64;
 
 /* record layout (MSB-first bitfields): word0 has a 2-bit field at bit 7; word1 has 5-bit fields at bits 0 and 5;
