@@ -237,6 +237,35 @@ class Aim(unittest.TestCase):
         self.assertEqual(M.depth_shortfall("Bad", "Perfect"), M.depth_shortfall("Tee-off", "Perfect"))   # timing only
 
 
+class Returns(unittest.TestCase):
+    def _player(self, ret):
+        r = dict(M.BUILDS["big server"][0])
+        r["ret"] = ret
+        return M.MatchPlayer("R", r)
+
+    def test_family_grade(self):
+        self.assertEqual(M.return_grade(120.0, 0.5), "Good")
+        self.assertEqual(M.return_grade(85.0, 0.5), "VeryGood")
+        self.assertEqual(M.return_grade(120.0, 0.9), "Bad")
+
+    def test_bad_grade_never_attacking(self):
+        rng = random.Random(3)
+        p = self._player(95)
+        qs = {M.return_quality(rng, p, 85.0, 0.9, second=True)[0] for _ in range(2000)}
+        self.assertNotIn("good", qs)        # hold lever 1: a stretched return is lowered one step
+
+    def test_low_return_rating_errs_more(self):
+        def unret(ret):
+            rng = random.Random(5)
+            p = self._player(ret)
+            return sum(M.return_quality(rng, p, 115.0, 0.5)[0] == "unreturned" for _ in range(4000))
+        self.assertGreater(unret(60), unret(90))
+
+    def test_volley_base_error(self):
+        self.assertGreater(M.RALLY["volley_base_err"], 0.0)
+        self.assertLess(M.RALLY["volley_base_err"], M.RALLY["base_err"])
+
+
 class Sim(unittest.TestCase):
     def test_round_robin_deterministic(self):
         b = {k: M.BUILDS[k] for k in ("heavy topspin", "slicer")}

@@ -616,14 +616,21 @@ def return_quality(rng, ret, serve_mph, placement=0.5, opp_timing="Average", opp
         return "unreturned", tf
     err = RETURN_ERR[t] * clamp(1.9 - 1.5 * w, 0.4, 1.8) + GRADE_FX[g]["err_add"]
     err += 0.30 * ret.floor["ret"]
+    err += RETURN_RATING_ERR * max(0.0, RETURN_RATING_REF - ret.s["ret"])   # hold lever 2: low Return rating
     if rng.random() < err:
         return "unreturned", tf
     q = {"Perfect": "good", "Good": "neutral", "Poor": "weak", "Mistimed": "weak"}[t]
     if q == "good" and not second and rng.random() > RETURN_GOOD_SHARE:
         q = "neutral"           # a clean return of a first serve mostly neutralises (calibration, section 2d)
+    if g in ("Bad", "VeryBad"):  # hold lever 1: a stretched or jammed return hands the server a weaker ball
+        q = {"good": "neutral", "neutral": "weak", "weak": "weak"}[q]
     return q, tf
 
 
+# Hold levers (model calibration, final run): extra return error per unit of Return stat below RETURN_RATING_REF
+# (stat 0.80 = rating about 85), and a Bad or VeryBad return grade lowers the return ball one step.
+RETURN_RATING_ERR = 0.30
+RETURN_RATING_REF = 0.80
 RETURN_GOOD_SHARE = 0.4       # share of Perfect first-serve returns that come back as attacking returns
 RETURN_ERR = {"Perfect": 0.10, "Good": 0.25, "Poor": 0.60, "Mistimed": 0.90}   # model calibration (sections 2d, 9d)
 # The ball a return hands the server (rally model): pace mph before rating terms, depth 0..1, width 0..1.
@@ -636,6 +643,8 @@ RETURN_BALL = {"pace": {"good": 66.0, "neutral": 58.0, "weak": 48.0}, "depth": {
 RALLY = {
     "base_err": 0.09,                  # situation fault chance of every groundstroke (control-sum penalties: running,
                                        # fast ball, fatigue) beyond the timing and grade terms; model calibration
+    "volley_base_err": 0.03,           # the same situation term on every volley, a third of the groundstroke value
+                                       # (model fix, final run; game proposal: volleys carry a small base error)
     "pace_margin": {"Flat": 81.0, "TopSpin": 84.0, "Slice": 68.0, "Lob": 60.0},   # mph where the pace term starts
     "pace_err": 0.003,                 # error per mph above the margin speed
     "margin_hand": 10.0,                # margin speed added per unit of hand stat
@@ -792,7 +801,7 @@ def hit(rng, p, b, at_net, prm):
     fx = GRADE_FX[g]
     margin = (R["pace_margin"][cls] + R["margin_hand"] * stat) * row_fx(g, cls, "pace_cap")
     if at_net:          # volley errors come mainly from overreach (owner direction)
-        err = VOLLEY_BANDS[vb]["err"]
+        err = VOLLEY_BANDS[vb]["err"] + R["volley_base_err"]
         if hold == "Powerful" and (sit.height < NET_HEIGHT_CM or sit.pace > 100.0):
             err += OVERREACH_ERR
     else:
