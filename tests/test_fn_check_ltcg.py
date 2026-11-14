@@ -98,7 +98,6 @@ class FnCheckLtcgTest(unittest.TestCase):
                                (16, L.REFLO, 0x82001004)])
 
     def test_recursive_call_is_a_relocation(self):
-        code = words(0x4BFFFFFC + 0)  # b -4 would be outside; use bl to self below
         code = words(0x60000000, 0x4BFFFFFD)  # nop; bl -4 -> start
         sites = L.candidate_sites(L.Image(b"", 0, []), 0x100, code)
         self.assertEqual([(s.offset, s.kind, s.address) for s in sites], [(4, L.REL24, 0x100)])
@@ -111,7 +110,7 @@ class FnCheckLtcgTest(unittest.TestCase):
                   Reloc(12, "g_constants", L.REFHI), Reloc(16, "g_constants", L.REFLO)]
         sites = L.target_sites(code, start, relocs)
         index = L.SymbolIndex([(g_name, 0x83000000), ("g_constants", 0x83000000 + 0x0C),
-                               ("ext_callee", start + 0xFF8)])
+                               ("ext_callee", start + 8 + 0xFF8)])
         memory = {0x83000010: struct.pack(">f", pool_value) + bytes(4)}
         return code, sites, start, index, lambda a, n: memory.get(a, bytes(n))[:n]
 
@@ -127,7 +126,7 @@ class FnCheckLtcgTest(unittest.TestCase):
         res = self._compare()
         self.assertTrue(res.ok, res.problems)
         self.assertEqual(res.renames, {"lbl_83000000": "my_global"})
-        self.assertEqual(len(res.pools), 1)
+        self.assertEqual(len(res.pools), 2)  # lis and lfs sites
 
     def test_pool_value_mismatch_fails(self):
         res = self._compare(pool_value=2.0)

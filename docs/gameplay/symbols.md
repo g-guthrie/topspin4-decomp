@@ -16,9 +16,11 @@ use seen in the code, written as C; argument names are ours. Older symbol tables
 | `fn_886935A0` | `AimSelector_GetTarget` (vtbl slot 4) | `void (AimSelector *x, Vec4 *out, PlayerController *pc)` | stick direction to the AimingConfig quad edge | C | aiming s3 |
 | `fn_88693040` | `AimSelector_BuildQuad` | `void (AimSelector *x, Quad *out, PlayerController *pc, float m)` | interpolates the zone quads by QuadEfficiency `m`, doubles widening | C | aiming s3 |
 | `fn_88693280` | `AimSelector_ClipToCourt` (vtbl slot 8) | `void (AimSelector *, Vec4 *from, Vec4 *to)` | clips the hitter-to-target segment to the efficiency-1 quad | C (described) | ball-physics s7 |
-| `fn_88660F70` | `AimingConfig_Find` | `AimingConfig *(Settings *, uint32 key)` | linear search of the 25 AimingConfig rows by Id | C | aiming s2 |
-| `fn_88661188` | `AimingConfig_KeyForShot` | `uint32 (PlayerController *)` | row key: template name, FlatReturn on a return, doubles base key | C | aiming s2 |
-| `fn_8867D350`, `fn_8867D150` | `Aim_ZoneLerp`, `Aim_ConfigLerp` | `void (Quad *out, ...)` | zone-quad lerp; lateral/depth bilinear and mirror | C | aiming s3 |
+| `fn_88660F70` | `AimSelector_ChooseConfig` | `AimingConfig *(AimSelector *, ...)` | picks one of the selector's three configs (template name, FlatReturn on a return, doubles key) | C | aiming s3 |
+| `fn_88661188` | `Aim_IsMirrored` | `bool (PlayerController *)` | mirror test: second service court when serving, else hitter at z >= 0 | C | aiming s3 |
+| `fn_886706C8` | `Aim_StickToQuadState` | `bool (PlayerController *, QuadAimingState *out)` | picks the stick source, sets DirectionSelected | C | aiming s3 |
+| `fn_8867D350` | `Aim_ZoneQuad` | `void (Quad *out, AimingZone *z, float m, float w)` | one zone's quad at efficiency m, doubles widening | C | aiming s3 |
+| `fn_8867D150` | `Aim_QuadPoint` | `void (Quad *q, QuadAimingState *a, Vec4 *out)` | stick direction to the quad edge | C | aiming s3 |
 | `fn_88695640` | `AimingState_Roll` | `void (PlayerController *)` | rolls `DeviationSystem.Random` S+0xD7C = U[0,1] | C | aiming s4 |
 | `fn_88695C48` | `AimingState_Evaluate` | `void (ShotContext *sc)` | runs the aiming graph (`SC+0x100 +0x18`), sets QuadEfficiency = FinalEfficiency | C | aiming s4 |
 | `fn_886BE1C8` | `PlayerController_RunFinalEfficiency` | `void (PlayerController *)` | at +0x5A0 runs graph 196 (human) / difficulty `7bcf55ee` (AI) | C | aiming s4 |
@@ -76,6 +78,6 @@ then `Id` +0x80, `VolleyDistance` +0x84, `BaselineDistance` +0x88, `CenterDistan
 
 ## 3. Constants
 
-`g_ts4_script_constants` = 0x880D0F70: +0 = 1.0, +0x38 = -1, +0x80 = 0.001 (I from use),
+`g_ts4_script_constants` = 0x880D0F70: +0 = 1.0, +0x38 = -1, +0x80 = 0.001,
 +0x1BC = 0.01, +0x2AC = 0.1, +0x408 = 0.02, +0x518 = sqrt 2, +0x51C = 1.4, +0x55C = 1.25,
 +0x644 = 137 (doubles alley, cm). `lbl_8814B440` = 0.0, `lbl_8814B910` = 0.5, `0x8814B45C` = 2.0.

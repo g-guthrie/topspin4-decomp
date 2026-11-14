@@ -5924,6 +5924,38 @@
       "src/xbox360/dg1_string_table_find.c": {
         "status": "Matching",
         "source": "xbox360/dg1_string_table_find.c"
+      },
+      "src/xbox360/ga1_gameplay_a.c": {
+        "status": "Matching",
+        "source": "xbox360/ga1_gameplay_a.c"
+      },
+      "src/xbox360/ga2_a.c": {
+        "status": "Matching",
+        "source": "xbox360/ga2_a.c"
+      },
+      "src/xbox360/ga2_b.c": {
+        "status": "Matching",
+        "source": "xbox360/ga2_b.c"
+      },
+      "src/xbox360/ga2_d.c": {
+        "status": "Matching",
+        "source": "xbox360/ga2_d.c"
+      },
+      "src/xbox360/ga2_e.c": {
+        "status": "Matching",
+        "source": "xbox360/ga2_e.c"
+      },
+      "src/xbox360/ga3_e.c": {
+        "status": "Matching",
+        "source": "xbox360/ga3_e.c"
+      },
+      "src/xbox360/ga4_b.c": {
+        "status": "Matching",
+        "source": "xbox360/ga4_b.c"
+      },
+      "src/xbox360/ga4_c.cpp": {
+        "status": "Matching",
+        "source": "xbox360/ga4_c.cpp"
       }
     }
   }

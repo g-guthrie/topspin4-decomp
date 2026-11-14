@@ -89,7 +89,7 @@ ts4_word fn_886A0FC0();
 ts4_word fn_886A2E48();
 ts4_word fn_886A6F78();
 ts4_word ts4_if_call_seq_ts4_object_finalize_886A8020();
-ts4_word fn_886AB320();
+ts4_word ga4_tree_collect_886AB320();
 ts4_word fn_886ABAE8();
 ts4_word fn_886AD278();
 ts4_word fn_886B0250();

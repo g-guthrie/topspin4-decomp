@@ -88,7 +88,7 @@ ts4_word fn_886A0EC8();
 ts4_word fn_886A0FC0();
 ts4_word fn_886A2E48();
 ts4_word fn_886A6F78();
-ts4_word fn_886AB320();
+ts4_word ga4_tree_collect_886AB320();
 ts4_word fn_886ABAE8();
 ts4_word fn_886AD278();
 ts4_word fn_886B0250();
@@ -927,13 +927,13 @@ ts4_word ts4_call_seq_lbl_880C8F26_886AA650(ts4_word a0)
     return t2;
 }
 
-/* Swing_DLL.xex 0x886AB3F8: call_seq u32@0x4, fn_881609C8, u32@0x18, fn_886AB320 */
+/* Swing_DLL.xex 0x886AB3F8: call_seq u32@0x4, fn_881609C8, u32@0x18, ga4_tree_collect_886AB320 */
 ts4_word ts4_call_seq_u32_off4_886AB3F8(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t4;
 
     fn_881609C8((ts4_word)a1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 4)));
-    t4 = fn_886AB320((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 24)), (ts4_word)a1, (ts4_word)a2);
+    t4 = ga4_tree_collect_886AB320((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 24)), (ts4_word)a1, (ts4_word)a2);
     return t4;
 }
 

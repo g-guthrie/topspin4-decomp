@@ -45161,3 +45161,80 @@ src/xbox360/dg1_string_table_find.c:
 	.text       start:0x881903A8 end:0x88190490
 	.text       start:0x881EEC90 end:0x881EEE60
 	.text       start:0x881FBA58 end:0x881FBB40
+
+src/xbox360/ga1_gameplay_a.c:
+	.pdata      start:0x881229B8 end:0x881229C0
+	.pdata      start:0x88122AB8 end:0x88122AC0
+	.pdata      start:0x88122AE8 end:0x88122AF0
+	.pdata      start:0x88122B88 end:0x88122B90
+	.pdata      start:0x88122C28 end:0x88122C30
+	.pdata      start:0x88122CC8 end:0x88122CD0
+	.pdata      start:0x88122FE8 end:0x88122FF0
+	.pdata      start:0x88122FF0 end:0x88122FF8
+	.pdata      start:0x88122FF8 end:0x88123000
+	.pdata      start:0x88123008 end:0x88123010
+	.pdata      start:0x88123018 end:0x88123020
+	.pdata      start:0x88123020 end:0x88123028
+	.pdata      start:0x88123028 end:0x88123030
+	.pdata      start:0x881230A0 end:0x881230A8
+	.pdata      start:0x881232B8 end:0x881232C0
+	.text       start:0x88645528 end:0x8864554C
+	.text       start:0x88646318 end:0x88646388
+	.text       start:0x88649778 end:0x88649828
+	.text       start:0x88649C88 end:0x88649D0C
+	.text       start:0x8864AFF8 end:0x8864B030
+	.text       start:0x8864C040 end:0x8864C0D0
+	.text       start:0x8864DB28 end:0x8864DBD4
+	.text       start:0x88655628 end:0x8865567C
+	.text       start:0x886565E0 end:0x88656674
+	.text       start:0x88656678 end:0x8865670C
+	.text       start:0x88656710 end:0x886567A4
+	.text       start:0x88656848 end:0x88656900
+	.text       start:0x886569A8 end:0x88656B44
+	.text       start:0x886575F0 end:0x88657654
+	.text       start:0x88657920 end:0x886579B8
+	.text       start:0x88657BF0 end:0x88657C70
+	.text       start:0x88659658 end:0x8865969C
+	.text       start:0x8865A228 end:0x8865A274
+	.text       start:0x8865AE10 end:0x8865AEB8
+	.text       start:0x8865BFC0 end:0x8865C000
+	.text       start:0x8865D6A0 end:0x8865D6E4
+	.text       start:0x8865E330 end:0x8865E384
+	.text       start:0x8865E588 end:0x8865E5BC
+	.text       start:0x8865E6A8 end:0x8865E700
+	.text       start:0x8865E828 end:0x8865E8C0
+	.text       start:0x8865EB60 end:0x8865EBA8
+	.text       start:0x8865FF90 end:0x8865FFF4
+	.text       start:0x88660098 end:0x886600DC
+
+src/xbox360/ga2_a.c:
+	.text       start:0x8866A018 end:0x8866A038
+
+src/xbox360/ga2_b.c:
+	.text       start:0x886612A8 end:0x886612E0
+	.text       start:0x88664680 end:0x886646B8
+
+src/xbox360/ga2_d.c:
+	.text       start:0x88662980 end:0x886629C4
+	.text       start:0x88668850 end:0x886688A4
+	.text       start:0x88668C38 end:0x88668C7C
+	.text       start:0x88670D50 end:0x88670DA0
+
+src/xbox360/ga2_e.c:
+	.pdata      start:0x88123350 end:0x88123358
+	.text       start:0x88661638 end:0x886616D0
+	.text       start:0x88664F60 end:0x88664FC4
+	.text       start:0x886731B0 end:0x8867320C
+	.text       start:0x88673210 end:0x8867326C
+
+src/xbox360/ga3_e.c:
+	.pdata      start:0x881239F8 end:0x88123A00
+	.text       start:0x8867C918 end:0x8867C9A0
+
+src/xbox360/ga4_b.c:
+	.pdata      start:0x88124658 end:0x88124660
+	.text       start:0x886AB320 end:0x886AB3F8
+
+src/xbox360/ga4_c.cpp:
+	.pdata      start:0x88124288 end:0x88124290
+	.text       start:0x8869F428 end:0x8869F510
