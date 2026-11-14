@@ -1,0 +1,109 @@
+/*
+ * ts4core tunable registry (X-macro). Single source of truth for:
+ *   - the C enum Ts4Tun and the name table (src/data.c),
+ *   - docs/port/data-format.md (section "Tunable registry"),
+ *   - port/core/tools/ts4d.py (parses the TS4_TUN lines with a regex, so keep one entry per line).
+ *
+ * TS4_TUN(ID, "name", "unit", ORIGIN, REQ, "source / meaning")
+ *
+ *   key in the TUNE section = zlib.crc32(name as ASCII)   (same hash family the game uses)
+ *   ORIGIN  GAME  value lives in the game's data or code constants; the export tools should fill it
+ *                 ("where" is in the last column; "loc U" = location not yet decoded)
+ *           PORT  value invented by the port (no counterpart in the game, or not decoded yet);
+ *                 shipped in port/core/data/provisional.tunables.json, never presented as the game's value
+ *   REQ     R     the module that uses it will not start without it (listed by ts4_missing_tunable())
+ *           O     optional; code checks ts4_has_tunable() and degrades
+ *
+ * Nothing in the C sources carries a default for any of these.
+ */
+
+/* ---- ball model (docs/gameplay/gp4b.md section 7; gp4.md) ---- */
+TS4_TUN(BALL_RADIUS_CM,       "ball.radius_cm",        "cm",     GAME, R, "ball+0x4D0; writer not located (gp4b s7)")
+TS4_TUN(BALL_A4,              "ball.a4",               "s",      GAME, R, "ball+0x4D4 drag time constant; k = T / a4; loc U")
+TS4_TUN(BALL_G,               "ball.g",                "m/s^2",  GAME, R, "ball+0x4D8 gravity; loc U")
+TS4_TUN(BALL_MAX_BOUNCES,     "ball.max_bounces",      "count",  GAME, R, "ball+0x4DC; fn_886B1BA0+0x2178 stores 10")
+TS4_TUN(BALL_NET_HEIGHT_CM,   "ball.net_height_cm",    "cm",     GAME, R, "ball+0x124 / cfg+0x124 net height at the crossing")
+TS4_TUN(BALL_NET_RESTITUTION, "ball.net_restitution",  "ratio",  GAME, R, "pool+0x10C = 0.2 (velocity factor after a solid net hit)")
+TS4_TUN(BALL_CORD_ANGLE_A,    "ball.cord_angle_a_deg", "deg",    GAME, R, "ball+0x494 net-cord deflection (gp4 s1.4)")
+TS4_TUN(BALL_CORD_ANGLE_B,    "ball.cord_angle_b_deg", "deg",    GAME, R, "ball+0x498 net-cord deflection")
+TS4_TUN(BALL_CORD_SPEED_LOSS, "ball.cord_speed_loss",  "ratio",  GAME, R, "ball+0x49C")
+TS4_TUN(BALL_CORD_SPIN_LOSS,  "ball.cord_spin_loss",   "ratio",  GAME, R, "ball+0x4A0")
+TS4_TUN(BALL_DISP_X_LO,       "ball.disp_x_lo_cm",     "cm",     GAME, R, "ball+0x4C0 landing dispersion box (gp4b s10.3)")
+TS4_TUN(BALL_DISP_X_HI,       "ball.disp_x_hi_cm",     "cm",     GAME, R, "ball+0x4C4")
+TS4_TUN(BALL_DISP_Z_LO,       "ball.disp_z_lo_cm",     "cm",     GAME, R, "ball+0x4C8")
+TS4_TUN(BALL_DISP_Z_HI,       "ball.disp_z_hi_cm",     "cm",     GAME, R, "ball+0x4CC")
+
+/* ---- court (line positions; the 2*radius tolerance of gp4b s10.3 is applied in code) ---- */
+TS4_TUN(COURT_HALF_LENGTH_CM, "court.half_length_cm",  "cm",     PORT, R, "baseline |x|; gp4b s10.3 lists 1194.5 incl. tolerance (pool const)")
+TS4_TUN(COURT_HALF_WIDTH_S_CM,"court.half_width_singles_cm","cm", PORT, R, "singles sideline |z|; gp4b s10.3 lists 415.5 incl. tolerance")
+TS4_TUN(COURT_HALF_WIDTH_D_CM,"court.half_width_doubles_cm","cm", PORT, R, "doubles sideline |z|; gp4b s10.3 lists 552.5")
+TS4_TUN(COURT_SERVICE_X_CM,   "court.service_line_cm", "cm",     PORT, R, "service line |x|; gp4b s10.3 lists 646.0")
+
+/* ---- shot decision / launch (gp4b s10, shot-to-template.md) ---- */
+TS4_TUN(SHOT_NET_AIM_CM,      "shot.net_aim_cm",       "cm",     GAME, R, "cfg+0x134 = S+0x750 Net outcome aim height (80.0 on disc)")
+TS4_TUN(SHOT_LET_AIM_CM,      "shot.let_aim_cm",       "cm",     GAME, R, "cfg+0x138 = S+0x754 Let outcome aim height (90.0 on disc)")
+TS4_TUN(SHOT_MIN_DEPTH_CM,    "shot.min_depth_cm",     "cm",     GAME, R, "pool+0x604/0x610 = 75: minimum depth past the net for an In shot")
+TS4_TUN(SHOT_OUT_MARGIN_CM,   "shot.out_margin_cm",    "cm",     GAME, R, "pool+0x4C = 3: how far outside the line an Out shot lands")
+TS4_TUN(SHOT_TIER_MEDIUM,     "shot.tier_medium",      "0..1",   GAME, R, "cfg+0xC70 = 0.4 (power above which the Medium tier applies; role M)")
+TS4_TUN(SHOT_TIER_POWERFUL,   "shot.tier_powerful",    "0..1",   GAME, R, "cfg+0xC74 = 0.7")
+TS4_TUN(SHOT_CHARGE_TICKS,    "shot.charge_full_ticks","ticks",  PORT, R, "ticks of holding a shot button for full power (game: curves cfg+0x8FC..0x920 over *(flags+0x44))")
+TS4_TUN(SHOT_ERR_BASE,        "shot.error_prob",       "0..1",   PORT, R, "initial S+0x718 (graph ERROR refines it)")
+TS4_TUN(SHOT_ERR_ADD,         "shot.error_added",      "0..1",   PORT, R, "initial S+0x564")
+TS4_TUN(SHOT_LET_PROB,        "shot.let_prob",         "0..1",   PORT, R, "initial S+0x71C (graph LET refines it)")
+TS4_TUN(SHOT_NET_SHARE,       "shot.net_share",        "0..1",   PORT, R, "initial S+0x720: share of errors that are Net")
+TS4_TUN(SHOT_SPIN_BLEND,      "shot.spin_blend",       "0..1",   PORT, R, "initial S+0x774 (spin lerp between template lo/hi)")
+TS4_TUN(SHOT_F4C,             "shot.f4c",              "0..1",   PORT, R, "initial S+0x778 (secondary stage weight w = 1 - f4C)")
+TS4_TUN(SHOT_NET_LET_ENABLED, "shot.net_let_enabled",  "0/1",    PORT, R, "gate G of gp4b s10.2 (bytes match+0x328/0x329 meaning unknown)")
+
+/* ---- aiming (aim tables of shot-to-template s4 are not decoded) ---- */
+TS4_TUN(AIM_DEPTH_CM,         "aim.depth_cm",          "cm",     PORT, R, "default landing depth past the net for a groundstroke")
+TS4_TUN(AIM_DEPTH_STICK_CM,   "aim.depth_stick_cm",    "cm",     PORT, R, "extra depth at full forward stick (negative = shorter)")
+TS4_TUN(AIM_WIDTH_STICK_CM,   "aim.width_stick_cm",    "cm",     PORT, R, "lateral offset at full sideways stick")
+TS4_TUN(AIM_SERVE_X_CM,       "aim.serve_x_cm",        "cm",     GAME, R, "serve landing x past the net (aim table 0x12C entries, x ~485..535)")
+TS4_TUN(AIM_SERVE_Z_CM,       "aim.serve_z_cm",        "cm",     GAME, R, "serve landing |z| (z ~145..180)")
+TS4_TUN(SERVE_CONTACT_H_CM,   "serve.contact_height_cm","cm",    PORT, R, "ball height at serve contact")
+TS4_TUN(SERVE_BASELINE_X_CM,  "serve.baseline_x_cm",   "cm",     PORT, R, "server's |x| when serving")
+TS4_TUN(SERVE_START_Z_CM,     "serve.start_z_cm",      "cm",     PORT, R, "server's |z| offset from the centre mark")
+TS4_TUN(RECEIVE_BASELINE_X_CM,"receive.baseline_x_cm", "cm",     PORT, R, "receiver's |x| when the point starts")
+
+/* ---- reach / candidate window (gp2.md, stats-swing-clipfit.md part B; ReachTuning offsets) ---- */
+TS4_TUN(REACH_VOLLEY_X_MAX,   "reach.volley_x_max_cm", "cm",     GAME, R, "ReachTuning+0xD8: |sample.x| below this = volley zone")
+TS4_TUN(REACH_VOLLEY_BOUNCE,  "reach.volley_max_bounce","count", GAME, R, "bounce index limit of the volley zone (gp2: <= 2)")
+TS4_TUN(REACH_SPLIT_VOLLEY,   "reach.split_height_volley_cm","cm",GAME,R, "ReachTuning+0x44")
+TS4_TUN(REACH_SPLIT_OTHER,    "reach.split_height_other_cm","cm", GAME, R, "ReachTuning+0x40")
+TS4_TUN(REACH_SMASH_LO_V,     "reach.smash_lo_volley_cm","cm",   GAME, R, "ReachTuning+0x48")
+TS4_TUN(REACH_SMASH_HI_V,     "reach.smash_hi_volley_cm","cm",   GAME, R, "ReachTuning+0x4C")
+TS4_TUN(REACH_SMASH_LO_O,     "reach.smash_lo_other_cm","cm",    GAME, R, "ReachTuning+0x50")
+TS4_TUN(REACH_SMASH_HI_O,     "reach.smash_hi_other_cm","cm",    GAME, R, "ReachTuning+0x54")
+TS4_TUN(REACH_RADIUS_RIGHT,   "reach.radius_right_cm", "cm",     GAME, R, "ReachTuning+0xF4")
+TS4_TUN(REACH_RADIUS_LEFT,    "reach.radius_left_cm",  "cm",     GAME, R, "ReachTuning+0x100")
+TS4_TUN(REACH_PREP_VOLLEY,    "reach.prep_ticks_volley","ticks", GAME, R, "ReachTuning+0x108")
+TS4_TUN(REACH_PREP_OTHER,     "reach.prep_ticks",      "ticks",  GAME, R, "ReachTuning+0x104")
+TS4_TUN(REACH_UNIT_SCALE,     "reach.unit_scale",      "m/s per cm/tick", GAME, R, "pool+0x114 = 0.6")
+TS4_TUN(REACH_SPEED_CAP,      "reach.speed_cap",       "m/s",    GAME, R, "finite clamp of a required speed (FLT_MAX in gp2 draft; use a large number)")
+TS4_TUN(REACH_UNREACHABLE,    "reach.unreachable",     "m/s",    GAME, R, "pool+0x20 = 100")
+TS4_TUN(REACH_FAR_DEFAULT,    "reach.far_default",     "m/s",    GAME, R, "stored for samples with no usable geometry")
+TS4_TUN(REACH_MIN_TIME,       "reach.min_time_ticks",  "ticks",  GAME, R, "pool+0x00 = 1: minimum preparation slack")
+TS4_TUN(REACH_NET_MARGIN,     "reach.net_margin_cm",   "cm",     GAME, R, "gp2: samples with |x| <= 150 are not candidates")
+TS4_TUN(REACH_SCORE_MAX_SPEED,"reach.score_max_speed", "m/s",    GAME, R, "pool+0xF0 = 50: above this the score is -1")
+TS4_TUN(SWING_CONTACT_DELAY,  "swing.contact_delay_ticks","ticks",PORT, R, "ticks from button release to racket contact (game: clip fit at EventRacket)")
+TS4_TUN(SWING_RECOVERY,       "swing.recovery_ticks",  "ticks",  PORT, R, "ticks the player is locked after contact")
+TS4_TUN(SWING_SLACK_CM,       "swing.contact_slack_cm","cm",     PORT, R, "extra distance tolerated at contact on top of the reach radius")
+
+/* ---- movement (movement-and-ai.md, gp3.md s5) ---- */
+TS4_TUN(MOVE_SPEED_RUSH,      "move.speed_rush_cms",   "cm/s",   PORT, R, "locomotion speed in the Rush regime (game: animation root motion)")
+TS4_TUN(MOVE_SPEED_JOG,       "move.speed_jog_cms",    "cm/s",   PORT, R, "Jog regimes")
+TS4_TUN(MOVE_SPEED_WALK,      "move.speed_walk_cms",   "cm/s",   PORT, R, "walk / approach")
+TS4_TUN(MOVE_ACCEL,           "move.accel_cms2",       "cm/s^2", PORT, R, "acceleration limit")
+TS4_TUN(MOVE_REACTION,        "move.reaction_frames",  "ticks",  GAME, R, "profile record +0x1DC (state 0 wait)")
+TS4_TUN(MOVE_RUSH_GUARD,      "move.rush_guard",       "",       GAME, R, "cfg+0x630")
+TS4_TUN(MOVE_MIN_RUSH,        "move.min_distance_rush","cm",     GAME, R, "cfg+0x270 mode record minimum distance")
+TS4_TUN(MOVE_MIN_JOGJOG,      "move.min_distance_jogjog","cm",   GAME, R, "cfg+0x284")
+TS4_TUN(MOVE_MIN_JOG,         "move.min_distance_jog", "cm",     GAME, R, "cfg+0x298")
+TS4_TUN(MOVE_VALIDITY,        "move.validity_threshold","",      GAME, R, "pool 0x8814B910 = 0.5")
+TS4_TUN(MOVE_MAX_HOPS,        "move.max_hops",         "count",  GAME, R, "8 (fn_886BD690 loop bound)")
+
+/* ---- point flow (port policy, not game data) ---- */
+TS4_TUN(FLOW_POINT_END_TICKS, "flow.point_end_ticks",  "ticks",  PORT, R, "pause after a point before the next serve")
+TS4_TUN(FLOW_AI_SERVE_DELAY,  "flow.ai_serve_delay_ticks","ticks",PORT, R, "AI waits this long before serving")
+TS4_TUN(FLOW_AI_POWER,        "flow.ai_power",         "0..1",   PORT, R, "AI holds the shot button for this fraction of shot.charge_full_ticks")

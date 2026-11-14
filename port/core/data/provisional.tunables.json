@@ -1,0 +1,313 @@
+{
+ "_comment": "Provisional tunables of the ts4core port. NOT exported from the game: values are invented by the port, quoted from docs/gameplay notes, or physical/rules-of-tennis constants. The export tools override every GAME-origin entry they can decode. See docs/port/data-format.md.",
+ "tunables": {
+  "aim.depth_cm": {
+   "value": 900.0,
+   "source": "port"
+  },
+  "aim.depth_stick_cm": {
+   "value": 250.0,
+   "source": "port"
+  },
+  "aim.serve_x_cm": {
+   "value": 500.0,
+   "source": "doc shot-to-template s4 (485..535)"
+  },
+  "aim.serve_z_cm": {
+   "value": 160.0,
+   "source": "doc shot-to-template s4 (145..180)"
+  },
+  "aim.width_stick_cm": {
+   "value": 280.0,
+   "source": "port"
+  },
+  "ball.a4": {
+   "value": 1.5,
+   "source": "port"
+  },
+  "ball.cord_angle_a_deg": {
+   "value": 6.0,
+   "source": "port"
+  },
+  "ball.cord_angle_b_deg": {
+   "value": 3.0,
+   "source": "port"
+  },
+  "ball.cord_speed_loss": {
+   "value": 0.3,
+   "source": "port"
+  },
+  "ball.cord_spin_loss": {
+   "value": 0.5,
+   "source": "port"
+  },
+  "ball.disp_x_hi_cm": {
+   "value": 25.0,
+   "source": "port"
+  },
+  "ball.disp_x_lo_cm": {
+   "value": -25.0,
+   "source": "port"
+  },
+  "ball.disp_z_hi_cm": {
+   "value": 25.0,
+   "source": "port"
+  },
+  "ball.disp_z_lo_cm": {
+   "value": -25.0,
+   "source": "port"
+  },
+  "ball.g": {
+   "value": 9.81,
+   "source": "physics"
+  },
+  "ball.max_bounces": {
+   "value": 10,
+   "source": "doc gp4b s7"
+  },
+  "ball.net_height_cm": {
+   "value": 91.4,
+   "source": "physics"
+  },
+  "ball.net_restitution": {
+   "value": 0.2,
+   "source": "doc gp4 pool+0x10C"
+  },
+  "ball.radius_cm": {
+   "value": 3.3,
+   "source": "port"
+  },
+  "court.half_length_cm": {
+   "value": 1188.5,
+   "source": "rules of tennis"
+  },
+  "court.half_width_doubles_cm": {
+   "value": 548.6,
+   "source": "rules of tennis"
+  },
+  "court.half_width_singles_cm": {
+   "value": 411.5,
+   "source": "rules of tennis"
+  },
+  "court.service_line_cm": {
+   "value": 640.1,
+   "source": "rules of tennis"
+  },
+  "flow.ai_power": {
+   "value": 0.6,
+   "source": "port"
+  },
+  "flow.ai_serve_delay_ticks": {
+   "value": 60,
+   "source": "port"
+  },
+  "flow.point_end_ticks": {
+   "value": 90,
+   "source": "port"
+  },
+  "move.accel_cms2": {
+   "value": 1800.0,
+   "source": "port"
+  },
+  "move.max_hops": {
+   "value": 8,
+   "source": "doc gp3 s5"
+  },
+  "move.min_distance_jog": {
+   "value": 0.0,
+   "source": "port"
+  },
+  "move.min_distance_jogjog": {
+   "value": 150.0,
+   "source": "port"
+  },
+  "move.min_distance_rush": {
+   "value": 300.0,
+   "source": "port"
+  },
+  "move.reaction_frames": {
+   "value": 12,
+   "source": "port"
+  },
+  "move.rush_guard": {
+   "value": 0.0,
+   "source": "port"
+  },
+  "move.speed_jog_cms": {
+   "value": 480.0,
+   "source": "port"
+  },
+  "move.speed_rush_cms": {
+   "value": 700.0,
+   "source": "port"
+  },
+  "move.speed_walk_cms": {
+   "value": 220.0,
+   "source": "port"
+  },
+  "move.validity_threshold": {
+   "value": 0.5,
+   "source": "doc gp3 s5 lbl_8814B910"
+  },
+  "reach.far_default": {
+   "value": 1000000000.0,
+   "source": "port"
+  },
+  "reach.min_time_ticks": {
+   "value": 1.0,
+   "source": "doc gp2 pool+0x00"
+  },
+  "reach.net_margin_cm": {
+   "value": 150.0,
+   "source": "doc gp2 s4"
+  },
+  "reach.prep_ticks": {
+   "value": 18,
+   "source": "port"
+  },
+  "reach.prep_ticks_volley": {
+   "value": 8,
+   "source": "port"
+  },
+  "reach.radius_left_cm": {
+   "value": 120.0,
+   "source": "port"
+  },
+  "reach.radius_right_cm": {
+   "value": 120.0,
+   "source": "port"
+  },
+  "reach.score_max_speed": {
+   "value": 50.0,
+   "source": "doc gp2 pool+0xF0"
+  },
+  "reach.smash_hi_other_cm": {
+   "value": 340.0,
+   "source": "port"
+  },
+  "reach.smash_hi_volley_cm": {
+   "value": 340.0,
+   "source": "port"
+  },
+  "reach.smash_lo_other_cm": {
+   "value": 260.0,
+   "source": "port"
+  },
+  "reach.smash_lo_volley_cm": {
+   "value": 200.0,
+   "source": "port"
+  },
+  "reach.speed_cap": {
+   "value": 1000000000.0,
+   "source": "port"
+  },
+  "reach.split_height_other_cm": {
+   "value": 200.0,
+   "source": "port"
+  },
+  "reach.split_height_volley_cm": {
+   "value": 200.0,
+   "source": "port"
+  },
+  "reach.unit_scale": {
+   "value": 0.6,
+   "source": "doc gp2 pool+0x114"
+  },
+  "reach.unreachable": {
+   "value": 100.0,
+   "source": "doc gp2 pool+0x20"
+  },
+  "reach.volley_max_bounce": {
+   "value": 2,
+   "source": "doc gp2"
+  },
+  "reach.volley_x_max_cm": {
+   "value": 500.0,
+   "source": "port"
+  },
+  "receive.baseline_x_cm": {
+   "value": 1300.0,
+   "source": "port"
+  },
+  "serve.baseline_x_cm": {
+   "value": 1250.0,
+   "source": "port"
+  },
+  "serve.contact_height_cm": {
+   "value": 260.0,
+   "source": "port"
+  },
+  "serve.start_z_cm": {
+   "value": 120.0,
+   "source": "port"
+  },
+  "shot.charge_full_ticks": {
+   "value": 40,
+   "source": "port"
+  },
+  "shot.error_added": {
+   "value": 0.0,
+   "source": "port"
+  },
+  "shot.error_prob": {
+   "value": 0.06,
+   "source": "port"
+  },
+  "shot.f4c": {
+   "value": 0.0,
+   "source": "doc shot-to-template s7"
+  },
+  "shot.let_aim_cm": {
+   "value": 90.0,
+   "source": "doc shot-to-template s1"
+  },
+  "shot.let_prob": {
+   "value": 0.01,
+   "source": "port"
+  },
+  "shot.min_depth_cm": {
+   "value": 75.0,
+   "source": "doc gp4b s10.3"
+  },
+  "shot.net_aim_cm": {
+   "value": 80.0,
+   "source": "doc shot-to-template s1"
+  },
+  "shot.net_let_enabled": {
+   "value": 1,
+   "source": "port"
+  },
+  "shot.net_share": {
+   "value": 0.4,
+   "source": "port"
+  },
+  "shot.out_margin_cm": {
+   "value": 3.0,
+   "source": "doc gp4b s10.3"
+  },
+  "shot.spin_blend": {
+   "value": 0.5,
+   "source": "port"
+  },
+  "shot.tier_medium": {
+   "value": 0.4,
+   "source": "doc shot-to-template s3"
+  },
+  "shot.tier_powerful": {
+   "value": 0.7,
+   "source": "doc shot-to-template s3"
+  },
+  "swing.contact_delay_ticks": {
+   "value": 18,
+   "source": "port"
+  },
+  "swing.contact_slack_cm": {
+   "value": 20.0,
+   "source": "port"
+  },
+  "swing.recovery_ticks": {
+   "value": 24,
+   "source": "port"
+  }
+ }
+}

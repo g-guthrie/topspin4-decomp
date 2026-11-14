@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Top Spin 4 port: viewer</title>
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app">
+  <aside id="panel">
+    <header>
+      <h1>TS4 port viewer</h1>
+      <div id="backend" class="badge">loading...</div>
+    </header>
+    <nav id="tabs">
+      <button data-tab="clips" class="active">Clips</button>
+      <button data-tab="shot">Shot</button>
+      <button data-tab="input">Input</button>
+      <button data-tab="status">Status</button>
+    </nav>
+
+    <section id="tab-clips" class="tab active">
+      <div class="row">
+        <label><input type="radio" name="clipmode" value="core" checked> Core clips</label>
+        <label><input type="radio" name="clipmode" value="records"> Swing records</label>
+      </div>
+      <div class="row">
+        <input id="clipfilter" type="search" placeholder="filter (name, index, codec)">
+        <label class="small"><input id="exportedOnly" type="checkbox"> exported only</label>
+      </div>
+      <div id="cliplist" class="list"></div>
+      <div id="clipinfo" class="info"></div>
+      <div class="transport">
+        <button id="playBtn" title="play / pause">Pause</button>
+        <input id="scrub" type="range" min="0" max="1000" value="0">
+        <span id="timeLabel">0.00 / 0.00 s</span>
+        <div id="contactMark" title="racket contact marker (unverified unit)"></div>
+      </div>
+      <div class="row">
+        <label class="small">speed <input id="speed" type="range" min="0.05" max="2" step="0.05" value="1"></label>
+        <label class="small"><input id="loop" type="checkbox" checked> loop</label>
+        <label class="small">yaw <input id="yaw" type="range" min="-180" max="180" step="5" value="0"></label>
+      </div>
+      <div class="row">
+        <button id="pairBtn" title="remember: selected record = current clip">Pair record with clip</button>
+        <button id="dlPairs">Download clip-map.json</button>
+      </div>
+      <div id="pairInfo" class="small muted"></div>
+    </section>
+
+    <section id="tab-shot" class="tab">
+      <div id="shotUnavailable" class="warn" hidden></div>
+      <form id="shotForm" autocomplete="off">
+        <label>template <select id="tplSel"></select></label>
+        <fieldset><legend>contact point (cm)</legend>
+          <label>x <input id="fx" type="number" step="10" value="-1188"></label>
+          <label>y <input id="fy" type="number" step="5" value="100"></label>
+          <label>z <input id="fz" type="number" step="10" value="150"></label>
+        </fieldset>
+        <fieldset><legend>landing target (cm)</legend>
+          <label>x <input id="tx" type="number" step="10" value="1000"></label>
+          <label>z <input id="tz" type="number" step="10" value="-250"></label>
+        </fieldset>
+        <label>spin blend <input id="blend" type="range" min="0" max="1" step="0.05" value="0.5"><output id="blendOut">0.5</output></label>
+        <label>f4C <input id="f4c" type="range" min="0" max="1" step="0.05" value="0"><output id="f4cOut">0</output></label>
+        <div class="row">
+          <label class="small"><input id="lefty" type="checkbox"> left-handed</label>
+          <label class="small">mode <select id="mode"><option value="in">In</option><option value="net">Net (hits the net)</option></select></label>
+        </div>
+        <div class="row">
+          <button type="submit" id="launchBtn">Launch</button>
+          <label class="small">ball speed <input id="ballRate" type="range" min="0.05" max="2" step="0.05" value="0.5"></label>
+        </div>
+      </form>
+      <div class="row small muted">Click the court to set the target; shift+click to set the contact point.</div>
+      <div class="row presets">
+        <button data-preset="fh-cross">Baseline FH cross</button>
+        <button data-preset="serve">Serve deuce</button>
+        <button data-preset="volley">Volley</button>
+        <button data-preset="lob">Lob</button>
+      </div>
+      <pre id="shotOut" class="out"></pre>
+    </section>
+
+    <section id="tab-input" class="tab">
+      <p class="small">Keys: <b>J/Space</b> Flat (A), <b>K</b> TopSpin (B), <b>U</b> Slice (X), <b>I</b> Lob (Y), <b>L/Ctrl</b> Risk (RT/LT), <b>Shift</b> sprint (RB), <b>WASD/arrows</b> stick. Gamepad: standard mapping. A shot is requested when the shot button is released; hold longer for Medium/Powerful (stub).</p>
+      <div class="row"><label class="small">situation <select id="situation"><option>baseline</option><option>volley</option><option>smash</option><option>serve</option></select></label>
+      <label class="small"><input id="autoLaunch" type="checkbox" checked> launch on request</label></div>
+      <pre id="inputState" class="out"></pre>
+      <div class="small muted">last shot request</div>
+      <pre id="requestOut" class="out"></pre>
+    </section>
+
+    <section id="tab-status" class="tab">
+      <div id="statusOut"></div>
+    </section>
+  </aside>
+  <main id="stage">
+    <canvas id="view"></canvas>
+    <div id="camBar">
+      <button data-cam="broadcast">Broadcast</button>
+      <button data-cam="behind">Behind baseline</button>
+      <button data-cam="side">Side</button>
+      <button data-cam="top">Top</button>
+      <button data-cam="player">Player</button>
+    </div>
+    <div id="toast"></div>
+  </main>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
