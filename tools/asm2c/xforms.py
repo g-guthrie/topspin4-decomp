@@ -465,10 +465,56 @@ def t_ptrtemp(b, rng=None):
     return _pick(ptrtemp_all(b), rng)
 
 
+_SUM = re.compile(r'\(\((?:lv|t|p|a)\d+ \+ (?:lv|t|p|a)\d+\)\)|\((?:lv|t|p|a)\d+ \+ (?:lv|t|p|a)\d+\)')
+
+
+def blockcse_all(b):
+    """(T1) a sum of two variables `(lv5 + t2)` used two or more times in one block (the
+    address of an array element the original keeps in a callee-saved register) becomes a
+    temporary assigned just before its first use: `hN = (ts4_word)(lv5 + t2);`.  The
+    replacement covers the rest of the enclosing block (deeper lines included) as long as
+    neither operand is reassigned."""
+    L, out = b.split('\n'), []
+    seen = set()
+    for i, l in enumerate(L):
+        if _DECL.match(l):
+            continue
+        for m in _SUM.finditer(l):
+            e = m.group(0)
+            e = e[1:-1] if e.startswith('((') else e
+            ind = len(l) - len(l.lstrip())
+            if (e, ind) in seen:
+                continue
+            seen.add((e, ind))
+            ops = re.findall(r'\w+', e)
+            j, n, k = i, 0, i
+            while k < len(L):
+                lk = L[k]
+                if lk.strip() and len(lk) - len(lk.lstrip()) < ind:
+                    break
+                if k > i and any(re.match(r'^\s*' + o + r' = ', lk) for o in ops):
+                    break
+                n += lk.count(e); j = k
+                k += 1
+            if n < 2:
+                continue
+            h = _newname(b, 'h')
+            L2 = list(L)
+            for q in range(i, j + 1):
+                L2[q] = L2[q].replace('(' + e + ')', h).replace(e, h)
+            L2.insert(i, ' ' * ind + f'{h} = (ts4_word){e};')
+            out.append(_add_decl('\n'.join(L2), f'    ts4_word {h};'))
+    return out
+
+
+def t_blockcse(b, rng=None):
+    return _pick(blockcse_all(b), rng)
+
+
 # (transform, weight) for perm.py; t_sv is added there because it needs the target's sites
 TRANSFORMS = [(t_bool, 2), (t_strlen, 2), (t_strl_cse, 1), (t_compound, 2), (t_nz, 1), (t_unvol, 2),
               (t_homecopy, 1), (t_locsize, 2), (t_locperm, 2), (t_earlyinv, 2), (t_cse, 2), (t_hoist, 2),
-              (t_ldfirst, 3), (t_idx, 3), (t_stswap, 2), (t_ptrtemp, 1)]
+              (t_ldfirst, 3), (t_idx, 3), (t_stswap, 2), (t_ptrtemp, 1), (t_blockcse, 2)]
 
 
 def deterministic(b, sites=()):
@@ -489,5 +535,5 @@ def deterministic(b, sites=()):
         out += [x] if x else []
         out += hoist_all(s)[:3] + ldfirst_all(s, 3)
     out += sv_all(b, sites)
-    out += ptrtemp_all(b)[:3] + hoist_all(b)[:4] + ldfirst_all(b, 4) + idx_all(b)[:4] + stswap_all(b)[:4]
+    out += blockcse_all(b)[:3] + ptrtemp_all(b)[:3] + hoist_all(b)[:4] + ldfirst_all(b, 4) + idx_all(b)[:4] + stswap_all(b)[:4]
     return list(dict.fromkeys(x for x in out if x and x != b))

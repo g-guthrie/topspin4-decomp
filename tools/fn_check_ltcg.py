@@ -280,7 +280,9 @@ def candidate_sites(image: Image, start: int, code: bytes) -> list[Site]:
                 sites.append(Site(index * 4, REFLO, full if full is not None else -1))
             continue
         target = branch_target(word, address)
-        if target is not None and not (start <= target < end):
+        # A branch to the function's own first instruction is a recursive call
+        # (the target object has a REL24 to itself there), never a local loop.
+        if target is not None and (target == start or not (start <= target < end)):
             sites.append(Site(index * 4, REL24 if word >> 26 == 18 else REL14, target))
     return sites
 
@@ -359,8 +361,8 @@ def compare(c_code: bytes, c_sites: list[Site], c_start: int, c_index: SymbolInd
         for cs in c_sites:
             ts = t_by[(cs.offset, cs.kind)]
             where = f"+{cs.offset:#x}"
-            c_in = c_start <= cs.address < c_start + size
-            t_in = t_start <= ts.address < t_start + size
+            c_in = c_start < cs.address < c_start + size
+            t_in = t_start < ts.address < t_start + size
             if c_in or t_in:
                 if not (c_in and t_in and cs.address - c_start == ts.address - t_start):
                     problems.append(f"{where}: local label differs")
