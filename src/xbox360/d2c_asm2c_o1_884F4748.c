@@ -38,7 +38,7 @@ ts4_word ts4_call_seq_lbl_88092008_885A9298();
 ts4_word ts4_if_call_seq_u32_off2c_885A9E38();
 ts4_word fn_885B55F0();
 ts4_word ts4_if_call_seq_u32_off4_885B6060();
-ts4_word fn_885B72F0();
+ts4_word ts4_pool_free_885B72F0();
 ts4_word fn_885B85F8();
 ts4_word fn_885B9140();
 #ifndef _MSC_VER

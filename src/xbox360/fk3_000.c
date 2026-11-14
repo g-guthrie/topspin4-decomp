@@ -172,7 +172,7 @@ ts4_word ts4_if_call_seq_NtSetEvent_8857C1F8();
 ts4_word fn_8857C8C8();
 ts4_word fn_885AA208();
 ts4_word fn_885ABDB0();
-ts4_word fn_885B72F0();
+ts4_word ts4_pool_free_885B72F0();
 ts4_word fn_885C3770();
 ts4_word fn_885C38E0();
 ts4_word fn_885CD338();
@@ -2993,7 +2993,7 @@ ts4_word ts4_atomic_interlocked_inc_885A6E08(ts4_word a0)
     return t1;
 }
 
-/* Swing_DLL.xex 0x885ABE30: if_get fn_885ABDB0, u32@0x34, fn_885AA208, fn_885B72F0, u32@0x34, u32@0x80 */
+/* Swing_DLL.xex 0x885ABE30: if_get fn_885ABDB0, u32@0x34, fn_885AA208, ts4_pool_free_885B72F0, u32@0x34, u32@0x80 */
 ts4_word ts4_if_get_fn_885ABDB0_885ABE30(ts4_word a0)
 {
     ts4_word p18;
@@ -3008,7 +3008,7 @@ ts4_word ts4_if_get_fn_885ABDB0_885ABE30(ts4_word a0)
     t2 = *(ts4_word *)((char *)(ts4_word)(a0) + 52);
     if ((ts4_word)t2 != 0) {
         fn_885AA208((ts4_word)t2);
-        fn_885B72F0((ts4_word)t2);
+        ts4_pool_free_885B72F0((ts4_word)t2);
         *(ts4_word *)((char *)(ts4_word)(a0) + 52) = (ts4_word)0;
     }
     t6 = *(ts4_word *)((char *)(ts4_word)(a0) + 128);
@@ -3029,14 +3029,14 @@ ts4_word ts4_if_get_fn_885ABDB0_885ABE30(ts4_word a0)
     t16 = *(ts4_word *)((char *)(ts4_word)(a0) + 76);
     p18 = (ts4_word)t16;
     if ((ts4_word)t16 != 0) {
-        t17 = fn_885B72F0((ts4_word)t16);
+        t17 = ts4_pool_free_885B72F0((ts4_word)t16);
         *(ts4_word *)((char *)(ts4_word)(a0) + 76) = (ts4_word)0;
         p18 = (ts4_word)t17;
     }
     return p18;
 }
 
-/* Swing_DLL.xex 0x885B5E88: if_atomic interlocked_dec, u8@0x0, fn_885B72F0 */
+/* Swing_DLL.xex 0x885B5E88: if_atomic interlocked_dec, u8@0x0, ts4_pool_free_885B72F0 */
 ts4_word ts4_if_atomic_interlocked_dec_885B5E88(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6)
 {
     ts4_word t1;
@@ -3050,7 +3050,7 @@ ts4_word ts4_if_atomic_interlocked_dec_885B5E88(ts4_word a0, ts4_word a1, ts4_wo
     t1 = _InterlockedDecrement((volatile long *)(ts4_word)((a0 + 16)));
     if ((ts4_word)t1 == 0) {
         *(unsigned char *)((char *)(ts4_word)(a0) + 0) = (unsigned char)15;
-        fn_885B72F0();
+        ts4_pool_free_885B72F0();
     }
     return 1;
 }

@@ -208,7 +208,7 @@ ts4_word ts4_tailcall_NetDll_WSACleanup_884F0238();
 ts4_word ts4_tailcall_NetDll_recv_884F0318();
 ts4_word ts4_tailcall_NetDll_send_884F0350();
 ts4_word fn_885651F8();
-ts4_word fn_88565258();
+ts4_word ts4_crt_nh_malloc_88565258();
 ts4_word fn_88565320();
 ts4_word ts4_tailcall_fn_885655E8_88565748();
 ts4_word ts4_tailcall_fn_885659E8_88565AF8();
@@ -912,13 +912,13 @@ ts4_word ts4_get_u32_off188_8831A510(ts4_word a0, ts4_word a1)
     return 0;
 }
 
-/* Swing_DLL.xex 0x8831A618: if_tail fn_88565258, fn_8857B048 */
+/* Swing_DLL.xex 0x8831A618: if_tail ts4_crt_nh_malloc_88565258, fn_8857B048 */
 ts4_word ts4_if_tail_fn_88565258_8831A618(ts4_word a0, ts4_word a1)
 {
     if ((ts4_word)(a1 & 0x100000) != 0) {
         return fn_8857B048((ts4_word)a0, (ts4_word)-1, (ts4_word)0, (ts4_word)4);
     }
-    return fn_88565258((ts4_word)a0, (ts4_word)a1);
+    return ts4_crt_nh_malloc_88565258((ts4_word)a0, (ts4_word)a1);
 }
 
 /* Swing_DLL.xex 0x8831A638: if_tail fn_885651F8, ts4_tailcall_MmFreePhysicalMemory_8857B158 */
@@ -2388,7 +2388,7 @@ ts4_word ts4_if_call_seq_fn_883B70D8_883B7328(ts4_word a0, ts4_word a1, ts4_word
     return p3;
 }
 
-/* Swing_DLL.xex 0x883B9150: if_call_seq fn_88565258, u32@0x0, u32@0x0, fn_885651F8, u32@0x0, u32@0x0 */
+/* Swing_DLL.xex 0x883B9150: if_call_seq ts4_crt_nh_malloc_88565258, u32@0x0, u32@0x0, fn_885651F8, u32@0x0, u32@0x0 */
 ts4_word ts4_if_call_seq_fn_88565258_883B9150(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word p1;
@@ -2402,7 +2402,7 @@ ts4_word ts4_if_call_seq_fn_88565258_883B9150(ts4_word a0, ts4_word a1, ts4_word
     if ((ts4_word)(a0 << 2) == 0) {
         p1 = (ts4_word)1;
     }
-    t2 = fn_88565258((ts4_word)p1);
+    t2 = ts4_crt_nh_malloc_88565258((ts4_word)p1);
     if ((ts4_word)t2 == 0) {
         return 0;
     }

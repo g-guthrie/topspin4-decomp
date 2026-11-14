@@ -17,7 +17,7 @@ extern void fn_88778BE8(void *, int);
 extern void ts4_tailcall_fn_88584548_8857AFE8(int);
 extern void ts4_destroy_owned_object(void *);
 extern void fn_8860BBD8(void *);
-extern void fn_88606270(void *, int, const char *, void *);
+extern void ts4_forward_varargs_88606270(void *, int, const char *, void *);
 extern void fn_881AAF10(void *, void *);
 extern void fn_887A3FE8(void *);
 extern void fn_8879A380(void *);

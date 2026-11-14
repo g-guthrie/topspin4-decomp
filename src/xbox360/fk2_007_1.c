@@ -149,7 +149,7 @@ ts4_word ts4_forward_to_fn_8841B5E0();
 ts4_word ts4_tailcall_fn_885827E0_88563110();
 ts4_word fn_88564F40();
 ts4_word fn_885651F8();
-ts4_word fn_88565258();
+ts4_word ts4_crt_nh_malloc_88565258();
 ts4_word ts4_tailcall_fn_88582F30_8857A128();
 ts4_word ts4_tailcall_XamEnumerate_8857A1C8();
 ts4_word ts4_if_get_u32_lbl_88C32048_8857A1E0();

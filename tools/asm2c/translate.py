@@ -390,6 +390,10 @@ class Gen:
             t = tys.pop()
             if t not in ('float', 'double'):
                 raise Skip('float phi')
+            if not all(self._fhas(s, f) for s, o in arms) or (pre_out is not None and not self._fhas(st, f)):
+                # no value on some path: the register is dead after the join
+                st['fregs'].pop(f, None); st['fwritten'].discard(f); st['clobbered'].add(f)
+                continue
             self.ntmp += 1
             pn = f'pf{self.ntmp}'
             self.fphis.append((pn, t))
@@ -434,6 +438,11 @@ class Gen:
             raise Skip('freg')
         self.fparams.setdefault(f, t)
         return f
+
+    @staticmethod
+    def _fhas(st, f):
+        """True when float register f has a value in st (written, or an untouched parameter)."""
+        return f in st['fregs'] or (f in ('f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8') and f not in st['clobbered'])
 
     def setf(self, st, f, e, t='float'):
         st['fregs'][f] = (e, t); st['fwritten'].add(f)

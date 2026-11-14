@@ -23,7 +23,7 @@ extern char lbl_88D45B38[];
 ts4_word fn_881B18E0();
 ts4_word fn_881B19A0();
 ts4_word fn_881B9148();
-ts4_word fn_88565258();
+ts4_word ts4_crt_nh_malloc_88565258();
 ts4_word fn_88581AF0();
 ts4_word fn_88581B70();
 ts4_word fn_88613350();

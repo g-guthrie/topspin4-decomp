@@ -1,13 +1,13 @@
 /* Family SWB2 (jump-table switch). */
 extern float g_ts4_script_constants[];
-int fn_885636E8(void);
+int ts4_crt_fpclass_885636E8(void);
 
 int ts4_map_input_flag_8819F760(double value, int *out)
 {
     int flag;
     int result;
 
-    switch (fn_885636E8()) {
+    switch (ts4_crt_fpclass_885636E8()) {
     case 1:
     case 2:
         result = 1; flag = 0; break;

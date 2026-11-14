@@ -29,9 +29,9 @@ struct sm4_b_b { char pad[0x2c]; struct { char pad[8]; int v; } *o; };
 void ts4_call_if_child_set_884AE730(struct sm4_b_b *s) { void *o = s->o; if (o && s->o->v) fn_884A6300(o); }
 
 /* tail call with constant arguments */
-extern void fn_88421058(int, int, void *, int, int, int, void *);
+extern void ts4_forward_varargs_88421058(int, int, void *, int, int, int, void *);
 extern char lbl_8808C97C, lbl_8808C990;
-void ts4_tail_88421058_consts_884D7A18(int a, int b) { fn_88421058(a, b, &lbl_8808C97C, 5, 5, 0, &lbl_8808C990); }
+void ts4_tail_88421058_consts_884D7A18(int a, int b) { ts4_forward_varargs_88421058(a, b, &lbl_8808C97C, 5, 5, 0, &lbl_8808C990); }
 
 /* free the block that starts one byte-header before the pointer */
 extern void fn_88884DE0(void *, unsigned);

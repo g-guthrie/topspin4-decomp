@@ -11,7 +11,7 @@ extern char g_ts4_tsu_format[], lbl_880EAD84[], lbl_880EA5E4[];
 extern void fn_8822A1E8(void *, void *, u8);
 extern void fn_8875DCD8(void *, void *, int);
 extern void ts4_format_text(char *, u32, const char *, ...);
-extern void fn_88606270(void *, int, const char *, void *);
+extern void ts4_forward_varargs_88606270(void *, int, const char *, void *);
 extern void fn_881AAF10(void *, void *);
 extern void fn_88617D88(void *);
 extern char *fn_88617D88r(void *);

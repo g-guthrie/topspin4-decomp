@@ -129,11 +129,11 @@ ts4_text16 *ts4_uninit_copy_text_88181740(ts4_text16 *first, ts4_text16 *last, t
 }
 
 /* 0x8819F700: -1 when the classifier returns 4, 1 when it returns 0x200, else 0 */
-int fn_885636E8(float);
+int ts4_crt_fpclass_885636E8(float);
 int ts4_check_kind_8819F700(float f)
 {
-    if (fn_885636E8(f) == 0x200) return 1;
-    return (fn_885636E8(f) - 4 == 0) ? -1 : 0;
+    if (ts4_crt_fpclass_885636E8(f) == 0x200) return 1;
+    return (ts4_crt_fpclass_885636E8(f) - 4 == 0) ? -1 : 0;
 }
 
 /* 0x881AAE10: erase one 4-byte element, shifting the tail down */

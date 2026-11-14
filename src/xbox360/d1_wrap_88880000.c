@@ -2,12 +2,12 @@
  * Small wrappers: a stack frame around one or two calls. The names
  * describe that behaviour and end in the function address. */
 
-extern void * fn_88565258(int);
+extern void * ts4_crt_nh_malloc_88565258(int);
 extern void fn_886263E8(void *);
 
 void ts4_call_guarded_88888508(void)
 {
-    void *result1 = fn_88565258(296);
+    void *result1 = ts4_crt_nh_malloc_88565258(296);
     if (result1 != 0) {
         fn_886263E8(result1);
     }

@@ -161,7 +161,7 @@ ts4_word fn_88290C68();
 ts4_word fn_882C7288();
 ts4_word fn_88564F40();
 ts4_word fn_885651F8();
-ts4_word fn_88565258();
+ts4_word ts4_crt_nh_malloc_88565258();
 ts4_word ts4_if_get_u32_lbl_88C32048_8857A1E0();
 ts4_word fn_8857B388();
 ts4_word ts4_if_call_seq_NtSuspendThread_8857B4C8();

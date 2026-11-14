@@ -194,7 +194,7 @@ extern char * lbl_88D45A48;
 extern char * lbl_88D459E8;
 extern char * lbl_88D45A08;
 extern u32 fn_888C7AF8(u32);
-extern u32 fn_8857BF40(char *, int);
+extern u32 ts4_query_size_8857BF40(char *, int);
 extern void fn_881C38D0(char *);
 extern void fn_8890E988(char *);
 extern u32 fn_88319C40(int, int, int);
@@ -2270,13 +2270,13 @@ u32 ts4_bytes_for_bit_count_field8_88934CD8(char *a)
 /* Swing_DLL.xex 0x881A5668 */
 u32 ts4_forward_field20_with_zero_881A5668(char *a)
 {
-    return fn_8857BF40(LP(a, 20), 0);
+    return ts4_query_size_8857BF40(LP(a, 20), 0);
 }
 
 /* Swing_DLL.xex 0x887CB6E0 */
 u32 ts4_forward_field20_with_zero_887CB6E0(char *a)
 {
-    return fn_8857BF40(LP(a, 20), 0);
+    return ts4_query_size_8857BF40(LP(a, 20), 0);
 }
 
 /* forward_this_plus_24 */

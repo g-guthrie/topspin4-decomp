@@ -78,7 +78,7 @@ typedef struct {
 
 extern const float lbl_88038960[256]; /* FLOOR1_fromdB_LOOKUP */
 int ts4_get_u32_off0_883C57A8(const void *a, const void *b); /* icomp */
-void fn_8856B388(void *base, lib2_size_t n, lib2_size_t size,
+void ts4_qsort_8856B388(void *base, lib2_size_t n, lib2_size_t size,
                  int (*cmp)(const void *, const void *)); /* qsort */
 
 /* floor1_free_info (exported copy is ts4_if_call_seq_ts4_memset_883C56F8) */

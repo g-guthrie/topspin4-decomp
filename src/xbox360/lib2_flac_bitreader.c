@@ -88,7 +88,7 @@ typedef struct FLAC__BitReader {
 extern unsigned lbl_88B3B008[256];       /* FLAC__crc16_table */
 extern const unsigned char lbl_88035920[]; /* byte_to_unary_table */
 void *fn_88562DC0(void *dst, const void *src, unsigned int n); /* memmove */
-void *fn_88565258(unsigned int n);                              /* malloc */
+void *ts4_crt_nh_malloc_88565258(unsigned int n);                              /* malloc */
 
 #define FLAC__CRC16_UPDATE(data, crc) (((((crc)<<8) & 0xffff) ^ lbl_88B3B008[((crc)>>8) ^ (data)]))
 
@@ -147,7 +147,7 @@ FLAC__bool lib2_FLAC__bitreader_init_883B6EC0(void *ctx, FLAC__BitReader *br, FL
     br->words = br->bytes = 0;
     br->consumed_words = br->consumed_bits = 0;
     br->capacity = 65536u / FLAC__BITS_PER_WORD;
-    br->buffer = (brword *)fn_88565258(sizeof(brword) * br->capacity);
+    br->buffer = (brword *)ts4_crt_nh_malloc_88565258(sizeof(brword) * br->capacity);
     if (br->buffer == 0)
         return false;
     br->read_callback = rcb;

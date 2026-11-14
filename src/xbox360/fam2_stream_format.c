@@ -17,7 +17,7 @@ typedef struct Ts4TextStream {
     Ts4Sink *sink;
 } Ts4TextStream;
 
-extern void fn_88421058(char *buf, u32 size, const char *fmt, ...);
+extern void ts4_forward_varargs_88421058(char *buf, u32 size, const char *fmt, ...);
 extern u32 fn_88421338(const char *buf);
 
 #define TS4_STREAM_FORMAT_T(A, T, FMT) \
@@ -26,7 +26,7 @@ Ts4TextStream *ts4_stream_format_##A(Ts4TextStream *self, T value) \
 { \
     char buf[0x2728]; \
     Ts4Sink *sink; \
-    fn_88421058(buf, sizeof(buf), FMT, value); \
+    ts4_forward_varargs_88421058(buf, sizeof(buf), FMT, value); \
     sink = self->sink; \
     sink->vtbl->write(sink, buf, fn_88421338(buf)); \
     return self; \

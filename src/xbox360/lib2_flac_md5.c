@@ -46,13 +46,13 @@ typedef struct {
 void *fn_8857ACB8(void *dst, const void *src, unsigned int n); /* memcpy */
 void *ts4_memset(void *dst, int c, unsigned int n);
 void fn_885651F8(void *p);                                      /* free */
-void *fn_88565258(unsigned int n);                              /* malloc */
+void *ts4_crt_nh_malloc_88565258(unsigned int n);                              /* malloc */
 void *fn_88565320(void *p, unsigned int n);                     /* realloc */
 
 #define memcpy fn_8857ACB8
 #define memset ts4_memset
 #define free fn_885651F8
-#define malloc fn_88565258
+#define malloc ts4_crt_nh_malloc_88565258
 #define realloc fn_88565320
 #define byteSwap(buf, words)
 #define byteSwapX16(buf)
