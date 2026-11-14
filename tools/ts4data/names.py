@@ -669,16 +669,6 @@ def main(argv=None):
     for h, e in keep.items():
         names.found[h] = e
     names.rejected = rejected
-    merged = [(p, load_merge(p)) for p in a.merge]
-    # merged dictionaries come first (before string hits and guesses); the first file wins a
-    # conflict, unless a later file has a higher confidence
-    for _p, d in merged:
-        for h, (n, src, conf, note) in d.items():
-            cur = names.found.get(h)
-            if cur and cur[1] == "merged" and RANK.get(conf, 0) > RANK.get(cur[2], 0) and \
-                    n not in rejected.get(h, ()) and X.crc(n) == h:
-                del names.found[h]
-            names.add(h, n, "merged", conf, note or src)
     for n in X.TYPE_NAMES.values():
         names.add(X.crc(n), n, "string")
     for n in SEED_NAMES:
@@ -699,6 +689,16 @@ def main(argv=None):
     if a.dump_strings:
         with open(a.dump_strings, "w", encoding="utf-8") as o:
             o.write("\n".join(sorted(x.replace("\n", " ") for x in strs)))
+    merged = [(p, load_merge(p)) for p in a.merge]
+    # merged dictionaries come first (before string hits and guesses); the first file wins a
+    # conflict, unless a later file has a higher confidence
+    for _p, d in merged:
+        for h, (n, src, conf, note) in d.items():
+            cur = names.found.get(h)
+            if cur and cur[1] == "merged" and RANK.get(conf, 0) > RANK.get(cur[2], 0) and \
+                    n not in rejected.get(h, ()) and X.crc(n) == h:
+                del names.found[h]
+            names.add(h, n, "merged", conf, note or src)
     for s in strs:
         names.add(X.crc(s), s, "string")
     toks = set()

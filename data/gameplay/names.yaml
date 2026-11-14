@@ -3,10 +3,15 @@
 # (dict, string, token, nsrule, nested, seed, sibling, pattern, guess3, combo2) are kept on
 # regeneration, so other agents can add names by hand with src: <agent or source>.
 # crc32 is checked on load.  conf: certain > high > medium > low (see names.py).
-# note: "pre-regeneration"
+# targets: 12609
+# found: 4443
+# types: [651, 3678]
+# members: [3583, 7335]
+# by_confidence: {"certain": 528, "high": 1636, "low": 1011, "medium": 1268}
+# combo2_expected_false_hits: 14.2
 names:
   "0032cbaa": {name: "VeryEfficientReturn", src: string, conf: high}
-  "00615077": {name: "Weight", src: dict, conf: certain}
+  "00615077": {name: "Weight", src: merged, conf: high, note: "analyser_names"}
   "006a63f8": {name: "TriggerTime", src: combo2, conf: low}
   "007925f4": {name: "WoodUp", src: merged, conf: medium, note: "analyser_names"}
   "009de487": {name: "FaceGenDataList", src: token, conf: high}
@@ -16,7 +21,7 @@ names:
   "00d99a56": {name: "DataOptions", src: dict, conf: certain}
   "00e36a44": {name: "Sidesteps_BackRight", src: dict, conf: certain}
   "0118ccde": {name: "FilterList", src: guess3, conf: medium}
-  "01291ade": {name: "SwingType", src: dict, conf: certain}
+  "01291ade": {name: "SwingType", src: merged, conf: high, note: "analyser_names"}
   "0136b5eb": {name: "FieldOfView", src: string, conf: high}
   "0140379f": {name: "IsClassicServe", src: merged, conf: high, note: "analyser_names"}
   "014d8cbc": {name: "IsTraining", src: merged, conf: medium, note: "analyser_names"}
@@ -34,7 +39,7 @@ names:
   "020beebf": {name: "BasicChallengesCount", src: string, conf: high}
   "0213fac2": {name: "TunnelBreathingOutWomen", src: pattern, conf: medium}
   "0226345a": {name: "TimerDefault", src: combo2, conf: low}
-  "022e24bb": {name: "Pam::SwingGamePlay::Data::PSMove", src: nsrule, conf: medium}
+  "022e24bb": {name: "Pam::SwingGamePlay::Data::PSMove", src: nsrule, conf: high}
   "02496d8d": {name: "Socket", src: token, conf: high}
   "02642da2": {name: "FovSmoothTime", src: token, conf: high}
   "026da510": {name: "Prop1", src: merged, conf: high, note: "analyser_names"}
@@ -63,7 +68,7 @@ names:
   "03cfc45a": {name: "Pam::SwingGamePlay::Data::PlayerSettings_AntiCollision", src: nested, conf: medium}
   "04047b7f": {name: "Pam::Swing::GameplayInterface::GameplayOutputs_SparringPartner", src: nested, conf: medium}
   "04159b46": {name: "SeriesKey", src: string, conf: high}
-  "041a0da5": {name: "EndOfPointType", src: dict, conf: certain}
+  "041a0da5": {name: "EndOfPointType", src: merged, conf: high, note: "analyser_names"}
   "041d4f2f": {name: "UV", src: string, conf: high}
   "042fc530": {name: "Round", src: string, conf: high}
   "0434f8b0": {name: "StepValidation", src: combo2, conf: low}
@@ -73,7 +78,7 @@ names:
   "04aae254": {name: "MoveController", src: merged, conf: medium, note: "analyser_names"}
   "04b3f0c0": {name: "FootstepCategory2", src: dict, conf: certain}
   "04cba047": {name: "NationList", src: token, conf: high}
-  "04cda578": {name: "Inputs", src: merged, conf: medium, note: "crc_dict"}
+  "04cda578": {name: "Inputs", src: merged, conf: high, note: "analyser_names"}
   "04d48a7a": {name: "Pam::SwingGamePlay::Data::ReceiverState_ReturnServeState", src: nested, conf: medium}
   "04ddd27e": {name: "SurfaceBonus", src: combo2, conf: low}
   "04ef0aab": {name: "Amazing1stVolley", src: string, conf: high}
@@ -94,13 +99,13 @@ names:
   "0597e8ae": {name: "Licensed", src: token, conf: high}
   "059b1452": {name: "BrandSet", src: combo2, conf: low}
   "05a2590b": {name: "DebugB", src: sibling, conf: medium}
-  "05a55e14": {name: "MissCollision", src: dict, conf: certain}
+  "05a55e14": {name: "MissCollision", src: merged, conf: high, note: "analyser_names"}
   "05a98e90": {name: "RenderData", src: combo2, conf: low}
   "05b33830": {name: "PressX", src: merged, conf: high, note: "analyser_names"}
   "05c29577": {name: "RankValue", src: combo2, conf: low}
   "05ce1315": {name: "OperationList", src: guess3, conf: medium}
   "05cf120a": {name: "BreakPoints", src: merged, conf: medium, note: "analyser_names"}
-  "05d0b6d2": {name: "Cutscene_BallHit_WarmingUp", src: dict, conf: certain}
+  "05d0b6d2": {name: "Cutscene_BallHit_WarmingUp", src: merged, conf: high, note: "analyser_names"}
   "05ef2079": {name: "AnimID", src: combo2, conf: low}
   "05efe4ba": {name: "BaseDropTime", src: merged, conf: low, note: "analyser_names"}
   "0602c2f3": {name: "BackBackRight", src: dict, conf: certain}
@@ -126,7 +131,7 @@ names:
   "0797e300": {name: "BitIndex", src: dict, conf: certain}
   "079a89d2": {name: "MaterialList", src: guess3, conf: medium}
   "079e4085": {name: "MaxValue", src: string, conf: high}
-  "07a00729": {name: "Pam::DisplayAnimation::Animation", src: nsrule, conf: high}
+  "07a00729": {name: "Pam::DisplayAnimation::Animation", src: nsrule, conf: medium}
   "07c159a2": {name: "Head", src: merged, conf: high, note: "analyser_names"}
   "07c9660d": {name: "PaceList", src: dict, conf: certain}
   "07e359f5": {name: "ClothList", src: guess3, conf: medium}
@@ -173,7 +178,7 @@ names:
   "0aff8b55": {name: "IsMateHuman", src: merged, conf: low, note: "analyser_names"}
   "0b1a4089": {name: "CAny", src: dict, conf: certain}
   "0b20a7de": {name: "PlayerTypeKey", src: string, conf: high}
-  "0b213966": {name: "OutEfficiency", src: merged, conf: medium, note: "crc_dict"}
+  "0b213966": {name: "OutEfficiency", src: merged, conf: medium, note: "analyser_names"}
   "0b230030": {name: "MinigameResult", src: token, conf: high}
   "0b2f5adc": {name: "ThrowSlice", src: merged, conf: high, note: "analyser_names"}
   "0b337596": {name: "SwingTimingSelectionList", src: brute4, conf: medium, note: "C brute: 4 words of the top 300 vocabulary, exact implied length"}
@@ -193,7 +198,7 @@ names:
   "0c1e7755": {name: "Pam::SwingGamePlay::Data::AnimationSelection_EndOfPoint", src: nested, conf: medium}
   "0c35537e": {name: "PositionParameters", src: combo2, conf: low}
   "0c3c8f59": {name: "Slot", src: string, conf: high}
-  "0c58aa02": {name: "MoveConstraintsArea", src: guess3, conf: medium}
+  "0c58aa02": {name: "MoveConstraintsArea", src: merged, conf: medium, note: "analyser_names"}
   "0c620133": {name: "ForceSequence", src: combo2, conf: low}
   "0c69df26": {name: "SelectionProcedureList", src: guess3, conf: medium}
   "0c7b2a3d": {name: "ParamGroup", src: combo2, conf: low}
@@ -214,7 +219,7 @@ names:
   "0d7d1d50": {name: "IsStreamed", src: token, conf: high}
   "0d7f1bc3": {name: "Heaps", src: token, conf: high}
   "0d9a8b26": {name: "DefaultHeaps", src: combo2, conf: low}
-  "0dabf7a1": {name: "Movement", src: merged, conf: medium, note: "crc_dict"}
+  "0dabf7a1": {name: "Movement", src: merged, conf: high, note: "analyser_names"}
   "0dc15c5d": {name: "Data", src: dict, conf: certain}
   "0dd16adc": {name: "BallCorridor", src: merged, conf: medium, note: "analyser_names"}
   "0dd77382": {name: "FirstBouncePoint", src: merged, conf: low, note: "analyser_names"}
@@ -237,7 +242,7 @@ names:
   "0f75a2f3": {name: "Pam::SwingAnimation::AnimationDB::RTTake", src: dict, conf: certain}
   "0f953d9d": {name: "Pam::SwingGamePlay::Data::Behavior_FirstFrameInputFilter", src: nested, conf: medium}
   "0f9bfc83": {name: "DeviationXMax", src: merged, conf: low, note: "analyser_names"}
-  "0fa3067f": {name: "Animation", src: dict, conf: certain}
+  "0fa3067f": {name: "Animation", src: merged, conf: medium, note: "analyser_names"}
   "0fd6bf48": {name: "ReasonKey", src: string, conf: high}
   "0fdb28d1": {name: "BackBackLeft", src: dict, conf: certain}
   "0fffd80f": {name: "DynamicDirection", src: combo2, conf: low}
@@ -261,8 +266,8 @@ names:
   "1126544f": {name: "EndOf", src: guess3, conf: medium}
   "113379c1": {name: "Pam::XBinData::CCRCDictionnaryXBinType_CRCFileList", src: dict, conf: certain}
   "11340863": {name: "SbikPosition", src: combo2, conf: low}
-  "11453f46": {name: "MatchState", src: merged, conf: medium, note: "crc_dict"}
-  "116b7885": {name: "Fatigue", src: dict, conf: certain}
+  "11453f46": {name: "MatchState", src: merged, conf: high, note: "analyser_names"}
+  "116b7885": {name: "Fatigue", src: merged, conf: high, note: "analyser_names"}
   "118f9763": {name: "FromSmoothMax", src: token, conf: high}
   "1197dfe3": {name: "Random", src: merged, conf: high, note: "analyser_names"}
   "11a5de65": {name: "ShotEventSystem", src: guess3, conf: medium}
@@ -287,7 +292,7 @@ names:
   "12a5afe9": {name: "BirthMonth", src: string, conf: high}
   "12b2a5f2": {name: "LevelName", src: string, conf: high}
   "12b2b329": {name: "ModeBaseLine", src: merged, conf: high, note: "analyser_names"}
-  "12bbd23e": {name: "ReachableSegmentList", src: guess3, conf: medium}
+  "12bbd23e": {name: "ReachableSegmentList", src: merged, conf: medium, note: "analyser_names"}
   "1304dc36": {name: "NationRankList", src: guess3, conf: medium}
   "1313ce9c": {name: "CurrentTrajectory", src: merged, conf: medium, note: "analyser_names"}
   "1314cfe9": {name: "Pam::Swing::GameplayInterface::BeginPointConfig_TeamList", src: nested, conf: medium}
@@ -307,17 +312,17 @@ names:
   "13fab12d": {name: "HighlyFlammable", src: string, conf: high}
   "140989c6": {name: "RiskyShot", src: merged, conf: medium, note: "analyser_names"}
   "141cebfc": {name: "Reachable", src: merged, conf: high, note: "analyser_names"}
-  "141d93dd": {name: "Timing", src: dict, conf: certain}
+  "141d93dd": {name: "Timing", src: merged, conf: high, note: "analyser_names"}
   "14548e74": {name: "Selection", src: token, conf: high}
   "1467c6ca": {name: "DescriptionKey", src: combo2, conf: low}
   "146bcd3f": {name: "DataList", src: dict, conf: certain}
   "14acc560": {name: "PlayerInfo", src: merged, conf: high, note: "analyser_names"}
   "14c6c425": {name: "Result", src: string, conf: high}
   "14d866b5": {name: "MountPoint", src: token, conf: high}
-  "14dfcc60": {name: "Pam::Swing::SystemData::Animation", src: nsrule, conf: high}
+  "14dfcc60": {name: "Pam::Swing::SystemData::Animation", src: nsrule, conf: medium}
   "14ebeeb6": {name: "Fov16_9Min", src: token, conf: high}
   "1502b65f": {name: "Pam::SwingGamePlay::Data::ReceiverState", src: nsrule, conf: medium}
-  "150da21d": {name: "WoodUpCompliant", src: dict, conf: certain}
+  "150da21d": {name: "WoodUpCompliant", src: merged, conf: high, note: "analyser_names"}
   "15a3a8a2": {name: "CameraUp", src: sibling, conf: medium}
   "15a5bd88": {name: "MoveVector", src: merged, conf: medium, note: "analyser_names"}
   "15be426d": {name: "Targetcamera", src: token, conf: high}
@@ -335,7 +340,7 @@ names:
   "164b5ed0": {name: "Pam::System::CDebugActionsModuleType", src: dict, conf: certain}
   "164b73de": {name: "AlternateIntensity", src: merged, conf: medium, note: "analyser_names"}
   "165bbde9": {name: "Pause", src: string, conf: high}
-  "168d15cd": {name: "Attitude", src: dict, conf: certain}
+  "168d15cd": {name: "Attitude", src: merged, conf: high, note: "analyser_names"}
   "169200bf": {name: "Objective8BaselineController", src: brute4, conf: high, note: "members of type F2A0BD48: all 32 = Objective{1..8} x 4 play styles, lengths implied by the nested rule"}
   "1693c2a3": {name: "RepositioningSpeed", src: merged, conf: medium, note: "analyser_names"}
   "16aa4d8b": {name: "CompletionPercent", src: combo2, conf: low}
@@ -377,7 +382,7 @@ names:
   "1902e0b3": {name: "DistanceLateral", src: merged, conf: medium, note: "analyser_names"}
   "190ed678": {name: "MaxDuration", src: sibling, conf: medium}
   "1916cbe0": {name: "CustomIO", src: combo2, conf: low}
-  "19280e4e": {name: "From", src: dict, conf: certain}
+  "19280e4e": {name: "From", src: merged, conf: high, note: "analyser_names"}
   "195394b9": {name: "LoadedPointer", src: combo2, conf: low}
   "19543b5d": {name: "OutSolverParameters", src: guess3, conf: medium}
   "19643c84": {name: "CrushingPassingShot", src: string, conf: high}
@@ -393,7 +398,7 @@ names:
   "19e5a8dd": {name: "RequirePowerful", src: merged, conf: medium, note: "analyser_names"}
   "19e69416": {name: "Materials", src: token, conf: high}
   "19e80834": {name: "SeasonCount", src: combo2, conf: low}
-  "19e91dd3": {name: "Input", src: dict, conf: certain}
+  "19e91dd3": {name: "Input", src: merged, conf: high, note: "analyser_names"}
   "19eaf7aa": {name: "Pam::PlayerCreator::DNAType", src: nsrule, conf: high}
   "1a2b0da3": {name: "Pam::SwingGamePlay::Data::PaddleSettings", src: nsrule, conf: medium}
   "1a2ba100": {name: "EOPZoneForbidden", src: dict, conf: certain}
@@ -423,8 +428,8 @@ names:
   "1bba4131": {name: "ToSend", src: combo2, conf: low}
   "1bdeb8e6": {name: "Pam::System::Conditions::ConditionChoice", src: dict, conf: certain}
   "1bf14905": {name: "BaseRange", src: combo2, conf: low}
-  "1bf15200": {name: "PlayerState", src: merged, conf: medium, note: "crc_dict"}
-  "1c33c293": {name: "Settings", src: seed, conf: high}
+  "1bf15200": {name: "PlayerState", src: merged, conf: high, note: "analyser_names"}
+  "1c33c293": {name: "Settings", src: merged, conf: high, note: "analyser_names"}
   "1c41adf3": {name: "ShotResolutionCommand", src: guess3, conf: medium}
   "1c422b57": {name: "SeasonIndex", src: combo2, conf: low}
   "1c440a7e": {name: "Playing", src: string, conf: high}
@@ -439,8 +444,8 @@ names:
   "1cc24d6d": {name: "Vector", src: token, conf: high}
   "1cca65d4": {name: "IsB", src: merged, conf: medium, note: "analyser_names"}
   "1ce20955": {name: "SecondServePointCount", src: string, conf: high}
-  "1ceb5268": {name: "EOPServiceType", src: dict, conf: certain}
-  "1ceefd8b": {name: "ReturnServe", src: merged, conf: medium, note: "crc_dict"}
+  "1ceb5268": {name: "EOPServiceType", src: merged, conf: high, note: "analyser_names"}
+  "1ceefd8b": {name: "ReturnServe", src: merged, conf: high, note: "analyser_names"}
   "1cf1d0dc": {name: "Shape", src: string, conf: high}
   "1d08dfeb": {name: "ClothName", src: combo2, conf: low}
   "1d1b8ddf": {name: "Heap", src: string, conf: high}
@@ -449,7 +454,7 @@ names:
   "1d6ea51b": {name: "Exercice", src: merged, conf: medium, note: "analyser_names"}
   "1d775834": {name: "value", src: string, conf: high}
   "1d8efe14": {name: "ToHierarchy", src: combo2, conf: low}
-  "1d9502ff": {name: "OutputBehaviorList", src: guess3, conf: medium}
+  "1d9502ff": {name: "OutputBehaviorList", src: merged, conf: medium, note: "analyser_names"}
   "1d97681d": {name: "Pam::SwingGamePlay::Data::VarListSingle", src: nsrule, conf: medium}
   "1da0ffc0": {name: "LetHeight", src: merged, conf: medium, note: "analyser_names"}
   "1db42687": {name: "ForceClear", src: token, conf: high}
@@ -458,7 +463,7 @@ names:
   "1dca7285": {name: "InGame", src: string, conf: high}
   "1dcbcc15": {name: "NotationRotationView", src: guess3, conf: medium}
   "1dd2911b": {name: "HighRatio", src: combo2, conf: low}
-  "1de220e2": {name: "VolleySpectacular", src: dict, conf: certain}
+  "1de220e2": {name: "VolleySpectacular", src: merged, conf: high, note: "analyser_names"}
   "1df37205": {name: "ControllerId", src: combo2, conf: low}
   "1e19f91b": {name: "CountryNameKey", src: sibling, conf: medium}
   "1e202659": {name: "NationName", src: combo2, conf: low}
@@ -489,7 +494,7 @@ names:
   "1f2d511c": {name: "HighDisplayPriority", src: dict, conf: certain}
   "1f404717": {name: "StepChoice", src: combo2, conf: low}
   "1f406b31": {name: "RankProgress2", src: sibling, conf: medium}
-  "1f536d49": {name: "PressAndHold", src: merged, conf: medium, note: "crc_dict"}
+  "1f536d49": {name: "PressAndHold", src: merged, conf: high, note: "analyser_names"}
   "1f5b1ffe": {name: "MoveSpeed", src: combo2, conf: low}
   "1f5e3137": {name: "AllowSpeedCoef", src: dict, conf: certain}
   "1f618844": {name: "ContentKey", src: combo2, conf: low}
@@ -518,7 +523,7 @@ names:
   "207f2323": {name: "Pam::Swing::Season::SpecialPlayerList_PlayerList", src: nested, conf: medium}
   "20a70041": {name: "Acting", src: token, conf: high}
   "20b23973": {name: "Pam::Net::Data::TimerType", src: nsrule, conf: high}
-  "20d7985e": {name: "Swing", src: dict, conf: certain}
+  "20d7985e": {name: "Swing", src: merged, conf: high, note: "analyser_names"}
   "20eecda9": {name: "LayoutServerName", src: dict, conf: certain}
   "2101bfd2": {name: "PositioningDelay", src: combo2, conf: low}
   "21047b31": {name: "Pam::CameraEngine::CShotSourceType", src: string, conf: high}
@@ -539,15 +544,16 @@ names:
   "21b9063d": {name: "GameLogic", src: merged, conf: medium, note: "analyser_names"}
   "21b99080": {name: "Objective5BaselineController", src: brute4, conf: high, note: "members of type F2A0BD48: all 32 = Objective{1..8} x 4 play styles, lengths implied by the nested rule"}
   "21be4b26": {name: "HasHeadset", src: string, conf: high}
+  "2202fddf": {name: "FinalScore", src: merged, conf: medium, note: "analyser_names"}
   "220dc37c": {name: "CancelAction", src: combo2, conf: low}
   "2219ed03": {name: "SkillId", src: string, conf: high}
-  "221e130f": {name: "Cutscene_BallBounce", src: dict, conf: certain}
+  "221e130f": {name: "Cutscene_BallBounce", src: merged, conf: high, note: "analyser_names"}
   "222a7edc": {name: "StatValue", src: combo2, conf: low}
   "222afb1d": {name: "FacialEventIndexBegin", src: dict, conf: certain}
   "223baf94": {name: "Pam::SwingAnimation::AnimationDB::TransitionEventDefinition_DirectionList", src: dict, conf: certain}
   "225845c2": {name: "Objective3BaselineAttacker", src: brute4, conf: high, note: "members of type F2A0BD48: all 32 = Objective{1..8} x 4 play styles, lengths implied by the nested rule"}
   "225aa38d": {name: "ForceMaterial", src: token, conf: high}
-  "226615d7": {name: "Control", src: dict, conf: certain}
+  "226615d7": {name: "Control", src: merged, conf: high, note: "analyser_names"}
   "22703895": {name: "Withdrawal", src: merged, conf: high, note: "analyser_names"}
   "22833845": {name: "HumanHuman", src: combo2, conf: low}
   "22f438af": {name: "NbTeam", src: sibling, conf: medium}
@@ -565,10 +571,10 @@ names:
   "23b48e57": {name: "BothTrigger", src: combo2, conf: low}
   "23c20ef1": {name: "NodeList", src: combo2, conf: low}
   "23c79a10": {name: "Random2", src: merged, conf: medium, note: "analyser_names"}
-  "23c81fa8": {name: "Pam::Swing::GameplayInterface::PlayerInfo_Inputs", src: nested, conf: medium}
+  "23c81fa8": {name: "Pam::Swing::GameplayInterface::PlayerInfo_Inputs", src: nested, conf: high}
   "23de8f3f": {name: "SeriesStepList", src: guess3, conf: medium}
   "23e346dc": {name: "PlaystyleServe", src: string, conf: high}
-  "23e632e5": {name: "OutStart", src: dict, conf: certain}
+  "23e632e5": {name: "OutStart", src: merged, conf: high, note: "analyser_names"}
   "23eab932": {name: "Patch", src: token, conf: high}
   "23f63787": {name: "StateServer", src: guess3, conf: medium}
   "23ff925d": {name: "ArmeniaOpponentSpot", src: guess3, conf: medium}
@@ -595,12 +601,12 @@ names:
   "25838164": {name: "FileSystemList", src: guess3, conf: medium}
   "25c7ef75": {name: "FirstServeCount", src: sibling, conf: medium}
   "25eee9e5": {name: "ReturnSlicePower", src: merged, conf: medium, note: "analyser_names"}
-  "25f3717a": {name: "MoveConstraintsConfig", src: guess3, conf: medium}
-  "25fcd125": {name: "Pam::SwingGamePlay::Data::PlayerState", src: nsrule, conf: medium}
+  "25f3717a": {name: "MoveConstraintsConfig", src: merged, conf: medium, note: "analyser_names"}
+  "25fcd125": {name: "Pam::SwingGamePlay::Data::PlayerState", src: nsrule, conf: high}
   "260e2aea": {name: "CameraTypeList", src: guess3, conf: medium}
   "261220d4": {name: "Jog_Volley_FH", src: dict, conf: certain}
   "261dda33": {name: "ContinentId", src: combo2, conf: low}
-  "26296dd2": {name: "Normal", src: dict, conf: certain}
+  "26296dd2": {name: "Normal", src: merged, conf: high, note: "analyser_names"}
   "26322279": {name: "MessageId", src: combo2, conf: low}
   "26426f07": {name: "Pam::SwingGamePlay::Data::ReceiverSettings_MoveReceiver", src: nested, conf: medium}
   "265ab126": {name: "Packed", src: token, conf: high}
@@ -654,7 +660,7 @@ names:
   "28f46b9c": {name: "PlayerPointer", src: combo2, conf: low}
   "2906f362": {name: "HitPositionSelection", src: merged, conf: low, note: "analyser_names"}
   "290c4dbf": {name: "__Name", src: dict, conf: certain}
-  "293eed8b": {name: "InputNotation", src: merged, conf: medium, note: "crc_dict"}
+  "293eed8b": {name: "InputNotation", src: merged, conf: high, note: "analyser_names"}
   "2973d595": {name: "InitialBalls", src: combo2, conf: low}
   "29800a44": {name: "Forces", src: token, conf: high}
   "29899e83": {name: "BeginPoint", src: merged, conf: medium, note: "analyser_names"}
@@ -674,7 +680,7 @@ names:
   "2a7d02b3": {name: "Pam::SwingGamePlay::Data::PlayerSettings_HitPositionSelection", src: nested, conf: low}
   "2a958b96": {name: "Pam::SwingGamePlay::Data::AnimationSelection_SwingSelection_BadContext", src: nested, conf: medium}
   "2aa5a6e0": {name: "Master", src: token, conf: high}
-  "2abd43f2": {name: "Id", src: dict, conf: certain}
+  "2abd43f2": {name: "Id", src: merged, conf: high, note: "analyser_names"}
   "2adccd7e": {name: "ShootTarget", src: merged, conf: medium, note: "analyser_names"}
   "2ade0cc8": {name: "Pam::System::IO::CFileSystemCache", src: nsrule, conf: high}
   "2adef05c": {name: "BallShot", src: merged, conf: medium, note: "analyser_names"}
@@ -710,9 +716,9 @@ names:
   "2cd48361": {name: "RandSlot", src: merged, conf: low, note: "analyser_names"}
   "2cdbaaa3": {name: "IsUpgradable", src: token, conf: high}
   "2ce1ada4": {name: "ValidationMethod", src: combo2, conf: low}
-  "2ce33943": {name: "Default", src: dict, conf: certain}
+  "2ce33943": {name: "Default", src: merged, conf: high, note: "analyser_names"}
   "2ce59096": {name: "AttributeList", src: string, conf: high}
-  "2cecf817": {name: "Type", src: dict, conf: certain}
+  "2cecf817": {name: "Type", src: merged, conf: high, note: "analyser_names"}
   "2d06f9e4": {name: "EndColor", src: sibling, conf: medium}
   "2d10970e": {name: "NbHit", src: merged, conf: medium, note: "analyser_names"}
   "2d3c963a": {name: "Pam::SwingGamePlay::Data::PositioningComponents", src: nsrule, conf: medium}
@@ -733,7 +739,7 @@ names:
   "2db3eb6f": {name: "AverageSpeed", src: combo2, conf: low}
   "2db6e543": {name: "CrowdList", src: guess3, conf: medium}
   "2dd6a7c1": {name: "Pam::XBinData::CCRCDictionnaryXBin", src: dict, conf: certain}
-  "2de0bce2": {name: "Context", src: dict, conf: certain}
+  "2de0bce2": {name: "Context", src: merged, conf: high, note: "analyser_names"}
   "2de84521": {name: "ResetSequencer", src: sibling, conf: medium}
   "2def2eb4": {name: "FootstepGroup", src: guess3, conf: medium}
   "2e20a34e": {name: "Service", src: merged, conf: high, note: "analyser_names"}
@@ -784,7 +790,7 @@ names:
   "317da836": {name: "CheckCondition", src: combo2, conf: low}
   "318cb93d": {name: "MatchIsSuperTieBreak", src: string, conf: high}
   "3192be92": {name: "OpponentCondition", src: merged, conf: low, note: "analyser_names"}
-  "319dc754": {name: "TunnelStep", src: dict, conf: certain}
+  "319dc754": {name: "TunnelStep", src: merged, conf: high, note: "analyser_names"}
   "31ac0217": {name: "PlaystyleOffensive", src: string, conf: high}
   "31bd8af6": {name: "UniqueId", src: string, conf: high}
   "31c95055": {name: "BallSpeed", src: sibling, conf: medium}
@@ -801,7 +807,7 @@ names:
   "327db7ae": {name: "Pam::SwingGamePlay::Data::EOPState_FromContext", src: nested, conf: medium}
   "328a2512": {name: "ServeComponents", src: merged, conf: medium, note: "analyser_names"}
   "32a0e422": {name: "AlphaFactor", src: combo2, conf: low}
-  "32a41e36": {name: "WrongFoot", src: dict, conf: certain}
+  "32a41e36": {name: "WrongFoot", src: merged, conf: high, note: "analyser_names"}
   "32a58abc": {name: "MatchIndex", src: combo2, conf: low}
   "32ac08fa": {name: "Pam::DisplayAnimation::EventList", src: nsrule, conf: medium}
   "32ad8c7c": {name: "CMaterialManagerXBIN", src: string, conf: high}
@@ -879,7 +885,7 @@ names:
   "366e727b": {name: "States", src: string, conf: high}
   "36714020": {name: "LocalizationKey", src: combo2, conf: low}
   "36785da4": {name: "ReturnFlatFinesse", src: merged, conf: medium, note: "analyser_names"}
-  "3689ab7e": {name: "Dive", src: dict, conf: certain}
+  "3689ab7e": {name: "Dive", src: merged, conf: high, note: "analyser_names"}
   "369ac0d9": {name: "AbilityCount", src: sibling, conf: medium}
   "369c5a74": {name: "ShotList", src: token, conf: high}
   "36c23bf2": {name: "BlendLoop", src: combo2, conf: low}
@@ -1026,7 +1032,7 @@ names:
   "3ef58c92": {name: "CharacterCreator", src: token, conf: high}
   "3efbe213": {name: "MinAmplitude", src: sibling, conf: medium}
   "3f1b36f7": {name: "Pam::System::Conditions::ExpressionChoice", src: dict, conf: certain}
-  "3f270ae0": {name: "Condition", src: dict, conf: certain}
+  "3f270ae0": {name: "Condition", src: merged, conf: high, note: "analyser_names"}
   "3f2c130e": {name: "AIDifficultyList", src: string, conf: high}
   "3f3a4df2": {name: "Front", src: dict, conf: certain}
   "3f56b691": {name: "NextSpeedCoef", src: dict, conf: certain}
@@ -1042,14 +1048,14 @@ names:
   "3fa05469": {name: "Pam::Swing::Season::TournamentWinner", src: nsrule, conf: high}
   "3fcb484e": {name: "IsWoodUp", src: pattern, conf: medium}
   "3fcc49dd": {name: "TimingExpressionInputs", src: merged, conf: low, note: "analyser_names"}
-  "3fcc8ac9": {name: "MoveConstraintsSettings", src: guess3, conf: medium}
+  "3fcc8ac9": {name: "MoveConstraintsSettings", src: merged, conf: medium, note: "analyser_names"}
   "3fd0f8a8": {name: "Fov16_9", src: token, conf: high}
   "3fd79cf1": {name: "SeasonChangeEvent", src: guess3, conf: medium}
   "3fe036f3": {name: "Pam::Swing::PlayerGamerTagDataList", src: nsrule, conf: high}
   "3fe92dc7": {name: "Pam::XBinData::CXBinData", src: dict, conf: certain}
   "3ff018fe": {name: "Pam::DisplayAnimation::Event", src: nsrule, conf: high}
   "3ff6a651": {name: "Pam::SwingAnimation::AnimationDB::QualifierValue", src: dict, conf: certain}
-  "40030515": {name: "LeftLine", src: merged, conf: medium, note: "crc_dict"}
+  "40030515": {name: "LeftLine", src: merged, conf: medium, note: "analyser_names"}
   "401c9058": {name: "Pam::SwingGamePlay::Data::SwingSelection_Request_Style", src: nested, conf: medium}
   "401c906f": {name: "SingleCounterList", src: guess3, conf: medium}
   "402bc402": {name: "WordWrap", src: string, conf: high}
@@ -1066,10 +1072,10 @@ names:
   "407d125c": {name: "BasedValue", src: combo2, conf: low}
   "40827212": {name: "Pam::System::Conditions::ExpressionChoice_XPath", src: dict, conf: certain}
   "40a9bc06": {name: "RandomEvent", src: combo2, conf: low}
-  "40b26607": {name: "OutStop", src: dict, conf: certain}
+  "40b26607": {name: "OutStop", src: merged, conf: high, note: "analyser_names"}
   "40b7740a": {name: "PowerfulEfficientShot", src: string, conf: high}
   "40dcaebd": {name: "Pam::SwingGamePlay::Data::RePositioningState", src: nsrule, conf: medium}
-  "40dd9ee9": {name: "ShotResolutionSettings", src: guess3, conf: medium}
+  "40dd9ee9": {name: "ShotResolutionSettings", src: merged, conf: medium, note: "analyser_names"}
   "40ff9eb5": {name: "PlayerID", src: token, conf: high}
   "40ffdf15": {name: "OutRatio", src: merged, conf: medium, note: "analyser_names"}
   "411d4bad": {name: "Paused", src: token, conf: high}
@@ -1089,12 +1095,12 @@ names:
   "41a6a445": {name: "Thumbnail", src: token, conf: high}
   "41adf40a": {name: "AcceptVolley", src: combo2, conf: low}
   "41b24805": {name: "Index", src: string, conf: high}
-  "41c32aca": {name: "Target", src: merged, conf: medium, note: "crc_dict"}
+  "41c32aca": {name: "Target", src: merged, conf: high, note: "analyser_names"}
   "41ca436e": {name: "WonSet", src: merged, conf: medium, note: "analyser_names"}
   "41cf7fd7": {name: "PlayStyleList", src: guess3, conf: medium}
   "41e5dfa5": {name: "DropMax", src: combo2, conf: low}
   "41f06e0b": {name: "IsDeuce", src: merged, conf: medium, note: "analyser_names"}
-  "4203f666": {name: "To", src: dict, conf: certain}
+  "4203f666": {name: "To", src: merged, conf: high, note: "analyser_names"}
   "421602a9": {name: "Sequencer", src: guess3, conf: medium}
   "424f0965": {name: "TimingFeedback", src: string, conf: high}
   "4250e54f": {name: "Pam::SwingGamePlay::Data::MoveConstraintsSettings", src: nsrule, conf: medium}
@@ -1133,12 +1139,12 @@ names:
   "44401377": {name: "CurrentSpeed", src: merged, conf: medium, note: "analyser_names"}
   "4445e55d": {name: "Pam::Swing::SeasonDB::SpecialRule", src: nsrule, conf: medium}
   "4456f186": {name: "Pam::XBinData::COfflineRelativeXBinPath", src: string, conf: high}
-  "4463883a": {name: "XPath", src: dict, conf: certain}
+  "4463883a": {name: "XPath", src: merged, conf: high, note: "analyser_names"}
   "4485857a": {name: "SurfaceId", src: sibling, conf: medium}
   "4498a815": {name: "TopSpinRank", src: string, conf: high}
   "44a6d4ab": {name: "RotationDegree", src: merged, conf: high, note: "analyser_names"}
   "44a81ac4": {name: "Pam::SwingGamePlay::Data::QuadAimingState", src: nsrule, conf: medium}
-  "44b8753c": {name: "TrajectoryEvaluationContext", src: guess3, conf: medium}
+  "44b8753c": {name: "TrajectoryEvaluationContext", src: merged, conf: medium, note: "analyser_names"}
   "44bc9013": {name: "TriggeredEvent", src: combo2, conf: low}
   "44d6efc3": {name: "HierarchyList", src: combo2, conf: low}
   "44da6037": {name: "ConditionKey", src: combo2, conf: low}
@@ -1162,8 +1168,8 @@ names:
   "45e53349": {name: "SlotCount", src: combo2, conf: low}
   "45ec6170": {name: "RaceList", src: combo2, conf: low}
   "45eeaa8f": {name: "Pam::System::Conditions::OrType", src: dict, conf: certain}
-  "45f80a27": {name: "Advanced", src: dict, conf: certain}
-  "45fffb93": {name: "Backhand", src: dict, conf: certain}
+  "45f80a27": {name: "Advanced", src: merged, conf: high, note: "analyser_names"}
+  "45fffb93": {name: "Backhand", src: merged, conf: high, note: "analyser_names"}
   "4603588e": {name: "DisplayConfigList", src: guess3, conf: medium}
   "4608c23d": {name: "SeasonSaveList", src: token, conf: high}
   "460d1419": {name: "BeatRecord", src: combo2, conf: low}
@@ -1196,7 +1202,7 @@ names:
   "472f1803": {name: "NewMailCount", src: token, conf: high}
   "473097ae": {name: "InsertBefore", src: combo2, conf: low}
   "475558a9": {name: "PowerClamp", src: combo2, conf: low}
-  "475cee12": {name: "Center", src: dict, conf: certain}
+  "475cee12": {name: "Center", src: merged, conf: high, note: "analyser_names"}
   "47747fcd": {name: "MapList", src: combo2, conf: low}
   "4782dd74": {name: "FaceGen_HotSpot", src: token, conf: high}
   "479f3a04": {name: "ChildrenCount", src: string, conf: high}
@@ -1213,14 +1219,14 @@ names:
   "48315650": {name: "ServeContext", src: merged, conf: medium, note: "analyser_names"}
   "483a66ea": {name: "GScale", src: string, conf: high}
   "48533deb": {name: "ParentFlag", src: merged, conf: medium, note: "analyser_names"}
-  "485bb638": {name: "Rules", src: dict, conf: certain}
+  "485bb638": {name: "Rules", src: merged, conf: high, note: "analyser_names"}
   "48806f9a": {name: "RiskCount", src: combo2, conf: low}
   "4882ebbb": {name: "ExpressionComponents", src: merged, conf: medium, note: "analyser_names"}
   "48866636": {name: "UserProperties", src: dict, conf: certain}
   "488faba3": {name: "TexturePack", src: string, conf: high}
   "4897c3dd": {name: "TournamentResult", src: guess3, conf: medium}
-  "48b79674": {name: "Expert", src: dict, conf: certain}
-  "48bfa002": {name: "Tired", src: dict, conf: certain}
+  "48b79674": {name: "Expert", src: merged, conf: high, note: "analyser_names"}
+  "48bfa002": {name: "Tired", src: merged, conf: high, note: "analyser_names"}
   "48c67c52": {name: "AnimIdToPlay", src: token, conf: high}
   "48cb6845": {name: "EventLink", src: guess3, conf: medium}
   "48ccc83f": {name: "SweatID", src: combo2, conf: low}
@@ -1252,14 +1258,14 @@ names:
   "4a377dd1": {name: "RecordFrame", src: combo2, conf: low}
   "4a3e924d": {name: "VertexA", src: token, conf: high}
   "4a4f33fa": {name: "Skill1", src: string, conf: high}
-  "4a4fa42e": {name: "EndOfMatch", src: dict, conf: certain}
+  "4a4fa42e": {name: "EndOfMatch", src: merged, conf: high, note: "analyser_names"}
   "4a5049b0": {name: "BallInfo", src: token, conf: high}
   "4a5c5d16": {name: "Sponsor01", src: string, conf: high}
   "4a7f6060": {name: "FacialEvents", src: dict, conf: certain}
   "4a9e4d3d": {name: "PS3MoveRangeControllerPortId", src: token, conf: high}
   "4aad7d5d": {name: "IsValid", src: merged, conf: medium, note: "analyser_names"}
   "4ab23ea3": {name: "PaddleSettings", src: guess3, conf: medium}
-  "4acfa191": {name: "Pam::Swing::GameplayInterface::PlayerInfo_Inputs_Stick_Aiming", src: nested, conf: medium}
+  "4acfa191": {name: "Pam::Swing::GameplayInterface::PlayerInfo_Inputs_Stick_Aiming", src: nested, conf: high}
   "4ad0cf31": {name: "B", src: merged, conf: high, note: "analyser_names"}
   "4aea79be": {name: "PlayerSponsorList", src: guess3, conf: medium}
   "4afac5c3": {name: "ThreadStatePath", src: dict, conf: certain}
@@ -1274,7 +1280,7 @@ names:
   "4b79bbc1": {name: "FarLimitMax", src: token, conf: high}
   "4b9df303": {name: "IsValidated", src: string, conf: high}
   "4ba9ba2b": {name: "Pam::Math::C3DVector", src: string, conf: high}
-  "4bb34bbb": {name: "PlayLob", src: merged, conf: medium, note: "crc_dict"}
+  "4bb34bbb": {name: "PlayLob", src: merged, conf: medium, note: "analyser_names"}
   "4bb4c315": {name: "QuantityProgress", src: string, conf: high}
   "4bb87e52": {name: "__IsPause", src: dict, conf: certain}
   "4bcdc335": {name: "UpdateCount", src: combo2, conf: low}
@@ -1331,7 +1337,7 @@ names:
   "4ed75b8c": {name: "WorldName", src: combo2, conf: low}
   "4ed992b4": {name: "SourceHeap", src: combo2, conf: low}
   "4ee9bfa6": {name: "Short", src: merged, conf: high, note: "analyser_names"}
-  "4eea9393": {name: "Profile", src: merged, conf: medium, note: "crc_dict"}
+  "4eea9393": {name: "Profile", src: merged, conf: high, note: "analyser_names"}
   "4efc4c0e": {name: "Timeout", src: token, conf: high}
   "4f05004c": {name: "Ranking", src: string, conf: high}
   "4f0c9846": {name: "Move", src: string, conf: high}
@@ -1351,7 +1357,7 @@ names:
   "4fa89f5e": {name: "Pam::Net::Data::SessionListType", src: nsrule, conf: medium}
   "4fcb3f83": {name: "IsFH", src: merged, conf: medium, note: "analyser_names"}
   "4fcc3eb8": {name: "VolleySpeedCoef", src: merged, conf: medium, note: "analyser_names"}
-  "4fd4c7a4": {name: "IsTired", src: merged, conf: medium, note: "crc_dict"}
+  "4fd4c7a4": {name: "IsTired", src: merged, conf: medium, note: "analyser_names"}
   "4fd58c34": {name: "DefaultPlayer", src: combo2, conf: low}
   "4fe40932": {name: "ClearFlag", src: dict, conf: certain}
   "4ffa89da": {name: "LostPoints", src: combo2, conf: low}
@@ -1390,7 +1396,7 @@ names:
   "51eb10bb": {name: "Pam::Swing::SeasonDB::RewardsList", src: nsrule, conf: medium}
   "51faa5e6": {name: "Pam::Swing::SeasonDB::LocationList", src: nsrule, conf: medium}
   "51fc19ed": {name: "GamePlay", src: token, conf: high}
-  "5246754d": {name: "Range", src: dict, conf: certain}
+  "5246754d": {name: "Range", src: merged, conf: high, note: "analyser_names"}
   "5255791d": {name: "SomethingNew", src: combo2, conf: low}
   "525d6e6d": {name: "CInterpolatorGroup", src: dict, conf: certain}
   "526b9c83": {name: "PlayerEventType", src: guess3, conf: medium}
@@ -1411,7 +1417,7 @@ names:
   "536e8f92": {name: "RewardText", src: string, conf: high}
   "53780dc7": {name: "Pam::System::IO::CFileSystemOpenArchive", src: string, conf: high}
   "53957d0c": {name: "IsCorrupted", src: string, conf: high}
-  "53a7fcce": {name: "ShotContext", src: merged, conf: medium, note: "crc_dict"}
+  "53a7fcce": {name: "ShotContext", src: merged, conf: high, note: "analyser_names"}
   "53b0c153": {name: "First", src: merged, conf: high, note: "analyser_names"}
   "53b10c90": {name: "ConditionList", src: merged, conf: medium, note: "analyser_names"}
   "53d880a8": {name: "ServeDone", src: merged, conf: medium, note: "analyser_names"}
@@ -1438,20 +1444,20 @@ names:
   "54cf6df3": {name: "IsServeFault", src: merged, conf: low, note: "analyser_names"}
   "54d3a7b8": {name: "IsPlayed", src: token, conf: high}
   "54f43e4a": {name: "MatrixArray", src: token, conf: high}
-  "550171d1": {name: "Rush", src: dict, conf: certain}
+  "550171d1": {name: "Rush", src: merged, conf: high, note: "analyser_names"}
   "550b34de": {name: "NoRotation", src: combo2, conf: low}
   "550d365c": {name: "Pam::Swing::SeasonDB::SpecialObjectiveList", src: nsrule, conf: medium}
   "550d9671": {name: "Objective7BaselineController", src: brute4, conf: high, note: "members of type F2A0BD48: all 32 = Objective{1..8} x 4 play styles, lengths implied by the nested rule"}
   "552a6649": {name: "CModuleProcessor", src: dict, conf: certain}
   "555267aa": {name: "VeryBad", src: dict, conf: certain}
   "55568e39": {name: "PoisonedSlices", src: string, conf: high}
-  "5564f5d6": {name: "HighTopSpin", src: dict, conf: certain}
+  "5564f5d6": {name: "HighTopSpin", src: merged, conf: high, note: "analyser_names"}
   "558b5bb6": {name: "NewsTemplate", src: combo2, conf: low}
   "55906b9a": {name: "MovesServe", src: dict, conf: certain}
   "5597a171": {name: "SideDistance", src: combo2, conf: low}
   "559ddd1f": {name: "MatchIntensity", src: sibling, conf: medium}
   "55af5302": {name: "SeriesIcon", src: sibling, conf: medium}
-  "55d982ab": {name: "VeryEasy", src: dict, conf: certain}
+  "55d982ab": {name: "VeryEasy", src: merged, conf: high, note: "analyser_names"}
   "55ddd63c": {name: "LimitAngle", src: combo2, conf: low}
   "5605a542": {name: "Obsolete", src: string, conf: high}
   "5611b5b5": {name: "CurrentValue", src: merged, conf: medium, note: "analyser_names"}
@@ -1505,7 +1511,7 @@ names:
   "58c68094": {name: "Sidesteps_BackLeft", src: dict, conf: certain}
   "58dc7f04": {name: "DepthGroup", src: combo2, conf: low}
   "58ee12a3": {name: "SchoolTiming", src: combo2, conf: low}
-  "58f6f3bf": {name: "Pam::SwingGamePlay::Data::PSMove_Output", src: nested, conf: medium}
+  "58f6f3bf": {name: "Pam::SwingGamePlay::Data::PSMove_Output", src: nested, conf: high}
   "590179d9": {name: "TimeFormat", src: sibling, conf: medium}
   "5903ea00": {name: "CanOverflow", src: combo2, conf: low}
   "590fb0b6": {name: "OutZone", src: sibling, conf: medium}
@@ -1522,7 +1528,7 @@ names:
   "598c3763": {name: "MaximumPosition", src: combo2, conf: low}
   "5991b859": {name: "SbikValue", src: dict, conf: certain}
   "59b0b7f1": {name: "LevelMin", src: combo2, conf: low}
-  "59bc5767": {name: "Z", src: dict, conf: certain}
+  "59bc5767": {name: "Z", src: merged, conf: high, note: "analyser_names"}
   "59c2372b": {name: "NodeIndex", src: token, conf: high}
   "59f2984f": {name: "Generic", src: merged, conf: high, note: "analyser_names"}
   "59f72580": {name: "SwingSelectionCategory", src: guess3, conf: medium}
@@ -1597,7 +1603,7 @@ names:
   "5db80ab0": {name: "AtFrame", src: merged, conf: medium, note: "analyser_names"}
   "5dbdc19b": {name: "SecondSection", src: combo2, conf: low}
   "5dc1d0c0": {name: "Server", src: token, conf: high}
-  "5dc9adef": {name: "HitPosition", src: merged, conf: medium, note: "crc_dict"}
+  "5dc9adef": {name: "HitPosition", src: merged, conf: medium, note: "analyser_names"}
   "5dcee3b3": {name: "True", src: string, conf: high}
   "5dda4769": {name: "Pam::SwingAnimation::AnimationDB::PreEvent", src: dict, conf: certain}
   "5de8a7c3": {name: "ProfileSummary", src: token, conf: high}
@@ -1612,7 +1618,7 @@ names:
   "5e83a7c2": {name: "Pam::SwingGamePlay::Data::PlayerSettings_HitPositionSelection_PositionDefinition", src: nested, conf: low}
   "5e8c67d5": {name: "SpeedEvaluation", src: merged, conf: medium, note: "analyser_names"}
   "5e8f70a2": {name: "WinWinner", src: token, conf: high}
-  "5e8f94a1": {name: "Qualifier", src: dict, conf: certain}
+  "5e8f94a1": {name: "Qualifier", src: merged, conf: high, note: "analyser_names"}
   "5e9ba6da": {name: "Pam::SwingGamePlay::Data::DebugFlags_EndOfMatch", src: nested, conf: medium}
   "5ea6cfe6": {name: "Offset", src: string, conf: high}
   "5eb2bff6": {name: "ContinentKey", src: combo2, conf: low}
@@ -1645,14 +1651,14 @@ names:
   "605f4e68": {name: "Pam::SwingAnimation::AnimationDB::ExtractPositionList", src: dict, conf: certain}
   "60747bb6": {name: "ServeSide", src: combo2, conf: low}
   "607eafc7": {name: "OutputList", src: combo2, conf: low}
-  "6086515f": {name: "Base", src: dict, conf: certain}
+  "6086515f": {name: "Base", src: merged, conf: high, note: "analyser_names"}
   "608b0064": {name: "CrowdTolerance", src: combo2, conf: low}
   "60a64828": {name: "UIState", src: string, conf: high}
   "60a81b1a": {name: "FirstServePointCount", src: string, conf: high}
   "60b2ddb4": {name: "MaxMatch", src: sibling, conf: medium}
   "60d93c07": {name: "LocalPlayerPosition", src: merged, conf: low, note: "analyser_names"}
   "60ee2ffe": {name: "Pam::SwingGamePlay::Data::AnimBones", src: nsrule, conf: high}
-  "6127b0ec": {name: "Hard", src: dict, conf: certain}
+  "6127b0ec": {name: "Hard", src: merged, conf: high, note: "analyser_names"}
   "6130b528": {name: "TextHeight", src: combo2, conf: low}
   "61366de0": {name: "AbilityList", src: guess3, conf: medium}
   "6140414e": {name: "LitigiousProbability", src: combo2, conf: low}
@@ -1670,7 +1676,7 @@ names:
   "6222a062": {name: "LimitFovMax4_3", src: token, conf: high}
   "623b2af8": {name: "AnimSetup", src: combo2, conf: low}
   "623cc12c": {name: "BackBuffer", src: string, conf: high}
-  "6252fdff": {name: "State", src: seed, conf: high}
+  "6252fdff": {name: "State", src: merged, conf: high, note: "analyser_names"}
   "625a398b": {name: "Swing_Serve_Jankovic", src: dict, conf: certain}
   "626d8ae1": {name: "StartProcess", src: sibling, conf: medium}
   "628359c4": {name: "OutcomeId", src: combo2, conf: low}
@@ -1687,14 +1693,14 @@ names:
   "6305842a": {name: "Pam::SwingGamePlay::Data::AnimationSelection_SwingSelection", src: nested, conf: medium}
   "63069291": {name: "FakePatchVersion", src: token, conf: high}
   "63199a64": {name: "AIStyle", src: merged, conf: medium, note: "analyser_names"}
-  "6348717a": {name: "Commands", src: merged, conf: medium, note: "crc_dict"}
+  "6348717a": {name: "Commands", src: merged, conf: high, note: "analyser_names"}
   "634de3b3": {name: "VertexID", src: token, conf: high}
   "63537641": {name: "RaceID", src: combo2, conf: low}
   "635e3356": {name: "Coeff", src: token, conf: high}
   "636565ea": {name: "ModifyInfoList", src: guess3, conf: medium}
   "639eb568": {name: "PlayerInstance", src: guess3, conf: medium}
   "63bc8ae7": {name: "Pam::XData::CQueueLifeTime", src: string, conf: high}
-  "63c89d57": {name: "IsHuman", src: merged, conf: medium, note: "crc_dict"}
+  "63c89d57": {name: "IsHuman", src: merged, conf: medium, note: "analyser_names"}
   "63de1333": {name: "Tracker", src: guess3, conf: medium}
   "63f5a11f": {name: "Pam::Swing::GameplayInterface::GameplayInputs", src: nsrule, conf: high}
   "640feafc": {name: "ReplaySection", src: combo2, conf: low}
@@ -1702,7 +1708,7 @@ names:
   "642c2ff4": {name: "Pam::SwingGamePlay::Data::GameLogic_Net", src: nested, conf: medium}
   "644334fb": {name: "GroupRank", src: combo2, conf: low}
   "6455dacf": {name: "CRCFileList", src: dict, conf: certain}
-  "64587312": {name: "Pam::Swing::GameplayInterface::RulesInfo_Score", src: nested, conf: medium}
+  "64587312": {name: "Pam::Swing::GameplayInterface::RulesInfo_Score", src: nested, conf: high}
   "646c9847": {name: "ReplayRequired", src: combo2, conf: low}
   "647558d6": {name: "GeometryRef", src: combo2, conf: low}
   "648d6833": {name: "LaunchFlag", src: combo2, conf: low}
@@ -1810,7 +1816,7 @@ names:
   "6a219e04": {name: "SideMinMax", src: merged, conf: low, note: "analyser_names"}
   "6a28c3a6": {name: "GameplayZone", src: combo2, conf: low}
   "6a368d33": {name: "NameKey", src: string, conf: high}
-  "6a4b2ea4": {name: "Power", src: dict, conf: certain}
+  "6a4b2ea4": {name: "Power", src: merged, conf: high, note: "analyser_names"}
   "6a5117fe": {name: "Vertex4", src: combo2, conf: low}
   "6a5c5e2c": {name: "Blend", src: token, conf: high}
   "6a79e41f": {name: "GameStart", src: merged, conf: medium, note: "analyser_names"}
@@ -1830,7 +1836,7 @@ names:
   "6b2b0e68": {name: "PercentSpeedLost", src: merged, conf: low, note: "analyser_names"}
   "6b2f980b": {name: "ExpectedHitPoint", src: merged, conf: low, note: "analyser_names"}
   "6b405940": {name: "VenueList", src: guess3, conf: medium}
-  "6b433a31": {name: "Intensity", src: dict, conf: certain}
+  "6b433a31": {name: "Intensity", src: merged, conf: high, note: "analyser_names"}
   "6b4eec20": {name: "PreStep", src: combo2, conf: low}
   "6b5d4b93": {name: "ErrorCode", src: string, conf: high}
   "6b798c5d": {name: "AnimationId", src: combo2, conf: low}
@@ -1855,12 +1861,12 @@ names:
   "6c3656ad": {name: "Portrait", src: string, conf: high}
   "6c47c965": {name: "EngineConfig", src: token, conf: high}
   "6c5a8d02": {name: "MinWeight", src: sibling, conf: medium}
-  "6c67fb3c": {name: "TeamState", src: merged, conf: medium, note: "crc_dict"}
+  "6c67fb3c": {name: "TeamState", src: merged, conf: medium, note: "analyser_names"}
   "6c7306bb": {name: "LocalPosY", src: merged, conf: low, note: "analyser_names"}
   "6c7675cc": {name: "LobbyConfig", src: combo2, conf: low}
   "6c78e021": {name: "NextTrajectory", src: combo2, conf: low}
   "6c7994f1": {name: "Pam::Swing::SystemData::Sound", src: nsrule, conf: high}
-  "6cb36fd3": {name: "RacketSmash", src: dict, conf: certain}
+  "6cb36fd3": {name: "RacketSmash", src: merged, conf: high, note: "analyser_names"}
   "6cb3f1e9": {name: "Fov4_3Min", src: token, conf: high}
   "6cb746a9": {name: "SupportedLanguageList", src: guess3, conf: medium}
   "6ccfc298": {name: "FinalEfficiency", src: merged, conf: medium, note: "analyser_names"}
@@ -1881,7 +1887,7 @@ names:
   "6d8755ac": {name: "UpdateState", src: merged, conf: medium, note: "analyser_names"}
   "6d879dd7": {name: "LeagueHistory", src: combo2, conf: low}
   "6da19641": {name: "ReturnFlatPower", src: merged, conf: medium, note: "analyser_names"}
-  "6daa7feb": {name: "Pam::SwingGamePlay::Data::ShotContext", src: nsrule, conf: medium}
+  "6daa7feb": {name: "Pam::SwingGamePlay::Data::ShotContext", src: nsrule, conf: high}
   "6db17f14": {name: "MainModule", src: combo2, conf: low}
   "6dc034e1": {name: "Pam::CameraEngine::KeyType", src: nsrule, conf: high}
   "6dd28e9b": {name: "3", src: dict, conf: certain}
@@ -1912,7 +1918,7 @@ names:
   "6f35ef85": {name: "FilterValue", src: combo2, conf: low}
   "6f450666": {name: "LitigiousBounce", src: token, conf: high}
   "6f5c5456": {name: "NumPoints", src: token, conf: high}
-  "6f663018": {name: "Pam::SwingGamePlay::Data::PlayerState_Net", src: nested, conf: medium}
+  "6f663018": {name: "Pam::SwingGamePlay::Data::PlayerState_Net", src: nested, conf: high}
   "6f81c6fa": {name: "CrowdLODList", src: token, conf: high}
   "6f95a949": {name: "OpenSlots", src: combo2, conf: low}
   "6fb2e0e7": {name: "AngleClamp", src: combo2, conf: low}
@@ -1943,8 +1949,8 @@ names:
   "70d89c4a": {name: "Pam::System::Conditions::EqualityOperatorType", src: dict, conf: certain}
   "70d9f5f2": {name: "GameCount", src: combo2, conf: low}
   "7113871b": {name: "LT", src: merged, conf: high, note: "analyser_names"}
-  "71198650": {name: "Volley", src: dict, conf: certain}
-  "71215a86": {name: "Player1", src: merged, conf: medium, note: "crc_dict"}
+  "71198650": {name: "Volley", src: merged, conf: high, note: "analyser_names"}
+  "71215a86": {name: "Player1", src: merged, conf: medium, note: "analyser_names"}
   "71389ac6": {name: "CanRequest", src: combo2, conf: low}
   "714b21ad": {name: "AttitudeStyle", src: merged, conf: medium, note: "analyser_names"}
   "716d7bfe": {name: "Crowd", src: token, conf: high}
@@ -1969,13 +1975,13 @@ names:
   "727a4ebf": {name: "RequiredAmplitude", src: combo2, conf: low}
   "72847e88": {name: "Property", src: token, conf: high}
   "72926b09": {name: "CameraName", src: token, conf: high}
-  "729975e2": {name: "PowerfulBall", src: dict, conf: certain}
+  "729975e2": {name: "PowerfulBall", src: merged, conf: high, note: "analyser_names"}
   "7299db61": {name: "NbSets", src: string, conf: high}
   "72a1c887": {name: "PatchList", src: guess3, conf: medium}
   "72a206e3": {name: "TextureData", src: combo2, conf: low}
   "72ac24ad": {name: "TextKey", src: combo2, conf: low}
   "72ae4348": {name: "ThreadedLoadingEnabled", src: token, conf: high}
-  "72b1c1a1": {name: "Pam::SwingGamePlay::Data::MatchState", src: nsrule, conf: medium}
+  "72b1c1a1": {name: "Pam::SwingGamePlay::Data::MatchState", src: nsrule, conf: high}
   "72b408a6": {name: "PressY", src: merged, conf: high, note: "analyser_names"}
   "72c2fcc4": {name: "Pam::Swing::SeasonDB::ImageList", src: nsrule, conf: medium}
   "72d7e7b8": {name: "MaterialID", src: combo2, conf: low}
@@ -2003,7 +2009,7 @@ names:
   "73d244c2": {name: "Pam::SwingGamePlay::Data::Ball", src: nsrule, conf: high}
   "73d46f4f": {name: "PlaysName", src: sibling, conf: medium}
   "73d9ffbd": {name: "ResetStats", src: combo2, conf: low}
-  "73fca7f2": {name: "Surface", src: dict, conf: certain}
+  "73fca7f2": {name: "Surface", src: merged, conf: high, note: "analyser_names"}
   "7401bd45": {name: "ServeClass", src: merged, conf: medium, note: "analyser_names"}
   "7411a137": {name: "Pam::Swing::SeasonDB::SpecialObjective", src: nsrule, conf: high}
   "741f430a": {name: "Pam::SwingGamePlay::Data::PlayerSettings_SwingTimingSelectionList", src: nested, conf: medium}
@@ -2020,7 +2026,7 @@ names:
   "74ea79ab": {name: "LoseUnforcedError", src: token, conf: high}
   "74f382c1": {name: "SeriesList", src: guess3, conf: medium}
   "74f62f78": {name: "FanReward", src: combo2, conf: low}
-  "750b5a10": {name: "Right", src: dict, conf: certain}
+  "750b5a10": {name: "Right", src: merged, conf: high, note: "analyser_names"}
   "751ae5eb": {name: "ReviewTransition", src: merged, conf: medium, note: "analyser_names"}
   "751d21d7": {name: "BasePath", src: combo2, conf: low}
   "7521d5e0": {name: "ProjectFile", src: combo2, conf: low}
@@ -2043,7 +2049,7 @@ names:
   "76030a22": {name: "AngleRequired", src: sibling, conf: medium}
   "760a2e9a": {name: "HkxIndex", src: dict, conf: certain}
   "76178d22": {name: "Constraint", src: token, conf: high}
-  "761fdece": {name: "ShotPalette", src: guess3, conf: medium}
+  "761fdece": {name: "ShotPalette", src: merged, conf: medium, note: "analyser_names"}
   "76350ec5": {name: "Pam::Swing::SeasonDB::RoundConfig_DifficultyUp", src: nested, conf: medium}
   "764b2f27": {name: "__IsMaster", src: dict, conf: certain}
   "76534a8a": {name: "MailImage", src: sibling, conf: medium}
@@ -2139,7 +2145,7 @@ names:
   "7aeb2fe8": {name: "PhysicalObject", src: guess3, conf: medium}
   "7b0167bf": {name: "PlayerInstanceIndex", src: string, conf: high}
   "7b0fd6ae": {name: "SaveKey", src: combo2, conf: low}
-  "7b12b796": {name: "SplitSteps", src: dict, conf: certain}
+  "7b12b796": {name: "SplitSteps", src: merged, conf: high, note: "analyser_names"}
   "7b271b8a": {name: "RTTakeList", src: dict, conf: certain}
   "7b2baf46": {name: "Started", src: merged, conf: medium, note: "analyser_names"}
   "7b2cc127": {name: "IsObsolete", src: token, conf: high}
@@ -2206,7 +2212,7 @@ names:
   "7e7f9bdf": {name: "NbFrame", src: sibling, conf: medium}
   "7ea0c084": {name: "IsSuperTieBreak", src: merged, conf: medium, note: "analyser_names"}
   "7ead1fd6": {name: "LocalLoading", src: combo2, conf: low}
-  "7eb30f90": {name: "Smash", src: dict, conf: certain}
+  "7eb30f90": {name: "Smash", src: merged, conf: medium, note: "analyser_names"}
   "7eea4c04": {name: "CPlayerCreatorDNA", src: string, conf: high}
   "7ef0be7d": {name: "InfoEffect", src: merged, conf: medium, note: "analyser_names"}
   "7f29e296": {name: "Duration", src: dict, conf: certain}
@@ -2222,7 +2228,7 @@ names:
   "7f556e96": {name: "Stick_MovePolar", src: merged, conf: high, note: "analyser_names"}
   "7f65605d": {name: "DialogueId", src: combo2, conf: low}
   "7f6a439f": {name: "ReqSpeedSwing", src: merged, conf: high, note: "analyser_names"}
-  "7f6c2523": {name: "Preparation", src: dict, conf: certain}
+  "7f6c2523": {name: "Preparation", src: merged, conf: high, note: "analyser_names"}
   "7f8ef551": {name: "Pam::SwingAnimation::AnimationDB::RTTakeBlock", src: dict, conf: certain}
   "7f924a47": {name: "Pam::System::Conditions::ExpressionChoice_XPath_Boolean", src: dict, conf: certain}
   "7f93b9b9": {name: "InfoPowerful", src: merged, conf: medium, note: "analyser_names"}
@@ -2265,7 +2271,7 @@ names:
   "82252628": {name: "SpecialObjective", src: dict, conf: certain}
   "822f6686": {name: "Pam::System::Conditions::ComparableExpressionChoice_XPath_UInt32", src: dict, conf: certain}
   "823b1fae": {name: "DebugDisplay", src: combo2, conf: low}
-  "82587b50": {name: "FrameCount", src: dict, conf: certain}
+  "82587b50": {name: "FrameCount", src: merged, conf: high, note: "analyser_names"}
   "826b987b": {name: "MiscConfig", src: combo2, conf: low}
   "827190e5": {name: "CameraFollow", src: combo2, conf: low}
   "82728379": {name: "LooserTeamIndex", src: merged, conf: high, note: "analyser_names"}
@@ -2286,7 +2292,7 @@ names:
   "8383fb47": {name: "WinRewardKey", src: sibling, conf: medium}
   "83848d0a": {name: "BrandSetID", src: string, conf: high}
   "83868a17": {name: "Pam::Swing::SystemData::GameModeSelectorList_GameModeSelector_Module_AvailableModeList", src: nested, conf: medium}
-  "838fbb49": {name: "RightLine", src: merged, conf: medium, note: "crc_dict"}
+  "838fbb49": {name: "RightLine", src: merged, conf: medium, note: "analyser_names"}
   "83a2fec6": {name: "ApproachShotsExpert", src: string, conf: high}
   "83ab907e": {name: "GameType", src: token, conf: high}
   "83abf7b2": {name: "MatchCrowdState", src: guess3, conf: medium}
@@ -2333,14 +2339,14 @@ names:
   "85e93ae5": {name: "BoxLeft", src: string, conf: high}
   "85f4c811": {name: "BaselineTimingAbility", src: merged, conf: medium, note: "analyser_names"}
   "85fe8a56": {name: "TotalStep", src: combo2, conf: low}
-  "860f3051": {name: "ProStyle", src: dict, conf: certain}
+  "860f3051": {name: "ProStyle", src: merged, conf: high, note: "analyser_names"}
   "86329084": {name: "BirthDay", src: string, conf: high}
   "86338393": {name: "UserCountry", src: combo2, conf: low}
   "864304cd": {name: "Pam::Net::Data::DebugType", src: nsrule, conf: high}
   "8679ea1c": {name: "RT2", src: dict, conf: certain}
   "867f4f78": {name: "VisualQuality", src: combo2, conf: low}
   "8690a8d0": {name: "Pam::SwingAnimation::AnimationDB::ExtractPosition", src: dict, conf: certain}
-  "8692ef2b": {name: "TimingState", src: merged, conf: medium, note: "crc_dict"}
+  "8692ef2b": {name: "TimingState", src: merged, conf: medium, note: "analyser_names"}
   "869394f0": {name: "CurrentVisible", src: merged, conf: medium, note: "analyser_names"}
   "8699e4ac": {name: "Pam::SwingGamePlay::Data::Behavior_ActionList_Action", src: nested, conf: low}
   "86b38d4b": {name: "FilterValues", src: guess3, conf: medium}
@@ -2357,8 +2363,8 @@ names:
   "87568446": {name: "TolerancyZNeg", src: dict, conf: certain}
   "875715ff": {name: "Pam::Math::C4DIndex", src: dict, conf: certain}
   "87a2c8ae": {name: "ObsoleteConditions", src: combo2, conf: low}
-  "87b1920f": {name: "EndOfPoint", src: dict, conf: certain}
-  "87b755bf": {name: "InStop", src: dict, conf: certain}
+  "87b1920f": {name: "EndOfPoint", src: merged, conf: high, note: "analyser_names"}
+  "87b755bf": {name: "InStop", src: merged, conf: high, note: "analyser_names"}
   "87c53315": {name: "FromTime", src: combo2, conf: low}
   "87c5be7a": {name: "StartCalled", src: merged, conf: medium, note: "analyser_names"}
   "87ca7e9c": {name: "StrategyKey", src: combo2, conf: low}
@@ -2389,6 +2395,7 @@ names:
   "894543b0": {name: "CurrentTiming", src: combo2, conf: low}
   "89491e8e": {name: "Pam::SwingGamePlay::Data::ModuleDefEngine", src: nsrule, conf: medium}
   "89616a1a": {name: "StringId", src: merged, conf: low, note: "analyser_names"}
+  "898d41ee": {name: "YggConstraintsDjokovic", src: guess3, conf: medium}
   "899c4c22": {name: "AmplitudeConfig", src: merged, conf: low, note: "analyser_names"}
   "89ccd511": {name: "Pam::SwingGamePlay::Data::AmplitudeConfig", src: nsrule, conf: low}
   "8a0fb6b0": {name: "StandardBehavior", src: guess3, conf: medium}
@@ -2444,9 +2451,9 @@ names:
   "8c872b2c": {name: "BallTrail", src: merged, conf: medium, note: "analyser_names"}
   "8c8cbb68": {name: "PointReviewList", src: guess3, conf: medium}
   "8c91d005": {name: "OutfitIndex", src: string, conf: high}
-  "8c9b26e0": {name: "DefaultAttributes", src: merged, conf: medium, note: "crc_dict"}
+  "8c9b26e0": {name: "DefaultAttributes", src: merged, conf: medium, note: "analyser_names"}
   "8caae668": {name: "MaxDelta", src: merged, conf: medium, note: "analyser_names"}
-  "8cae3d42": {name: "MoveToNet", src: dict, conf: certain}
+  "8cae3d42": {name: "MoveToNet", src: merged, conf: high, note: "analyser_names"}
   "8caeb32a": {name: "SceneList", src: guess3, conf: medium}
   "8ccdc5e0": {name: "IDB", src: string, conf: high}
   "8cdbc232": {name: "RacketPos", src: combo2, conf: low}
@@ -2478,7 +2485,7 @@ names:
   "8eb31ff2": {name: "Bracket", src: token, conf: high}
   "8ed965f3": {name: "ShootEvent", src: combo2, conf: low}
   "8ef94766": {name: "SingleCounter", src: guess3, conf: medium}
-  "8efd67a5": {name: "Element", src: dict, conf: certain}
+  "8efd67a5": {name: "Element", src: merged, conf: high, note: "analyser_names"}
   "8f04474d": {name: "Pam::SwingGamePlay::Data::PlayerState_QualityOfPlay", src: nested, conf: medium}
   "8f08cd8d": {name: "IsActivated", src: token, conf: high}
   "8f308499": {name: "Efficiency", src: merged, conf: high, note: "analyser_names"}
@@ -2507,7 +2514,7 @@ names:
   "90f481d0": {name: "LoseUnforcedErrorEasyBall", src: token, conf: high}
   "911a1856": {name: "CameraDistance", src: token, conf: high}
   "911c750e": {name: "Pam::Swing::Season::PlayerRankingStats", src: nsrule, conf: medium}
-  "912faaa2": {name: "Powerful", src: merged, conf: medium, note: "crc_dict"}
+  "912faaa2": {name: "Powerful", src: merged, conf: high, note: "analyser_names"}
   "913e9b19": {name: "Encoding", src: token, conf: high}
   "9146088b": {name: "ShadowMode", src: combo2, conf: low}
   "91522dbf": {name: "NbWon", src: sibling, conf: medium}
@@ -2528,8 +2535,8 @@ names:
   "92314b15": {name: "ParamVec", src: token, conf: high}
   "923c763f": {name: "Show", src: string, conf: high}
   "9245a1cf": {name: "UpdateNewsEvent", src: guess3, conf: medium}
-  "92672f1b": {name: "MatchAnalyser", src: merged, conf: medium, note: "crc_dict"}
-  "926eef1b": {name: "VolleyZone", src: merged, conf: medium, note: "crc_dict"}
+  "92672f1b": {name: "MatchAnalyser", src: merged, conf: medium, note: "analyser_names"}
+  "926eef1b": {name: "VolleyZone", src: merged, conf: medium, note: "analyser_names"}
   "92786a47": {name: "VisualDebugger", src: token, conf: high}
   "927a7e18": {name: "IsBreakPoint", src: merged, conf: low, note: "analyser_names"}
   "927c11e3": {name: "AnimBones", src: merged, conf: high, note: "analyser_names"}
@@ -2556,7 +2563,7 @@ names:
   "93a12c54": {name: "TargetHit", src: merged, conf: medium, note: "analyser_names"}
   "93d35c68": {name: "BallSpin", src: sibling, conf: medium}
   "93db63d5": {name: "CurrentDevice", src: combo2, conf: low}
-  "93e5ba75": {name: "Apologize", src: dict, conf: certain}
+  "93e5ba75": {name: "Apologize", src: merged, conf: high, note: "analyser_names"}
   "93ee10df": {name: "FirstPoint", src: merged, conf: medium, note: "analyser_names"}
   "93f32b86": {name: "InvertZ", src: combo2, conf: low}
   "93f7afc2": {name: "TwoHanded", src: dict, conf: certain}
@@ -2586,7 +2593,7 @@ names:
   "95741049": {name: "Bone", src: token, conf: high}
   "95822fc7": {name: "RankProgress", src: string, conf: high}
   "9588cec3": {name: "TransitionRuleList", src: dict, conf: certain}
-  "959a9407": {name: "EOP", src: dict, conf: certain}
+  "959a9407": {name: "EOP", src: merged, conf: high, note: "analyser_names"}
   "95a01c3b": {name: "Gravity", src: merged, conf: high, note: "analyser_names"}
   "95b29297": {name: "Integer", src: token, conf: high}
   "95cfa75d": {name: "TypeOffset", src: combo2, conf: low}
@@ -2604,7 +2611,7 @@ names:
   "964a8173": {name: "UsePlayerIndex", src: sibling, conf: medium}
   "965872b3": {name: "Curve", src: token, conf: high}
   "96733f04": {name: "Pam::Swing::SeasonDB::StatusList", src: nsrule, conf: medium}
-  "96793e47": {name: "BHType", src: dict, conf: certain}
+  "96793e47": {name: "BHType", src: merged, conf: high, note: "analyser_names"}
   "967c7b47": {name: "Shape1_Shape2_Shape3", src: token, conf: high}
   "967fcce8": {name: "SubGroupIndex", src: dict, conf: certain}
   "9681a6e5": {name: "RegionList", src: combo2, conf: low}
@@ -2616,7 +2623,7 @@ names:
   "96afac38": {name: "IsY", src: merged, conf: high, note: "analyser_names"}
   "96c40758": {name: "RoundList", src: guess3, conf: medium}
   "96f91b64": {name: "Pam::SwingGamePlay::Data::IncomingBallEditor", src: nsrule, conf: medium}
-  "96fe1e55": {name: "Repositioning", src: dict, conf: certain}
+  "96fe1e55": {name: "Repositioning", src: merged, conf: high, note: "analyser_names"}
   "9703c830": {name: "Swing_ServeAndVolley_Ad_Style02", src: dict, conf: certain}
   "97186ebe": {name: "DataVector", src: sibling, conf: medium}
   "97393b68": {name: "Pam::Swing::Season::ExtraTimeEventUnlockList", src: nsrule, conf: high}
@@ -2648,13 +2655,13 @@ names:
   "98bf80fc": {name: "GameMode", src: string, conf: high}
   "98dd0128": {name: "Loading", src: string, conf: high}
   "99030041": {name: "SideLeft", src: merged, conf: medium, note: "analyser_names"}
-  "990377a5": {name: "DropShot", src: dict, conf: certain}
+  "990377a5": {name: "DropShot", src: merged, conf: high, note: "analyser_names"}
   "99058f2d": {name: "Pam::PlayerCreator::TextureListType", src: nsrule, conf: medium}
   "99185f83": {name: "ExtractPosition", src: dict, conf: certain}
   "991df89e": {name: "AskNext", src: merged, conf: high, note: "analyser_names"}
   "9922d5ca": {name: "RequestChallenge", src: merged, conf: high, note: "analyser_names"}
   "9927a641": {name: "Failed", src: string, conf: high}
-  "99365b30": {name: "Min", src: dict, conf: certain}
+  "99365b30": {name: "Min", src: merged, conf: high, note: "analyser_names"}
   "994e55ab": {name: "Pam::XBinData::CXBinPath", src: string, conf: high}
   "995b0cf8": {name: "Viewport", src: token, conf: high}
   "997d5652": {name: "Age", src: string, conf: high}
@@ -2704,7 +2711,7 @@ names:
   "9bef5a7b": {name: "SlideLimit", src: combo2, conf: low}
   "9bfeb677": {name: "TopSpinSchool", src: merged, conf: high, note: "analyser_names"}
   "9c0f0d60": {name: "BackupValue", src: combo2, conf: low}
-  "9c11fa39": {name: "DebugCustomValue", src: guess3, conf: medium}
+  "9c11fa39": {name: "DebugCustomValue", src: merged, conf: medium, note: "analyser_names"}
   "9c18079e": {name: "CommandBuffer", src: string, conf: high}
   "9c1c9375": {name: "Error", src: string, conf: high}
   "9c1d5e02": {name: "ReasonId", src: combo2, conf: low}
@@ -2716,7 +2723,7 @@ names:
   "9c85a134": {name: "IsThere", src: token, conf: high}
   "9c989aa7": {name: "Record", src: string, conf: high}
   "9cab08b1": {name: "ReceiverNumberStage", src: merged, conf: low, note: "analyser_names"}
-  "9cafb633": {name: "Wood", src: dict, conf: certain}
+  "9cafb633": {name: "Wood", src: merged, conf: high, note: "analyser_names"}
   "9cb83a2d": {name: "RelativePosition", src: token, conf: high}
   "9cb9c54d": {name: "RushRatio", src: combo2, conf: low}
   "9cbdc1bf": {name: "PositioningSpeed", src: merged, conf: medium, note: "analyser_names"}
@@ -2729,17 +2736,17 @@ names:
   "9d2e4cf1": {name: "ShotOther", src: combo2, conf: low}
   "9d39801a": {name: "CurrentWeight", src: combo2, conf: low}
   "9d6d3bff": {name: "SecondValueIndex", src: merged, conf: high, note: "analyser_names"}
-  "9d734117": {name: "Vivacity", src: merged, conf: medium, note: "crc_dict"}
-  "9d7c7c58": {name: "BallState", src: merged, conf: medium, note: "crc_dict"}
+  "9d734117": {name: "Vivacity", src: merged, conf: high, note: "analyser_names"}
+  "9d7c7c58": {name: "BallState", src: merged, conf: medium, note: "analyser_names"}
   "9d8d66d3": {name: "IsWin", src: merged, conf: medium, note: "analyser_names"}
   "9d914a30": {name: "InsideOutRequested", src: merged, conf: medium, note: "analyser_names"}
   "9dabb75b": {name: "DynamicPosition", src: combo2, conf: low}
   "9dbaa17a": {name: "FootstepCategory1", src: dict, conf: certain}
   "9de0a0f2": {name: "Pam::System::IO::CFileSystemPackArchive", src: string, conf: high}
   "9de60cb0": {name: "OnlyMen", src: combo2, conf: low}
-  "9deb41b3": {name: "PerfectShot", src: merged, conf: medium, note: "crc_dict"}
+  "9deb41b3": {name: "PerfectShot", src: merged, conf: medium, note: "analyser_names"}
   "9dfd3de0": {name: "ZBuffer", src: token, conf: high}
-  "9e119d06": {name: "Stomp", src: dict, conf: certain}
+  "9e119d06": {name: "Stomp", src: merged, conf: high, note: "analyser_names"}
   "9e4cbed3": {name: "HkxName", src: dict, conf: certain}
   "9e4d7a8a": {name: "RTTakeIndex", src: dict, conf: certain}
   "9e50f2f5": {name: "SourceXPath", src: token, conf: high}
@@ -2753,7 +2760,7 @@ names:
   "9ef68e3f": {name: "Token", src: token, conf: high}
   "9f250d9c": {name: "OutfitInfo", src: combo2, conf: low}
   "9f375bfe": {name: "SpecialShot", src: merged, conf: high, note: "analyser_names"}
-  "9f448218": {name: "Enabled", src: dict, conf: certain}
+  "9f448218": {name: "Enabled", src: merged, conf: high, note: "analyser_names"}
   "9f46f9ef": {name: "Pam::SwingGamePlay::Data::AnimationSelection_Serve", src: nested, conf: medium}
   "9f569d59": {name: "UnlockSlot", src: combo2, conf: low}
   "9f66aeea": {name: "ScaleModifier", src: combo2, conf: low}
@@ -2764,7 +2771,7 @@ names:
   "9fb57f53": {name: "Player", src: merged, conf: high, note: "analyser_names"}
   "9fbf39db": {name: "NbPlayed", src: sibling, conf: medium}
   "9fe59fa0": {name: "Pam::SwingGamePlay::Data::IncomingBall", src: nsrule, conf: medium}
-  "9ff498ef": {name: "HeavyStomp", src: dict, conf: certain}
+  "9ff498ef": {name: "HeavyStomp", src: merged, conf: high, note: "analyser_names"}
   "9ff530fe": {name: "PlayerCondition", src: merged, conf: low, note: "analyser_names"}
   "9ff62751": {name: "AttributeRequestList", src: guess3, conf: medium}
   "9ffccb73": {name: "Skill", src: merged, conf: high, note: "analyser_names"}
@@ -2773,7 +2780,7 @@ names:
   "9fff9bc0": {name: "SequenceTimeContribution", src: guess3, conf: medium}
   "a00047a7": {name: "ConnectCommand", src: combo2, conf: low}
   "a00af223": {name: "AnimGroupDesc", src: dict, conf: certain}
-  "a0323a39": {name: "Return", src: dict, conf: certain}
+  "a0323a39": {name: "Return", src: merged, conf: high, note: "analyser_names"}
   "a03926db": {name: "ModuleDefMatch", src: guess3, conf: medium}
   "a03ca0ed": {name: "GiveUp", src: token, conf: high}
   "a04840c3": {name: "ButtonAutoSwing", src: merged, conf: low, note: "analyser_names"}
@@ -2807,7 +2814,7 @@ names:
   "a147c87f": {name: "LightPack", src: token, conf: high}
   "a16323f5": {name: "FirstName", src: string, conf: high}
   "a163c166": {name: "Pam::System::Conditions::ConditionsType", src: dict, conf: certain}
-  "a1816bed": {name: "HitPoint", src: merged, conf: medium, note: "crc_dict"}
+  "a1816bed": {name: "HitPoint", src: merged, conf: medium, note: "analyser_names"}
   "a18908b5": {name: "TargetSection", src: combo2, conf: low}
   "a1a40991": {name: "InfoRepositioningTime", src: merged, conf: low, note: "analyser_names"}
   "a1e83b5e": {name: "CurrentCamera", src: token, conf: high}
@@ -2848,11 +2855,11 @@ names:
   "a42c93be": {name: "Emergency", src: merged, conf: medium, note: "analyser_names"}
   "a430f361": {name: "VertexC", src: token, conf: high}
   "a436b877": {name: "Pam::SwingAnimation::AnimationDB::ResponseCurveSingle", src: dict, conf: certain}
-  "a43884fa": {name: "FirstIndex", src: dict, conf: certain}
+  "a43884fa": {name: "FirstIndex", src: merged, conf: high, note: "analyser_names"}
   "a43d7e52": {name: "Pam::SwingGamePlay::Data::TimingExpressionInputs", src: nsrule, conf: low}
   "a44152d6": {name: "Skill3", src: string, conf: high}
   "a48e2625": {name: "DisplayRecord", src: guess3, conf: medium}
-  "a48e3ab0": {name: "Frequency", src: dict, conf: certain}
+  "a48e3ab0": {name: "Frequency", src: merged, conf: high, note: "analyser_names"}
   "a4aa01b0": {name: "CurrentAcceleration", src: merged, conf: medium, note: "analyser_names"}
   "a4c2e1b8": {name: "NextRecovery", src: combo2, conf: low}
   "a4e21ef6": {name: "Cameras", src: token, conf: high}
@@ -2863,7 +2870,7 @@ names:
   "a526d459": {name: "Face", src: token, conf: high}
   "a52d0f5b": {name: "TransitionSpeed", src: combo2, conf: low}
   "a52fdc6d": {name: "Pam::System::Memory::CHeapChunkType", src: string, conf: high}
-  "a53b6469": {name: "Max", src: dict, conf: certain}
+  "a53b6469": {name: "Max", src: merged, conf: high, note: "analyser_names"}
   "a552b8c4": {name: "RT", src: merged, conf: high, note: "analyser_names"}
   "a5545e36": {name: "GlobalClock", src: merged, conf: medium, note: "analyser_names"}
   "a5678ea7": {name: "MissContinue", src: dict, conf: certain}
@@ -2893,8 +2900,8 @@ names:
   "a68dd490": {name: "SwingCount", src: dict, conf: certain}
   "a68f268b": {name: "SRPCommandQueue", src: token, conf: high}
   "a696076d": {name: "TexturePointer", src: combo2, conf: low}
-  "a6a1b2ae": {name: "Serve", src: dict, conf: certain}
-  "a6a6a055": {name: "ShotEfficiency", src: merged, conf: medium, note: "crc_dict"}
+  "a6a1b2ae": {name: "Serve", src: merged, conf: high, note: "analyser_names"}
+  "a6a6a055": {name: "ShotEfficiency", src: merged, conf: medium, note: "analyser_names"}
   "a6b848cc": {name: "SubAnimGroup", src: dict, conf: certain}
   "a6b9f302": {name: "BirthNumber", src: combo2, conf: low}
   "a6bf2366": {name: "Pam::SwingGamePlay::Data::MoveConstraintsArea", src: nsrule, conf: medium}
@@ -2950,7 +2957,7 @@ names:
   "aa5c5914": {name: "Displayed", src: token, conf: high}
   "aa631972": {name: "DirectionSelected", src: merged, conf: medium, note: "analyser_names"}
   "aa7614bd": {name: "Pam::SwingGamePlay::Data::BaseEffect", src: nsrule, conf: medium}
-  "aa7aebc4": {name: "TunnelBagSound", src: dict, conf: certain}
+  "aa7aebc4": {name: "TunnelBagSound", src: merged, conf: high, note: "analyser_names"}
   "aa85d449": {name: "LastChampionKey", src: string, conf: high}
   "aa9c7d46": {name: "DefaultMove", src: combo2, conf: low}
   "aaa7c45e": {name: "Pam::Swing::Season::PlayerStatusList", src: nsrule, conf: medium}
@@ -2993,7 +3000,7 @@ names:
   "ac994ffd": {name: "ShootTargets", src: combo2, conf: low}
   "aca33774": {name: "MatchSettings", src: string, conf: high}
   "aca533ac": {name: "COutfitManagerXBIN", src: string, conf: high}
-  "acb75b15": {name: "PSMove", src: merged, conf: medium, note: "crc_dict"}
+  "acb75b15": {name: "PSMove", src: merged, conf: high, note: "analyser_names"}
   "acd47ca5": {name: "TournamentsWon", src: combo2, conf: low}
   "ace461bb": {name: "SizeY", src: combo2, conf: low}
   "ace8cdbe": {name: "StatList", src: combo2, conf: low}
@@ -3002,8 +3009,8 @@ names:
   "ad09351e": {name: "IsDefenseShot", src: merged, conf: low, note: "analyser_names"}
   "ad0e9f1d": {name: "AgentsState", src: token, conf: high}
   "ad11d5a1": {name: "Pam::SwingAnimation::AnimationDB::RotY_None", src: dict, conf: certain}
-  "ad1995d3": {name: "RePositioningState", src: guess3, conf: medium}
-  "ad4ba1ab": {name: "SwingCategory", src: dict, conf: certain}
+  "ad1995d3": {name: "RePositioningState", src: merged, conf: medium, note: "analyser_names"}
+  "ad4ba1ab": {name: "SwingCategory", src: merged, conf: high, note: "analyser_names"}
   "ad4f7020": {name: "MaxOpacity", src: sibling, conf: medium}
   "ad516653": {name: "TrajectoryData", src: guess3, conf: medium}
   "ad6468a3": {name: "Debug", src: merged, conf: high, note: "analyser_names"}
@@ -3012,7 +3019,7 @@ names:
   "ada1322b": {name: "Pam::SwingGamePlay::Data::PlayerSettings_HitPositionSelection_MovePattern", src: nested, conf: low}
   "adacb502": {name: "PowerfulShot", src: dict, conf: certain}
   "adb1e3e9": {name: "SurfaceType", src: token, conf: high}
-  "adb6ffce": {name: "Positioning", src: dict, conf: certain}
+  "adb6ffce": {name: "Positioning", src: merged, conf: high, note: "analyser_names"}
   "addd20e9": {name: "Quota", src: merged, conf: medium, note: "analyser_names"}
   "ade11395": {name: "InfoTextList", src: guess3, conf: medium}
   "adfee929": {name: "ReleasePrecision", src: merged, conf: high, note: "analyser_names"}
@@ -3033,7 +3040,7 @@ names:
   "ae8d7b2f": {name: "HasWon", src: sibling, conf: medium}
   "ae98e722": {name: "Creation", src: dict, conf: certain}
   "ae9d9365": {name: "AnimationProjects", src: combo2, conf: low}
-  "aea55abe": {name: "Cutscene_BallBounce_WarmingUp", src: dict, conf: certain}
+  "aea55abe": {name: "Cutscene_BallBounce_WarmingUp", src: merged, conf: high, note: "analyser_names"}
   "aeb26612": {name: "Pam::Swing::GameplayInterface::BallInfo_FirstBouncePosition", src: nested, conf: medium}
   "aef32f14": {name: "FinalPositioningComponents", src: merged, conf: medium, note: "analyser_names"}
   "af01aeda": {name: "Object", src: token, conf: high}
@@ -3047,8 +3054,8 @@ names:
   "af42d538": {name: "FrameStep", src: combo2, conf: low}
   "af445abc": {name: "PauseInput", src: sibling, conf: medium}
   "af52fdb7": {name: "Particle", src: token, conf: high}
-  "af5d1e2e": {name: "BaseLine", src: merged, conf: medium, note: "crc_dict"}
-  "af62f9b9": {name: "HeavyRacketHit", src: dict, conf: certain}
+  "af5d1e2e": {name: "BaseLine", src: merged, conf: high, note: "analyser_names"}
+  "af62f9b9": {name: "HeavyRacketHit", src: merged, conf: high, note: "analyser_names"}
   "af6dfe2f": {name: "ImpactWidth", src: combo2, conf: low}
   "af9ddbd7": {name: "IsDynamic", src: token, conf: high}
   "afaf5131": {name: "FacialEvent", src: dict, conf: certain}
@@ -3057,7 +3064,7 @@ names:
   "afd868db": {name: "PlayerStateId", src: merged, conf: low, note: "analyser_names"}
   "afdff65f": {name: "Pam::SwingGamePlay::Data::Behavior_OutputBehaviorList", src: nested, conf: medium}
   "b0010cba": {name: "DeltaOver", src: combo2, conf: low}
-  "b0043514": {name: "FlatFinesse", src: dict, conf: certain}
+  "b0043514": {name: "FlatFinesse", src: merged, conf: medium, note: "analyser_names"}
   "b0064eba": {name: "Pam::SwingGamePlay::Data::MoveConstraintsConfig", src: nsrule, conf: medium}
   "b01c4a81": {name: "Orientation", src: dict, conf: certain}
   "b01f1c10": {name: "Pam::SwingGamePlay::Data::AnimationSelection_RunBack", src: nested, conf: medium}
@@ -3077,6 +3084,7 @@ names:
   "b0cffdee": {name: "MonthCount", src: combo2, conf: low}
   "b0e5a61c": {name: "Pam::SwingGamePlay::Data::StateShotEditor", src: nsrule, conf: medium}
   "b0f1ec2c": {name: "LifeMethod", src: sibling, conf: medium}
+  "b0f8eeef": {name: "PaResolveWanted", src: guess3, conf: medium}
   "b1009e1b": {name: "UV2", src: token, conf: high}
   "b1080bc1": {name: "MaterialKey", src: sibling, conf: medium}
   "b10c7f96": {name: "HandEventIndexEnd", src: dict, conf: certain}
@@ -3132,7 +3140,7 @@ names:
   "b3e81d72": {name: "LastResult", src: combo2, conf: low}
   "b3ea1998": {name: "Pam::System::UInt8", src: string, conf: high}
   "b3ebaf2d": {name: "ScaleActivated", src: token, conf: high}
-  "b3ee33f3": {name: "MoveState", src: merged, conf: medium, note: "crc_dict"}
+  "b3ee33f3": {name: "MoveState", src: merged, conf: medium, note: "analyser_names"}
   "b3ff5297": {name: "Jog", src: dict, conf: certain}
   "b405c94e": {name: "Pam::Math::CMatrix", src: string, conf: high}
   "b429534d": {name: "ScaleZ", src: token, conf: high}
@@ -3185,7 +3193,7 @@ names:
   "b6ca3263": {name: "Pam::SwingGamePlay::Data::PlayerState_MatchAnalyser", src: nested, conf: medium}
   "b6f52a17": {name: "UnlockedItemList", src: token, conf: high}
   "b6fd382f": {name: "BinFilePathFormatted", src: dict, conf: certain}
-  "b70a03f3": {name: "VolleyStandard", src: dict, conf: certain}
+  "b70a03f3": {name: "VolleyStandard", src: merged, conf: medium, note: "analyser_names"}
   "b70c80a5": {name: "NormalMap", src: string, conf: high}
   "b715c843": {name: "PreviousWinners", src: combo2, conf: low}
   "b7249b32": {name: "PlayerGamerTagDataList", src: token, conf: high}
@@ -3202,14 +3210,14 @@ names:
   "b7964695": {name: "ClearZ", src: token, conf: high}
   "b797ce6b": {name: "SelectionScore", src: merged, conf: medium, note: "analyser_names"}
   "b79d9c05": {name: "AccuracyCrossAce", src: merged, conf: low, note: "analyser_names"}
-  "b7b2364b": {name: "X", src: dict, conf: certain}
+  "b7b2364b": {name: "X", src: merged, conf: high, note: "analyser_names"}
   "b7dad510": {name: "SignatureList", src: guess3, conf: medium}
   "b7f257b8": {name: "ItemList", src: string, conf: high}
   "b7f6b2af": {name: "ScreenShot", src: token, conf: high}
   "b809decd": {name: "Completed", src: token, conf: high}
   "b81fcc00": {name: "Objective7AllAround", src: brute4, conf: high, note: "members of type F2A0BD48: all 32 = Objective{1..8} x 4 play styles, lengths implied by the nested rule"}
   "b8489600": {name: "Is7f7U_Ability", src: nested, conf: high}
-  "b848a48a": {name: "Transition", src: dict, conf: certain}
+  "b848a48a": {name: "Transition", src: merged, conf: high, note: "analyser_names"}
   "b84e9d41": {name: "SetupId", src: token, conf: high}
   "b8501389": {name: "ValidatedConditions", src: guess3, conf: medium}
   "b8566ccb": {name: "InstanceStatistics", src: combo2, conf: low}
@@ -3245,11 +3253,11 @@ names:
   "b9ff91c0": {name: "Life", src: token, conf: high}
   "ba146885": {name: "IsPersistent", src: sibling, conf: medium}
   "ba20ed09": {name: "MatchAnalyserSettings", src: guess3, conf: medium}
-  "ba26eeae": {name: "RepositioningState", src: merged, conf: medium, note: "crc_dict"}
+  "ba26eeae": {name: "RepositioningState", src: merged, conf: medium, note: "analyser_names"}
   "ba299ad9": {name: "RunTime", src: token, conf: high}
   "ba491d6c": {name: "Pam::SwingGamePlay::Data::Behavior_InputFilter", src: nested, conf: medium}
   "ba667f1b": {name: "Bad", src: dict, conf: certain}
-  "baacf8f3": {name: "BallHeight", src: merged, conf: medium, note: "crc_dict"}
+  "baacf8f3": {name: "BallHeight", src: merged, conf: medium, note: "analyser_names"}
   "bab436f1": {name: "IsClay", src: merged, conf: medium, note: "analyser_names"}
   "bab5b3f4": {name: "TimingExpression", src: merged, conf: medium, note: "analyser_names"}
   "babad6a4": {name: "XScale", src: sibling, conf: medium}
@@ -3285,7 +3293,7 @@ names:
   "bc68b415": {name: "MovePattern", src: guess3, conf: medium}
   "bc8aa35e": {name: "Speciality", src: string, conf: high}
   "bc924e0d": {name: "Pam::SwingGamePlay::Data::PlayerSettings_HitPositionSelection_MovePattern_SelectionList", src: nested, conf: low}
-  "bcbb5310": {name: "Direction", src: dict, conf: certain}
+  "bcbb5310": {name: "Direction", src: merged, conf: high, note: "analyser_names"}
   "bccd3f05": {name: "Down", src: merged, conf: high, note: "analyser_names"}
   "bcd51790": {name: "Pam::SwingAnimation::AnimationDB::AnimGroupDesc", src: dict, conf: certain}
   "bce607cd": {name: "InterfaceServer", src: combo2, conf: low}
@@ -3297,7 +3305,7 @@ names:
   "bd6a4b43": {name: "Pam::System::FeatureListType_Feature_PartList", src: dict, conf: certain}
   "bd6ab343": {name: "Pam::XBinData::CString", src: dict, conf: certain}
   "bd761be8": {name: "ProjectList", src: combo2, conf: low}
-  "bd8ea388": {name: "InsideOut", src: merged, conf: medium, note: "crc_dict"}
+  "bd8ea388": {name: "InsideOut", src: merged, conf: high, note: "analyser_names"}
   "bda04ec6": {name: "__CreateDummyIfConditionsFailed", src: dict, conf: certain}
   "bdad58be": {name: "Pam::SwingGamePlay::Data::ReceiverSettings", src: nsrule, conf: medium}
   "bdd29cad": {name: "LetProbability", src: merged, conf: medium, note: "analyser_names"}
@@ -3315,7 +3323,7 @@ names:
   "be8416ea": {name: "WinPercent", src: combo2, conf: low}
   "be852356": {name: "TenaciousCockroach", src: string, conf: high}
   "be8bace6": {name: "Swing_Serve_Djokovic", src: dict, conf: certain}
-  "be9a22cd": {name: "PlayPower", src: merged, conf: medium, note: "crc_dict"}
+  "be9a22cd": {name: "PlayPower", src: merged, conf: medium, note: "analyser_names"}
   "bebf81b8": {name: "RulesInfo", src: token, conf: high}
   "bec573d1": {name: "ClearColor", src: token, conf: high}
   "bed0ad32": {name: "InitialTime", src: combo2, conf: low}
@@ -3329,13 +3337,13 @@ names:
   "bf298a20": {name: "Item", src: merged, conf: high, note: "analyser_names"}
   "bf345462": {name: "FontSize", src: combo2, conf: low}
   "bf505168": {name: "Pam::Swing::SeasonDB::Status", src: nsrule, conf: high}
-  "bf5a86a3": {name: "Position", src: dict, conf: certain}
+  "bf5a86a3": {name: "Position", src: merged, conf: high, note: "analyser_names"}
   "bf671cfd": {name: "Pam::System::CModuleManagerSubElementType", src: dict, conf: certain}
   "bf86ea17": {name: "UnlockType", src: string, conf: high}
   "bfaa2ef3": {name: "Pam::SwingGamePlay::Data::PlayerState_ServeState_HumanState", src: nested, conf: medium}
   "bfb04f2c": {name: "Pam::SwingAnimation::AnimationDB::MotionOpBlendSpeedCoef", src: dict, conf: certain}
   "bfb447e4": {name: "ControlValues", src: merged, conf: medium, note: "analyser_names"}
-  "bfb9d8c0": {name: "VolleyPower", src: dict, conf: certain}
+  "bfb9d8c0": {name: "VolleyPower", src: merged, conf: medium, note: "analyser_names"}
   "bfbb3865": {name: "NewsWeight", src: sibling, conf: medium}
   "bfc89669": {name: "ContinentList", src: combo2, conf: low}
   "bfe604aa": {name: "Pam::Swing::SystemData::MarketPlaceContent", src: nsrule, conf: high}
@@ -3355,7 +3363,7 @@ names:
   "c0a7b31a": {name: "__HeapName", src: dict, conf: certain}
   "c0aa0f01": {name: "Pam::SwingAnimation::AnimationDB::AnimDecalContribution", src: dict, conf: certain}
   "c0b3c032": {name: "PresetVertex", src: combo2, conf: low}
-  "c0b506dd": {name: "Y", src: dict, conf: certain}
+  "c0b506dd": {name: "Y", src: merged, conf: high, note: "analyser_names"}
   "c0b674d8": {name: "SaveName", src: combo2, conf: low}
   "c0dee81c": {name: "SequenceTime", src: guess3, conf: medium}
   "c0e76482": {name: "TargetData", src: combo2, conf: low}
@@ -3372,12 +3380,12 @@ names:
   "c1af3db3": {name: "ShotCount", src: sibling, conf: medium}
   "c1b45814": {name: "OpponentInfos", src: combo2, conf: low}
   "c1cf6fc1": {name: "AnimationStep", src: combo2, conf: low}
-  "c1df4081": {name: "Medium", src: dict, conf: certain}
+  "c1df4081": {name: "Medium", src: merged, conf: high, note: "analyser_names"}
   "c1e2abc9": {name: "IgnoreSpeedCoef", src: dict, conf: certain}
   "c1f0f632": {name: "SkillSettings", src: guess3, conf: medium}
   "c20cf2f7": {name: "PlayerStatusList", src: guess3, conf: medium}
   "c2214984": {name: "ZPos", src: sibling, conf: medium}
-  "c222a5e0": {name: "Miss", src: dict, conf: certain}
+  "c222a5e0": {name: "Miss", src: merged, conf: high, note: "analyser_names"}
   "c223687f": {name: "BallDifficulty", src: merged, conf: medium, note: "analyser_names"}
   "c22b47ea": {name: "MemLimit", src: combo2, conf: low}
   "c233d70f": {name: "SimulationDone", src: merged, conf: medium, note: "analyser_names"}
@@ -3406,14 +3414,14 @@ names:
   "c363cea9": {name: "LeftBackLeft", src: dict, conf: certain}
   "c36c4b3f": {name: "Display", src: string, conf: high}
   "c3716fda": {name: "FirstValueIndex", src: merged, conf: high, note: "analyser_names"}
-  "c38f5ceb": {name: "ServeAndVolley", src: dict, conf: certain}
+  "c38f5ceb": {name: "ServeAndVolley", src: merged, conf: high, note: "analyser_names"}
   "c395a618": {name: "Job", src: token, conf: high}
   "c3a5c531": {name: "Impact", src: token, conf: high}
   "c3a9716a": {name: "StartCondition", src: dict, conf: certain}
   "c3abdd26": {name: "ForceEvent", src: combo2, conf: low}
   "c3c4f7dd": {name: "IsReached", src: token, conf: high}
-  "c3c896c0": {name: "Outputs", src: merged, conf: medium, note: "crc_dict"}
-  "c3d48ae1": {name: "RushRepositioning", src: merged, conf: medium, note: "crc_dict"}
+  "c3c896c0": {name: "Outputs", src: merged, conf: high, note: "analyser_names"}
+  "c3d48ae1": {name: "RushRepositioning", src: merged, conf: medium, note: "analyser_names"}
   "c3e81c3d": {name: "StreamInfo", src: guess3, conf: medium}
   "c40ce87e": {name: "MaxSize", src: sibling, conf: medium}
   "c41d3248": {name: "CurrentBlendCoef", src: dict, conf: certain}
@@ -3466,7 +3474,7 @@ names:
   "c6c76679": {name: "AimingConfig", src: combo2, conf: low}
   "c709e68c": {name: "Steps_FH", src: dict, conf: certain}
   "c7139f2f": {name: "IsRallyRunning", src: merged, conf: low, note: "analyser_names"}
-  "c718daaa": {name: "Lob", src: dict, conf: certain}
+  "c718daaa": {name: "Lob", src: merged, conf: high, note: "analyser_names"}
   "c7194003": {name: "RefFrame", src: combo2, conf: low}
   "c729b208": {name: "StateIndex", src: merged, conf: medium, note: "analyser_names"}
   "c72c36b4": {name: "OutcomeStats", src: guess3, conf: medium}
@@ -3504,7 +3512,7 @@ names:
   "c8c9eac7": {name: "SortIndex", src: string, conf: high}
   "c8d19d62": {name: "Objective1BaselineController", src: brute4, conf: high, note: "members of type F2A0BD48: all 32 = Objective{1..8} x 4 play styles, lengths implied by the nested rule"}
   "c8d7bcf2": {name: "WinnerTeam", src: string, conf: high}
-  "c8dffc00": {name: "AttitudeType", src: dict, conf: certain}
+  "c8dffc00": {name: "AttitudeType", src: merged, conf: high, note: "analyser_names"}
   "c8eabb91": {name: "R_X", src: string, conf: high}
   "c90196a9": {name: "AcademyRank", src: combo2, conf: low}
   "c9028c65": {name: "NoMirror", src: dict, conf: certain}
@@ -3533,7 +3541,7 @@ names:
   "ca16d50e": {name: "LocalOpponentPosition", src: merged, conf: medium, note: "analyser_names"}
   "ca179e4d": {name: "TargetValue", src: combo2, conf: low}
   "ca2af7ad": {name: "Placement", src: token, conf: high}
-  "ca370ec4": {name: "LightRacketHit", src: dict, conf: certain}
+  "ca370ec4": {name: "LightRacketHit", src: merged, conf: high, note: "analyser_names"}
   "ca457473": {name: "MiscIncomingInfo", src: guess3, conf: medium}
   "ca491992": {name: "Padding", src: token, conf: high}
   "ca4c321d": {name: "SpinServeMaster", src: string, conf: high}
@@ -3546,7 +3554,7 @@ names:
   "ca824eb7": {name: "ShotDetected", src: merged, conf: medium, note: "analyser_names"}
   "ca959fd1": {name: "InitializedCompleting", src: combo2, conf: low}
   "caa49bd2": {name: "Pam::Swing::SeasonDB::MatchPlayerList", src: nsrule, conf: medium}
-  "caa7531f": {name: "Net", src: dict, conf: certain}
+  "caa7531f": {name: "Net", src: merged, conf: high, note: "analyser_names"}
   "cab496c1": {name: "AIProfile", src: combo2, conf: low}
   "cac46ebe": {name: "Flags", src: string, conf: high}
   "cac57360": {name: "TCR", src: brute3, conf: medium, note: "C brute: 1-3 words of the top 1200 vocabulary, exact implied length"}
@@ -3561,13 +3569,13 @@ names:
   "cb412fd4": {name: "ActiveCoach", src: string, conf: high}
   "cb537879": {name: "IsSet", src: token, conf: high}
   "cb5a8c6d": {name: "HasEe", src: combo2, conf: low}
-  "cb7211a8": {name: "Output", src: merged, conf: medium, note: "crc_dict"}
+  "cb7211a8": {name: "Output", src: merged, conf: high, note: "analyser_names"}
   "cb7a9adc": {name: "FromGame", src: combo2, conf: low}
   "cbe44a9b": {name: "FatigueIngame", src: merged, conf: medium, note: "analyser_names"}
   "cbf66811": {name: "Nation", src: string, conf: high}
   "cc04bb2a": {name: "AnimGroupDescList", src: dict, conf: certain}
   "cc0738ed": {name: "CameraPackList", src: token, conf: high}
-  "cc20baea": {name: "AutoSwing", src: merged, conf: medium, note: "crc_dict"}
+  "cc20baea": {name: "AutoSwing", src: merged, conf: medium, note: "analyser_names"}
   "cc31f458": {name: "Mass", src: merged, conf: high, note: "analyser_names"}
   "cc32f1d4": {name: "InputFilter", src: merged, conf: medium, note: "analyser_names"}
   "cc45b7de": {name: "SeasonReward", src: combo2, conf: low}
@@ -3615,9 +3623,9 @@ names:
   "cedbcb39": {name: "IncMove", src: guess3, conf: medium}
   "cedeb70b": {name: "ApplyRotYStartFrom", src: dict, conf: certain}
   "cee114bd": {name: "System", src: string, conf: high}
-  "cee7d1f2": {name: "Speed", src: dict, conf: certain}
+  "cee7d1f2": {name: "Speed", src: merged, conf: high, note: "analyser_names"}
   "cef9b8ec": {name: "HitPositionLocal", src: merged, conf: low, note: "analyser_names"}
-  "cf00ed91": {name: "TunnelBreathingOutMen", src: dict, conf: certain}
+  "cf00ed91": {name: "TunnelBreathingOutMen", src: merged, conf: high, note: "analyser_names"}
   "cf010c55": {name: "Precision", src: merged, conf: high, note: "analyser_names"}
   "cf1dbec6": {name: "BoneName", src: sibling, conf: medium}
   "cf1e46a9": {name: "CoachBonus", src: string, conf: high}
@@ -3638,7 +3646,7 @@ names:
   "cfc05a31": {name: "PracticeGround", src: string, conf: high}
   "cfd12de0": {name: "Team1", src: combo2, conf: low}
   "cfdb99a1": {name: "InfoRepositioning", src: merged, conf: medium, note: "analyser_names"}
-  "cfdbd245": {name: "GoodTiming", src: merged, conf: medium, note: "crc_dict"}
+  "cfdbd245": {name: "GoodTiming", src: merged, conf: medium, note: "analyser_names"}
   "cfe0b8e3": {name: "MountAll", src: dict, conf: certain}
   "cfe2e822": {name: "Objective6VolleyPlayer", src: brute4, conf: high, note: "members of type F2A0BD48: all 32 = Objective{1..8} x 4 play styles, lengths implied by the nested rule"}
   "cfef9e84": {name: "MaximumHeight", src: combo2, conf: low}
@@ -3655,8 +3663,8 @@ names:
   "d08750ee": {name: "VariableList", src: token, conf: high}
   "d09501f5": {name: "EndCondition", src: dict, conf: certain}
   "d0a12b25": {name: "Pam::SwingGamePlay::Data::ReceiverState_CorridorState", src: nested, conf: medium}
-  "d0cb6659": {name: "Finesse", src: merged, conf: medium, note: "crc_dict"}
-  "d0f027ec": {name: "StepIndex", src: dict, conf: certain}
+  "d0cb6659": {name: "Finesse", src: merged, conf: high, note: "analyser_names"}
+  "d0f027ec": {name: "StepIndex", src: merged, conf: high, note: "analyser_names"}
   "d0fbcd62": {name: "NormSpeedInfo", src: merged, conf: low, note: "analyser_names"}
   "d1054850": {name: "EventValue", src: string, conf: high}
   "d11869de": {name: "Pam::System::Memory::CHeapProxyType", src: string, conf: high}
@@ -3694,7 +3702,7 @@ names:
   "d39a1c7f": {name: "FrameDecal", src: combo2, conf: low}
   "d3af693d": {name: "UnlockPoints", src: sibling, conf: medium}
   "d3d99e8b": {name: "A", src: merged, conf: high, note: "analyser_names"}
-  "d3f7df83": {name: "Applause", src: dict, conf: certain}
+  "d3f7df83": {name: "Applause", src: merged, conf: high, note: "analyser_names"}
   "d400e765": {name: "Ball", src: dict, conf: certain}
   "d4062bcb": {name: "Pam::SwingAnimation::AnimationDB::IdToBitIndex", src: dict, conf: certain}
   "d41db381": {name: "PadList", src: string, conf: high}
@@ -3705,7 +3713,7 @@ names:
   "d447e6df": {name: "Pam::SwingGamePlay::Data::PlayerSettings_OutSolverParameters", src: nested, conf: medium}
   "d48899f9": {name: "ShortRally", src: combo2, conf: low}
   "d48c2fe9": {name: "MaterialPack", src: token, conf: high}
-  "d4905279": {name: "EOPVictoryGrunt", src: dict, conf: certain}
+  "d4905279": {name: "EOPVictoryGrunt", src: merged, conf: high, note: "analyser_names"}
   "d49a12c0": {name: "SpecialKey", src: combo2, conf: low}
   "d49e8d82": {name: "SpecialRuleTrue_Index", src: dict, conf: certain}
   "d4a243c7": {name: "ResponseCurve", src: combo2, conf: low}
@@ -3730,7 +3738,7 @@ names:
   "d55a048f": {name: "StepCount", src: combo2, conf: low}
   "d55ba89b": {name: "PlayerCanCollideList", src: brute4, conf: medium, note: "C brute: 4 words of the top 300 vocabulary, exact implied length"}
   "d59097b5": {name: "MainTitle", src: combo2, conf: low}
-  "d5973f7e": {name: "TunnelJump", src: dict, conf: certain}
+  "d5973f7e": {name: "TunnelJump", src: merged, conf: high, note: "analyser_names"}
   "d5d7f07c": {name: "ModuleManager", src: token, conf: high}
   "d5e48585": {name: "IsEndOfPoint", src: token, conf: high}
   "d5e92f0f": {name: "SynchroSection", src: guess3, conf: medium}
@@ -3738,7 +3746,7 @@ names:
   "d5f9c148": {name: "SizeBinary", src: combo2, conf: low}
   "d5fd9684": {name: "CoefRemainingTime", src: merged, conf: low, note: "analyser_names"}
   "d6095c99": {name: "EndConditions", src: sibling, conf: medium}
-  "d610cad2": {name: "Up", src: dict, conf: certain}
+  "d610cad2": {name: "Up", src: merged, conf: high, note: "analyser_names"}
   "d6202cc5": {name: "Pam::Swing::SeasonDB::Sponsor", src: nsrule, conf: high}
   "d63697a6": {name: "Spectator", src: token, conf: high}
   "d64861ca": {name: "MotionDataGroup", src: dict, conf: certain}
@@ -3755,8 +3763,8 @@ names:
   "d6c2c506": {name: "SpeedFactor", src: merged, conf: high, note: "analyser_names"}
   "d6d23b3b": {name: "OverallParameter", src: combo2, conf: low}
   "d6d9e5ed": {name: "ServeThrow", src: sibling, conf: medium}
-  "d6f0e7d1": {name: "BadContext", src: dict, conf: certain}
-  "d6f18e08": {name: "ServeStick", src: merged, conf: medium, note: "crc_dict"}
+  "d6f0e7d1": {name: "BadContext", src: merged, conf: high, note: "analyser_names"}
+  "d6f18e08": {name: "ServeStick", src: merged, conf: medium, note: "analyser_names"}
   "d6f6a94e": {name: "Objective6BaselineAttacker", src: brute4, conf: high, note: "members of type F2A0BD48: all 32 = Objective{1..8} x 4 play styles, lengths implied by the nested rule"}
   "d6ff9a7b": {name: "Pam::SwingAnimation::AnimationDB::AnimGroup_SubAnimGroupList", src: dict, conf: certain}
   "d714dcc1": {name: "Pam::Swing::SeasonDB::Ranking", src: nsrule, conf: high}
@@ -3782,7 +3790,7 @@ names:
   "d81ae1e1": {name: "Pam::SwingGamePlay::Data::ShotComponents", src: nsrule, conf: medium}
   "d824b287": {name: "MinigameDescription", src: guess3, conf: medium}
   "d82b2992": {name: "Pam::SwingGamePlay::Data::SwingSelection_Request_Power", src: nested, conf: medium}
-  "d8330191": {name: "SkillList", src: merged, conf: medium, note: "crc_dict"}
+  "d8330191": {name: "SkillList", src: merged, conf: high, note: "analyser_names"}
   "d83bf612": {name: "DisplayAnim", src: guess3, conf: medium}
   "d84072ad": {name: "Pam::SwingGamePlay::Data::AmplitudeConfig_ScaleConfig", src: nested, conf: low}
   "d841b9e0": {name: "EndPosition", src: sibling, conf: medium}
@@ -3803,18 +3811,18 @@ names:
   "d9d18d44": {name: "PowerfulShotCounter", src: string, conf: high}
   "d9dab78a": {name: "Pam::Swing::Season::SeasonPlayer", src: nsrule, conf: high}
   "d9e063b8": {name: "MainBallState", src: merged, conf: medium, note: "analyser_names"}
-  "d9fa1b37": {name: "TopSpin", src: dict, conf: certain}
+  "d9fa1b37": {name: "TopSpin", src: merged, conf: high, note: "analyser_names"}
   "da23a06b": {name: "Pam::Swing::SeasonDB::SeriesList", src: nsrule, conf: medium}
   "da2afc2c": {name: "ServiceRequested", src: merged, conf: medium, note: "analyser_names"}
   "da472ec6": {name: "BounceCount", src: merged, conf: medium, note: "analyser_names"}
   "da4adcac": {name: "PointIndex", src: merged, conf: medium, note: "analyser_names"}
   "da4ec2de": {name: "MapId", src: combo2, conf: low}
   "da523669": {name: "SubTypeKey", src: sibling, conf: medium}
-  "da554856": {name: "Left", src: dict, conf: certain}
+  "da554856": {name: "Left", src: merged, conf: high, note: "analyser_names"}
   "da5df2c6": {name: "SaveList", src: guess3, conf: medium}
   "da618c56": {name: "Pam::SwingAnimation::AnimationDB::AnimationList", src: dict, conf: certain}
   "da63814f": {name: "Pam::Swing::SystemData::Part", src: nsrule, conf: high}
-  "da6877c2": {name: "EOPFRustrationGrunt", src: dict, conf: certain}
+  "da6877c2": {name: "EOPFRustrationGrunt", src: merged, conf: high, note: "analyser_names"}
   "da6acae1": {name: "UpdateSetupCommand", src: token, conf: high}
   "da762a45": {name: "TextID", src: string, conf: high}
   "da779b16": {name: "TolerancyUp", src: dict, conf: certain}
@@ -3853,7 +3861,7 @@ names:
   "dc77bb6b": {name: "PeerId", src: combo2, conf: low}
   "dc7d620e": {name: "DataType", src: token, conf: high}
   "dc9bfaa7": {name: "CurrentTarget", src: merged, conf: medium, note: "analyser_names"}
-  "dcb67730": {name: "Value", src: dict, conf: certain}
+  "dcb67730": {name: "Value", src: merged, conf: high, note: "analyser_names"}
   "dcc919da": {name: "IsNetShot", src: merged, conf: low, note: "analyser_names"}
   "dcecb7a7": {name: "SetupSettings", src: combo2, conf: low}
   "dd002764": {name: "Pam::SwingAnimation::AnimationDB::MotionData", src: dict, conf: certain}
@@ -3872,8 +3880,8 @@ names:
   "dd9247ed": {name: "RefreshStatus", src: combo2, conf: low}
   "dd93d65c": {name: "Brand", src: string, conf: high}
   "dda048f3": {name: "ShotDifficulty", src: merged, conf: medium, note: "analyser_names"}
-  "ddae07ee": {name: "VeryHard", src: dict, conf: certain}
-  "ddde0ae8": {name: "FlatPower", src: dict, conf: certain}
+  "ddae07ee": {name: "VeryHard", src: merged, conf: high, note: "analyser_names"}
+  "ddde0ae8": {name: "FlatPower", src: merged, conf: medium, note: "analyser_names"}
   "dded6f70": {name: "Day", src: string, conf: high}
   "de262e0b": {name: "Pam::SwingAnimation::AnimationDB::HkxList", src: dict, conf: certain}
   "de266211": {name: "ServeFlatPowerful", src: merged, conf: medium, note: "analyser_names"}
@@ -3889,7 +3897,7 @@ names:
   "deb3800a": {name: "OverrideShot", src: merged, conf: medium, note: "analyser_names"}
   "deb70653": {name: "Swing_Serve_Default", src: dict, conf: certain}
   "ded10611": {name: "Hips", src: merged, conf: high, note: "analyser_names"}
-  "ded1baa5": {name: "AmplitudeConfigList", src: guess3, conf: medium}
+  "ded1baa5": {name: "AmplitudeConfigList", src: merged, conf: medium, note: "analyser_names"}
   "deddda10": {name: "Won", src: string, conf: high}
   "df0e55fc": {name: "CameraSequence", src: token, conf: high}
   "df24cad5": {name: "Stick_Move", src: merged, conf: high, note: "analyser_names"}
@@ -3957,7 +3965,7 @@ names:
   "e2d559c6": {name: "FontScale", src: combo2, conf: low}
   "e2d8a91f": {name: "__AutoDestroy", src: dict, conf: certain}
   "e2ed0535": {name: "LogoCount", src: combo2, conf: low}
-  "e2f99a63": {name: "IsDouble", src: merged, conf: medium, note: "crc_dict"}
+  "e2f99a63": {name: "IsDouble", src: merged, conf: medium, note: "analyser_names"}
   "e30afbfc": {name: "QualifierEnumRawData", src: dict, conf: certain}
   "e30fa117": {name: "UIPackDescList", src: token, conf: high}
   "e31f8e99": {name: "ClothProcessor", src: token, conf: high}
@@ -4003,16 +4011,16 @@ names:
   "e5791c94": {name: "CKey", src: dict, conf: certain}
   "e588c9c4": {name: "Pam::Swing::Season::PlayerSponsorList", src: nsrule, conf: medium}
   "e592405f": {name: "EntranceType", src: token, conf: high}
-  "e5b929a6": {name: "LocalPosition", src: merged, conf: medium, note: "crc_dict"}
+  "e5b929a6": {name: "LocalPosition", src: merged, conf: medium, note: "analyser_names"}
   "e5c447ff": {name: "IsTextID", src: token, conf: high}
   "e5cc0980": {name: "MorphTargetList", src: guess3, conf: medium}
   "e5ccee02": {name: "GlobalInfo", src: token, conf: high}
   "e5cfa4b4": {name: "RepositioningPointSingle", src: merged, conf: low, note: "analyser_names"}
-  "e5e4f8d7": {name: "Distance", src: dict, conf: certain}
-  "e5f05652": {name: "SwingEffect", src: dict, conf: certain}
+  "e5e4f8d7": {name: "Distance", src: merged, conf: high, note: "analyser_names"}
+  "e5f05652": {name: "SwingEffect", src: merged, conf: high, note: "analyser_names"}
   "e60854b7": {name: "BaselineAttacker", src: dict, conf: certain}
   "e62b8981": {name: "ScaleMode", src: combo2, conf: low}
-  "e630e16b": {name: "Forehand", src: dict, conf: certain}
+  "e630e16b": {name: "Forehand", src: merged, conf: high, note: "analyser_names"}
   "e642398b": {name: "TournamentRound", src: sibling, conf: medium}
   "e64615e3": {name: "HealthParameter", src: combo2, conf: low}
   "e6543f33": {name: "ArchiveLoader", src: guess3, conf: medium}
@@ -4020,7 +4028,7 @@ names:
   "e66c131a": {name: "Swing_ServeAndVolley_Deuce_Roddick", src: dict, conf: certain}
   "e68d2433": {name: "PlayerNation", src: sibling, conf: medium}
   "e693ae00": {name: "AnimationSetup", src: combo2, conf: low}
-  "e69b0c68": {name: "InStart", src: dict, conf: certain}
+  "e69b0c68": {name: "InStart", src: merged, conf: high, note: "analyser_names"}
   "e6bd2e2d": {name: "ReceiveBall", src: combo2, conf: low}
   "e6c2c059": {name: "DeuceCount", src: combo2, conf: low}
   "e6d62656": {name: "OutcomeWoodSide", src: merged, conf: high, note: "analyser_names"}
@@ -4039,7 +4047,7 @@ names:
   "e7f9a0e8": {name: "LoadingPicture", src: string, conf: high}
   "e807a8af": {name: "Swing_ServeAndVolley_Ad_Nadal", src: dict, conf: certain}
   "e80eec22": {name: "BirthPlace", src: string, conf: high}
-  "e8280b3c": {name: "Player2", src: merged, conf: medium, note: "crc_dict"}
+  "e8280b3c": {name: "Player2", src: merged, conf: medium, note: "analyser_names"}
   "e8417f0f": {name: "Persistent", src: token, conf: high}
   "e843d999": {name: "TransitionParameters", src: combo2, conf: low}
   "e85fac40": {name: "SequencePointer", src: combo2, conf: low}
@@ -4062,15 +4070,15 @@ names:
   "e91388d9": {name: "CannonBall", src: token, conf: high}
   "e93ddff8": {name: "Part", src: dict, conf: certain}
   "e94fab0d": {name: "AmbienceHuge", src: combo2, conf: low}
-  "e95035a9": {name: "Easy", src: dict, conf: certain}
+  "e95035a9": {name: "Easy", src: merged, conf: high, note: "analyser_names"}
   "e9533090": {name: "Swing_Serve_Nadal", src: dict, conf: certain}
-  "e95c1ab2": {name: "Amplitude", src: dict, conf: certain}
+  "e95c1ab2": {name: "Amplitude", src: merged, conf: high, note: "analyser_names"}
   "e96512be": {name: "GameConditions", src: guess3, conf: medium}
   "e9803a46": {name: "SaveCode", src: combo2, conf: low}
   "e99f7f5b": {name: "Pam::SwingGamePlay::Data::Aiming", src: nsrule, conf: high}
   "e9b3927e": {name: "FacialAnimEventList", src: token, conf: high}
   "e9b6636f": {name: "Pam::Swing::SystemData::System", src: nsrule, conf: high}
-  "e9ca839c": {name: "UserAIState", src: guess3, conf: medium}
+  "e9ca839c": {name: "UserAIState", src: merged, conf: medium, note: "analyser_names"}
   "e9ce9bb2": {name: "OnRaised", src: sibling, conf: medium}
   "e9d64a2d": {name: "Pam::SwingGamePlay::Data::MoveDirPower", src: nsrule, conf: low}
   "e9f37a3a": {name: "Players", src: merged, conf: high, note: "analyser_names"}
@@ -4171,7 +4179,7 @@ names:
   "ef231875": {name: "Pam::LLCore::System::CSaveDeviceAccessorType", src: nsrule, conf: high}
   "ef25e751": {name: "PlayerStats", src: sibling, conf: medium}
   "ef77a66f": {name: "AnimGroupList", src: dict, conf: certain}
-  "ef823202": {name: "Effort", src: dict, conf: certain}
+  "ef823202": {name: "Effort", src: merged, conf: high, note: "analyser_names"}
   "efa98eb5": {name: "Global", src: token, conf: high}
   "efae6048": {name: "DescriptionText", src: combo2, conf: low}
   "efc07e66": {name: "TotalPoints", src: combo2, conf: low}
@@ -4184,7 +4192,7 @@ names:
   "f051d827": {name: "Pam::PlayerCreator::HierarchyType", src: nsrule, conf: high}
   "f05592fd": {name: "Pam::Swing::InGameMenusType_Menu", src: nested, conf: high}
   "f0620e16": {name: "Pam::System::OutputLog::COutputLogConsole", src: string, conf: high}
-  "f084c272": {name: "PositionOnCourt", src: dict, conf: certain}
+  "f084c272": {name: "PositionOnCourt", src: merged, conf: high, note: "analyser_names"}
   "f09a0436": {name: "TextureID", src: combo2, conf: low}
   "f0a015db": {name: "Pam::SwingGamePlay::Data::ModuleDefMatch", src: nsrule, conf: medium}
   "f0a1a34a": {name: "Pam::Swing::PlayerList", src: nsrule, conf: high}
@@ -4227,20 +4235,20 @@ names:
   "f258f74b": {name: "Pam::SwingGamePlay::Data::PlayerState_DebugCustomValue_ControlValues", src: nested, conf: medium}
   "f265dce5": {name: "LastMatch", src: string, conf: high}
   "f271f3c8": {name: "IsTopSpin", src: merged, conf: high, note: "analyser_names"}
-  "f27c976e": {name: "Style", src: merged, conf: medium, note: "crc_dict"}
+  "f27c976e": {name: "Style", src: merged, conf: high, note: "analyser_names"}
   "f2885ba2": {name: "VolleyReflex", src: dict, conf: certain}
   "f29ccdbc": {name: "BestHitPoint", src: merged, conf: low, note: "analyser_names"}
   "f29d43aa": {name: "UIInfo", src: combo2, conf: low}
   "f2b24032": {name: "Pam::SwingGamePlay::Data::AI", src: nsrule, conf: high}
   "f2b9a69d": {name: "EventType", src: string, conf: high}
   "f2df768b": {name: "ChallengeDescription", src: combo2, conf: low}
-  "f2e1e039": {name: "Height", src: merged, conf: medium, note: "crc_dict"}
+  "f2e1e039": {name: "Height", src: merged, conf: high, note: "analyser_names"}
   "f2ed454f": {name: "PhysicalSize", src: combo2, conf: low}
   "f31cf093": {name: "IsMale", src: merged, conf: medium, note: "analyser_names"}
   "f324b589": {name: "QuadEfficiency", src: merged, conf: medium, note: "analyser_names"}
   "f3279d03": {name: "Pam::SwingGamePlay::Data::ShotSelection_Request", src: nested, conf: high}
   "f333d452": {name: "Pam::SwingAnimation::AnimationDB::TakeTableName", src: dict, conf: certain}
-  "f3581855": {name: "Score", src: merged, conf: medium, note: "crc_dict"}
+  "f3581855": {name: "Score", src: merged, conf: high, note: "analyser_names"}
   "f3650560": {name: "Pam::Swing::MatchSettings::RulesConfig", src: nsrule, conf: medium}
   "f3676e90": {name: "OnlineCommand", src: merged, conf: medium, note: "analyser_names"}
   "f36e8bec": {name: "AllowOpenStance", src: merged, conf: low, note: "analyser_names"}
@@ -4253,7 +4261,7 @@ names:
   "f3dbba7e": {name: "IsFlat", src: merged, conf: medium, note: "analyser_names"}
   "f40ccd04": {name: "Enable", src: token, conf: high}
   "f42ab603": {name: "Request", src: merged, conf: high, note: "analyser_names"}
-  "f431f5e8": {name: "Stamina", src: dict, conf: certain}
+  "f431f5e8": {name: "Stamina", src: merged, conf: high, note: "analyser_names"}
   "f435825d": {name: "Vertex3", src: combo2, conf: low}
   "f4366c3f": {name: "Difficulty", src: merged, conf: high, note: "analyser_names"}
   "f440d0d3": {name: "Pam::SwingAnimation::AnimationDB::AnimationRuntimeParam", src: dict, conf: certain}
@@ -4272,7 +4280,7 @@ names:
   "f55495e0": {name: "Save", src: string, conf: high}
   "f56bccc1": {name: "LinkPlayer", src: guess3, conf: medium}
   "f56e92b4": {name: "ImpactHeight", src: combo2, conf: low}
-  "f578057a": {name: "Flat", src: dict, conf: certain}
+  "f578057a": {name: "Flat", src: merged, conf: high, note: "analyser_names"}
   "f59526d0": {name: "MeshName", src: string, conf: high}
   "f5bf4f97": {name: "Male", src: string, conf: high}
   "f5e32576": {name: "Steps", src: dict, conf: certain}
@@ -4317,7 +4325,7 @@ names:
   "f7751fc2": {name: "Pam::Swing::SeasonDB::ItemPack", src: nsrule, conf: high}
   "f7cf85a7": {name: "RefreshHierarchy", src: combo2, conf: low}
   "f7f35cb0": {name: "Pam::SwingGamePlay::Data::DoubleSettings_ReachBall", src: nested, conf: medium}
-  "f7f8c318": {name: "MissType", src: dict, conf: certain}
+  "f7f8c318": {name: "MissType", src: merged, conf: high, note: "analyser_names"}
   "f81c5dde": {name: "TrainingMode", src: combo2, conf: low}
   "f8557721": {name: "InputSector", src: combo2, conf: low}
   "f8b91253": {name: "ShowAdvancedChallenges", src: string, conf: high}
@@ -4383,7 +4391,7 @@ names:
   "fc410c09": {name: "AttributeTable", src: combo2, conf: low}
   "fc4df475": {name: "Pam::Net::Data::DisconnectCommandType", src: nsrule, conf: low}
   "fc66f136": {name: "ClampDirection", src: combo2, conf: low}
-  "fc6f57a1": {name: "Slice", src: dict, conf: certain}
+  "fc6f57a1": {name: "Slice", src: merged, conf: high, note: "analyser_names"}
   "fc7f3d8a": {name: "EmergencyRepositioning", src: merged, conf: high, note: "analyser_names"}
   "fc95d8a6": {name: "ScoreReward", src: combo2, conf: low}
   "fca4ef82": {name: "PlayerSide", src: merged, conf: medium, note: "analyser_names"}
@@ -4393,7 +4401,7 @@ names:
   "fcd367bc": {name: "RepositioningComponents", src: merged, conf: medium, note: "analyser_names"}
   "fcd4acd4": {name: "WoodId", src: combo2, conf: low}
   "fcf54229": {name: "EndPoint", src: merged, conf: medium, note: "analyser_names"}
-  "fd119356": {name: "Ace", src: dict, conf: certain}
+  "fd119356": {name: "Ace", src: merged, conf: high, note: "analyser_names"}
   "fd1b96a3": {name: "StaminaHighlight", src: combo2, conf: low}
   "fd341e2e": {name: "BackBufferSize", src: token, conf: high}
   "fd4a76f0": {name: "OutcomeWoodUp", src: merged, conf: high, note: "analyser_names"}
@@ -4405,7 +4413,7 @@ names:
   "fdcd9efa": {name: "GlobalSceneList", src: guess3, conf: medium}
   "fdd82b26": {name: "DiffAttributesGain", src: merged, conf: low, note: "analyser_names"}
   "fdfc4c8d": {name: "true", src: string, conf: high}
-  "fe11d138": {name: "Name", src: dict, conf: certain}
+  "fe11d138": {name: "Name", src: merged, conf: high, note: "analyser_names"}
   "fe1d9057": {name: "PropertiesLRIGH", src: merged, conf: medium, note: "crc_dict"}
   "fe25beb6": {name: "PlayParameters", src: token, conf: high}
   "fe267439": {name: "RootNode", src: token, conf: high}
@@ -4420,7 +4428,7 @@ names:
   "fe8fbe7e": {name: "ScaleFactor", src: combo2, conf: low}
   "fe9842c8": {name: "Coach", src: string, conf: high}
   "fea88dc0": {name: "EndFrame", src: token, conf: high}
-  "fea8d2ab": {name: "Pam::SwingGamePlay::Data::MatchState_RecordReplay", src: nested, conf: medium}
+  "fea8d2ab": {name: "Pam::SwingGamePlay::Data::MatchState_RecordReplay", src: nested, conf: high}
   "febb7184": {name: "Play", src: token, conf: high}
   "fecb947c": {name: "ShotFile", src: combo2, conf: low}
   "fedadd94": {name: "IsWideScreen", src: string, conf: high}
@@ -4433,7 +4441,7 @@ names:
   "ff10c545": {name: "BoxBottom", src: string, conf: high}
   "ff294069": {name: "MultiShadows", src: combo2, conf: low}
   "ff3594ef": {name: "SubPart", src: dict, conf: certain}
-  "ff3a7b97": {name: "Category", src: dict, conf: certain}
+  "ff3a7b97": {name: "Category", src: merged, conf: high, note: "analyser_names"}
   "ff6bd068": {name: "MatchSets", src: string, conf: high}
   "ff87be5e": {name: "ZPriority", src: dict, conf: certain}
   "ff973eec": {name: "GroupSeparator", src: combo2, conf: low}
