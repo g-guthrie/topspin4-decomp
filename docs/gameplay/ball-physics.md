@@ -553,7 +553,9 @@ only three abilities, plus one data-driven test:
   (its error and difficulty). It does not touch the slice's flight or bounce: no ball routine reads it.
 * **InstantRocket `0x82E4BF1A`** (`fn_8869D720`): selects the curve pair `cfg+0x914/0x920` instead of `cfg+0x8FC/0x908`
   that maps the counters `S+0xDFC/0xE04` to `S+0xE00/0xE08`. `S+0xE00` feeds the "Fatality" condition `0xC78C8F06`
-  (`fn_88697E98 +0x4C8`: `S+0xE00 > cfg+0x934`). This is the special-shot meter, not a ball parameter.
+  (`fn_88697E98 +0x4C8`: `S+0xE00 > 0.15`, the code constant `lbl_880D0934`; an earlier note read it as
+  `cfg+0x934`, corrected by G8). The InstantRocket curves have the same keys as the default ones, so the skill's only
+  live effect is graph 248 (controls-and-shot-selection s18.6).
 * **SpectacularVolleys `0x1E8D4F10`** (`fn_886BCE88 +0x6DC`, the serve path that stores the stroke skill): a test next to `S+0xCF0/0xD00`. It does not
   touch the ball.
 * **Data-driven test**: condition `0xC42EF3FE` of the evaluator `fn_88697E98` (`+0x450`) tests "player has skill

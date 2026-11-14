@@ -52,7 +52,7 @@ TRIGGERS = {
                    "class means power < 0.15).  AI at difficulty 3-5 (S+0x3F0, graph 139/140) tries it first "
                    "in its release fn_886AE0E8",
         "clip_gate": "a Fatality clip must fit the ball (fn_886DAA48 clip fit within the selection horizon "
-                     "now+40 frames, tolerance box tol, facing clamp [-90, 45]); all are FH, Shoulder "
+                     "now+40 frames, tolerance box [40, 40, 80, -50, 50, -80], facing clamp [-90, 30/45/90]); all are FH, Shoulder "
                      "height, Baseline; contact 1.4-2.4 s after clip start, so the clip needs a long, early "
                      "fit (see entry_to_contact)",
         "ball": "link SwingCategory/Fatality in graphs 17, 205, 206, 238, 239, 243, 244, 248, 249, 292: "

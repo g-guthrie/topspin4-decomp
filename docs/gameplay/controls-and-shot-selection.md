@@ -1062,7 +1062,7 @@ too (1.05-1.18 -> 1.2), but no swing group sets allow_speed_coef, so it does not
 categories have no measured ball effect (I: visual and movement only).
 
 **How movement feeds it** (C + I): the query fits clips to the predicted ball within a horizon of now + 40
-frames (`fn_886C9228`; 10 in mode `0x2994504E`), with the clip's tolerance box and facing clamp [-90, 45].
+frames (`fn_886C9228`; 10 in mode `0x2994504E`), with the clip's tolerance box and facing clamp (Fatality: box [40, 40, 80, -50, 50, -80] cm, clamp right limit 30, 45 or 90 deg).
 SlowDown (planner state 19, Reach) pushes the mode to AutoSwingGood and forces immediate queries, but does
 not affect the Fatality condition. FlatGoodReach / FlatBadReach come from the line MinSpeed values
 (S+0xA5C / 0xABC) of the planner.

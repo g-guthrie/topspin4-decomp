@@ -487,24 +487,24 @@ def return_quality(rng, ret, serve_mph, placement=0.5, opp_timing="Good", opp_sc
 
 RALLY = {
     "e_timing": {"Perfect": 0.012, "Good": 0.035, "Poor": 0.16, "Mistimed": 0.45},
-    "pace_margin": {"Flat": 78.0, "TopSpin": 86.0, "Slice": 68.0, "Lob": 60.0},   # mph where the pace term starts
+    "pace_margin": {"Flat": 78.0, "TopSpin": 84.0, "Slice": 68.0, "Lob": 60.0},   # mph where the pace term starts
     "pace_err": 0.006,                 # error per mph above the margin speed
     "margin_hand": 10.0,                # margin speed added per unit of hand stat
     "kick": {"Flat": 0.08, "TopSpin": 0.20, "Slice": 0.0, "Lob": 0.2},
     "kick_hand": 0.18,                  # topspin kick added per unit of hand stat (spin scales with FH/BH rating)
     "low": {"Slice": 1.0},              # slice stays low: the receiver's contact height drops
-    "max_run_base": 5.8, "max_run_speed": 2.6,          # m/s reachable: base + per unit of Speed stat
+    "max_run_base": 5.7, "max_run_speed": 2.9,          # m/s reachable: base + per unit of Speed stat
     "floor_err": 0.20,
     "pass_err": 0.07,
     "low_drive_err": 0.004,             # per mph above 70 when driving a ball below 60 cm (x depth below 60 / 30)                   # added error for a passing shot against a net player                  # error added per unit of floor penalty of the stroke's rating
-    "vigor_cost": {"Finesse": 0.002, "Medium": 0.004, "Powerful": 0.007, "Rushed": 0.007, "Overcharge": 0.016},
+    "vigor_cost": {"Finesse": 0.002, "Medium": 0.004, "Powerful": 0.008, "Rushed": 0.008, "Overcharge": 0.018},
     "run_cost": 0.0012,                 # vigor per m/s of required run speed
     "recover_point": 0.022, "recover_set": 0.12,
     "net_rush": {"volley_style": 0.55, "approach_on_short": 0.35},
 }
 
 
-SLICE_DROP_CM = 65.0      # a slice reaches the receiver this much lower than a neutral ball
+SLICE_DROP_CM = 72.0      # a slice reaches the receiver this much lower than a neutral ball
 PUTAWAY = {"Tee-off": 0.75, "VeryGood": 0.50, "Good": 0.30, "Normal": 0.12}   # volley winner chance
 
 

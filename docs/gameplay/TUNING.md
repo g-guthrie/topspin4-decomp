@@ -35,11 +35,28 @@ Paths below are relative to `data/gameplay/tunables/Settings/` unless noted.
 | quantity | value(s) | where | notes |
 |---|---|---|---|
 | hold time to full charge | 1.25 s (75 frames) | code `g_ts4_script_constants+0x55C` = 1.25; divisor `EngineConfig/@Frequency` = 60 (`GameplayInterface`) | changing the frequency changes the whole clock; do not |
-| tier thresholds | Finesse < 0.15, Medium < 0.70, Powerful >= 0.70 (11 / 53 frames) | graphs `Finesse`, `Medium`, `Powerful` (one curve each) | patch the curve's `x0`/`x1` |
+| tier thresholds | Finesse < 0.15, Medium < 0.70, Powerful >= 0.70 (12 / 53 frames) | graphs `Finesse`, `Medium`, `Powerful` (one curve each) | patch the curve's `x0`/`x1` |
 | auto-commit lead | 12 frames before contact | `02_PlayerSettings.yaml` `0x8E4 /baaa713d` (PT+0x740) | also the moment the planner runs |
 | speed of each row | template curves | `11_ShotPalette.yaml` (37 template rows, `/ShotDef[i]/ShotConfig/...`), readable in `data/gameplay/ball_templates.yaml` | ball-physics s1, s11 |
 | shot power curves | 4 lists, x 0..1.25 | `16_a957f922.yaml` (cfg+0x8FC..0x920) | tunables-catalog s3 |
 | AI charge | `min(PressAndHold, frames/75)` | AI `ShotComponents.PressAndHold` mix graphs | ai-inputs s5 |
+| InstantRocket | curve cfg+0x914 = default keys (no effect); graph 248 skill lerp (+0.03..0.04 PF) | `16_a957f922.yaml`, graph 248 | G8, controls s18.6 |
+| powerful-shot stamina cost | 25 x PF per Flat/Slice/TopSpin Powerful or powerful serve (not Lob) | graph 10 FatigueIngame (data); which rows count is code (`fn_8865FA70`) | timing-and-fatigue s2b |
+
+### 1a. Swing modes and special swings (G8; data vs code)
+
+| what | data | hard-coded |
+|---|---|---|
+| rule rows per mode x class (category, alt, condition, skill, EasyAutoSwing) | `02_PlayerSettings.yaml` SwingSelectionCategory, PT+0x4D8..0x5AF (`shot_tree.yaml swing_category_rules`) | which mode is used (human release vs held, AI always Normal), class keys (`fn_886872A0`) |
+| condition thresholds | PT+0x1B0 / 0x1B4 reach speeds, PT+0x5BC..0x5C8 timing, PT+0x6F0 corridor 300 cm | Fatality power 0.15 (`lbl_880D0934`), VolleyForward 450 / 600 (script constants) |
+| autoswing windows | PT+0x6D0..0x6E4 (5/8, 10/20, 15/20); PT+0x5C0 gate (-1 = 40 frames) | the gate's other terms (`fn_8866B5B8`) |
+| auto-commit | PT+0x740 swing 12, PT+0x744 serve 12 | |
+| AI release | PT+0x6F4 18 frames; Fatality-first by difficulty graphs 139/140 | +10 with S+0xBD2, 20 for fast balls |
+| fast-ball flags | PT+0x110..0x12C (65/35/50 frames, 300/200/250 cm) | sample height < 240 cm (script constant) |
+| evaluations | graphs 168, 173-177, 179 (Expressions) | |
+| what a category does to the ball | graph link ports (Fatality, #0698037d, #f2885ba2, ...) | |
+| Fatality clips | AnimationsDB (37 per setup; FH shoulder only) | |
+
 
 ## 2. Timing
 
@@ -120,6 +137,26 @@ Surfaces do not change ball physics; a per-surface bounce needs a code hook (sur
 | swing clip fit | contact window 0..20 ticks (reach), -5..15 (miss); racket-point box 60 x 60 cm (reach), 60 x 80 (miss); nearest clip wins (no weights); prep clips widen to 60..100 cm with root displacement 150..600 cm | `02_PlayerSettings.yaml` PT+0x3CC..0x3E8; widening constants in code (stats-swing-clipfit s4) |
 | serve position limits | `ServiceConstraint` MinZ 40 / MaxZ 375 cm | `05_MoveConstraintsSettings.yaml` |
 | animation speed with vigor | RushSpeedCoef, SwingSpeedCoef graphs | Expressions |
+
+### 6b. Movement responsiveness delays (G9; movement-and-ai E.7, movement-and-animation s7)
+
+| delay | value | kind | where to change it |
+|---|---|---|---|
+| stick dead zone | 0.4 radial | data | input mapper (controls s3) |
+| stick filter | off (EMA τ 0.6 × 10..30 frames if switched on) | data flag | Settings.bin input item byte +0x1E (file 0x2C514 record); weights 10 / 30 / 0.6 beside it |
+| stick → RequiredMove → request | 0 frames | hard-coded call order | `fn_886C15A0` |
+| human reaction wait | 0 | hard-coded (zeroed record, AI-only writer) | `profile+0x1DC`, `fn_886A7AC8` / `fn_886B81E0` |
+| AI reaction wait | 0-15 frames | graph output | positioning graphs 141-145, 147-150, 155 (4th output) |
+| pre-hit freeze | 20 frames latched, release before 10 = stop | data | `04_RepositioningSettings.yaml` `#98294782` (cfg+0xA88), `#5f4a986d` (cfg+0xA8C); power test 0.1 is pool +0x2AC (code) |
+| net-rush refusal near the opponent's hit | 20 frames, only when changing into mode 2 | data | same `#98294782` (shared with the freeze) |
+| start acceleration | 2-21 frames to 5 cm, 24-62 to 1 m | clip property | AnimationsDB ExtractPosition track of the cycle clip and its TE[0] entry phase |
+| stop | 41-72 frames, 22-153 cm | clip property | Tr_*_To_Stand_Std root tracks |
+| reversal overshoot | 27-142 cm, back past the start after 39-96 frames | clip property | Tr_Jog_*/Tr_Sidesteps_* reversal clips |
+| swing tail | Out window +36 (groundstroke), +38 (volley) frames after contact | clip property | TransitionEvent[1].Position per swing clip |
+| pose cross-fade | linear, duration not found | code + unknown | `fn_886D89E8` (node+0x2C) |
+| play-rate ramp on transitions | 10 / 15 frames on 4 rules | data | TransitionRuleList Allow Parameters BlendIn/BlendOut |
+| speed override hysteresis | 0.4 | hard-coded | pool +0x118 |
+| Turn hold / Stop wait (planner) | 10 / ≥ 4 frames | hard-coded | `fn_886B8468` P+0x128, state 8 |
 
 ## 7. Fatigue and vigor
 

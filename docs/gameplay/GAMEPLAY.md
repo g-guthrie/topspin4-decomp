@@ -57,8 +57,15 @@ per-player update `fn_886BF360` (gp3). Field names come from the reflection tabl
   Lob); the swing commits on **release**, or automatically **12 frames before contact**
   (`PT+0x740`) if the button is still held (controls s4).
 * **Power** (C): `power = min(frames held / 60, 1.25) / 1.25`. Tiers (D): **Finesse < 0.15 <=
-  Medium < 0.70 <= Powerful**, i.e. under 11 frames, 11 to 52 frames, 53 frames and more
-  (controls s5).
+  Medium < 0.70 <= Powerful**, i.e. frames 0-11, 12-52, 53 and more; full at 75
+  (controls s5). The charge stops at the commit; a re-press restarts it (controls s18.6).
+* **Swing modes** (G8, C; controls s18): the AI and a human who released before any clip started use
+  the Normal rule list; a human still holding the button uses AutoSwingGood (slow, easy ball) or
+  AutoSwingBad. A fast ball with no press can still trigger a synthesized Flat Finesse / FlatVolley
+  auto swing. The chosen SwingCategory changes the ball only through graph link ports: Fatality
+  pins PowerfulFactor and removes the late aim penalty; FlatGoodReach and VolleyReflex worsen PF and
+  aim. Flat forehand launch at median ratings: 112.5 km/h (Finesse), 125.1 (Medium), 127.1-130.1
+  (Powerful, 53-75 frames) (`data/gameplay/charge_table.yaml`).
 * **Tree** (D): Wood, serves (stroke x tier), smash, baseline (tier x stroke; Slice + Risk = drop
   shot), volley (stroke only). The Risky rows 12-15 are reachable only through the debug override
   (controls s6, shot-to-template). The planner `fn_886B0490` runs at the animation point.
@@ -150,6 +157,18 @@ the most; the drop shot misses 30-40 % at `|t| = 0.3`. OutcomeNet sends low-cont
   pushing within 40 deg of the net point, more than 175 cm from it, and with no event under 20
   frames away. The RB sprint only applies during this repositioning action (`0x7653DEC8`), not
   while chasing a ball (`0xA740FF84`).
+* **Responsiveness** (G9, movement-and-ai E, movement-and-animation s7):
+  * The stick reaches RequiredMove and the locomotion request in the same frame (C). There is no stick
+    smoothing: the filter is off in data, so only the 0.4 dead zone applies.
+  * Humans have no reaction delay (I, strong); the AI waits 0-15 frames.
+  * Root motion is a 2-D track per clip in AnimationsDB (`data/gameplay/root_motion.yaml`). Frames to 5 cm / 1 m
+    from a standing start: run 7-14 / 29-41, sidestep 20 / 56-62, sprint 14-22 / 43-46.
+  * A stop takes 41-72 frames (22-153 cm). A reversal from a jog overshoots 27-142 cm.
+  * A swing blocks movement until its Out window: groundstroke +36 frames (p10-p90 27-44), volley +38. No input
+    shortens it.
+  * New: the **pre-hit freeze**. In the last 20 frames before the opponent's hit, a recovering player's move is
+    latched, and letting go of the stick at frames -20..-11 stops him.
+  * Best-case game-logic latency is 0-1 frame, plus the clip's own acceleration.
 * **Locomotion clips** (movement-and-animation s2): move-set sectors, transition matrix (314 x
   314) and 128 rules; RushSpeedCoef from Speed and vigor.
 * **Swing** (gp7, stats-swing-clipfit): the planner writes the contact target; the clip is chosen
@@ -157,6 +176,11 @@ the most; the drop shot misses 30-40 % at `|t| = 0.3`. OutcomeNet sends low-cont
   nearest racket point by squared distance among clips whose contact tick lies in the window and
   whose x / z error is inside the box; no weights). Swing
   category rules decide Fatality, spectacular volleys and dives (controls s17, movement-and-animation s3).
+* **Fatality (put-away)** (G8, controls s18.7): FlatPower row 0, power > 0.15, no RB in the central
+  corridor |z| < 300 cm, and one of 37 forehand shoulder-height clips (contact 98-159 frames into a
+  227-frame clip with a ~4 m run-in, enterable 9-137 frames before contact) must fit on the first frame
+  any clip fits; the AI tries it first at difficulty 3-5. Clip stats per category:
+  `data/gameplay/special_swings.yaml`.
 
 ## 9. Ratings, skills and fatigue
 

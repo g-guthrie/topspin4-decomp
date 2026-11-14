@@ -107,6 +107,28 @@ Tuning: capacity and per-point recovery are the FatigueConst / `80ce1a10` graph 
 (`ts4_analyser_patch.py`); the rest multipliers and the animation cost table are in
 `02_PlayerSettings.yaml` (`/Fatigue/...`).
 
+## 2b. G8: the charge and the cost of a powerful swing
+
+Agent G8; full account in controls-and-shot-selection s18.6, numbers in `data/gameplay/charge_table.yaml`
+(`python3 tools/ts4data/charge_table.py --out data/gameplay/charge_table.yaml`). C = code, D = data.
+
+* **Counter** (C): S+0xDFC +1 per frame from the press (states AFAF / F6EB / 658B, latched or AI) until
+  the commit: the release, or the 12-frame auto-commit (PT+0x740) which uses the TimingValue of that
+  frame. A re-press while committed (`fn_88698538`) zeroes it.
+* **Power** (C+D): min(frames / 60, 1.25) / 1.25; tiers start at 12 (Medium) and 53 (Powerful) frames,
+  full at 75. Holding longer changes nothing. A press must come at least 24 / 65 frames before contact
+  to reach Medium / Powerful before the auto-commit freezes it.
+* **Timing cost** (D): a late Powerful flat is the risky case: at ManualShotTiming +0.5 a full charge
+  gives P(error) 0.222 (median) and aim efficiency 0.45, against 0 and 0.6 at charge 0.8; Medium and
+  Finesse stay at P(error) 0.
+* **Stamina cost** (C+D): `fn_8865FA70` adds the shot's PowerfulFactor to SumPowerfulFactor S+0xF24 for
+  Flat/Slice/TopSpin Powerful rows, serve Powerful rows and Advanced serves (not Lob Powerful).
+  FatigueIngame (graph 10) adds 25 x that sum to the rally cost (a 0.8-PF shot = 20), the same at every
+  Stamina; graph 12 capacity runs from lerp(40, 80, Stamina) at CurrentRecovery 0 to lerp(100, 200,
+  Stamina) at 1. Since vigor = 1 - cost / (2 x capacity), one powerful shot costs about 20 / 160 =
+  0.125 vigor at Stamina 0 and recovery 0, and 20 / 400 = 0.05 at Stamina 1 and recovery 1 (capacity
+  S+0xF60 is the s2 denominator; graph 12's second output is VigorMax S+0xF64).
+
 ## 3. Reference model
 
 `ref/gameplay/timing.c` (`ts4_range_curve`, `ts4_timing_value`, shipped curves) and

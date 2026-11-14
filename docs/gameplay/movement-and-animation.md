@@ -579,3 +579,68 @@ clip's own overshoot. The planner's 10-frame Turn hold (P+0x128) only adds to it
   `fn_88699300` (twice), `fn_886AA280`.
 * No input cuts the tail short. The only exit is a matrix transition at an Out event, and no rule reads the stick to
   open one early (C, within the readers above; a runtime check is listed in OPEN s11 R17).
+
+## 8. G8: special swings, the put-away and how movement feeds them
+
+Agent G8. C = read from code, D = read from data, I = inferred. Trigger logic, modes and the ball effect of each
+category are in `controls-and-shot-selection.md` s18; this section covers the clips and the movement side.
+Dump: `data/gameplay/special_swings.yaml` (`python3 tools/ts4data/special_swings.py --settings
+work/disc/core/334e7e0d.bin --core work/disc/core_all --out data/gameplay/special_swings.yaml`). It joins
+`animation_rules.yaml` with G9's `root_motion.yaml` (s7) and samples the root with `root_motion.py`. Frames at rate 1,
+frame = phase x (FrameCount - 1).
+
+### 8.1 Clip shape per category (D, Men; [min, median, max])
+
+| category | clips | frames | contact | shortest entry -> contact | contact -> Out | root travel to contact from frame 0 (cm) | last 40 f before contact (cm) |
+|---|---|---|---|---|---|---|---|
+| Fatality | 37 | 178 / 227 / 254 | 98 / 137 / 159 | 8 / 9 / 11 | 30 / 45 / 58 | 166 / 394 / 547 | 58 / 128 / 173 |
+| FlatPower | 186 | 95 / 132 / 174 | 35 / 47 / 88 | 2 / 4 / 22 | 16 / 36 / 66 | 14 / 190 / 491 | 16 / 154 / 313 |
+| FlatFinesse | 76 | 105 / 143 / 174 | 40 / 47 / 74 | 3 / 5 / 21 | 25 / 37 / 62 | 16 / 224 / 412 | 16 / 176 / 297 |
+| FlatFollowNet | 41 | 96 / 133 / 206 | 34 / 40 / 107 | 0 / 7 / 11 | 19 / 29 / 66 | 39 / 149 / 511 | 39 / 149 / 214 |
+| FlatGoodReach | 28 | 101 / 141 / 176 | 35 / 45 / 58 | 1 / 5 / 10 | 15 / 32 / 53 | 192 / 291 / 458 | 192 / 260 / 345 |
+| FlatBadReach | 11 | 147 / 161 / 189 | 43 / 49 / 62 | 3 / 7 / 11 | 38 / 52 / 56 | 335 / 396 / 536 | 298 / 338 / 362 |
+| FlatTooLate | 9 | 109 / 127 / 134 | 35 / 45 / 45 | 6 | 34 / 36 / 44 | 47 / 56 / 71 | 47 / 54 / 66 |
+| FlatPerfect | 2 | 100 / 132 | 38 / 48 | 4 / 8 | 39 / 44 | 6 / 30 | 6 / 31 |
+| FlatReturn | 117 | 109 / 135 / 218 | 36 / 59 / 95 | 7 / 19 / 50 | 14 / 36 / 67 | 1 / 61 / 204 | 4 / 59 / 168 |
+| VolleyReflex | 50 | 95 / 133 / 197 | 28 / 38 / 80 | 2 / 7 / 47 | 17 / 47 / 82 | 22 / 56 / 308 | 22 / 55 / 202 |
+| VolleyForward | 13 | 82 / 100 / 108 | 30 / 38 / 41 | 6 / 9 / 9 | 25 / 37 / 50 | 210 / 241 / 297 | 210 / 241 / 297 |
+| VolleySpectacular | 2 | 240 / 256 | 72 | 23 | 124 | 125 / 127 | 112 |
+
+The yaml also lists Slice, volley, smash and clay categories and every Properties value.
+
+* **Fatality** clips are the long ones: about 2.3 s at rate 1 with a 4 m run-in before contact. All 37 are forehand,
+  shoulder height, Power/Control VeryGood, preference 5, group `Swings_FH_Fatality` (allow_speed_coef 0). They have
+  three TransitionEvents: In+Out at phase 0..0.08, In only at about 0.14..0.55, and Out at about 0.8. So the clip is
+  normally entered part-way, 9 to 137 frames before contact. The selection horizon (now + 40 frames, `fn_886C9228`)
+  makes the useful entries the last 40 frames, over which the root still travels 58-173 cm forward and is moving at
+  about 2 cm/frame at contact.
+* Because of the three TransitionEvents, the busy-time function `fn_886CD3C8` reads put-away clips as "not busy"
+  (G9, s7.5). Whether that lets the planner act during a Fatality's follow-through needs a runtime check (OPEN s11).
+* **Reach** clips (FlatGoodReach / FlatBadReach / SliceGoodReach) carry the player 2.6-3.4 m in the last 40 frames,
+  which is how a stretch reaches the ball. Their categories also make the ball worse (controls s18.4).
+
+### 8.2 How movement feeds each special swing (C, with I where marked)
+
+| category | planner and fit inputs |
+|---|---|
+| Fatality | no planner state needed. Charge > 0.15, no sticky RB in |z| < 300 cm, a Flat/TopSpin/Lob groundstroke, and a FH shoulder-height Fatality clip that fits the predicted ball (tolerance box [40, 40, 80, -50, 50, -80] cm on all 37; facing clamp [-90, 30], [-90, 45] or [-90, 90]) |
+| FlatGoodReach / FlatBadReach | min of the line MinSpeed values S+0xA5C / 0xABC above PT+0x1B0 = 3.5 / PT+0x1B4 = 4.5 m/s (the reach speed the planner needs), timing window for humans |
+| SlowDown effects | planner state 19 (Reach) sets SlowDown S+0x7CC = 1: AutoSwingGood list and immediate queries |
+| FlatReturn / SliceReturn | the fast-ball flags of Planner_Reset (return 65 frames / 300 cm; baseline 50 / 250) |
+| VolleyReflex | volley lists; AI probes it on S+0x5DE (net fast ball, 35 frames / 200 cm) |
+| VolleyForward | LocalPosition x + 450 (singles) / 600 (doubles) < 0, not Slice / DropShot |
+| FollowNet | sticky RB in the corridor |z| < 300 cm |
+
+### 8.3 Why a player who ran down a short ball early may not get the put-away
+
+From the gates above (C), weighted by the clip data (I):
+
+1. Too little charge at the walk (power <= 0.15, under 12 frames held): FlatFinesse class, where the Fatality row is dead.
+2. RB held in the central corridor: FlatFollowNet wins.
+3. Slice, drop shot, volley or smash: no Fatality row.
+4. The ball is not at shoulder height on the forehand at contact: no Fatality clip can fit. This is the most likely
+   reason, because a short ball is often taken at waist or knee height.
+5. First fit wins: the walk tries Fatality first, but the first frame on which any clip in the list fits ends the
+   request. If a FlatPower clip fits before a Fatality clip does, the put-away is lost for that shot.
+6. Arriving very early is no help in itself: the clip has to fit at a 9-40 frame entry, which needs the player still
+   about 0.6-1.7 m behind the contact point and moving forward (root travel above).

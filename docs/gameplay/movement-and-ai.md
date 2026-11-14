@@ -349,7 +349,7 @@ The 13 conditions of retune-baseline s8e are confirmed, with these precise readi
 | # | condition | code | reading |
 |---|---|---|---|
 | 0 (new) | decider gate | 0x8869B950: byte `(ctx+0x1C)+0x4C → +0x1A3` | 0 skips the decider; the mode is left as it is (name unknown) |
-| 1 | opponent's hit planned | `fn_8865EC70` at 0x8869BA2C | as documented |
+| 1 | opponent's hit planned | caller side (repositioning s1) | as documented; `fn_8865EC70` at 0x8869BA2C is `PlayerCtx_LocalToWorld`, used for the angle and distance tests |
 | 2 | already at the net | 0x8869B964: x > -cfg (`r31+0xC4`, 500) | mode 0 |
 | 3 | stick released | 0x8869B9B8: `S+0x9DC` < pool+0x2AC (0.1) | mode 0 |
 | 4 | angle | 0x8869BA78: \|angle\| < `r31+0xC0` × pool+0x184 (degrees to radians, 40°) | |

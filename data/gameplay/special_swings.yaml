@@ -27,7 +27,7 @@ triggers:
   Fatality:
     grade: "C+D"
     trigger: "row condition 0xC78C8F06: not following to the net (human: !(sticky RB && |world z| < PT+0x6F0 = 300 cm, the central corridor); AI: !S+0x4E0) and raw charge S+0xE00 > 0.15 (lbl_880D0934).  First row of FlatPower in all three modes; dead in FlatFinesse (that class means power < 0.15).  AI at difficulty 3-5 (S+0x3F0, graph 139/140) tries it first in its release fn_886AE0E8"
-    clip_gate: "a Fatality clip must fit the ball (fn_886DAA48 clip fit within the selection horizon now+40 frames, tolerance box tol, facing clamp [-90, 45]); all are FH, Shoulder height, Baseline; contact 1.4-2.4 s after clip start, so the clip needs a long, early fit (see entry_to_contact)"
+    clip_gate: "a Fatality clip must fit the ball (fn_886DAA48 clip fit within the selection horizon now+40 frames, tolerance box [40, 40, 80, -50, 50, -80], facing clamp [-90, 30/45/90]); all are FH, Shoulder height, Baseline; contact 1.4-2.4 s after clip start, so the clip needs a long, early fit (see entry_to_contact)"
     ball: "link SwingCategory/Fatality in graphs 17, 205, 206, 238, 239, 243, 244, 248, 249, 292: fixes PowerfulFactor and removes the late-timing aim penalty (charge_table.yaml category_effects)"
     rule_rows: ["Normal/FlatPower row 0 value cond Fatality, easy", "Normal/FlatFinesse row 0 value cond Fatality, easy", "AutoSwingGood/FlatPower row 0 value cond Fatality, easy", "AutoSwingGood/FlatFinesse row 0 value cond Fatality, easy", "AutoSwingBad/FlatPower row 0 value cond Fatality, easy", "AutoSwingBad/FlatFinesse row 0 value cond Fatality, easy"]
   FlatPerfect:

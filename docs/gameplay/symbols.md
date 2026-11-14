@@ -77,6 +77,33 @@ use seen in the code, written as C; argument names are ours. Older symbol tables
 | `fn_8866ECA8` | `Fatigue_AddAnimationCosts` | `void (PlayerController *)` | animation-event costs from `PT+0x618` into `S+0xF28` | C | timing-and-fatigue s2 |
 | `fn_8866EE48` | `Fatigue_PointEnd` | `void (PlayerController *, float rest)` | between-point recovery | C | timing-and-fatigue s2 |
 
+### 1a. Swing request, modes and charge (agent G8; controls-and-shot-selection s18)
+
+| function | proposed name | prototype | what it does | grade |
+|---|---|---|---|---|
+| `fn_886B3CF8` | `SwingRequest_Update` | `void (PlayerController *)` | request state machine 93E5 / AFAF / F6EB / 658B / A190 / 3564 | C |
+| `fn_886B0250` | `SwingCategory_Select` | `int (PlayerController *, int autoswing)` | end-of-point exits, mode (Normal / AutoSwingGood / AutoSwingBad), calls the walk | C |
+| `fn_886B01A8` | `SwingCategory_ClassList` | `List *(PlayerTuning *, ...)` | class list by S+0x35C | C |
+| `fn_886AFDF8` | `SwingCategory_Walk` | `int (PlayerController *, List *, int autoswing)` | reaction gate, row walk, immediate / deferred clip queries | C |
+| `fn_886AC7E0` | `SwingClip_QueryLevels` | `int (PlayerCtx *, int autoswing, int frames)` | preference levels 8..3, S+0x380 | C |
+| `fn_886AC928` | `SwingClip_Probe` | `int (PlayerCtx *, uint32 category, ...)` | AI frames-to-contact probe of one category | C |
+| `fn_886DAA48` | `AnimSel_FindSwing` | `int (AnimSel *, int autoswing, int frames, int flag)` | best clip; start it or return frames to its racket event | C |
+| `fn_886B0380` | `SwingRequest_AutoSwing` | `int (PlayerController *)` | analyser, S+0xD10, `fn_886B0250(ctrl, 1)` | C |
+| `fn_8866B5B8` | `SwingRequest_AutoSwingGate` | `bool (PlayerController *)` | TimingValue > -1, ball past, smash / volley / fast-ball flags | C |
+| `fn_8866B6E0` | `Player_InCentralCorridor` | `bool (PlayerCtx *)` | \|world z\| < PT+0x6F0 (300 cm) | C |
+| `fn_88697E98` | `SwingCategory_Condition` | `bool (PlayerController *, uint32 cond)` | condition switch | C |
+| `fn_886872A0` | `SwingRequest_Evaluate` | `void (PlayerController *)` | tier graphs, class key S+0x35C | C |
+| `fn_88698538` | `Charge_Reset` | `void (ReceiverState *)` | FrameCount and Value = 0 (re-press) | C |
+| `fn_8869D720` | `Charge_UpdatePower` | `void (PlayerController *)` | S+0xE00 / S+0xE08 from the counters and curves | C |
+| `fn_886865D8` | `Hud_UpdatePlayerShot` | `void (PlayerController *)` | HUD block: charge, PF, IsRisk, IsPowerful, timing grade | C |
+| `fn_8865FA70` | `Fatigue_AddPowerfulShot` | `void (PlayerController *, Command *)` | SumPowerfulFactor += PF for powerful rows | C |
+| `fn_886AE0E8` | `AITrigger_Release` | `bool (AITrigger *)` | AI swing release: Fatality first (S+0x3F0), category probes, 18 / 28 / 20 frames | C |
+| `fn_8867E838` | `AITrigger_Prepare` (vtbl +0x18) | `void (AITrigger *)` | aitrig+0xA8 = S+0x3F0 > 0.5 | C |
+| `fn_88662510` | `AITrigger_SwingNow` | `bool (AITrigger *)` | 12 frames before contact | C |
+| `fn_88699300` | `Planner_ReachState` | `void (Planner *)` | state 19: SlowDown S+0x7CC = 1, S+0xFB7 = 1 | C |
+| `fn_886BA768` | `Planner_Reset` | `void (Planner *)` | fast-ball flags S+0x5DD/5DE/5DF, SlowDown = 0 | C |
+| `fn_88694030` | `AIBehaviour_Draw` | `void (AIController *)` | zeroes #ee04af9f entries when S+0x360 == Fatality | C |
+
 ## 2. Layouts (absolute PlayerState offsets)
 
 `AimingState` (S+0xD60, C + Layoutall):
@@ -109,6 +136,15 @@ IsLeftLine, S+0xFAC..0xFAF VolleyRight/Left, BaselineRight/Left (planner states 
 PlayerCtx: +0x4C own team, +0x5C Mover. Planner: +0x284 side flags latched, +0x288/0x28C held
 command.
 
+Swing-request fields (G8, C + Layoutall): S+0x360 SwingCategory, S+0x35C swing class key, S+0x368/0x36C
+ProStyle/Surface keys, S+0x380 SwingPreferenceLevel, S+0x378 SwingSpeedCoef, S+0x3F0 AI Fatality-first, S+0x5DD
+IsFastBall, S+0x5DE net fast ball, S+0x5DF IsBaselineFastBall, S+0x7B0 AutoSwing, S+0x7B4 AutoVolleySwing,
+S+0x7B8 GoodVolleySwing, S+0x7BC/0x7C0/0x7C4 fast-ball auto-swing evaluations, S+0x7CC SlowDown, S+0x7D4
+PerfectShot, S+0xD10 TimingState auto-swing good, S+0xDFC/0xE00 charge counter / power, S+0xE04/0xE08 Risk hold
+(unused), S+0xF24 SumPowerfulFactor. PlayerController: +0x40 walk miss counter, +0x58C committed, +0x58D latched,
++0x59C autoswung, +0x59D/+0x59E re-press window (I). State hashes: 0x93E5E96D, 0xAFAF1093, 0xF6EB6636,
+0x658B2E11, 0xA1903341, 0x35649982. HUD timing grades: Excellent 0x20E63862, TooLate 0x466A207E, 0x7A6A58AF (I: too early).
+
 `Fatigue` (S+0xF20): see `timing-and-fatigue.md` s2 and `ref/gameplay/fatigue.h`.
 
 AI record (`State.bin` type `D7C700B9`, 0x274 bytes): see `ai-inputs.md` s2.
@@ -123,3 +159,30 @@ then `Id` +0x80, `VolleyDistance` +0x84, `BaselineDistance` +0x88, `CenterDistan
 `g_ts4_script_constants` = 0x880D0F70: +0 = 1.0, +0x38 = -1, +0x80 = 0.001,
 +0x1BC = 0.01, +0x2AC = 0.1, +0x408 = 0.02, +0x518 = sqrt 2, +0x51C = 1.4, +0x55C = 1.25,
 +0x644 = 137 (doubles alley, cm); GE2: +0x118 = 0.4, +0x404 = 40, +0x4EC = 225, +0x82C = 700, +0x830 = 1.5707951, +0xF0 = 50 (more in `data/gameplay/repositioning.yaml`). `lbl_8814B440` = 0.0, `lbl_8814B910` = 0.5, `0x8814B45C` = 2.0.
+G8: `lbl_880D0934` = 0.15 (Fatality power), +0x29C = 0.25 and +0x2A0 = 0.75 (HUD grade bands), +0x394 = 600 and
++0x470 = 450 (VolleyForward doubles / singles), +0x40C = 240 (fast-ball sample height).
+
+## 4. G9 additions (movement responsiveness)
+
+Same grades. Details: movement-and-ai.md s E, movement-and-animation.md s7; models in `ref/gameplay/responsiveness.c`.
+
+| function | proposed name | prototype | what it does | grade | note |
+|---|---|---|---|---|---|
+| `fn_8869C010` | `Mover_UpdateRequiredMove` (refines `Planner_MovementIntent`) | `void (Mover *, ...)` | per MoveMode: stick → RequiredMove `S+0x9D0/0x9D4` (v = (y, 0, -x), power min(\|v\|,1), far side +π), copy to `S+0x9D8`; stand; go to MoveGoal | C | E.1 |
+| `fn_886C15A0` | `Match_UpdatePlayer` | `void (...)` | per-player loop: `fn_8869C010` → `fn_8866CDC8` → `fn_886C0050` | C | E.1 |
+| `fn_886C0050` | `Locomotion_Update` | `void (...)` | calls `fn_8866F740`, then the request `fn_886BEEE8` | C | E.1 |
+| `fn_886BEEE8` | `Locomotion_QueueSteps` | `void (...)` | queues 2 steps per call (ring of 20 × 0x30) via `fn_886E08E8` / `fn_886E4B70` | C | E.1 |
+| `fn_8866F740` | `Mover_PreHitFreeze` | `void (...)` | last cfg+0xA88 (20) frames before the opponent's hit: latch the move; release before cfg+0xA8C (10) → stand | C | E.4 |
+| `fn_8865EF98` | `Match_NextHitterPlannedFrame` | `bool (Match *, int *frame_out)` | the next hitter's planned hit frame | C | E.4, E.5 |
+| `fn_8869C868` | `Mover_ConstrainMove` | `void (...)` | ConstrainedMove `S+0x9E0`; state 0xA6A1B2AE snaps to ±π/2 inside (π/4, 3π/4), else power 0 | C | E.7 |
+| `fn_88910F50` | `InputItem_FilterStick` | `void (...)` | optional stick EMA (item +0x2A, off in data) | C | E.1 |
+| `fn_88910038` | `InputItem_Load` | `void (...)` | copies the filter flag from data +0x1E | C | E.1 |
+| `fn_886A7AC8` | `PlannerProfile_Construct` | `void (Profile *)` | zeroes the 0x2AC-byte record (incl. +0x1DC reaction delay) | C | E.3 |
+| `fn_886B81E0` | `PlannerProfile_CopyAI` | `void (...)` | AI-only copy of positioning outputs (+0x1DC, +0x1B4) | C | E.3 |
+| `fn_88644CE8` | `RootTrack_SampleDelta` | `void (AnimSet *, RTTake *, float t1, float t2, float *dx, float *dz)` | ExtractPosition lerp at t·N, returns P(t2) - P(t1) | C | anim s7.1 |
+| `fn_886455A0` | `RootMotion_SampleClip` | `void (...)` | one clip's root delta | C | anim s7.1 |
+| `fn_886457E0` | `RootMotion_SampleBlend` | `void (...)` | Σ weight · scale · R(yaw) · Δ over blend children | C | anim s7.1 |
+| `fn_8864A770` | `AnimSet_BindAnimationsDB` | `void (...)` | sets animset+0xAC = root+0x78 (ExtractPositionList) | C | anim s7.1 |
+| `fn_886D89E8` | `AnimNode_UpdateBlend` | `void (AnimNode *)` | linear cross-fade weight (clock - +0x24) / +0x2C | C | anim s7.2 |
+| `fn_886CD3C8` | `AnimNode_BusyFrames` | `float (AnimNode *)` | frames to TE[1] (only for 2-event clips) | C | anim s7.5 |
+| `fn_886C5A08` | `Transition_IsAllowed` | `bool (...)` | matrix lookup (root+0x44), Allow 0x575896F4, event index checks | C | anim s7.5 |

@@ -806,6 +806,12 @@ class Linked:
             if sec > 0:
                 if not name.startswith((".", "$", "?")) and name in world.by_name:
                     return world.by_name[name]        # a real symbol: use the image's copy
+                m = re.search(r"_([0-9A-F]{8})$", name) if not name.startswith((".", "$", "?")) else None
+                if m and int(m.group(1), 16) in world.func_size:
+                    # a function defined in the candidate's own file under a name that carries an
+                    # image address (a context copy of a callee): call the image's function, so
+                    # the call is intercepted exactly like the original's
+                    return int(m.group(1), 16)
                 return self.sec_addr.get(sec, 0) + value
             if name in world.by_name:
                 return world.by_name[name]
