@@ -45,17 +45,3 @@ ts4_word ts4_if_call_seq_u32_off0_88158A38(ts4_word a0, ts4_word a1)
     return a0;
 }
 
-/* Swing_DLL.xex 0x885E7300: if_get u32@0xe4, u32@0x38, u32@lbl_88D3CAF4 */
-ts4_word ts4_if_get_u32_offe4_885E7300(ts4_word a0, ts4_word a1)
-{
-    ts4_word t1;
-    ts4_word t2;
-
-    (void)a0;
-    t1 = *(ts4_word *)((char *)(ts4_word)(a1) + 228);
-    t2 = *(ts4_word *)((char *)(ts4_word)(a1) + 56);
-    if ((unsigned char)((t1 >> 7) & 0x1) != 0) {
-        return (*(ts4_word *)((char *)(ts4_word)((t2 << 2)) + (*(ts4_word *)lbl_88D3CAF4)));
-    }
-    return t2;
-}

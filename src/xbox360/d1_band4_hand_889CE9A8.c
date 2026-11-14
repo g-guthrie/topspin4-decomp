@@ -7,7 +7,7 @@ extern char lbl_880C9990[];
 extern double g_ts4_script_constants[];
 extern void fn_888240B8(void *, double);
 extern char lbl_88D4DABE;
-extern void fn_889D1A88(void);
+extern void ts4_loop_call_seq_u32_lbl_88D4DAD8_889D1A88(void);
 extern void ts4_get_fn_889D1918_889D19B8(void);
 extern void fn_8830EC08(char *);
 extern void fn_88563470(void (*)(void));

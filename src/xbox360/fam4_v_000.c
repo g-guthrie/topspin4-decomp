@@ -161,7 +161,7 @@ ts4_word fn_88674ED0();
 ts4_word fn_88676898();
 ts4_word fn_886A4F28();
 ts4_word fn_886A5C00();
-ts4_word fn_886AA6D0();
+ts4_word ts4_if_call_seq_u32_off64_886AA6D0();
 ts4_word fn_886EA398();
 ts4_word fn_886F6128();
 ts4_word fn_886FC898();
@@ -2585,7 +2585,7 @@ void ts4_loop_get_u32_off30_886AA8B0(ts4_word a0)
                     t9 = *(ts4_word *)((char *)(ts4_word)(t6) + 80);
                     ((ts4_word (*)(ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t9) + 0))) + 12))))((ts4_word)t9);
                 }
-                fn_886AA6D0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(lv5) + 0)));
+                ts4_if_call_seq_u32_off64_886AA6D0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(lv5) + 0)));
             }
             p17 = (ts4_word)(lv5 + 4);
             lv5 = p17;

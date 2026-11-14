@@ -106,7 +106,7 @@ ts4_word fn_88722AB0();
 ts4_word fn_88722CA8();
 ts4_word fn_88725348();
 ts4_word fn_8872CDE0();
-ts4_word fn_88731540();
+ts4_word ts4_if_addr_ts4_handle_forward_88150770_88731540();
 ts4_word fn_88734098();
 ts4_word fn_8873B890();
 ts4_word fn_8873EFC0();

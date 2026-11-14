@@ -84,7 +84,7 @@ ts4_word fn_88470AD0();
 ts4_word fn_88472530();
 ts4_word fn_88472748();
 ts4_word fn_88472858();
-ts4_word fn_88475AE8();
+ts4_word ts4_if_get_u16_off4_88475AE8();
 ts4_word ts4_counted_ref_release_88475B08();
 ts4_word fn_8849EE78();
 ts4_word fn_885651F8();

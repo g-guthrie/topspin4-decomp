@@ -208,7 +208,7 @@ extern u32 fn_884A9828(char *);
 extern u32 fn_8857A128(u32, int);
 extern char lbl_88C476D8;
 extern char lbl_88C4763C;
-extern void fn_8819C190(char *);
+extern void ts4_if_call_seq_u32_off0_8819C190(char *);
 extern u32 fn_8856CAD0(char *);
 extern u32 fn_8856C878(char *);
 extern u32 fn_88566FE8(char *);
@@ -2709,7 +2709,7 @@ u32 ts4_get_field100_88608990(char *a)
 /* Swing_DLL.xex 0x881DD848 */
 void ts4_forward_this_plus_20_881DD848(char *a)
 {
-    fn_8819C190(a + 20);
+    ts4_if_call_seq_u32_off0_8819C190(a + 20);
 }
 
 /* Swing_DLL.xex 0x8890DFC0 */

@@ -44,7 +44,7 @@ extern char lbl_880D7228;
 extern void fn_8860BBD8(Ts4Object *object);
 extern char lbl_880D7244;
 extern char lbl_880D7310;
-extern void fn_88912A38(Ts4Object *object);
+extern void ts4_if_call_seq_lbl_880D72B0_88912A38(Ts4Object *object);
 extern char lbl_880D7380;
 extern char lbl_880D73C4;
 extern char lbl_880D73FC;
@@ -196,10 +196,10 @@ TS4_DTOR(ts4_dtor_vtable_base_881722E0, lbl_880D2CF8, fn_8893B3E0) /* Swing_DLL.
 TS4_DTOR(ts4_dtor_vtable_base_88174218, lbl_880D7030, fn_88617D28) /* Swing_DLL.xex 0x88174218 */
 TS4_DTOR(ts4_dtor_vtable_base_88176DB8, lbl_880D7228, fn_8860BBD8) /* Swing_DLL.xex 0x88176DB8 */
 TS4_DTOR(ts4_dtor_vtable_base_88176E78, lbl_880D7244, fn_88617D28) /* Swing_DLL.xex 0x88176E78 */
-TS4_DTOR(ts4_dtor_vtable_base_881773F8, lbl_880D7310, fn_88912A38) /* Swing_DLL.xex 0x881773F8 */
-TS4_DTOR(ts4_dtor_vtable_base_88177548, lbl_880D7380, fn_88912A38) /* Swing_DLL.xex 0x88177548 */
-TS4_DTOR(ts4_dtor_vtable_base_88177698, lbl_880D73C4, fn_88912A38) /* Swing_DLL.xex 0x88177698 */
-TS4_DTOR(ts4_dtor_vtable_base_881777E8, lbl_880D73FC, fn_88912A38) /* Swing_DLL.xex 0x881777E8 */
+TS4_DTOR(ts4_dtor_vtable_base_881773F8, lbl_880D7310, ts4_if_call_seq_lbl_880D72B0_88912A38) /* Swing_DLL.xex 0x881773F8 */
+TS4_DTOR(ts4_dtor_vtable_base_88177548, lbl_880D7380, ts4_if_call_seq_lbl_880D72B0_88912A38) /* Swing_DLL.xex 0x88177548 */
+TS4_DTOR(ts4_dtor_vtable_base_88177698, lbl_880D73C4, ts4_if_call_seq_lbl_880D72B0_88912A38) /* Swing_DLL.xex 0x88177698 */
+TS4_DTOR(ts4_dtor_vtable_base_881777E8, lbl_880D73FC, ts4_if_call_seq_lbl_880D72B0_88912A38) /* Swing_DLL.xex 0x881777E8 */
 TS4_DTOR(ts4_dtor_vtable_base_8817B690, lbl_880DBD30, fn_88617D28) /* Swing_DLL.xex 0x8817B690 */
 TS4_DTOR(ts4_dtor_vtable_base_8817B8D8, lbl_880DBDA8, fn_88617D28) /* Swing_DLL.xex 0x8817B8D8 */
 TS4_DTOR(ts4_dtor_vtable_base_8817B938, lbl_880DBDD0, fn_88617D28) /* Swing_DLL.xex 0x8817B938 */

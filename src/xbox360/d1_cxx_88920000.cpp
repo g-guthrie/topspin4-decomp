@@ -5,17 +5,17 @@
 
 extern "C" {
 
-extern void fn_88921680();
-extern void fn_889216E0();
+extern void ts4_if_call_seq_u32_off20_88921680();
+extern void ts4_if_call_seq_u32_off20_889216E0();
 
 void ts4_call_88921680_889219B8(int p0, int p1, int p2)
 {
-    ((void (*)(int, int))fn_88921680)(p2, p0);
+    ((void (*)(int, int))ts4_if_call_seq_u32_off20_88921680)(p2, p0);
 }
 
 void ts4_call_889216E0_88921A98(int p0, int p1, int p2)
 {
-    ((void (*)(int, int))fn_889216E0)(p2, p0);
+    ((void (*)(int, int))ts4_if_call_seq_u32_off20_889216E0)(p2, p0);
 }
 
 }

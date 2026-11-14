@@ -420,7 +420,7 @@ void ts4_call_seq_XNetLogonGetTitleID_884F1EE8(ts4_word a0, ts4_word a1, ts4_wor
     return;
 }
 
-/* Swing_DLL.xex 0x88652DC8: get fn_88650C70, ts4_handle_forward_88610A48, ts4_handle_forward_88150770, u32@0x0, u32@0x4, u32@0x0 */
+/* Swing_DLL.xex 0x88652DC8: get ts4_get_fn_8864F6E8_88650C70, ts4_handle_forward_88610A48, ts4_handle_forward_88150770, u32@0x0, u32@0x4, u32@0x0 */
 void ts4_get_fn_88650C70_88652DC8(ts4_word a0, ts4_args3 sp1)
 {
     ts4_word loc54[1];

@@ -221,7 +221,7 @@ ts4_word fn_889B4418();
 ts4_word fn_889B9A58();
 ts4_word fn_889D01F8();
 ts4_word ts4_get_fn_889D1918_889D19B8();
-ts4_word fn_889D1A88();
+ts4_word ts4_loop_call_seq_u32_lbl_88D4DAD8_889D1A88();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
 #endif
@@ -3433,7 +3433,7 @@ void ts4_set_u32_off0_889D18A0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a
     return;
 }
 
-/* Swing_DLL.xex 0x889D1AD8: if_call_seq u8@lbl_88D4DABE, fn_889D1A88, ts4_get_fn_889D1918_889D19B8 */
+/* Swing_DLL.xex 0x889D1AD8: if_call_seq u8@lbl_88D4DABE, ts4_loop_call_seq_u32_lbl_88D4DAD8_889D1A88, ts4_get_fn_889D1918_889D19B8 */
 ts4_word ts4_if_call_seq_u8_lbl_88D4DABE_889D1AD8(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p4;
@@ -3451,7 +3451,7 @@ ts4_word ts4_if_call_seq_u8_lbl_88D4DABE_889D1AD8(ts4_word a0, ts4_word a1, ts4_
     t1 = *(unsigned char *)lbl_88D4DABE;
     p4 = (ts4_word)a0;
     if ((ts4_word)t1 == 0) {
-        t2 = fn_889D1A88();
+        t2 = ts4_loop_call_seq_u32_lbl_88D4DAD8_889D1A88();
         t3 = ts4_get_fn_889D1918_889D19B8((ts4_word)t2);
         p4 = (ts4_word)t3;
     }

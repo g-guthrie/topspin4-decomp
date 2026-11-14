@@ -8,9 +8,9 @@ typedef struct Ts4VObj7 { void **vt; } Ts4VObj7;
 void ts4_destroy_array_elements_reverse_88154758(char *base, int size, int count, void (*dtor)(void *)) { char *p = base + size * count; int i = count - 1; for (; i >= 0; i--) { p -= size; dtor(p); } }
 
 /* 0x8820CA98: forward to a helper or a vtable slot depending on the low nibble of the kind byte */
-extern void fn_8820F068(void *, void *);
+extern void ts4_if_get_fn_8819B0C8_8820F068(void *, void *);
 typedef struct Ts4KindOwner { struct { char pad[8]; unsigned char kind; } *info; } Ts4KindOwner;
-void ts4_dispatch_by_kind_8820CA98(Ts4KindOwner *t, Ts4VObj7 *a, void *b) { u32 k = t->info->kind & 0xf; if (k == 0xa) fn_8820F068(a, b); else if (k == 0xb) ((void (*)(Ts4VObj7 *, void *))a->vt[0x5c / 4])(a, b); }
+void ts4_dispatch_by_kind_8820CA98(Ts4KindOwner *t, Ts4VObj7 *a, void *b) { u32 k = t->info->kind & 0xf; if (k == 0xa) ts4_if_get_fn_8819B0C8_8820F068(a, b); else if (k == 0xb) ((void (*)(Ts4VObj7 *, void *))a->vt[0x5c / 4])(a, b); }
 
 /* 0x8834C558: store a float in one of two slots; slot 0 is capped by the value stored next to it */
 int ts4_set_float_capped_by_index_adj1c_8834C558(char *t, int idx, float x) {

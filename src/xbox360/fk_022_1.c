@@ -80,7 +80,7 @@ ts4_word fn_8816D1A8();
 ts4_word fn_881705B0();
 ts4_word ts4_if_atomic_interlocked_dec_881876D0();
 ts4_word fn_881878A0();
-ts4_word fn_8819B0C8();
+ts4_word ts4_if_call_seq_u32_off0_8819B0C8();
 ts4_word fn_881B1A98();
 ts4_word fn_881B1B68();
 ts4_word fn_881B1BF8();

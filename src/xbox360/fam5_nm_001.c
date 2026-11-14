@@ -18,15 +18,15 @@ typedef unsigned long ts4_word;
 ts4_word fn_88933EF8();
 ts4_word fn_88936AF0();
 ts4_word fn_88939040();
-ts4_word fn_8893CD70();
+ts4_word ts4_loop_call_seq_fn_88939210_8893CD70();
 
-/* Swing_DLL.xex 0x8899B2E8: if_call_seq fn_8893CD70, fn_88939040, u8@0x78, fn_88933EF8, fn_88936AF0 */
+/* Swing_DLL.xex 0x8899B2E8: if_call_seq ts4_loop_call_seq_fn_88939210_8893CD70, fn_88939040, u8@0x78, fn_88933EF8, fn_88936AF0 */
 void ts4_if_call_seq_fn_8893CD70_8899B2E8(ts4_word a0, ts4_word a1)
 {
     ts4_word t3;
     ts4_word t4;
 
-    fn_8893CD70();
+    ts4_loop_call_seq_fn_88939210_8893CD70();
     fn_88939040((ts4_word)a1, (ts4_word)(a0 + 112), (ts4_word)8);
     t3 = *(unsigned char *)((char *)(ts4_word)(a0) + 120);
     t4 = fn_88933EF8((ts4_word)a1, (ts4_word)1);

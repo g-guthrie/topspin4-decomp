@@ -4268,6 +4268,74 @@
       "src/xbox360/lua3_lwstrlib.c": {
         "status": "Matching",
         "source": "xbox360/lua3_lwstrlib.c"
+      },
+      "src/xbox360/fam5_g_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_g_000.c"
+      },
+      "src/xbox360/fam5_h_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_h_000.c"
+      },
+      "src/xbox360/fam5_h_cpp_000.cpp": {
+        "status": "Matching",
+        "source": "xbox360/fam5_h_cpp_000.cpp"
+      },
+      "src/xbox360/fam5_hand.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_hand.c"
+      },
+      "src/xbox360/fam5_hand_o1.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_hand_o1.c"
+      },
+      "src/xbox360/fam5_nm2_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm2_000.c"
+      },
+      "src/xbox360/fam5_nm3_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm3_000.c"
+      },
+      "src/xbox360/fam5_nm4_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm4_000.c"
+      },
+      "src/xbox360/fam5_nm4_o1_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm4_o1_000.c"
+      },
+      "src/xbox360/fam5_nm5_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm5_000.c"
+      },
+      "src/xbox360/fam5_nm6_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm6_000.c"
+      },
+      "src/xbox360/fam5_nm6_cpp_000.cpp": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm6_cpp_000.cpp"
+      },
+      "src/xbox360/fam5_nm6_cpp_o1_000.cpp": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm6_cpp_o1_000.cpp"
+      },
+      "src/xbox360/fam5_nm7_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm7_000.c"
+      },
+      "src/xbox360/fam5_nm8_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm8_000.c"
+      },
+      "src/xbox360/fam5_nm_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm_000.c"
+      },
+      "src/xbox360/fam5_nm_001.c": {
+        "status": "Matching",
+        "source": "xbox360/fam5_nm_001.c"
       }
     }
   }

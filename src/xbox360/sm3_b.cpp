@@ -65,7 +65,7 @@ extern char lbl_88D488B8[], lbl_88D48A98[];
 extern double floor(float);
 extern float lbl_8814B910;
 extern float lbl_8814B440;
-extern void *fn_8819B0C8(void *, void *);
+extern void *ts4_if_call_seq_u32_off0_8819B0C8(void *, void *);
 extern void *fn_88213CC8(void *, void *);
 extern void *ts4_find_record_by_key_881AD100(void *, u32 *);
 extern void *ts4_find_record_by_key_881AD0A8(void *, u32 *);
@@ -320,7 +320,7 @@ void ts4_set_float30_choose_by_flag_888AE0C0(char *self, float a, float b) { if 
 int ts4_contains_word0_stride16_887793F0(char *self, u32 k) { char *e = *(char **)(self + 496); char *p = *(char **)(self + 492); if (e == p) return 0; do { if (*(u32 *)(p + 0) == k) return 1; p += 16; } while (e != p); return 0; }
 
 /* 0x887815B0: find 8-byte entry whose word0 == *key in the range at +0xAC; call helper with entry+4 */
-void *ts4_find_pair_by_key_then_call_887815B0(char *self, u32 *k, void *a5) { char *e = *(char **)(self + 0xb0); char *p = *(char **)(self + 0xac); if (e == p) return self; do { if (*(u32 *)p == *k) return fn_8819B0C8(a5, p + 4); p += 8; } while (e != p); return self; }
+void *ts4_find_pair_by_key_then_call_887815B0(char *self, u32 *k, void *a5) { char *e = *(char **)(self + 0xb0); char *p = *(char **)(self + 0xac); if (e == p) return self; do { if (*(u32 *)p == *k) return ts4_if_call_seq_u32_off0_8819B0C8(a5, p + 4); p += 8; } while (e != p); return self; }
 
 /* 0x887E9D38: true if any object pointer in the range at +0x4C has nonzero field +0xC */
 int ts4_any_obj_field_c_set_887E9D38(char *self) { char *p = *(char **)(self + 0x4c); char *e = *(char **)(self + 0x50); if (p == e) return 0; do { if (*(u32 *)(*(char **)p + 0xc) != 0) return 1; p += 4; } while (p != e); return 0; }

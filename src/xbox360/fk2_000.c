@@ -234,9 +234,9 @@ ts4_word ts4_call_seq_u32_off18_88837CB0();
 ts4_word fn_888380A8();
 ts4_word fn_88883CD0();
 ts4_word fn_888860A0();
-ts4_word fn_88890718();
+ts4_word ts4_if_get_u32_off8_88890718();
 ts4_word fn_888AF5C0();
-ts4_word fn_88912A38();
+ts4_word ts4_if_call_seq_lbl_880D72B0_88912A38();
 ts4_word ts4_loop_call_seq_lbl_880D6268_8892AF80();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
@@ -1422,7 +1422,7 @@ ts4_word ts4_if_call_seq_lbl_880D717C_88176840(ts4_word a0, ts4_word a1, ts4_wor
     return t4;
 }
 
-/* Swing_DLL.xex 0x881779F8: if_call_seq lbl_880D754C, u32@0x0, u32@0x34, ts4_destroy_owned_object, fn_88912A38, ts4_tsu_cleanup_end */
+/* Swing_DLL.xex 0x881779F8: if_call_seq lbl_880D754C, u32@0x0, u32@0x34, ts4_destroy_owned_object, ts4_if_call_seq_lbl_880D72B0_88912A38, ts4_tsu_cleanup_end */
 ts4_word ts4_if_call_seq_lbl_880D754C_881779F8(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6)
 {
     ts4_word t1;
@@ -1437,7 +1437,7 @@ ts4_word ts4_if_call_seq_lbl_880D754C_881779F8(ts4_word a0, ts4_word a1, ts4_wor
     if ((ts4_word)t1 != 0) {
         ts4_destroy_owned_object((ts4_word)t1);
     }
-    fn_88912A38((ts4_word)a0);
+    ts4_if_call_seq_lbl_880D72B0_88912A38((ts4_word)a0);
     if ((ts4_word)(a1 & 0x1) != 0) {
         ts4_tsu_cleanup_end((ts4_word)a0);
     }
@@ -1988,12 +1988,12 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45B38_881892B8(void)
     return 0;
 }
 
-/* Swing_DLL.xex 0x88189D30: if_call_seq fn_88890718, u32@lbl_88CACF08, KeTlsGetValue, u16@0x4, fn_8841A590 */
+/* Swing_DLL.xex 0x88189D30: if_call_seq ts4_if_get_u32_off8_88890718, u32@lbl_88CACF08, KeTlsGetValue, u16@0x4, fn_8841A590 */
 ts4_word ts4_if_call_seq_fn_88890718_88189D30(ts4_word a0, ts4_word a1)
 {
     ts4_word t3;
 
-    fn_88890718((ts4_word)a0);
+    ts4_if_get_u32_off8_88890718((ts4_word)a0);
     if ((ts4_word)(a1 & 0x1) != 0) {
         t3 = KeTlsGetValue((ts4_word)(*(ts4_word *)lbl_88CACF08));
         fn_8841A590((ts4_word)t3, (ts4_word)a0, (ts4_word)(*(unsigned short *)((char *)(ts4_word)(a0) + 4)), (ts4_word)26);

@@ -179,7 +179,7 @@ ts4_word fn_88617788();
 ts4_word ts4_loop_call_seq_u32_off4_886178A0();
 ts4_word fn_88617D88();
 ts4_word fn_88618998();
-ts4_word fn_886195A0();
+ts4_word ts4_if_call_seq_u8_off68_886195A0();
 ts4_word fn_88619628();
 ts4_word fn_8861A370();
 ts4_word fn_8861B8E0();
@@ -206,7 +206,7 @@ ts4_word fn_88657C70();
 ts4_word fn_8865D7D8();
 ts4_word fn_887EBC98();
 ts4_word fn_88883CD0();
-ts4_word fn_88884200();
+ts4_word ts4_if_call_seq_ts4_tailcall_MmFreePhysicalMemory_8857B158_88884200();
 ts4_word fn_888860A0();
 ts4_word fn_889BCA90();
 ts4_word fn_889BCB10();
@@ -2416,7 +2416,7 @@ ts4_word ts4_if_get_u32_off180_8861FD10(ts4_word a0, ts4_word a1, ts4_word a2, t
     }
     *(unsigned char *)((char *)(ts4_word)(a0) + 392) = (unsigned char)0;
     *(ts4_word *)((char *)(ts4_word)(a0) + 44) = (ts4_word)0;
-    t17 = fn_886195A0((ts4_word)a0);
+    t17 = ts4_if_call_seq_u8_off68_886195A0((ts4_word)a0);
     return t17;
 }
 
@@ -2460,7 +2460,7 @@ ts4_word ts4_call_seq_fn_88619628_886203D8(ts4_word a0, ts4_word a1)
     return t13;
 }
 
-/* Swing_DLL.xex 0x88620D80: if_call_seq fn_886195A0, u8@0xe5, u32@0xe8, u32@0x178, u32@0xe8, u32@0x178 */
+/* Swing_DLL.xex 0x88620D80: if_call_seq ts4_if_call_seq_u8_off68_886195A0, u8@0xe5, u32@0xe8, u32@0x178, u32@0xe8, u32@0x178 */
 ts4_word ts4_if_call_seq_fn_886195A0_88620D80(ts4_word a0)
 {
     ts4_word p13;
@@ -2475,7 +2475,7 @@ ts4_word ts4_if_call_seq_fn_886195A0_88620D80(ts4_word a0)
     ts4_word t10;
     ts4_word t12;
 
-    t1 = fn_886195A0();
+    t1 = ts4_if_call_seq_u8_off68_886195A0();
     t2 = *(unsigned char *)((char *)(ts4_word)(a0) + 229);
     p16 = (ts4_word)t1;
     if ((ts4_word)t2 == 0) {
@@ -2490,7 +2490,7 @@ ts4_word ts4_if_call_seq_fn_886195A0_88620D80(ts4_word a0)
             p13 = (ts4_word)t9;
             if ((ts4_word)t9 != 0) {
                 t10 = *(ts4_word *)((char *)(ts4_word)(a0) + 392);
-                t12 = fn_88884200((ts4_word)t9, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 52)), (ts4_word)t10);
+                t12 = ts4_if_call_seq_ts4_tailcall_MmFreePhysicalMemory_8857B158_88884200((ts4_word)t9, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 52)), (ts4_word)t10);
                 p13 = (ts4_word)t12;
             }
             p15 = (ts4_word)p13;

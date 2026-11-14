@@ -139,7 +139,7 @@ ts4_word ts4_loop_call_seq_u32_off34_8871B7E0();
 ts4_word fn_88721A08();
 ts4_word fn_88722B80();
 ts4_word fn_8872D070();
-ts4_word fn_88731540();
+ts4_word ts4_if_addr_ts4_handle_forward_88150770_88731540();
 ts4_word fn_88739D80();
 ts4_word fn_88748350();
 ts4_word fn_88748B18();
@@ -180,7 +180,7 @@ ts4_word fn_888AD568();
 ts4_word ts4_if_call_seq_fn_8817EA90_888D85B0();
 ts4_word fn_888DDD70();
 ts4_word fn_888F67B8();
-ts4_word fn_88912A38();
+ts4_word ts4_if_call_seq_lbl_880D72B0_88912A38();
 ts4_word fn_889C63A0();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy

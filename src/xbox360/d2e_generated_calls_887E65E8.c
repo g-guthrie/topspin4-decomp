@@ -77,7 +77,7 @@ ts4_word fn_881640A8();
 ts4_word fn_8816CAA0();
 ts4_word fn_881898E8();
 ts4_word fn_8819AE68();
-ts4_word fn_8819C190();
+ts4_word ts4_if_call_seq_u32_off0_8819C190();
 ts4_word fn_881A50F0();
 ts4_word fn_881A62E8();
 ts4_word fn_881A6A00();
