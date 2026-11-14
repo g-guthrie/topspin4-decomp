@@ -93,7 +93,7 @@ void fn_88565258(void);
 void fn_88567798(void);
 void fn_88568C20(void);
 void fn_88569098(void);
-void fn_885690C8(void);
+void ts4_call_with_header_word_885690C8(void);
 void fn_885690E0(void);
 void fn_8856C298(void);
 void fn_8856C718(void);
@@ -402,7 +402,7 @@ TS4_FORWARD(88883CC0, fn_8857B598)
 TS4_FORWARD(88883CC8, ts4_resume_thread)
 TS4_FORWARD(88883EF0, fn_8857B170)
 TS4_FORWARD(88883F30, fn_8857C1F8)
-TS4_FORWARD(88884180, fn_885690C8)
+TS4_FORWARD(88884180, ts4_call_with_header_word_885690C8)
 TS4_FORWARD(88884188, fn_885690E0)
 TS4_FORWARD(88884198, fn_88562DC0)
 TS4_FORWARD(888842C8, fn_88567798)

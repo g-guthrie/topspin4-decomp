@@ -6,7 +6,7 @@ extern void fn_88562DC0(void *);
 extern void ts4_tailcall_fn_88567748_88567798(void *);
 extern void fn_88568C20(void *);
 extern void fn_88569098(void *);
-extern void fn_885690C8(void *);
+extern void ts4_call_with_header_word_885690C8(void *);
 extern void fn_885690E0(void *);
 extern void fn_8856C718(void *);
 extern void fn_8857A1E0(void *);

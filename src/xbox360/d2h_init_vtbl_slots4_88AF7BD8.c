@@ -5,7 +5,7 @@ struct ts4_tmp_88AFB860 { char *vt; unsigned short s0; unsigned short s1; unsign
 struct ts4_tmp_88AFB0F0 { char *vt; unsigned short s0; unsigned short s1; unsigned pad[6]; unsigned sub[0x40]; };
 struct ts4_tmp_88AF7BD8 { char *vt; unsigned short s0; unsigned short s1; unsigned pad; unsigned sub[0xa4 / 4]; };
 
-extern void fn_8847FBC8(void *, int);
+extern void ts4_set_wrap_byte_8847FBC8(void *, int);
 extern char lbl_88088130[];
 extern char lbl_88044CA0[];
 extern void fn_884A1C40(void);
@@ -41,7 +41,7 @@ void ts4_init_vtbl_slot4_88AFB0F0(void)
     struct ts4_tmp_88AFB0F0 local;
     local.vt = lbl_88088130;
     local.s1 = 1;
-    fn_8847FBC8(local.sub, 0);
+    ts4_set_wrap_byte_8847FBC8(local.sub, 0);
     lbl_88D25D84.vtbl = lbl_88044CA0;
     lbl_88D25D84.destroy = (void *)fn_884A1C40;
     lbl_88D25D84.thunk = (void *)ts4_vcall0_thunk_884A1C08;

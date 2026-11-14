@@ -7,7 +7,7 @@ extern void fn_8841ABD8(void *, int);
 extern void fn_8841ED08(void *);
 extern void fn_8841FDB8(void *);
 extern void fn_884235C0(void *);
-extern void fn_885690C8(void *);
+extern void ts4_call_with_header_word_885690C8(void *);
 extern void fn_885690E0(void *);
 extern char lbl_8803A308[];
 extern char lbl_8803A310[];
@@ -41,7 +41,7 @@ void ts4_forward_8841B488(void *object)
 
 void ts4_forward_8841B490(void *object)
 {
-    fn_885690C8(object);
+    ts4_call_with_header_word_885690C8(object);
 }
 
 void ts4_forward_adjusted_8_8841C118(char *object)

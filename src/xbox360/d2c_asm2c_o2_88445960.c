@@ -167,7 +167,7 @@ ts4_word fn_885772B0();
 ts4_word ts4_if_get_u32_lbl_88C32048_8857A1E0();
 ts4_word ts4_if_call_seq_NtSetEvent_8857C1F8();
 ts4_word fn_88582610();
-ts4_word fn_8858CE08();
+ts4_word ts4_forward_if_small_kind_8858CE08();
 ts4_word fn_8858E2E8();
 ts4_word fn_8858FD68();
 ts4_word fn_88590818();
