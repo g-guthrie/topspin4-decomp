@@ -9348,6 +9348,1457 @@
       "symbols": {
         "ts4l_zlib_inflate_83453F60": 1360
       }
+    },
+    {
+      "source": "src/loader/l13_create_obj_830A0F70.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_create_obj_830A0F70": 116,
+        "ts4l_create_obj_830A1328": 116
+      }
+    },
+    {
+      "source": "src/loader/l13_lazy_desc_o1_83108158.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_lazy_desc_83108158": 184,
+        "ts4l_lazy_desc_83108EC8": 184,
+        "ts4l_lazy_desc_83108FF0": 184,
+        "ts4l_lazy_desc_8310CB80": 184
+      }
+    },
+    {
+      "source": "src/loader/l13_parse_int_set_o1_83104830.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_parse_int_set_83104830": 92,
+        "ts4l_parse_int_set_83104890": 92,
+        "ts4l_parse_int_set_83104960": 92
+      }
+    },
+    {
+      "source": "src/loader/l13_vec_free_83100080.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_vec_free_83100080": 112,
+        "ts4l_vec_free_83100120": 112,
+        "ts4l_vec_free_831002E0": 112,
+        "ts4l_vec_free_83100350": 112
+      }
+    },
+    {
+      "source": "src/loader/l15_allpass_delay_831B1218.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_allpass_128_831B1218": 80,
+        "ts4l_allpass_256_831B1340": 80,
+        "ts4l_allpass_512_831B1420": 80,
+        "ts4l_allpass_2048_831B1710": 80,
+        "ts4l_allpass_1024_831B17E8": 80
+      }
+    },
+    {
+      "source": "src/loader/l15_arm_timer_83224AA8.cpp",
+      "flags": [],
+      "symbols": {
+        "ts4l_arm_timer_83224AA8": 124
+      }
+    },
+    {
+      "source": "src/loader/l15_attach_8321FF00.cpp",
+      "flags": [],
+      "symbols": {
+        "ts4l_attach_8321FF00": 112
+      }
+    },
+    {
+      "source": "src/loader/l15_bulk_8319E408.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_if_atomic_interlocked_dec_8319E408": 88,
+        "ts4l_if_atomic_interlocked_dec_831A2508": 88,
+        "ts4l_if_get_u32_off0_831A2560": 120,
+        "ts4l_if_get_u32_0x20_831A3458": 148,
+        "ts4l_if_get_u64_off38_832263D0": 76,
+        "ts4l_if_get_u32_offc_83227040": 116,
+        "ts4l_if_call_seq_u32_off218_83228090": 108,
+        "ts4l_if_call_seq_u32_off0_83228910": 156,
+        "ts4l_if_get_u32_off210_83228D40": 212,
+        "ts4l_if_get_u16_off3c_8322D720": 192,
+        "ts4l_if_get_u32_off3c_8322EE08": 104,
+        "ts4l_if_call_seq_u32_off0_832340B8": 104
+      }
+    },
+    {
+      "source": "src/loader/l15_bulk_8319E778.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_get_RtlEnterCriticalSection_8319E778": 92,
+        "ts4l_if_get_u32_off208_83234120": 128
+      }
+    },
+    {
+      "source": "src/loader/l15_call_store_result_8321F1D0.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_call_store_result_8321F1D0": 80,
+        "ts4l_call_store_result_8321F220": 84
+      }
+    },
+    {
+      "source": "src/loader/l15_count_bits_831C0030.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_count_bits_831C0030": 84,
+        "ts4l_count_bits_83257128": 84
+      }
+    },
+    {
+      "source": "src/loader/l15_current_element_8322EC68.cpp",
+      "flags": [],
+      "symbols": {
+        "ts4l_current_element_8322EC68": 76,
+        "ts4l_current_element_8322ECB8": 76,
+        "ts4l_current_element_8322ED08": 76
+      }
+    },
+    {
+      "source": "src/loader/l15_delay_taps3_831B10F8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_delay_taps3_512_831B10F8": 116,
+        "ts4l_delay_taps3_2048_831B4538": 116
+      }
+    },
+    {
+      "source": "src/loader/l15_delete_object_8319F6C0.cpp",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_delete_sub_object_8319F6C0": 112,
+        "ts4l_delete_sub_object_8319FFB0": 112,
+        "ts4l_delete_object_831A0BA8": 112,
+        "ts4l_delete_sub_object_831A1C58": 112,
+        "ts4l_delete_object_831F3768": 112,
+        "ts4l_delete_object_831F3C18": 112,
+        "ts4l_delete_object_831F4DA8": 112
+      }
+    },
+    {
+      "source": "src/loader/l15_ensure_closed_831F34B8.cpp",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_ensure_closed_831F34B8": 92
+      }
+    },
+    {
+      "source": "src/loader/l15_ensure_open_831F3460.cpp",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_ensure_open_831F3460": 88
+      }
+    },
+    {
+      "source": "src/loader/l15_free_buffers_831FEED0.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_free_buffers_831FEED0": 136,
+        "ts4l_free_buffers_83272D18": 136
+      }
+    },
+    {
+      "source": "src/loader/l15_get_ref_83230250.cpp",
+      "flags": [],
+      "symbols": {
+        "ts4l_get_ref_83230250": 96
+      }
+    },
+    {
+      "source": "src/loader/l15_get_sub_interface_832274A8.cpp",
+      "flags": [],
+      "symbols": {
+        "ts4l_get_sub_interface_832274A8": 76,
+        "ts4l_get_sub_interface_8322C268": 76,
+        "ts4l_get_sub_interface_8322C3E8": 76
+      }
+    },
+    {
+      "source": "src/loader/l15_get_tail_interface_832274F8.cpp",
+      "flags": [],
+      "symbols": {
+        "ts4l_get_tail_interface_832274F8": 80,
+        "ts4l_get_tail_interface_8322C438": 80
+      }
+    },
+    {
+      "source": "src/loader/l15_hash_find_8319CEC8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_hash_find_8319CEC8": 72
+      }
+    },
+    {
+      "source": "src/loader/l15_init_record_83201560.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_init_record_83201560": 112
+      }
+    },
+    {
+      "source": "src/loader/l15_list_walk_8320F0C8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_list_walk_8320F0C8": 152,
+        "ts4l_list_walk_owner_83210BB0": 152,
+        "ts4l_list_walk_83213878": 152,
+        "ts4l_list_walk_owner_83215C20": 152,
+        "ts4l_list_walk_83215F40": 152
+      }
+    },
+    {
+      "source": "src/loader/l15_map_bytes_831CE978.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_map_bytes_831CE978": 72,
+        "ts4l_map_bytes_encoded_831CE9C0": 80
+      }
+    },
+    {
+      "source": "src/loader/l15_query_and_apply_8321D628.cpp",
+      "flags": [],
+      "symbols": {
+        "ts4l_query_and_apply_8321D628": 232,
+        "ts4l_query_and_apply_8321D710": 232,
+        "ts4l_query_and_apply_8321D7F8": 232,
+        "ts4l_query_and_apply_8321D8E0": 232
+      }
+    },
+    {
+      "source": "src/loader/l15_release_clear_831C6BC8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_release_clear_831C6BC8": 80,
+        "ts4l_release_clear_832616D8": 80
+      }
+    },
+    {
+      "source": "src/loader/l15_release_two_831F4328.cpp",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_release_two_831F4328": 104
+      }
+    },
+    {
+      "source": "src/loader/l15_reset_channels_831BB688.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_reset_channels_831BB688": 132,
+        "ts4l_reset_channels_832526B8": 132
+      }
+    },
+    {
+      "source": "src/loader/l15_scale_from_index_831DF030.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_scale_from_index_831DF030": 156,
+        "ts4l_scale_from_index_831FA358": 156,
+        "ts4l_scale_from_index_8326C278": 156
+      }
+    },
+    {
+      "source": "src/loader/l15_smooth_prefix_831C67C8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_smooth_prefix_831C67C8": 120,
+        "ts4l_smooth_prefix_832612C8": 120
+      }
+    },
+    {
+      "source": "src/loader/l15_submit_params9_8322F420.cpp",
+      "flags": [],
+      "symbols": {
+        "ts4l_submit_default_8322F420": 76,
+        "ts4l_submit_one_8322F470": 84,
+        "ts4l_submit_two_8322F4C8": 88
+      }
+    },
+    {
+      "source": "src/loader/l15_submit_params_83222020.cpp",
+      "flags": [],
+      "symbols": {
+        "ts4l_submit_params_83222020": 84,
+        "ts4l_submit_params_83223408": 84
+      }
+    },
+    {
+      "source": "src/loader/l15_validate_request_8320E040.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_validate_request_8320E040": 124,
+        "ts4l_validate_request_83210D98": 124
+      }
+    },
+    {
+      "source": "src/loader/l19_idct_8x8_i_832D6448.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_idct_8x8_i_832D6448": 872
+      }
+    },
+    {
+      "source": "src/loader/l19_idct_8x8_s_832D6088.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_idct_8x8_s_832D6088": 956
+      }
+    },
+    {
+      "source": "src/loader/l20_png_do_read_filler_o1_83448678.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_png_do_read_filler_83448678": 708
+      }
+    },
+    {
+      "source": "src/loader/l21_ex6_jpeg_err_834436C8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_std_error_834436C8": 112
+      }
+    },
+    {
+      "source": "src/loader/l21_jp1_jpeg_coefct_83456D18.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_start_iMCU_row_83456D18": 112,
+        "ts4l_jpeg_decompress_onepass_83456D98": 668,
+        "ts4l_jpeg_consume_data_83457040": 608,
+        "ts4l_jpeg_decompress_smooth_data_834575F8": 1960
+      }
+    },
+    {
+      "source": "src/loader/l21_jp1_jpeg_color_8345AB00.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_build_ycc_rgb_table_8345AB00": 284,
+        "ts4l_jpeg_ycc_rgb_convert_8345AC20": 208,
+        "ts4l_jpeg_null_convert_8345ACF0": 136,
+        "ts4l_jpeg_gray_rgb_convert_8345AD98": 100,
+        "ts4l_jpeg_ycck_cmyk_convert_8345AE00": 240,
+        "ts4l_jpeg_build_ink_tables_8345AEF0": 1100,
+        "ts4l_jpeg_cmyk_rgb_convert_8345B340": 356,
+        "ts4l_jpeg_jinit_color_deconverter_8345B678": 688
+      }
+    },
+    {
+      "source": "src/loader/l21_jp1_jpeg_huffd_83458338.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_fill_bit_buffer_83458338": 360,
+        "ts4l_jpeg_huff_decode_834584A0": 292,
+        "ts4l_jpeg_decode_mcu_83458670": 1236,
+        "ts4l_jpeg_jinit_huff_decoder_83458CE8": 120
+      }
+    },
+    {
+      "source": "src/loader/l21_jp1_jpeg_master_8344E498.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_calc_output_dimensions_8344E498": 652,
+        "ts4l_jpeg_jinit_master_decompress_8344EE68": 112
+      }
+    },
+    {
+      "source": "src/loader/l21_jp1_jpeg_merge_8345BB68.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_merged_1v_upsample_8345BB68": 108
+      }
+    },
+    {
+      "source": "src/loader/l21_jp1_jpeg_phuff_83459058.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_decode_mcu_AC_first_83459058": 604,
+        "ts4l_jpeg_decode_mcu_AC_refine_834593D0": 1088,
+        "ts4l_jpeg_start_pass_phuff_decoder_83459810": 744
+      }
+    },
+    {
+      "source": "src/loader/l21_jp1_jpeg_sample_8345A4B0.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_h2v1_upsample_8345A4B0": 100,
+        "ts4l_jpeg_jinit_upsampler_8345A818": 744
+      }
+    },
+    {
+      "source": "src/loader/l21_jp1_jpeg_utils_8344EED8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_jdiv_round_up_8344EED8": 36,
+        "ts4l_jpeg_jround_up_8344EF00": 48,
+        "ts4l_jpeg_jcopy_sample_rows_8344EF30": 84
+      }
+    },
+    {
+      "source": "src/loader/l21_png_expand_834489D0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_png_do_gamma_834489D0": 1120,
+        "ts4l_png_do_expand_palette_83448E30": 668,
+        "ts4l_png_do_expand_834490D0": 1192
+      }
+    },
+    {
+      "source": "src/loader/l21_png_misc_83445EB0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_png_write_rows_83445EB0": 60,
+        "ts4l_png_destroy_write_struct_83445F58": 104,
+        "ts4l_png_set_gAMA_83446060": 40,
+        "ts4l_png_set_tRNS_83446228": 100,
+        "ts4l_png_write_image_83446DD0": 100,
+        "ts4l_png_do_swap_834476E8": 60,
+        "ts4l_png_set_gamma_83448070": 64,
+        "ts4l_png_do_chop_83448620": 88
+      }
+    },
+    {
+      "source": "src/loader/l21_rm3_jpeg_chuff_8345D9B8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_gen_optimal_table_8345D9B8": 840,
+        "ts4l_jpeg_finish_pass_gather_8345DD00": 1072
+      }
+    },
+    {
+      "source": "src/loader/l21_rm3_jpeg_cphuff_8345EEF0.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_encode_mcu_AC_refine_8345EEF0": 768
+      }
+    },
+    {
+      "source": "src/loader/l21_rm3_jpeg_dctmgr_83459BD0.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_idct_start_pass_83459BD0": 1008
+      }
+    },
+    {
+      "source": "src/loader/l21_rm3_jpeg_huff_83457FD0.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_make_d_derived_tbl_83457FD0": 872
+      }
+    },
+    {
+      "source": "src/loader/l21_small_o1_831A0020.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_call_seq_fn_831A0AF0_831A0020": 116,
+        "ts4l_if_call_seq_RtlInitAnsiString_8340D6A8": 100,
+        "ts4l_if_get_u32_off84_831F33C0": 160,
+        "ts4l_get_global_checked_8340A198": 80
+      }
+    },
+    {
+      "source": "src/loader/l21_small_thunks_830A02B0.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_call_for_each_strided_830A02B0": 64,
+        "ts4l_vec_xor_830B62D0": 8,
+        "ts4l_fabs_830D5D60": 8,
+        "ts4l_fabs_830D5D68": 8,
+        "ts4l_destroy_field0_83162EC0": 20,
+        "ts4l_call_with_out_u64_return_it_83173850": 40,
+        "ts4l_call_with_u16_fields_83186510": 20,
+        "ts4l_is_id_165_to_167_831CC988": 40,
+        "ts4l_is_id_165_to_167_832676F0": 40,
+        "ts4l_if_tail_833F27D8": 76,
+        "ts4l_if_call_seq_u32_off10_834385B0": 96,
+        "ts4l_if_call_seq_u32_off10_8347F8C8": 96
+      }
+    },
+    {
+      "source": "src/loader/l21_zlib_deflate_831674C0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_zlib_flush_pending_831674C0": 188,
+        "ts4l_zlib_deflateEnd_83167968": 276,
+        "ts4l_zlib_fill_window_83167FB8": 516,
+        "ts4l_zlib_deflate_stored_831681C0": 460,
+        "ts4l_zlib_deflateReset_83168CD0": 320
+      }
+    },
+    {
+      "source": "src/loader/l21_zlib_deflate_api_83167580.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_zlib_deflate_83167580": 1000
+      }
+    },
+    {
+      "source": "src/loader/l21_zlib_deflate_fast_83452EF0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_zlib_deflate_fast_83452EF0": 1044
+      }
+    },
+    {
+      "source": "src/loader/l21_zlib_inflate_api_831691E8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_zlib_inflateReset_831691E8": 120,
+        "ts4l_zlib_inflateEnd_83169260": 132,
+        "ts4l_zlib_inflateInit2__831692E8": 340
+      }
+    },
+    {
+      "source": "src/loader/l21_zlib_inflate_reset_83453CF8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_zlib_inflateReset_83453CF8": 120
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_83516988.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_XGetVideoMode_83516988": 16,
+        "ts4l_import_XNotifyGetNext_83516998": 16,
+        "ts4l_import_NetDll_XNetStartup_835169A8": 16,
+        "ts4l_import_XamGetSystemVersion_835169B8": 16,
+        "ts4l_import_NetDll_XNetCleanup_835169C8": 16,
+        "ts4l_import_NetDll_XNetRandom_835169D8": 16,
+        "ts4l_import_NetDll_XNetCreateKey_835169E8": 16,
+        "ts4l_import_NetDll_XNetRegisterKey_835169F8": 16,
+        "ts4l_import_NetDll_XNetUnregisterKey_83516A08": 16,
+        "ts4l_import_NetDll_XNetXnAddrToInAddr_83516A18": 16,
+        "ts4l_import_NetDll_XNetServerToInAddr_83516A28": 16,
+        "ts4l_import_NetDll_XNetTsAddrToInAddr_83516A38": 16,
+        "ts4l_import_NetDll_XNetInAddrToXnAddr_83516A48": 16,
+        "ts4l_import_NetDll_XNetInAddrToServer_83516A58": 16,
+        "ts4l_import_NetDll_XNetInAddrToString_83516A68": 16,
+        "ts4l_import_NetDll_XNetUnregisterInAddr_83516A78": 16,
+        "ts4l_import_NetDll_XNetXnAddrToMachineId_83516A88": 16,
+        "ts4l_import_NetDll_XNetConnect_83516A98": 16,
+        "ts4l_import_NetDll_XNetGetConnectStatus_83516AA8": 16,
+        "ts4l_import_NetDll_XNetDnsLookup_83516AB8": 16,
+        "ts4l_import_NetDll_XNetDnsRelease_83516AC8": 16,
+        "ts4l_import_NetDll_XNetQosListen_83516AD8": 16,
+        "ts4l_import_NetDll_XNetQosLookup_83516AE8": 16,
+        "ts4l_import_NetDll_XNetQosServiceLookup_83516AF8": 16,
+        "ts4l_import_NetDll_XNetQosRelease_83516B08": 16,
+        "ts4l_import_NetDll_XNetGetTitleXnAddr_83516B18": 16,
+        "ts4l_import_NetDll_XNetGetDebugXnAddr_83516B28": 16,
+        "ts4l_import_NetDll_XNetGetEthernetLinkStatus_83516B38": 16,
+        "ts4l_import_NetDll_XNetGetBroadcastVersionStatus_83516B48": 16,
+        "ts4l_import_NetDll_XNetQosGetListenStats_83516B58": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_83516B68.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_NetDll_XNetGetOpt_83516B68": 16,
+        "ts4l_import_NetDll_XNetSetOpt_83516B78": 16,
+        "ts4l_import_XMsgInProcessCall_83516B88": 16,
+        "ts4l_import_XamFree_83516B98": 16,
+        "ts4l_import_XamAlloc_83516BA8": 16,
+        "ts4l_import_XMsgStartIORequest_83516BB8": 16,
+        "ts4l_import_XNetLogonGetMachineID_83516BC8": 16,
+        "ts4l_import_XamUserGetXUID_83516BD8": 16,
+        "ts4l_import_XNetLogonGetTitleID_83516BE8": 16,
+        "ts4l_import_NetDll_WSAStartup_83516BF8": 16,
+        "ts4l_import_NetDll_WSACleanup_83516C08": 16,
+        "ts4l_import_NetDll_socket_83516C18": 16,
+        "ts4l_import_NetDll_closesocket_83516C28": 16,
+        "ts4l_import_NetDll_shutdown_83516C38": 16,
+        "ts4l_import_NetDll_ioctlsocket_83516C48": 16,
+        "ts4l_import_NetDll_setsockopt_83516C58": 16,
+        "ts4l_import_NetDll_getsockopt_83516C68": 16,
+        "ts4l_import_NetDll_getsockname_83516C78": 16,
+        "ts4l_import_NetDll_getpeername_83516C88": 16,
+        "ts4l_import_NetDll_bind_83516C98": 16,
+        "ts4l_import_NetDll_connect_83516CA8": 16,
+        "ts4l_import_NetDll_listen_83516CB8": 16,
+        "ts4l_import_NetDll_accept_83516CC8": 16,
+        "ts4l_import_NetDll_select_83516CD8": 16,
+        "ts4l_import_NetDll_WSAGetOverlappedResult_83516CE8": 16,
+        "ts4l_import_NetDll_WSACancelOverlappedIO_83516CF8": 16,
+        "ts4l_import_NetDll_recv_83516D08": 16,
+        "ts4l_import_NetDll_WSARecv_83516D18": 16,
+        "ts4l_import_NetDll_recvfrom_83516D28": 16,
+        "ts4l_import_NetDll_WSARecvFrom_83516D38": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_83516D48.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_NetDll_send_83516D48": 16,
+        "ts4l_import_NetDll_WSASend_83516D58": 16,
+        "ts4l_import_NetDll_sendto_83516D68": 16,
+        "ts4l_import_NetDll_WSASendTo_83516D78": 16,
+        "ts4l_import_NetDll_WSAEventSelect_83516D88": 16,
+        "ts4l_import_NetDll_inet_addr_83516D98": 16,
+        "ts4l_import_NetDll_WSAGetLastError_83516DA8": 16,
+        "ts4l_import_NetDll_WSASetLastError_83516DB8": 16,
+        "ts4l_import_NetDll_WSACreateEvent_83516DC8": 16,
+        "ts4l_import_NetDll_WSACloseEvent_83516DD8": 16,
+        "ts4l_import_NetDll_WSASetEvent_83516DE8": 16,
+        "ts4l_import_NetDll_WSAResetEvent_83516DF8": 16,
+        "ts4l_import_NetDll_WSAWaitForMultipleEvents_83516E08": 16,
+        "ts4l_import_NetDll___WSAFDIsSet_83516E18": 16,
+        "ts4l_import_XamGetPrivateEnumStructureFromHandle_83516E28": 16,
+        "ts4l_import_XamCreateEnumeratorHandle_83516E38": 16,
+        "ts4l_import_XamUserGetMembershipTierFromXUID_83516E48": 16,
+        "ts4l_import_XGetLanguage_83516E58": 16,
+        "ts4l_import_XamUserGetOnlineCountryFromXUID_83516E68": 16,
+        "ts4l_import_XamUserCheckPrivilege_83516E78": 16,
+        "ts4l_import_NetDll_XnpLoadConfigParams_83516E88": 16,
+        "ts4l_import_NetDll_XnpSaveConfigParams_83516E98": 16,
+        "ts4l_import_NetDll_XnpConfigUPnP_83516EA8": 16,
+        "ts4l_import_NetDll_XnpConfig_83516EB8": 16,
+        "ts4l_import_NetDll_XnpGetConfigStatus_83516EC8": 16,
+        "ts4l_import_NetDll_XnpLoadMachineAccount_83516ED8": 16,
+        "ts4l_import_NetDll_XnpSaveMachineAccount_83516EE8": 16,
+        "ts4l_import_NetDll_XnpCapture_83516EF8": 16,
+        "ts4l_import_NetDll_XnpEthernetInterceptSetCallbacks_83516F08": 16,
+        "ts4l_import_NetDll_XnpEthernetInterceptXmit_83516F18": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_83516F28.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_NetDll_XnpEthernetInterceptRecv_83516F28": 16,
+        "ts4l_import_NetDll_XnpLogonGetStatus_83516F38": 16,
+        "ts4l_import_NetDll_XnpLogonGetQFlags_83516F48": 16,
+        "ts4l_import_NetDll_XnpLogonSetQFlags_83516F58": 16,
+        "ts4l_import_NetDll_XnpLogonSetQEvent_83516F68": 16,
+        "ts4l_import_NetDll_XnpLogonClearQEvent_83516F78": 16,
+        "ts4l_import_NetDll_XnpLogonGetQVals_83516F88": 16,
+        "ts4l_import_NetDll_XnpLogonSetQVals_83516F98": 16,
+        "ts4l_import_NetDll_XnpLogonSetPState_83516FA8": 16,
+        "ts4l_import_NetDll_XnpGetVlanXboxName_83516FB8": 16,
+        "ts4l_import_NetDll_XnpSetVlanXboxName_83516FC8": 16,
+        "ts4l_import_NetDll_XnpGetActiveSocketList_83516FD8": 16,
+        "ts4l_import_NetDll_XnpNoteSystemTime_83516FE8": 16,
+        "ts4l_import_NetDll_XnpRegisterKeyForCallerType_83516FF8": 16,
+        "ts4l_import_NetDll_XnpUnregisterKeyForCallerType_83517008": 16,
+        "ts4l_import_XMsgStartIORequestEx_83517018": 16,
+        "ts4l_import_XMsgSystemProcessCall_83517028": 16,
+        "ts4l_import_XamContentCreateEx_83517038": 16,
+        "ts4l_import_XamContentDelete_83517048": 16,
+        "ts4l_import_XamContentInstall_83517058": 16,
+        "ts4l_import_XamContentClose_83517068": 16,
+        "ts4l_import_XamContentFlush_83517078": 16,
+        "ts4l_import_XamContentSetThumbnail_83517088": 16,
+        "ts4l_import_XamContentGetThumbnail_83517098": 16,
+        "ts4l_import_XamContentGetCreator_835170A8": 16,
+        "ts4l_import_XamContentGetLicenseMask_835170B8": 16,
+        "ts4l_import_XamContentCreateEnumerator_835170C8": 16,
+        "ts4l_import_XamContentCreateDeviceEnumerator_835170D8": 16,
+        "ts4l_import_XamContentGetDeviceState_835170E8": 16,
+        "ts4l_import_XamContentGetDeviceData_835170F8": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_83517108.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_XamContentGetDeviceName_83517108": 16,
+        "ts4l_import_XamContentLaunchImage_83517118": 16,
+        "ts4l_import_XamContentResolve_83517128": 16,
+        "ts4l_import_XamInputGetCapabilities_83517138": 16,
+        "ts4l_import_XamInputGetState_83517148": 16,
+        "ts4l_import_XamInputSetState_83517158": 16,
+        "ts4l_import_XamInputGetKeystrokeEx_83517168": 16,
+        "ts4l_import_XamNotifyCreateListener_83517178": 16,
+        "ts4l_import_XamUserGetName_83517188": 16,
+        "ts4l_import_XamUserGetSigninState_83517198": 16,
+        "ts4l_import_XamUserAreUsersFriends_835171A8": 16,
+        "ts4l_import_XamUserCreateStatsEnumerator_835171B8": 16,
+        "ts4l_import_XamReadTileToTexture_835171C8": 16,
+        "ts4l_import_XamParseGamerTileKey_835171D8": 16,
+        "ts4l_import_XamWriteGamerTile_835171E8": 16,
+        "ts4l_import_XamReadString_835171F8": 16,
+        "ts4l_import_XamUserCreateAchievementEnumerator_83517208": 16,
+        "ts4l_import_XamShowSigninUI_83517218": 16,
+        "ts4l_import_XamShowSigninUIp_83517228": 16,
+        "ts4l_import_XamShowFriendsUI_83517238": 16,
+        "ts4l_import_XamShowPlayersUI_83517248": 16,
+        "ts4l_import_XamShowMessagesUI_83517258": 16,
+        "ts4l_import_XamShowKeyboardUI_83517268": 16,
+        "ts4l_import_XamShowQuickChatUI_83517278": 16,
+        "ts4l_import_XamShowVoiceMailUI_83517288": 16,
+        "ts4l_import_XamShowGamerCardUIForXUID_83517298": 16,
+        "ts4l_import_XamShowAchievementsUI_835172A8": 16,
+        "ts4l_import_XamShowPlayerReviewUI_835172B8": 16,
+        "ts4l_import_XamShowMarketplaceUI_835172C8": 16,
+        "ts4l_import_XamShowDeviceSelectorUI_835172D8": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_835172E8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_XamShowMessageBoxUI_835172E8": 16,
+        "ts4l_import_XamShowMessageComposeUI_835172F8": 16,
+        "ts4l_import_XamShowGameInviteUI_83517308": 16,
+        "ts4l_import_XamShowFriendRequestUI_83517318": 16,
+        "ts4l_import_XamShowDirtyDiscErrorUI_83517328": 16,
+        "ts4l_import_XGetGameRegion_83517338": 16,
+        "ts4l_import_XamUserGetSigninInfo_83517348": 16,
+        "ts4l_import_XMsgCancelIORequest_83517358": 16,
+        "ts4l_import_XamEnumerate_83517368": 16,
+        "ts4l_import_XamGetExecutionId_83517378": 16,
+        "ts4l_import_XamLoaderLaunchTitle_83517388": 16,
+        "ts4l_import_VdEnableDisableClockGating_83517398": 16,
+        "ts4l_import_RtlEnterCriticalSection_835173A8": 16,
+        "ts4l_import_KeGetCurrentProcessType_835173B8": 16,
+        "ts4l_import_RtlLeaveCriticalSection_835173C8": 16,
+        "ts4l_import_MmQueryAddressProtect_835173D8": 16,
+        "ts4l_import_KfAcquireSpinLock_835173E8": 16,
+        "ts4l_import_MmFreePhysicalMemory_835173F8": 16,
+        "ts4l_import_KfReleaseSpinLock_83517408": 16,
+        "ts4l_import_KeQueryPerformanceFrequency_83517418": 16,
+        "ts4l_import_VdPersistDisplay_83517428": 16,
+        "ts4l_import_VdSwap_83517438": 16,
+        "ts4l_import_VdGetSystemCommandBuffer_83517448": 16,
+        "ts4l_import_MmAllocatePhysicalMemoryEx_83517458": 16,
+        "ts4l_import_VdSetSystemCommandBufferGpuIdentifierAddress_83517468": 16,
+        "ts4l_import_KiApcNormalRoutineNop_83517478": 16,
+        "ts4l_import_MmGetPhysicalAddress_83517488": 16,
+        "ts4l_import_KeReleaseSpinLockFromRaisedIrql_83517498": 16,
+        "ts4l_import_VdEnableRingBufferRPtrWriteBack_835174A8": 16,
+        "ts4l_import_VdInitializeRingBuffer_835174B8": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_835174C8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_KeAcquireSpinLockAtRaisedIrql_835174C8": 16,
+        "ts4l_import_KeResetEvent_835174D8": 16,
+        "ts4l_import_KeSetEvent_835174E8": 16,
+        "ts4l_import_KeInitializeDpc_835174F8": 16,
+        "ts4l_import_KeSetBasePriorityThread_83517508": 16,
+        "ts4l_import_KeLockL2_83517518": 16,
+        "ts4l_import_KeInsertQueueDpc_83517528": 16,
+        "ts4l_import_KeUnlockL2_83517538": 16,
+        "ts4l_import_ObReferenceObjectByHandle_83517548": 16,
+        "ts4l_import_KeWaitForSingleObject_83517558": 16,
+        "ts4l_import_ObDereferenceObject_83517568": 16,
+        "ts4l_import_VdSetDisplayMode_83517578": 16,
+        "ts4l_import_VdQueryVideoMode_83517588": 16,
+        "ts4l_import_VdGetCurrentDisplayInformation_83517598": 16,
+        "ts4l_import_VdQueryVideoFlags_835175A8": 16,
+        "ts4l_import_VdSetGraphicsInterruptCallback_835175B8": 16,
+        "ts4l_import_VdInitializeEngines_835175C8": 16,
+        "ts4l_import_ExGetXConfigSetting_835175D8": 16,
+        "ts4l_import_VdIsHSIOTrainingSucceeded_835175E8": 16,
+        "ts4l_import_VdShutdownEngines_835175F8": 16,
+        "ts4l_import_RtlInitializeCriticalSection_83517608": 16,
+        "ts4l_import_ExRegisterTitleTerminateNotification_83517618": 16,
+        "ts4l_import_sprintf_83517628": 16,
+        "ts4l_import__vsnprintf_83517638": 16,
+        "ts4l_import_DbgPrint_83517648": 16,
+        "ts4l_import_VdQuerySystemCommandBuffer_83517658": 16,
+        "ts4l_import_VdSetSystemCommandBuffer_83517668": 16,
+        "ts4l_import_VdGetCurrentDisplayGamma_83517678": 16,
+        "ts4l_import_KeBugCheck_83517688": 16,
+        "ts4l_import_VdInitializeScalerCommandBuffer_83517698": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_835176A8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_RtlFillMemoryUlong_835176A8": 16,
+        "ts4l_import_VdCallGraphicsNotificationRoutines_835176B8": 16,
+        "ts4l_import_ObDeleteSymbolicLink_835176C8": 16,
+        "ts4l_import_RtlInitAnsiString_835176D8": 16,
+        "ts4l_import_ObCreateSymbolicLink_835176E8": 16,
+        "ts4l_import_KeLeaveCriticalRegion_835176F8": 16,
+        "ts4l_import_KeEnterCriticalRegion_83517708": 16,
+        "ts4l_import_VdRetrainEDRAM_83517718": 16,
+        "ts4l_import_VdRetrainEDRAMWorker_83517728": 16,
+        "ts4l_import_KeSetCurrentProcessType_83517738": 16,
+        "ts4l_import_XexGetProcedureAddress_83517748": 16,
+        "ts4l_import_XexGetModuleHandle_83517758": 16,
+        "ts4l_import_XexCheckExecutablePrivilege_83517768": 16,
+        "ts4l_import_KeTlsFree_83517778": 16,
+        "ts4l_import_KeTlsAlloc_83517788": 16,
+        "ts4l_import_KeTlsSetValue_83517798": 16,
+        "ts4l_import_KeTlsGetValue_835177A8": 16,
+        "ts4l_import__vswprintf_835177B8": 16,
+        "ts4l_import__vscwprintf_835177C8": 16,
+        "ts4l_import__swprintf_835177D8": 16,
+        "ts4l_import__snwprintf_835177E8": 16,
+        "ts4l_import_XexGetModuleSection_835177F8": 16,
+        "ts4l_import_XeCryptBnQwBeSigVerify_83517808": 16,
+        "ts4l_import_XeKeysGetKey_83517818": 16,
+        "ts4l_import_XeCryptRotSumSha_83517828": 16,
+        "ts4l_import_XeCryptSha_83517838": 16,
+        "ts4l_import___C_specific_handler_83517848": 16,
+        "ts4l_import_RtlTryEnterCriticalSection_83517858": 16,
+        "ts4l_import_XAudioGetVoiceCategoryVolume_83517868": 16,
+        "ts4l_import_MmMapIoSpace_83517878": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_83517888.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_XMACreateContext_83517888": 16,
+        "ts4l_import_XMAReleaseContext_83517898": 16,
+        "ts4l_import_KeWaitForMultipleObjects_835178A8": 16,
+        "ts4l_import_XAudioSubmitRenderDriverFrame_835178B8": 16,
+        "ts4l_import_XAudioUnregisterRenderDriverClient_835178C8": 16,
+        "ts4l_import_XAudioRegisterRenderDriverClient_835178D8": 16,
+        "ts4l_import_XAudioGetSpeakerConfig_835178E8": 16,
+        "ts4l_import_RtlNtStatusToDosError_835178F8": 16,
+        "ts4l_import_XeKeysGetKeyProperties_83517908": 16,
+        "ts4l_import_XeCryptAesKey_83517918": 16,
+        "ts4l_import_XeCryptAesEcb_83517928": 16,
+        "ts4l_import_XeKeysQwNeRsaPrvCrypt_83517938": 16,
+        "ts4l_import_XeCryptBnQw_SwapDwQwLeBe_83517948": 16,
+        "ts4l_import_vsprintf_83517958": 16,
+        "ts4l_import_XeCryptRandom_83517968": 16,
+        "ts4l_import_XeCryptShaFinal_83517978": 16,
+        "ts4l_import_XeCryptShaUpdate_83517988": 16,
+        "ts4l_import_XeCryptShaInit_83517998": 16,
+        "ts4l_import_XeCryptBnQwNeRsaPubCrypt_835179A8": 16,
+        "ts4l_import_XeCryptBnQwNeRsaPrvCrypt_835179B8": 16,
+        "ts4l_import_XeCryptBnQwNeRsaKeyGen_835179C8": 16,
+        "ts4l_import_XeCryptRc4Key_835179D8": 16,
+        "ts4l_import_XeCryptRc4Ecb_835179E8": 16,
+        "ts4l_import_RtlCaptureContext_835179F8": 16,
+        "ts4l_import_RtlUnwind_83517A08": 16,
+        "ts4l_import_RtlInitializeCriticalSectionAndSpinCount_83517A18": 16,
+        "ts4l_import_KeEnableFpuExceptions_83517A28": 16,
+        "ts4l_import_NtWaitForSingleObjectEx_83517A38": 16,
+        "ts4l_import_NtOpenFile_83517A48": 16,
+        "ts4l_import_NtCreateFile_83517A58": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_83517A68.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_NtSetEvent_83517A68": 16,
+        "ts4l_import_XexUnloadImage_83517A78": 16,
+        "ts4l_import_XexUnloadImageAndExitThread_83517A88": 16,
+        "ts4l_import_XexLoadImage_83517A98": 16,
+        "ts4l_import_RtlRaiseException_83517AA8": 16,
+        "ts4l_import_ObOpenObjectByPointer_83517AB8": 16,
+        "ts4l_import_ObLookupThreadByThreadId_83517AC8": 16,
+        "ts4l_import_KeQueryBasePriorityThread_83517AD8": 16,
+        "ts4l_import_KeSetDisableBoostThread_83517AE8": 16,
+        "ts4l_import_NtSuspendThread_83517AF8": 16,
+        "ts4l_import_NtQueueApcThread_83517B08": 16,
+        "ts4l_import_KeSetAffinityThread_83517B18": 16,
+        "ts4l_import_NtResumeThread_83517B28": 16,
+        "ts4l_import_NtCreateEvent_83517B38": 16,
+        "ts4l_import_MmQueryAllocationSize_83517B48": 16,
+        "ts4l_import_MmSetAddressProtect_83517B58": 16,
+        "ts4l_import_NtReleaseMutant_83517B68": 16,
+        "ts4l_import_NtCreateMutant_83517B78": 16,
+        "ts4l_import_ObOpenObjectByName_83517B88": 16,
+        "ts4l_import_NtPulseEvent_83517B98": 16,
+        "ts4l_import_NtCreateSemaphore_83517BA8": 16,
+        "ts4l_import_NtReleaseSemaphore_83517BB8": 16,
+        "ts4l_import_NtSignalAndWaitForSingleObjectEx_83517BC8": 16,
+        "ts4l_import_NtWaitForMultipleObjectsEx_83517BD8": 16,
+        "ts4l_import_NtQueryFullAttributesFile_83517BE8": 16,
+        "ts4l_import_NtSetInformationFile_83517BF8": 16,
+        "ts4l_import_NtQueryInformationFile_83517C08": 16,
+        "ts4l_import_NtWriteFile_83517C18": 16,
+        "ts4l_import_NtClose_83517C28": 16,
+        "ts4l_import_NtQueryVolumeInformationFile_83517C38": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_import_thunks_o1_83517C48.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_import_NtClearEvent_83517C48": 16,
+        "ts4l_import_RtlUnicodeToMultiByteN_83517C58": 16,
+        "ts4l_import_NtAllocateVirtualMemory_83517C68": 16,
+        "ts4l_import_KeBugCheckEx_83517C78": 16,
+        "ts4l_import_NtFreeVirtualMemory_83517C88": 16,
+        "ts4l_import_RtlCompareMemoryUlong_83517C98": 16,
+        "ts4l_import_RtlCompareMemory_83517CA8": 16,
+        "ts4l_import_NtQueryVirtualMemory_83517CB8": 16,
+        "ts4l_import_DbgBreakPoint_83517CC8": 16,
+        "ts4l_import_RtlImageXexHeaderField_83517CD8": 16,
+        "ts4l_import_HalReturnToFirmware_83517CE8": 16,
+        "ts4l_import_RtlFreeAnsiString_83517CF8": 16,
+        "ts4l_import_RtlUnicodeStringToAnsiString_83517D08": 16,
+        "ts4l_import_RtlInitUnicodeString_83517D18": 16,
+        "ts4l_import_KeQuerySystemTime_83517D28": 16,
+        "ts4l_import_ExTerminateThread_83517D38": 16,
+        "ts4l_import_NtFlushBuffersFile_83517D48": 16,
+        "ts4l_import_RtlMultiByteToUnicodeN_83517D58": 16,
+        "ts4l_import_NtQueryDirectoryFile_83517D68": 16,
+        "ts4l_import_NtReadFileScatter_83517D78": 16,
+        "ts4l_import_NtReadFile_83517D88": 16,
+        "ts4l_import_NtDuplicateObject_83517D98": 16,
+        "ts4l_import_NtDeviceIoControlFile_83517DA8": 16,
+        "ts4l_import_NtWriteFileGather_83517DB8": 16,
+        "ts4l_import_ExCreateThread_83517DC8": 16,
+        "ts4l_import_KeDelayExecutionThread_83517DD8": 16,
+        "ts4l_import_RtlTimeToTimeFields_83517DE8": 16,
+        "ts4l_import_RtlTimeFieldsToTime_83517DF8": 16
+      }
+    },
+    {
+      "source": "src/loader/l22_small_ops_o1_830AB5D8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_align_up_830AB5D8": 24,
+        "ts4l_align_up_830AE490": 24,
+        "ts4l_mask64_test_830B49E0": 32,
+        "ts4l_mask64_test_830B6140": 32,
+        "ts4l_range_mask64_830C0950": 44,
+        "ts4l_bit_test_830C94E8": 36,
+        "ts4l_bit_test_830C9540": 36,
+        "ts4l_bit_test_830C95D8": 36,
+        "ts4l_range_mask64_830D33C0": 44,
+        "ts4l_mask64_test_830D7E00": 32,
+        "ts4l_mask64_test_830D9F78": 32,
+        "ts4l_align_up_830DFC08": 24,
+        "ts4l_range_mask64_83158A28": 44,
+        "ts4l_range_mask64_8315E160": 44,
+        "ts4l_load_be32_831610F0": 44,
+        "ts4l_load_be32_83161120": 44,
+        "ts4l_load_be16_83161150": 24,
+        "ts4l_load_be32_83163A50": 44,
+        "ts4l_load_be32_83163A80": 44,
+        "ts4l_load_be16_83163AB0": 24,
+        "ts4l_swap16_store_83423728": 24,
+        "ts4l_swap16_store_83486670": 24
+      }
+    },
+    {
+      "source": "src/loader/l22_vcall_thunks_o1_8314DA90.cpp",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_vcall_if_slot1_8314DA90": 28,
+        "ts4l_vcall_if_slot36_8314E680": 28,
+        "ts4l_vcall_if_slot9_8314E8E8": 28,
+        "ts4l_vcall_member_slot0_83174C98": 40,
+        "ts4l_vcall_member_slot1_83174CC0": 36,
+        "ts4l_vcall_member_slot3_83174CE8": 36,
+        "ts4l_vcall_member_slot5_83174D10": 36,
+        "ts4l_vcall_member_slot0_83180490": 36,
+        "ts4l_vcall_member_slot1_831804B8": 36,
+        "ts4l_vcall_member_slot3_831804E0": 36,
+        "ts4l_vcall_member_slot0_831F4718": 36,
+        "ts4l_vcall_member_slot1_831F4740": 36,
+        "ts4l_vcall_member_slot2_831F4768": 36,
+        "ts4l_vcall_member_slot3_831F4790": 36,
+        "ts4l_vcall_member_slot8_831F4818": 36,
+        "ts4l_vcall_member_slot9_831F4840": 36,
+        "ts4l_vcall_member_slot10_831F4868": 36,
+        "ts4l_vcall_member_slot3_8320BFE8": 44,
+        "ts4l_vcall_member_slot4_8320C018": 44
+      }
+    },
+    {
+      "source": "src/loader/l23_format_info_83228758.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_format_info_83228758": 292
+      }
+    },
+    {
+      "source": "src/loader/l23_gres_release_o1_830AE870.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_gres_release_830AE870": 560
+      }
+    },
+    {
+      "source": "src/loader/l23_state_step_8324D518.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_sm_step_8324D518": 428
+      }
+    },
+    {
+      "source": "src/loader/l23_status_map_832289B8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_enum_to_code_832289B8": 208
+      }
+    },
+    {
+      "source": "src/loader/l23_status_map_83268E98.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_hresult_map_83268E98": 224
+      }
+    },
+    {
+      "source": "src/loader/l23_swap_dispatch_83315358.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_copy_by_layout_83315358": 580
+      }
+    },
+    {
+      "source": "src/loader/l23_swap_dispatch_833155A0.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_copy_strided_833155A0": 804
+      }
+    },
+    {
+      "source": "src/loader/l23_swap_dispatch_833CD390.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_copy_strided_833CD390": 808
+      }
+    },
+    {
+      "source": "src/loader/l23_value_equal_o1_83140A58.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_value_equal_83140A58": 412
+      }
+    },
+    {
+      "source": "src/loader/l23_zlib_inflate_codes_o1_8316CD00.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_inflate_codes_8316CD00": 1584
+      }
+    },
+    {
+      "source": "src/loader/l24_block_size_83287E50.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_block_size_83287E50": 56,
+        "ts4l_block_size_83288550": 56,
+        "ts4l_block_size_83288C58": 56,
+        "ts4l_block_size_83289338": 56,
+        "ts4l_block_size_83289A20": 56,
+        "ts4l_block_size_8328A108": 56
+      }
+    },
+    {
+      "source": "src/loader/l24_handle_props_o1_83101890.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_set_float_prop_83103950": 100,
+        "ts4l_set_float_prop_83103DF0": 100,
+        "ts4l_set_float_prop_83104050": 100,
+        "ts4l_set_float_prop_83104118": 100,
+        "ts4l_set_float_prop_83104180": 100,
+        "ts4l_set_float_prop_83104350": 100,
+        "ts4l_set_float_prop_831043B8": 100,
+        "ts4l_set_float_prop_83104580": 100,
+        "ts4l_set_float_prop_831045E8": 100,
+        "ts4l_set_int_prop_83102A50": 88,
+        "ts4l_set_int_prop_83102AA8": 88,
+        "ts4l_set_int_prop_83102B58": 88,
+        "ts4l_set_int_prop_83102BB0": 88,
+        "ts4l_set_int_prop_83102C60": 88,
+        "ts4l_forward_prop_83102EC0": 84,
+        "ts4l_forward_prop_83102F18": 84,
+        "ts4l_forward_prop_83102F70": 84,
+        "ts4l_forward_prop_83102FC8": 84,
+        "ts4l_forward_prop_83103020": 84,
+        "ts4l_forward_prop_83103078": 84,
+        "ts4l_forward_sub_prop_83101890": 96,
+        "ts4l_forward_sub_prop_83101950": 96,
+        "ts4l_forward_sub_prop_83102268": 96,
+        "ts4l_forward_sub_prop_83102328": 96,
+        "ts4l_forward_sub_float_prop_831018F0": 96,
+        "ts4l_forward_sub_float_prop_831022C8": 96,
+        "ts4l_call_prop_83102B00": 88,
+        "ts4l_call_prop_83102C08": 88,
+        "ts4l_set_flagged_int_prop_831030D0": 104,
+        "ts4l_set_flagged_int_prop_83103318": 104,
+        "ts4l_set_int_prop84_83103138": 88,
+        "ts4l_set_int_prop84_83103380": 88,
+        "ts4l_set_vec4_prop_831039B8": 124,
+        "ts4l_set_vec4_prop_83103F70": 124,
+        "ts4l_set_int_notify_83103A38": 104,
+        "ts4l_set_int_flag_83103678": 108,
+        "ts4l_set_int_notify_83103AA0": 104
+      }
+    },
+    {
+      "source": "src/loader/l24_msg_ctor_o1_831143F8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_msg_ctor_5_831144D8": 72,
+        "ts4l_msg_ctor_3_83114520": 80,
+        "ts4l_msg_ctor_8_831145A8": 112,
+        "ts4l_msg_ctor_16_83114618": 112,
+        "ts4l_msg_ctor_38_831147A0": 72,
+        "ts4l_msg_ctor_40_831147E8": 80,
+        "ts4l_msg_ctor_47_83114838": 80,
+        "ts4l_msg_ctor_19_831148F8": 80,
+        "ts4l_msg_ctor_2053_83114948": 80,
+        "ts4l_msg_ctor_24_83114998": 72,
+        "ts4l_msg_ctor_25_831149E0": 72,
+        "ts4l_msg_ctor_34_83114A28": 72,
+        "ts4l_msg_ctor_35_83114A70": 72,
+        "ts4l_msg_ctor_43_83114AB8": 80,
+        "ts4l_msg_ctor_26_83114B08": 80,
+        "ts4l_msg_ctor_28_83114B90": 80
+      }
+    },
+    {
+      "source": "src/loader/l24_msg_ctor_o1_8311B4B0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_msg_ctor_var_8311B538": 80
+      }
+    },
+    {
+      "source": "src/loader/l24_msg_ctor_o1_8311DC30.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_msg_ctor_39_8311DCA8": 80
+      }
+    },
+    {
+      "source": "src/loader/l24_msg_ctor_o1_831230F0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_msg_ctor_4_83123180": 80,
+        "ts4l_msg_ctor_32_831231D0": 80,
+        "ts4l_msg_ctor_5_83123220": 72,
+        "ts4l_msg_ctor_3_83123268": 80,
+        "ts4l_msg_ctor_0_831232F0": 84,
+        "ts4l_msg_ctor_18_831233F0": 80,
+        "ts4l_msg_ctor_24_83123478": 72,
+        "ts4l_msg_ctor_34_831234C0": 72,
+        "ts4l_msg_ctor_2051_83123508": 80,
+        "ts4l_msg_ctor_2052_83123558": 88,
+        "ts4l_msg_ctor_2001_83123848": 80,
+        "ts4l_msg_ctor_2003_831238D0": 80,
+        "ts4l_msg_ctor_2040_83123958": 80,
+        "ts4l_msg_ctor_2006_831239E0": 88,
+        "ts4l_msg_ctor_2008_83123A70": 80,
+        "ts4l_msg_ctor_2009_83123AC0": 80,
+        "ts4l_msg_ctor_2012_83123B10": 80,
+        "ts4l_msg_ctor_2011_83123B98": 80,
+        "ts4l_msg_ctor_2017_83123D48": 72,
+        "ts4l_msg_ctor_2016_83123D90": 80,
+        "ts4l_msg_ctor_2018_83123DE0": 96,
+        "ts4l_msg_ctor_2019_83123E40": 80,
+        "ts4l_msg_ctor_2024_83123ED0": 80,
+        "ts4l_msg_ctor_2059_83123F20": 96,
+        "ts4l_msg_ctor_2021_83123F80": 80,
+        "ts4l_msg_ctor_2023_83124050": 80,
+        "ts4l_msg_ctor_2056_831240A0": 72,
+        "ts4l_msg_ctor_2028_831240E8": 80
+      }
+    },
+    {
+      "source": "src/loader/l24_msg_ctor_o1_8313F348.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_msg_ctor_2042_8313F3F8": 80,
+        "ts4l_msg_ctor_2045_8313F480": 80
+      }
+    },
+    {
+      "source": "src/loader/l24_msg_ctor_o1_83141F38.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_msg_ctor_24_83141FC0": 72
+      }
+    },
+    {
+      "source": "src/loader/l24_name_tbl_find_o1_83116E20.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_name_tbl_find_8313F928": 104,
+        "ts4l_name_tbl_find_8311D1C0": 104,
+        "ts4l_name_tbl_find_83116E88": 104,
+        "ts4l_name_tbl_find_8311E7C0": 104,
+        "ts4l_name_tbl_find_83145588": 104,
+        "ts4l_name_tbl_find_83116E20": 104
+      }
+    },
+    {
+      "source": "src/loader/l24_pool1_init_o1_83170148.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_pool1_init_83170148": 64,
+        "ts4l_pool1_init_83170258": 64,
+        "ts4l_pool1_init_831702F8": 64,
+        "ts4l_pool1_init_831703A8": 64,
+        "ts4l_pool1_init_831704E0": 64,
+        "ts4l_pool1_init_83171150": 64,
+        "ts4l_pool1_init_83175F10": 64,
+        "ts4l_pool1_init_831795B0": 64,
+        "ts4l_pool1_init_83179650": 64,
+        "ts4l_pool1_init_8317BAD0": 64,
+        "ts4l_pool1_init_8317BBE0": 64,
+        "ts4l_pool1_init_83180E90": 64,
+        "ts4l_pool1_init_83188600": 64,
+        "ts4l_pool1_init_83189AF8": 64,
+        "ts4l_pool1_init_83189BF8": 64,
+        "ts4l_pool1_init_8319CF10": 64
+      }
+    },
+    {
+      "source": "src/loader/l24_pool_clear_o1_83171750.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_pool1_clear_83171860": 140,
+        "ts4l_pool1_clear_83171970": 140,
+        "ts4l_pool1_clear_83171A78": 140,
+        "ts4l_pool1_clear_83171B88": 140,
+        "ts4l_pool1_clear_83171C98": 140,
+        "ts4l_pool1_clear_83171F60": 140,
+        "ts4l_pool1_clear_831767A0": 140,
+        "ts4l_pool1_clear_83176830": 140,
+        "ts4l_pool1_clear_831768C0": 140,
+        "ts4l_pool1_clear_83179DB0": 140,
+        "ts4l_pool1_clear_83179E40": 140,
+        "ts4l_pool1_clear_8317CB38": 140,
+        "ts4l_pool1_clear_8317CBC8": 140,
+        "ts4l_pool1_clear_83181EC8": 140,
+        "ts4l_pool1_clear_831889C8": 140,
+        "ts4l_pool1_clear_8319D2D8": 140,
+        "ts4l_pool16_clear_83171750": 140,
+        "ts4l_pool16_clear_83171E40": 140,
+        "ts4l_pool16_clear_83171ED0": 140,
+        "ts4l_pool16_clear_83176950": 140,
+        "ts4l_pool16_clear_83181E38": 140,
+        "ts4l_pool16_clear_83182098": 140,
+        "ts4l_pool16_clear_8319E9E8": 140
+      }
+    },
+    {
+      "source": "src/loader/l24_pool_init_o1_83170028.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_pool16_init_83170028": 80,
+        "ts4l_pool16_init_83181010": 80,
+        "ts4l_pool16_init_83171050": 80,
+        "ts4l_pool16_init_83171100": 80,
+        "ts4l_pool16_init_83175D90": 80,
+        "ts4l_pool16_init_83180DE0": 80,
+        "ts4l_pool8_init_8317BF40": 80
+      }
+    },
+    {
+      "source": "src/loader/l24_quad_range_mask_83353370.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_quad_range_mask_83353370": 44,
+        "ts4l_quad_range_mask_833D24C8": 44,
+        "ts4l_quad_range_mask_833D3468": 44,
+        "ts4l_quad_range_mask_833D3F10": 44,
+        "ts4l_quad_range_mask_833D4318": 44,
+        "ts4l_quad_range_mask_833D4850": 44,
+        "ts4l_quad_range_mask_833D4C40": 44,
+        "ts4l_quad_range_mask_833D50A0": 44,
+        "ts4l_quad_range_mask_833D7170": 44,
+        "ts4l_quad_range_mask_833DB908": 44,
+        "ts4l_quad_range_apply_83353448": 44,
+        "ts4l_quad_range_apply_833D2898": 44,
+        "ts4l_quad_range_apply_833D3810": 44,
+        "ts4l_quad_range_apply_833D3FD0": 44,
+        "ts4l_quad_range_apply_833D43D8": 44,
+        "ts4l_quad_range_apply_833D4910": 44,
+        "ts4l_quad_range_apply_833D4D00": 44,
+        "ts4l_quad_range_apply_833D5470": 44,
+        "ts4l_quad_range_apply_833D8A48": 44,
+        "ts4l_quad_range_apply_833DBCB0": 44
+      }
+    },
+    {
+      "source": "src/loader/l26_prop_put_o1_83104E28.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_prop_put_83104E28": 332
+      }
+    },
+    {
+      "source": "src/loader/l26_zlib_inflate_blocks_o1_8316C308.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_zlib_inflate_blocks_8316C308": 2220
+      }
+    },
+    {
+      "source": "src/loader/l26_zlib_inflate_blocks_o1_83465CD0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_zlib_inflate_blocks_83465CD0": 2128
+      }
+    },
+    {
+      "source": "src/loader/l26_zlib_inflate_codes_o1_83469150.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_inflate_codes_83469150": 1584
+      }
+    },
+    {
+      "source": "src/loader/l26_zlib_inflate_fast_o1_8346A070.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_inflate_fast_8346A070": 1072
+      }
+    },
+    {
+      "source": "src/loader/l26_zlib_inflate_flush_o1_8316DAF8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_inflate_flush_8316DAF8": 360
+      }
+    },
+    {
+      "source": "src/loader/l26_zlib_inflate_flush_o1_83469F08.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_inflate_flush_83469F08": 360
+      }
+    },
+    {
+      "source": "src/loader/l26_zlib_inflate_o1_83169450.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_zlib_inflate_83169450": 1360
+      }
+    },
+    {
+      "source": "src/loader/l27_pool_release_8319CCD0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_pool_release_8319CCD0": 148,
+        "ts4l_pool_release_8319D868": 148,
+        "ts4l_pool_release_8319F538": 148,
+        "ts4l_pool_release_8319FD00": 148,
+        "ts4l_pool_release_831A0A58": 148,
+        "ts4l_pool_release_831A1198": 148,
+        "ts4l_pool_release_831A1B40": 148,
+        "ts4l_pool_release_831A2020": 148,
+        "ts4l_pool_release_831BAF50": 148,
+        "ts4l_pool_release_831F2E18": 148,
+        "ts4l_pool_release_831F3568": 148,
+        "ts4l_pool_release_831F3B08": 148,
+        "ts4l_pool_release_831F45E8": 148,
+        "ts4l_pool_release_8320C070": 148
+      }
     }
   ]
 }
