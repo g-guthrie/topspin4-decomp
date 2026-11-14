@@ -30,7 +30,9 @@ import emit, frame, source, translate
 from source import ROOT
 
 
-FLAGSETS = {'': [], 'O1': ['/O1']}
+# /Oc (no divide-by-zero trap): LT1 found the game project was built with it; a target with
+# divw/divwu and no twllei/twi needs it, and it changes nothing for other functions
+FLAGSETS = {'': [], 'O1': ['/O1'], 'Oc': ['/Oc'], 'O1Oc': ['/O1', '/Oc']}
 
 
 def categorize(reason):
