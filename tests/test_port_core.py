@@ -11,6 +11,7 @@
 import math
 import os
 import random
+import re
 import shutil
 import struct
 import subprocess
@@ -250,6 +251,28 @@ class DataFormatTests(CoreCase):
         self.assertEqual(len(g["inputs"]), n_in)
         self.assertEqual([p[2] for p in g["inputs"]], list(range(n_in)))
 
+
+    @unittest.skipUnless((ROOT / "data" / "gameplay" / "graphs.yaml").exists(), "data/gameplay not present")
+    def test_gameplay_blob_binds_every_port_and_plays(self):
+        """Optional local test: pack data/gameplay (never committed output) and run a short deterministic match."""
+        with tempfile.TemporaryDirectory() as d:
+            out = Path(d) / "game.ts4d"
+            tool = CORE / "tools" / "ts4yaml.py"
+            r = subprocess.run([sys.executable, str(tool), "check", "--data", str(ROOT / "data" / "gameplay")],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr[-400:])
+            m = re.search(r"(\d+)/(\d+) ports bound", r.stdout)
+            self.assertIsNotNone(m, r.stdout[-400:])
+            self.assertEqual(m.group(1), m.group(2))
+            subprocess.run([sys.executable, str(tool), "pack", "--data", str(ROOT / "data" / "gameplay"),
+                            "--out", str(out)], check=True, capture_output=True)
+            a = self.run_bin("--match", out, "7", "20000").stdout
+            b = self.run_bin("--match", out, "7", "20000").stdout
+            self.assertEqual(a, b)
+            hits = int(re.search(r"hits (\d+)", a).group(1))
+            points = int(re.search(r"points (\d+)", a).group(1))
+            self.assertGreater(hits, 10, a)
+            self.assertGreater(points, 1, a)
 
 class WasmTests(unittest.TestCase):
     def test_wasm_build_reproduces_host_state_hash(self):

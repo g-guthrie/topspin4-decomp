@@ -150,6 +150,32 @@ the core: `move.table.rush`, `move.table.jogjog`, `move.table.jog` (table2d, row
 slack ticks; the movement validity margin, `movement-and-ai.md`). All optional: without them no run mode is
 ever "valid" and the planner stays in Approach.
 
+## 7b. Gameplay-blob sections (`ts4yaml.py`, optional)
+
+`python3 port/core/tools/ts4yaml.py pack --data data/gameplay --out game.ts4d` builds a blob from the committed
+gameplay dumps (graphs, templates with ramp curves, shot tree, input map, ball block, AI records, skills, animation
+rules and clips) and writes `game.ts4d.manifest.json` with the sha256 of every source file;
+`ts4yaml.py check --data data/gameplay` prints the coverage (4672/4672 ports bound, 33 shot classes, 115 GAME
+tunables). The blob is a local build product: never commit it. All of these sections are optional; a v1 loader that
+does not know them ignores them, and the core falls back to `ROLE` wiring and the port policies. Little-endian.
+
+| tag | layout | meaning |
+|---|---|---|
+| `BIND` | u32 n; n x {u32 graph hash, u32 graph index, u32 n_ports, u32 off}; ports {u8 region, u8 flags, u16 aux, u32 offset} (inputs then outputs) | cell -> member binding of every graph port. Regions 0 none, 1 self PlayerState, 2 opponent, 3 ball, 4 match, 5 team, 6 AI, 7 skill (aux = skill index), 8 animation qualifier, 9 partner. Flag bit0 RANDOM: filled with U[0,1) from the core RNG before the run |
+| `SINI` | u32 n; n x {u8 region, 3 pad, u32 offset, f32 value} | `State.bin` default of every bound field (images start from these) |
+| `AIDF` | u32 n_styles, u32 n_levels, style hashes; per (style, level) a 72-byte record {u32 level crc, 6 graph hashes g40..g54, f32 run_speed_limit, 5 list counts, 5 list offsets}; list entries 20 bytes {u32 component graph, u32 mix graph, f32 weight, f32, u32} | AI difficulty records (lists: rally, return, serve, repositioning, positioning) |
+| `SKIL` | u32 n; n x u32 skill hash, indexed by `skill_list_index` (0 = cut skill) | skill ids for `Ts4PlayerExtra.skill_mask` |
+| `ANIM` | 17-u32 header (qualifier types, values, clips + stride, groups, subgroups, movesets, rules, transition matrices) then the tables | male clip catalogue (1682 clips, 63 groups, 314 subgroups, 34 movesets), qualifier words per clip, transition rules (24 bytes, vivacity speeds, blend frames) |
+| `SCLS` | u32 n; n x {u32 name crc, i32 aim graph, i32 power graph, u32 n_el, 12 x i32 element graph}; u32 n_rows; n_rows x {i32 class, i32 return class} | the 33 shot classes and the template-row -> class link (the link is a port name-match policy) |
+| `SCAT` | u32 n_modes, u32 n_classes; (mode, class) x {u32 n, u32 off}; rows {u32 value, u32 alt, u32 condition, u32 level, u8, 3 pad} | swing-category rules walked by `swingcat.c` (copy of `ref/gameplay/swing_category.c`) |
+
+New `CURV` names used when present: `shot.power`, `shot.power_alt` (InstantRocket), `serve.timing`,
+`move.table.rush`, `move.table.jogjog`, `move.table.jog`.
+
+New API (`ts4core.h`): `ts4_set_player_extra` (AI style/level, skill mask, before `ts4_match_start`),
+`ts4_player_field` (read a float of a player's PlayerState image), `ts4_anim_view` / `ts4_anim_view_size`
+(per-player clip id, frame, rate, blend, layer; valid every tick).
+
 ## 8. Tunable registry
 
 Generated from `port/core/include/ts4_tunables.def` (`python3 port/core/tools/ts4d.py registry`). ORIGIN
