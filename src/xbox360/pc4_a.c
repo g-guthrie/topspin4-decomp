@@ -34,12 +34,6 @@ void ts4_update_field_via_fn_888C0480(pc4_ptr_holder *self)
     self->p[0x2C / 4] = (float)fn_88564D68(x, *(const double *)&g_ts4_script_constants[0xD0 / 4]);
 }
 
-/* 0x888C0EF8: (int)((float)b * pool[15] / (float)a) from ints at +0x34 and +0x30. */
-int ts4_scaled_ratio_int_888C0EF8(const int *s)
-{
-    return (int)((float)s[0x34 / 4] * g_ts4_script_constants[15] / (float)s[0x30 / 4]);
-}
-
 /* 0x88804D90: Lua binding pushing timestamp * pool[32]; returns 1 result. */
 int ts4_lua_push_scaled_timestamp_88804D90(void **unused, void **state)
 {

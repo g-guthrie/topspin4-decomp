@@ -1,7 +1,7 @@
 /* Swing_DLL.xex 0x889CFA78-0x889D1EAC, executable version 0.0.0.3. */
 
 extern void fn_888860A0(void *);
-extern double fn_8882EA98(void *, int);
+extern double ts4_lua_opt_number_default_8882EA98(void *, int);
 extern void fn_888240B8(void *, double);
 extern double sqrt(double);
 extern double fabs(double);
@@ -27,25 +27,25 @@ typedef struct P0 { void *p; } P0;
 typedef struct P4 { int pad; void *p; } P4;
 int ts4_sqrt_889CFC38(void *x)
 {
-    fn_888240B8(x, sqrt(fn_8882EA98(x, 1)));
+    fn_888240B8(x, sqrt(ts4_lua_opt_number_default_8882EA98(x, 1)));
     return 1;
 }
 
 int ts4_fabs_889CFF38(void *x)
 {
-    fn_888240B8(x, fabs(fn_8882EA98(x, 1)));
+    fn_888240B8(x, fabs(ts4_lua_opt_number_default_8882EA98(x, 1)));
     return 1;
 }
 
 int ts4_scale_889CFA78(void *x)
 {
-    fn_888240B8(x, fn_8882EA98(x, 1) * g_ts4_script_constants[327]);
+    fn_888240B8(x, ts4_lua_opt_number_default_8882EA98(x, 1) * g_ts4_script_constants[327]);
     return 1;
 }
 
 int ts4_scale_889CFAC8(void *x)
 {
-    fn_888240B8(x, fn_8882EA98(x, 1) * g_ts4_script_constants[328]);
+    fn_888240B8(x, ts4_lua_opt_number_default_8882EA98(x, 1) * g_ts4_script_constants[328]);
     return 1;
 }
 

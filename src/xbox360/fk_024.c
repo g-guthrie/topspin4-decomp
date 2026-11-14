@@ -144,7 +144,7 @@ ts4_word fn_888AA1C8();
 ts4_word fn_888B1488();
 ts4_word fn_888B14F0();
 ts4_word fn_888B1628();
-ts4_word fn_888C1990();
+ts4_word ts4_store_scaled_ratio_and_update_888C1990();
 ts4_word fn_888F67B8();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
@@ -2191,11 +2191,11 @@ void ts4_set_u8_off54_888C1A08(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x888C1A18: set u8@0x54, fn_888C1990 */
+/* Swing_DLL.xex 0x888C1A18: set u8@0x54, ts4_store_scaled_ratio_and_update_888C1990 */
 ts4_word ts4_set_u8_off54_888C1A18(ts4_word a0)
 {
     *(unsigned char *)((char *)(ts4_word)(a0) + 84) = (unsigned char)1;
-    return fn_888C1990((ts4_word)a0);
+    return ts4_store_scaled_ratio_and_update_888C1990((ts4_word)a0);
 }
 
 /* Swing_DLL.xex 0x888C1A28: get u32@0x28, u8@0x69, u32@0x28, u8@0x3a, u32@0x4, u32@0x44 */

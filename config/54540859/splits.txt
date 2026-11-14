@@ -39036,3 +39036,60 @@ src/xbox360/fk3_o1_000.c:
 	.text       start:0x88884B20 end:0x88884BF4
 	.text       start:0x889D19B8 end:0x889D1A1C
 	.text       start:0x889D1A20 end:0x889D1A84
+
+src/xbox360/pc2_script_pool_a.c:
+	.pdata      start:0x88123AD0 end:0x88123AD8
+	.text       start:0x8865C790 end:0x8865C814
+	.text       start:0x8866CD58 end:0x8866CD98
+	.text       start:0x8866D868 end:0x8866D8DC
+	.text       start:0x88679748 end:0x886797B4
+	.text       start:0x8867EB38 end:0x8867EB94
+	.text       start:0x886CBCB0 end:0x886CBCEC
+	.text       start:0x886CBCF0 end:0x886CBD34
+	.text       start:0x886D13C8 end:0x886D1404
+	.text       start:0x886EBBC8 end:0x886EBBFC
+	.text       start:0x886EC4B8 end:0x886EC51C
+
+src/xbox360/pc3_script_args.c:
+	.pdata      start:0x881278B8 end:0x881278C0
+	.pdata      start:0x88127978 end:0x88127980
+	.pdata      start:0x88127B50 end:0x88127B58
+	.pdata      start:0x88127DA8 end:0x88127DB0
+	.pdata      start:0x88127EE8 end:0x88127EF0
+	.pdata      start:0x88128830 end:0x88128838
+	.text       start:0x8877B138 end:0x8877B1EC
+	.text       start:0x8877C668 end:0x8877C71C
+	.text       start:0x8877F6B8 end:0x8877F758
+	.text       start:0x8877FC10 end:0x8877FCCC
+	.text       start:0x88783A18 end:0x88783AF4
+	.text       start:0x88786450 end:0x88786500
+	.text       start:0x8879C0C0 end:0x8879C194
+
+src/xbox360/pc4_a.c:
+	.pdata      start:0x8812A920 end:0x8812A928
+	.pdata      start:0x8812D9E0 end:0x8812D9E8
+	.pdata      start:0x8812E998 end:0x8812E9A0
+	.pdata      start:0x88134358 end:0x88134360
+	.text       start:0x88804D90 end:0x88804DEC
+	.text       start:0x88883BA0 end:0x88883BE4
+	.text       start:0x888C0480 end:0x888C04D4
+	.text       start:0x889D2FA0 end:0x889D2FE8
+
+src/xbox360/pc4_b.c:
+	.pdata      start:0x8812BA88 end:0x8812BA90
+	.pdata      start:0x8812E9F0 end:0x8812E9F8
+	.pdata      start:0x88131550 end:0x88131558
+	.pdata      start:0x88131558 end:0x88131560
+	.text       start:0x8882EA98 end:0x8882EB20
+	.text       start:0x888C1990 end:0x888C1A08
+	.text       start:0x888C4708 end:0x888C47F4
+	.text       start:0x8893C808 end:0x8893C87C
+	.text       start:0x8893C880 end:0x8893C904
+
+src/xbox360/pc4_c.c:
+	.pdata      start:0x8812B810 end:0x8812B818
+	.pdata      start:0x8812B990 end:0x8812B998
+	.pdata      start:0x8812BBB8 end:0x8812BBC0
+	.text       start:0x8882A178 end:0x8882A254
+	.text       start:0x8882D2A0 end:0x8882D360
+	.text       start:0x88832558 end:0x88832644

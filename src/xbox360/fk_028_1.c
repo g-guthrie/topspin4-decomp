@@ -96,7 +96,7 @@ ts4_word fn_88823320();
 ts4_word fn_88823FC0();
 ts4_word fn_888240B8();
 ts4_word fn_88824188();
-ts4_word fn_8882EA98();
+ts4_word ts4_lua_opt_number_default_8882EA98();
 ts4_word fn_88866B60();
 ts4_word fn_88866C30();
 ts4_word fn_88883CD0();

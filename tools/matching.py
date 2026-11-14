@@ -31973,6 +31973,65 @@ MATCHING_UNITS = (
             "ts4_if_get_fn_889D1918_889D1A20": 100,
         },
     },
+    {
+        "source": "src/xbox360/pc2_script_pool_a.c",
+        "object": "pc2_script_pool_a.obj",
+        "symbols": {
+            "ts4_clamp_float_to_unit_886EBBC8": 52,
+            "ts4_range_remap_886CBCB0": 60,
+            "ts4_range_remap_886D13C8": 60,
+            "ts4_set_hashes_and_const0_8866CD58": 64,
+            "ts4_lookup_below_8867EB38": 92,
+            "ts4_pack_vec3_10bit_886EC4B8": 100,
+            "ts4_init_limits_and_hashes_88679748": 108,
+            "ts4_reset_pending_state_8866D868": 116,
+            "ts4_select_pair_const_8865C790": 132,
+            "ts4_range_map_pair_886CBCF0": 68,
+        },
+    },
+    {
+        "source": "src/xbox360/pc3_script_args.c",
+        "object": "pc3_script_args.obj",
+        "symbols": {
+            "ts4_script_title_server_player_match_8877F6B8": 160,
+            "ts4_script_store_pending_entry_88786450": 176,
+            "ts4_script_show_achievements_ui_8877B138": 180,
+            "ts4_script_vcall_34_with_arg_8877C668": 180,
+            "ts4_script_online_context_call_8877FC10": 188,
+            "ts4_script_session_record_flag_88783A18": 220,
+            "ts4_script_profile_available_dispatch_8879C0C0": 212,
+        },
+    },
+    {
+        "source": "src/xbox360/pc4_a.c",
+        "object": "pc4_a.obj",
+        "symbols": {
+            "ts4_get_scaled_timestamp_88883BA0": 68,
+            "ts4_set_inverse_of_const_double_889D2FA0": 72,
+            "ts4_update_field_via_fn_888C0480": 84,
+            "ts4_lua_push_scaled_timestamp_88804D90": 92,
+        },
+    },
+    {
+        "source": "src/xbox360/pc4_b.c",
+        "object": "pc4_b.obj",
+        "symbols": {
+            "ts4_lua_opt_number_default_8882EA98": 136,
+            "ts4_classify_range_hash_888C4708": 236,
+            "ts4_read_scaled_counter_8893C808": 116,
+            "ts4_store_scaled_ratio_and_update_888C1990": 120,
+            "ts4_set_scaled_or_default_mode_8893C880": 132,
+        },
+    },
+    {
+        "source": "src/xbox360/pc4_c.c",
+        "object": "pc4_c.obj",
+        "symbols": {
+            "ts4_lua_string_byte_8882A178": 220,
+            "ts4_lua_wstring_byte_88832558": 236,
+            "ts4_lua_set_threshold_from_arg_8882D2A0": 192,
+        },
+    },
 )
 
 

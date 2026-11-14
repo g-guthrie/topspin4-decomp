@@ -144,7 +144,7 @@ ts4_word fn_888AA1C8();
 ts4_word fn_888B1488();
 ts4_word fn_888B14F0();
 ts4_word fn_888B1628();
-ts4_word fn_888C1990();
+ts4_word ts4_store_scaled_ratio_and_update_888C1990();
 ts4_word fn_888F67B8();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy

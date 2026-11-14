@@ -161,7 +161,7 @@ ts4_word fn_88939470();
 ts4_word fn_889395D8();
 ts4_word fn_889396A8();
 ts4_word fn_8893B328();
-ts4_word fn_8893C808();
+ts4_word ts4_read_scaled_counter_8893C808();
 ts4_word ts4_destroy_owned_object();
 ts4_word ts4_find_service();
 ts4_word ts4_object_finalize();

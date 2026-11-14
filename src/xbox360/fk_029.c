@@ -502,26 +502,26 @@ ts4_word fn_88564550();
 ts4_word fn_8856C178();
 ts4_word fn_8860D250();
 ts4_word fn_888240B8();
-ts4_word fn_8882EA98();
+ts4_word ts4_lua_opt_number_default_8882EA98();
 ts4_word ts4_assign_formatted_text();
 
-/* Swing_DLL.xex 0x889CFEB8: call_seq fn_8882EA98, fn_88564550, fn_888240B8 */
+/* Swing_DLL.xex 0x889CFEB8: call_seq ts4_lua_opt_number_default_8882EA98, fn_88564550, fn_888240B8 */
 ts4_word ts4_call_seq_fn_8882EA98_889CFEB8(ts4_word a0)
 {
     ts4_word t1;
 
-    t1 = fn_8882EA98((ts4_word)a0, (ts4_word)1);
+    t1 = ts4_lua_opt_number_default_8882EA98((ts4_word)a0, (ts4_word)1);
     fn_88564550((ts4_word)t1);
     fn_888240B8((ts4_word)a0);
     return 1;
 }
 
-/* Swing_DLL.xex 0x889CFEF8: call_seq fn_8882EA98, fn_88564470, fn_888240B8 */
+/* Swing_DLL.xex 0x889CFEF8: call_seq ts4_lua_opt_number_default_8882EA98, fn_88564470, fn_888240B8 */
 ts4_word ts4_call_seq_fn_8882EA98_889CFEF8(ts4_word a0)
 {
     ts4_word t1;
 
-    t1 = fn_8882EA98((ts4_word)a0, (ts4_word)1);
+    t1 = ts4_lua_opt_number_default_8882EA98((ts4_word)a0, (ts4_word)1);
     fn_88564470((ts4_word)t1);
     fn_888240B8((ts4_word)a0);
     return 1;
