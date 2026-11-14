@@ -85,6 +85,13 @@ class Image:
             ch = struct.unpack_from('<I', data, off + 36)[0]
             self.sections.append((name, self.base + va, vs, ra, rs, ch))
             off += 40
+        # A memory image (the XEX basefile as mapped, e.g. a 0x180000-byte default.dll) keeps the
+        # file-layout headers but holds each section at its RVA: read it at the RVA instead.
+        raw_end = max(ra + rs for _, _, _, ra, rs, _ in self.sections)
+        rva_end = max(va - self.base + vs for _, va, vs, _, _, _ in self.sections)
+        if len(data) > raw_end and len(data) >= rva_end:
+            self.sections = [(n, va, vs, va - self.base, max(vs, rs), ch)
+                             for n, va, vs, ra, rs, ch in self.sections]
 
     @classmethod
     def from_sections(cls, sections):
@@ -382,6 +389,8 @@ def detect_switch(img, fn_start, fn_end, bctr):
                 sec = img.section_of(lab)
                 if src != 'mask' or sec is None or not (sec[5] & 0x20):
                     return None, 'offset label outside function'
+                if img.word(lab) == 0:
+                    lab = 0  # lands on padding: an index this switch never takes; XenonRecomp traps
             labels.append(lab)
     if not labels:
         return None, 'empty table'
@@ -627,7 +636,7 @@ def function_extent(img, start, limit):
         a = work.pop()
         while start <= a < limit and a not in seen:
             w = img.word(a)
-            if w is None or w == 0:
+            if w is None or w >> 26 == 0:  # padding or primary opcode 0 (illegal): not code
                 break
             seen.add(a)
             end = max(end, a + 4)
@@ -741,7 +750,7 @@ def discover_functions(img, known, data_ranges=()):
             if j < len(allv) and allv[j][0] <= a:
                 a = allv[j][1]
                 continue
-            if img.word(a) == 0:
+            if img.word(a) >> 26 == 0:  # padding / data words in .text (e.g. the XEX trailer)
                 a += 4
                 continue
             limit = allv[j][0] if j < len(allv) else va + vs
