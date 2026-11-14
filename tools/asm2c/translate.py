@@ -1121,7 +1121,7 @@ class Gen:
                     if isinstance(lv0, V):
                         lv0.used = True
                     w = lv0.n if isinstance(lv0, V) else lv0
-                    sl[off] = f'((ts4_s64)(int){w})' if isinstance(lv0, V) and lv0.t == 'int' else f'((ts4_s64)(ts4_word){w})'
+                    sl[off] = f'((ts4_s64){w})'      # the value's own type extends it (lha: sign, lhz: zero)
                     return
                 if mn == 'ld' or mn == 'std':
                     raise Skip(mn)
