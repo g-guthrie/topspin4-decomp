@@ -1,0 +1,340 @@
+# Top Spin 4 skills, coach abilities and coach tiers as described publicly (community/press/official).
+# Companion to docs/gameplay/community-reference.md. Compiled 2026-11-14 by research agent R1 from web
+# search + fetch; most community pages were readable only as search-engine snippets (see the doc, s0).
+#
+# Fields:
+#   name         in-game display name (confirmed against data/gameplay/traits_skills.yaml, StringTable.bin)
+#   code         internal ability code from the repo's disc extraction (crc32 in traits_skills.yaml)
+#   effect       short public description (paraphrase; quotes are short)
+#   trigger      condition the description implies (for code search)
+#   community    notable player opinions / meta notes
+#   sources      list of {url, kind, confidence}; kind: official|press|community|single|repo
+#   aliases      other names used publicly
+# Confidence: H = several agreeing sources or matches in-game text; M = one good source; L = single poster/garbled.
+
+coach_tiers:
+  - tier: Bronze
+    repo_level: 1
+    attribute_bonus_points: 25
+    notes: "Mostly XP bonuses early (10%/20% post-match XP, per-winner XP)."
+    sources:
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}
+      - {url: "https://www.destructoid.com/preview-top-spin-4-player-creator-career-more/", kind: press, confidence: H}
+  - tier: Silver
+    repo_level: 2
+    attribute_bonus_points: 35
+    notes: "Stronger attribute bonuses (e.g. +10 Power) and gameplay skills."
+    sources:
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}
+      - {url: "https://www.destructoid.com/preview-top-spin-4-player-creator-career-more/", kind: press, confidence: H}
+  - tier: Gold
+    repo_level: 3
+    attribute_bonus_points: 50
+    notes: "Largest bonuses and best skills; achievement 'Golden boy' = unlock all skills of a Gold coach."
+    sources:
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}
+      - {url: "https://notebooklover.pixnet.net/blog/post/44784757", kind: press, confidence: M}
+coach_rules:
+  - claim: "Max +15 to any single attribute from a coach."
+    sources: [{url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}]
+  - claim: "Coach pool depends on how career levels were allocated across the three styles."
+    sources: [{url: "https://www.destructoid.com/preview-top-spin-4-player-creator-career-more/", kind: press, confidence: H}]
+  - claim: "Bonuses/skills unlock by completing coach objectives (e.g. '10 aces against your coach')."
+    sources: [{url: "https://gamespot.com/articles/top-spin-4-first-impressions/1100-6286632/", kind: press, confidence: M, note: snippet}]
+  - claim: "One active coach; switching loses the former coach's bonus (some reviews say learned skills are permanent: conflict)."
+    sources:
+      - {url: "https://www.gamereactor.eu/top-spin-4-preview/", kind: press, confidence: M}
+      - {url: "https://www.videogamer.com/reviews/top-spin-4-review/", kind: press, confidence: M}
+      - {url: "https://worthplaying.com/article/2011/3/23/reviews/80484-ps3x360-review-top-spin-4/", kind: press, confidence: M}
+  - claim: "Pros have up to 3 skills, created players up to 2."
+    sources: [{url: "https://www.mobygames.com/game/65583/top-spin-4/", kind: community, confidence: M, note: snippet}]
+  - claim: "Coach skills apply online too."
+    sources: [{url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}]
+  - claim: "Repo count: 110 coaches = 20 level-1, 37 level-2, 53 level-3 (contradicts press counts of ~50/~100/30+)."
+    sources: [{url: "data/gameplay/coaches_career.yaml", kind: repo, confidence: H}]
+
+coach_only_abilities:
+  - {name: "10% XP Bonus", code: GeneralXPBonus, effect: "Post-match XP +10%.", sources: [{url: "data/gameplay/coaches_career.yaml", kind: repo, confidence: H}, {url: "https://notebooklover.pixnet.net/blog/post/44784757", kind: press, confidence: M}]}
+  - {name: "20% XP Bonus", code: GeneralMaxiXPBonus, effect: "Post-match XP +20% (e.g. coach Zheng Wei per superguide).", sources: [{url: "data/gameplay/coaches_career.yaml", kind: repo, confidence: H}, {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}]}
+  - {name: "Volley XP Bonus", code: VolleyXPBonus, effect: "Each winner at the net = bonus XP (5).", sources: [{url: "data/gameplay/coaches_career.yaml", kind: repo, confidence: H}, {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: "snippet: '5 XP bonuses for net winners'"}]}
+  - {name: "Baseline XP Bonus", code: BaselineXPBonus, effect: "Each winner at the baseline = bonus XP (3).", sources: [{url: "data/gameplay/coaches_career.yaml", kind: repo, confidence: H}]}
+  - {name: "BONUS ATTRIBUTE", code: _AttributeBonus, effect: "Flat attribute increments, unlocked step by step.", sources: [{url: "data/gameplay/coaches_career.yaml", kind: repo, confidence: H}]}
+
+skills:
+  - name: Shot counter
+    code: PowerfulShotCounter
+    aliases: ["Shot Counter"]
+    effect: "Use the power of the opponent's shot to counter with a well-timed Flat Finesse (tapped A)."
+    trigger: "Flat + control(Finesse) tier + good timing + powerful incoming ball"
+    community: "Chinese review: gives 'powerful counterpunches'."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "https://notebooklover.pixnet.net/blog/post/44784757", kind: press, confidence: M}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Return serve counter
+    code: ReturnServeCounter
+    effect: "Same as Shot counter but against the opponent's serve (well-timed Flat Finesse return)."
+    trigger: "return of serve + Flat Finesse + good timing"
+    community: "Only seen in name lists publicly."
+    sources:
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: L, note: "snippet, name only"}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Reach swings expert
+    code: ReachSwingsExpert
+    aliases: ["Reach Swing Expert", "救球魔人"]
+    effect: "More efficient shots when on the run and stretching to hit the ball."
+    trigger: "reach/stretch swing (far from ball, running)"
+    community: "Rated best defensive skill (FR forum); 'Makes all your control shots on the run better' (ITST); silver+ coaches (TW guide)."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "https://intertopspintour.com/forum/viewtopic.php?f=1034&t=16301", kind: single, confidence: M, note: snippet}
+      - {url: "https://www.jeuxvideo.com/forums/1-25025-117376-1-0-1-0-evolution-la-plus-efficace-d-un-joueur.htm", kind: single, confidence: M, note: snippet}
+      - {url: "https://forum.gamer.com.tw/C.php?bsn=4794&snA=106", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Passing shot sniper
+    code: PassingShotSniper
+    effect: "More precise shots when the opponent is at the net."
+    trigger: "opponent at net"
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Crushing passing shot
+    code: CrushingPassingShot
+    effect: "More powerful shots when the opponent is at the net."
+    trigger: "opponent at net"
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Spectacular volleys
+    code: SpectacularVolleys
+    effect: "Expand your arsenal of volleys to perform spectacular shots."
+    trigger: "volley; likely unlocks extra volley animations"
+    community: "Superguide pairs it with Spin serve master for S&V."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: "Longer, better!"
+    code: BetterOnLongRallies
+    aliases: ["Longer, Better"]
+    effect: "More and more precise and reliable shots as the rally gets longer."
+    trigger: "rally length counter"
+    community: "Good but less effective than Reach swings expert (FR forum)."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "https://www.jeuxvideo.com/forums/1-25025-117376-1-0-1-0-evolution-la-plus-efficace-d-un-joueur.htm", kind: single, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Highly flammable
+    code: HighlyFlammable
+    effect: "Become 'on fire' on a 4-point (or more) winning streak during a set."
+    trigger: "consecutive points won in set >= 4"
+    community: "Split opinions: weakest skill vs very effective (ITST); hard to trigger (FR); raises winner chance (TW); temporary stat boost (ITST)."
+    sources:
+      - {url: "http://www.intertopspintour.net/forum/viewtopic.php?t=15388", kind: community, confidence: M, note: snippet}
+      - {url: "https://forum.gamer.com.tw/C.php?bsn=4794&snA=106", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Poisoned slices
+    code: PoisonedSlices
+    aliases: ["Poisoned Slice"]
+    effect: "Force the opponent to return less efficient shots by playing low slice shots."
+    trigger: "own low slice -> debuff on receiver"
+    community: "'completely nullified monster defense'; holding/breaking serve got easier (single poster). Coaches per superguide (snippet, possibly misaligned): Peto Chesire, Regina Francis, Remi Ercolani."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Diesel returner
+    code: DieselReturner
+    aliases: ["Diesel Return", "Diesel Return of Serve"]
+    effect: "More and more efficient return shots during return-serve games."
+    trigger: "return games; counter grows during game/match"
+    community: "Superguide: helps passing shots and returns, which are 'underpowered' for most players."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Instant rocket
+    code: InstantRocket
+    effect: "Reach maximum power sooner on power shots."
+    trigger: "power-shot charge rate"
+    community: "'minimal difference' (FR) vs strong online, beats Invasion builds (ITST). Coach Joe/Jon Samala listed with Instant Rocket + Monster Defense (superguide snippet)."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "https://intertopspintour.com/forum/viewtopic.php?f=1032&t=14624", kind: single, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Diesel hard hitter
+    code: DieselHardHitter
+    effect: "Become more and more precise with power shots during a rally."
+    trigger: "power shots; rally counter"
+    community: "TW guide: suits power players."
+    sources:
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: H, note: snippet}
+      - {url: "https://forum.gamer.com.tw/C.php?bsn=4794&snA=106", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Inside out master
+    code: InsideOutMaster
+    effect: "More powerful shots when performing an inside-out swing (LT + shot button)."
+    trigger: "inside-out modifier"
+    sources:
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Focus service
+    code: FocusService
+    effect: "Better serves when trailing in the game."
+    trigger: "serving + trailing in current game"
+    community: "Tuned by the April 2011 Player Balancing Update."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+400", kind: community, confidence: H, note: snippet}
+      - {url: "https://forums.operationsports.com/forums/tennis/477387-top-spin-4-player-balancing-update-available.html", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Wrong foot expert
+    code: WrongFootExpert
+    aliases: ["wrong-foot bonus"]
+    effect: "More precise shots when you wrong-foot the opponent (hit behind them as they run to one side)."
+    trigger: "aim opposite to opponent's movement"
+    sources:
+      - {url: "https://www.destructoid.com/preview-top-spin-4-player-creator-career-more/", kind: press, confidence: H}
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Amazing first volley
+    code: Amazing1stVolley
+    effect: "The first volley in a rally is more efficient."
+    trigger: "first volley of rally"
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Slice invasion
+    code: SliceInvasion
+    effect: "The more slices in a rally, the more efficient and harder to return they become."
+    trigger: "count of slices in rally"
+    community: "Part of strong defensive builds (ITST)."
+    sources:
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Topspin invasion
+    code: TopSpinInvasion
+    aliases: ["Top Spin Invasion", "TI"]
+    effect: "The more topspin shots in a rally, the more efficient they become."
+    trigger: "count of topspin shots in rally"
+    community: "Online meta: 'TI/MD is still king' (ITST); 'too situational' (FR); suits defensive players (TW)."
+    sources:
+      - {url: "https://intertopspintour.com/forum/viewtopic.php?f=1032&t=14624", kind: single, confidence: M, note: snippet}
+      - {url: "https://forum.gamer.com.tw/C.php?bsn=4794&snA=106", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Fatality
+    code: Fatality
+    effect: "Shot is more precise if aimed at the open court."
+    trigger: "aim toward open court"
+    community: "TW guide: very wide angles to stretch the opponent. Repo has Swing_FH_Fatality_* animation clips."
+    sources:
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: H, note: snippet}
+      - {url: "https://forum.gamer.com.tw/C.php?bsn=4794&snA=106", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Approach shots expert
+    code: ApproachShotsExpert
+    effect: "Approach shots are harder to counter."
+    trigger: "follow-to-net (RB) shots"
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Monster Defense
+    code: TenaciousCockroach
+    aliases: ["MD", "Monster defence"]
+    effect: "More precise shots and fewer errors when trailing in the game."
+    trigger: "trailing in current game"
+    community: "Meta skill with Topspin invasion; countered by Poisoned slices (single poster)."
+    sources:
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: H, note: snippet}
+      - {url: "https://gamefaqs.gamespot.com/boards/605747-top-spin-4/58947469", kind: single, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Semi-volley king
+    code: SemiVolleyKing
+    effect: "Playing a shot just after the first bounce is no longer a problem."
+    trigger: "half-volley / short-hop contact"
+    community: "Not found in public sources (repo only)."
+    sources:
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Diesel server
+    code: DieselServer
+    aliases: ["Diesel Serve"]
+    effect: "More and more efficient serves during your serve games."
+    trigger: "serve games; counter grows"
+    community: "TW guide: suits serve & volley."
+    sources:
+      - {url: "https://www.mobygames.com/game/65583/top-spin-4/", kind: community, confidence: M, note: snippet}
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Spin serve master
+    code: SpinServeMaster
+    effect: "Devastating spin serves (topspin and slice)."
+    trigger: "topspin/slice serves"
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Volley shots artist
+    code: VolleyShotsArtist
+    effect: "Standard, control and drop-shot volleys are more efficient."
+    trigger: "A/X volleys and drop volleys (RT+X)"
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Low volley specialist
+    code: LowVolleySpecialist
+    effect: "Playing a low volley is no longer a problem."
+    trigger: "low contact volley"
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Smell of blood
+    code: SmellOfBlood
+    effect: "More efficient shots when you have a game point."
+    trigger: "own game point"
+    community: "'basically the opposite of monster defense'; 'interesting' (FR)."
+    sources:
+      - {url: "http://www.intertopspintour.net/forum/viewtopic.php?t=15388", kind: community, confidence: M, note: snippet}
+      - {url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Serve stick berserker
+    code: ServeStickBerserker
+    effect: "Increased precision with powerful advanced (right-stick) serves."
+    trigger: "advanced serve"
+    community: "Tuned by April 2011 Player Balancing Update after 'unreturnable serve' complaints. Same name reused in TopSpin 2K25 (different game)."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+400", kind: community, confidence: H, note: snippet}
+      - {url: "https://forums.operationsports.com/forums/tennis/477387-top-spin-4-player-balancing-update-available.html", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Drop shot artist
+    code: DropShotArtist
+    effect: "Innate talent to perform drop shots (RT + X)."
+    trigger: "drop shot / drop volley"
+    community: "Tuned in April 2011; weak drop shots nerfed again in Sept 2011 patch. Achievement of the same name = 20 drop-shot winners."
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+400", kind: community, confidence: H, note: snippet}
+      - {url: "https://www.trueachievements.com/a148308/drop-shot-artist-achievement", kind: community, confidence: M, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Brutal volley
+    code: BrutalVolley
+    effect: "Power volleys (B) are more efficient."
+    trigger: "B volley"
+    sources:
+      - {url: "https://forum.lowyat.net/topic/1679805/+420", kind: community, confidence: H, note: snippet}
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Return sixth sense
+    code: Return6thSense
+    effect: "Shortly before the opponent's serve, controller vibration indicates the serve direction."
+    trigger: "receiving serve"
+    community: "No public mention; no coach or pro owns it in the data -> probably cut."
+    sources:
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+  - name: Emergency reactivity
+    code: EmergencyReactivity
+    effect: "More reactive (faster transitions/movement) after own bad shot or opponent's good shot."
+    trigger: "shot-quality state"
+    community: "No public mention; unowned in data -> probably cut."
+    sources:
+      - {url: "data/gameplay/traits_skills.yaml", kind: repo, confidence: H}
+
+not_ts4_skills:
+  - {name: "No Mercy", why: "Listed by MobyGames only; not in StringTable skill list; pro skill hash entries are attribute bonuses.", sources: [{url: "https://www.mobygames.com/game/65583/top-spin-4/", kind: community, confidence: L}]}
+  - {name: "Spin Serve Berserker", why: "Snippet garble of Spin serve master / Serve stick berserker.", sources: [{url: "http://www.topspinsuperguides.com/topspin4.htm", kind: community, confidence: L}]}
+  - {name: "Net Rusher / Lob Artist / Ace Machine / Big Server / Iron Man", why: "No source found for TS4."}
+  - {name: "Aggressive lob, Smash, Return Serve (level-4 skill picks)", why: "Original Top Spin (2003) skill system (Neoseeker thread), not TS4.", sources: [{url: "https://www.neoseeker.com/forums/6559/t328561-learn-how-to-best-create-ultimate-player/", kind: community, confidence: M}]}
