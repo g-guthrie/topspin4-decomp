@@ -1602,6 +1602,9 @@ def compare(world, A, B, rkind, nonvol=True):
         return "final memory differs: " + delta_diff(world, A["delta"], B["delta"])
     if oa[0] == "return":
         for k in ret_regs(rkind):
+            dead = lambda v: STACK_LO <= (v & 0xFFFFFFFF) < STACK_TOP
+            if k in ("r3", "r3_64") and dead(A["r3"]) and dead(B["r3"]):
+                continue     # both return a pointer into their own, now dead, frame: unusable
             if k == "r3" and (A["r3"] & 0xFFFFFFFF) != (B["r3"] & 0xFFFFFFFF):
                 return f"return value r3: original {A['r3'] & 0xFFFFFFFF:#x}, candidate {B['r3'] & 0xFFFFFFFF:#x}"
             if k == "r3_64" and A["r3"] != B["r3"]:
