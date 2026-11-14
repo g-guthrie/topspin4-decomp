@@ -62,8 +62,8 @@ Paths below are relative to `data/gameplay/tunables/Settings/` unless noted.
 | late vs early | late about 2x | fault graphs' `easy/hard/easy2/hard2` timing curves |
 | forgiveness of small errors | dead zone 0.15 | the `dz` curve (last two curves of each fault graph) |
 | stat weight | hand stat halves the penalty | strong- vs weak-hand curve pairs |
-| situation penalties | running 300..600 cm at 3..6 m/s to -0.5, full charge -0.15, fast ball -0.6, fatigue -0.3 | the penalty curves of the control sum |
-| per-shot ceiling | `ErrorResolution` Min/Max per grade (mostly 0 / 1) | `11_ShotPalette.yaml` `/ShotDef[i]/ShotResolution/ErrorResolution/<grade>/Min,Max` |
+| situation penalties | running 300..600 cm at 3..6 m/s to -0.5, full charge -0.15, fast ball -0.6 (input `#1407106c` S+0x770 never written, so inert unless a patch supplies it; OPEN 1.10), fatigue -0.3 | the penalty curves of the control sum |
+| per-shot ceiling | `ErrorResolution` Min/Max, **Good row only** (0 / 1 for most shots) | `11_ShotPalette.yaml` `/ShotDef[i]/ShotResolution/ErrorResolution/Good/Min,Max`; the VeryGood/Normal/Bad/VeryBad rows are never selected in retail (OPEN 1.9). Power and aiming scales likewise use `PowerResolution/Good` and `AimingResolution/Good` |
 | net vs out | low contact (< 90..100 cm) goes to the net | net graphs' height ramps |
 | let chance | 0.02 fading to 0 | graph `LetProbability` |
 | net / let aim heights | 80 / 90 cm | `01_ShotResolutionSettings.yaml` cfg+0x134/0x138 |

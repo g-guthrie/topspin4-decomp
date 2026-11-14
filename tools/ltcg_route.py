@@ -130,7 +130,8 @@ def build_units(rebuilt_dir: Path, split_dir: Path, symbols_txt: Path, wibo: Pat
         checked, _ci, _ti, workdir = L.verify(
             ROOT / source, [absolute_context(c) for c in unit.get("context", [])],
             unit.get("flags", []), pairs, find_target, symbols,
-            no_include=unit.get("no_include", False), **kwargs)
+            no_include=unit.get("no_include", False), extra_includes=unit.get("include", []),
+            **kwargs)
         bad = [c for c in checked if c.result is None or not c.result.ok
                or c.result.renames]
         if bad:
@@ -210,6 +211,7 @@ def register(spec: dict, symbol_sizes: dict[str, int], path: Path = UNITS_PATH) 
             raise SystemExit(f"missing context source {entry}")
     unit = {"source": spec["source"], "object": Path(spec["source"]).stem + ".obj",
             "context": spec.get("context", []), "flags": spec.get("flags", []),
-            "no_include": bool(spec.get("no_include", False)), "symbols": symbol_sizes}
+            "no_include": bool(spec.get("no_include", False)), "include": spec.get("include", []),
+            "symbols": symbol_sizes}
     units.append(unit)
     path.write_text(json.dumps(units, indent=1) + "\n")

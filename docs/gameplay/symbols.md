@@ -41,6 +41,11 @@ use seen in the code, written as C; argument names are ours. Older symbol tables
 | `fn_886B3CF8` | `SwingRequest_Update` | `void (PlayerController *)` | request state machine; commits ManualShotTiming at 3 sites | C | controls s4 |
 | `fn_8865E430` | `Repositioning_UpdateSprint` | `void (PlayerController *)` | S+0xA2C = Rush && vigor >= 0.1; RequiredAmplitude S+0xA10 = 1 | C | OPEN 3.1 |
 | `fn_8866FB60` | `MoveSpeed_Query` | `void (Mover *, float *speed, bool *valid, bool *sprint)` | speed by move state hash (`0xA73FFF84` override S+0xDE8, `0x7652DEC8` RequiredAmplitude + sprint, `0x77579282` this+0x34) | C | OPEN 3.1 |
+| `fn_886629C8` | `ShotSpecific_Fill` | `void (PlayerCtx *, ShotDefEntry *)` | copies ShotResolution grades into ShotSpecific by the Power/Control keys; serve variant fills ServeSpecific | C | OPEN 1.9 |
+| `fn_8826DD20`, `fn_8826DDF8` | `GradeRange_Get` (8 / 16-byte grades) | `void (const void *table, const uint32 *grade, void *out)` | VeryGood/Good/Normal/Bad/VeryBad select +0/8/0x10/0x18/0x20 (x2 for 16-byte) | C | OPEN 1.9 |
+| `fn_8865AC08` | `Grade_Value` | `float (const uint32 *grade)` | VeryGood 1, Good 0.75, Normal 0.5, Bad 0.25, else 0 | C | OPEN 1.9 |
+| `fn_8865EB60` | `PlayerCtx_IsReturnOfServe` | `bool (PlayerCtx *)` | serve phase, other team serving, this is the receiving slot | C | OPEN 1.11 |
+| `fn_88699300` | `Planner_PrepareState` | `void (Planner *, int state)` | 23-way prepare; sets HandAttributeQuality, speed override, flags per state | C (partly) | OPEN 1.11 |
 | `fn_886902E8` | `Fatigue_Init` | `void (PlayerController *)` | vigor = recovery = VigorMax = 1, constant graphs | C | timing-and-fatigue s2 |
 | `fn_88690540` | `Fatigue_Update` | `void (PlayerController *)` | per-frame load and CurrentVigor | C | timing-and-fatigue s2 |
 | `fn_8866ECA8` | `Fatigue_AddAnimationCosts` | `void (PlayerController *)` | animation-event costs from `PT+0x618` into `S+0xF28` | C | timing-and-fatigue s2 |

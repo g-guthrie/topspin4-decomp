@@ -530,7 +530,7 @@ class LazyImage:
 def verify(source: Path, contexts: list[str], flags: list[str], pairs: list[tuple[str, str]],
            find_target, symbols: list, no_include: bool = False, toolchain: Path = TOOLCHAIN,
            wibo: Path = WIBO, target_image: Path = TARGET_IMAGE, keep: bool = False,
-           verbose: bool = True) -> tuple[list[Checked], SymbolIndex, SymbolIndex, Path]:
+           verbose: bool = True, extra_includes: list[str] | None = None) -> tuple[list[Checked], SymbolIndex, SymbolIndex, Path]:
     """Compile+link once and compare every (candidate, target name) pair.
 
     find_target(name) -> (start address, code bytes, relocations) reads the split
@@ -543,7 +543,7 @@ def verify(source: Path, contexts: list[str], flags: list[str], pairs: list[tupl
     t_index = SymbolIndex([(e[0], e[2]) for e in symbols])
     t_read = LazyImage(target_image).read
     workdir = Path(tempfile.mkdtemp(prefix="ltcgcheck-", dir=ROOT / "work"))
-    includes = [] if no_include else [c for c, _ in pairs]
+    includes = ([] if no_include else [c for c, _ in pairs]) + list(extra_includes or [])
     image, map_symbols, alias = build(source, contexts, flags, includes, toolchain, wibo,
                                       workdir, code_names, verbose)
     c_index = SymbolIndex([(s.name, s.address) for s in map_symbols], alias)
@@ -576,6 +576,9 @@ def main() -> int:
     parser.add_argument("--flags", nargs="*", default=[], help="extra cl flags for every /GL source")
     parser.add_argument("--no-include", action="store_true",
                         help="do not force the mapped functions with /INCLUDE")
+    parser.add_argument("--include", action="append", default=[],
+                        help="also force this symbol with /INCLUDE (keeps a context callee's standard "
+                             "calling convention when it has other callers in the original)")
     parser.add_argument("--keep", action="store_true", help="keep the scratch directory")
     parser.add_argument("--quiet", action="store_true", help="omit listings for failures")
     parser.add_argument("--setup", action="store_true", help="prepare work/ltcg-toolchain and exit")
@@ -606,7 +609,8 @@ def main() -> int:
 
     checked, c_index, t_index, workdir = verify(
         args.source, args.context, args.flags, pairs, find_target, symbols,
-        no_include=args.no_include, toolchain=args.toolchain, wibo=args.wibo, keep=args.keep)
+        no_include=args.no_include, toolchain=args.toolchain, wibo=args.wibo, keep=args.keep,
+        extra_includes=args.include)
     failures, renames = 0, {}
     for item in checked:
         cand, tname, t_start, res = item.candidate, item.target, item.t_start, item.result

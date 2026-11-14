@@ -530,7 +530,7 @@ These are the shot-error model. All classes share one template and differ in the
     Long/short aim;
   - ControlValues `8f3a95d8`/`665930ed`.
 - **Wood graphs** (280-282 / 289-291) set the frame-shot chances to
-  `lerp(0, 0.3 (0.2 for down), ramp(#1407106c 60..100))` times the template's `ShotSpecific.WoodUp/Down/Side`
+  `lerp(0, 0.3 (0.2 for down), ramp(#1407106c 60..100))` times the template's `ShotSpecific.WoodUp/Down/Side` *(GE1: no code or graph writes S+0x770, so this term is probably always 0 in retail; OPEN 1.10)*
   flag. They also write constants (800 / -1, 0.5 / 800, 1000 / 0).
 - **`07902e50`** (241/242/246/247) is a curve of PowerfulFactor `[0..0.3: 0->0.3 | 0.3..0.5: ->0.6 |
   0.5..1: ->1]`. The serve graphs 255..257 compute it from PressAndHold, Serve, Power and SkillList.
@@ -756,7 +756,7 @@ template never adds error. Which numbers go into the dice depends on these steps
 
 1. **Ratings become stats (V).** `DefaultAttributes` (graph 23) maps each 30..100 rating to 0..1 with
    3-4 ramps (section 6.1). For example, Forehand is `[30..50: 0->0.2 | 50..80: 0.2->0.8 | 80..100: 0.8->1]`.
-   The game then sets `HandAttributeQuality` (S+0x74C) to the stat of the hitting side by code (I). Serves
+   The game then sets `HandAttributeQuality` (S+0x74C) to the stat of the hitting side by code (GE1, C: Return on the return of serve, else Forehand or Backhand by side, Volley in the volley states; OPEN 1.11). Serves
    use `Profile.Serve`.
 2. **Buttons pick the shot class (V for the controls, I for the class lookup).**
    - The stroke button gives Flat/TopSpin/Slice/Lob.
@@ -801,7 +801,7 @@ template never adds error. Which numbers go into the dice depends on these steps
    | easy2 (c = 1, strong hand) | 0 / 0 / 0.05 / 0.1 | 0 / 0 / 0.1 / 0.2 |
    | hard2 (c = 0, strong hand) | 0 / 0.1 / 0.3 / 0.3 | 0 / 0.1 / 0.6 / 0.6 |
 
-   `ErrorResolution.Min/Max` come from the shot's `ShotDef` grade row (I for which grade). For most shots
+   `ErrorResolution.Min/Max` come from the shot's `ShotDef` grade row (**GE1: always the Good row**, selected by the Control swing key S+0x3B8, which code only sets to Good; `fn_886629C8`, OPEN 1.9). For most shots
    and the Good/Normal grades it is 0 / 1 (0 / 0.8 to 0.9 for VeryGood/Good on some rows, 0.2 / 1 for
    VeryBad).
 

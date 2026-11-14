@@ -80,13 +80,16 @@ holding to the auto-commit gives +0.5 (late). The TimingAbility blend has no eff
 Each of the 33 shot classes has a fault graph and a net graph (V):
 
 ```
-c = clamp01(0.8 + running far and fast (to -0.5) + full charge (-0.15) + fast ball (to -0.6)
+c = clamp01(0.8 + running far and fast (to -0.5) + full charge (-0.15) + fast ball (to -0.6; its
+            input S+0x770 has no writer, so probably inert in retail, OPEN 1.10)
             + fatigue ramp(vigor 0..0.4: -0.3 -> 0) + contact point, pressure, skill terms)
 e = lerp(lerp(hard(t), easy(t), c), lerp(hard2(t), easy2(t), c), HandAttributeQuality) * rally term
 FaultProbability = dz(lerp(ErrorResolution.Min, Max, e)),  dz(x) = 0 below 0.15
 ```
 
-Inside `|t| < 0.3` a groundstroke is safe under normal conditions; late errors cost about twice
+The `ErrorResolution`, `PowerResolution` and `AimingResolution` ranges come from the shot's
+`ShotDef` row, always its **Good** grade (the swing keys that select the grade are never set to
+anything else; OPEN 1.9). Inside `|t| < 0.3` a groundstroke is safe under normal conditions; late errors cost about twice
 early ones; the hand stat halves the penalty. Flat/power classes are the least forgiving, volleys
 the most; the drop shot misses 30-40 % at `|t| = 0.3`. OutcomeNet sends low-contact errors
 (below 90 cm) into the net. LetProbability is 0.02 fading to 0. Human serves use deterministic
@@ -141,8 +144,9 @@ the most; the drop shot misses 30-40 % at `|t| = 0.3`. OutcomeNet sends low-cont
 
 ## 9. Ratings, skills and fatigue
 
-* **Ratings** 30..100 map to 0..1 stats through DefaultAttributes (graph 23); the hitting side's
-  stat becomes HandAttributeQuality (stats-coaches-career s1).
+* **Ratings** 30..100 map to 0..1 stats through DefaultAttributes (graph 23); HandAttributeQuality is
+  the Return stat on a return of serve, Volley in volley states, else Forehand or Backhand by side
+  (stats-coaches-career s1, OPEN 1.11).
 * **Skills**: 30 working skills; 28 act through graph link ports (0/1 multipliers or curve
   switches), three in code (PoisonedSlices, InstantRocket, SpectacularVolleys). None touches the
   ball template directly (traits-and-skills).

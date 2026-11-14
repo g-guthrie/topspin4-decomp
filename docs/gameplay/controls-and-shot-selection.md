@@ -707,6 +707,14 @@ nothing but the tree's Slice branches, statistics and the HUD.
    (`g_ts4_script_constants+0`) and keeps the request; otherwise `InsideOut = 0` and the request is
    dropped. I read this as "the ball is on the other side of the body from the natural stroke", i.e.
    a real run-around (M).
+   *GE1 transcription (C for the steps, I for the meaning):* with `P` = the hitter's position
+   mirrored into his frame (`fn_8865EC70`) and `B0`, `B1` = the ball vectors at ball state
+   `+0x100` / `+0x110`: (a) intersect the ball's normalised travel line with a line through `P`
+   (`fn_881896F8`, offset `t`), take `Q1 = (P.x, 0, P.z + t)`, mirror it by the opponent's side
+   tag (`fn_8865E730`) and set `s1 = Q1.z < P.z`; (b) the same from `B0` gives `s2 = Q2.z < B0.z`.
+   `InsideOut = (s1 != s2) ? 1.0 : 0.0` and `InsideOutRequested = (s1 != s2)`. So LT counts only
+   when the ball's crossing point and the hitter's position lie on different sides in z: the
+   ball comes to the side the player is running around (I).
 3. **Forced side commit.** Movement planner `fn_886A3440` (called by `fn_886A9E48` and `fn_886B8468`):
    for a human pad player with `Buttons.LT` held, `Stick_MovePolar.Power > 0.2` and the stick angle
    (plus pi on the mirrored court side `0xA2EDA1E7`) within **0.8727 rad (50 deg) of pi/2** (of

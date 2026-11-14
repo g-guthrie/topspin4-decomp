@@ -126,7 +126,7 @@ the first level for which a clip starts (G6b, V; s6).
 record directly, 0x14 higher:
 * Tolerancy (record +0x30..+0x44): `fn_886D3310` copies the six values into per-clip arrays at selector
   +0x40/+0x4C/+0x58/+0x64/+0x70/+0x7C; `fn_886D7638` is a debug live editor of the same values (GameplayInterface
-  +0x298..+0x2A8). The consumer of those arrays was not traced.
+  +0x298..+0x2A8). The consumer of those arrays was not traced. *GE1: no runtime reader found (OPEN 3.6); I: dead data.*
 * AngleClamp Left/Right (record +0x48/+0x4C): `fn_886DAA48` copies them into AnimIface +0x44C/+0x450 when it starts a swing.
 * MaximumOccurency (record +0x54): `fn_886CD880` copies it into a per-clip counter array at selector +0x14C;
   `fn_886C50D0` resets PlayCountStat (+0x88).
