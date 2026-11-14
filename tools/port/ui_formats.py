@@ -14,6 +14,8 @@ import struct
 import zlib
 
 STRING_TABLE_SIG = bytes.fromhex("c88433e76668075d")
+STRING_CLASS_INDIRECT = 0x92A82712
+STRING_CLASS_INLINE = 0x9EDE2887
 FONT_VERSION = 6
 
 
@@ -58,7 +60,8 @@ def parse_string_table(d: bytes):
 
     Layout (XBin image, offsets self-relative):
       0x14 array A  (8 B each): u32 rel -> font name (C string, "" = default), f32 scale
-      0x20 array B (12 B each): u32 rel -> u32 rel -> UTF-16BE text, u32 string-class crc, u32 key crc
+      0x20 array B (12 B each): u32 rel, u32 string-class crc, u32 key crc; class 0x92A82712: rel -> u32 rel ->
+                                UTF-16BE text, class 0x9EDE2887: rel -> UTF-16BE text
                                 (sorted by key; key = zlib.crc32 of the TextID, e.g. "CommonDisclaimerTextWorkInProgress")
       0x2C u32 rel -> font-name pool, 0x30 array C (4 B each): u16 lower, u16 upper case pairs
     A and B are parallel (same index = same string).
@@ -76,7 +79,8 @@ def parse_string_table(d: bytes):
         p = o + rel
         if p + 4 > len(d):
             raise UiDataError("text pointer out of range")
-        q = p + struct.unpack_from(">I", d, p)[0]
+        # class 0x92A82712: pointer to a pointer to the text; class 0x9EDE2887: pointer to the text
+        q = p + struct.unpack_from(">I", d, p)[0] if typ == STRING_CLASS_INDIRECT else p
         oa = a0 + 8 * i
         ra, scale = struct.unpack_from(">If", d, oa)
         out.append({"key": key, "type": typ, "font": _cstr(d, oa + ra), "scale": scale, "text": _wstr(d, q)})

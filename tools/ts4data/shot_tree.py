@@ -88,6 +88,18 @@ def _names():
               "ManualShotTiming", "TimingValue", "FrameCount", "Value", "ReceiverState", "InstantRocket",
               "PSMoveConfig", "IsPSMove", "InsideOutRequested", "InvertPaddle", "ServeClass", "Risk",
               "EngineConfig", "Frequency", "Throw", "ShotFailed", "IsAdvanced", "MinPower"]
+    # Swing-category rule lists (agent G6b; fn_886AFDF8 / fn_88697E98).  Names crc32-verified; the
+    # condition names were recovered by a dictionary search and match the code (doc s17).
+    words += [str(d) for d in range(10)]  # SwingPreferenceLevel values
+    words += ["None", "Normal", "AutoSwingGood", "AutoSwingBad", "EasyAutoSwing", "SkillId",
+              "SwingSelectionCategory", "Fatality", "GoToNet", "IsPerfect", "BadTiming", "SkillRequired",
+              "IsGoodVolleyRelease", "IsBadVolleyRelease", "IsFastBall", "IsVolleyFastBall",
+              "IsBaselineFastBall", "InsideOut", "VolleySpectacular", "VolleyForward", "DropShot"]
+    words += ["FlatFinesse", "FlatPower", "VolleyStandard", "VolleyPower", "VolleyDropShot", "FlatFollowNet",
+              "FlatGoodReach", "FlatBadReach", "FlatTooLate", "SliceFollowNet", "SliceGoodReach",
+              "SliceBadReach", "SliceTooLate", "VolleyReflex", "VolleyFollowNet", "FlatPerfect", "SliceReturn",
+              "FlatPowerfulBall", "FlatHighTopSpin", "VolleyReflexExtra", "VolleyStandardExtra",
+              "VolleyPowerExtra", "FlatClay", "SliceClay"]
     return {crc(w): w for w in words}
 
 
@@ -586,6 +598,92 @@ def serve_tables(settings: bytes):
     return out
 
 
+# ----------------------------------------------------------------- swing-category rule lists (G6b)
+# PlayerTuning (cfg+0x180) block SwingSelectionCategory (59f72580): three modes x six class lists of
+# QualifierValue rows {Value, AltValue (5d78dedc), Condition (2ce1ada4), SkillId, EasyAutoSwing (5b9470b9),
+# e0dcd0b9}, 0x14 bytes each, list descriptors {rel, count, cap} at PT+0x4D8 + 0x48*mode + 0xC*class.
+# Mode chosen by fn_886B0250, class by fn_886B01A8 from S+0x35C, rows walked by fn_886AFDF8 (doc s17).
+SC_PT = CFG + 0x180
+SC_MODES = ("Normal", "AutoSwingGood", "AutoSwingBad")
+SC_CLASSES = ("FlatPower", "FlatFinesse", "Slice", "VolleyStandard", "VolleyPower", "Smash")
+# What fn_88697E98 tests for each condition hash (V; offsets are PlayerState S / PlayerTuning PT).
+SC_CONDITIONS = {
+    0xDFA2AFF1: "always (None)",
+    0xC78C8F06: "not following to the net (human: !(sticky RB && |z| < PT+0x6F0); AI: !S+0x4E0) and power S+0xE00 > 0.15",
+    0x7E522D55: "sticky RB (PC+0x3D, InputState.ReqVolleyRepos) and |z| < PT+0x6F0 (fn_8866B6E0)",
+    0x07F0DF25: "PerfectShotEvaluation S+0x7D4 > 0.5",
+    0x693616C3: "min(LeftLine.MinSpeed S+0xA5C, RightLine.MinSpeed S+0xABC) > PT+0x1B0",
+    0x60D5B606: "min(LeftLine.MinSpeed, RightLine.MinSpeed) > PT+0x1B4",
+    0xDE050FD0: "min(MinSpeed) > PT+0x1B0 and (AI or PT+0x5C8 < ManualShotTiming S+0x544 < PT+0x5C4)",
+    0x42864090: "min(MinSpeed) > PT+0x1B4 and not (PT+0x5C8 < ManualShotTiming < PT+0x5C4)",
+    0xD00AC582: "TimingState.TimingValue S+0xD08 > PT+0x5BC",
+    0x4041760A: "ManualShotTiming S+0x544 > PT+0x5BC and SlowDown S+0x7CC < 0.5",
+    0xFE98362E: "Context.IsFastBall S+0x5DD or Context.IsBaselineFastBall S+0x5DF",
+    0x990377A5: "shot id ctx+0x3C == DropShot",
+    0x7D633A62: "LocalPosition S+0x8E0 + (team mode 2 ? 600 : 450) < 0 and shot id not Slice/DropShot",
+    0x28D4D485: "S+0x7B8 (7e28dbc0.b928d859) > 0.5",
+    0xDE102FEC: "S+0x7B8 <= 0.5",
+    0x1DE220E2: "AnimationSelection.SwingSelection.VolleySpectacular S+0x388",
+    0xBD8EA388: "Context.IsInsideOut S+0x5DB",
+    0xC42EF3FE: "skill SkillId > 0.5 (fn_8868F0D8)",
+}
+
+
+def swing_category_rules(settings: bytes):
+    b = Buf(settings)
+    pt = lambda off: SC_PT + off  # noqa: E731
+    name = lambda h: (nm(h) or "%08x" % h) if h else None  # noqa: E731
+    out = {"source": "PlayerTuning (cfg+0x180) SwingSelectionCategory, file 0x%x" % pt(0x4D8),
+           "row_fields": "Value, AltValue (5d78dedc, used when no clip matches Value), Condition (2ce1ada4), "
+                         "SkillId, EasyAutoSwing (5b9470b9), e0dcd0b9",
+           "modes": {}}
+    for m, mode in enumerate(SC_MODES):
+        lists = {}
+        for c, cls in enumerate(SC_CLASSES):
+            desc = pt(0x4D8 + 0x48 * m + 0xC * c)
+            base, count = b.rel(desc), b.u32(desc + 4)
+            rows = []
+            for i in range(count):
+                e = base + 0x14 * i
+                v, alt, cond, skill = (b.u32(e + k) for k in (0, 4, 8, 12))
+                rows.append({"value": name(v), "alt": name(alt), "condition": name(cond),
+                             "skill_id": name(skill), "easy_autoswing": settings[e + 0x10],
+                             "e0dcd0b9": settings[e + 0x11]})
+            lists[cls] = rows
+        out["modes"][mode] = lists
+    used = {}
+    for m in range(len(SC_MODES)):
+        for c in range(len(SC_CLASSES)):
+            desc = pt(0x4D8 + 0x48 * m + 0xC * c)
+            for i in range(b.u32(desc + 4)):
+                h = b.u32(b.rel(desc) + 0x14 * i + 8)
+                used[name(h)] = SC_CONDITIONS.get(h, "?")
+    out["conditions"] = dict(sorted(used.items()))
+    lv = pt(0x5B0)
+    base = b.rel(lv)
+    out["preference_levels_pt_0x5b0"] = [b.u32(base + 4 * i) for i in range(b.u32(lv + 4))]
+    out["preference_level_names"] = [nm(h) or "%08x" % h for h in out["preference_levels_pt_0x5b0"]]
+    del out["preference_levels_pt_0x5b0"]
+    out["thresholds"] = {
+        "min_speed_reach_mps_pt_0x1b0": b.f32(pt(0x1B0)),
+        "min_speed_bad_reach_mps_pt_0x1b4": b.f32(pt(0x1B4)),
+        "late_timing_pt_0x5bc": b.f32(pt(0x5BC)),
+        "pt_0x5c0": b.f32(pt(0x5C0)),
+        "timing_window_hi_pt_0x5c4": b.f32(pt(0x5C4)),
+        "timing_window_lo_pt_0x5c8": b.f32(pt(0x5C8)),
+        "pt_0x5cc": b.f32(pt(0x5CC)),
+        "pt_0x5d0": b.f32(pt(0x5D0)),
+        "net_zone_abs_z_pt_0x6f0": b.f32(pt(0x6F0)),
+    }
+    # AutoSwing (027d6931.AutoSwing) frame pairs {window, limit}: default / Context.IsInsideOut / S+0xBD2
+    out["autoswing_frames"] = {
+        "default_pt_0x6d0": [b.i32(pt(0x6D0)), b.i32(pt(0x6D4))],
+        "inside_out_pt_0x6d8": [b.i32(pt(0x6D8)), b.i32(pt(0x6DC))],
+        "bd2_pt_0x6e0": [b.i32(pt(0x6E0)), b.i32(pt(0x6E4))],
+    }
+    return out
+
+
 def extract(settings: bytes, expressions: bytes | None, layout_bytes: bytes | None,
             interface: bytes | None = None):
     b = Buf(settings)
@@ -617,7 +715,8 @@ def extract(settings: bytes, expressions: bytes | None, layout_bytes: bytes | No
         "frequency_D": read_frequency(interface) if interface else None,
     }
     data = {"tree_text": tree_text(nodes), "tree_nodes": nodes, "tree_leaves": leaves, "rows": rows,
-            "power": power, "input_mapper": read_input_mapper(b, layout)}
+            "power": power, "input_mapper": read_input_mapper(b, layout),
+            "swing_category_rules": swing_category_rules(settings)}
     if expressions:
         g = read_tier_graphs(expressions)
         data["tier_graphs"] = g
