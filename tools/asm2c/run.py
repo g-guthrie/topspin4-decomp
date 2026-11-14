@@ -26,7 +26,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import emit, source, translate
+import emit, frame, source, translate
 from source import ROOT
 
 
@@ -42,7 +42,8 @@ def translate_all(names, dis, env, variant):
     inference, v = volatile stores, V = volatile loads and stores, L = volatile loads,
     R = a loop break whose exit only returns is written as that return, J = arms that return
     early still join at their shared tail block, w = void returns and tail calls as statements,
-    z = zero word stores (and the store after each) volatile."""
+    z = zero word stores (and the store after each) volatile, F = stack-frame model (frame plans
+    chosen by an early frame check, see frame_select)."""
     mode, orient, signed = int(variant[0]), int(variant[1]), 'u' not in variant
     vol = 2 if 'V' in variant else 1 if 'v' in variant else 3 if 'L' in variant else 0
     res, fails = {}, {}
@@ -58,6 +59,55 @@ def translate_all(names, dis, env, variant):
         except Exception as e:  # generator bug: keep going, report as category
             fails[addr] = 'EXC ' + type(e).__name__
     return res, fails
+
+
+PLANS = ('word', 'tight', 'fill')
+
+
+def frame_select(res, dis, a2name, work, tag, flags, jobs, chunk=200, stats=None):
+    """Variant letter F (stack-frame model): every result with stack locals is rendered
+    once per frame plan (frame.split), all plans are compiled in batches and the first
+    plan whose frame size and local offsets equal the original's is kept.  Results whose
+    frame cannot be made equal (no plan, nor the unsplit text) are dropped before
+    fn_check (the early frame-size rejection).  Results without stack locals pass."""
+    cands = {}            # addr -> [(plan, result)]
+    keep = {}
+    for a, r in res.items():
+        if is_cpp(r) or not frame.DECL.search(r['body']):
+            keep[a] = r; continue
+        opts, seen = [], set()
+        for p in PLANS + ('-',):
+            b = r['body'] if p == '-' else frame.split(r['body'], p)
+            if b is not None and b not in seen:
+                seen.add(b); opts.append((p, dict(r, body=b)))
+        cands[a] = opts
+    tl = lambda a: dis.lines(a2name[a])
+    jobsl = []
+    nplan = max((len(v) for v in cands.values()), default=0)
+    for k in range(nplan):
+        sel = sorted(a for a, v in cands.items() if len(v) > k)
+        for i in range(0, len(sel), chunk):
+            jobsl.append((k, sel[i:i + chunk]))
+    def one(ix):
+        k, grp = jobsl[ix]
+        return k, frame.frame_check({a: cands[a][k][1] for a in grp}, tl, str(work / f'fr{tag}_{ix:03d}.c'), flags)
+    with ThreadPoolExecutor(jobs) as ex:
+        got = list(ex.map(one, range(len(jobsl))))
+    ok = collections.defaultdict(dict)
+    for k, fc in got:
+        for a, v in fc.items():
+            ok[a][k] = v
+    st = collections.Counter()
+    for a, opts in cands.items():
+        fc = ok.get(a, {})
+        good = [k for k in sorted(fc) if fc[k][0]]
+        if good:
+            keep[a] = opts[good[0]][1]; st['frame ok ' + opts[good[0]][0]] += 1
+        else:
+            st['frame differs'] += 1
+    if stats is not None:
+        stats.update(st)
+    return keep
 
 
 def digest(r):
@@ -165,6 +215,10 @@ def main():
         for v in a.variants.split(','):
             todo = [c for c in cands if c[1] not in matched and (only is None or c[1] in only)]
             res, fails = translate_all(todo, dis, env, v)
+            if 'F' in v:
+                fst = collections.Counter()
+                res = frame_select(res, dis, addr2name, a.work, f'{v}{fs}', flags, a.jobs, a.chunk, fst)
+                print(f'  frame check: {dict(fst)}', flush=True)
             lastfail.update({ad: ('translate', r) for ad, r in fails.items() if lastfail.get(ad, ('translate',))[0] == 'translate'})
             fresh = {}
             for ad, r in res.items():

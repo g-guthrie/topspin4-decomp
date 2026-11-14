@@ -340,6 +340,7 @@ class Gen:
     ljoin = False     # retry after 'irregular exit': inside loops, arms whose other paths return join at their shared block
     rbrk = False      # variant letter R: a break to a loop exit that only returns is written as the return
     vret = False      # variant letter w: returns and tail calls are void
+    xjoin = True      # (T1) arms that left the loops for good join at their post-dominator
 
     def __init__(self, lines, env, mode=0, orient=0, word_ret=False, infer_signed=True, vol=0, strict=False):
         self.env, self.mode, self.orient, self.word_ret = env, mode, orient, word_ret
@@ -2269,6 +2270,24 @@ class Gen:
         r = self.region(start, stop | {J}, s, o)
         return s, o, r
 
+    def _outside_join(self, J):
+        """(T1) A branch that has already left every loop being emitted for good (an arm that
+        ends in a return) joins at its post-dominator J when no path from J re-enters a loop
+        being emitted or reaches a loop exit: the shared tail is emitted once."""
+        bad = set(self.active) | set(x for x in self.exits if x is not None)
+        for h in self.active:
+            bad |= set(self.loops[h])
+        stack, seen = [J], set()
+        while stack:
+            b = stack.pop()
+            if b in seen or b == cfg.EXIT or b not in self.blocks:
+                continue
+            if b in bad:
+                return False
+            seen.add(b)
+            stack.extend(cfg.succs(self.blocks[b]))
+        return True
+
     def _leads_to_exit(self, J, L):
         """J is outside loop L and every path from it reaches the loop exit (a break
         that runs code first, e.g. the erase after a find) without re-entering L, and
@@ -2395,6 +2414,7 @@ class Gen:
         J = cfg.ipdom(self.pdom, bid)
         if self.active and J != cfg.EXIT and J not in self.loops[self.active[-1]] \
                 and J != (self.exits[-1] if self.exits else None) \
+                and not (self.xjoin and bid not in self.loops[self.active[-1]] and self._outside_join(J)) \
                 and not self._leads_to_exit(J, self.loops[self.active[-1]]):
             J = cfg.EXIT      # the arms leave the loop for good: no join to merge at
         if self.ljoin and self.active and J != cfg.EXIT and J in self.loops[self.active[-1]]:
