@@ -6,11 +6,10 @@ EQ1, 2026-11-14. Tool: `tools/fn_equiv.py` (checker version string `fn_equiv/1`)
 works, what it measured on the remaining code, and how the tier should enter the project.
 Section 8 lists the inputs and the commands that reproduce every number.
 
-**Status: partial.** The batch runs were stopped at the coordinator's request so the native-build boots get the CPU.
-Complete: the matched ground truth (300 functions, checker `58667366...`), mutation testing (149
-mutants) and the near-miss set (69 functions, final checker). Partial: the final-checker rerun of
-the matched set (223 of 300, 0 DIFFERENT) and the asm2c sample (261 of 332 compiled translations
-checked, mixed checker versions; see 4).
+**Status.** All runs are complete. The matched ground truth (300 functions), mutation testing
+(155 mutants), the near-miss set (69 functions) and the gameplay survey (section 9) all use the final
+checker (sha256 `755e11c2...`). The asm2c sample (332 checked translations) mixes three checker
+versions; see section 4. Every batch ran under `nice -n 19` with one worker.
 
 ## 1. Why a second tier
 
@@ -229,35 +228,35 @@ is not a test.
 
 | operator | mutants | DIFFERENT | missed |
 |---|---|---|---|
-| const | 78 | 73 | 5 |
+| const | 78 | 72 | 6 |
 | cmp | 32 | 32 | 0 |
-| store | 27 | 26 | 1 |
+| store | 30 | 29 | 1 |
 | swap | 6 | 5 | 1 |
-| bound | 6 | 5 | 1 |
-| all | 149 (78 functions) | **141 (94.6%)** | 8 |
+| bound | 9 | 7 | 2 |
+| all | 155 (78 functions) | **145 (93.5%)** | 10 |
 
-(246 operator/function pairs had no site and 5 had only non-compiling mutants.) The 8 misses:
-- **4 are equivalent by construction**, so no checker could see them: three change the fifth
-  argument (r7) of a call to `fn_8841F080`, which never reads r7; one changes the crc32 tail loop
+Final checker (`755e11c2...`); 240 operator/function pairs had no site and 5 had only
+non-compiling mutants. The 10 misses:
+- **4 are equivalent by construction**, so no checker could see them. Two change the fifth
+  argument (r7) of a call to `fn_8841F080`, which never reads r7. One changes the crc32 tail loop
   `while (len >= 4)` to `> 4`, which moves the last word into the byte loop, and that computes the
-  same CRC.
-- **1 is a stated blind spot**: `value.f8 = 0` -> `1` in `ts4_name_table_build`, a field at
-  offset 8 of a local struct passed to callees. Only the first word of a frame object is
-  compared (7.1); a wider window gave false DIFFERENT verdicts on non-matched candidates.
-- **3 sit on paths the trials did not reach or reached without the deciding value**: `luaL_getn`
-  `n - 1` -> `1 - n` in a block outside the 90% covered; `lib2_frame_sync` (coverage 90.5%) `> 0`
-  -> `> 1` on a 64-bit total-samples field that must be exactly 1, and a dropped
-  `lookahead` store on an uncovered branch.
+  same CRC. One enlarges an unused local array (`loc50[2]` -> `[3]`), which changes only the frame
+  size.
+- **4 are the stated blind spot of the frame-object window** (only the first word of a local
+  passed by pointer is compared, 7.1): `value.f8` in `ts4_name_table_build`, `buf[4]` and
+  `buf[6]`/`buf[7]` of the 13-byte IHDR buffer in `png_write_IHDR`, and `loc58[1]` in
+  `fn_8820B418`.
+- **2 sit on paths the trials did not reach or reached without the deciding value**: `luaL_getn`
+  `n - 1` -> `1 - n` in a block outside the 90% covered, and a `jpeg_decode_mcu` loop bound
+  (coverage 91%).
 
-Excluding the four equivalent mutants, the detection rate is 141/145 = 97%.
-
-(Run with checker `58667366...`, like the complete table in 3.1. The rerun with the final checker
-was stopped before it reached the mutation step. Fixes 6-8 relax only argument and frame-object
-comparisons; the one mutant category they can affect is a dropped argument to a variadic call,
-which none of these 149 mutants is.)
+Excluding the four equivalent mutants, the detection rate is 145/151 = 96%. The function set differs
+slightly from earlier rounds, because the deterministic choice draws from the EQUIVALENT results of
+3.1, which moved by a few functions.
 
 Checker improvements that came out of earlier rounds of this experiment, and that the table
-already includes: stack arguments 9+ (a dropped argument in a 13-argument call was missed),
+already includes: stack arguments 9+ (a dropped argument in a 13-argument call was missed; later, a changed 13th
+argument was missed again because its slot shares 8 bytes with the LR save word of a small frame),
 seeded jump-table case values and an explicit boundary phase (a `which_tbl >= 4` -> `>= 5` was
 missed because 4 was never drawn), 8-byte loads in the mutation trace, and the out-parameter
 model (a `start < 1` flip in Lua's `str_sub` was missed because the length came back through
@@ -453,7 +452,7 @@ Inputs (nothing from them is in the repository):
 | symbols | `work/matching-b45/analysis/symbols.txt` + committed `symbols.txt` (b45: 30,430 matched functions) |
 | emulator | unicorn 2.1.4 (pip), Python 3.13.18 |
 | compiler | the project's MSVC 16.00.10224 via `fn_check.compile_candidate` (base flags `/O2 /Oi`, per-file exceptions) |
-| checker | `tools/fn_equiv.py`, version string `fn_equiv/1`, sha256 `082aff678b3695657221636b489a01057e114614483176ecf28dcd8c198157dd` (final); the complete runs in 3.1/3.2 used `58667366...` (see 3.1) |
+| checker | `tools/fn_equiv.py`, version string `fn_equiv/1`, sha256 `755e11c2bbd9fae18efc60fe742ad186de195b8140dd866fad01066bac25b840` (final) |
 
 Commands (scratch scripts live in `work/eq1/`, outside the repository's tracked tree; each
 writes JSON lines, one result per function):

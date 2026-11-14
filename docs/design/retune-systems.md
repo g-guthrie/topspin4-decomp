@@ -70,6 +70,55 @@ Code: one function decides the row today (`fn_886629C8`, always Good, by `S+0x3B
 offsets, so Tee-off is not a sixth data row: it reuses the VeryGood row with a code multiplier
 (Q1 engine check, item 3).
 
+## 2a. The grade is not one scale: each shot family is judged on its own terms
+
+Review after the first tuning run (owner, 2026-11-14). Section 2's table was written for a rally
+groundstroke and then applied to everything. That was an error: it put every return of a fast serve
+in a Bad or VeryBad row, because serve pace is "near reflex limits" on a rally scale, and that was
+the main cause of the big server's dominance in the simulation. The same mistake was latent in
+other families. The rule from now on: a grade measures how good the situation is *for that kind of
+shot*, against what is normal for that kind of shot.
+
+| Family | What "normal" is | Grade inputs | Notes |
+|---|---|---|---|
+| Rally groundstroke | Set a quarter to half a second early, strike zone, rally pace | Section 2's table as written | |
+| Return of serve | Standing ready, little time, high pace: all normal | **No pace or arrival-time points.** Good by default. Bad only when stretched wide or jammed at the body (reach swing). VeryGood on a slow serve in the strike zone, which is how a weak second serve gets attacked. No Tee-off. | Serve pace reaches the returner through the timing window only (`W_react`, and `W_opp` from the server's own timing), and through the Return rating |
+| Serve | There is no incoming ball | **No grade.** The serve keeps its own inputs: motion timing, pace chosen, how near the lines, Serve rating, fatigue, and the new fault chance | The overcharge and Tee-off do not exist on serve |
+| Volley | Little time is normal; the ball is judged against the net, not the body | Time since the opponent's contact (volley scale); ball height **relative to the net**; incoming pace on a volley scale; stretch | Output is the four outcome bands (weak ball before error), not extra error |
+| Smash | The ball is overhead by definition | Time under the ball and whether the player is backpedalling. **No height points.** | Set under a short lob is VeryGood or Tee-off |
+| Half-volley and pick-up | Low contact is the whole problem | Height relative to the ground and the Volley rating | Pace capped because the ball must be lifted |
+
+### Shot type changes how much a bad situation costs
+
+The grade table's caps are for a flat drive. Other shot types lose less on a bad grade, which is why
+players use them when they are in trouble:
+
+| Shot type | Share of the grade penalty applied | Why |
+|---|---|---|
+| Flat | 100% | needs timing, balance and a clean strike zone |
+| Topspin | 80% | more margin; still needs the legs under it |
+| Slice | 50% | the defensive stroke: short swing, works stretched and low |
+| Lob | 50% | a touch shot, hit from anywhere |
+| Drop shot | 120% on pace-related points | touch off a fast ball is the hardest thing in the game |
+
+The same shares apply to the bonus side in reverse: a flat drive gains the most from VeryGood and
+Tee-off, a slice the least. So the reason to hit flat is the top of the grade table, and the reason
+to hit slice is the bottom of it.
+
+### What this does to the big server
+
+In real tennis the big serve is very strong and still does not dominate, because holding serve is
+not winning: the server also has to break. The targets:
+
+* A serve specialist holds about 90% of service games and breaks about 10-15%; an all-rounder holds
+  80-85% and breaks about 20%. Their matches are decided in tie-breaks and come out close to even.
+* Levers, in order: (1) returns are no longer pushed into Bad rows by pace (the table above);
+  (2) the fault chance rises with pace, so the biggest serves miss more; (3) a second serve is
+  slower and can be VeryGood for the returner; (4) maximum effort costs stamina; (5) the Return and
+  Reflexes ratings widen the returner's window; (6) standing further back buys reaction time at the
+  cost of angle, which the reaction rule already makes real.
+* What is deliberately left: free points on a well-timed first serve. That is the style's reward.
+
 ## 3. The timing window
 
 Retail: the timing value `t` is 0 at 20 frames before the ball arrives and moves 0.05 per frame.
@@ -150,10 +199,12 @@ Retail: charge counts from the press to the commit; Medium from 12 frames, Power
   commit and the charge is short of Powerful: they asked for more than the ball allowed. Releasing
   early at a lower tier is never rushed; it is just a smaller swing. Cost of a rushed swing: +1
   grade point, on top of the retail late timing.
-* **Overcharge.** Holding at least 25 frames past a full meter (100 frames in all) without moving
-  enters the overcharge state. The time requirement is the gate: with the 12-frame commit it needs
-  the press about 1.9 s before contact, which only a slow ball allows. It cannot happen on a return
-  of serve or in a normal rally.
+* **Overcharge.** Holding at least 10 frames past a full meter (85 frames in all) without moving
+  enters the overcharge state. (The first draft used 25 frames; the simulation showed that a
+  typical Tee-off ball gives about 98 frames from the opponent's contact, so 25 made the overcharge
+  a once-in-70-matches event. At 10 it is about once in 11 matches.) The time requirement is still
+  the gate: only a slow ball allows it, and it cannot happen on a return of serve or in a normal
+  rally.
 
 | | Full charge | Overcharge |
 |---|---|---|
