@@ -195,7 +195,7 @@ ts4_word fn_888AC748();
 ts4_word fn_888ACA68();
 ts4_word fn_888ACDA8();
 ts4_word fn_888AD568();
-ts4_word fn_888C0970();
+ts4_word ts4_if_call_seq_u8_off1c_888C0970();
 ts4_word fn_888C3768();
 ts4_word fn_888C93E8();
 ts4_word fn_888C9A68();
@@ -668,7 +668,7 @@ ts4_word ts4_if_get_u32_off10_888AE728(ts4_word a0, ts4_word a1, ts4_word a2, ts
     return p7;
 }
 
-/* Swing_DLL.xex 0x888D3648: loop_set u8@0x88, u32@0x90, u8@0x89, ts4_find_service, fn_888C0970, u32@0x48 */
+/* Swing_DLL.xex 0x888D3648: loop_set u8@0x88, u32@0x90, u8@0x89, ts4_find_service, ts4_if_call_seq_u8_off1c_888C0970, u32@0x48 */
 ts4_word ts4_loop_set_u8_off88_888D3648(ts4_word a0)
 {
     ts4_word lv10;
@@ -697,7 +697,7 @@ ts4_word ts4_loop_set_u8_off88_888D3648(ts4_word a0)
     *(unsigned char *)((char *)(ts4_word)(a0) + 137) = (unsigned char)0;
     t1 = ts4_find_service((ts4_word)((4102225920) | 24426));
     if ((ts4_word)t1 != 0) {
-        fn_888C0970((ts4_word)t1);
+        ts4_if_call_seq_u8_off1c_888C0970((ts4_word)t1);
     }
     t4 = *(ts4_word *)((char *)(ts4_word)(a0) + 72);
     if ((int)t4 != 0) {

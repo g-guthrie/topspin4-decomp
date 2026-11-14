@@ -141,7 +141,7 @@ ts4_word fn_885068E8();
 ts4_word fn_8854D9B0();
 ts4_word fn_885EBB08();
 ts4_word ts4_if_call_seq_u32_off18_885F4B48();
-ts4_word fn_885F4C70();
+ts4_word ts4_if_get_u32_off8_885F4C70();
 ts4_word ts4_if_call_seq_u32_off18_885F4D78();
 ts4_word ts4_noop_884927F8();
 ts4_word ts4_tsu_cleanup_end();

@@ -28,7 +28,7 @@ extern char lbl_880CFF37[];
 extern char lbl_880D052A[];
 extern char lbl_880D0532[];
 void ts4_call_seq_lbl_880F345C_886E8448(char *name);
-void *fn_88771440(char *name);
+void *ts4_call_seq_lbl_880EFA80_88771440(char *name);
 void ts4_type_register_88771378(void *object);
 void fn_8887E558(char *name);
 void fn_8893CBE0(char *name);
@@ -56,7 +56,7 @@ void ts4_construct_named_88771E58(struct TS4Base *self, struct TS4Triple value)
 {
     fn_88627EC0(self, value);
     self->flag = 0;
-    ts4_type_register_88771378(fn_88771440(lbl_880C91A2));
+    ts4_type_register_88771378(ts4_call_seq_lbl_880EFA80_88771440(lbl_880C91A2));
 }
 
 void ts4_construct_named_8887EAC0(struct TS4Base *self, struct TS4Triple value)

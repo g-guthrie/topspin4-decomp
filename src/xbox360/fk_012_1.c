@@ -102,7 +102,7 @@ ts4_word KeTlsGetValue();
 ts4_word fn_8841A510();
 ts4_word fn_8841A590();
 ts4_word fn_8841DBA0();
-ts4_word fn_8841DC28();
+ts4_word ts4_if_get_u32_off8_8841DC28();
 ts4_word fn_8841E4A0();
 ts4_word ts4_get_u32_off0_8841EAC8();
 ts4_word fn_884210E8();

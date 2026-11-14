@@ -41,7 +41,8 @@ def translate_all(names, dis, env, variant):
     """variant = mode digit, orient digit, then optional letters: u = no signed-type
     inference, v = volatile stores, V = volatile loads and stores, L = volatile loads,
     R = a loop break whose exit only returns is written as that return, J = arms that return
-    early still join at their shared tail block."""
+    early still join at their shared tail block, w = void returns and tail calls as statements,
+    z = zero word stores (and the store after each) volatile."""
     mode, orient, signed = int(variant[0]), int(variant[1]), 'u' not in variant
     vol = 2 if 'V' in variant else 1 if 'v' in variant else 3 if 'L' in variant else 0
     res, fails = {}, {}
@@ -50,7 +51,8 @@ def translate_all(names, dis, env, variant):
         if not lines:
             fails[addr] = 'nolookup'; continue
         try:
-            res[addr] = translate.gen(lines, env, mode, orient, signed, vol, rbrk='R' in variant, cjoin='J' in variant)
+            res[addr] = translate.gen(lines, env, mode, orient, signed, vol, rbrk='R' in variant, cjoin='J' in variant,
+                                       vret='w' in variant, volz='z' in variant)
         except translate.Skip as e:
             fails[addr] = str(e)
         except Exception as e:  # generator bug: keep going, report as category

@@ -21,11 +21,11 @@ extern char lbl_880C88D9[];
 void ts4_type_register_88638D10(void *object);
 void fn_8863C218(void *object, int arg, struct TS4TripleArg value);
 extern void *lbl_88D45914;
-void fn_888C3220(void *object);
+void ts4_loop_call_seq_u32_off20_888C3220(void *object);
 void fn_886F7B38(void *object, struct TS4TripleArg value);
 void *fn_88923458(void *owner, struct TS4TripleArg value, unsigned int size);
 void fn_88633BD8(void *object, void *child);
-void fn_88652A90(void);
+void ts4_call_seq_lbl_880F5230_88652A90(void);
 void ts4_type_register_886529C8(void);
 void ts4_call_seq_lbl_880F4FD0_886580B8(void);
 void fn_887DBFD0(void *object, struct TS4TripleArg value, int mask);
@@ -71,7 +71,7 @@ void ts4_triple_ctor_notify_888DDC98(void *self, struct TS4TripleArg value)
 {
     fn_88627EC0(self, value);
     if (lbl_88D45914)
-        fn_888C3220(lbl_88D45914);
+        ts4_loop_call_seq_u32_off20_888C3220(lbl_88D45914);
 }
 
 /* Call base(self, value) and return self. */
@@ -98,7 +98,7 @@ void ts4_triple_ctor_clear_flag_88654248(void *self, struct TS4TripleArg value)
 {
     fn_88627EC0(self, value);
     *((unsigned char *)self + 8) = 0;
-    fn_88652A90();
+    ts4_call_seq_lbl_880F5230_88652A90();
     ts4_type_register_886529C8();
 }
 

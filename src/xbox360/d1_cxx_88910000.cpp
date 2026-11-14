@@ -7,7 +7,7 @@ extern "C" {
 
 extern void fn_889165B8();
 extern void fn_88916750();
-extern void fn_88916EE8();
+extern void ts4_if_get_u32_off8_88916EE8();
 extern void fn_88916F48();
 extern void ts4_if_get_u32_off8_889183F0();
 extern void fn_88919658();
@@ -25,7 +25,7 @@ void ts4_call_88916750_88916E98(int p0, int p1, int p2)
 
 void ts4_call_88916EE8_88916F28(int p0, int p1, int p2)
 {
-    ((void (*)(int, int))fn_88916EE8)(p2, p0);
+    ((void (*)(int, int))ts4_if_get_u32_off8_88916EE8)(p2, p0);
 }
 
 void ts4_call_88916F48_889170A8(int p0, int p1, int p2)

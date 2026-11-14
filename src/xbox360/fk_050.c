@@ -132,7 +132,7 @@ ts4_word fn_8818A530();
 ts4_word fn_88198F20();
 ts4_word fn_88199E90();
 ts4_word fn_88224B38();
-ts4_word fn_88316460();
+ts4_word ts4_if_call_seq_u32_off4_88316460();
 ts4_word ts4_addr_lbl_880292C8_8832E758();
 ts4_word fn_8841F080();
 ts4_word fn_88472748();
@@ -435,7 +435,7 @@ ts4_word ts4_call_seq_lbl_88C6E268_88AFF458(void)
     *(ts4_word *)lbl_88C6E268 = (ts4_word)(ts4_word)lbl_88028D18;
     ts4_addr_lbl_880292C8_8832E758((ts4_word)((ts4_word)lbl_88C6E268 + 24572));
     *(ts4_word *)((char *)(ts4_word)((ts4_word)lbl_88C6E268) + 23080) = (ts4_word)(ts4_word)lbl_88028B5C;
-    t2 = fn_88316460((ts4_word)((ts4_word)lbl_88C6E268 + 21952), (ts4_word)(ts4_word)lbl_880C1320, (ts4_word)0);
+    t2 = ts4_if_call_seq_u32_off4_88316460((ts4_word)((ts4_word)lbl_88C6E268 + 21952), (ts4_word)(ts4_word)lbl_880C1320, (ts4_word)0);
     return t2;
 }
 

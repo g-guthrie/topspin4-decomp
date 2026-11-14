@@ -114,4 +114,4 @@ extern char lbl_88028D18[];
 extern char lbl_88028B5C[];
 extern char lbl_880C1320[];
 extern void ts4_addr_lbl_880292C8_8832E758(void *member);
-extern void fn_88316460(void *member, void *name, int flags);
+extern void ts4_if_call_seq_u32_off4_88316460(void *member, void *name, int flags);

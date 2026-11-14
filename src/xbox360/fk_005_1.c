@@ -135,7 +135,7 @@ ts4_word fn_88626140();
 ts4_word fn_886285F8();
 ts4_word ts4_call_seq_fn_88617D88_88629DC0();
 ts4_word fn_8862C390();
-ts4_word fn_88884DE0();
+ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88884DE0();
 ts4_word fn_88888668();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy

@@ -57,7 +57,7 @@ ts4_word fn_8830F378();
 ts4_word fn_88314478();
 ts4_word fn_88315C60();
 ts4_word fn_88315F10();
-ts4_word fn_88316460();
+ts4_word ts4_if_call_seq_u32_off4_88316460();
 ts4_word fn_883179C0();
 ts4_word ts4_addr_lbl_88028B5C_88318518();
 ts4_word fn_88318550();

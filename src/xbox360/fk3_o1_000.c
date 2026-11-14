@@ -56,14 +56,14 @@ ts4_word ts4_set_thread_priority_8857B3C8();
 ts4_word fn_8857B598();
 ts4_word fn_8857C8C8();
 ts4_word fn_885846A0();
-ts4_word fn_88593BB0();
+ts4_word ts4_if_atomic_interlocked_dec_88593BB0();
 ts4_word ts4_pool16_init_885B5E38();
 ts4_word ts4_pool_free_885B72F0();
 ts4_word fn_885DC838();
 ts4_word ts4_read_indexed_u32_property_885DCDA8();
 ts4_word fn_885DCE58();
 ts4_word fn_88883DE0();
-ts4_word fn_88884DE0();
+ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88884DE0();
 ts4_word fn_889D1918();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
@@ -181,7 +181,7 @@ ts4_word ts4_if_atomic_interlocked_dec_88296E30(ts4_word a0, ts4_word a1, ts4_wo
         *(unsigned char *)((char *)(ts4_word)(a0) + 10944) = (unsigned char)((*(unsigned char *)((char *)(ts4_word)(a0) + 10944)) | 16);
         fn_8857C8C8();
         fn_882A2C10((ts4_word)a0);
-        fn_88884DE0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + -4)), (ts4_word)(612368384));
+        ts4_if_call_seq_u32_lbl_88D45B38_88884DE0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + -4)), (ts4_word)(612368384));
     }
     return t1;
 }
@@ -429,7 +429,7 @@ ts4_word ts4_if_atomic_interlocked_dec_885949C0(ts4_word a0, ts4_word a1, ts4_wo
             p5 = (ts4_word)0;
         }
         ts4_pool_free_885B72F0((ts4_word)p5);
-        fn_88593BB0((ts4_word)(ts4_word)lbl_88D2F130);
+        ts4_if_atomic_interlocked_dec_88593BB0((ts4_word)(ts4_word)lbl_88D2F130);
     }
     return t1;
 }
@@ -491,7 +491,7 @@ ts4_word ts4_if_atomic_interlocked_dec_885A6E48(ts4_word a0, ts4_word a1, ts4_wo
             p5 = (ts4_word)0;
         }
         ts4_pool_free_885B72F0((ts4_word)p5);
-        fn_88593BB0((ts4_word)(ts4_word)lbl_88D2F130);
+        ts4_if_atomic_interlocked_dec_88593BB0((ts4_word)(ts4_word)lbl_88D2F130);
     }
     return t1;
 }

@@ -4,7 +4,7 @@ void fn_8867DF68(void *self);
 void ts4_call_for_each_word_then_release_range_88752C10(void *self);
 void fn_8825FF40(void *self);
 void fn_8876CF38(void *self);
-void fn_8875F488(void *self);
+void ts4_loop_get_u32_off1c_8875F488(void *self);
 void fn_887C83B8(void *self);
 void ts4_if_call_seq_u32_off0_887C7E70(void *self);
 void fn_887D87C0(void *self);

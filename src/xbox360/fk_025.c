@@ -68,8 +68,8 @@ extern char lbl_88D4BD34[];
 ts4_word fn_88150310();
 ts4_word fn_8816D1A8();
 ts4_word fn_881705B0();
-ts4_word fn_88174B90();
-ts4_word fn_88174C40();
+ts4_word ts4_loop_call_seq_u32_off4_88174B90();
+ts4_word ts4_loop_call_seq_u32_off4_88174C40();
 ts4_word fn_88177110();
 ts4_word fn_88178C40();
 ts4_word fn_8817E720();
@@ -109,7 +109,7 @@ ts4_word fn_88871BD8();
 ts4_word fn_888860A0();
 ts4_word fn_888C04D8();
 ts4_word fn_888C39A0();
-ts4_word fn_888C6FE0();
+ts4_word ts4_if_get_u32_off5c_888C6FE0();
 ts4_word fn_888CB3F0();
 ts4_word fn_888CC2C8();
 ts4_word fn_888CC890();
@@ -118,7 +118,7 @@ ts4_word fn_888CEBA8();
 ts4_word fn_888D3330();
 ts4_word fn_888D3648();
 ts4_word fn_888D73B0();
-ts4_word fn_888D8078();
+ts4_word ts4_if_call_seq_fn_888C39A0_888D8078();
 ts4_word fn_888DA428();
 ts4_word fn_888DA698();
 ts4_word fn_888DA850();
@@ -804,7 +804,7 @@ ts4_word ts4_if_call_seq_u32_off68_888CCB50(ts4_word a0, ts4_word a1, ts4_word a
     return p3;
 }
 
-/* Swing_DLL.xex 0x888CCE88: if_call_seq fn_888CCCC8, fn_888C6FE0 */
+/* Swing_DLL.xex 0x888CCE88: if_call_seq fn_888CCCC8, ts4_if_get_u32_off5c_888C6FE0 */
 ts4_word ts4_if_call_seq_fn_888CCCC8_888CCE88(ts4_word a0, ts4_word a1)
 {
     ts4_word loc50[6];
@@ -820,7 +820,7 @@ ts4_word ts4_if_call_seq_fn_888CCCC8_888CCE88(ts4_word a0, ts4_word a1)
     t1 = fn_888CCCC8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)&loc50[0]);
     if ((ts4_word)(t1 & 0xff) != 0) {
         t2 = loc50[5];
-        fn_888C6FE0((ts4_word)t2);
+        ts4_if_get_u32_off5c_888C6FE0((ts4_word)t2);
     }
     return 1;
 }
@@ -972,10 +972,10 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45B1C_888DAEE8(ts4_word a0, ts4_word a1, ts4
     return t3;
 }
 
-/* Swing_DLL.xex 0x888DBFB0: tailcall fn_888D8078 */
+/* Swing_DLL.xex 0x888DBFB0: tailcall ts4_if_call_seq_fn_888C39A0_888D8078 */
 ts4_word ts4_tailcall_fn_888D8078_888DBFB0(ts4_word a0, ts4_word a1, ts4_word a2)
 {
-    return fn_888D8078((ts4_word)a0, (ts4_word)a1, (ts4_word)0, (ts4_word)a2);
+    return ts4_if_call_seq_fn_888C39A0_888D8078((ts4_word)a0, (ts4_word)a1, (ts4_word)0, (ts4_word)a2);
 }
 
 /* Swing_DLL.xex 0x888DCA10: call_seq ts4_find_service, fn_888DA428 */
@@ -1842,28 +1842,28 @@ void ts4_addr_lbl_880D7058_88912DC0(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x88913358: get u32@0x0, fn_88174C40 */
+/* Swing_DLL.xex 0x88913358: get u32@0x0, ts4_loop_call_seq_u32_off4_88174C40 */
 ts4_word ts4_get_u32_off0_88913358(ts4_word a0, ts4_word a1)
 {
-    return fn_88174C40((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+    return ts4_loop_call_seq_u32_off4_88174C40((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
 }
 
-/* Swing_DLL.xex 0x88913360: get u32@0x0, fn_88174C40 */
+/* Swing_DLL.xex 0x88913360: get u32@0x0, ts4_loop_call_seq_u32_off4_88174C40 */
 ts4_word ts4_get_u32_off0_88913360(ts4_word a0, ts4_word a1)
 {
-    return fn_88174C40((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+    return ts4_loop_call_seq_u32_off4_88174C40((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
 }
 
-/* Swing_DLL.xex 0x88913418: get u32@0x0, fn_88174B90 */
+/* Swing_DLL.xex 0x88913418: get u32@0x0, ts4_loop_call_seq_u32_off4_88174B90 */
 ts4_word ts4_get_u32_off0_88913418(ts4_word a0, ts4_word a1)
 {
-    return fn_88174B90((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+    return ts4_loop_call_seq_u32_off4_88174B90((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
 }
 
-/* Swing_DLL.xex 0x88913420: get u32@0x0, fn_88174B90 */
+/* Swing_DLL.xex 0x88913420: get u32@0x0, ts4_loop_call_seq_u32_off4_88174B90 */
 ts4_word ts4_get_u32_off0_88913420(ts4_word a0, ts4_word a1)
 {
-    return fn_88174B90((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+    return ts4_loop_call_seq_u32_off4_88174B90((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
 }
 
 /* Swing_DLL.xex 0x889136E8: if_call_seq lbl_880D7074, u32@0x0, fn_881A6A00, u32@0x28, ts4_destroy_owned_object, fn_88617D28 */

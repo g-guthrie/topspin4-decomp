@@ -333,6 +333,7 @@ class Gen:
 
     cjoin = False     # variant letter J: arms that return early still join at their shared tail
     rbrk = False      # variant letter R: a break to a loop exit that only returns is written as the return
+    vret = False      # variant letter w: returns and tail calls are void
 
     def __init__(self, lines, env, mode=0, orient=0, word_ret=False, infer_signed=True, vol=0, strict=False):
         self.env, self.mode, self.orient, self.word_ret = env, mode, orient, word_ret
@@ -1871,6 +1872,8 @@ class Gen:
             raise Skip('vmx tail')
         if tail == 'ret' and 'v1' in st['vwritten'] and 'r3' not in written and 'f1' not in st['fwritten']:
             self.rets.append('__vector4'); out.append(f'return {self.vrd(st, "v1")};')
+        elif tail == 'ret' and self.vret and 'f1' not in st['fwritten']:
+            self.rets.append('void'); out.append('return;')     # variant w: r3 is not a result
         elif tail == 'ret':
             r3v = st['regs'].get('r3')
             if 'r3' in written and 'f1' in st['fwritten'] and isinstance(r3v, V) and r3v.callsym and (not r3v.used or r3v.t in ('float', 'double')):
@@ -1934,7 +1937,10 @@ class Gen:
             if nfix is not None:
                 self.fprotos[tail[1]] = [self.argtype(a) for a in callargs[:nfix]] + ['...']
             self.protos[tail[1]] = len(callargs); self.detail.append(tail[1]); self.kinds.append('tail')
-            self.rets.append('ts4_word'); out.append(f'return {tail[1]}({", ".join(self.argcast(c) for c in callargs)});')
+            if self.vret:      # variant w: the tail call is a plain statement of a void function
+                self.rets.append('void'); out.append(f'{tail[1]}({", ".join(self.argcast(c) for c in callargs)});'); out.append('return;')
+            else:
+                self.rets.append('ts4_word'); out.append(f'return {tail[1]}({", ".join(self.argcast(c) for c in callargs)});')
         else:
             if st['ctr'] is None:
                 raise Skip('ctr lost')
@@ -1963,7 +1969,11 @@ class Gen:
                 raise Skip('ca hi')
             self.rets.append('ts4_word')
             pt = ', '.join(self.argtype(c) for c in callargs); self.kinds.append('vcall')
-            out.append(f'return ((ts4_word (*)({pt}))({tail[1]}))({", ".join(self.argcast(c) for c in callargs)});')
+            if self.vret:
+                self.rets[-1] = 'void'
+                out.append(f'((void (*)({pt}))({tail[1]}))({", ".join(self.argcast(c) for c in callargs)});'); out.append('return;')
+            else:
+                out.append(f'return ((ts4_word (*)({pt}))({tail[1]}))({", ".join(self.argcast(c) for c in callargs)});')
 
     # ---- conditions ------------------------------------------------------------
     def leaf(self, st, mn, cr):
@@ -2783,12 +2793,36 @@ def vcall_thunk(lines):
     return None
 
 
-def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0, rbrk=False, cjoin=False):
-    Gen.rbrk = rbrk; Gen.cjoin = cjoin
+def post_volz(body):
+    """Variant z: a zero word store and the store after it become volatile, which keeps
+    MSVC from moving the zero stores (it schedules `li rX,0` stores as a group)."""
+    zero = r'^\s*\*\(ts4_word \*\)(.*) = \(ts4_word\)0;$'
+    L = body.split('\n')
+    for i in range(len(L) - 1):
+        if re.match(zero, L[i]):
+            L[i] = L[i].replace('*(ts4_word *)', '*(volatile ts4_word *)', 1)
+            j = i + 1
+            while j < len(L) and L[j].strip() in ('', '}'):
+                j += 1
+            if j < len(L) and not re.match(zero, L[j]):
+                L[j] = L[j].replace('*(ts4_word *)', '*(volatile ts4_word *)')
+    return '\n'.join(L)
+
+
+def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0, rbrk=False, cjoin=False, vret=False, volz=False):
+    """`vret` (variant w): returns and tail calls are void (r3 is never a result).
+    `volz` (variant z): see post_volz."""
+    Gen.rbrk = rbrk; Gen.cjoin = cjoin; Gen.vret = vret
     try:
-        return _gen(lines_all, env, mode, orient, infer_signed, vol)
+        res = _gen(lines_all, env, mode, orient, infer_signed, vol)
     finally:
-        Gen.rbrk = False; Gen.cjoin = False
+        Gen.rbrk = False; Gen.cjoin = False; Gen.vret = False
+    if volz:
+        b = post_volz(res['body'])
+        if b == res['body']:
+            raise Skip('volz none')
+        res['body'] = b
+    return res
 
 
 def _gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):

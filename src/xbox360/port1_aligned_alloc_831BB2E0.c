@@ -4,7 +4,7 @@
 
 
 extern void *fn_88888668(unsigned, unsigned);
-extern void fn_88884DE0(void *, unsigned);
+extern void ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(void *, unsigned);
 
 /* Swing_DLL.xex 0x885BE210 */
 char *ts4_aligned_alloc_885BE210(unsigned n, int a)
@@ -30,7 +30,7 @@ char *ts4_aligned_alloc_885BE210(unsigned n, int a)
         q[-1] = (char)(q - p);
         return q;
     }
-    fn_88884DE0(p, 0x248c8000);
+    ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(p, 0x248c8000);
     return 0;
 }
 

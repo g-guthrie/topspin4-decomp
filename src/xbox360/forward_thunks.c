@@ -159,7 +159,7 @@ void fn_887C7E70(void);
 void fn_887C8268(void);
 void fn_887D8F28(void);
 void fn_887DD610(void);
-void fn_887EA320(void);
+void ts4_loop_get_u32_off1c_887EA320(void);
 void fn_887F20D0(void);
 void ts4_type_register_887F48B8(void);
 void fn_887F7588(void);
@@ -369,7 +369,7 @@ TS4_FORWARD(887C83B0, fn_887C8268)
 TS4_FORWARD(887D9508, ts4_tsu_notify_object)
 TS4_FORWARD(887D9A08, fn_887D8F28)
 TS4_FORWARD(887DF418, fn_887DD610)
-TS4_FORWARD(887EA550, fn_887EA320)
+TS4_FORWARD(887EA550, ts4_loop_get_u32_off1c_887EA320)
 TS4_FORWARD(887F3430, fn_887F20D0)
 TS4_FORWARD(887F4C98, ts4_type_register_887F48B8)
 TS4_FORWARD(887F7670, fn_887F7588)

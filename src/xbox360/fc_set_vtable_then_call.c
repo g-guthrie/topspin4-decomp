@@ -98,7 +98,7 @@ extern char lbl_880F8B94;
 extern char lbl_880F8C74;
 extern char lbl_880F8C78;
 extern char lbl_880F8D50;
-void fn_881F41E8(void *);
+void ts4_call_seq_lbl_880E9660_881F41E8(void *);
 void fn_882804F0(void *);
 void fn_882806A8(void *);
 void fn_8860BBD8(void *);
@@ -335,7 +335,7 @@ SET_VTABLE_THEN_CALL(ts4_set_vtable_then_call_8877A598, lbl_880E4BA0, fn_8860BBD
 SET_VTABLE_THEN_CALL(ts4_set_vtable_then_call_88782310, lbl_880E4BA0, fn_8860BBD8)
 
 /* Swing_DLL.xex 0x887B53D8 */
-SET_VTABLE_THEN_CALL(ts4_set_vtable_then_call_887B53D8, lbl_880EF750, fn_881F41E8)
+SET_VTABLE_THEN_CALL(ts4_set_vtable_then_call_887B53D8, lbl_880EF750, ts4_call_seq_lbl_880E9660_881F41E8)
 
 /* Swing_DLL.xex 0x887C7E20 */
 SET_VTABLE_THEN_CALL(ts4_set_vtable_then_call_887C7E20, lbl_880EA60C, fn_88617D28)

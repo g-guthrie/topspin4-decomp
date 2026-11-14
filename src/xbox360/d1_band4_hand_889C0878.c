@@ -2,7 +2,7 @@
 
 extern void *ts4_get_u32_lbl_88D4E11C_88581A90(void);
 extern void fn_88580EB8(void *, int, void *);
-extern void fn_889D1D28(void *);
+extern void ts4_if_get_u32_off0_889D1D28(void *);
 extern int ts4_if_call_seq_u32_off0_8864BC08(void *);
 extern int fn_8864D0A0(void *, void *);
 typedef struct D1358 { char pad[0x18]; void *a; void *b; } D1358;
@@ -13,7 +13,7 @@ void ts4_release_889D1358(D1358 *s)
     {
         void *b = s->b;
         if (b != 0) {
-            fn_889D1D28(b);
+            ts4_if_get_u32_off0_889D1D28(b);
             fn_88580EB8(ts4_get_u32_lbl_88D4E11C_88581A90(), 0, b);
         }
     }

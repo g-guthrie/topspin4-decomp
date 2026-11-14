@@ -5,7 +5,7 @@ extern double g_ts4_script_constants[];
 extern void *lbl_88D4594C;
 extern void *lbl_88D45954;
 extern void *lbl_88D45A60;
-ts4_script_u32 fn_887993C8(void *object, int);
+ts4_script_u32 ts4_if_set_u32_off314_887993C8(void *object, int);
 ts4_script_u32 fn_8886B230(ts4_script_u32);
 ts4_script_u32 fn_8886B388(ts4_script_u32);
 ts4_script_u32 fn_888C8370(void *object, int);
@@ -335,7 +335,7 @@ ts4_script_u32 ts4_script_number_arg_call_8879AB70(struct TS4ScriptContext *cont
     } else {
         number = g_ts4_script_constants[11];
     }
-    fn_887993C8(lbl_88D45A60, (int)number);
+    ts4_if_set_u32_off314_887993C8(lbl_88D45A60, (int)number);
     return 0;
 }
 

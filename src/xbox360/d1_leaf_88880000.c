@@ -17,7 +17,7 @@ extern void ts4_get_u32__imp_KeTimeStampBundle_8857B830(void *);
 extern void fn_8857C1F8(void *);
 extern void fn_8857C8C8(void *);
 extern void fn_8861A8D0(void *);
-extern void fn_8861AA88(void *);
+extern void ts4_if_get_u32_off0_8861AA88(void *);
 extern void fn_88887BE0(void *);
 extern void fn_8888D120(void *);
 extern char lbl_88D3EB60[];

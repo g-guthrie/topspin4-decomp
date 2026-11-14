@@ -157,7 +157,7 @@ ts4_word fn_886077C0();
 ts4_word fn_88608590();
 ts4_word fn_88608FE0();
 ts4_word fn_8860B180();
-ts4_word fn_8860B230();
+ts4_word ts4_if_get_u32_off10_8860B230();
 ts4_word fn_8860B2A8();
 ts4_word fn_8860BBD8();
 ts4_word fn_8860BD70();
@@ -2046,7 +2046,7 @@ ts4_word ts4_if_set_u32_off4_886171F0(ts4_word a0, ts4_word a1, ts4_word a2, ts4
     if ((ts4_word)a2 != 0) {
         t1 = fn_8860B2A8((ts4_word)a0, (ts4_word)a2);
         if ((ts4_word)(t1 & 0xff) != 0) {
-            fn_8860B230((ts4_word)a0, (ts4_word)a2);
+            ts4_if_get_u32_off10_8860B230((ts4_word)a0, (ts4_word)a2);
             t3 = *(ts4_word *)((char *)(ts4_word)(a0) + 28);
             t5 = fn_88613268((ts4_word)(*(ts4_word *)lbl_88D45B38), (ts4_word)t3, (ts4_word)1, (ts4_word)0, (ts4_word)0);
             t6 = *(ts4_word *)((char *)(ts4_word)(a0) + 28);

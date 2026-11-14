@@ -120,7 +120,7 @@ extern char * ts4_fixed_string_append_8816CF48(char *, char *, char *);
 extern void fn_8881C828(u32 *, int, u32);
 extern u32 fn_888367F8(int, int, u32 *);
 extern u32 fn_888368B0(int, int, u32 *);
-extern void fn_887EA320(void);
+extern void ts4_loop_get_u32_off1c_887EA320(void);
 extern void fn_88563110(int);
 extern void fn_887EA6E0(void);
 extern u32 fn_881AD020(char *, u32 *);
@@ -172,7 +172,7 @@ extern char * fn_88193748(char *);
 extern u32 fn_8857BA40(char *, int, int, int);
 extern u32 fn_88276028(int, int);
 extern u32 fn_88888668(int, int);
-extern u32 fn_88884DE0(int, int);
+extern u32 ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(int, int);
 extern int NetDll_XNetUnregisterInAddr(int, int);
 extern int NetDll_XNetConnect(int, int);
 extern int NetDll_XNetGetConnectStatus(int, int);
@@ -195,7 +195,7 @@ extern char * lbl_88D459E8;
 extern char * lbl_88D45A08;
 extern u32 fn_888C7AF8(u32);
 extern u32 ts4_query_size_8857BF40(char *, int);
-extern void fn_881C38D0(char *);
+extern void ts4_counted_ptr_assign_881C38D0(char *);
 extern void fn_8890E988(char *);
 extern u32 fn_88319C40(int, int, int);
 extern u32 fn_88336AD8(int, int, int);
@@ -1244,7 +1244,7 @@ void ts4_call_twice_chained_on_global_8863C640(void)
 /* Swing_DLL.xex 0x887EB348 */
 u32 ts4_call_then_call_zero_return_zero_887EB348(void)
 {
-    fn_887EA320();
+    ts4_loop_get_u32_off1c_887EA320();
     fn_88563110(0);
     return 0;
 }
@@ -2002,7 +2002,7 @@ u32 ts4_forward_shifted_args_885933A0(int a, int b, int c)
 /* Swing_DLL.xex 0x885933B0 */
 u32 ts4_forward_shifted_args_885933B0(int a, int b, int c)
 {
-    return fn_88884DE0(b, c);
+    return ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(b, c);
 }
 
 /* netdll_call_with_one */
@@ -2283,7 +2283,7 @@ u32 ts4_forward_field20_with_zero_887CB6E0(char *a)
 /* Swing_DLL.xex 0x881DD850 */
 void ts4_forward_this_plus_24_881DD850(char *a)
 {
-    fn_881C38D0(a + 24);
+    ts4_counted_ptr_assign_881C38D0(a + 24);
 }
 
 /* Swing_DLL.xex 0x886811D0 */
@@ -2327,7 +2327,7 @@ u32 ts4_forward_second_arg_with_const_24950000_882A8E08(int a, int b)
 /* Swing_DLL.xex 0x882A8E18 */
 u32 ts4_forward_second_arg_with_const_24950000_882A8E18(int a, int b)
 {
-    return fn_88884DE0(b, 0x24950000);
+    return ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(b, 0x24950000);
 }
 
 /* forward_with_zero_third_arg */
@@ -2474,7 +2474,7 @@ u32 ts4_forward_with_const_248C8000_885BE1F0(int a)
 /* Swing_DLL.xex 0x885BE200 */
 u32 ts4_forward_with_const_248C8000_885BE200(int a)
 {
-    return fn_88884DE0(a, 0x248C8000);
+    return ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(a, 0x248C8000);
 }
 
 /* forward_field0_with_minus1 */

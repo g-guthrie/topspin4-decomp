@@ -20,9 +20,9 @@ typedef struct Ts4Handle10 { char pad[0x10]; int handle; } Ts4Handle10;
 /* 0x881C2090 */
 void ts4_call_with_handle10_if_nonzero_881C2090(Ts4Handle10 *t) { int p = t->handle; if (p) fn_881BF3E8(p); }
 
-extern void fn_88884DE0(void *, int);
+extern void ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(void *, int);
 /* 0x882EC158 */
-void ts4_call_with_tag_if_nonnull_882EC158(void *p) { if (p) fn_88884DE0(p, 0x24810000); }
+void ts4_call_with_tag_if_nonnull_882EC158(void *p) { if (p) ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(p, 0x24810000); }
 
 /* ---- 64-bit field sums ---- */
 typedef struct Ts4Sum18 { char pad[0x18]; u64 total; u32 pad2; u32 extra; } Ts4Sum18;

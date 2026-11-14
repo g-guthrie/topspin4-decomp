@@ -49,8 +49,8 @@ extern void fn_881C5AA8(void *table, void *value, int flag);
 extern void fn_881906E8(Ts4BucketTable14 *table, Ts4BucketNode14 *node);
 extern void fn_881C5B50(Ts4BucketTable8 *table, Ts4BucketNode8 *node);
 extern void fn_881EFF80(Ts4BucketTable8 *table, Ts4BucketNode8 *node);
-extern void fn_881EF9A0(Ts4BucketTable38 *table, Ts4BucketNode38 *node);
-extern void fn_881F0208(Ts4BucketTable8 *table, Ts4BucketNode8 *node);
+extern void ts4_if_call_seq_u32_off0_881EF9A0(Ts4BucketTable38 *table, Ts4BucketNode38 *node);
+extern void ts4_if_call_seq_u32_off0_881F0208(Ts4BucketTable8 *table, Ts4BucketNode8 *node);
 extern void fn_8827BF00(Ts4BucketTable8 *table, Ts4BucketNode8 *node);
 
 void ts4_clear_bucket_table_881902D0(Ts4BucketTable14 *table)
@@ -150,7 +150,7 @@ void ts4_clear_bucket_table_881EF750(Ts4BucketTable38 *table)
                 Ts4BucketNode38 *node = current;
 
                 current = current->next;
-                fn_881EF9A0(table, node);
+                ts4_if_call_seq_u32_off0_881EF9A0(table, node);
             }
         }
     }
@@ -178,7 +178,7 @@ void ts4_clear_bucket_table_881EFA60(Ts4BucketTable8 *table)
                 Ts4BucketNode8 *node = current;
 
                 current = current->next;
-                fn_881F0208(table, node);
+                ts4_if_call_seq_u32_off0_881F0208(table, node);
             }
         }
     }

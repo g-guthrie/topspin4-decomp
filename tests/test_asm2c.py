@@ -742,6 +742,23 @@ class K5Tests(unittest.TestCase):
         r = gen(["subfic r10,r3,0x0", "srwi r10,r3,31", "addme r10,r10", "and r3,r10,r3", "blr"])
         self.assertIn("(((int)a0 > 0) ? a0 : 0)", r["body"])
 
+    def test_void_variant_returns_and_tail_calls(self):
+        t = ["mr r11,r3", "li r10,0", "addi r3,r3,16", "stb r10,8(r11)", "b 0x0 -> 0x88001000   ; REL24 fn_88001000"]
+        r = gen(t, vret=True)
+        self.assertTrue(r["sig"].startswith("void "))
+        self.assertIn("fn_88001000(", r["body"])
+        self.assertNotIn("return fn_88001000", r["body"])
+        r = gen(["li r11,0", "stw r11,4(r3)", "blr"], vret=True)
+        self.assertTrue(r["sig"].startswith("void "))
+        self.assertIn("return;", r["body"])
+
+    def test_volatile_zero_stores_variant(self):
+        r = gen(["li r11,0", "li r10,5", "stw r11,4(r3)", "stw r10,8(r3)", "blr"], volz=True)
+        self.assertIn("*(volatile ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)0;", r["body"])
+        self.assertIn("*(volatile ts4_word *)((char *)(ts4_word)(a0) + 8) = (ts4_word)5;", r["body"])
+        with self.assertRaises(translate.Skip):
+            gen(["li r10,5", "stw r10,8(r3)", "blr"], volz=True)
+
     def test_cntlzw_as_number_is_intrinsic(self):
         r = gen(["cntlzw r11,r4", "srwi r11,r11,5", "cntlzw r3,r3", "add r3,r3,r11", "blr"])
         self.assertIn("_CountLeadingZeros(a0)", r["body"])

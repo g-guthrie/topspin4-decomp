@@ -117,7 +117,7 @@ ts4_word ts4_if_set_fn_88425490_884292B8();
 ts4_word fn_8842B078();
 ts4_word fn_88431250();
 ts4_word fn_88432B08();
-ts4_word fn_88433DD8();
+ts4_word ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8();
 ts4_word fn_88434B38();
 ts4_word fn_884C5468();
 ts4_word fn_884C6220();
@@ -1818,18 +1818,18 @@ ts4_word ts4_if_call_seq_fn_88423788_88432B70(ts4_word a0, ts4_word a1, ts4_word
     return a0;
 }
 
-/* Swing_DLL.xex 0x88433ED8: call_seq lbl_88042D94, fn_88433DD8, lbl_88042D84, fn_88433DD8, lbl_88042D78, fn_88433DD8 */
+/* Swing_DLL.xex 0x88433ED8: call_seq lbl_88042D94, ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8, lbl_88042D84, ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8, lbl_88042D78, ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8 */
 ts4_word ts4_call_seq_lbl_88042D94_88433ED8(ts4_word a0, ts4_word a1)
 {
     ts4_word t7;
 
-    fn_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D94);
-    fn_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D84);
-    fn_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D78);
-    fn_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D6C);
-    fn_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D60);
-    fn_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D54);
-    t7 = fn_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D48);
+    ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D94);
+    ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D84);
+    ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D78);
+    ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D6C);
+    ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D60);
+    ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D54);
+    t7 = ts4_if_call_seq_ts4_if_call_seq_u32_off4_88428890_88433DD8((ts4_word)a0, (ts4_word)a1, (ts4_word)(ts4_word)lbl_88042D48);
     return t7;
 }
 

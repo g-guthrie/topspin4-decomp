@@ -4,7 +4,7 @@
 
 extern void ts4_if_get_u8_off6d0_883810C8(void *);
 extern void fn_88381228(void *);
-extern void fn_883812A8(void *);
+extern void ts4_if_get_u32_off2ac_883812A8(void *);
 extern void fn_88381320(void *);
 extern void fn_883813B8(void *);
 extern void fn_883814B8(void *);
@@ -22,7 +22,7 @@ void ts4_forward_adjusted_or_null_m1c_883818A0(char *object)
 
 void ts4_forward_adjusted_or_null_m1c_88381928(char *object)
 {
-    fn_883812A8(object ? object - 0x1c : 0);
+    ts4_if_get_u32_off2ac_883812A8(object ? object - 0x1c : 0);
 }
 
 void ts4_forward_adjusted_or_null_m1c_88381940(char *object)

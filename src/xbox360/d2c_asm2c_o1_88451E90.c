@@ -214,7 +214,7 @@ ts4_word fn_885AA098();
 ts4_word fn_885AA110();
 ts4_word fn_885AA168();
 ts4_word fn_885AA560();
-ts4_word fn_885AA5F0();
+ts4_word ts4_get_u32_off18_885AA5F0();
 ts4_word ts4_get_u32_off0_885AA668();
 ts4_word fn_885AA8A0();
 ts4_word fn_885AB808();
@@ -246,7 +246,7 @@ ts4_word fn_885B87E0();
 ts4_word fn_885CF138();
 ts4_word ts4_if_get_u32_off0_885CF1F0();
 ts4_word fn_885F5180();
-ts4_word fn_88884DE0();
+ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88884DE0();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
 #endif

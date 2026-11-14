@@ -18,7 +18,7 @@ extern char lbl_88D459D0[];
 extern char lbl_88D459D8[];
 extern char lbl_88D45B38[];
 ts4_word fn_88150600();
-ts4_word fn_88213D38();
+ts4_word ts4_if_call_seq_u32_off8_88213D38();
 ts4_word fn_8846C178();
 ts4_word fn_88613268();
 ts4_word fn_88799490();

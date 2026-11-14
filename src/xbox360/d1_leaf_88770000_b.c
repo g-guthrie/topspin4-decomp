@@ -4,7 +4,7 @@
 
 extern void fn_881B9148(void *);
 extern void fn_8860BBD8(void *);
-extern void fn_88771440(void *);
+extern void ts4_call_seq_lbl_880EFA80_88771440(void *);
 extern char lbl_880C91A3[];
 extern char lbl_880E3738[];
 extern char lbl_880E3770[];

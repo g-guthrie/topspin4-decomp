@@ -20,9 +20,9 @@ typedef struct Ts4CapOwner { char pad[0x4c]; struct { char pad[0x20]; u32 flags;
 int ts4_get_two_floats_if_capable_88325148(Ts4CapOwner *t, float *a, float *b) { if (t->owner == 0) return 0x24; if ((t->owner->flags & 0x10) == 0) return 0x31; if (a) *a = t->first; if (b) *b = t->second; return 0; }
 
 /* 0x882A2788: free a singly linked chain (child at +0xc) releasing each node's payload and the node itself */
-extern void fn_88884DE0(void *, int);
+extern void ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(void *, int);
 typedef struct Ts4ChainNode { char pad[8]; void *payload; struct Ts4ChainNode *next; } Ts4ChainNode;
-void ts4_free_chain_882A2788(Ts4ChainNode *n) { if (n) { ts4_free_chain_882A2788(n->next); n->next = 0; fn_88884DE0(n->payload, (int)0xB1800000); fn_88884DE0(n, 0x24800000); } }
+void ts4_free_chain_882A2788(Ts4ChainNode *n) { if (n) { ts4_free_chain_882A2788(n->next); n->next = 0; ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(n->payload, (int)0xB1800000); ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(n, 0x24800000); } }
 
 /* 0x88346150: store a float into one of four slots chosen by index (this-adjusted object) */
 int ts4_set_float_slot_by_index4_adj1c_88346150(char *t, u32 idx, float x) {

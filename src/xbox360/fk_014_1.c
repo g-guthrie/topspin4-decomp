@@ -189,7 +189,7 @@ ts4_word fn_885AB8D0();
 ts4_word fn_885ABB98();
 ts4_word fn_885AC3C8();
 ts4_word fn_885B5CD0();
-ts4_word fn_88884DE0();
+ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88884DE0();
 
 /* Swing_DLL.xex 0x88564B00: tailcall ts4_strtoxl_88564828 */
 ts4_word ts4_tailcall_fn_88564828_88564B00(ts4_word a0, ts4_word a1, ts4_word a2)

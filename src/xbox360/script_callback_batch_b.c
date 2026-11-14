@@ -5,7 +5,7 @@ extern void *lbl_88D4595C;
 
 ts4_u32 fn_88868EE0(void);
 void fn_888693C8(void);
-void fn_888E9088(void *object);
+void ts4_loop_call_seq_u32_lbl_88D458F0_888E9088(void *object);
 void fn_888E9678(void);
 void fn_888E96F0(void *object);
 void fn_888E9B68(void *object);
@@ -27,7 +27,7 @@ ts4_u32 ts4_script_match_start_reset_rewards(void)
 /* Registered as InitPracticeGround. */
 ts4_u32 ts4_script_init_practice_ground(void)
 {
-    fn_888E9088(lbl_88D4595C);
+    ts4_loop_call_seq_u32_lbl_88D458F0_888E9088(lbl_88D4595C);
     return 0;
 }
 

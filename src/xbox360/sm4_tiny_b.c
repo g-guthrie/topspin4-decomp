@@ -34,8 +34,8 @@ extern char lbl_8808C97C, lbl_8808C990;
 void ts4_tail_88421058_consts_884D7A18(int a, int b) { ts4_forward_varargs_88421058(a, b, &lbl_8808C97C, 5, 5, 0, &lbl_8808C990); }
 
 /* free the block that starts one byte-header before the pointer */
-extern void fn_88884DE0(void *, unsigned);
-void ts4_free_with_header_885BE2C8(unsigned char *p) { if (p) fn_88884DE0(p - p[-1], 0x248c8000); }
+extern void ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(void *, unsigned);
+void ts4_free_with_header_885BE2C8(unsigned char *p) { if (p) ts4_if_call_seq_u32_lbl_88D45B38_88884DE0(p - p[-1], 0x248c8000); }
 
 /* forward the child object at +8 together with this */
 extern void fn_88470870(void *, void *);
