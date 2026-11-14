@@ -81,166 +81,154 @@ def floor_penalty(rating):
 
 
 # =========================================================================== set-up grade
+# Structure: docs/design/retune-systems.md s2 (design authority).  A penalty score summed from four inputs the
+# engine computes, mapped to six rows.  Thresholds are this spec's tuned values (section 4).
 
 GRADES = ["Tee-off", "VeryGood", "Good", "Normal", "Bad", "VeryBad"]
 
-# Penalty points per input (piecewise linear).  Inputs and engine sources (spec section 4):
-#   frames  : TimingState #3fe3a099 S+0xCF0, frames from the opponent's contact to own contact
-#   v_req   : #5cf9de02 S+0x7A4, required run speed to the hit point, m/s
-#   run_cm  : #03d2be3d S+0x7A0, distance still to run to the hit point, cm
-#   height  : Ball+0x344 contact height, cm
-#   pace    : incoming ball speed at contact, km/h (#1407106c S+0x770: needs the code writer, TUNING s12)
-#   depth_x : own court position, cm behind own baseline (+ = behind, - = inside the court)
-#   set_f   : frames the player has been planted (planner Hold/BallWindow state) at contact
-#   stretch : SwingCategory reach qualifier #0698037d (0/1)
-#   kick    : incoming spin_a (template spin, negative = topspin), magnitude 0..0.5
-P_TIME = [(20, 4.5), (30, 3.0), (45, 1.6), (60, 0.7), (80, 0.0)]
-P_TIME_VOLLEY = [(12, 3.6), (18, 2.4), (26, 1.2), (36, 0.3), (48, 0.0)]   # volleys live at short times
-P_PACE_VOLLEY = [(60, 0.0), (80, 0.4), (100, 1.0), (120, 1.8), (140, 2.6)]
-P_RUN = [(0.0, 0.0), (0.28, 0.0), (0.55, 1.0), (0.80, 2.4), (1.0, 4.0)]     # on v_req / own top speed
-P_LOW = [(20, 2.4), (40, 1.7), (60, 0.9), (80, 0.0)]
-P_HIGH = [(130, 0.0), (165, 0.8), (200, 2.0)]
-P_PACE = [(45, 0.0), (60, 0.3), (75, 0.9), (90, 1.7), (110, 2.8)]
-P_DEEP = [(150, 0.0), (300, 0.5), (500, 1.4)]
-P_KICK = [(0.20, 0.0), (0.40, 0.45), (0.55, 0.70)]
-STRETCH_PTS = 1.4
+# Arrival margin: frames the player has been planted at the hit point before contact (planner arrival, S+0xCF0
+# family).  30+ : 0, 15-29 : 1, 1-14 : 2, still moving at contact : 3, reach or lunge swing : 4.
+ARRIVAL_EDGES = (30, 15, 1)
+# Volleys: nobody is "set" at the net, so the margin is the frames since the opponent's contact (S+0xCF0) on a
+# volley time scale (retune-systems s2 "volley time scale"; edges are this spec's tuned values).
+VOLLEY_ARRIVAL_EDGES = (44, 32, 22)
+# Contact height (Ball+0x344), cm: knee, waist, shoulder, head (judgement for an adult player).
+KNEE_CM, WAIST_CM, SHOULDER_CM, HEAD_CM = 50.0, 95.0, 145.0, 185.0
+# Incoming pace at contact (S+0x770 once written), km/h: slow <= , normal <= , heavy <= , else near reflex limits.
+PACE_EDGES = (52.0, 78.0, 100.0)
+VOLLEY_PACE_EDGES = (52.0, 85.0, 110.0)
+LOW_VIGOR = 0.30
 TOP_SPEED_REF = 7.5          # m/s: v_req is divided by the player's top speed; callers rescale v_req
-UNSET_PTS = 0.4             # still moving at contact (set_f < 6)
-INSIDE_BONUS = -0.4         # inside the court with time (depth_x < -150 and frames >= 60)
-GRADE_EDGES = [0.8, 2.0, 3.4, 5.0]          # VeryGood | Good | Normal | Bad | VeryBad
-# Tee-off (owner's conditions, all required; thresholds from engine values, spec section 4):
-#   slow ball at arrival   contact pace <= 52 km/h (S+0x770, needs its writer); a neutral rally ball arrives at 60-75
-#   waist to shoulder      contact height 95..145 cm (Ball+0x344)
-#   time                   >= 60 frames since the opponent's hit (S+0xCF0 >= 60, as AutoSwing graph 179)
-#   no reach               required run speed < 3.5 m/s (PT+0x1B0, the FlatGoodReach threshold), not stretched
-#   feet set               planted within 100 cm of the hit point (racket reach, no lunge) and arrived >= 20 frames
-#                          before contact; the run that got him there does not matter
-#   not backing up         own contact point not more than 150 cm behind the baseline and not moving back
-TEEOFF = {"pace_max": 52.0, "h_lo": 95.0, "h_hi": 145.0, "frames_min": 60, "vreq_max": 3.5, "run_max": 100.0,
+# Score -> grade (retune-systems s2): -1 or 0 VeryGood (Tee-off if the test passes at -1), 1-2 Good, 3 Normal,
+# 4-5 Bad, 6+ VeryBad.
+GRADE_OF_SCORE = [(0, "VeryGood"), (2, "Good"), (3, "Normal"), (5, "Bad")]
+
+# Tee-off test (retune-systems s2, owner's conditions, all required)
+TEEOFF = {"pace_max": 52.0, "h_lo": WAIST_CM, "h_hi": SHOULDER_CM, "frames_min": 60, "vreq_max": 3.5,
           "set_min": 20, "depth_max": 150.0}
 
 
-def grade_points(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick=0.0, volley=False):
-    pts = {
-        "time": pwl(P_TIME_VOLLEY if volley else P_TIME, frames),
-        "run": pwl(P_RUN, v_req / TOP_SPEED_REF),
-        "height": pwl(P_LOW, height) + pwl(P_HIGH, height),
-        "pace": pwl(P_PACE_VOLLEY if volley else P_PACE, pace),
-        "position": 0.0 if volley else pwl(P_DEEP, depth_x) + (INSIDE_BONUS if depth_x < -150 and frames >= 60 else 0.0),
-        "stretch": STRETCH_PTS if stretch else 0.0,
-        "unset": UNSET_PTS if (set_f < 6 and not volley) else 0.0,
-        "kick": pwl(P_KICK, abs(kick)),
-    }
-    return pts
+def grade_points(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick=0.0, volley=False,
+                 rushed=False, vigor=1.0):
+    """Points per input (integers).  kick, run_cm and depth_x are not inputs of the score (kept in the
+    signature for the callers; the Tee-off test reads depth_x)."""
+    if stretch:
+        arrival = 4
+    elif volley:
+        e = VOLLEY_ARRIVAL_EDGES
+        arrival = 0 if frames >= e[0] else 1 if frames >= e[1] else 2 if frames >= e[2] else 3
+    else:
+        e = ARRIVAL_EDGES
+        arrival = 0 if set_f >= e[0] else 1 if set_f >= e[1] else 2 if set_f >= e[2] else 3
+    if WAIST_CM <= height <= SHOULDER_CM:
+        h = 0
+    elif KNEE_CM <= height <= HEAD_CM:
+        h = 1
+    else:
+        h = 2
+    pe = VOLLEY_PACE_EDGES if volley else PACE_EDGES
+    pc = -1 if pace <= pe[0] else 0 if pace <= pe[1] else 1 if pace <= pe[2] else 2
+    self_ = (1 if rushed else 0) + (1 if vigor < LOW_VIGOR else 0)
+    return {"arrival": arrival, "height": h, "pace": pc, "self": self_}
 
 
-def grade_of(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick=0.0, volley=False):
-    """(grade name, score, points).  Tee-off needs a VeryGood score AND every sitter condition (a volley
-    Tee-off is the put-away: slow, above the net, time to watch it)."""
-    pts = grade_points(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick, volley)
-    if volley:
-        q = max(0.0, sum(pts.values()))
-        if q <= 0.5 and pace <= 75.0 and height >= 110.0 and frames >= 30 and not stretch:
-            return "Tee-off", q, pts
-        for g, edge in zip(GRADES[1:], GRADE_EDGES):
-            if q < edge:
-                return g, q, pts
-        return "VeryBad", q, pts
-    q = max(0.0, sum(pts.values()))
+def grade_of_score(score):
+    for edge, g in GRADE_OF_SCORE:
+        if score <= edge:
+            return g
+    return "VeryBad"
+
+
+def teeoff_test(frames, v_req, height, pace, depth_x, set_f, stretch, volley=False):
     t = TEEOFF
-    if (pace <= t["pace_max"] and t["h_lo"] <= height <= t["h_hi"] and frames >= t["frames_min"]
-            and v_req < t["vreq_max"] and not stretch and set_f >= t["set_min"]
-            and depth_x <= t["depth_max"]):
-        return "Tee-off", q, pts
-    for g, edge in zip(GRADES[1:], GRADE_EDGES):
-        if q < edge:
-            return g, q, pts
-    return "VeryBad", q, pts
+    if volley:      # at the net: a slow ball above the net with time to watch it (the volley put-away)
+        return pace <= 75.0 and height >= 110.0 and frames >= 30 and not stretch
+    return (pace <= t["pace_max"] and t["h_lo"] <= height <= t["h_hi"] and frames >= t["frames_min"]
+            and v_req < t["vreq_max"] and not stretch and set_f >= t["set_min"] and depth_x <= t["depth_max"])
 
 
-# What each grade gives (spec section 4 table).  pace = mph added to the stack, cap = soft pace ceiling (mph,
-# forehand flat drive), spin = multiplier on available spin, aim = added aim efficiency (0..1 scale),
-# err = multiplier on the error probability, err_add = added error probability, depth_cm = mean depth
-# shortfall of an In shot (replaces the uniform 0..310 cm DeepDeviation), window = typical window multiplier
-# (informative; the window is computed from the same inputs by window_halfwidths).
+def grade_of(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick=0.0, volley=False,
+             rushed=False, vigor=1.0):
+    """(grade name, score, points)."""
+    pts = grade_points(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick, volley, rushed, vigor)
+    score = sum(pts.values())
+    if score <= -1 and teeoff_test(frames, v_req, height, pace, depth_x, set_f, stretch, volley):
+        return "Tee-off", score, pts
+    return grade_of_score(score), score, pts
+
+
+# What each row gives (retune-systems s2 table; values are this spec's tuned values, section 4).
+#   pace_cap  PowerResolution Max relative to the Good row (Good = retail)
+#   aim_cap   AimingResolution Max relative to the Good row (Good = the retail row unchanged); Tee-off is the
+#             VeryGood row times a code multiplier (five rows only)
+#   err_add   ErrorResolution: probability added to the shot's fault chance
+#   w_grade   window factor
 GRADE_FX = {
-    "Tee-off": dict(pace=9.0, cap=None, spin=1.10, aim=0.15, err=0.5, err_add=0.0, depth_cm=15, window=1.6),
-    "VeryGood": dict(pace=5.0, cap=108.0, spin=1.05, aim=0.08, err=0.7, err_add=0.0, depth_cm=30, window=1.3),
-    "Good": dict(pace=0.0, cap=103.0, spin=1.00, aim=0.0, err=1.0, err_add=0.0, depth_cm=45, window=1.0),
-    "Normal": dict(pace=-3.0, cap=97.0, spin=0.95, aim=-0.08, err=1.3, err_add=0.02, depth_cm=80, window=0.85),
-    "Bad": dict(pace=-7.0, cap=89.0, spin=0.85, aim=-0.18, err=1.8, err_add=0.05, depth_cm=130, window=0.65),
-    "VeryBad": dict(pace=-12.0, cap=80.0, spin=0.70, aim=-0.30, err=2.5, err_add=0.10, depth_cm=190, window=0.45),
+    "Tee-off": dict(pace_cap=1.18, aim_cap=1.18, aim_min=0.30, err_add=0.0, w_grade=1.30),
+    "VeryGood": dict(pace_cap=1.08, aim_cap=1.12, aim_min=0.20, err_add=0.0, w_grade=1.10),
+    "Good": dict(pace_cap=1.00, aim_cap=1.00, aim_min=0.0, err_add=0.0, w_grade=1.00),
+    "Normal": dict(pace_cap=0.93, aim_cap=0.82, aim_min=0.0, err_add=0.03, w_grade=0.95),
+    "Bad": dict(pace_cap=0.82, aim_cap=0.59, aim_min=0.0, err_add=0.08, w_grade=0.90),
+    "VeryBad": dict(pace_cap=0.70, aim_cap=0.35, aim_min=0.0, err_add=0.15, w_grade=0.85),
 }
 
 
 # =========================================================================== timing window
+# retune-systems s3:  W = clamp(W_rating x W_opp x W_grade x W_react, 0.60, 1.75);
+# Perfect half-width = 2 frames x W, Good half-width = 6 frames x W (retail |t| < 0.1 and < 0.3).
 
-PERFECT_HALF_BASE = 1.5       # frames each side of the 20-frame target (retail |t| < 0.1 = 2 frames each side)
-GOOD_HALF_BASE = 5.8          # retail |t| < 0.3 = 5.8 frames each side
-PERFECT_MIN, PERFECT_MAX = 0.5, 4.5
-GOOD_MIN, GOOD_MAX = 2.0, 12.0
-E_PACE = [(35, 1.40), (50, 1.22), (65, 1.04), (80, 0.92), (95, 0.82), (110, 0.74), (130, 0.65), (160, 0.58)]
-E_HEIGHT = [(20, 0.70), (45, 0.82), (70, 0.97), (85, 1.10), (125, 1.10), (150, 1.0), (180, 0.86), (220, 0.80)]
-E_KICK = [(0.20, 1.0), (0.40, 0.92), (0.55, 0.86)]
-E_RUN = [(0.0, 1.05), (0.28, 1.0), (0.55, 0.86), (0.80, 0.70), (1.0, 0.58)]  # on v_req / own top speed
-E_SET_BONUS = 1.08            # planted for >= 15 frames
-E_STRETCH = 0.80
-E_NET_TIME = 1.20             # inside 4 m of the net with reaction time >= 450 ms (a sitter at the net)
-E_FLOAT = 1.12                # floating ball: apex well above the net and slow (lob that does not go deep)
-# Reaction-time threshold (ms from the opponent's contact to own contact, minus nothing): no effect in normal
-# rallies, a steep ramp close to human limits.  Sourced anchors: volley reaction ~205-226 ms (Chow et al. 1999),
-# ~500 ms available against a 200 km/h serve (O'Donoghue & Liddle 1998); the shape is a judgement.
-RT_CURVE = [(200, 0.22), (250, 0.32), (300, 0.45), (350, 0.58), (400, 0.70), (450, 0.80), (500, 0.88), (550, 0.94),
-            (650, 1.0)]
-# Direct term: the opponent's last timing grade (owner's change of brief).  Sized with the rally simulation.
-# Direct opponent-timing term (owner decision): its own input, separate from every ball-derived input, scaling both
-# windows.  Five levels of the hitter's release: Perfect (inside his Perfect window), Good (inner half of the Good
-# band), Average (outer half), Poor, Mistimed.  Ball effects stack on top; the product of the ball ease and this
-# term is floored at TOTAL_FLOOR of the normal window (before the rating factor).
+PERFECT_HALF_BASE = 2.0
+GOOD_HALF_BASE = 6.0
+W_CLAMP = (0.60, 1.75)
+W_RATING = [(40, 0.90), (70, 1.00), (100, 1.10)]      # on the stroke's rating (Forehand/Backhand/Volley/Return)
+W_REACT = [(250, 0.70), (600, 1.00)]                   # ms from the opponent's contact to own contact
 OPP_TIMING_FX = {"Perfect": 0.85, "Good": 0.93, "Average": 1.0, "Poor": 1.15, "Mistimed": 1.30}
-OPP_FX_CAP = (0.80, 1.40)     # range of the scaled term in the sizing sweep; it never compounds across shots
-TOTAL_FLOOR = 0.60
+OPP_FX_CAP = (0.80, 1.40)     # range of the scaled term in the sizing sweep
+TOTAL_FLOOR = W_CLAMP[0]
+OVERCHARGE_W = 0.80
+OVERCHARGE_PACE = 1.04
+RUSHED_LATE_F = 8.0           # a rushed swing commits at the 12-frame auto-commit: 8 frames late (t = +0.4)
+
+
+def rating_of_stat(stat):
+    """Inverse of the stat curve (NEW_CURVE): the 0..100 rating behind a 0..1 stat."""
+    inv = [(y, x) for x, y in NEW_CURVE]
+    return pwl(inv, stat)
 
 
 def reaction_factor(react_ms):
-    return pwl(RT_CURVE, react_ms)
-
-
-def ease_factors(pace_kmh, react_ms, height, kick=0.0, v_req=0.0, set_f=0, stretch=False,
-                 dist_net_cm=1200.0, floating=False):
-    f = {
-        "pace": pwl(E_PACE, pace_kmh),
-        "reaction": reaction_factor(react_ms),
-        "height": pwl(E_HEIGHT, height),
-        "kick": pwl(E_KICK, abs(kick)),
-        "movement": pwl(E_RUN, v_req / TOP_SPEED_REF) * (E_SET_BONUS if set_f >= 15 else 1.0) * (E_STRETCH if stretch else 1.0),
-        "position": E_NET_TIME if (dist_net_cm < 400 and react_ms >= 450) else 1.0,
-        "floating": E_FLOAT if floating else 1.0,
-    }
-    return f
+    return pwl(W_REACT, react_ms)
 
 
 def rating_factor(stat):
-    """Timing rating (hand stat for groundstrokes, Volley for volleys, Return for returns): 0.80..1.20."""
-    return 0.80 + 0.40 * clamp(stat, 0.0, 1.0)
+    return pwl(W_RATING, rating_of_stat(stat))
 
 
-def window_halfwidths(pace_kmh, react_ms, height, kick=0.0, v_req=0.0, set_f=0, stretch=False,
-                      dist_net_cm=1200.0, floating=False, stat=0.5, opp_timing="Average", opp_scale=1.0):
-    """(perfect half-width, good half-width, total ease multiplier) in frames.
-    opp_scale scales the direct opponent term's distance from 1 (1.0 = the proposal, 0 = off)."""
-    f = ease_factors(pace_kmh, react_ms, height, kick, v_req, set_f, stretch, dist_net_cm, floating)
-    e = 1.0
-    for v in f.values():
-        e *= v
-    opp = 1.0 + (OPP_TIMING_FX[opp_timing] - 1.0) * opp_scale
-    opp = clamp(opp, *OPP_FX_CAP)
-    e = max(TOTAL_FLOOR, e * opp) * rating_factor(stat)
-    return (clamp(PERFECT_HALF_BASE * e, PERFECT_MIN, PERFECT_MAX),
-            clamp(GOOD_HALF_BASE * e, GOOD_MIN, GOOD_MAX), e)
+def window_scale(grade, stat, react_ms, opp_timing="Average", opp_scale=1.0, overcharge=False):
+    """W and its factors."""
+    opp = clamp(1.0 + (OPP_TIMING_FX[opp_timing] - 1.0) * opp_scale, *OPP_FX_CAP)
+    f = {"rating": rating_factor(stat), "opp": opp, "grade": GRADE_FX[grade]["w_grade"],
+         "react": reaction_factor(react_ms)}
+    w = clamp(f["rating"] * f["opp"] * f["grade"] * f["react"], *W_CLAMP)
+    if overcharge:
+        w *= OVERCHARGE_W
+    return w, f
+
+
+def window_halfwidths(grade, stat, react_ms, opp_timing="Average", opp_scale=1.0, overcharge=False):
+    """(Perfect half-width, Good half-width, W) in frames."""
+    w, _ = window_scale(grade, stat, react_ms, opp_timing, opp_scale, overcharge)
+    return PERFECT_HALF_BASE * w, GOOD_HALF_BASE * w, w
 
 
 HUMAN_SIGMA_F = 3.4          # sd of a human's release error in frames (judgement, see spec section 5)
+POOR_SPAN_F = 4.0            # frames past the Good edge still "Poor" (beyond: Mistimed)
+# Position inside the row (retune-systems s4): the retail graphs lerp each row's Min..Max with the timing value, and
+# that shape stays.  Retail anchor (G8): a late t = +0.5 FlatPower keeps about 75 % of its peak aim (0.45 of 0.60).
+# The shape below is judgement through that anchor; t is the timing value after the division by W.
+T_SHAPE = [(0.0, 1.0), (0.1, 0.97), (0.3, 0.88), (0.5, 0.75), (0.8, 0.50), (1.2, 0.25)]
+# Zero-error band (retune-systems s3): retail size at W = 1 (t -0.60 .. +0.45, 19 frames), scaling with W.
+ZERO_BAND_T = (-0.60, 0.45)
 
 
 def p_window(half, sigma=None):
@@ -250,85 +238,145 @@ def p_window(half, sigma=None):
     return math.erf((half + 0.5) / (sigma * math.sqrt(2.0)))
 
 
+def classify_release(err, perfect_half, good_half):
+    """(coarse, fine, pos, t) for a signed release error in frames (+ = late).  t = err x 0.05 / W."""
+    a = abs(err)
+    w = good_half / GOOD_HALF_BASE
+    t = err * 0.05 / w
+    pos = pwl(T_SHAPE, abs(t))
+    hp, hg = perfect_half + 0.5, good_half + 0.5
+    if a <= hp:
+        return "Perfect", "Perfect", pos, t
+    if a <= hg:
+        return "Good", ("Good" if a <= 0.5 * (hp + hg) else "Average"), pos, t
+    if a <= hg + POOR_SPAN_F:
+        return "Poor", "Poor", pos, t
+    return "Mistimed", "Mistimed", pos, t
+
+
+def release(rng, perfect_half, good_half, sigma=None, rushed=False):
+    """Draw a release.  Returns (coarse, fine, pos, t).  rushed=True: the swing commits at the 12-frame auto-commit
+    (8 frames late, no human error left)."""
+    err = RUSHED_LATE_F if rushed else rng.gauss(0.0, HUMAN_SIGMA_F if sigma is None else sigma)
+    return classify_release(err, perfect_half, good_half)
+
+
+# Timing error outside the zero-error band: probability per unit of t beyond the band edge (late costs about twice
+# early, as in the retail fault graphs), times a hold weight (retail: a late full charge errs, Medium does not).
+TIMING_ERR_SLOPE = {"late": 1.6, "early": 0.8}
+TIMING_ERR_HOLD = {"Finesse": 0.5, "Medium": 1.0, "Powerful": 1.5, "Full": 2.0, "Overcharge": 4.0}
+
+
+def timing_error(t, hold="Medium"):
+    lo, hi = ZERO_BAND_T
+    x = TIMING_ERR_SLOPE["late"] * (t - hi) if t > hi else TIMING_ERR_SLOPE["early"] * (lo - t) if t < lo else 0.0
+    return clamp(x * TIMING_ERR_HOLD[hold], 0.0, 0.9)
+
+
 def timing_outcome(rng, perfect_half, good_half, sigma=None, fine=False):
-    """Coarse grade Perfect | Good | Poor | Mistimed; with fine=True also the five-level grade the opponent's
-    window reads (Good split into Good = inner half of the band and Average = outer half)."""
-    e = abs(rng.gauss(0.0, HUMAN_SIGMA_F if sigma is None else sigma))
-    if e <= perfect_half + 0.5:
-        c = f = "Perfect"
-    elif e <= good_half + 0.5:
-        c = "Good"
-        f = "Good" if e <= 0.5 * (perfect_half + good_half) + 0.5 else "Average"
-    elif e <= good_half + 4.5:
-        c = f = "Poor"
-    else:
-        c = f = "Mistimed"
+    c, f, _, _ = release(rng, perfect_half, good_half, sigma)
     return (c, f) if fine else c
 
 
-# =========================================================================== speed stack (forehand launch mph)
+# =========================================================================== speed (forehand launch mph)
+# retune-systems s2/s4/s5: the grade row sets the pace cap (PowerResolution Max vs Good), the charge tier sets how
+# close to the cap the swing can get, timing picks the position inside the row, the overcharge adds 4 % to the cap.
+# The Good-row full-charge flat cap is the retail full-charge pace: charge_table.yaml Flat Powerful at full charge,
+# median 130.1 km/h (80.8 mph), max 145.2 km/h (90.2 mph).
 
-BASE_MPH = {"Flat": 74.0, "TopSpin": 69.0, "Slice": 60.0, "Lob": 49.0}
-RATING_MPH = (20.0, 5.0)      # mph per unit of (power stat - 0.50) and (hand stat - 0.50)
-HOLD_MPH = {"Finesse": -7.0, "Medium": 0.0, "Powerful": 5.0, "Rushed": -2.0, "Overcharge": 13.0}
-TIMING_MPH = {"Perfect": 3.0, "Good": 0.0, "Poor": -4.0, "Mistimed": -9.0}
-SKILL_MPH = 2.0               # a pace skill (InstantRocket / HighlyFlammable class) on Powerful+ swings
+# Good row = the retail row unchanged: launch km/h at perfect timing by class and tier, at the Power-rating levels
+# 30 / 54 / 75 / 100 (retune-baseline.md 1b, ground_cc, forehand).  "Full" is a full charge (75 frames): the
+# charge_table.yaml Flat full-charge values min 127.1 / median 130.1 / max 145.2 km/h (sourced), the p90 level
+# interpolated; spin classes take the Flat ratio Full / Powerful at each level.
+GOOD_ROW_LEVELS = (30, 54, 75, 100)
+GOOD_ROW_KMH = {
+    ("Flat", "Finesse"): (110, 113, 117, 123), ("Flat", "Medium"): (121, 125, 127, 131),
+    ("Flat", "Powerful"): (126, 129, 130, 141), ("Flat", "Full"): (127.1, 130.1, 132.5, 145.2),
+    ("TopSpin", "Finesse"): (113, 114, 116, 118), ("TopSpin", "Medium"): (114, 116, 117, 118),
+    ("TopSpin", "Powerful"): (117, 119, 121, 124),
+    ("Slice", "Finesse"): (97, 98, 99, 100), ("Slice", "Medium"): (101, 102, 104, 108),
+    ("Slice", "Powerful"): (101, 103, 106, 109), ("Lob", "Finesse"): (102, 102, 102, 103),
+    ("Lob", "Medium"): (101, 102, 102, 102), ("Lob", "Powerful"): (101, 100, 99, 98),
+}
+for _c in ("TopSpin", "Slice", "Lob"):
+    GOOD_ROW_KMH[(_c, "Full")] = tuple(round(v * f / p, 1) for v, f, p in zip(
+        GOOD_ROW_KMH[(_c, "Powerful")], GOOD_ROW_KMH[("Flat", "Full")], GOOD_ROW_KMH[("Flat", "Powerful")]))
+# How much of the row's pace cap each tier gets above Good (retune-systems s5: the tier steps grow on Good and above);
+# below Good the tier differences are halved (the steps stay small).
+TIER_SHARE_UP = {"Finesse": 0.40, "Medium": 0.60, "Powerful": 0.85, "Full": 1.00}
+TIER_SPREAD_DOWN = 0.5
+ROW_SPREAD = 0.15             # PowerResolution Min = Max x (1 - spread); retail late +0.5 loses <= 5 km/h (1e)
+SKILL_PACE = 0.02             # a pace skill (InstantRocket / HighlyFlammable class) on Powerful+ swings
 FATIGUE_MPH = 6.0             # mph lost at vigor 0
-NOISE_MPH = 1.7               # execution spread (sd)
-CAP_SOFTNESS = 0.30           # above the grade cap only 30 % of the excess survives
-# Owner decision: the fastest forehand in the game is 110 mph, a hard ceiling reached almost never.  Above a knee the
-# stack is compressed, then clipped.  Backhand: ceiling 105 (judgement; tour backhand averages are 7 mph below
+NOISE_MPH = 1.5               # execution spread (sd)
+# Owner decision: 110 mph forehand hard ceiling; backhand 105 (judgement; tour backhand averages are 7 mph below
 # forehand averages, ATP/TDI 2024, and the gap at the top is taken a little smaller than at the mean).
-CEILING = {"FH": {"knee": 100.0, "slope": 0.5, "max": 110.0}, "BH": {"knee": 96.0, "slope": 0.5, "max": 105.0}}
+CEILING = {"FH": 110.0, "BH": 105.0}
+HOLDS = ["Finesse", "Medium", "Powerful", "Full", "Overcharge"]
 
 
-def stack_speed(cls, grade, hold, timing, power_stat, hand_stat, vigor=1.0, skill=False, noise=0.0, stroke="FH"):
-    """Launch speed (mph) of a groundstroke and the stack terms (dict).  noise = the execution draw (mph)."""
+def good_row_mph(cls, tier, power_rating):
+    return mph(pwl(list(zip(GOOD_ROW_LEVELS, GOOD_ROW_KMH[(cls, tier)])), power_rating))
+
+
+def row_max_mph(cls, grade, hold, power_rating):
+    """PowerResolution Max of this grade row for the tier reached (perfect timing)."""
+    tier = "Full" if hold == "Overcharge" else hold
+    cap = GRADE_FX[grade]["pace_cap"]
+    g = good_row_mph(cls, tier, power_rating)
+    if cap >= 1.0:
+        v = g * (1.0 + (cap - 1.0) * TIER_SHARE_UP[tier])
+    else:
+        m = good_row_mph(cls, "Medium", power_rating)
+        v = cap * (m + TIER_SPREAD_DOWN * (g - m))
+    return v * (OVERCHARGE_PACE if hold == "Overcharge" else 1.0)
+
+
+def stack_speed(cls, grade, hold, pos, power_stat, hand_stat, vigor=1.0, skill=False, noise=0.0, stroke="FH"):
+    """Launch speed (mph) and its terms.  pos = position inside the row from the timing (1 = perfect).
+    hand_stat is not used: the Good row is retail, which keys pace on the Power rating only."""
     terms = {
-        "base": BASE_MPH[cls],
-        "ratings": RATING_MPH[0] * (power_stat - 0.50) + RATING_MPH[1] * (hand_stat - 0.50),
-        "grade": GRADE_FX[grade]["pace"],
-        "hold": HOLD_MPH[hold],
-        "timing": TIMING_MPH[timing],
-        "skill": SKILL_MPH if (skill and hold in ("Powerful", "Overcharge")) else 0.0,
+        "row_max": row_max_mph(cls, grade, hold, rating_of_stat(power_stat)),
+        "skill": 1.0 + (SKILL_PACE if (skill and hold in ("Powerful", "Full", "Overcharge")) else 0.0),
+        "pos": 1.0 - ROW_SPREAD * (1.0 - pos),
         "fatigue": -FATIGUE_MPH * (1.0 - vigor),
         "noise": noise,
     }
-    if cls in ("Slice", "Lob"):          # pace stack for these shots is half as steep
-        for k in ("ratings", "grade", "hold", "timing", "skill"):
-            terms[k] *= 0.5
-    v = sum(terms.values())
-    cap = GRADE_FX[grade]["cap"]
-    if cap is not None and cls in ("Flat", "TopSpin"):
-        cap_c = cap - (0.0 if cls == "Flat" else 4.0)
-        if v > cap_c:
-            v = cap_c + (v - cap_c) * CAP_SOFTNESS
-    c = CEILING[stroke]
-    if v > c["knee"]:
-        v = min(c["max"], c["knee"] + (v - c["knee"]) * c["slope"])
-    return v, terms
+    v = terms["row_max"] * terms["skill"] * terms["pos"] + terms["fatigue"] + noise
+    return min(CEILING[stroke], v), terms
 
 
-# =========================================================================== power swing timing (frames)
+# =========================================================================== charge (frames), retail tiers kept
 
-CHARGE = {"medium_from": 8, "powerful_from": 36, "full_at": 48, "overcharge_wait": 12, "overcharge_hold_max": 40}
+CHARGE = {"medium_from": 12, "powerful_from": 53, "full_at": 75, "overcharge_past_full": 25}
 RELEASE_LEAD = 20             # perfect release 20 frames before contact (kept)
 AUTO_COMMIT = 12              # retail auto-commit lead (PT+0x740)
+REACT_PRESS_F = 15            # a human presses about 15 frames after the opponent's contact (judgement)
+RUSHED_SHARE = 0.35           # judgement: share of short-of-Powerful wanted swings the player keeps holding
 
 
-def hold_reached(frames_pressed_before_contact, set_f):
-    """Tier the meter reaches if the player presses `frames_pressed_before_contact` frames before contact and
-    releases at the perfect lead.  Overcharge needs the full meter plus `overcharge_wait` frames set and
-    waiting (set_f = frames planted before contact)."""
-    held = frames_pressed_before_contact - RELEASE_LEAD
+def tier_of_held(held):
     c = CHARGE
-    if held >= c["full_at"] + c["overcharge_wait"] and set_f >= c["overcharge_wait"] + RELEASE_LEAD:
+    if held >= c["full_at"] + c["overcharge_past_full"]:
         return "Overcharge"
+    if held >= c["full_at"]:
+        return "Full"
     if held >= c["powerful_from"]:
         return "Powerful"
     if held >= c["medium_from"]:
         return "Medium"
     return "Finesse"
+
+
+def hold_reached(frames_pressed_before_contact, set_f, release_lead=RELEASE_LEAD):
+    """Tier the meter reaches if the player presses `frames_pressed_before_contact` frames before contact and
+    releases `release_lead` frames before contact.  The overcharge also needs the 25 frames past full spent
+    planted (set_f counts frames planted before contact)."""
+    held = frames_pressed_before_contact - release_lead
+    t = tier_of_held(held)
+    if t == "Overcharge" and set_f < CHARGE["overcharge_past_full"] + release_lead:
+        t = "Full"
+    return t
 
 
 # =========================================================================== situations (Monte Carlo)
@@ -398,7 +446,11 @@ class Player:
 
 
 def policy_forehand(rng, p, sit, grade, overcharge_try=0.8):
-    """Shot class and hold chosen by a competent human: harder when the set-up allows it."""
+    """Shot class and hold chosen by a competent human: harder when the set-up allows it.  Returns (cls, hold,
+    commit) with commit False (released at will), "late" (held into the auto-commit and reached Powerful) or
+    "rushed" (held into the auto-commit, still short of Powerful).  The hold follows the retail charge (12 / 53 / 75 frames from the press to the commit): a player who
+    wanted Powerful but cannot reach it either releases at the tier he has (not rushed) or keeps holding into the
+    12-frame auto-commit (rushed, RUSHED_SHARE of the time)."""
     style = p.style
     flat_bias = style.get("flat", 0.35)
     slice_bias = style.get("slice", 0.12)
@@ -409,38 +461,40 @@ def policy_forehand(rng, p, sit, grade, overcharge_try=0.8):
         cls = "Flat" if u < 0.55 + flat_bias else "TopSpin"
     else:
         cls = "Flat" if u < flat_bias else ("Slice" if u < flat_bias + slice_bias else "TopSpin")
-    # press as soon as the ball is read: reaction ~ 15 frames after the opponent's contact
-    press_lead = sit.frames - 15
+    press_lead = sit.frames - REACT_PRESS_F
     want = "Powerful" if grade in ("Tee-off", "VeryGood", "Good") else "Medium"
-    if grade in ("Normal",) and rng.random() < 0.4:
+    if grade == "Normal" and rng.random() < 0.4:
         want = "Powerful"
     reach = hold_reached(press_lead, sit.set_f)
-    order = ["Finesse", "Medium", "Powerful", "Overcharge"]
+    order = HOLDS
     if reach == "Overcharge" and grade in ("Tee-off", "VeryGood") and rng.random() < overcharge_try:
-        hold = "Overcharge"
-    elif order.index(min(reach, "Powerful", key=order.index)) >= order.index(want):
-        hold = want
-    else:
-        hold = "Rushed" if want == "Powerful" else reach
-    return cls, hold
+        return cls, "Overcharge", False
+    if reach == "Overcharge":
+        reach = "Full"
+    if order.index(reach) >= order.index(want):
+        return cls, (reach if want == "Powerful" else want), False
+    if want == "Powerful" and rng.random() < RUSHED_SHARE:
+        late = tier_of_held(press_lead - AUTO_COMMIT)
+        # held into the auto-commit: 8 frames late; "rushed" (+1 grade point) only if still short of Powerful
+        return cls, ("Full" if late == "Overcharge" else late), ("rushed" if late in ("Finesse", "Medium") else "late")
+    return cls, reach, False
 
 
-def forehand_shot(rng, p, sit, opp_timing="Average", opp_scale=1.0, overcharge_try=0.8):
+def forehand_shot(rng, p, sit, opp_timing="Average", opp_scale=1.0, overcharge_try=0.8, vigor=1.0):
     vr = sit.v_req * TOP_SPEED_REF / (RALLY["max_run_base"] + RALLY["max_run_speed"] * p.s["speed"])
-    g, q, _ = grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
-                       sit.stretch, sit.kick)
-    cls, hold = policy_forehand(rng, p, sit, g, overcharge_try)
-    hp, hg, e = window_halfwidths(sit.pace, sit.react_ms, sit.height, sit.kick, vr, sit.set_f,
-                                  sit.stretch, sit.dist_net_cm, sit.floating, p.s["fh"], opp_timing, opp_scale)
-    if hold == "Overcharge":            # biggest swing, smallest margin: Perfect window halved
-        hp *= 0.5
-    if hold == "Rushed":
-        hp, hg = hp * 0.7, hg * 0.8
-    t = timing_outcome(rng, hp, hg)
-    vig = 1.0
-    v, terms = stack_speed(cls, g, hold, t, p.s["power"], p.s["fh"], vig,
+    g0, _, _ = grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
+                        sit.stretch, sit.kick, vigor=vigor)
+    cls, hold, commit = policy_forehand(rng, p, sit, g0, overcharge_try)
+    rushed = commit == "rushed"
+    g = g0
+    if rushed:
+        g, _, _ = grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
+                           sit.stretch, sit.kick, rushed=True, vigor=vigor)
+    hp, hg, w = window_halfwidths(g, p.s["fh"], sit.react_ms, opp_timing, opp_scale, hold == "Overcharge")
+    t, tf, pos, tv = release(rng, hp, hg, rushed=bool(commit))
+    v, terms = stack_speed(cls, g, hold, pos, p.s["power"], p.s["fh"], vigor,
                            skill="pace" in p.skills, noise=rng.gauss(0.0, NOISE_MPH))
-    return dict(grade=g, cls=cls, hold=hold, timing=t, mph=v, hp=hp, hg=hg)
+    return dict(grade=g, cls=cls, hold=hold, rushed=rushed, timing=t, mph=v, hp=hp, hg=hg, w=w, t=tv)
 
 
 # =========================================================================== serve
@@ -492,27 +546,41 @@ def serve_react_ms(v_mph):
     return 500.0 * (200.0 / kmh(v_mph)) ** 0.9
 
 
+def return_grade(serve_mph, placement, vigor=1.0):
+    """Grade of a return from the same score: arrival (central serve: set late; wide: still moving; very wide: a
+    reach), strike-zone height, incoming pace at contact (0.62 of the launch speed)."""
+    arrival = 2 if placement < 0.5 else 3 if placement < 0.8 else 4
+    pace = kmh(serve_mph) * 0.62
+    pe = PACE_EDGES
+    pc = -1 if pace <= pe[0] else 0 if pace <= pe[1] else 1 if pace <= pe[2] else 2
+    score = arrival + pc + (1 if vigor < LOW_VIGOR else 0)
+    return grade_of_score(score)
+
+
 def return_quality(rng, ret, serve_mph, placement=0.5, opp_timing="Average", opp_scale=1.0, second=False):
     """Returner outcome: 'unreturned' | 'weak' | 'neutral' | 'good', and the return's timing grade."""
     rt = serve_react_ms(serve_mph)
-    pace_contact = kmh(serve_mph) * 0.62
-    hp, hg, e = window_halfwidths(pace_contact, rt, 115.0, 0.35 if second else 0.1, 1.5 + 3.0 * placement, 4,
-                                  placement > 0.75, 1300.0, False, ret.s["ret"], opp_timing, opp_scale)
-    t, tf = timing_outcome(rng, hp, hg, fine=True)
+    g = return_grade(serve_mph, placement)
+    hp, hg, w = window_halfwidths(g, ret.s["ret"], rt, opp_timing, opp_scale)
+    t, tf, pos, tv = release(rng, hp, hg)
     reach = 0.97 - 0.40 * max(0.0, placement - 0.5) / 0.5 * (1.15 - 0.3 * ret.s["speed"])
     if rng.random() > reach:
         return "unreturned", tf
-    err = {"Perfect": 0.03, "Good": 0.12, "Poor": 0.45, "Mistimed": 0.85}[t] * clamp(1.9 - 1.5 * e, 0.4, 1.8)
+    err = RETURN_ERR[t] * clamp(1.9 - 1.5 * w, 0.4, 1.8) + GRADE_FX[g]["err_add"]
     err += 0.30 * ret.floor["ret"]
     if rng.random() < err:
         return "unreturned", tf
     return ({"Perfect": "good", "Good": "neutral", "Poor": "weak", "Mistimed": "weak"}[t]), tf
 
 
+RETURN_ERR = {"Perfect": 0.03, "Good": 0.10, "Poor": 0.40, "Mistimed": 0.80}   # model calibration (section 2d)
+
+
 # =========================================================================== rally / match simulation
 
 RALLY = {
-    "e_timing": {"Perfect": 0.012, "Good": 0.035, "Poor": 0.16, "Mistimed": 0.45},
+    "base_err": 0.02,                  # situation fault chance of every groundstroke (control-sum penalties: running,
+                                       # fast ball, fatigue) beyond the timing and grade terms; model calibration
     "pace_margin": {"Flat": 81.0, "TopSpin": 84.0, "Slice": 68.0, "Lob": 60.0},   # mph where the pace term starts
     "pace_err": 0.006,                 # error per mph above the margin speed
     "margin_hand": 10.0,                # margin speed added per unit of hand stat
@@ -523,13 +591,15 @@ RALLY = {
     "floor_err": 0.20,                  # error added per unit of floor penalty of the stroke's rating
     "pass_err": 0.03,                   # added error for a passing shot against a net player
     "low_drive_err": 0.004,             # per mph above 70 when driving a ball below 60 cm (x depth below 60 / 30)
-    "vigor_cost": {"Finesse": 0.002, "Medium": 0.004, "Powerful": 0.006, "Rushed": 0.006, "Overcharge": 0.018},
+    "vigor_cost": {"Finesse": 0.002, "Medium": 0.004, "Powerful": 0.006, "Full": 0.006, "Overcharge": 0.009},
     "run_cost": 0.0012,                 # vigor per m/s of required run speed
     "recover_point": 0.022, "recover_set": 0.12,
     "net_rush": {"volley_style": 0.55, "approach_on_short": 0.35},
 }
 
 
+DEPTH_BASE = 0.62         # rally-model depth of an In ball before the DeepDeviation pull (0 short .. 1 baseline)
+DEPTH_EFF = 0.30          # extra depth per unit of FinalEfficiency above 0.55 (outer quads reach deeper)
 SLICE_DROP_CM = 72.0      # a slice reaches the receiver this much lower than a neutral ball
 
 
@@ -603,11 +673,11 @@ def hit(rng, p, b, at_net, prm):
         sit.stretch = sit.v_req > 5.2 or sit.run_cm > 250.0   # model fix: re-test the stretch after the lunge
     vmax0 = (R["max_run_base"] + R["max_run_speed"] * p.s["speed"]) * (0.80 + 0.20 * p.vigor)
     vr = sit.v_req * TOP_SPEED_REF / vmax0          # required speed as felt by this player
+    stretch = sit.stretch or vr > 5.2
     g, q, _ = grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
-                       sit.stretch or vr > 5.2, sit.kick, volley=at_net)
+                       stretch, sit.kick, volley=at_net, vigor=p.vigor)
     # reach: the player cannot get there at all
-    vmax = (R["max_run_base"] + R["max_run_speed"] * p.s["speed"]) * (0.80 + 0.20 * p.vigor)
-    if sit.v_req > vmax:
+    if sit.v_req > vmax0:
         return "unreached", None, {"grade": "VeryBad", "timing": None}
     wing = "fh" if rng.random() < 0.55 else "bh"
     stat = p.s["volley"] if at_net else p.s[wing]
@@ -615,27 +685,31 @@ def hit(rng, p, b, at_net, prm):
     if not at_net and sit.height < 50:      # a pick-up off the ground is touch: Volley rating shares it
         stat = 0.6 * stat + 0.4 * p.s["volley"]
         flo = 0.6 * flo + 0.4 * p.floor["volley"]
-    hp, hg, e = window_halfwidths(sit.pace, sit.react_ms, sit.height, sit.kick, vr, sit.set_f, sit.stretch,
-                                  sit.dist_net_cm, sit.floating, stat, b.timing, prm.get("opp_scale", 1.0))
-    hp *= 0.75 + 0.25 * p.vigor
-    hg *= 0.75 + 0.25 * p.vigor
     st = p.style
+    rushed, commit = False, False
     if at_net:          # VolleyPower on good balls; an overreach on others at the style's rate
         power = g in ("Tee-off", "VeryGood") or rng.random() < st.get("net_power", 0.15)
         cls, hold = ("Flat", "Powerful") if power else ("Slice" if rng.random() < 0.5 else "Flat", "Medium")
     else:
-        cls, hold = policy_forehand(rng, p, sit, g)
+        cls, hold, commit = policy_forehand(rng, p, sit, g)
+        rushed = commit == "rushed"
         if rng.random() < st.get("topspin_more", 0.0) and cls == "Flat" and g not in ("Tee-off",):
             cls = "TopSpin"
         if rng.random() < st.get("slice_more", 0.0) and cls != "Slice" and g not in ("Tee-off", "VeryGood"):
             cls = "Slice"
-    if hold == "Overcharge":
-        hp *= 0.5
-    if hold == "Rushed":
-        hp, hg = hp * 0.7, hg * 0.8
-    t, tf = timing_outcome(rng, hp, hg, fine=True)
+        if rushed:      # +1 grade point (retune-systems s5)
+            g, q, _ = grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
+                               stretch, sit.kick, rushed=True, vigor=p.vigor)
+    hp, hg, w = window_halfwidths(g, stat, sit.react_ms, b.timing, prm.get("opp_scale", 1.0), hold == "Overcharge")
+    t, tf, pos, tv = release(rng, hp, hg, rushed=bool(commit))
+    if g == "Tee-off" and tv > 0:       # Tee-off keeps the put-away's "no late-timing aim penalty"
+        aim_pos, aim_fine = 1.0, "Perfect"
+    else:
+        aim_pos, aim_fine = pos, tf
     power_stat = p.s["power"]
-    v, _ = stack_speed(cls, g, hold, t, power_stat, stat, p.vigor, "pace" in p.skills, rng.gauss(0.0, NOISE_MPH))
+    stroke = "FH" if wing == "fh" else "BH"
+    v, _ = stack_speed(cls, g, hold, pos, power_stat, stat, p.vigor, "pace" in p.skills,
+                       rng.gauss(0.0, NOISE_MPH), stroke)
     vb = None
     if at_net:
         vb = volley_band(g, t, stat, rng)
@@ -644,14 +718,13 @@ def hit(rng, p, b, at_net, prm):
         if sit.height < NET_HEIGHT_CM:
             v = min(v, LOW_VOLLEY_CAP_MPH)
     fx = GRADE_FX[g]
-    margin = R["pace_margin"][cls] + R["margin_hand"] * stat
+    margin = (R["pace_margin"][cls] + R["margin_hand"] * stat) * fx["pace_cap"]
     if at_net:          # volley errors come mainly from overreach (owner direction)
         err = VOLLEY_BANDS[vb]["err"]
         if hold == "Powerful" and (sit.height < NET_HEIGHT_CM or sit.pace > 100.0):
             err += OVERREACH_ERR
     else:
-        err = fx["err"] * (R["e_timing"][t] * (2.0 if hold == "Overcharge" else 1.0)
-                           + R["pace_err"] * max(0.0, v - margin)) + fx["err_add"]
+        err = timing_error(tv, hold) + R["pace_err"] * max(0.0, v - margin) + fx["err_add"] + R["base_err"]
     if not at_net and sit.height < 60 and cls in ("Flat", "TopSpin"):   # driving a low ball: it must be lifted
         err += R["low_drive_err"] * max(0.0, v - 70.0) * (60.0 - sit.height) / 30.0
     if b.hitter_net and not at_net:     # passing: the lanes past a net player are narrow
@@ -659,19 +732,20 @@ def hit(rng, p, b, at_net, prm):
     err += R["floor_err"] * flo + 0.12 * (1.0 - p.vigor) ** 1.5
 
     key = aim_key(cls, hold, at_net)
-    fe = final_efficiency(aim_efficiency(key, g, tf, stat), rng.random())
+    fe = final_efficiency(aim_efficiency(key, g, aim_fine, stat, aim_pos), rng.random())
     corner = rng.random() < st.get("corner", CORNER_SHARE)
     if corner and not at_net:
         err += LINE_RISK * fe
     p.spend(R["vigor_cost"][hold] + R["run_cost"] * sit.v_req)
-    info = {"grade": g, "timing": t, "fine": tf, "cls": cls, "hold": hold, "mph": v, "band": vb}
+    info = {"grade": g, "timing": t, "fine": tf, "cls": cls, "hold": hold, "mph": v, "band": vb, "rushed": rushed,
+            "w": w}
     if rng.random() < err:
         return "error", None, info
     if at_net and rng.random() < VOLLEY_BANDS[vb]["putaway"] * (1.0 if hold == "Powerful" else 0.6):
         return "putaway", None, info
-    tb = {"Perfect": 0.12, "Good": 0.0, "Poor": -0.15, "Mistimed": -0.3}[t]
-    depth = clamp(0.55 - fx["depth_cm"] / 405.0 + 0.5 * tb + rng.gauss(0.0, 0.12) + (0.08 if cls == "TopSpin" else 0.0),
-                  0.0, 1.0)
+    deep = deep_deviation(rng, g, aim_fine)
+    depth = clamp(DEPTH_BASE - deep / 405.0 + DEPTH_EFF * (fe - 0.55) + rng.gauss(0.0, 0.10)
+                  + (0.08 if cls == "TopSpin" else 0.0), 0.0, 1.0)
     # aim (spec section 7): the retail chain Efficiency -> FinalEfficiency (graph 196) -> quad, fed by grade, timing
     # and hand.  The stick is direction-only: "corner" = the diagonal (deep corner), otherwise a safer direction.
     angle_back = ANGLE_BACK * b.width if g in ("Tee-off", "VeryGood", "Good") else 0.0
@@ -768,7 +842,7 @@ def _play_point(rng, server, receiver, prm):
     p_eff = prm.get("serve_effort", 0.4)
     big_eff = rng.random() < server.style.get("max_serve", 0.0)
     e = 1.0 if big_eff else clamp(rng.betavariate(2, 3) * (p_eff / 0.4), 0.0, 1.0)
-    g, gf = timing_outcome(rng, *window_halfwidths(60, 700, 130, 0, 0, 30, False, 1200, True, server.s["serve"])[:2], fine=True)
+    g, gf = timing_outcome(rng, *window_halfwidths("Good", server.s["serve"], 1000.0)[:2], fine=True)
     v, ok, cost, _ = first_serve(rng, server, e, server.vigor, g)
     server.spend(cost * 0.004)
     second = False
@@ -928,37 +1002,37 @@ def round_robin(builds, matches, seed, prm=None, sets_to_win=2):
 
 # =========================================================================== placement, drop shots, recovery
 
-DEPTH_TIMING_CM = {"Perfect": -30.0, "Good": 0.0, "Poor": 80.0, "Mistimed": 180.0}
-DEPTH_SD_CM = 45.0
 
 
 def depth_shortfall(grade, timing):
-    """Mean and sd (cm) of how far an In groundstroke lands short of the aimed depth (DeepDeviation by quality,
-    replacing the retail uniform 0..310 cm)."""
-    return min(DEEP_MAX_CM, DEEP_GRADE_CM[grade] + DEEP_TIMING_CM[timing]), DEEP_SD_CM
+    """Mean and sd (cm) of how far an In groundstroke lands short of the aimed depth (retune-systems s4: the depth
+    pull by timing; the grade does not enter)."""
+    lo, hi = DEEP_TIMING_RANGE[timing]
+    return 0.5 * (lo + hi), (hi - lo) / math.sqrt(12.0)
 
 
 # Aim (owner decision): the retail aim system stays (direction-only stick, nested quads, Efficiency picks the quad,
-# FinalEfficiency graph 196 with its random roll).  The proposal only changes how Efficiency is fed (spec section 7):
-#   Efficiency = class_peak x lerp(AimingResolution.Min, .Max of the grade row, quality)
-#   quality    = timing term (against the new variable window) x hand term
-# The grade rows exist (ShotSpecific.AimingResolution, selected by the Control key S+0x3B8); retail always uses Good.
+# FinalEfficiency graph 196 with its random roll).  Only how Efficiency is fed changes (spec section 7):
+#   Efficiency = class_peak x lerp(row Min, row Max, timing shape x hand term)
+# Row Max = the grade's aim cap (ratio to Good, Good = retail).  The timing shape is the retail one (T_SHAPE).
 AIM_CLASS_PEAK = {"TopSpinMedium": 0.80, "FlatMedium": 0.76, "FlatFinesse": 0.80, "SliceMedium": 0.76,
                   "FlatPower": 0.60, "DropShot": 0.40}              # retail Efficiency at perfect timing (aiming.md s4)
-AIM_GRADE_ROW = {"Tee-off": (0.30, 1.25), "VeryGood": (0.20, 1.15), "Good": (0.00, 1.00), "Normal": (0.00, 0.85),
-                 "Bad": (0.00, 0.65), "VeryBad": (0.00, 0.45)}    # (Min, Max); Tee-off = VeryGood row + code offset
-AIM_TIMING_Q = {"Perfect": 1.00, "Good": 0.85, "Average": 0.70, "Poor": 0.45, "Mistimed": 0.25}
+AIM_GRADE_ROW = {g: (GRADE_FX[g]["aim_min"], GRADE_FX[g]["aim_cap"]) for g in GRADES}
+# representative position for each release grade, from T_SHAPE at |t| 0.05 / 0.15 / 0.25 / 0.45 / 0.8
+AIM_TIMING_Q = {k: round(pwl(T_SHAPE, t), 3) for k, t in
+                (("Perfect", 0.05), ("Good", 0.15), ("Average", 0.25), ("Poor", 0.45), ("Mistimed", 0.8))}
 AIM_HAND = (0.65, 0.35)       # hand term = 0.65 + 0.35 x hand stat (retail: hand 0.3 costs 0.03-0.05)
 EFF_MAX = 0.98                # keep Efficiency below the lines quad (m > 1 would aim outside the court)
-# DeepDeviation by quality (replaces uniform 0..310 cm at perfect timing): mean cm by grade + timing, sd, cap.
-DEEP_GRADE_CM = {"Tee-off": 15.0, "VeryGood": 30.0, "Good": 45.0, "Normal": 80.0, "Bad": 130.0, "VeryBad": 190.0}
-DEEP_TIMING_CM = {"Perfect": 0.0, "Good": 15.0, "Average": 30.0, "Poor": 90.0, "Mistimed": 200.0}
-DEEP_SD_CM, DEEP_MAX_CM = 25.0, 310.0
+# DeepDeviation by timing (retune-systems s4): Perfect 0-40 cm, Good up to 150 cm, outside Good the retail 2-3 m.
+DEEP_TIMING_RANGE = {"Perfect": (0.0, 40.0), "Good": (0.0, 110.0), "Average": (40.0, 150.0),
+                     "Poor": (200.0, 300.0), "Mistimed": (200.0, 310.0)}
+DEEP_MAX_CM = 310.0
 
 
-def aim_efficiency(cls_key, grade, timing_fine, hand_stat):
+def aim_efficiency(cls_key, grade, timing_fine, hand_stat, pos=None):
     lo, hi = AIM_GRADE_ROW[grade]
-    q = AIM_TIMING_Q[timing_fine] * (AIM_HAND[0] + AIM_HAND[1] * hand_stat)
+    tq = AIM_TIMING_Q[timing_fine] if pos is None else pos
+    q = tq * (AIM_HAND[0] + AIM_HAND[1] * hand_stat)
     return min(EFF_MAX, AIM_CLASS_PEAK[cls_key] * (lo + (hi - lo) * q))
 
 
@@ -972,8 +1046,8 @@ def final_efficiency(eff, rnd):
 
 
 def deep_deviation(rng, grade, timing_fine):
-    m = DEEP_GRADE_CM[grade] + DEEP_TIMING_CM[timing_fine]
-    return clamp(rng.gauss(m, DEEP_SD_CM), 0.0, DEEP_MAX_CM)
+    lo, hi = DEEP_TIMING_RANGE[timing_fine]
+    return rng.uniform(lo, hi)
 
 
 def angle_access(depth_x_cm, grade, hand_stat):
@@ -984,6 +1058,9 @@ def angle_access(depth_x_cm, grade, hand_stat):
     return clamp(pos * g * (0.85 + 0.15 * hand_stat), 0.0, 1.0)
 
 
+DROP_GRADE_ERR = {"Tee-off": 0.5, "VeryGood": 0.7, "Good": 1.0, "Normal": 1.3, "Bad": 1.8, "VeryBad": 2.5}
+
+
 def drop_quality(incoming_kmh, height, grade, timing, touch_stat):
     """Drop shot: landing distance past the net (cm), bounce height (cm), error probability.
     Easy to play off a slow, mid-height ball from inside the court; hard off pace or a low ball."""
@@ -992,7 +1069,7 @@ def drop_quality(incoming_kmh, height, grade, timing, touch_stat):
     land += {"Perfect": -30, "Good": 0, "Poor": 80, "Mistimed": 160}[timing]
     bounce = 35.0 + 0.25 * max(0.0, land - 200.0) + 0.2 * max(0.0, incoming_kmh - 60.0)
     err = (0.03 + 0.0035 * max(0.0, incoming_kmh - 45.0) + pwl([(20, 0.20), (50, 0.08), (80, 0.0)], height)
-           + {"Perfect": 0.0, "Good": 0.03, "Poor": 0.18, "Mistimed": 0.45}[timing]) * GRADE_FX[grade]["err"]
+           + {"Perfect": 0.0, "Good": 0.03, "Poor": 0.18, "Mistimed": 0.45}[timing]) * DROP_GRADE_ERR[grade]
     err *= 1.2 - 0.4 * touch_stat
     return land, bounce, clamp(err, 0.0, 0.95)
 
