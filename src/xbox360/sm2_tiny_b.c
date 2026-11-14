@@ -5,7 +5,7 @@ typedef struct ts4_pair64 { ts4_s64 a, b; } ts4_pair64;
 extern void ts4_destroy_owned_object(void *object);
 extern void ts4_set_u32_off8_8847FA60(void *p, unsigned v);
 extern void ts4_tailcall_NetDll_closesocket_884F0258(int s);
-extern void fn_8864E5A8(void *a, float x, float y, float z);
+extern void ts4_mat34_scale_rows_8864E5A8(void *a, float x, float y, float z);
 extern void fn_886D0808(void *p);
 extern void fn_88566E40(void *p);
 extern void fn_88472530(void *p);
@@ -15,7 +15,7 @@ void ts4_set_float_idx_2d_88606CD0(char *p, int i, float v) { ((float *)p)[i + 0
 /* float field at +0x50 returned as its raw bit pattern */
 unsigned ts4_get_float_bits_50_886EC440(const char *p) { float f = *(const float *)(p + 0x50); return *(unsigned *)&f; }
 /* forward a float vec3 by components */
-void ts4_call_with_vec3_8864EF50(void *a, const float *v) { fn_8864E5A8(a, v[0], v[1], v[2]); }
+void ts4_call_with_vec3_8864EF50(void *a, const float *v) { ts4_mat34_scale_rows_8864E5A8(a, v[0], v[1], v[2]); }
 void ts4_set_byte_nested_a34_88660CE0(const char *s, char v) { *(char *)(*(char **)(*(char **)(s + 0x30) + 0x74) + 0xa34) = v; }
 unsigned char ts4_pack_or_shl1_8840F170(unsigned char a, int b) { return (unsigned char)((b << 1) | a); }
 unsigned ts4_get_u32_by_is_zero_8865A278(const char *p, unsigned v) { return ((const unsigned *)*(const char **)(p + 0x10))[v == 0]; }

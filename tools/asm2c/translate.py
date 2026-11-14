@@ -1825,8 +1825,6 @@ class Gen:
             if (mn == 'bl' and i >= ar) or (nfx is not None and i >= nfx) or all(isinstance(args[k], tuple) or f'r{k + 3}' not in written or f'r{k + 3}' in clobbered
                    for k in range(i, len(args))):
                 args = args[:i]
-        if any(isinstance(a, tuple) for a in args):
-            raise Skip('hi arg')
         # float arguments: f1, f2, ... in order; each also takes the GPR slot of its position,
         # so they fill the argument positions whose GPR was not set up here
         nf = 0
@@ -1836,6 +1834,20 @@ class Gen:
             nf = max(nf, self.env.farity(sym))
         if vnfix is not None:
             nf = 0
+        fslots = set()
+        if nf and mn == 'bl' and ar and not sa and any(isinstance(a, tuple) for a in args[ar:]) \
+                and any(isinstance(a, tuple) and a[0] == 'hi' for a in args[:ar]):
+            args = args[:ar]      # registers past the callee's parameters are temporaries
+        if nf and any(isinstance(a, tuple) and a[0] == 'hi' for a in args):
+            # a `lis` temporary (e.g. the address of a float constant) in the GPR slot of a
+            # float argument: that slot belongs to the float
+            hs = [j for j, a in enumerate(args) if j >= 1 and isinstance(a, tuple) and a[0] == 'hi']
+            if len(hs) <= nf:
+                fslots = set(hs)
+                for j in hs:
+                    args[j] = '__fslot'
+        if any(isinstance(a, tuple) for a in args):
+            raise Skip('hi arg')
         fargs = []
         for j in range(nf):
             if st['fregs'].get(f'f{j + 1}', (None, 'float'))[1] not in ('float', 'double', 'fret'):
@@ -1845,13 +1857,15 @@ class Gen:
         if fargs:
             if sa:
                 raise Skip('float stack args')
-            pos = [j for j in range(1, len(args)) if f'r{3 + j}' not in written or f'r{3 + j}' in clobbered]
+            pos = [j for j in range(1, len(args)) if f'r{3 + j}' not in written or f'r{3 + j}' in clobbered or j in fslots]
             for j in pos:
                 if not fargs:
                     break
                 args[j] = fargs.pop(0)
             if '__gap' not in args:
                 args += fargs
+        if '__fslot' in args:
+            raise Skip('hi arg')
         if '__gap' in args:
             args = args[:args.index('__gap')]
         args = [vdbl[j] if a == f'__vdbl{j}' else a for j, a in enumerate(args)]

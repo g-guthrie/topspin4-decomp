@@ -22,7 +22,7 @@ ts4_uptr fn_88152DF8(ts4_uptr);
 ts4_uptr fn_881705B0(ts4_uptr, ts4_uptr);
 ts4_uptr ts4_if_atomic_interlocked_dec_881876D0(ts4_uptr);
 ts4_uptr fn_88198CE0(ts4_uptr);
-ts4_uptr fn_881A50F0(ts4_uptr);
+ts4_uptr ts4_small_string512_ctor_881A50F0(ts4_uptr);
 ts4_uptr fn_881B9148(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_8826B328(ts4_uptr);
 ts4_uptr fn_884022C0(ts4_uptr);

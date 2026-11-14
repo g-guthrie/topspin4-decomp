@@ -131,10 +131,10 @@ ts4_word ts4_loop_get_u32_lbl_88D45B1C_88865818();
 ts4_word fn_888860A0();
 ts4_word fn_88888668();
 ts4_word ts4_if_call_seq_ts4_find_service_888C1C28();
-ts4_word fn_888C8190();
-ts4_word fn_888C8230();
-ts4_word fn_888C82D0();
-ts4_word fn_888C87D8();
+ts4_word ts4_clear_script_prop_B1CA7E98_888C8190();
+ts4_word ts4_clear_script_prop_DB0366CE_888C8230();
+ts4_word ts4_clear_script_prop_052C33A9_888C82D0();
+ts4_word ts4_clear_script_prop_3D814F55_888C87D8();
 ts4_word fn_888C8B30();
 ts4_word fn_888C9178();
 ts4_word fn_888CB4D0();
@@ -1957,24 +1957,24 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45898_88782EC0(ts4_word a0, ts4_word a1, ts4
     return 0;
 }
 
-/* Swing_DLL.xex 0x88782F00: call_seq u32@lbl_88D45954, fn_888C8190 */
+/* Swing_DLL.xex 0x88782F00: call_seq u32@lbl_88D45954, ts4_clear_script_prop_B1CA7E98_888C8190 */
 ts4_word ts4_call_seq_u32_lbl_88D45954_88782F00(void)
 {
-    fn_888C8190((ts4_word)(*(ts4_word *)lbl_88D45954));
+    ts4_clear_script_prop_B1CA7E98_888C8190((ts4_word)(*(ts4_word *)lbl_88D45954));
     return 0;
 }
 
-/* Swing_DLL.xex 0x88782F30: call_seq u32@lbl_88D45954, fn_888C8230 */
+/* Swing_DLL.xex 0x88782F30: call_seq u32@lbl_88D45954, ts4_clear_script_prop_DB0366CE_888C8230 */
 ts4_word ts4_call_seq_u32_lbl_88D45954_88782F30(void)
 {
-    fn_888C8230((ts4_word)(*(ts4_word *)lbl_88D45954));
+    ts4_clear_script_prop_DB0366CE_888C8230((ts4_word)(*(ts4_word *)lbl_88D45954));
     return 0;
 }
 
-/* Swing_DLL.xex 0x887832C0: call_seq u32@lbl_88D45954, fn_888C87D8 */
+/* Swing_DLL.xex 0x887832C0: call_seq u32@lbl_88D45954, ts4_clear_script_prop_3D814F55_888C87D8 */
 ts4_word ts4_call_seq_u32_lbl_88D45954_887832C0(void)
 {
-    fn_888C87D8((ts4_word)(*(ts4_word *)lbl_88D45954));
+    ts4_clear_script_prop_3D814F55_888C87D8((ts4_word)(*(ts4_word *)lbl_88D45954));
     return 0;
 }
 
@@ -1985,10 +1985,10 @@ ts4_word ts4_call_seq_u32_lbl_88D45954_887832F0(void)
     return 0;
 }
 
-/* Swing_DLL.xex 0x88783320: call_seq u32@lbl_88D45954, fn_888C82D0 */
+/* Swing_DLL.xex 0x88783320: call_seq u32@lbl_88D45954, ts4_clear_script_prop_052C33A9_888C82D0 */
 ts4_word ts4_call_seq_u32_lbl_88D45954_88783320(void)
 {
-    fn_888C82D0((ts4_word)(*(ts4_word *)lbl_88D45954));
+    ts4_clear_script_prop_052C33A9_888C82D0((ts4_word)(*(ts4_word *)lbl_88D45954));
     return 0;
 }
 

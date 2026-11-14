@@ -71,7 +71,7 @@ ts4_word RtlEnterCriticalSection();
 ts4_word RtlInitializeCriticalSection();
 ts4_word RtlLeaveCriticalSection();
 ts4_word XNotifyGetNext();
-ts4_word fn_88163990();
+ts4_word ts4_small_string64_ctor_88163990();
 ts4_word fn_8816C930();
 ts4_word fn_8816CAA0();
 ts4_word fn_8816D1A8();

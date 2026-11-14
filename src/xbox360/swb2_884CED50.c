@@ -10,7 +10,7 @@ typedef struct Node {
 int fn_884262F8(Node *n);
 void *ts4_get_u32_off4_88426130(Node *n);
 int ts4_sum_list_field_1C_8841ECE0(void *list);
-Node *fn_8841ED08(void *list, int index);
+Node *ts4_chunk_elem24_8841ED08(void *list, int index);
 
 int ts4_node_measure_884CED50(Node *n, unsigned int kind, int arg)
 {
@@ -34,7 +34,7 @@ int ts4_node_measure_884CED50(Node *n, unsigned int kind, int arg)
         void *list = ts4_get_u32_off4_88426130(n);
         int i = 0;
         while (i < ts4_sum_list_field_1C_8841ECE0(list)) {
-            Node *child = fn_8841ED08(list, i);
+            Node *child = ts4_chunk_elem24_8841ED08(list, i);
             int r = ts4_node_measure_884CED50(child, child->kind, arg);
             if (r > best) best = r;
             i++;

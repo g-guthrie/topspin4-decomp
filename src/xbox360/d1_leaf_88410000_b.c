@@ -4,7 +4,7 @@
 
 extern void fn_8841AAC8(void *, int);
 extern void fn_8841ABD8(void *, int);
-extern void fn_8841ED08(void *);
+extern void ts4_chunk_elem24_8841ED08(void *);
 extern void fn_8841FDB8(void *);
 extern void fn_884235C0(void *);
 extern void ts4_call_with_header_word_885690C8(void *);

@@ -59,7 +59,7 @@ ts4_word ts4_if_atomic_interlocked_dec_881876D0();
 ts4_word fn_88198CE0();
 ts4_word fn_881A4F30();
 ts4_word fn_881A5088();
-ts4_word fn_881A50F0();
+ts4_word ts4_small_string512_ctor_881A50F0();
 ts4_word fn_881B9148();
 ts4_word fn_88280A50();
 ts4_word fn_88280E60();
@@ -1215,10 +1215,10 @@ ts4_word ts4_if_call_seq_u32_off28_88625D40(ts4_word a0, ts4_word a1, ts4_word a
     return t5;
 }
 
-/* Swing_DLL.xex 0x886265E8: call_seq fn_881A50F0, u32@0x20c, u32@0x210 */
+/* Swing_DLL.xex 0x886265E8: call_seq ts4_small_string512_ctor_881A50F0, u32@0x20c, u32@0x210 */
 ts4_word ts4_call_seq_fn_881A50F0_886265E8(ts4_word a0)
 {
-    fn_881A50F0((ts4_word)a0);
+    ts4_small_string512_ctor_881A50F0((ts4_word)a0);
     *(ts4_word *)((char *)(ts4_word)(a0) + 524) = (ts4_word)0;
     *(ts4_word *)((char *)(ts4_word)(a0) + 528) = (ts4_word)0;
     return a0;

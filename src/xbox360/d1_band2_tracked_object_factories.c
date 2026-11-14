@@ -15,7 +15,7 @@ void *fn_884ACA78(void *header, void *argument);
 void *fn_884ADDB0(void *header, void *argument);
 void *ts4_call_seq_fn_884B70D0_884AE6A8(void *header, void *argument);
 void *fn_884AF088(void *header, void *argument);
-void *fn_884AFB70(void *header, void *argument);
+void *ts4_init_vtbls_884AFB70(void *header, void *argument);
 void *ts4_call_seq_fn_884B96F0_884B00F0(void *header, void *argument);
 void *ts4_call_seq_fn_884B96F0_884B0218(void *header, void *argument);
 void *fn_884B06B0(void *header, void *argument);
@@ -112,7 +112,7 @@ void *ts4_create_tracked_object_884AFF80(void *argument)
     Ts4AllocHeader *header = fn_8841A510(allocator, 0x2c, 53);
     char *object;
     header->size = 0x2c;
-    object = fn_884AFB70(header, argument);
+    object = ts4_init_vtbls_884AFB70(header, argument);
     return object != 0 ? object + 8 : 0;
 }
 

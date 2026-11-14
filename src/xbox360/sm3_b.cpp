@@ -92,7 +92,7 @@ extern void fn_887FEA98(void *, int, int, u64);
 extern void fn_88947E40(void *, u64, int);
 extern u32 ts4_get_u32__imp_KeTimeStampBundle_8857B830(void);
 extern float fn_88771618(void *, int);
-extern int fn_887E9778(void *);
+extern int ts4_obj_sub_vcall_count_887E9778(void *);
 extern int fn_88996860(void);
 
 /* 0x887CF258: bounds-checked (0..3) pointer slot at +8; returns byte field +0x28 of the slot. */
@@ -156,7 +156,7 @@ void ts4_update_float_f8_88771A80(char *self)
 /* 0x8877C318: true when helper on the global object returns a positive value. */
 bool ts4_global_helper_positive_8877C318(void)
 {
-    return fn_887E9778(lbl_88D45A0C) > 0;
+    return ts4_obj_sub_vcall_count_887E9778(lbl_88D45A0C) > 0;
 }
 
 /* 0x8899DCB8: -1 if helper returned -1, else 0. */

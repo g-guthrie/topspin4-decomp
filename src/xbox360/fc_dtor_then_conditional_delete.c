@@ -16,7 +16,7 @@ void *fn_881D57B8(void *);
 void *ts4_if_call_seq_u32_off3c_881D5988(void *);
 void *fn_881D6D90(void *);
 void *ts4_if_call_seq_lbl_880E8618_881D9098(void *);
-void *fn_881D9190(void *);
+void *ts4_dtor_free_buffers_881D9190(void *);
 void *ts4_call_seq_u32_off1c_881DBB08(void *);
 void *ts4_if_call_seq_u32_off1c_881DD6F8(void *);
 void *fn_881DDF90(void *);
@@ -30,7 +30,7 @@ void *ts4_call_seq_u32_off24_88201338(void *);
 void *ts4_if_call_seq_u32_offc_88206CA0(void *);
 void *fn_88207420(void *);
 void *ts4_if_call_seq_lbl_880E9E8C_882099C8(void *);
-void *fn_88209AC0(void *);
+void *ts4_dtor_free_buffers_88209AC0(void *);
 void *fn_8820B580(void *);
 void *fn_8820BFE8(void *);
 void *ts4_call_seq_u32_off58_8820D100(void *);
@@ -91,7 +91,7 @@ DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881D6D38, fn_881D6D90)
 DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881D9040, ts4_if_call_seq_lbl_880E8618_881D9098)
 
 /* Swing_DLL.xex 0x881D9138 */
-DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881D9138, fn_881D9190)
+DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881D9138, ts4_dtor_free_buffers_881D9190)
 
 /* Swing_DLL.xex 0x881DBA88 */
 DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881DBA88, ts4_call_seq_u32_off1c_881DBB08)
@@ -133,7 +133,7 @@ DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_882073C8, fn_88207420)
 DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_88209970, ts4_if_call_seq_lbl_880E9E8C_882099C8)
 
 /* Swing_DLL.xex 0x88209A68 */
-DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_88209A68, fn_88209AC0)
+DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_88209A68, ts4_dtor_free_buffers_88209AC0)
 
 /* Swing_DLL.xex 0x8820B528 */
 DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_8820B528, fn_8820B580)

@@ -36,7 +36,7 @@ void fn_8883F508(void *object, unsigned int value, int flag);
 void fn_8885CC38(struct TS4Mgr *mgr, int value, int a, int b);
 void fn_8885F628(void *object, int value);
 void fn_88863D00(void *object, int value, int flag);
-void *fn_88843650(struct TS4Mgr *mgr, int flag);
+void *ts4_reltbl_record_da554856_mode_88843650(struct TS4Mgr *mgr, int flag);
 void fn_88851628(void *object, int value);
 
 unsigned int ts4_script_callback_8883E708(void *unused, struct TS4CallContext *context)

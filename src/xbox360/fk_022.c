@@ -187,10 +187,10 @@ ts4_word fn_887F9168();
 ts4_word ts4_name_keys_register_887FB3B0();
 ts4_word fn_887FFDB0();
 ts4_word fn_887FFFB8();
-ts4_word fn_88800080();
+ts4_word ts4_reltbl_index_of_e10_88800080();
 ts4_word fn_88800BF8();
 ts4_word fn_88800D40();
-ts4_word fn_88800E40();
+ts4_word ts4_reltbl_index_of_e10_88800E40();
 ts4_word fn_88801428();
 ts4_word fn_88837880();
 ts4_word fn_8883F508();
@@ -2445,7 +2445,7 @@ ts4_word ts4_call_seq_fn_887FFFB8_88800880(ts4_word a0, ts4_word a1)
     return (*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t1) + 132))) + 16));
 }
 
-/* Swing_DLL.xex 0x88800AA0: if_call_seq fn_887FFFB8, u32@0x84, fn_887FFFB8, u32@0x84, fn_88800080, u32@0x0 */
+/* Swing_DLL.xex 0x88800AA0: if_call_seq fn_887FFFB8, u32@0x84, fn_887FFFB8, u32@0x84, ts4_reltbl_index_of_e10_88800080, u32@0x0 */
 ts4_word ts4_if_call_seq_fn_887FFFB8_88800AA0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3)
 {
     ts4_word p5;
@@ -2460,7 +2460,7 @@ ts4_word ts4_if_call_seq_fn_887FFFB8_88800AA0(ts4_word a0, ts4_word a1, ts4_word
         t3 = fn_887FFFB8((ts4_word)a0, (ts4_word)a1, (ts4_word)0);
         p5 = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t3) + 132));
     }
-    t6 = fn_88800080((ts4_word)p5, (ts4_word)a2);
+    t6 = ts4_reltbl_index_of_e10_88800080((ts4_word)p5, (ts4_word)a2);
     return ((((t6 + 1) << 6) + (*(ts4_word *)((char *)(ts4_word)(t1) + 0))) + t1);
 }
 
@@ -2544,14 +2544,14 @@ ts4_word ts4_get_u32_off1c_888012F8(ts4_word a0)
     return t4;
 }
 
-/* Swing_DLL.xex 0x88801330: get u32@0x1c, u32@0x48, vcall, fn_88800E40 */
+/* Swing_DLL.xex 0x88801330: get u32@0x1c, u32@0x48, vcall, ts4_reltbl_index_of_e10_88800E40 */
 ts4_word ts4_get_u32_off1c_88801330(ts4_word a0, ts4_word a1)
 {
     ts4_word t3;
     ts4_word t4;
 
     t3 = ((ts4_word (*)(ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 28))) + 72))))((ts4_word)(a0 + 28), (ts4_word)0);
-    t4 = fn_88800E40((ts4_word)t3, (ts4_word)a1);
+    t4 = ts4_reltbl_index_of_e10_88800E40((ts4_word)t3, (ts4_word)a1);
     return t4;
 }
 

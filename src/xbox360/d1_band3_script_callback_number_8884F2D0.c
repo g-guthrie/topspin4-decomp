@@ -4,7 +4,7 @@ struct TS4CallState { char reserved[0x6C]; struct TS4ArgList *args; };
 struct TS4CallContext { struct TS4CallState *state; };
 double fn_88822420(void *list, int index);
 extern void *lbl_88D459E8;
-void fn_8883C608(void *object, int value);
+void ts4_reltbl_flag_nth_active_8883C608(void *object, int value);
 extern void *lbl_88D459E0;
 void fn_8884E380(void *object, int value);
 void fn_88852AC0(void *object, int value);
@@ -25,7 +25,7 @@ void fn_88863138(void *object, int value);
 unsigned int ts4_script_callback_8883E548(void *unused, struct TS4CallContext *context)
 {
     int value = (int)fn_88822420(context->state->args->list, 1);
-    fn_8883C608(lbl_88D459E8, value);
+    ts4_reltbl_flag_nth_active_8883C608(lbl_88D459E8, value);
     (void)unused;
     return 0;
 }
