@@ -322,7 +322,32 @@ def decode_all(settings: bytes, state: bytes | None = None, extra_names=()):
            "files": [decode_file(settings, "Settings.bin", names)]}
     if state is not None:
         out["files"].append(decode_file(state, "State.bin", names))
+        out["ball_block"] = decode_ball_block(state)
     return out
+
+
+STATE_BALL_IMAGE = 0x964     # State.bin file offset of the serialised 0x540-byte ball (layout Gp4bBall)
+
+
+def decode_ball_block(state: bytes, base: int = STATE_BALL_IMAGE):
+    """The default ball block in State.bin (ball-physics.md section 2), with the meaning of each field.
+
+    Readers (Swing_DLL.xex): +0x4C0..0x4CC only fn_886AE528 +0xA78..+0xAA4 (Wood frame-shot target, offset
+    from the hitter); +0x4D0..0x4DC the flight solver / stepper; +0x4E0 fn_889C2818 (skip the step on the
+    launch frame); +0x4E1 fn_889C1C80 / fn_889C1F70 let-cord (zero spin_b and spin_c); +0x494..0x4A0 the
+    let-cord branch (copied through the command C+0x30..0x3C, fn_886B5128 +0x7B8..+0x7E8)."""
+    f = lambda o: round(struct.unpack_from(">f", state, base + o)[0], 6)
+    u = lambda o: struct.unpack_from(">I", state, base + o)[0]
+    b = lambda o: state[base + o]
+    return {
+        "file_offset": "0x%X" % base,
+        "tau_s": f(0x00), "bounce_tick": u(0x04), "T": f(0x08),
+        "hold_ticks_0x28": u(0x28), "hold_delta_0xA0": [f(0xA0), f(0xA4), f(0xA8)],
+        "cord_0x494_elev_deg_yaw_deg_speed_loss_spin_loss": [f(0x494), f(0x498), f(0x49C), f(0x4A0)],
+        "wood_dx_cm_0x4C0": [f(0x4C0), f(0x4C4)], "wood_dz_cm_0x4C8": [f(0x4C8), f(0x4CC)],
+        "radius_cm_0x4D0": f(0x4D0), "a4_0x4D4": f(0x4D4), "g_0x4D8": f(0x4D8), "max_bounces_0x4DC": u(0x4DC),
+        "skip_launch_step_0x4E0": b(0x4E0), "no_sidespin_0x4E1": b(0x4E1),
+    }
 
 
 def summarize(dec):
@@ -486,6 +511,7 @@ def write_yaml(dec, path, cmd, mode):
         fh.write("".join("# %s\n" % h for h in hdr))
         fh.write(to_yaml({"generator": {"command": cmd, "curve_mode_for_trajectories": mode},
                           "sources": [{"file": f["file"], "size": f["size"], "sha256": f["sha256"]} for f in dec["files"]],
+                          "ball_block": dec.get("ball_block"),
                           "rows": rows}))
         fh.write("\n")
 

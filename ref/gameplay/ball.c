@@ -220,7 +220,11 @@ void ball_config_default(ball_config *c)
     c->max_bounces = 5;
     c->disp_dx[0] = -800.0f; c->disp_dx[1] = -400.0f;
     c->disp_dz[0] = -400.0f; c->disp_dz[1] = 400.0f;
+    c->skip_launch_step = true;                            /* ball+0x4E0 = 1 in the image */
+    c->no_sidespin = true;                                 /* ball+0x4E1 = 1 in the image */
 }
+
+static float scale1(float s) { return s == 0.0f ? 1.0f : s; }  /* port-only scales: 0 = identity */
 
 void ball_to_world_cm(const ball_config *cfg, const float l[3], float o[3])
 {
@@ -441,7 +445,7 @@ static void solve_speed(ball_state *b, const ball_template *t, const ball_config
     if (!o->has_min) return;
     tmin = tau_of_min_speed(b);
     o->tau_min = b->tau = tmin;
-    tgt = b->planned ? node(t, &t->primary, b) : b->speed_kmh;
+    tgt = b->planned ? node(t, &t->primary, b) * scale1(b->port_speed_scale) : b->speed_kmh;
     target = tgt * tgt / 12.96f;
     if (m ? !(m(b) > target) : (target >= 0.0f)) {
         float lo = TAU_LO, hi = tmin;
@@ -634,7 +638,18 @@ static void setup_points(ball_state *b, const ball_template *t, const ball_confi
     b->aim_height_m = c->aim_height_m;
     b->net_height_cm = c->net_height_cm;
     b->mode = c->mode;
+    b->no_sidespin = cfg->no_sidespin;                     /* ball+0x4E1 lives in the ball block */
+    b->port_speed_scale = c->port_speed_scale;
+    b->port_bounce_loss_scale = c->port_bounce_loss_scale;
+    b->port_bounce_decay_scale = c->port_bounce_decay_scale;
+    b->port_bounce_tilt_scale = c->port_bounce_tilt_scale;
     ball_spin_set(b, t, c->from_cm[1] * CM, c->spin_blend);
+    if (c->port_spin_scale[0] != 0.0f || c->port_spin_scale[1] != 0.0f || c->port_spin_scale[2] != 0.0f) {
+        b->spin_a *= scale1(c->port_spin_scale[0]);        /* port-only modifier hook */
+        b->spin_b *= scale1(c->port_spin_scale[1]);
+        b->spin_c *= scale1(c->port_spin_scale[2]);
+        ball_drift_update(b, true);
+    }
 }
 
 void ball_probe(ball_state *b, const ball_template *t, const ball_config *cfg, const ball_command *c, ball_solve *o)
@@ -677,10 +692,11 @@ void ball_bounce_response(ball_state *b, const ball_template *t, float v[3])
     if (l > 0.0f && fabsf(v[1] / l) < 0.99999f) cross3(v, up, axis);
     theta = atan2f(v[1], v[0]);                            /* elevation in the x-y plane (z ignored) */
     if (theta > PI_F * 0.5f) theta = PI_F - theta;
-    f_loss = ball_curve16_eval(&t->bounce_speed_loss, sa);
-    f_decay = ball_curve16_eval(&t->bounce_spin_decay, sa);
+    f_loss = ball_curve16_eval(&t->bounce_speed_loss, sa) * scale1(b->port_bounce_loss_scale);
+    f_decay = ball_curve16_eval(&t->bounce_spin_decay, sa) * scale1(b->port_bounce_decay_scale);
     yaw = ball_curve16_eval(&t->bounce_yaw, b->spin_b);
-    tilt = wrap_pi(ball_curve16_eval(&t->bounce_out_elev, theta) - theta) * fabsf(BOUNCE_TILT_GAIN * sa);
+    tilt = wrap_pi(ball_curve16_eval(&t->bounce_out_elev, theta) - theta) * fabsf(BOUNCE_TILT_GAIN * sa)
+           * scale1(b->port_bounce_tilt_scale);
     for (i = 0; i < 3; i++) v[i] *= 1.0f - f_loss;
     rotate(v, axis, tilt);                                 /* elevation pulled toward the template angle */
     rotate(v, up, yaw);                                    /* sidespin kick (raw spin_b, no hand mirror) */
@@ -892,15 +908,137 @@ uint32_t ball_outcome_decide(const ball_outcome_inputs *in, const float target[3
     return BALL_MODE_LET;
 }
 
-void ball_in_target(float p[3], const ball_bounds *bb, const ball_config *cfg, ball_rng *rng, bool groundstroke)
+void ball_target_min_depth(float p[3])
 {
-    p[0] = clampf(p[0], -bb->xmax, bb->xmax);
-    p[2] = clampf(p[2], bb->zmin, bb->zmax);
-    if (p[0] >= 0.0f) { if (p[0] < 75.0f) p[0] = 75.0f; }          /* pool+0x604 */
-    else if (p[0] > -75.0f) p[0] = -75.0f;                         /* pool+0x610 */
-    if (groundstroke) {
-        float dx = ball_rng_range(rng, cfg->disp_dx[0], cfg->disp_dx[1]);
-        float dz = ball_rng_range(rng, cfg->disp_dz[0], cfg->disp_dz[1]);
-        if (p[0] < 0.0f) { p[0] += dx; p[2] += dz; } else { p[0] -= dx; p[2] -= dz; }
+    if (p[0] > 0.0f && p[0] < 75.0f) p[0] = 75.0f;                /* pool+0x604, fn_886807C0 +0x874 */
+    else if (p[0] < 0.0f && p[0] > -75.0f) p[0] = -75.0f;         /* pool+0x610 (x == 0 is kept)    */
+}
+
+void ball_in_target(float p[3], const ball_bounds *bb)
+{
+    p[0] = clampf(p[0], 75.0f, bb->xmax);                          /* fn_886807C0 +0x398..+0x3E0 */
+    p[2] = clampf(p[2], bb->zmin, bb->zmax);                       /* +0x43C..+0x47C             */
+    ball_target_min_depth(p);
+}
+
+void ball_in_shortfall(float p[3], const float from[3], float shortfall_cm)
+{
+    float dx = p[0] - from[0], dz = p[2] - from[2], l = sqrtf(dx * dx + dz * dz);
+    if (l == 0.0f) return;                                         /* vsel keeps the zero vector */
+    p[0] -= dx / l * shortfall_cm;                                 /* fn_886805E0 +0x17C..+0x190 */
+    p[2] -= dz / l * shortfall_cm;
+}
+
+void ball_wood_target(float out[3], const float from[3], const ball_config *cfg, ball_rng *rng)
+{
+    float dx = ball_rng_range(rng, cfg->disp_dx[0], cfg->disp_dx[1]);   /* fn_886AE528 +0xA90 */
+    float dz = ball_rng_range(rng, cfg->disp_dz[0], cfg->disp_dz[1]);   /* +0xAA4             */
+    if (from[0] < 0.0f) { out[0] = from[0] + dx; out[2] = from[2] + dz; }
+    else { out[0] = from[0] - dx; out[2] = from[2] - dz; }
+    out[1] = 0.0f;
+}
+
+static float cross_y(const float d[3], float wx, float wz) { return d[2] * wx - d[0] * wz; }
+static bool inside_rect(float x, float z, const ball_bounds *bb)
+{
+    return x < bb->xmax && z < bb->zmax && x > 100.0f && z > bb->zmin;  /* strict; 100 = pool+0x20 */
+}
+
+void ball_reach_flags(const float p[3], const ball_bounds *bb, const ball_reach_inputs *in, bool *b50, bool *b51)
+{
+    const float D2R = 0.017453292f;                                /* pool+0x184 */
+    float R = in->len_a, Rm = in->len_b > in->len_a ? in->len_b : in->len_a;
+    float R2 = R * R, Rm2 = Rm * Rm, a1 = in->ang1_deg * D2R, a2 = in->ang2_deg * D2R;
+    float d1[3] = { sinf(a1), 0.0f, cosf(a1) }, d2[3] = { sinf(a2), 0.0f, cosf(a2) };
+    /* court corners of the receiver half from 1 m past the net: q1 (100, zmax), q2 (100, zmin),
+     * q3 (xmax, zmin), q4 (xmax, zmax) */
+    float px = p[0], pz = p[2];
+    float dq1 = (px - 100.0f) * (px - 100.0f) + (pz - bb->zmax) * (pz - bb->zmax);
+    float dq2 = (px - 100.0f) * (px - 100.0f) + (pz - bb->zmin) * (pz - bb->zmin);
+    float dq3 = (px - bb->xmax) * (px - bb->xmax) + (pz - bb->zmin) * (pz - bb->zmin);
+    float dq4 = (px - bb->xmax) * (px - bb->xmax) + (pz - bb->zmax) * (pz - bb->zmax);
+    bool g1, g2, all5;
+    if (in->point_end) { *b50 = *b51 = true; return; }             /* fn_88671B10 +0x54 */
+    /* group 1 (+0x2F0..+0x3D4): any of four "court not covered" tests */
+    g1 = (dq2 > Rm2 && dq1 > Rm2)                                  /* both near corners beyond the long reach */
+        || cross_y(d1, bb->xmax - px, bb->zmax - pz) > 0.0f        /* q4 outside ray a1 */
+        || cross_y(d2, bb->xmax - px, bb->zmin - pz) < 0.0f        /* q3 outside ray a2 */
+        || (dq3 < R2 && dq4 < R2);                                 /* both far corners inside the short reach */
+    /* group 2 (+0x3D4..+0x4A4): all four "court spans the fan" tests */
+    g2 = (dq3 < Rm2 && dq4 < Rm2) && (dq1 > R2 && dq2 > R2)
+        && cross_y(d1, 100.0f - px, bb->zmax - pz) < 0.0f          /* q1 vs ray a1 */
+        && cross_y(d2, 100.0f - px, bb->zmin - pz) > 0.0f;         /* q2 vs ray a2 */
+    /* five end points of the reach fan (+0x4A4..+0x5A4) */
+    all5 = inside_rect(px + d1[0] * Rm, pz + d1[2] * Rm, bb) && inside_rect(px + d1[0] * R, pz + d1[2] * R, bb)
+        && inside_rect(px + d2[0] * Rm, pz + d2[2] * Rm, bb) && inside_rect(px + d2[0] * R, pz + d2[2] * R, bb)
+        && inside_rect(px + Rm, pz, bb);
+    if (all5) { *b50 = true; *b51 = false; }                       /* +0x5F4 */
+    else if (g2 || !g1) { *b50 = true; *b51 = true; }              /* +0x5FC..+0x610 */
+    else { *b50 = false; *b51 = true; }                            /* +0x614 */
+}
+
+uint32_t ball_out_target_nonforced(float p[3], const ball_bounds *bb, ball_rng *rng)
+{
+    float x0 = p[0], z0 = p[2], best = -1.0f, line[3] = { 0.0f, 0.0f, 0.0f }, d[3], l, r;
+    float d0 = (bb->zmin - z0) * (bb->zmin - z0);                  /* to (x0, zmin)   */
+    float d1 = (bb->zmax - z0) * (bb->zmax - z0);                  /* to (x0, zmax)   */
+    float d2 = (bb->xmax - x0) * (bb->xmax - x0);                  /* to (xmax, z0)   */
+    if (d0 < d1 && d0 < d2) { best = d0; line[0] = x0; line[2] = bb->zmin; }
+    if (d1 < d0 && d1 < d2) { best = d1; line[0] = x0; line[2] = bb->zmax; }
+    if (d2 < d1 && d2 < d0) { best = d2; line[0] = bb->xmax; line[2] = z0; }
+    if (best < 0.0f) {
+        /* exact tie: the original keeps f11 = -1 (pool+0x38) and a stale vector register (v125), so
+         * sqrtf(-1) feeds the roll (NaN target). Port deviation: take the first smallest line. */
+        if (d0 <= d1 && d0 <= d2) { best = d0; line[0] = x0; line[2] = bb->zmin; }
+        else if (d1 <= d2) { best = d1; line[0] = x0; line[2] = bb->zmax; }
+        else { best = d2; line[0] = bb->xmax; line[2] = z0; }
     }
+    if (best > 40000.0f) {                                          /* pool+0x614: demote to In */
+        p[0] = clampf(p[0], -bb->xmax, bb->xmax);
+        p[2] = clampf(p[2], bb->zmin, bb->zmax);
+        ball_target_min_depth(p);
+        return BALL_MODE_IN;
+    }
+    r = ball_rng_range(rng, sqrtf(best), 200.0f);                  /* pool+0x364 */
+    d[0] = line[0] - x0; d[1] = 0.0f; d[2] = line[2] - z0;
+    l = sqrtf(d[0] * d[0] + d[2] * d[2]);
+    if (l > 0.0f) { p[0] = x0 + d[0] / l * r; p[2] = z0 + d[2] / l * r; }
+    ball_push_out(p, bb);
+    ball_target_min_depth(p);
+    return BALL_MODE_OUT;
+}
+
+bool ball_aim_bracket_lo(const float from[3], const float to[3], float d_cm, float out[3])
+{
+    float dx = to[0] - from[0], dz = to[2] - from[2], l = sqrtf(dx * dx + dz * dz), s;
+    if (dx == 0.0f || l == 0.0f) return false;
+    s = -from[0] / dx;                                             /* line meets x = 0 */
+    out[0] = dx / l * d_cm;
+    out[1] = 0.0f;
+    out[2] = from[2] + dz * s + dz / l * d_cm;
+    return true;
+}
+
+void ball_modifiers_default(ball_modifiers *m)
+{
+    memset(m, 0, sizeof *m);
+    m->sec_weight = 1.0f;          /* primary solver only */
+    m->spin_blend = 0.5f;
+    m->outcome.b50 = m->outcome.b51 = true;
+    m->outcome.net_let_enabled = true;
+    m->net_aim_cm = 80.0f; m->let_aim_cm = 90.0f;
+    m->port_speed_scale = 1.0f;
+    m->port_spin_scale[0] = m->port_spin_scale[1] = m->port_spin_scale[2] = 1.0f;
+    m->port_bounce_loss_scale = m->port_bounce_decay_scale = m->port_bounce_tilt_scale = 1.0f;
+}
+
+void ball_modifiers_apply_command(const ball_modifiers *m, ball_command *c)
+{
+    c->sec_weight = m->sec_weight;
+    c->spin_blend = m->spin_blend;
+    c->port_speed_scale = m->port_speed_scale;
+    memcpy(c->port_spin_scale, m->port_spin_scale, sizeof c->port_spin_scale);
+    c->port_bounce_loss_scale = m->port_bounce_loss_scale;
+    c->port_bounce_decay_scale = m->port_bounce_decay_scale;
+    c->port_bounce_tilt_scale = m->port_bounce_tilt_scale;
 }

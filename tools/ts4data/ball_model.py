@@ -203,8 +203,10 @@ def solve(B, row, templates, mode="step"):
     return o
 
 
-def bounce(B, row, templates, v_in):
-    """fn_889C1C80 applied to the analytic arrival velocity; returns (v_out, spin after)."""
+def bounce(B, row, templates, v_in, no_sidespin=True):
+    """fn_889C1C80 applied to the analytic arrival velocity; returns (v_out, spin after).
+
+    no_sidespin is ball+0x4E1 (1 in the State.bin ball image): spin_b and spin_c are zeroed instead of decayed."""
     v = [v_in[0], -v_in[1], v_in[2]]
     sa, sb, sc = B.spin
     theta = math.atan2(v[1], v[0])
@@ -228,7 +230,11 @@ def bounce(B, row, templates, v_in):
         axis = [0.0, 0.0, 1.0]
     v = _rotate(v, axis, tilt)
     v = _rotate(v, [0.0, 1.0, 0.0], yaw)
-    return v, (sa * (1 - decay), sb * (1 - decay), sc * (1 - decay)), {"speed_loss": loss, "spin_decay": decay}
+    if no_sidespin:
+        spin = (sa * (1 - decay), 0.0, 0.0)
+    else:
+        spin = (sa * (1 - decay), sb * (1 - decay), sc * (1 - decay))
+    return v, spin, {"speed_loss": loss, "spin_decay": decay}
 
 
 def _rotate(v, axis, ang):

@@ -120,14 +120,18 @@ float ball_value_eval(const ball_value *v, float a, float b, ball_curve_mode m);
 /* ------------------------------------------------------------------ ball constants */
 
 /* Ball block constants. Retail defaults live in the State.bin ball image (radius 4 cm, a4 0.06,
- * g 9.81, max_bounces 5); ball+0x4C0..0x4CC is the dispersion box of In shots. */
+ * g 9.81, max_bounces 5, wood box (-800..-400, -400..400) cm, launch-step skip 1, no_sidespin 1).
+ * ball+0x4C0..0x4CC is read only by the Wood (frame shot) branch of the planner (fn_886AE528
+ * +0xA78..+0xAA4): it is NOT an In-shot dispersion (ball-physics.md section 2). */
 typedef struct {
     float radius_cm;      /* ball+0x4D0 */
     float a4;             /* ball+0x4D4 drag time constant scale (k = T / a4) */
     float g;              /* ball+0x4D8 m/s^2 */
     unsigned max_bounces; /* ball+0x4DC ball dead after this many events */
-    float disp_dx[2];     /* ball+0x4C0/0x4C4 cm */
-    float disp_dz[2];     /* ball+0x4C8/0x4CC cm */
+    float disp_dx[2];     /* ball+0x4C0/0x4C4 cm: Wood target x offset from the hitter (behind him) */
+    float disp_dz[2];     /* ball+0x4C8/0x4CC cm: Wood target z offset                              */
+    bool skip_launch_step; /* ball+0x4E0: no step on the launch frame (fn_889C2818); image = 1      */
+    bool no_sidespin;      /* ball+0x4E1: bounce / cord zero spin_b and spin_c; image = 1           */
 } ball_config;
 
 void ball_config_default(ball_config *c);
@@ -171,6 +175,8 @@ typedef struct {
     bool no_sidespin;         /* +0x4E1 bounce/cord clears spin_b and spin_c             */
     float vel[3];             /* +0x4F0 (pos - prev) * 60, m/s                           */
     float v_launch[3], v_arrive[3]; /* +0x500 / +0x510                                   */
+    /* port-only modifier scales copied from the command (0 = 1 = original) */
+    float port_speed_scale, port_bounce_loss_scale, port_bounce_decay_scale, port_bounce_tilt_scale;
 } ball_state;
 
 /* shot command (the planner's 0xE0-byte record, the fields the ball reads) */
@@ -186,6 +192,10 @@ typedef struct {
     uint32_t mode;            /* C+0x80                                                  */
     bool planned;             /* ball+0x369 (set by the planner, In/Out = 1)             */
     float aim_height_m;       /* ball+0x36C                                              */
+    /* port-only modifier scales (NOT in the original; 0 is read as 1 = original behaviour) */
+    float port_speed_scale;   /* row speed target (InitialSpeed / BounceSpeed kinds)     */
+    float port_spin_scale[3]; /* spin_a, spin_b, spin_c after the template lerp          */
+    float port_bounce_loss_scale, port_bounce_decay_scale, port_bounce_tilt_scale;
 } ball_command;
 
 /* solver result (Gp4bSolve, 0x2C bytes) */
@@ -285,8 +295,80 @@ typedef struct {
 uint32_t ball_outcome_decide(const ball_outcome_inputs *in, const float target_cm[3], const ball_bounds *bb,
                              ball_rng *rng);
 
-/* fn_886AE528 +0xA38: the target an In outcome is launched toward (clamp, 75 cm past the net, dispersion) */
-void ball_in_target(float target_cm[3], const ball_bounds *bb, const ball_config *cfg, ball_rng *rng,
-                    bool groundstroke);
+/* fn_886807C0 In branch (+0x398..+0x48C) and the common tail (+0x874..+0x8C0): x clamped to
+ * [75, xmax], z to [zmin, zmax], then the +-75 cm rule (0 < x < 75 -> 75, -75 < x < 0 -> -75).
+ * No random term (the old "groundstroke dispersion" was the Wood branch, see ball_wood_target). */
+void ball_in_target(float target_cm[3], const ball_bounds *bb);
+/* fn_886807C0 tail only: the +-75 cm rule applied to every outcome's target */
+void ball_target_min_depth(float target_cm[3]);
+
+/* fn_886805E0 (planner In case, fn_886AE528 +0xED8): pull the In target back toward the hitter by
+ * `shortfall_cm` (PlayerState S+0xD78, analyser/data value, 0 by default) along the horizontal
+ * hitter->target direction. The original then clamps the point along the shot line to the court
+ * polygon of the template selector (X vtbl slot 8, fn_88693280; not modelled) and applies
+ * x = max(x, 50) (fn_886AE528 +0xF00, pool+0xF0). `from_cm` is the hitter in the same frame. */
+void ball_in_shortfall(float target_cm[3], const float from_cm[3], float shortfall_cm);
+
+/* fn_886AE528 +0xA78..+0xB08 (outcome Wood with request IsWood S+0x40A): the frame-shot target is
+ * the HITTER position plus U[disp_dx] along x and U[disp_dz] along z, with the sign mirrored so that
+ * dx < 0 always points away from the net (behind the hitter): from.x < 0 -> add, else subtract.
+ * Two RNG draws (x first). y is taken from the hitter's ground point (0). */
+void ball_wood_target(float out_cm[3], const float from_cm[3], const ball_config *cfg, ball_rng *rng);
+
+/* fn_88671B10: the reach / angle flags b50, b51 of the outcome roll (H, transcribed). Inputs in the
+ * receiver-normalised frame (fn_8865E730): hitter position p (x, z used), rally bounds (serve = 0),
+ * len_a = S+0x7E0, len_b = S+0x7DC (cm), angles a1 = ctrl+0x44C, a2 = ctrl+0x450 (degrees, measured
+ * from +z toward +x: direction = (sin a, 0, cos a)). point_end = match+0x318 == 0x029EAAF4.
+ *   b50 = 0 forces Out; b51 = 0 stops a failed error roll from producing Out. */
+typedef struct {
+    float len_a, len_b;       /* S+0x7E0, S+0x7DC */
+    float ang1_deg, ang2_deg; /* ctrl+0x44C, ctrl+0x450 */
+    bool point_end;
+} ball_reach_inputs;
+void ball_reach_flags(const float p_cm[3], const ball_bounds *bb, const ball_reach_inputs *in, bool *b50, bool *b51);
+
+/* fn_886807C0 +0x59C..+0x830: non-forced Out whose aimed point is inside the court (the Out came
+ * from b50 / b51) and that fn_88662738 did not accept: find the nearest of the three lines (z = zmin,
+ * z = zmax, x = xmax; squared distance, ties keep `fallback`); if that line is farther than 200 cm
+ * (pool+0x614 = 40000 cm^2) return In with the target clamped to [-xmax, xmax] x [zmin, zmax];
+ * otherwise move the target toward the line point by r = U[dist, 200] (pool+0x364) and push it out
+ * (ball_push_out). Returns BALL_MODE_IN or BALL_MODE_OUT (the caller grades Out with ball_out_class). */
+uint32_t ball_out_target_nonforced(float target_cm[3], const ball_bounds *bb, ball_rng *rng);
+
+/* fn_888ABCC0 (lo end of the Net/Let aim bisection fn_889C29E8): intersection of the horizontal
+ * hitter->target line with the net line x = 0, moved `d_cm` further along the shot direction
+ * (d = cfg+0x130 = 100 cm). y = 0. Returns false when the line is parallel to the net. */
+bool ball_aim_bracket_lo(const float from_cm[3], const float to_cm[3], float d_cm, float out_cm[3]);
+
+/* ------------------------------------------------------------------ player / trait modifier hooks
+ *
+ * Every per-player, per-shot input that the ORIGINAL ball pipeline reads, gathered in one place so a
+ * port can tune traits, coach skills (S+0x640 skill list), Risk and power tiers. In the original all
+ * of these are PlayerState / controller fields written by data-driven analyser graphs or by the
+ * request flags; no ball routine reads a skill id, the Risk flag or the power tier directly
+ * (ball-physics.md section 16). The `port_*` scales are NOT in the original (identity = original). */
+typedef struct {
+    /* row selection: the shot-selection tree (shot-to-template.md); the port picks the row itself */
+    /* launch */
+    float sec_weight;         /* S+0x778 -> C+0x4C -> ball+0x430: w = clamp01(1 - f) (fn_886AE528 +0x594) */
+    float spin_blend;         /* S+0x774 -> C+0x50 -> ball+0x364: spin = lerp(lo, hi, f) (+0x5A4)          */
+    /* outcome roll (fn_886807C0) */
+    ball_outcome_inputs outcome; /* S+0x718/0x564/0x71C/0x720, flags S+0x56D/56E/572 */
+    ball_reach_inputs reach;  /* S+0x7DC/0x7E0, ctrl+0x44C/0x450 -> b50/b51 */
+    /* target shaping */
+    float in_shortfall_cm;    /* S+0xD78 (fn_886805E0)                                    */
+    float out_margin_cm;      /* S+0xD8C (+1 -> S+0xD90, fn_886807C0 +0x4D0; X vtbl slot 4) */
+    float net_aim_cm, let_aim_cm; /* S+0x750 / S+0x754 = cfg+0x134/0x138 (80 / 90)        */
+    bool is_wood;             /* S+0x40A request flag: frame shot (ball_wood_target)       */
+    /* port-only scales (identity = original behaviour) */
+    float port_speed_scale;   /* multiplies the row speed target                           */
+    float port_spin_scale[3]; /* multiplies spin_a, spin_b, spin_c after ball_spin_set     */
+    float port_bounce_loss_scale, port_bounce_decay_scale, port_bounce_tilt_scale;
+} ball_modifiers;
+
+void ball_modifiers_default(ball_modifiers *m);
+/* copy sec_weight / spin_blend (the planner's fn_886AE528 +0x594/+0x5A4 stores) and the port-only
+ * scales into a command */
+void ball_modifiers_apply_command(const ball_modifiers *m, ball_command *cmd);
 
 #endif

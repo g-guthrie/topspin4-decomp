@@ -15,6 +15,22 @@ sources:
   - file: State.bin
     size: 273746
     sha256: ff871577ad82545a26bca27d220e758734093d52b0f3b2f697337408aa1c4aeb
+ball_block:
+  file_offset: 0x964
+  tau_s: 2.0
+  bounce_tick: 1
+  T: 0.045
+  hold_ticks_0x28: 0
+  hold_delta_0xA0: [0.0, 0.0, 0.0]
+  cord_0x494_elev_deg_yaw_deg_speed_loss_spin_loss: [0.0, 0.0, 0.0, 0.0]
+  wood_dx_cm_0x4C0: [-800.0, -400.0]
+  wood_dz_cm_0x4C8: [-400.0, 400.0]
+  radius_cm_0x4D0: 4.0
+  a4_0x4D4: 0.06
+  g_0x4D8: 9.81
+  max_bounces_0x4DC: 5
+  skip_launch_step_0x4E0: 1
+  no_sidespin_0x4E1: 1
 rows:
   - index: 0
     file: Settings.bin

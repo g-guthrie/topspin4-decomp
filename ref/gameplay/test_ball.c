@@ -273,6 +273,95 @@ static void test_court_and_outcome(void)
     for (i = 0; i < 1000; i++) { float u = ball_rng_range(&r, 0.0f, 1.0f); CHECK(u >= 0.0f && u <= 1.0f); }
 }
 
+static void test_targets_and_reach(void)
+{
+    ball_bounds bb;
+    ball_config cfg;
+    ball_rng r = { 0x2468ACE1u, 0x13579BDFu };
+    ball_reach_inputs ri;
+    float p[3], from[3] = { -1100.0f, 0.0f, 0.0f }, w[3], lo[3];
+    bool b50, b51;
+    int i;
+    ball_config_default(&cfg);
+    CHECK(cfg.no_sidespin && cfg.skip_launch_step);
+    ball_court_bounds(false, false, false, 4.0f, &bb);
+    /* In: x in [75, xmax], z in [zmin, zmax], no random term */
+    p[0] = 20.0f; p[1] = 0.0f; p[2] = 900.0f;
+    ball_in_target(p, &bb);
+    NEAR(p[0], 75.0f, 0); NEAR(p[2], 423.5f, 0);
+    p[0] = 1500.0f; p[2] = -10.0f;
+    ball_in_target(p, &bb);
+    NEAR(p[0], 1202.5f, 0); NEAR(p[2], -10.0f, 0);
+    p[0] = -30.0f; ball_target_min_depth(p); NEAR(p[0], -75.0f, 0);
+    p[0] = 0.0f; ball_target_min_depth(p); NEAR(p[0], 0.0f, 0);
+    /* In length error: pulled back toward the hitter along the shot line */
+    p[0] = 1000.0f; p[2] = 0.0f;
+    ball_in_shortfall(p, from, 150.0f);
+    NEAR(p[0], 850.0f, 1e-3f); NEAR(p[2], 0.0f, 1e-3f);
+    /* Wood: 4..8 m behind the hitter, +-4 m across */
+    for (i = 0; i < 200; i++) {
+        ball_wood_target(w, from, &cfg, &r);
+        CHECK(w[0] >= -1900.0f && w[0] <= -1500.0f && w[2] >= -400.0f && w[2] <= 400.0f);
+    }
+    from[0] = 1100.0f;
+    ball_wood_target(w, from, &cfg, &r);
+    CHECK(w[0] >= 1500.0f && w[0] <= 1900.0f);
+    from[0] = -1100.0f;
+    /* reach flags (fn_88671B10) */
+    memset(&ri, 0, sizeof ri);
+    ri.point_end = true;
+    ball_reach_flags(from, &bb, &ri, &b50, &b51);
+    CHECK(b50 && b51);
+    ri.point_end = false;
+    ri.len_a = 1300.0f; ri.len_b = 1500.0f; ri.ang1_deg = 100.0f; ri.ang2_deg = 80.0f;
+    ball_reach_flags(from, &bb, &ri, &b50, &b51);      /* the whole fan lands in the court */
+    CHECK(b50 && !b51);
+    ri.len_a = 1500.0f; ri.len_b = 2600.0f; ri.ang1_deg = 120.0f; ri.ang2_deg = 60.0f;
+    ball_reach_flags(from, &bb, &ri, &b50, &b51);      /* fan leaves the court, no group-1 test */
+    CHECK(b50 && b51);
+    ri.ang1_deg = 60.0f; ri.ang2_deg = 120.0f;
+    ball_reach_flags(from, &bb, &ri, &b50, &b51);      /* group-1 ray test fires: forced Out */
+    CHECK(!b50 && b51);
+    /* non-forced Out: within 2 m of a line -> moved out; farther -> demoted to In */
+    p[0] = 1100.0f; p[2] = 0.0f;
+    CHECK(ball_out_target_nonforced(p, &bb, &r) == BALL_MODE_OUT);
+    CHECK(ball_target_out(p, &bb)); NEAR(p[2], 0.0f, 1e-3f);
+    CHECK(p[0] >= 1205.5f - 1e-3f && p[0] <= 1300.0f + 1e-3f);
+    p[0] = 600.0f; p[2] = 50.0f;
+    CHECK(ball_out_target_nonforced(p, &bb, &r) == BALL_MODE_IN);
+    NEAR(p[0], 600.0f, 0);
+    /* Net/Let aim bracket: 1 m past the net on the shot line */
+    p[0] = 1100.0f; p[2] = 400.0f;
+    CHECK(ball_aim_bracket_lo(from, p, 100.0f, lo));
+    NEAR(lo[0], 100.0f * 2200.0f / sqrtf(2200.0f * 2200.0f + 400.0f * 400.0f), 1e-2f);
+    NEAR(lo[2], 200.0f + 100.0f * 400.0f / sqrtf(2200.0f * 2200.0f + 400.0f * 400.0f), 1e-2f);
+}
+
+static void test_modifiers(void)
+{
+    ball_template t;
+    ball_config cfg;
+    ball_state b0, b1;
+    ball_solve o0, o1;
+    ball_modifiers m;
+    ball_command c = ground_command();
+    int row = build_row(0xC1965E5Cu, 0x879BA860u, 120.0f, 1.0f, 0.045f, -0.2f);
+    ball_config_default(&cfg);
+    ball_template_from_be(buf + row, 1, BALL_CURVE_STEP, &t);
+    ball_modifiers_default(&m);
+    m.sec_weight = 1.0f; m.spin_blend = c.spin_blend;
+    ball_modifiers_apply_command(&m, &c);
+    memset(&b0, 0, sizeof b0);
+    ball_probe(&b0, &t, &cfg, &c, &o0);                 /* identity scales = original */
+    m.port_speed_scale = 1.2f; m.port_spin_scale[0] = 2.0f;
+    ball_modifiers_apply_command(&m, &c);
+    memset(&b1, 0, sizeof b1);
+    ball_probe(&b1, &t, &cfg, &c, &o1);
+    NEAR(b1.spin_a, 2.0f * b0.spin_a, 1e-6f);
+    CHECK(o1.initial_kmh > o0.initial_kmh);
+    CHECK(b1.bounce_tick < b0.bounce_tick);
+}
+
 #ifdef BALL_CROSSCHECK_DRAFT
 #include "gp4b_types.h"
 void gp4b_probe(Gp4bBall *B, const uint8_t *row, Gp4bSolve *O);
@@ -346,6 +435,8 @@ int main(void)
     test_net_solid_and_cord();
     test_drop_time_kind();
     test_court_and_outcome();
+    test_targets_and_reach();
+    test_modifiers();
 #ifdef BALL_CROSSCHECK_DRAFT
     test_crosscheck();
 #endif
