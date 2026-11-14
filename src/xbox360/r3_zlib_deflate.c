@@ -3,7 +3,7 @@
 
 /* Placeholders for sibling zlib functions outside this file. */
 extern void ex3_fill_window_888776C8(ts4_deflate_state *s);                         /* fill_window */
-extern void fn_88873870(ts4_deflate_state *s, unsigned char *buf, unsigned long stored_len, int last); /* _tr_flush_block */
+extern void lb1_tr_flush_block_88873870(ts4_deflate_state *s, unsigned char *buf, unsigned long stored_len, int last); /* _tr_flush_block */
 extern void ex3_flush_pending_88876570(ts4_z_stream *strm);                           /* flush_pending */
 
 #define TS4_Z_NO_FLUSH 0
@@ -19,7 +19,7 @@ extern void ex3_flush_pending_88876570(ts4_z_stream *strm);                     
 
 #define TS4_FLUSH_BLOCK_ONLY(s, last) \
     { \
-        fn_88873870((s), ((s)->block_start >= 0L ? &(s)->window[(unsigned)(s)->block_start] : (unsigned char *)0), \
+        lb1_tr_flush_block_88873870((s), ((s)->block_start >= 0L ? &(s)->window[(unsigned)(s)->block_start] : (unsigned char *)0), \
                     (unsigned long)((long)(s)->strstart - (s)->block_start), (last)); \
         (s)->block_start = (s)->strstart; \
         ex3_flush_pending_88876570((s)->strm); \

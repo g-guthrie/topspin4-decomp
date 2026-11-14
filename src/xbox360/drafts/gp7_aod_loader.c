@@ -5,8 +5,8 @@
  *
  * Covers: fn_886CE170 (enqueue), fn_886CE5B0 (request by clip), fn_886CE2D8 / fn_886D2B58 (start the next
  * file read, single / loop form), fn_886D2E78 (per-frame tick), fn_886CE648 (finish a read),
- * ts4_if_set_u32_off0_886C52F0 (cancel), fn_886C3D50 / ts4_find_by_id_886C3DC0 / fn_886C3DA8 (queries), fn_886D7970 / fn_886D79D8 /
- * fn_886D7A60 (blocking waits), fn_886472C0 (hkx packfile -> animation object).
+ * ts4_if_set_u32_off0_886C52F0 (cancel), fn_886C3D50 / ts4_find_by_id_886C3DC0 / fn_886C3DA8 (queries), ga6_wait_loop_886D7970 / ga6_run_while_type012_886D79D8 /
+ * ga6_run_while_type4_886D7A60 (blocking waits), fn_886472C0 (hkx packfile -> animation object).
  *
  * What it does: clips live in one file each, "Media\Animation\AOD\%u.hkx" (%u = clip id, the u32 at +0 of
  * the clip object, same id as the +0x84 field of the AnimationRecord in Animations.bin). Requests are queued in a
@@ -145,15 +145,15 @@ void aod_tick_886D2E78(struct AodManager *m)
 }
 
 /* ---- blocking helpers (poll the tick, Sleep(1) between polls, at most 1000 iterations) ---- */
-/* fn_886D7970: wait until no request is in state 0/1/2 (fn_886C3D50 == 1 means "all settled"). */
-/* fn_886D79D8: wait until the request for `clip` (ts4_find_by_id_886C3DC0: lookup by clip pointer at request+4) leaves states 0/1/2. */
-/* fn_886D7A60: wait until the request for `clip` leaves state 4. */
+/* ga6_wait_loop_886D7970: wait until no request is in state 0/1/2 (fn_886C3D50 == 1 means "all settled"). */
+/* ga6_run_while_type012_886D79D8: wait until the request for `clip` (ts4_find_by_id_886C3DC0: lookup by clip pointer at request+4) leaves states 0/1/2. */
+/* ga6_run_while_type4_886D7A60: wait until the request for `clip` leaves state 4. */
 
 /* ---- fn_886CE170: enqueue (clip, arg_c, arg_10, done_flag) ----
  * Reuses an existing request for the same clip, otherwise pops one from the free list (or allocates), links it into
  * the vector, sets request->clip, arg_c, arg_10, priority = 1; state = (clip->animation != 0) ? AOD_LOADED : AOD_QUEUED
  * and clip->requested = 1; request->done_flag = done_flag.
- * fn_886CE5B0(manager, key_struct) first looks the clip up in a cache (fn_886C8438 / fn_886C5230):
+ * fn_886CE5B0(manager, key_struct) first looks the clip up in a cache (ts4_find_rec8c_by_keys_886C8438 / fn_886C5230):
  *   entry found, entry->+4 (use count) == 0 -> fn_886CE170 (enqueue);   found, count != 0 -> ++count only;
  *   not found -> *done_flag = 1 (nothing to load).
  */

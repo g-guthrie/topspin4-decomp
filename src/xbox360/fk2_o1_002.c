@@ -208,7 +208,7 @@ ts4_word fn_885E6C48();
 ts4_word fn_88608590();
 ts4_word ts4_loop_call_seq_u32_offc_8860BD70();
 ts4_word fn_88613268();
-ts4_word fn_886E79A8();
+ts4_word ga6_update_unless_typed_886E79A8();
 ts4_word fn_886E7A28();
 ts4_word fn_886ED298();
 ts4_word fn_88771868();
@@ -2944,7 +2944,7 @@ void ts4_get_u32_off28_886C5000(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x886E80A8: if_call_seq u32@0x20, fn_886E7A28, fn_886E79A8 */
+/* Swing_DLL.xex 0x886E80A8: if_call_seq u32@0x20, fn_886E7A28, ga6_update_unless_typed_886E79A8 */
 ts4_word ts4_if_call_seq_u32_off20_886E80A8(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p4;
@@ -2962,7 +2962,7 @@ ts4_word ts4_if_call_seq_u32_off20_886E80A8(ts4_word a0, ts4_word a1, ts4_word a
     p4 = (ts4_word)a0;
     if ((int)t1 != 0) {
         fn_886E7A28();
-        t3 = fn_886E79A8((ts4_word)(a0 + 176));
+        t3 = ga6_update_unless_typed_886E79A8((ts4_word)(a0 + 176));
         p4 = (ts4_word)t3;
     }
     return p4;

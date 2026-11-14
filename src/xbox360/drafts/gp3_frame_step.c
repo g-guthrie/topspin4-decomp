@@ -24,8 +24,8 @@ void fn_8866EBC0(struct Gp3Instance *inst);                 /* clear ball sample
 void fn_886AD278(void *prediction, struct Gp3Instance *inst, struct Gp3BallState *ball, int keep_mode, int full); /* ball prediction */
 void fn_8867B2D8(struct Gp3Instance *inst, int init);       /* fill ball.event_frame[] from the prediction */
 void fn_8866F090(void *world);
-void fn_8869F068(struct Gp3Instance *inst);
-void fn_8869EFC8(struct Gp3Instance *inst);
+void ga4_update_members_8869F068(struct Gp3Instance *inst);
+void ga4_update_members_with_result_8869EFC8(struct Gp3Instance *inst);
 void fn_8865EE90(struct Gp3Instance *inst);
 void ts4_gp3_flip_active_group_8865F030(struct Gp3Instance *inst);                 /* flip the active group (doubles) */
 int  fn_8866E250(struct Gp3Instance *inst, int *frame);     /* another scheduled command in the group? */
@@ -103,7 +103,7 @@ void gp3_gameplay_frame(struct Gp3Instance *inst_)
      *       for (p in players) if (p) { c = find_component(p->components, GP3_HASH_RECEIVER); c->vtbl[0x34/4](c); }
      *       fn_886AD278(world->prediction, inst, ball, 1, 1);
      *       fn_8867B2D8(inst, 0);  ball->event_frame[5][0] = limit;      // restored (the call resets it)
-     *       fn_8866F090(world); fn_8869F068(inst); fn_8869EFC8(inst);
+     *       fn_8866F090(world); ga4_update_members_8869F068(inst); ga4_update_members_with_result_8869EFC8(inst);
      *       for (p in players) if (p) { c = find_component(...); c->vtbl[0x30/4](c); }
      *       if (groups[match->active_group]->mode == 2 && !groups[match->active_group]->player0_has_flag)  fn_886A4AE0(inst);
      *   }
@@ -130,7 +130,7 @@ void gp3_gameplay_frame(struct Gp3Instance *inst_)
      *       fn_886AD278(world->prediction, inst, ball, 0, 1);               // re-predict the launched ball
      *       fn_8866F090(world);
      *       team[0..1]->+0x400/+0x404 = ticks of the last two samples;
-     *       fn_8869F068(inst); fn_8869EFC8(inst); fn_8865EE90(inst);
+     *       ga4_update_members_8869F068(inst); ga4_update_members_with_result_8869EFC8(inst); fn_8865EE90(inst);
      *       team->flag_32A = 0 unless match state is POINT_END with rules flag;
      *       if (fn_8866E250(inst, &f)) { rec->flag14 = 0; C->valid = 0; rec_174 = 0; fn_8867B2D8(inst, 1); }   // cancelled
      *       else { fn_8867B2D8(inst, 0); ts4_gp3_flip_active_group_8865F030(inst); ... }

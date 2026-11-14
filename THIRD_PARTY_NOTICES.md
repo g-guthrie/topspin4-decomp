@@ -37,7 +37,7 @@ SOFTWARE.
 
 ## Lua
 
-Files: `src/xbox360/swa_lua_match_class_88824F38.c`, `ex3_lua_lzio.c`, `ex3_lua_lvm_strcmp.c`, the `lu1_*` sources, and the `lib3_lua_*` sources except `lib3_lua_wstr.c`, the `lua2_*` and `lua3_*` sources (Lua 5.0.2 with LuaPlus-style changes; `lib3_lua_wstr.c` was reconstructed from disassembly only). Upstream: https://www.lua.org/
+Files: `src/xbox360/swa_lua_match_class_88824F38.c`, `ex3_lua_lzio.c`, `ex3_lua_lvm_strcmp.c`, the `lu1_*` sources, and the `lib3_lua_*` sources except `lib3_lua_wstr.c`, the `lua2_*` and `lua3_*` sources, `lb1_lua_tablib_sort.c` (Lua 5.0.2 with LuaPlus-style changes; `lib3_lua_wstr.c` was reconstructed from disassembly only). Upstream: https://www.lua.org/
 
 Copyright (C) 1994-2008 Lua.org, PUC-Rio.
 
@@ -62,7 +62,7 @@ SOFTWARE.
 ## zlib (compression and checksums)
 
 Files: `src/xbox360/r3_zlib_deflate.c`, `r3_zlib.h`, `ex3_zlib.h`, `ex3_zlib_trees.c`,
-`ex3_zlib_deflate.c`, `ex3_zlib_inflate.c`, `ex3_zlib_inftrees.c`, the `ex4_zlib_*` sources, `rm3_zlib_deflate.c`, and the `png2_zlib_*` sources
+`ex3_zlib_deflate.c`, `lb1_zlib_trees_flush.c`, `ex3_zlib_inflate.c`, `ex3_zlib_inftrees.c`, the `ex4_zlib_*` sources, `rm3_zlib_deflate.c`, and the `png2_zlib_*` sources
 (a zlib 1.1.4 copy) with `png2_zlib_inf.h`. Upstream: https://zlib.net/
 
 Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler

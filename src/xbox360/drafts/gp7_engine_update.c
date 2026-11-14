@@ -69,8 +69,8 @@ void engine_update_886E5F50(struct Engine *e)
     }
 }
 
-/* fn_886E5378: per player: fn_886D9070 (pose/skeleton refresh), fn_886E5178 (main pipeline, below),
- * fn_886DAF38 (debug), fn_886CDFD8, then fn_88649678(Animation service, player+1, state+0x70)
+/* ga6_update_chain_886E5378: per player: fn_886D9070 (pose/skeleton refresh), fn_886E5178 (main pipeline, below),
+ * ga6_flush_subsystem_886DAF38 (debug), fn_886CDFD8, then fn_88649678(Animation service, player+1, state+0x70)
  * = publish the pose of this player to the animation interface (AnimationData ToDisplay/Position|Rotation). */
 
 /* fn_886E5178: the per-player pipeline in execution order

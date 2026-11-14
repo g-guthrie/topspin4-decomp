@@ -233,9 +233,9 @@ ts4_word fn_88661188();
 ts4_word fn_88661A70();
 ts4_word fn_8866CDC8();
 float fn_886887C0(ts4_word, float);
-ts4_word fn_886917F8();
+ts4_word ga3_add_to_first_other_counter_886917F8();
 ts4_word fn_8869C010();
-ts4_word fn_886A7610();
+ts4_word ga4_entry_select_886A7610();
 ts4_word fn_886C0050();
 ts4_word fn_886EC0E0();
 ts4_word fn_88713970();
@@ -1884,19 +1884,19 @@ float ts4_if_call_seq_u8_off13c_88698B28(ts4_word a0, ts4_word a1, float f1, ts4
     return pf8;
 }
 
-/* Swing_DLL.xex 0x8869FD88: call_seq u32@0x8, u32@0x54, fn_886917F8, u32@0x8, u32@0xc, u32@0xc */
+/* Swing_DLL.xex 0x8869FD88: call_seq u32@0x8, u32@0x54, ga3_add_to_first_other_counter_886917F8, u32@0x8, u32@0xc, u32@0xc */
 ts4_word ts4_call_seq_u32_off8_8869FD88(ts4_word a0)
 {
     ts4_word t4;
 
-    fn_886917F8((ts4_word)(a0 + 32), (ts4_word)((*(volatile ts4_word *)((char *)(ts4_word)((((int)(*(volatile ts4_word *)((char *)(ts4_word)(a0) + 8)) * 1052) + a0)) + 84)) + 20), (ts4_word)-1);
+    ga3_add_to_first_other_counter_886917F8((ts4_word)(a0 + 32), (ts4_word)((*(volatile ts4_word *)((char *)(ts4_word)((((int)(*(volatile ts4_word *)((char *)(ts4_word)(a0) + 8)) * 1052) + a0)) + 84)) + 20), (ts4_word)-1);
     t4 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 8);
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 12) = (ts4_word)((*(volatile ts4_word *)((char *)(ts4_word)(a0) + 12)) + -1);
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 8) = (ts4_word)((int)(t4 + 1) % 10);
     return ((int)(t4 + 1) % 10);
 }
 
-/* Swing_DLL.xex 0x886A7678: call_seq u32@0xc, u32@0x8, u32@0xc, fn_886A7610 */
+/* Swing_DLL.xex 0x886A7678: call_seq u32@0xc, u32@0x8, u32@0xc, ga4_entry_select_886A7610 */
 ts4_word ts4_call_seq_u32_offc_886A7678(ts4_word a0, ts4_word a1)
 {
     ts4_word t1;
@@ -1905,7 +1905,7 @@ ts4_word ts4_call_seq_u32_offc_886A7678(ts4_word a0, ts4_word a1)
     t1 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 12);
     t2 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 8);
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 12) = (ts4_word)(t1 + 1);
-    fn_886A7610((ts4_word)a0, (ts4_word)((((int)((int)(t2 + t1) % 10) * 1052) + a0) + 52), (ts4_word)a1);
+    ga4_entry_select_886A7610((ts4_word)a0, (ts4_word)((((int)((int)(t2 + t1) % 10) * 1052) + a0) + 52), (ts4_word)a1);
     return ((((int)((int)(t2 + t1) % 10) * 1052) + a0) + 52);
 }
 

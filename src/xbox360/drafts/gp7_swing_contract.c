@@ -70,7 +70,7 @@ struct AnimIface {                   /* offsets measured; names are roles */
  *   anything else          : look the command up in the Animations.bin group table (fn_88265938 on tree+0x70); the group's
  *                            category hash at +0x10 decides:
  *        0xB0B391F4          -> choose segment[idx] (0x28-byte rows) and start it through fn_886D2528/fn_886CD668 when the
- *                               checks fn_886C45E8 (< 2 sources) and fn_886DD4D8 pass; else fn_882659B0 + fn_886E0328
+ *                               checks ts4_count_top_layers_with_id_after_limit_886C45E8 (< 2 sources) and fn_886DD4D8 pass; else fn_882659B0 + fn_886E0328
  *        0x20D7985E "Swing"  -> same with segment[idx], preceded by fn_886E40E0 (clear pending) when the top layer is free
  *        0x959A9407          -> fn_886E28C8 (blend in) when the playing record type differs, else just clear flags
  *   Command intake: fn_886C5D20 polls the three command streams at P+0x5ac / P+0xd0 (replay); streams are scanned for a

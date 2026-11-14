@@ -16,7 +16,7 @@ extern const unsigned char lbl_880CA598[256]; /* _length_code */
 void ex3_fill_window_888776C8(ex3_deflate_state *s);
 unsigned ex3_longest_match_888761B0(ex3_deflate_state *s, unsigned cur_match);
 unsigned ex3_longest_match_fast_888760B8(ex3_deflate_state *s, unsigned cur_match);
-void fn_88873870(ex3_deflate_state *s, unsigned char *buf, unsigned long stored_len, int eof); /* _tr_flush_block */
+void lb1_tr_flush_block_88873870(ex3_deflate_state *s, unsigned char *buf, unsigned long stored_len, int eof); /* _tr_flush_block */
 void ex3_flush_pending_88876570(struct ex3_z_stream *strm);
 
 #define EX4_Z_NO_FLUSH 0
@@ -63,7 +63,7 @@ void ex3_flush_pending_88876570(struct ex3_z_stream *strm);
 
 #define EX4_FLUSH_BLOCK_ONLY(s, last)                                                                      \
     {                                                                                                      \
-        fn_88873870((s), ((s)->block_start >= 0L ? &(s)->window[(unsigned)(s)->block_start] : (unsigned char *)0), \
+        lb1_tr_flush_block_88873870((s), ((s)->block_start >= 0L ? &(s)->window[(unsigned)(s)->block_start] : (unsigned char *)0), \
                     (unsigned long)((long)(s)->strstart - (s)->block_start), (last));                      \
         (s)->block_start = (s)->strstart;                                                                  \
         ex3_flush_pending_88876570((s)->strm);                                                             \

@@ -1,5 +1,5 @@
 /* Swing_DLL.xex band3 two-step wrappers, executable version 0.0.0.3. */
-void fn_8867DEF0(void *self);
+void ga3_update_sub_controller_8867DEF0(void *self);
 void fn_8867DF68(void *self);
 void ts4_call_for_each_word_then_release_range_88752C10(void *self);
 void ts4_loop_call_seq_u32_off0_8825FF40(void *self);

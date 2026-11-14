@@ -70,7 +70,7 @@ ts4_word fn_8818E7B0();
 ts4_word fn_8818EA28();
 ts4_word fn_8818F500();
 ts4_word fn_88190200();
-ts4_word fn_881903A8();
+ts4_word ts4_string_table_find_881903A8();
 ts4_word fn_88190490();
 ts4_word fn_881908F8();
 ts4_word fn_881928F8();

@@ -119,7 +119,7 @@ ts4_word fn_88617D88();
 ts4_word ts4_if_set_u32_off0_8862BE08();
 ts4_word ts4_if_set_u32_off0_8862C0E8();
 ts4_word fn_8864A1E0();
-ts4_word fn_886D7970();
+ts4_word ga6_wait_loop_886D7970();
 ts4_word fn_886D7C28();
 ts4_word ts4_loop_get_u32_off2c_88782188();
 ts4_word fn_88790750();
@@ -1846,7 +1846,7 @@ ts4_word ts4_if_call_seq_u8_off0_887E6218(ts4_word a0, ts4_word a1, ts4_word a2,
     t9 = *(unsigned char *)((char *)(ts4_word)(t8) + 68);
     p11 = (ts4_word)t8;
     if ((ts4_word)t9 != 0) {
-        t10 = fn_886D7970((ts4_word)t8);
+        t10 = ga6_wait_loop_886D7970((ts4_word)t8);
         p11 = (ts4_word)t10;
     }
     return p11;

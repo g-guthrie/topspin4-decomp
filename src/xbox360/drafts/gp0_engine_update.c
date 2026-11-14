@@ -134,7 +134,7 @@ struct MatchFrameState {               /* instance->u30 */
  *  C. if (match->328)            fn_886B3490(inst->u70);          // TopSpin School step ("End of exercice")
  *     else if ((match->318 == 0x029EAAF4 || == 0x02083CFD) && match->310 > 1 && flags->+0x60) {
  *         // END OF POINT: flags->+0x60 cleared, +0xE4=0, +0xD0=0x22703895, several +0xCC..+0xD6 =1 ...
- *         fn_8868F9C8(inst, &out) -> fn_88685060: point-end modifiers/stat evaluation (WP1);
+ *         ga3_apply_arg_8868F9C8(inst, &out) -> fn_88685060: point-end modifiers/stat evaluation (WP1);
  *         inst->u48->+0 = out; match->318 = 0x85E3E155; if !match->328 inst->u48->+8 = 1;
  *         inst->u6c->u8->vtbl[6]();   fn_88669878(inst->u68);  fn_88669040(inst->u4c);
  *         inst->u6c->u8->vtbl[10]();  inst->+0x9C = 0; inst->+0xA4 = match->310; flags->+0x60 = 0;
@@ -149,7 +149,7 @@ struct MatchFrameState {               /* instance->u30 */
  *             if (match->310 == world->+0xE0 && !match->328) fn_88668650(inst->u4c, inst->u4->u30->+0xA8);
  *         }
  *         if (match->60 is a valid frame (not 0x7FFFFFFF, >= 0)) {
- *             fn_8869EFC8(inst);   // per-player pose snapshot (4 slots)   WP?
+ *             ga4_update_members_with_result_8869EFC8(inst);   // per-player pose snapshot (4 slots)   WP?
  *             fn_8868FCC0(inst);   // 0x428 B: shot/stat bookkeeping
  *             fn_8865F150(inst);   // 0x2C0 B
  *         }

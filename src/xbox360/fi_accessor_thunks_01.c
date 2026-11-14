@@ -54,7 +54,7 @@ ts4_word fn_88655BC8(ts4_word);
 ts4_word fn_88655C90(ts4_word);
 ts4_word fn_886CA530(ts4_word);
 ts4_word fn_886CA610(ts4_word);
-ts4_word fn_886CF110(ts4_word);
+ts4_word ga6_free_buffers_886CF110(ts4_word);
 ts4_word fn_886D9070(ts4_word);
 ts4_word fn_887040A0(ts4_word, ts4_word);
 ts4_word fn_88704288(ts4_word);
@@ -625,23 +625,23 @@ void ts4_addr_lbl_880F43E8_88679F98(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x886A0678: call_seq fn_886CF110, u32@0x1c, u32@0x18 */
+/* Swing_DLL.xex 0x886A0678: call_seq ga6_free_buffers_886CF110, u32@0x1c, u32@0x18 */
 ts4_word ts4_call_seq_fn_886CF110_886A0678(ts4_word a0)
 {
     ts4_word t1;
 
-    t1 = fn_886CF110((ts4_word)a0);
+    t1 = ga6_free_buffers_886CF110((ts4_word)a0);
     *(ts4_word *)((char *)(a0) + 28) = (ts4_word)0;
     *(ts4_word *)((char *)(a0) + 24) = (ts4_word)0;
     return t1;
 }
 
-/* Swing_DLL.xex 0x886A0818: call_seq fn_886CF110, u32@0x1c, u32@0x18 */
+/* Swing_DLL.xex 0x886A0818: call_seq ga6_free_buffers_886CF110, u32@0x1c, u32@0x18 */
 ts4_word ts4_call_seq_fn_886CF110_886A0818(ts4_word a0)
 {
     ts4_word t1;
 
-    t1 = fn_886CF110((ts4_word)a0);
+    t1 = ga6_free_buffers_886CF110((ts4_word)a0);
     *(ts4_word *)((char *)(a0) + 28) = (ts4_word)0;
     *(ts4_word *)((char *)(a0) + 24) = (ts4_word)0;
     return t1;

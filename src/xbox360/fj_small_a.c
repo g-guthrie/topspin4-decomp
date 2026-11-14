@@ -227,7 +227,7 @@ extern void ts4_if_atomic_interlocked_dec_885949C0(char *);
 extern char * fn_88801428(int);
 extern u32 fn_8860DBC8(char *);
 extern u32 fn_8841B5E0(char *);
-extern u32 fn_886917F8(int, int, int);
+extern u32 ga3_add_to_first_other_counter_886917F8(int, int, int);
 extern u32 lua2_subexpr_88816C30(int, int, int);
 extern char * fn_885643D0(int);
 extern u32 fn_888364F8(int, int, u32 *);
@@ -3060,7 +3060,7 @@ u32 ts4_forward_field36_888905A8(char *a)
 /* Swing_DLL.xex 0x886918F8 */
 u32 ts4_forward_with_minus1_third_arg_886918F8(int a, int b)
 {
-    return fn_886917F8(a, b, -1);
+    return ga3_add_to_first_other_counter_886917F8(a, b, -1);
 }
 
 /* Swing_DLL.xex 0x88816D50 */

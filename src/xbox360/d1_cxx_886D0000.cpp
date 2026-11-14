@@ -5,12 +5,12 @@
 
 extern "C" {
 
-extern void fn_886D79D8();
+extern void ga6_run_while_type012_886D79D8();
 extern char lbl_88D45AF0[];
 
 void ts4_call_886D79D8_886D7AD0(int p0)
 {
-    ((void (*)(int, int))fn_886D79D8)(*(int *)(lbl_88D45AF0), p0);
+    ((void (*)(int, int))ga6_run_while_type012_886D79D8)(*(int *)(lbl_88D45AF0), p0);
 }
 
 }

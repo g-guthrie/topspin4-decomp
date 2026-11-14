@@ -1,4 +1,4 @@
-/* Family LG1: data-driven condition tree evaluator (region 0x886C9228; callers fn_886CEAC8 and fn_886CEB68).
+/* Family LG1: data-driven condition tree evaluator (region 0x886C9228; callers ga6_collect_matching_886CEAC8 and fn_886CEB68).
  * Nodes are 8-byte records {self-relative offset to the node data, kind hash}; child lists are
  * self-relative arrays {offset (-1 = empty), count} of nodes. Kind names are not known; the hashes
  * are kept as constants. */

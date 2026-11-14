@@ -145,7 +145,7 @@ ts4_word fn_88823768();
 ts4_word fn_88823AE8();
 ts4_word fn_88823FC0();
 ts4_word fn_88824188();
-ts4_word fn_88824248();
+ts4_word ts4_lua_pushvalue_88824248();
 ts4_word lua3_lua_settop_888246A8();
 ts4_word fn_88824B68();
 ts4_word ts4_match_class_88824F38();

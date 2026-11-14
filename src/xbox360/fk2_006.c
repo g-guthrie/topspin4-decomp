@@ -215,7 +215,7 @@ ts4_word fn_88823768();
 ts4_word fn_88823AE8();
 ts4_word fn_88823FC0();
 ts4_word fn_88824188();
-ts4_word fn_88824248();
+ts4_word ts4_lua_pushvalue_88824248();
 ts4_word lua3_lua_settop_888246A8();
 ts4_word fn_88824B68();
 ts4_word ts4_match_class_88824F38();
@@ -4126,7 +4126,7 @@ ts4_word ts4_if_call_seq_u32_off10_8882CD48(ts4_word a0, ts4_word a1, ts4_word a
     }
     fn_88823FC0((ts4_word)a0, (ts4_word)(ts4_word)lbl_880E1F70, (ts4_word)4);
     fn_88823AE8((ts4_word)a0, (ts4_word)-10001);
-    fn_88824248((ts4_word)a0, (ts4_word)1);
+    ts4_lua_pushvalue_88824248((ts4_word)a0, (ts4_word)1);
     fn_88824188((ts4_word)a0);
     return 3;
 }

@@ -119,7 +119,7 @@ ts4_word fn_88617D88();
 ts4_word ts4_if_set_u32_off0_8862BE08();
 ts4_word ts4_if_set_u32_off0_8862C0E8();
 ts4_word fn_8864A1E0();
-ts4_word fn_886D7970();
+ts4_word ga6_wait_loop_886D7970();
 ts4_word fn_886D7C28();
 ts4_word ts4_loop_get_u32_off2c_88782188();
 ts4_word fn_88790750();
