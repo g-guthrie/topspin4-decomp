@@ -25,6 +25,12 @@ Usage:
   python3 tools/ts4data/dump_tunables.py --iso IMAGE.iso [--out data/gameplay/tunables]
          [--names work/disc/values/names.json] [--xref work/disc/values/xref_settings.json]
          [--cache work/disc/core_all] [--only Settings.bin,State.bin]
+         [--tu orig/54540859/tu1/files]
+
+--tu DIR dumps what the patched game uses: DIR is the extracted Title Update #1 package
+(TitleUpdate.arc and Layoutall.bin, see docs/gameplay/title-update-balance.md).  Every member that
+TitleUpdate.arc carries replaces the disc member (header ``archive: TitleUpdate.arc``), and the TU's
+Layoutall.bin is used for every file unless --layout is given explicitly.
 """
 from __future__ import annotations
 
@@ -95,11 +101,30 @@ def esc(s):
     return s.replace("\\", "\\\\").replace('"', '\\"')
 
 
+TU_ARCHIVE = "TitleUpdate.arc"
+
+
 class Source:
-    def __init__(self, iso=None, cache=None):
+    def __init__(self, iso=None, cache=None, tu=None):
         self.iso, self.cache, self.arcs = iso, cache, {}
+        self.tu = None
+        if tu:
+            import ts4_arc
+            p = os.path.join(tu, TU_ARCHIVE) if os.path.isdir(tu) else tu
+            self.tu = ts4_arc.Arc(p)
+            self.tu_keys = {e[0]: e for e in self.tu.entries}
+
+    def resolve(self, arc_name, key):
+        """(archive the data comes from, data): the title update wins when it carries the key."""
+        if self.tu is not None and key in self.tu_keys:
+            return TU_ARCHIVE, self.tu.read(self.tu_keys[key])
+        return arc_name, self.get(arc_name, key)
 
     def get(self, arc_name, key):
+        if arc_name == TU_ARCHIVE:
+            if self.tu is None or key not in self.tu_keys:
+                raise SystemExit("member %08x of %s needs --tu" % (key, TU_ARCHIVE))
+            return self.tu.read(self.tu_keys[key])
         if self.cache:
             cands = [os.path.join(self.cache, arc_name, "%08x.bin" % key)]
             if arc_name == "Core.arc":
@@ -234,7 +259,13 @@ def main(argv=None):
     ap.add_argument("--xref", default="work/disc/values/xref_settings.json")
     ap.add_argument("--out", default="data/gameplay/tunables")
     ap.add_argument("--only", default="")
+    ap.add_argument("--tu", help="extracted title update package dir (TitleUpdate.arc, Layoutall.bin): dump the "
+                    "values the patched game uses")
     a = ap.parse_args(argv)
+    if a.tu and a.layout == ap.get_default("layout"):
+        a.layout = os.path.join(a.tu, "Layoutall.bin") if os.path.isdir(a.tu) else a.layout
+    if a.tu and a.xref == ap.get_default("xref"):
+        a.xref = None          # the code cross-reference is for the retail Swing_DLL and disc offsets
     cmd = "python3 tools/ts4data/dump_tunables.py " + " ".join(
         x if not x.endswith(".iso") else "<disc image>" for x in (argv if argv is not None else sys.argv[1:]))
     if os.path.exists(a.layout):
@@ -246,14 +277,16 @@ def main(argv=None):
     names = X.load_names(*[p for p in a.names if os.path.exists(p)])
     xref = load_xref(a.xref)
     os.makedirs(a.out, exist_ok=True)
-    src = Source(a.iso, a.cache)
+    src = Source(a.iso, a.cache, a.tu)
     only = {s for s in a.only.split(",") if s}
     index = []
     for name, arc_name, key, note in SOURCES:
         if only and name not in only:
             continue
-        data = src.get(arc_name, key)
-        info = dump_one(name, arc_name, key, note, data, layout, names, xref, cmd, sha256(lay_buf), a.out)
+        arc_used, data = src.resolve(arc_name, key)
+        if arc_used != arc_name:
+            note += " [Title Update #1 replacement of %s]" % arc_name
+        info = dump_one(name, arc_used, key, note, data, layout, names, xref, cmd, sha256(lay_buf), a.out)
         index.append(info)
         print("%-22s %7d values  %s" % (name, info["values"], info["sha256"][:16]), flush=True)
     with open(os.path.join(a.out, "index.yaml"), "w") as o:

@@ -380,7 +380,7 @@ def build_vocab(names, strings, limit):
 def guess_with_length(names, hints, vocab, top3):
     """1-3 word names of exactly the implied length (meet in the middle: suffix table keyed by
     (length, crc))."""
-    todo = {h: ls for h, ls in hints.items() if h not in names.found}
+    todo = {h: ls for h, ls in hints.items() if ls and h not in names.found}
     if not todo:
         return 0
     words = [w.encode() for w in vocab]

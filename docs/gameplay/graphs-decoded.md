@@ -1,4 +1,4 @@
-# Analyser graphs decoded (agent G1)
+# Analyser graphs decoded (agents G1, G1b)
 
 This file covers the 341 data-driven formula graphs in `Expressions.bin`: how a curve evaluates on the
 real game, how each port binds to a game field, who runs each graph, and what the graphs compute.
@@ -21,6 +21,11 @@ Inputs used (sha256):
 
 Disassembly was done with capstone 5.0.7 (PPC32 big-endian, skipdata); the repository helper is `work/disc/ppcd.py`.
 
+G1b (second pass) also used `Loader_DLL.dll` (sha256 `e49a53cdca2c1686e46a2514ca77f0736ff90433b477f5f171b0084c10cf5cfa`),
+the 1,250 decompressed `Core.arc` members (`work/disc/core_all`, 73 MB), the 56 Title Update #1 archive members
+(`work/disc/tu1_arc`), the TU1 package (`orig/54540859/tu1`) and the extracted Lua chunks (`work/disc/lua_amst`).
+G1b's results are sections 2.4, 4.3, 4.4, 5 (duplicates), 6.1 (graph 22), 6.9, 7.1, 11 and 12.
+
 ## 1. Headline
 
 1. **Curves are piecewise-linear ramps (V).** At load time the game overwrites every CURVE key's slope
@@ -33,12 +38,16 @@ Disassembly was done with capstone 5.0.7 (PPC32 big-endian, skipdata); the repos
    - 55 graphs are loaded by a literal hash in code.
    - 246 more are referenced only from `Settings.bin`: the AI difficulty tables, the 33-row shot-class
      table and `PlayerSettings`.
-   - 40 have no runner found. Some of those are reached through tables that have not been traced.
+   - Of the 40 graphs G1 left without a runner, **graphs 1-4 are run by code** (the hit-point scorer,
+     section 4.3). **The other 36 are dead data**: their hash occurs in no other file and in no code (G1b).
 4. **The shot-error inputs of `gp4b.md` 10.2 come from graphs (V).** `S+0x718` (FaultProbability),
    `S+0x720` (OutcomeNet) and `S+0x71C` (LetProbability) are graph outputs. FaultProbability and OutcomeNet
    come from one pair of graphs per shot class.
-5. **Names.** 46 of 341 graph names are recovered: 35 high, 5 medium and 6 low confidence. 787 member and
-   graph names are listed with confidence in `data/gameplay/analyser_names.json`.
+5. **Names.** 46 of 341 graph names are recovered by G1: 35 high, 5 medium and 6 low confidence. G1b adds
+   50 more member, key and graph names (837 entries in `data/gameplay/analyser_names.json`, section 7.1).
+6. **The additive error term `S+0x564` is always 0 (G1b, V).** The PlayerCtx reset `fn_8869DEF0` stores 0.0
+   there and clears the forcing flags; nothing else writes it (section 6.9). So
+   `P(error) = clamp01(FaultProbability)`. Section 11 walks through the whole shot-error chain.
 
 ## 2. Curve semantics (V)
 
@@ -106,8 +115,26 @@ The data supports this reading. In 4,095 of 5,174 adjacent key pairs, `y1` equal
   0x8C-byte records reached via `r3+0x6C -> +8`. It is called from `fn_886BC568 @0x886BC60C` and
   `fn_886900E8 @0x88690180`. This covers the shot/ball template speed curves. **`tools/ts4data/templates.py`
   (G3) currently assumes steps** and should switch to ramps. That file is not edited here.
-- **Other evaluators.** `fn_888AB6C8` and `fn_889C1868` evaluate other `0xF9F12A60` curves by calling
-  `fn_8817A688` directly. Whether those keys are fixed up first is **open** (U).
+- **Other evaluators (answered by G1b, V).** `fn_888AB6C8` and `fn_889C1868` evaluate the same template curves,
+  so they see the fixed-up slopes:
+  - `fn_8867BB78` walks the array header at `PlayerCtx+0x6C` `+8`. `PlayerCtx+0x6C` is the body of the
+    service `0x91831427`, which is the **`Settings.bin` root** (section 4.4). At `Settings.bin` root `+8` the
+    header is `{rel 0x1350, count 37}`, which points at file `0x137C`: the 37 shot-template rows of
+    `ball-physics.md` section 1. For each row it fixes the 8 value slots whose type word is `0xF9F12A60`:
+    `row+0x18` (primary), `row+0x24` (secondary), and the lo/hi pairs behind the array headers at
+    `row+0x30/+0x3C/+0x48` (spin `vertical_a`, `along_c`, `lateral_b`). The bounce tables at `row+0x58..`
+    are curve16 records with their own evaluator, so they need no fixup.
+  - `fn_888AB6C8(value*, ...)` is the generic "value" reader: type `0x7A330099` -> 2-D table `fn_8826D278`,
+    `0xF9F12A60` -> `fn_8817A688`, `0x33799CCE` -> constant. All 11 callers (`fn_888AB7B0` .. `fn_888ACDA8`,
+    the per-kind flight planners) pass `ball+0x24` (the selected template row's `tpl`) or `tpl+0xC`, so they
+    read the primary or secondary value of a Settings row.
+  - `fn_889C1868(ball, blend)` reads `X = ball+0x24` and evaluates the pairs behind `X+0x18/+0x24/+0x30`
+    (= `row+0x30/+0x3C/+0x48`, the spin lo/hi curves) at `ball+0x344`, then stores
+    `lerp(lo, hi, blend)` into `ball+0x90/+0x94/+0x98`. Callers: `0x889C1A58`, `0x889C1B98`, `0x889C2724`.
+  - **Exception.** The template row embedded in `State.bin` (file `0xEC4`, kind `BounceSpeed`, primary
+    `[100..1000: 80 -> 120]`, spin-a hi `[50..120: -0.4 -> -0.2]`) is not in that array and is never fixed up.
+    If the game ever plans a ball from it, its curves act as steps (`y0`). No code was found that points
+    `ball+0x24` at it (U).
 - **No second fixup.** A scan of every `fdivs`/`stfs` within a `0x14`-stride loop found this one fixup in
   `Swing_DLL` and none in `Loader_DLL`.
 
@@ -183,7 +210,9 @@ PlayerState element. Code anchors that agree: cell 276 -> `0x71C` (let chance, `
 | 0x718 | `7e28dbc0.FaultProbability` | the fault graph of each shot class |
 | 0x71C | `LetProbability` | LetProbability |
 | 0x720 | `OutcomeNet` | the net graph of each shot class |
-| 0x724 / 0x728 / 0x72C | `fd4a76f0` / `d9a8add8` / `e6d62656` | graphs 280-282 / 289-291: wood (frame) up / down / side chances |
+| 0x724 / 0x728 / 0x72C | OutcomeWoodUp / OutcomeWoodDown / OutcomeWoodSide (G1b names) | graphs 280-282 (289-291 are shadowed copies): wood (frame) up / down / side chances |
+| 0x730 / 0x734 | OutcomeLetIn / OutcomeLetOut (G1b names) | no graph |
+| 0x780..0x794 | WoodUp/WoodDown/WoodSide `AngleDeviation` and `Distance` (G1b names) | the wood graphs' constants (800 / -1, 0.5 / 800, 1000 / 0) |
 | 0x774 | `07902e50` | graphs 241/242/246/247 (curve of PowerfulFactor), serve power graphs |
 | 0x778 | `PowerfulFactor` | power graph of each shot class, then graph 198 |
 | 0x7DC | `e4f01642` | graphs `E4F01642` (8) and `46c7bb5f` (7) |
@@ -217,6 +246,7 @@ Each loader passes a literal hash to the graph lookup at the address given.
 | fn_886BCDA8 @0x886BCE64 | 8 `E4F01642` (planner +0x104) |
 | fn_886BDB58 | 166 Volley, 16 IsTired, 38 InputFiltering, 39 `daf2ecbd` |
 | fn_886BE1C8 | 18 RushSpeedCoef, 24 ShotDifficulty, 25 ShotEfficiency?, 196, 183, 184 DiffAttributesGain??, 185, 186, 187 |
+| fn_886B6348 (array from fn_886B69F8 and fn_8869DEF0, G1b) | 1 `3c58fc77`, 2 `4b5fcce1`, 3 `d2569d5b`, 4 `a551adcd` (hit-point scorer, section 4.3) |
 | fn_886BF598 | 163 Finesse, 164 Medium, 165 Powerful, 170 HighTopSpin, 169 PowerfulBall, 179 AutoSwing, 174 AutoVolleySwing, 173 GoodVolleySwing, 175, 176, 177, 180 Wood, 168 PerfectShot, 171 ReturnServeZone, 172 VolleyZone, 19 `c0150160`, 178 GoodTiming |
 
 Call addresses for each graph are in `CODE_LOADERS` in `tools/ts4_analyser.py` and in `loaded_by_code` in
@@ -248,6 +278,88 @@ surface "Wood" or a "ReturnServe" tutorial step. The structural tables are:
   alternative stat-curve graph `075a2137` is not referenced.
 - **Shot classes.** `40dd9ee9.00236a48.8c5e64b4` is at Settings file offset `0x28C04`: 33 entries of 0x18
   bytes `{Element list of links, Id, 3f9c096b aiming graph, 2c3e6b9c power graph}`. Section 5 has the table.
+
+### 4.3 The 40 graphs without a runner (G1b)
+
+**Method.** `tools/ts4_graph_refs.py` looks for each graph hash outside `Expressions.bin`:
+
+- as a big- or little-endian word in every decompressed `Core.arc` member (1,250 files), every Title
+  Update #1 archive member and the TU1 package, and the Lua chunks;
+- as a `lis` + `ori`/`addi` constant (at most 12 instructions apart) in the code of `Swing_DLL.dll` and
+  `Loader_DLL.dll`.
+
+A layout walk of every XBin member (`ts4_layout.walk` over `Core.arc` and TU1 members, typed by
+`Layoutall.bin`) gave the same answer. The only XBins that hold graph hashes are `Settings.bin`,
+`State.bin` and `Module.bin` (`44dc9505`). The non-Core archives on the disc hold no XBin with an
+Expressions root (`work/disc/inventory/xbin_types.tsv`).
+
+**Graphs 1-4 run (V).** Graphs `3c58fc77`, `4b5fcce1`, `d2569d5b` and `a551adcd` are built as a 4-word array
+with `lis/ori` and handed to the **hit-point scorer**:
+
+- The scorer class has vtable `0x880F4428`. Slot 3, `fn_886B6348(this, hashes[4], ctx)`, looks up each hash
+  with `fn_8866F028` (`0x886B637C`) and binds it into `this+8 + i*0x44`. Slot 4, `fn_8867C488(h)`, would load
+  the same hash into all four slots. Slot 2, `fn_88692040`, evaluates one of them.
+- The array is built in two places:
+  - the AI brain init `fn_886B69F8` (`0x886B6A04..0x886B6A50`), for the scorer at `brain+0xD4`;
+  - the PlayerCtx reset `fn_8869DEF0` (`0x8869E028..0x8869E0B0`), for the two scorers at `PlayerCtx+0xC0`
+    and `+0xC4` (one per candidate side, I).
+- `fn_88692040` scores one **BallPrediction sample** (the 0x30-byte record of `gp2.md` section 2). It picks
+  graph `sample+0x28` (the sample's bounce state, 0..3) and fills the inputs in `S+0x880..` (domain
+  `8448B811`) before it calls `fn_8890E988`:
+  - `+0x04` Height;
+  - `+0x0C` `#1407106c`, a speed times 3.6 (pool `0x880D1214`), so km/h (I);
+  - `+0x10`, `+0x18`, `+0x1C`, `+0x20` from the sample index, the tick difference and the prediction.
+  It returns `FinalScore` (`S+0x8CC`).
+- So graphs 1-4 rate **where along the incoming ball's path to take the ball**, one graph per bounce
+  state. Each is a product of curves: height (best 120..180 cm), `#1407106c` (falls from 1 at 40 to 0 at
+  100), and the other three inputs.
+- Graph 0 `36bde5fe` (`fn_886B62E0`, vtable `0x880F444C`) is the one-graph sibling. It rates by AvgSpeed and
+  Distance.
+
+**The other 36 are dead data (V for the scan, I for "never run").** No data word, no code constant and no
+string crc reaches them. The only way left would be a hash computed from a string at run time, and no such
+lookup was found: every `fn_8866F028` caller takes its hash from a literal, a Settings field, the AI
+difficulty record `fn_886A0EC8` or `PlayerTuning+0x63C` (= Settings `PlayerSettings.Expr[]`). Most of them
+are earlier versions of graphs that do run:
+
+| graphs | what they are | live counterpart |
+|---|---|---|
+| 21 `075a2137` | old stat curves with gaps at 49/50, 69/70, 89/90 | 23 DefaultAttributes |
+| 7 `46c7bb5f` | older error formula writing `S+0x7DC` | 8 `E4F01642` |
+| 15 `728e34d8` | tiredness formula using LocalPosition | 16 IsTired |
+| 34-36 | TeamState doubles positioning scores (Player1/Player2.Score) | 31-33 |
+| 57 `de9da221` (constant 0), 73 `ad039c14` | AI behaviour score graphs | the Settings AI lists |
+| 143, 147, 148 | AI PositioningComponents mixes | the Settings AI lists |
+| 167 `f5d45ddf` | receiver move value `S+0xDF0` | none |
+| 192, 195, 200 | AimingState FinalEfficiency variants | AI `714e0b0b`/`39b3b9e2` |
+| 212-214, 222, 223, 227, 234 | serve, return and drop aiming graphs | the aiming graphs in the class table |
+| 268-270 | power graphs | the class-table power graphs |
+| 319-322 | return net and fault graphs | 313-318 |
+| 335-338 | smash and lob net and fault graphs (338 = constant 0) | 333/334, 339/340 |
+| 61 / 146 `04cda578` Inputs, 109 `e8ad3080` | empty graphs: no nodes, no ports | none |
+
+`04cda578` is also the hash of the member name `Inputs`. It occurs in `State.bin` and `19ce55a5.bin` only as
+that name, never as a graph reference. `tools/ts4_analyser.py` keeps this list as `UNREFERENCED_GRAPHS`.
+`graphs.yaml` marks the graphs `unreferenced: true`, and the catalogue says "runs: never".
+
+### 4.4 Lookup structures (G1b, V)
+
+`fn_886BC568` (PlayerCtx init) and `fn_886BC678` make three registry services and store each body pointer
+(`server->vt+0x4C`, then `body + *body`):
+
+| service hash | object | body at | file |
+|---|---|---|---|
+| `0x91831427` | PlayerCtx+0x5C | **PlayerCtx+0x6C** | `Settings.bin` root (type `9B4FB082`): `+8` is the 37-row template array that `fn_8867BB78` fixes up |
+| `0x6D6C3329` | PlayerCtx+0x64 | PlayerCtx+0x68 | `State.bin` root (I: the cell table is read from this root) |
+| `0x3419C748` | PlayerCtx+0x60 | PlayerCtx+0x70 | `Expressions.bin` graph array (`fn_88690920` builds `PlayerCtx+0x9C` from it) |
+
+The stores are at `0x886BC74C`/`0x886BC784` (+0x5C/+0x6C), `0x886BC75C` and `0x886BC4BC` (+0x64/+0x68), and
+`0x886BC590`/`0x886BC5B8` (+0x60/+0x70).
+
+**Graph lookup (V).** `fn_8866F028(PlayerCtx, &hash)` scans `PlayerCtx+0x9C` from index 0 up to the count
+`*(PlayerCtx+0x70)+4`. It compares `entry->def +0x28` (the graph name) and **returns the first match**.
+`fn_88690920` fills `PlayerCtx+0x9C` in file order: entry `i` gets GraphDef `i` (stride 0x2C, `0x886909B4..`).
+So for a duplicated hash, **the lower index wins**. The higher copies are never looked up by hash.
 
 ## 5. The shot-class table (V)
 
@@ -313,7 +425,9 @@ row class               aiming power  net  fault power
 | `a4273d35` | 241 / 246 | differ: the 0.3 knot is 0.3 in 241 and 0.2 in 246 |
 | `7979bb20` | 280 / 289 | differ: 280 adds a vigor factor and its second curve starts at 70 |
 
-Which copy the hash lookup returns (first or last) is **open**.
+**The first copy is the live one (G1b, V, section 4.4).** The game runs 241 (knot 0.3), 280 (with the vigor
+factor), 242, 281, 282 and 61. Graphs 246, 289, 247, 290, 291 and 146 are shadowed, so editing them has no
+effect. The class table names the hash, not an index, so every class that lists `a4273d35` uses 241.
 
 ## 6. What the graphs do (plain language)
 
@@ -326,10 +440,26 @@ Formulas with every key are in `graphs-catalogue.md` and `graphs.yaml`.
 
 - **DefaultAttributes** (23, PlayerSettings) maps each raw rating 30..100 to a 0..1 stat with 3-4 ramps.
   For example, Volley is `[30..50: 0->0.2 | 50..80: 0.2->0.8 | 80..100: 0.8->1]`. Ratings below 30 give 0.
-- **`075a2137`** (21, unreferenced) is an older variant with gaps at 49/50, 69/70 and 89/90.
-- **`dc1d59b1`** (22, PlayerSettings) computes `lerp(Serve, Forehand, 0.4)` and `lerp(Serve, Power, 0.4)` into
-  cells 204/205. These resolve to S+0x5AC4/0x5ACC, past the PlayerState size, so the target is another
-  object (U).
+- **`075a2137`** (21) is an older variant with gaps at 49/50, 69/70 and 89/90. **Dead (G1b, V):** its hash
+  occurs in no other file, no TU1 file, and no code of either DLL (section 4.3).
+- **`dc1d59b1`** (22, PlayerSettings) computes the two custom serve attributes (G1b, V):
+  - `S.Profile.CustomAttribute[ServePrecision].Value = lerp(Serve, Forehand, 0.4)`
+  - `S.Profile.CustomAttribute[ServePower].Value = lerp(Serve, Power, 0.4)`
+
+  How this was found:
+  - `Profile` (S+0x5F0, type `07e5954b`) starts with the list `CustomAttribute` (`3b5cf1c2`) of
+    `{Id, Value}` (8 bytes).
+  - In `State.bin` player 0's list payload sits at element offset `0x5AC0`. Its two elements have
+    Id `592daed8` = crc("ServePrecision") and `32c0a57a` = crc("ServePower").
+  - Cells 204/205 (`0x5AC4`, `0x5ACC`) are exactly the two `Value` words.
+  - The two Id hashes also occur inside graph 22's port path records (`Expressions.bin` `0x80424`,
+    `0x80618`, leaf type `0x001A0000` after `Id`), so the ports select the list element by key.
+
+  Caveat (I): the cell offsets are player 0's payload position. Players 1-3 have their payloads at
+  `0x10AA4`, `0x1BA94` and `0x26A84` from their elements, so in the file image the raw cell would miss for
+  them. Whether the runtime resolves the key or relocates the payload per player was not traced.
+  No other graph and no code constant reads these two values (no `lis/ori` of either Id). Their reader is
+  unknown.
 
 ### 6.2 Fatigue (8, `fn_886BC1E0` and `fn_886BBC38`)
 
@@ -406,7 +536,8 @@ These are the shot-error model. All classes share one template and differ in the
 
 Together with `gp4b.md` 10.2 this closes the chain:
 `P(error) = clamp01(S+0x718 + S+0x564)`, `P(net | error) = S+0x720`, `P(let) = S+0x71C`.
-S+0x564 is `Context.ShotContext.#6906754b`. No graph writes it.
+S+0x564 is `Context.ShotContext.#6906754b`. No graph writes it, and it is always 0 (section 6.9), so in
+practice `P(error) = clamp01(S+0x718)`.
 
 ### 6.6 Older error graphs (2)
 
@@ -452,6 +583,34 @@ S+0x564 is `Context.ShotContext.#6906754b`. No graph writes it.
 The court-context graphs (5 `daf1c0d6`, 6 `d5b5624b`, 26/27/30-33) write
 `ShotContext.BaseLineInterpolator`, `Context.PosVolleyQualifier` and `TeamState.RepositioningState`.
 
+### 6.9 The additive error term S+0x564 (G1b, V)
+
+`S+0x564` is `Context.ShotContext.#6906754b` (float, State.bin default 0.0 for all four players). Its only
+writer is the PlayerCtx reset **`fn_8869DEF0`** (PlayerCtx vtable entry at `0x880F4360`). With
+`r11 = S + 0x500` (ShotContext), the reset does this (`0x8869E290..0x8869E344`):
+
+```
+f31 = 0.0 (pool 0x8814B440), f29 = 1.0 (pool 0x880D0F70), r31 = 0
+ShotContext +0x30, +0x40..+0x58, +0x60, +0x64 (= S+0x564), +0x68  = 0.0
+ShotContext +0x5C (S+0x55C)                                        = 1.0
+ShotContext +0x6C..+0x7D (bytes: S+0x56C..0x57D, which includes the forcing flags
+                          S+0x56D "force error", S+0x56E "force net", S+0x572 "force let") = 0
+ShotContext +0x60 (S+0x560, IsHuman)                               = r24 ? 1.0 : 0.0
+```
+
+The search covered every store in both DLLs:
+
+- `gp8.md` 9.1 already found no store to `0x564/0x56D/0x56E/0x572` relative to the PlayerState.
+- A register scan of every `.text` store whose base came from `addi rX, rY, 0x500` or `0x4F0` within 40
+  instructions found only the stores above (`work`-local `scan564.py`, reproduced by the command in section 12).
+- No graph port names `6906754b`. The hash occurs only in `Layoutall.bin`.
+
+So **`S+0x564` is 0 in normal play.** It is a debug or tuning hook that ships unused, and the error
+probability is `clamp01(FaultProbability)`.
+
+The same reset clears `S+0x56E`. Its `State.bin` default is 1 for all four players, which would force every
+error to be a net error. So the State.bin image is not the live value; the per-point reset is.
+
 ## 7. Names and confidence
 
 Names were recovered by crc32 brute force over:
@@ -470,6 +629,41 @@ Confidence:
 Readable output marks medium names with `?` and low with `??`. `data/gameplay/analyser_names.json` stores
 `{hex: [name, confidence]}` and each entry is crc-checked on load.
 
+### 7.1 Names added by G1b
+
+All entries are crc-checked and stored in `data/gameplay/analyser_names.json`. Agent G5b's
+`tools/ts4data/names.py` merges that file (`--merge`), so no separate names file was written. Method:
+2-word joins over the 1,345-word vocabulary from G5b's `names.json` tokens plus gameplay words; 3-word joins
+over a 348-word gameplay vocabulary (C brute force); family searches with a fixed prefix or suffix
+(`Wood*`, `Outcome*`, `*ValueIndex`); and the CRC-affine check `crc(P+w) = crc(w) ^ Z_L(crc(P)) ^ Z_L(0)`
+for `Coef*` siblings.
+
+| hash | name | conf | where | why |
+|---|---|---|---|---|
+| `592daed8` / `32c0a57a` | ServePrecision / ServePower | high | CustomAttribute Ids, graph 22 | the graph formulas lerp(Serve, Forehand) / lerp(Serve, Power) |
+| `acb75b15` | PSMove | high | graph 187 and member S+0x48 | its ports are PSMove.Swing.MaxSpeed, Preparation.Length, Output.PressAndHold |
+| `c0150160` / `fc7f3d8a` | EmergencyPositioning / EmergencyRepositioning | high | graphs 19 / 20 | both write `Context.Emergency` |
+| `5b808224` `2f6da855` `34a3a858` `2b157b35` `4d0165be` `f5ec1133` | Wood{Up,Down,Side}{AngleDeviation,Distance} | high | S+0x780..0x794 | 6-way pattern |
+| `fd4a76f0` `d9a8add8` `e6d62656` `de3a43e1` `ff02052d` | OutcomeWood{Up,Down,Side}, OutcomeLet{In,Out} | high | S+0x724..0x734 | sibling of OutcomeNet |
+| `033f32d0` `032809f7` `528a0451` | Power / Aiming / ErrorResolution | high | ShotSpecific Min/Max ranges | 3-way pattern |
+| `c3716fda` `9d6d3bff` `16cacc41` `ef197290` `c81829b9` `9ef21274` | First / Second / Sub / Control / Source / DestValueIndex | high | kernel node members (LERP a/b/t, SUB b, CURVE in, all out) | `*ValueIndex` family |
+| `c2ddc2e6` | Behavior | high | Settings `3f7bd49d` lists | 1 word |
+| `03996229` | DeviationSystem | medium | AimingState block with DeepDeviation/Random | |
+| `1313ce9c` | CurrentTrajectory | medium | BallState+0x0 | |
+| `d4df4664` | IncomingBall | medium | TeamState block with NormSpeedInfo | |
+| `4e56b470` | PreparedMoveDistance | medium | S+0x75C | 3 words |
+| `8dd0fb98` | HeightNotation | medium | S+0x7F0 | sibling of InputNotation |
+| `3f7bd49d` `5f0108a7` `20276499` `8c5e64b4` `99d2ac4e` | BehaviorSettings, ShotDef, AnimationFeedback, EvaluateList, AISettings | medium | Settings sections | |
+| 14 more | BallToRacket, RandSlot, PlanMatch, ... | low | Settings and S fields | 2-3 word joins, unchecked by context |
+
+`#7afa6edb` (S+0x8A4, also Fatigue.Input) is proven to be a **21-character** name: `crc("Coef" + w)` equals
+its sibling `#cbce3218` only for `len(w) = 21`. It is not yet recovered. Still unnamed are
+`#1407106c` (role: a speed in km/h, section 4.3), `#03d2be3d`/`#5cf9de02` (run distance in cm / required speed
+in m/s, `fn_8868E248`), `#07902e50` (the spin blend `S+0x774`), `#6906754b`, `#7bb6a318` (Commands block
+whose `From` is the contact point) and `#8ea88f9f`. Kernel **type** names (CONST, SUM, ...) are not found.
+They are not `CAnalyserAgent*` (those strings belong to the FaceGen and animation analyser) or any tried
+`Pam::*::C*` form.
+
 ## 8. Corrections to earlier docs
 
 - `analyser-graphs.md` section 4: curves are ramps, not an open question (section 2 here).
@@ -477,7 +671,11 @@ Readable output marks medium names with `?` and low with `??`. `data/gameplay/an
   error probability. S+0x718 comes from the 31 shot-class fault graphs.
 - The raw-rating order in `Profile.3B91D48C` (S+0x620..) and `Profile` (S+0x64C..) is Serve, Return, Forehand,
   Backhand, Volley, Power, Speed, Stamina (Layoutall names, V).
-- Graph runners: section 4 replaces the "consumer unknown" entries. 40 graphs remain without a runner.
+- Graph runners: section 4 replaces the "consumer unknown" entries. G1b closes the last 40: graphs 1-4 run
+  (section 4.3) and the other 36 are dead.
+- (G1b) `gp4b.md` 10.2/10.5 and `ball-physics.md` list `S+0x564` as a tuning knob. It is reset to 0 at every
+  PlayerCtx reset and has no other writer (section 6.9). The forcing flags `S+0x56D/56E/572` are cleared there
+  too.
 
 ## 9. Tools, tests and reproduction
 

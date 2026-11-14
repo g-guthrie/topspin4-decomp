@@ -186,6 +186,8 @@ def main(argv=None):
     ap.add_argument("yaml", nargs="+")
     ap.add_argument("--iso")
     ap.add_argument("--cache")
+    ap.add_argument("--tu", help="extracted title update package dir, for YAML dumped with dump_tunables.py --tu "
+                    "(header 'archive: TitleUpdate.arc'); pass the TU Layoutall.bin with --layout")
     ap.add_argument("--layout", default="work/disc/root/Layoutall.bin")
     ap.add_argument("--out", default="work/patched")
     ap.add_argument("--rebuild", action="store_true", help="also rebuild every touched archive (needs --iso)")
@@ -201,7 +203,7 @@ def main(argv=None):
     else:
         raise SystemExit("Layoutall.bin not found; pass --layout or --iso")
     layout = X.Layout(lay_buf)
-    src = Source(a.iso, a.cache)
+    src = Source(a.iso, a.cache, a.tu)
     per_arc = {}
     total = 0
     groups = {}
