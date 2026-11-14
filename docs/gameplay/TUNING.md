@@ -108,7 +108,7 @@ Surfaces do not change ball physics; a per-surface bounce needs a code hook (sur
 | walk vs run override | table PT+0x34C | `02_PlayerSettings.yaml` |
 | reach | `ReachBall` 8.0 / 300.0 | `08_DoubleSettings.yaml` |
 | RB fast reposition zone | x > -500 cm, events every 5 frames | `04_RepositioningSettings.yaml` `/RepositioningPointSettings/8154a27b` (0xA98), `/7440a9da` (0xA8C) |
-| RB near-net speed scale | 1.15 | State image `AnimationSelection.Movement.#98bb2ce3` (S+0x39C; `data/gameplay/tunables/State/`) |
+| RB near-net speed scale | 1.15 | graph 37 `VolleySpeedCoef` (CONST; writes S+0x39C, whose State image starts at 1.0) |
 | serve position limits | `ServiceConstraint` MinZ 40 / MaxZ 375 cm | `05_MoveConstraintsSettings.yaml` |
 | animation speed with vigor | RushSpeedCoef, SwingSpeedCoef graphs | Expressions |
 
