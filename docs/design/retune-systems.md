@@ -35,14 +35,16 @@ A penalty score, summed from four inputs the engine already computes, then mappe
 | Incoming pace at contact | the fast-ball input `S+0x770`, to be written (code) | slow: -1; normal: 0; heavy: 1; near reflex limits: 2 |
 | Self-inflicted | charge state, vigor | rushed power swing (section 5): +1; vigor under 0.3: +1 |
 
-| Score | Grade | Pace cap vs Good | Aim score cap | Error added | Window factor `W_grade` |
+| Score | Grade | Pace cap vs Good | Aim cap vs Good | Error added | Window factor `W_grade` |
 |---|---|---|---|---|---|
-| -1, and the Tee-off test passes | Tee-off | 1.18 | 1.00 | 0 | 1.30 |
-| -1 or 0 | VeryGood | 1.08 | 0.95 | 0 | 1.10 |
-| 1-2 | Good | 1.00 | 0.85 | 0 | 1.00 |
-| 3 | Normal | 0.93 | 0.70 | +0.03 | 0.95 |
-| 4-5 | Bad | 0.82 | 0.50 | +0.08 | 0.90 |
-| 6 or more | VeryBad | 0.70 | 0.30 | +0.15 | 0.85 |
+| -1, and the Tee-off test passes | Tee-off | 1.18 | 1.18 | 0 | 1.30 |
+| -1 or 0 | VeryGood | 1.08 | 1.12 | 0 | 1.10 |
+| 1-2 | Good | 1.00 | 1.00 | 0 | 1.00 |
+| 3 | Normal | 0.93 | 0.82 | +0.03 | 0.95 |
+| 4-5 | Bad | 0.82 | 0.59 | +0.08 | 0.90 |
+| 6 or more | VeryBad | 0.70 | 0.35 | +0.15 | 0.85 |
+
+Both caps are ratios to the Good row, and the Good row is the retail row unchanged.
 
 Checks on the table:
 * A normal rally ball (arrived 15-29 frames early, strike zone, normal pace) scores 1: Good. That is
@@ -57,8 +59,10 @@ Pace check: a top pace build's full-charge flat forehand is 145 km/h (90 mph) in
 Times 1.18 for Tee-off is 106 mph; the overcharge (section 5) adds about 4%: 110 mph, the ceiling.
 An ordinary pro (130 km/h, 81 mph at full charge) tops out near 95-99 mph.
 
-Code: one function decides the row today (`fn_886629C8`, always Good). The change computes the score
-there. The sixth row is new data in each shot's ShotResolution.
+Code: one function decides the row today (`fn_886629C8`, always Good, by `S+0x3B4` Power and
+`S+0x3B8` Control). The change computes the score there. ShotResolution has five rows at fixed
+offsets, so Tee-off is not a sixth data row: it reuses the VeryGood row with a code multiplier
+(Q1 engine check, item 3).
 
 ## 3. The timing window
 
@@ -66,9 +70,14 @@ Retail: the timing value `t` is 0 at 20 frames before the ball arrives and moves
 Perfect is `|t| < 0.1` (2 frames either side). Good is `|t| < 0.3` (6 frames either side). The
 automatic commit at 12 frames gives `t` of about +0.4, which is late. One curve for every ball.
 
-The engine already blends two timing curves (worst and best) by a "timing ability" value; in retail
-the two curves are identical, so the blend does nothing. The design makes them different, a narrow
-one and a wide one, and drives the blend from a single window scale `W`:
+The window is changed in one place: the timing value is divided by a window scale `W` where it is
+computed (`fn_8867DF68`, which evaluates `t` every frame and freezes it at the commit). Everything
+that reads `t` then scales with it: the Perfect and Good bands, the fault graphs' forgiveness and
+the aim efficiency curve. No graph has to be re-keyed for the window itself. (An earlier draft drove
+the engine's worst/best timing-curve blend instead; that blend takes one scalar from a
+single-input graph and lerps t-values, so it cannot carry four factors. Q1 engine check, item 1.)
+`W_grade` must be known before the commit; the order of the grade and the commit in code is to be
+confirmed.
 
 ```
 W = clamp( W_rating * W_opp * W_grade * W_react , 0.60 , 1.75 )
@@ -97,22 +106,29 @@ Worked cases (average rating):
 The fifth row is the "lucky roll" case: the opponent made a mistake, the dice kept the ball in, and
 the receiver still gets an easier Perfect. The direct term exists for exactly that.
 
-The zero-error band (retail: 19 frames wide whatever the ball) becomes the Good band: no timing
-error inside it, rising outside it. Aim efficiency keeps its retail shape against `t`.
+The zero-error band keeps its retail size at `W = 1` (19 frames, `t` from -0.6 to +0.45) and scales
+with `W` like everything else. It is not tied to the Good band: that would cut the error-free zone
+by about 37% on a neutral ball, which is not intended (Q1 engine check, item 4). Aim efficiency
+keeps its retail shape against `t`.
 
-Code: carry the hitter's timing grade on the ball record so the receiver's graphs can read it; write
-the incoming-pace input. Data: the two timing curves, and the graph that outputs the blend.
+Code: compute `W` and divide `t` by it; carry the hitter's timing grade on the ball record.
+Incoming pace (`S+0x770`): writing it wakes two dormant retail terms, the fault graphs' fast-ball
+penalty (ramp 40-60 km/h, up to -0.6 on control) and the frame-shot chance (graphs 280-282, up to
+0.3 from 60 to 100 km/h). Nearly every rally ball is over 60 km/h at contact, so those curves must
+be re-keyed in the same change (data) to start near reflex limits, or every shot is penalised.
 
 ## 4. What timing buys
 
-Timing picks the position inside the grade's ranges:
+Timing picks the position inside the grade's ranges, and it already does so in retail: the power,
+aiming and fault graphs read each row's Min and Max with the timing value. That stays, with its
+retail shape, which is gentle (a late +0.5 flat power shot still gets about 75% of its peak aim).
+So this part is data and needs no new rule. The one change is the depth pull:
 
-| Timing | Pace within the row | Aim score within the row | Depth pull |
-|---|---|---|---|
-| Perfect | top | top | 0-40 cm |
-| Good | middle | middle | up to 150 cm |
-| Poor (outside Good) | bottom | bottom | the retail 2-3 m |
-| Bad | bottom, plus error chance | bottom | the retail 2-3 m |
+| Timing | Depth pull |
+|---|---|
+| Perfect | 0-40 cm |
+| Good | up to 150 cm |
+| Outside Good | the retail 2-3 m |
 
 A poor or bad timing also marks the ball: the next receiver's `W_opp` widens, and a slow, short
 result usually earns them a better grade as well. That is the knock-on the owner asked for.
@@ -185,12 +201,13 @@ The three stack only at the top: Tee-off (situation) + overcharge (commitment) +
 | Change | Kind |
 |---|---|
 | Grade score and row selection | code (`fn_886629C8`) |
-| Sixth ShotResolution row per shot | data |
+| Tee-off as the VeryGood row with a multiplier | code |
 | Incoming pace written to `S+0x770` | code |
 | Hitter's timing grade carried on the ball | code |
-| Narrow and wide timing curves; the blend graph | data |
-| Zero-error band tied to the Good band | data (fault graphs) |
-| Timing picks the position in the row | data if the range pick is graph-driven; otherwise code (to confirm) |
+| Window scale `W` computed and applied to the timing value | code (`fn_8867DF68`) |
+| Fast-ball and frame-shot curves re-keyed for the live pace input | data |
+| Timing picks the position in the row | data (already graph-driven) |
+| Depth pull scaled by timing | data (aiming graphs) |
 | Rushed swing, overcharge state | code |
 | Overcharge meter state | UI |
 | Put-away clip eligibility and rule order | data |

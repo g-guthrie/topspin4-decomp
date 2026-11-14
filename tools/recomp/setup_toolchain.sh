@@ -10,7 +10,8 @@
 #
 # Requirements: git, cmake >= 3.25, ninja, clang/clang++ (tested 18.1.3), lld,
 # and for ReXGlue: libvulkan-dev libx11-dev libx11-xcb-dev libxcb1-dev
-# libwayland-dev libgtk-3-dev (SDL3 + GTK file dialogs). Set SKIP_REXGLUE=1 to
+# libwayland-dev libgtk-3-dev (SDL3 + GTK file dialogs); at run time mesa-vulkan-drivers
+# (lavapipe) and imagemagick (frame conversion). Set SKIP_REXGLUE=1 to
 # build only XenonRecomp.
 set -euo pipefail
 
@@ -70,4 +71,5 @@ cmake -S "$RG" -B "$WORK/rexbuild" -G Ninja -DCMAKE_BUILD_TYPE=Release \
   -DSDL_X11_XSCRNSAVER=OFF -DSDL_WAYLAND=OFF -DSDL_PIPEWIRE=OFF -DSDL_JACK=OFF \
   -DSDL_SNDIO=OFF -DSDL_IBUS=OFF
 ninja -C "$WORK/rexbuild" -j"$JOBS"
-echo "ReXGlue: $RG/out/linux-amd64/rexglue"
+cmake --install "$WORK/rexbuild" > /dev/null   # SDK package for the game project: WORK/rexsdk
+echo "ReXGlue: $RG/out/linux-amd64/rexglue (SDK installed in $WORK/rexsdk)"
