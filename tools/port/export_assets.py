@@ -21,6 +21,10 @@ Parts (each is optional; a part whose dependency is missing is skipped with a me
             ts4core loads (docs/port/data-format.md; written by tools/port/blob_writer.py: TPLS, TREE, GRPH, TUNE;
             ROLE and CURV are not written yet).
   meshes    venue/player meshes and textures, delegated to the assets agent's tools/ts4_assets.py when it exists.
+  venues    venues/<Venue>/ (venue.gltf static scene, trackside/*.gltf skinned crowd/officials/net, crowd.json
+            instances, venue.json desc/lights/placements/court-line check), venues/_trackside/ (shared crowd skeleton,
+            behaviour graph, clips) and venues/index.json (inventory). tools/ts4_venue.py, docs/port/venues-and-crowd.md.
+            --venues all|Amsterdam,RolandGarros (default Amsterdam), --crowd-lod N (0 finest of 8, default 2).
 
 manifest.json at the root of --out lists what was produced, with sizes, so the viewer can degrade gracefully.
 Standard library only (plus the repository's own tools). Reads the ISO in place; never modifies it.
@@ -52,7 +56,7 @@ PREPARATION = 0x7F6C2523
 STATE_BALL_BLOCK = 0x964               # State.bin: default ball block (docs/gameplay/shot-templates.md section 2)
 BALL_DEFAULTS = {"radius_cm": 4.0, "a4": 0.06, "g": 9.81, "max_bounces": 5, "net_height_cm": 91.4,
                  "net_height_source": "assumed (ITF centre strap 91.4 cm); not read from game data"}
-PARTS = ("havok", "animdb", "gameplay", "meshes")
+PARTS = ("havok", "animdb", "gameplay", "meshes", "venues")
 
 
 # ------------------------------------------------------------------------------------------------ pure helpers
@@ -521,6 +525,37 @@ def export_meshes(ctx):
     return {"dir": "meshes", "bytes": dir_size(dest)}
 
 
+def export_venues(ctx):
+    """venues/: every selected venue archive through tools/ts4_venue.py (agent A1)."""
+    import ts4_venue as V
+    import ts4_assets as A
+    iso = ctx.need_iso()
+    os.environ.setdefault("HAVOK_CLASSES", ensure_havok_classes(ctx))
+    dest = os.path.join(ctx.out, "venues")
+    os.makedirs(dest, exist_ok=True)
+    inv = V.inventory(iso)
+    with open(os.path.join(dest, "index.json"), "w") as fh:
+        json.dump(inv, fh, indent=1)
+    known = [r["venue"] for r in inv["venues"]]
+    want = known if ctx.args.venues == "all" else [v.strip() for v in ctx.args.venues.split(",") if v.strip()]
+    bad = [v for v in want if v not in known]
+    if bad:
+        raise Skip("unknown venue(s) %s; known: %s" % (", ".join(bad), ", ".join(known)))
+    first = A.Archive(want[0] + ".arc", iso) if want else None
+    shared = os.path.join(dest, "_trackside")
+    if first is not None and not os.path.exists(os.path.join(shared, "trackside.json")):
+        V.export_trackside_shared(first, A.Archive("Core.arc", iso).arc, shared, iso, log=ctx.log)
+    done, failed = [], []
+    for v in want:
+        try:
+            V.export_venue(A.Archive(v + ".arc", iso), os.path.join(dest, v), iso, crowd_lod=ctx.args.crowd_lod, log=ctx.log)
+            done.append(v)
+        except Exception as ex:          # one broken venue must not stop the others
+            ctx.log("  venue %s failed: %s: %s" % (v, type(ex).__name__, ex))
+            failed.append({"venue": v, "error": "%s: %s" % (type(ex).__name__, ex)})
+    return {"dir": "venues", "venues": done, "failed": failed, "bytes": dir_size(dest)}
+
+
 # ------------------------------------------------------------------------------------------------ driver
 
 def run(args):
@@ -535,13 +570,13 @@ def run(args):
     manifest_path = os.path.join(ctx.out, "manifest.json")
     manifest = {"schema": 1, "tool": "tools/port/export_assets.py", "unit_scale": 0.01,
                 "axes": "glTF y up; court x runs along the court with the net at x = 0, z across; metres",
-                "parts": {}, "skeletons": [], "animations": None, "gameplay": {}, "meshes": None}
+                "parts": {}, "skeletons": [], "animations": None, "gameplay": {}, "meshes": None, "venues": None}
     if os.path.exists(manifest_path):  # keep results of earlier partial runs for parts not selected now
         try:
             with open(manifest_path) as fh:
                 old = json.load(fh)
             if old.get("schema") == 1:
-                manifest.update({k: old.get(k, manifest[k]) for k in ("parts", "skeletons", "animations", "gameplay", "meshes")})
+                manifest.update({k: old.get(k, manifest[k]) for k in ("parts", "skeletons", "animations", "gameplay", "meshes", "venues")})
         except (OSError, ValueError):
             pass
     manifest["generated"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
@@ -578,6 +613,11 @@ def run(args):
                 r = export_meshes(ctx)
                 manifest["meshes"] = r
                 manifest["parts"]["meshes"] = status("ok", "%d bytes" % r["bytes"])
+            elif part == "venues":
+                r = export_venues(ctx)
+                manifest["venues"] = r
+                manifest["parts"]["venues"] = status("ok" if not r["failed"] else "partial", "%d venue(s), %d failed, %d bytes" % (
+                    len(r["venues"]), len(r["failed"]), r["bytes"]))
         except Skip as ex:
             ctx.log("  skipped: %s" % ex)
             manifest["parts"][part] = status("skipped", str(ex))
@@ -633,6 +673,8 @@ def build_parser():
                     "'auto' to use work/port/assets/clip_map.json from tools/port/clip_map.py (run on demand)")
     ap.add_argument("--max-gb", type=float, default=10.0, help="stop writing clips after this many GB (default 10)")
     ap.add_argument("--assets-args", nargs=argparse.REMAINDER, help="extra arguments passed to tools/ts4_assets.py (must be last)")
+    ap.add_argument("--venues", default="Amsterdam", help="venues part: 'all' or a comma list of venue names (default Amsterdam)")
+    ap.add_argument("--crowd-lod", type=int, default=2, help="venues part: crowd model LOD group, 0 = finest of 8 (default 2)")
     ap.add_argument("--strict", action="store_true", help="stop and re-raise on the first part that fails")
     return ap
 

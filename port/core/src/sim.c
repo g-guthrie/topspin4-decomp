@@ -553,6 +553,69 @@ static void serve_input(Ts4Core *c, int i, int pressed, int released, uint32_t b
 /* ================================================================================================ */
 /* AI: candidate evaluation and virtual input (gp2 + movement-and-ai.md: the AI uses the same pipeline)   */
 /* ================================================================================================ */
+/* run a weighted behaviour list of an AI record: each entry's score graph writes AI+0x1A0 (#91329eea); the entry
+ * with the best score * weight wins (the Default entry when none is positive, port policy for the tie rule) and
+ * its mix graph writes the Shot/Serve/Repositioning/Positioning components. Returns 1 when a mix graph ran. */
+static int ai_run_list(Ts4Core *c, int i, const uint8_t *rec, uint32_t list)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    uint32_t n = ts4_le32(rec + TS4_AI_LCOUNT + 4 * list), off = ts4_le32(rec + TS4_AI_LOFF + 4 * list), k;
+    int32_t best = -1, dflt = -1;
+    float best_v = 0.0f;
+    for (k = 0; k < n; k++) {
+        const uint8_t *e = c->ext.aidf + off + 20 * k;
+        float v;
+        ts4_fset(p->ai, 0x1A0, 0.0f);
+        if (!ts4_bgraph_h(c, ts4_le32(e), i)) continue;
+        v = ts4_fget(p->ai, 0x1A0) * ts4_lef32(e + 8);
+        if (ts4_lef32(e + 12) != 0.0f && dflt < 0) dflt = (int32_t)k;
+        if (v > best_v) { best_v = v; best = (int32_t)k; }
+    }
+    if (best < 0) best = dflt >= 0 ? dflt : (n ? 0 : -1);
+    if (best < 0) return 0;
+    return ts4_bgraph_h(c, ts4_le32(c->ext.aidf + off + 20 * (uint32_t)best + 4), i);
+}
+
+/* AI shot choice from ShotComponents (AI+0x23C..): stroke = largest of Slice/TopSpin/Flat/Lob (DropShot -> Slice +
+ * Risk), PressAndHold = charge, AimingSide/Length = stick (argmax: port policy for reading the mix) */
+static void ai_plan_shot(Ts4Core *c, int i, const uint8_t *rec)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    static const uint32_t btn[4] = {TS4_BTN_SLICE, TS4_BTN_TOPSPIN, TS4_BTN_FLAT, TS4_BTN_LOB};
+    float v, best = -1.0f, sl, sc, sr, ls, lc, ll;
+    uint32_t k;
+    if (!ai_run_list(c, i, rec, c->rally_shots == 1 ? 1u : 0u)) return;   /* l0c return, l00 rally */
+    for (k = 0; k < 4; k++) {
+        v = ts4_fget(p->ai, 0x23C + 4 * k);
+        if (v > best) { best = v; p->ai_stroke = btn[k]; }
+    }
+    if (ts4_fget(p->ai, 0x24C) > best) p->ai_stroke = TS4_BTN_SLICE | TS4_BTN_RISK;
+    p->ai_power = clampf(ts4_fget(p->ai, 0x254), 0.0f, 1.0f);
+    sl = ts4_fget(p->ai, 0x25C); sc = ts4_fget(p->ai, 0x260); sr = ts4_fget(p->ai, 0x264);
+    ls = ts4_fget(p->ai, 0x268); lc = ts4_fget(p->ai, 0x26C); ll = ts4_fget(p->ai, 0x270);
+    p->ai_aim_side = (sl > sc && sl > sr) ? -1.0f : ((sr > sc && sr > sl) ? 1.0f : 0.0f);
+    p->ai_aim_len = (ls > lc && ls > ll) ? -1.0f : ((ll > lc && ll > ls) ? 1.0f : 0.0f);
+    ts4_bgraph_h(c, ts4_le32(rec + TS4_AI_G54), i);   /* SwingReactionTime (AI+0x1C0) */
+    ts4_bgraph_h(c, ts4_le32(rec + TS4_AI_G50), i);   /* EvaluationOutputs #4abbb588 */
+}
+
+/* the opponent hit: positioning list -> PositioningComponents #79b99b60 (AI+0x1DC) = reaction delay (G4b) */
+static void ai_react(Ts4Core *c, int i)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    const uint8_t *rec;
+    p->react_tick = (int32_t)c->tick;
+    p->ai_stroke = 0;
+    if (p->setup.human || !ts4_bound(c)) return;
+    rec = ts4_ai_record(c, c->extra[i].ai_style, c->extra[i].ai_level);
+    if (!rec) return;
+    if (ai_run_list(c, i, rec, 4)) {
+        float d = ts4_fget(p->ai, 0x1DC) * (TUN_HAS(c, AI_REACTION_SCALE) ? TUN(c, AI_REACTION_SCALE) : 1.0f);
+        if (d > 0.0f && d < 600.0f) p->react_tick = (int32_t)c->tick + (int32_t)d;
+    }
+    ai_run_list(c, i, rec, 3);   /* repositioning components (RepositioningComponents) */
+}
+
 static void ai_commit(Ts4Core *c, int i)
 {
     Ts4SimPlayer *p = &c->pl[i];
@@ -560,7 +623,8 @@ static void ai_commit(Ts4Core *c, int i)
     GpMoveMode mode;
     uint32_t k, n = 0;
     int best = -1, pass;
-    float margin = TUN(c, REACH_NET_MARGIN), osign = own_sign(c, i);
+    float margin = TUN(c, REACH_NET_MARGIN), osign = own_sign(c, i), min_rs = 1e30f;
+    const uint8_t *rec = 0;
     window_params(c, p, &wp);
     p->committed = -1;
     p->commit_valid = 0;
@@ -579,6 +643,9 @@ static void ai_commit(Ts4Core *c, int i)
     }
     if (!n) return;
     gp_window_build(&c->win, c->cand_samples, c->cand_dist, (int)n, &wp, (int)c->tick, 0.0f);
+    if (ts4_bound(c)) rec = ts4_ai_record(c, c->extra[i].ai_style, c->extra[i].ai_level);
+    for (k = 0; k < (uint32_t)c->win.count; k++)
+        if (c->win.reach_speed[k] >= 0.0f && c->win.reach_speed[k] < min_rs) min_rs = c->win.reach_speed[k];
     for (pass = 0; pass < 2 && best < 0; pass++) {
         uint32_t j;
         mode.allow_volley = 1;
@@ -602,6 +669,17 @@ static void ai_commit(Ts4Core *c, int i)
                     v[TS4_V_TICKS_SINCE_FIRST] = dt < 0.0f ? -1000.0f : dt;
                 }
                 v[TS4_V_SELECTION_SCORE] = -1.0f;
+                if (rec) {   /* hit-point score graphs of the AI record (brain +0x158 / +0x19C) -> #3237ffac.Score */
+                    PS_SET(p, 0xB90, c->win.pos[idx][1]);       /* BallHeight */
+                    PS_SET(p, 0xB94, 0.0f);                     /* InputNotation: the AI feeds nothing */
+                    PS_SET(p, 0xB9C, reach_speed);              /* ReachabilitySpeed */
+                    PS_SET(p, 0xBA4, min_rs);                   /* MinReachabilitySpeed */
+                    PS_SET(p, 0xBA8, -1.0f);
+                    if (ts4_bgraph_h(c, ts4_le32(rec + (volley ? TS4_AI_G4C : TS4_AI_G48)), i)) {
+                        c->sel.score[idx] = PS_GET(p, 0xBA8);
+                        continue;
+                    }
+                }
                 ts4_role_run(c, TS4_R_SHOT_DIFFICULTY, v);
                 if (ts4_role_run(c, volley ? TS4_R_SELECTION_VOLLEY : TS4_R_SELECTION_GROUND, v))
                     c->sel.score[idx] = v[TS4_V_SELECTION_SCORE];
@@ -617,6 +695,7 @@ static void ai_commit(Ts4Core *c, int i)
         p->commit_valid = 1;
         p->commit_tick = s->tick;
         p->commit_pos[0] = s->pos[0]; p->commit_pos[1] = s->pos[1]; p->commit_pos[2] = s->pos[2];
+        if (rec) ai_plan_shot(c, i, rec);
     }
 }
 
