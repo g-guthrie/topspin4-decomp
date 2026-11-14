@@ -7,7 +7,7 @@
  * No game data is compiled in.  The tree and the tier/power numbers come from a
  * values file written by tools/ts4data/shot_tree.py (data/gameplay/shot_tree.tree).
  * Code constants that ARE in the executable (0x80 trigger level, 0.5 tests, the
- * 1/60 s tick) are written here with their original addresses.
+ * 32767 stick scale, the wood-down radius) are written here with their original addresses.
  *
  * Compile (portable C11):
  *   cc -std=c11 -Wall -Wextra -Werror -o /tmp/test_shot_select \
@@ -86,6 +86,9 @@ typedef struct Ts4ShotTree {
     float power_curve[4]; /* curve16 key {x0, x1, y0, y1} of cfg+0x8FC */
     int n_tiers;
     Ts4Tier tiers[TS4_TIER_MAX];
+    int has_risk_curve;
+    float risk_curve[4];  /* cfg+0x908: Risk hold value S+0xE08 (no reader found) */
+    int frequency;        /* GameplayInterface EngineConfig/@Frequency = the divisor D (0: absent) */
 } Ts4ShotTree;
 
 /* Parse the line format of shot_tree.py (see its tree_flat()).  0 on success. */
@@ -117,8 +120,27 @@ enum { TS4_PAD_A, TS4_PAD_B, TS4_PAD_X, TS4_PAD_Y, TS4_PAD_LB, TS4_PAD_RB, TS4_P
  * 0x80 of 0xFF, every other button when non-zero; `invert` flips it. */
 int ts4_button_level(int slot, uint8_t value, int invert);
 
-/* Stick channels (fn_88910F50 / fn_8890E358) are not reproduced here: the dead-zone
- * shape and the two header words of each stick item are not decoded (doc s2). */
+/* Stick channel (fn_88910F50 -> fn_8890E358).  Raw int16 axes, each negated when its
+ * invert bool (InputState @InvertPaddle in the shipped map) is set; radial dead zone:
+ * |v| <= dz*32767 gives all zero, otherwise m = min(|v|/32767, 1) and the output
+ * magnitude is (m - dz)/(1 - dz) along the raw direction.  Cartesian items multiply
+ * x/y by their scale; polar items give Power = lerp(power_range, mag) and
+ * Angle = lerp(angle_range, a/(2*pi) + 0.5) where a = atan2(x, y).  Angular snapping and the
+ * running-average filter of the runtime are not reproduced (doc s3.2). */
+typedef struct Ts4Stick { float x, y, mag, angle; } Ts4Stick;
+Ts4Stick ts4_stick_channel(int16_t raw_x, int16_t raw_y, float dead_zone, int invert_x, int invert_y);
+/* Cartesian output pair of one item. */
+void ts4_stick_cartesian(const Ts4Stick *s, const float scale[2], float out[2]);
+/* Polar output pair {Power, Angle} of one item. */
+void ts4_stick_polar(const Ts4Stick *s, const float angle_range[2], const float power_range[2],
+                     float out[2]);
+
+/* fn_886A3440, human pad branch: Buttons.LT held, Stick_MovePolar.Power > 0.2 and the
+ * stick angle within 0.8727 rad (50 deg) of pi/2 (of 3*pi/2 when `alt`, a flag at
+ * *(planner+0x2C)+0x60; +pi first on the mirrored court side): the movement planner then
+ * commits the swing profile PlayerTuning+0x1F8 at once (side picked by the stick through
+ * InputNotation).  Returns 1 when that forced commit happens. */
+int ts4_lt_forced_commit(int lt, float move_power, float move_angle, int alt, int mirrored_side);
 
 /* ShotInputLatch (fn_88679C78): latch the first held of A/B/X/Y in priority
  * Flat > TopSpin > Slice > Lob while nothing is latched.  Returns the latched id
@@ -145,10 +167,65 @@ Ts4Request ts4_build_request(const Ts4RequestInput *in, uint32_t *shot_id_out);
 /* curve16 evaluator (fn_881899D8) for one key. */
 float ts4_curve16(const float key[4], float x);
 
-/* fn_8869D720: power (S+0xE00) = curve16(cfg+0x8FC)(frames / D), where frames =
- * match frame - frame of the last ball launch (S+0xDFC, written by fn_886B0490)
- * and D is the int at *(match+0x44) (runtime value, not located: see doc). */
-float ts4_power(const Ts4ShotTree *tree, int frames_since_launch, int divisor);
+/* fn_8869D720: power (S+0xE00) = curve16(cfg+0x8FC)(frames / D).  For a human pad
+ * player `frames` is ReceiverState FrameCount (S+0xDFC): the number of frames the shot
+ * button has been held since the request started (incremented by fn_886B3CF8 until the
+ * swing is committed, reset by fn_88698538).  D = **(World+0x44) =
+ * GameplayInterface EngineConfig/@Frequency (60 in the shipped data); divisor 0 uses
+ * tree->frequency. */
+float ts4_power(const Ts4ShotTree *tree, int frames_held, int divisor);
+
+/* Charge counter of fn_886B3CF8 (states AFAF1093 / F6EB6636 / 658B2E11): one frame per
+ * update while the swing is not committed (PC+0x58C) and the request is latched
+ * (PC+0x58D, human) or the player is AI.  Commit happens on the shot-button release, or
+ * at the auto trigger (contact frame - now <= PlayerTuning+0x740, 12 frames shipped) if
+ * the button is still held.  Returns the new commit flag. */
+typedef struct Ts4Charge { int frames; int latched; int committed; } Ts4Charge;
+void ts4_charge_start(Ts4Charge *c);  /* fn_88698538: frames = 0, latched = 1 */
+int ts4_charge_update(Ts4Charge *c, int released, int frames_to_contact, int lead_frames);
+
+/* Human trigger vtbl +0x34 (fn_88662458): the planner fn_886B0490 runs when the contact
+ * frame (S+0x98 PlayerEvents.BallShot.AtFrame) is valid and contact - now <= lead. */
+int ts4_swing_now(int contact_frame_valid, int frames_to_contact, int lead_frames);
+
+/* --- serve ----------------------------------------------------------------- */
+
+/* fn_886723A8: serve Request from the toss inputs.  Stroke = Classic.Throw{Flat,Slice,
+ * TopSpin}; with p = S+0x670 (serve PressAndHold, the power ratio below):
+ * IsPowerful = p > 0.8, IsMedium = !(p < 0.1) && !IsPowerful
+ * (g_ts4_script_constants+0x110 / +0x2AC); IsClassicServe = Classic.Throw (S+0x480),
+ * IsAdvancedServe = Advanced.Throw (S+0x4B5) or a motion controller. */
+typedef struct Ts4ServeInput {
+    int throw_flat, throw_slice, throw_topspin;  /* S+0x482 / 0x483 / 0x484 */
+    int classic_throw, advanced_throw;           /* S+0x480 / 0x4B5 */
+    int motion_device;                           /* forces advanced (fn_8890DB38) */
+    float press_and_hold;                        /* S+0x670 */
+} Ts4ServeInput;
+Ts4Request ts4_serve_request(const Ts4ServeInput *in);
+
+/* fn_886B2638: serve power S+0x670 = clamp((release - toss_start) / toss_len, 0, 1), where
+ * toss_len = toss frames - PlayerTuning+0x744 (12 shipped); 1.0 when not released. */
+float ts4_serve_power(int release_frame, int toss_start_frame, int toss_len, int released);
+
+/* fn_886B2638: serve timing value = curve table (PlayerTuning+0x60C, keyed by serve
+ * animation) of the frames between the button release and contact; 1.0 when the button
+ * was not released.  `keys` are n curve16 keys {x0,x1,y0,y1} evaluated like a graph
+ * CURVE (last key with x0 <= x, first key below the range). */
+float ts4_serve_timing(const float (*keys)[4], int n, float frames_release_to_contact, int released);
+
+/* --- wood -------------------------------------------------------------------- */
+
+/* fn_886B0490 entry: IsWood when the anim controller armed the check (*(PC+0x78)+0x431,
+ * set by fn_886D6EB0 when the racket is within a radius of the ball) and
+ * |ManualShotTiming (S+0x544)| >= 0.1 (g_ts4_script_constants+0x2AC/+0x474). */
+int ts4_wood_check(int armed, float manual_shot_timing);
+
+/* fn_886AE528 +0x618..+0x760: the target x is pushed out to at least 50 from the centre
+ * line (min(x, -50) if x < 0, max(x, 50) otherwise; g_ts4_script_constants+0x570/+0xF0);
+ * IsWoodDown when the target is on the x < 0 side, IsWood is not set, and the squared
+ * distance to the reference point (vector v127 of the planner) is < 640000
+ * (g_ts4_script_constants+0x7EC; 8 m).  `target` is updated in place (x, y, z in cm). */
+int ts4_wood_down(float target[3], const float ref[3], int is_wood);
 
 /* Tier graph outputs (Expressions.bin Finesse/Medium/Powerful) and the >0.5 tests
  * of fn_886872A0.  out[0] = Finesse, out[1] = Medium, out[2] = Powerful. */

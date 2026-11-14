@@ -52,7 +52,7 @@ int ts4_shot_tree_parse(const char *text, Ts4ShotTree *tree)
     while (*p) {
         const char *eol = strchr(p, '\n');
         size_t len = eol ? (size_t)(eol - p) : strlen(p);
-        char line[256];
+        char line[1024];
         if (len >= sizeof line)
             return -1;
         memcpy(line, p, len);
@@ -75,6 +75,13 @@ int ts4_shot_tree_parse(const char *text, Ts4ShotTree *tree)
         } else if (sscanf(line, "power_curve %f %f %f %f", &f[0], &f[1], &f[2], &f[3]) == 4) {
             memcpy(tree->power_curve, f, sizeof f);
             tree->has_power_curve = 1;
+        } else if (sscanf(line, "risk_curve %f %f %f %f", &f[0], &f[1], &f[2], &f[3]) == 4) {
+            memcpy(tree->risk_curve, f, sizeof f);
+            tree->has_risk_curve = 1;
+        } else if (sscanf(line, "frequency %d", &idx) == 1) {
+            if (idx <= 0)
+                return -1;
+            tree->frequency = idx;
         } else if (sscanf(line, "tier %15s %31s %31s", c, a, d) == 3) {
             if (tree->n_tiers >= TS4_TIER_MAX)
                 return -1;
@@ -221,9 +228,142 @@ float ts4_curve16(const float k[4], float x)
 
 float ts4_power(const Ts4ShotTree *tree, int frames, int divisor)
 {
+    if (divisor == 0)
+        divisor = tree->frequency;
     if (!tree->has_power_curve || divisor == 0)
         return 0.0f;
     return ts4_curve16(tree->power_curve, (float)frames / (float)divisor);
+}
+
+void ts4_charge_start(Ts4Charge *c)
+{
+    c->frames = 0;      /* fn_88698538: FrameCount = 0, Value = 0 */
+    c->latched = 1;     /* PC+0x58D */
+    c->committed = 0;   /* PC+0x58C */
+}
+
+int ts4_charge_update(Ts4Charge *c, int released, int frames_to_contact, int lead_frames)
+{
+    if (c->committed || !c->latched)
+        return c->committed;
+    /* the per-frame power read (fn_8869D720) runs before the state machine, so the
+     * frame of the release still counts */
+    c->frames++;
+    if (released || ts4_swing_now(1, frames_to_contact, lead_frames))
+        c->committed = 1;
+    return c->committed;
+}
+
+int ts4_swing_now(int valid, int frames_to_contact, int lead_frames)
+{
+    return valid && frames_to_contact <= lead_frames;
+}
+
+/* ------------------------------------------------------------------ serve */
+
+Ts4Request ts4_serve_request(const Ts4ServeInput *in)
+{
+    Ts4Request r;
+    memset(&r, 0, sizeof r);
+    r.is_flat = (uint8_t)(in->throw_flat != 0);
+    r.is_slice = (uint8_t)(in->throw_slice != 0);
+    r.is_topspin = (uint8_t)(in->throw_topspin != 0);
+    float p = in->press_and_hold;
+    r.is_powerful = (uint8_t)(p > 0.8f);                    /* g_ts4_script_constants+0x110 */
+    r.is_medium = (uint8_t)(!(p < 0.1f) && !r.is_powerful); /* +0x2AC */
+    r.is_classic_serve = (uint8_t)(in->classic_throw != 0);
+    r.is_advanced_serve = (uint8_t)(in->advanced_throw != 0 || in->motion_device != 0);
+    return r;
+}
+
+float ts4_serve_power(int release, int toss_start, int toss_len, int released)
+{
+    if (!released || toss_len <= 0)
+        return 1.0f;
+    float v = (float)(release - toss_start) / (float)toss_len;
+    return v < 0.0f ? 0.0f : (v > 1.0f ? 1.0f : v);
+}
+
+float ts4_serve_timing(const float (*keys)[4], int n, float frames, int released)
+{
+    if (!released || n <= 0)
+        return 1.0f;
+    int k = 0;
+    for (int i = 0; i < n; ++i)
+        if (keys[i][0] <= frames)
+            k = i;
+    return ts4_curve16(keys[k], frames);
+}
+
+/* ------------------------------------------------------------------ wood */
+
+int ts4_wood_check(int armed, float t)
+{
+    return armed && (t >= 0.1f || t <= -0.1f);
+}
+
+int ts4_wood_down(float target[3], const float ref[3], int is_wood)
+{
+    if (target[0] < 0.0f)
+        target[0] = target[0] < -50.0f ? target[0] : -50.0f; /* +0x570 = -50 */
+    else
+        target[0] = target[0] > 50.0f ? target[0] : 50.0f;   /* +0xF0 = 50 */
+    if (!(target[0] < 0.0f) || is_wood)
+        return 0;
+    float dx = target[0] - ref[0], dy = target[1] - ref[1], dz = target[2] - ref[2];
+    return dx * dx + dy * dy + dz * dz < 640000.0f;          /* +0x7EC */
+}
+
+/* ------------------------------------------------------------------ sticks */
+
+Ts4Stick ts4_stick_channel(int16_t raw_x, int16_t raw_y, float dz, int inv_x, int inv_y)
+{
+    Ts4Stick s = {0.0f, 0.0f, 0.0f, 0.0f};
+    float x = (float)raw_x, y = (float)raw_y;
+    if (inv_x)
+        x = -x;
+    if (inv_y)
+        y = -y;
+    float mag = sqrtf(x * x + y * y);
+    if (mag <= dz * 32767.0f) /* const 0x880023EC = 32767 */
+        return s;
+    float m = mag * (1.0f / 32767.0f);
+    if (m > 1.0f)
+        m = 1.0f;
+    float out = (m - dz) / (1.0f - dz);
+    s.x = out * x / mag;
+    s.y = out * y / mag;
+    s.mag = out;
+    s.angle = atan2f(x, y); /* fn_88564BF8(f1 = x, f2 = y) */
+    return s;
+}
+
+void ts4_stick_cartesian(const Ts4Stick *s, const float scale[2], float out[2])
+{
+    out[0] = s->x * scale[0];
+    out[1] = s->y * scale[1];
+}
+
+void ts4_stick_polar(const Ts4Stick *s, const float ar[2], const float pr[2], float out[2])
+{
+    float u = s->angle * 0.159154943f + 0.5f; /* g_ts4_script_constants+0x1B8 = 1/(2 pi) */
+    out[0] = pr[0] + (pr[1] - pr[0]) * s->mag;
+    out[1] = ar[0] + (ar[1] - ar[0]) * u;
+}
+
+int ts4_lt_forced_commit(int lt, float power, float angle, int alt, int mirrored)
+{
+    const float pi = 3.14159265f;
+    if (!lt || !(power > 0.2f)) /* g_ts4_script_constants+0x10C */
+        return 0;
+    if (mirrored)
+        angle += pi;
+    float d = angle - (alt ? 4.712389f : 1.5707964f); /* +0x774 / +0xE8 */
+    while (d > pi)
+        d -= 2.0f * pi;
+    while (d < -pi)
+        d += 2.0f * pi;
+    return fabsf(d) < 0.8727f; /* +0x778 */
 }
 
 void ts4_tier_flags(const Ts4ShotTree *tree, float power, int out[3])

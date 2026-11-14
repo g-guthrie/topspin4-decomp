@@ -251,6 +251,9 @@ class LZXDecoder:
             if self.block_left < 0 and not partial:
                 raise LZXError("match overran block")
         self.wpos = wpos
+        # bytes of `data` consumed, the bitstream re-aligned to 16 bits as at a frame end (lets a
+        # caller feed one continuous multi-frame stream, e.g. an XEX LZX delta record)
+        self.consumed = br.p - (br.n // 16) * 2
         if partial:
             return bytes(out[:out_len])
         if len(out) != out_len:

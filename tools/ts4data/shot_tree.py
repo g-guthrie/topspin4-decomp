@@ -558,6 +558,34 @@ def input_map(mapper, frequency=None):
     return out
 
 
+def serve_tables(settings: bytes):
+    """Serve input tuning of PlayerTuning (cfg+0x180) read by the human serve input node
+    fn_88696020 / fn_88681B80 and the serve hit fn_886B2638 (doc s9)."""
+    b = Buf(settings)
+    out = {
+        "input_delay_frames_cfg_0x9a8": b.i32(CFG + 0x9A8),
+        "auto_serve_idle_frames_cfg_0x9ac": b.i32(CFG + 0x9AC),
+        "serve_lead_frames_cfg_0x8c4": b.i32(CFG + 0x8C4),
+        "right_stick_gestures": [],
+        "timing_curves_cfg_0x78c": [],
+    }
+    # five 0x10-byte gesture records {MinPower, angle (rad), tolerance, frames}; the record at
+    # cfg+0x95C (file 0x980) is the one fn_88681B80 tests to start an advanced serve
+    for f in range(0x970, 0x9C0, 0x10):
+        out["right_stick_gestures"].append({
+            "file_offset": "0x%x" % f, "min_power": b.f32(f), "angle": b.f32(f + 4),
+            "tolerance": b.f32(f + 8), "frames": b.i32(f + 12)})
+    lst = CFG + 0x78C
+    base = b.rel(lst)
+    for i in range(b.u32(lst + 4)):
+        e = base + 0x10 * i
+        p, n, key = b.rel(e), b.u32(e + 4), b.u32(e + 12)
+        out["timing_curves_cfg_0x78c"].append({
+            "serve_animation": nm(key) or "%08x" % key,
+            "keys_x0_x1_y0_y1": [[b.f32(p + 0x10 * k + 4 * j) for j in range(4)] for k in range(n)]})
+    return out
+
+
 def extract(settings: bytes, expressions: bytes | None, layout_bytes: bytes | None,
             interface: bytes | None = None):
     b = Buf(settings)
@@ -715,6 +743,7 @@ def main(argv=None):
             tree_flat(data["tree_nodes"], data["power"], data.get("tier_intervals_on_power", {}))) + "\n")
     if a.input_map:
         im = input_map(data["input_mapper"])
+        im["serve"] = serve_tables(settings)
         ih = [h.replace("power curves and tier graphs.", "InputMapper (pad -> InputState).")
               .replace("controller-to-shot values: shot-selection tree, rows, input map,",
                        "input map: every control, edge, threshold, output path and offset")

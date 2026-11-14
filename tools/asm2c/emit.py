@@ -42,7 +42,11 @@ def func_name(r, addr):
 
 def strip_dead_locals(body):
     """Remove locals that are only ever assigned (host cc: -Wunused-but-set-variable).
-    `x = call(...);` keeps the call as a statement; dead loads are deleted."""
+    `x = call(...);` keeps the call as a statement; dead loads are deleted.  Locals that
+    are declared but never mentioned again (left by a source transform) are dropped."""
+    for m in list(re.finditer(r'^    [A-Za-z_][\w ]*? (\w+);\n', body, re.M)):
+        if len(re.findall(r'\b' + m.group(1) + r'\b', body)) == 1:
+            body = body.replace(m.group(0), '', 1)
     while True:
         changed = False
         for m in re.finditer(r'^    (?:ts4_word|float|double) ((?:[tp]f?)\d+);$', body, re.M):
@@ -301,6 +305,17 @@ def run_group(res, group, path, tries=8, flags=(), cpp=False):
     out, maps = '', []
     for _ in range(tries):
         maps, rng = build(res, group, path, cpp)
+        # functions the host syntax check rejects (the emitted files must pass it) are dropped first
+        for _ in range(tries):
+            ok, err = cc_ok(path)
+            if ok:
+                break
+            lines = [int(x) for x in re.findall(r':(\d+):\d+: error', err)]
+            bad = {a for a, (s, e) in rng.items() if any(s <= l <= e for l in lines)}
+            if not bad:
+                break
+            group = [a for a in group if a not in bad]
+            maps, rng = build(res, group, path, cpp)
         out = check(path, maps, flags)
         if 'compile failed' not in out:
             return out, maps
