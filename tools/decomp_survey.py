@@ -141,7 +141,47 @@ def normalise(words):
         else:
             t2.append(op)
     h = lambda seq: hashlib.blake2b(struct.pack('>%dI' % len(seq), *seq), digest_size=12).digest()
-    return h(t1), h(t2)
+    return h(t1), h(t2), t2
+
+
+def minhash(ops, perms):
+    """MinHash signature of the opcode 4-gram set."""
+    sh = {hash(tuple(ops[i:i + 4])) & 0xFFFFFFFF for i in range(max(1, len(ops) - 3))}
+    return tuple(min(((a * x + b) % 4294967311) for x in sh) for a, b in perms)
+
+
+def fuzzy(un, matched, keys, threshold, bands=8, rows=3):
+    """Tier 3: for each unmatched function, the best difflib ratio of its opcode sequence
+    against matched functions that share a MinHash LSH band and whose length is within 15%.
+    Returns {addr: (ratio, matched addr)} for ratio >= threshold."""
+    import difflib
+    rng = random.Random(7)
+    perms = [(rng.randrange(1, 1 << 32), rng.randrange(0, 1 << 32)) for _ in range(bands * rows)]
+    index = collections.defaultdict(list)
+    for f in matched:
+        sig = minhash(keys[f['addr']][2], perms)
+        for bnd in range(bands):
+            index[(bnd, sig[bnd * rows:(bnd + 1) * rows])].append(f)
+    out = {}
+    for f in un:
+        ops = keys[f['addr']][2]
+        sig = minhash(ops, perms)
+        cands = {}
+        for bnd in range(bands):
+            for g in index.get((bnd, sig[bnd * rows:(bnd + 1) * rows]), ()):
+                if abs(g['size'] - f['size']) <= 0.15 * f['size']:
+                    cands[g['addr']] = g
+        best = (0.0, None)
+        for g in cands.values():
+            sm = difflib.SequenceMatcher(None, ops, keys[g['addr']][2], autojunk=False)
+            if sm.real_quick_ratio() < max(threshold, best[0]) or sm.quick_ratio() < max(threshold, best[0]):
+                continue
+            r = sm.ratio()
+            if r > best[0]:
+                best = (r, g['addr'])
+        if best[0] >= threshold:
+            out[f['addr']] = best
+    return out
 
 
 def cmd_buckets(fns, args):
@@ -193,7 +233,7 @@ def cmd_dups(fns, args):
     for f in un:
         r = rows[bucket_of(f['addr'])[0]]
         r[0] += 1; r[1] += f['size']
-        k1, k2 = keys[f['addr']]
+        k1, k2 = keys[f['addr']][:2]
         if k1 in m1:
             r[2] += 1; r[3] += f['size']
         elif k2 in m2:
@@ -206,6 +246,20 @@ def cmd_dups(fns, args):
         print(f'| {k} | ' + ' | '.join(str(x) for x in r) + ' |')
         tot = [a + b for a, b in zip(tot, r)]
     print('| **total** | ' + ' | '.join(str(x) for x in tot) + ' |')
+    if args.fuzzy:
+        mfs = [f for f in fns if f['matched'] and f['addr'] in keys and f['size'] >= args.min_size]
+        rest = [f for f in un if keys[f['addr']][0] not in m1 and keys[f['addr']][1] not in m2]
+        fz = fuzzy(rest, mfs, keys, args.fuzzy)
+        rows3 = collections.defaultdict(lambda: [0, 0])
+        for f in rest:
+            if f['addr'] in fz:
+                r = rows3[bucket_of(f['addr'])[0]]; r[0] += 1; r[1] += f['size']
+        print(f'\ntier 3 (opcode-sequence difflib ratio >= {args.fuzzy} against a matched function within 15% size, '
+              f'not already tier 1/2): {len(fz)} functions, {sum(r[1] for r in rows3.values())} bytes')
+        for k, r in sorted(rows3.items(), key=lambda kv: -kv[1][1]):
+            print(f'  {r[0]:5d} fns {r[1]:8d} B  {k}')
+        for ad, (r, g) in sorted(fz.items(), key=lambda kv: -kv[1][0])[:args.top]:
+            print(f'  {ad:08X} ~ {g:08X} ratio {r:.3f}')
     # clusters among the unmatched (one match would cover the rest)
     for tier in (0, 1):
         cl = collections.defaultdict(list)
@@ -246,6 +300,7 @@ def main(argv=None):
     sub = ap.add_subparsers(dest='cmd', required=True)
     b = sub.add_parser('buckets'); b.add_argument('--json')
     d = sub.add_parser('dups'); d.add_argument('--min-size', type=int, default=128); d.add_argument('--top', type=int, default=15)
+    d.add_argument('--fuzzy', type=float, default=0.0, help='also report tier 3 near duplicates at this difflib ratio (e.g. 0.9)')
     s = sub.add_parser('sample')
     s.add_argument('--lo', type=int, default=256); s.add_argument('--hi', type=int, default=2048)
     s.add_argument('-n', type=int, default=32); s.add_argument('--seed', type=int, default=1)
