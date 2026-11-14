@@ -205,7 +205,45 @@ that is why the fix also seeds jump-table case values.
 
 ### 3.2 Planted mutations must come out DIFFERENT
 
-RESULTS_MUTANTS
+`work/eq1/mutate.py` (scratch) takes the matched functions that came out EQUIVALENT (at least
+40 bytes, with a literal body in the source; 80 functions, deterministic shuffle, seed 7) and, per
+function and operator, plants one mutation in a copy of the source: **const** (a literal n ->
+n+1, 0 -> 1), **cmp** (`==`/`!=`, `<`/`>=`, `>`/`<=` flipped), **swap** (operands of `-` or `/`
+exchanged), **store** (an assignment through `->`, `*` or `[]` deleted), **bound** (a `for`/`while`
+condition `<` -> `<=` and so on). Up to 4 sites per operator are tried until one compiles and changes
+the function's code bytes. A mutant that does not compile or that the compiler optimises away
+is not a test.
+
+| operator | mutants | DIFFERENT | missed |
+|---|---|---|---|
+| const | 78 | 73 | 5 |
+| cmp | 32 | 32 | 0 |
+| store | 27 | 26 | 1 |
+| swap | 6 | 5 | 1 |
+| bound | 6 | 5 | 1 |
+| all | 149 (78 functions) | **141 (94.6%)** | 8 |
+
+(246 operator/function pairs had no site and 5 had only non-compiling mutants.) The 8 misses:
+- **4 are equivalent by construction**, so no checker could see them: three change the fifth
+  argument (r7) of a call to `fn_8841F080`, which never reads r7; one changes the crc32 tail loop
+  `while (len >= 4)` to `> 4`, which moves the last word into the byte loop, and that computes the
+  same CRC.
+- **1 is a stated blind spot**: `value.f8 = 0` -> `1` in `ts4_name_table_build`, a field at
+  offset 8 of a local struct passed to callees. Only the first word of a frame object is
+  compared (7.1); a wider window gave false DIFFERENT verdicts on non-matched candidates.
+- **3 sit on paths the trials did not reach or reached without the deciding value**: `luaL_getn`
+  `n - 1` -> `1 - n` in a block outside the 90% covered; `lib2_frame_sync` (coverage 90.5%) `> 0`
+  -> `> 1` on a 64-bit total-samples field that must be exactly 1, and a dropped
+  `lookahead` store on an uncovered branch.
+
+Excluding the four equivalent mutants, the detection rate is 141/145 = 97%.
+
+Checker improvements that came out of earlier rounds of this experiment, and that the table
+already includes: stack arguments 9+ (a dropped argument in a 13-argument call was missed),
+seeded jump-table case values and an explicit boundary phase (a `which_tbl >= 4` -> `>= 5` was
+missed because 4 was never drawn), 8-byte loads in the mutation trace, and the out-parameter
+model (a `start < 1` flip in Lua's `str_sub` was missed because the length came back through
+`&len`).
 
 ## 4. What the tier could cover: asm2c translations
 
@@ -233,8 +271,12 @@ matching pipeline keeps the original bytes for those functions. A function moves
 
 **Progress.** Two numbers, side by side, never summed:
 
-    matched     30,421 functions  2,933,124 / 10,154,036 code bytes (28.89%)
-    equivalent     NNN functions    NNN,NNN / 10,154,036 code bytes  (N.NN%)  [not included above]
+    matched     30,430 functions  2,936,440 / 10,154,036 code bytes (28.92%)   [b45]
+    equivalent       0 functions          0 / 10,154,036 code bytes  (0.00%)   [separate; not included above]
+
+(Today no source carries `"route": "equiv"`, so the second line is zero. Sections 4 and 5 show what
+the sampled translations and drafts would add.) The same function is never counted in both:
+a function that becomes matched leaves the equivalent count.
 
 `config/progress.json` gets a separate `equivalent_functions` / `equivalent_bytes` pair, and the
 public decomp.dev report keeps reporting matched bytes only (it has no notion of the second tier).
@@ -313,4 +355,34 @@ the call boundaries the checker compared; re-run the checker on the combined obj
 
 ## 8. Inputs and reproduction
 
-INPUTS
+Inputs (nothing from them is in the repository):
+
+| input | value |
+|---|---|
+| original | `orig/54540859/Swing_DLL.dll`, 13,848,064 bytes, sha256 `a7f28b29ef72fcc88c9b7c8208d27367b2e1bcfdafbeaddc49b9e8d32f952ba9` |
+| symbols | `work/matching-b45/analysis/symbols.txt` + committed `symbols.txt` (b45: 30,430 matched functions) |
+| emulator | unicorn 2.1.4 (pip), Python 3.13.18 |
+| compiler | the project's MSVC 16.00.10224 via `fn_check.compile_candidate` (base flags `/O2 /Oi`, per-file exceptions) |
+| checker | `tools/fn_equiv.py`, version string `fn_equiv/1`, sha256 CHECKER_SHA |
+
+Commands (scratch scripts live in `work/eq1/`, outside the repository's tracked tree; each
+writes JSON lines, one result per function):
+
+```sh
+python3 -m unittest tests.test_fn_equiv                  # 15 tests, synthetic code only
+# 3.1  matched ground truth (job list: 300 functions stratified by size, LTCG units excluded)
+NPROC=2 KW='{"trials":300,"time_budget":40}' python3 work/eq1/harness.py work/eq1/jobs_matched.json work/eq1/res_matched.jsonl
+python3 work/eq1/summarize.py work/eq1/res_matched.jsonl
+# 3.2  mutation testing on the EQUIVALENT ones
+NPROC=2 python3 work/eq1/mutate.py work/eq1/res_matched.jsonl work/eq1/res_mut.jsonl 80
+# 4/5  asm2c sample + near misses
+python3 work/eq1/asm2c_sample.py work/eq1/a2c work/eq1/jobs_a2c.json      # decomp_survey sample --seed 1
+python3 work/eq1/nearmiss_collect.py                                       # -> jobs_near.json
+python3 work/eq1/harness.py work/eq1/jobs_near.json work/eq1/res_near.jsonl  # finds fragments that do not compile
+python3 work/eq1/near_ctx.py                                              # -> jobs_near_ctx.json (fragment + its context source)
+# jobs_step3.json = jobs_near.json + jobs_near_ctx.json + jobs_a2c.json
+NPROC=2 KW='{"trials":400,"time_budget":45}' python3 work/eq1/harness.py work/eq1/jobs_step3.json work/eq1/res_step3.jsonl
+python3 work/eq1/report3.py work/eq1/res_step3.jsonl
+# one function
+python3 tools/fn_equiv.py src/xbox360/<file>.c <name>=0x<addr> --seed 1 --trials 400 --time 0 --json out.json
+```
