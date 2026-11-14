@@ -1,0 +1,5 @@
+// Reviewed bootstrap symbols for Loader_DLL.xex (see docs/loader-analysis.md).
+text_metadata_83517E14 = .text:0x83517E14; // type:object size:0x2C scope:local data:byte
+ts4l_field_address_2af0_830A02A8 = .text:0x830A02A8; // type:function size:0x8
+ts4l_field_address_4_830A02F0 = .text:0x830A02F0; // type:function size:0x8
+ts4l_get_u32_8b4_830A02F8 = .text:0x830A02F8; // type:function size:0x8

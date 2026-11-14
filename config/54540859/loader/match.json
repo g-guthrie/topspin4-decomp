@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "module": "Loader_DLL.xex",
+  "module_sha256": "8f9ed530c9cf32cf2ae33534ba1ca99e3abdcf2f5859bc8f68658e23187fd092",
+  "compiler": "Xbox 360 MSVC 16.00.10224.00",
+  "matched_functions": 3,
+  "matched_code_bytes": 24,
+  "module_total_code_bytes": 4650436,
+  "module_matched_code_percent": 0.00051608,
+  "module_total_functions": 17215,
+  "module_total_units": 11,
+  "basis": "objdiff-cli 3.7.1 over all Jeff 0.3.5 split units for Loader_DLL.xex"
+}

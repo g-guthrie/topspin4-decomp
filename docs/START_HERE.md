@@ -46,6 +46,13 @@ done, and what to do next.
 - **Title Update #1.** It is recorded in `docs/additional-content.md`, and
   `tools/stfs.py` reads it.
 
+### Second target: Loader_DLL
+
+`Loader_DLL.xex` (4,650,436 code bytes, 17,215 functions) is now a matching
+target alongside Swing, with its own pipeline (`tools/loader_matching.py`),
+config (`config/54540859/loader/`) and sources (`src/loader/`). See
+`docs/loader-analysis.md`. Together the two modules are about 14.8 MB of code.
+
 ## 3. Setup on a local machine
 
 Everything below `orig/`, `work/` and `build/` is git-ignored. Never commit game

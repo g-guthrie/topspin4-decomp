@@ -1,0 +1,13 @@
+{
+  "units": [
+    {
+      "source": "src/loader/l1_field_helpers_830A02A8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_field_address_2af0_830A02A8": 8,
+        "ts4l_field_address_4_830A02F0": 8,
+        "ts4l_get_u32_8b4_830A02F8": 8
+      }
+    }
+  ]
+}
