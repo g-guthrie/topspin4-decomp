@@ -21,9 +21,8 @@ The statements are a small command language: ``SceneOn``, ``Wait(5)``, ``ChangeS
 ``$Scene.Method``, ``self.__Action_0()`` (a Lua closure of the scene), ``@Name@`` (an action
 parameter), ``SetActiveControl('', 0)`` and so on.
 
-``.anims``: u32 ntracks-ish header, then fixed records naming a node (``Menu``) and a property
-(``visibility``, ``SceneOn`` ...) with key frames; only the names and the key times/values are read
-here (``parse_anims``), enough to know which timelines a scene has.
+``.anims``: named clips (``SceneOn``, ``SceneOff``, ``OnSelected`` ...) of key-framed curves on node
+properties; see ``parse_anims``.
 
   python3 tools/port/ui_actions.py actions FILE     # pretty listing
   python3 tools/port/ui_actions.py anims FILE
@@ -157,13 +156,97 @@ def statement_calls(stmt: str):
     return m.group(1), args
 
 
+def _name_block(d, o):
+    """[u32 len][u32 padded len][u32 0xFFFFFFFF][chars, padded] -> (string, offset after)."""
+    n, pad = _u32(d, o), _u32(d, o + 4)
+    if _u32(d, o + 8) != 0xFFFFFFFF or n > pad or o + 12 + pad > len(d):
+        raise UiFormatError("bad name block at 0x%X" % o)
+    return d[o + 12:o + 12 + n].decode("latin-1").rstrip("\0"), o + 12 + pad
+
+
+def _is_curve(d, o):
+    if o + 0x28 > len(d):
+        return False
+    first, size, no, po, to, ff = struct.unpack_from(">6I", d, o)
+    return ff == 0xFFFFFFFF and first in (0, 8) and 0x20 <= no < po < to <= size + 8 and o + size <= len(d)
+
+
 def parse_anims(d: bytes):
-    """Collect (node, property) name pairs and the float payloads that follow them."""
-    names = []
-    for m in re.finditer(rb"\xff\xff\xff\xff([A-Za-z_][\x20-\x7e]{1,63}?)\x00", d):
-        names.append(m.group(1).decode("latin-1"))
-    head = list(struct.unpack_from(">2I", d, 0)) if len(d) >= 8 else []
-    return {"header": head, "names": names}
+    """Decode an ``.anims`` file: named clips made of key-framed property curves.
+
+    Layout (big endian):
+      u32 (often the clip count, not always), f32 duration of the first curve group
+      curve groups, one per clip: curves back to back; between groups 2-3 words, the last one the
+        group's duration (f32 seconds)
+        curve: u32 first (8 for the first curve of a group, else 0), u32 size (from the curve), u32 node_off,
+               u32 prop_off, u32 tail_off (these three count from curve - 8),
+               u32 0xFFFFFFFF, u32 nkeys, u32 flags (0x00010000 = stepped), u32 0, u32 0,
+               nkeys x {f32 time, f32 value, f32 in_dx, in_dy, out_dx, out_dy}   (Maya-style tangents)
+               name block at node_off (target node, may contain "|" paths and @Param@), name block at
+               prop_off (visibility, translateX, scaleY, rotateZ, globalColorA/R/G/B, imageCenterX, ...)
+      2 words, then the clip table: u32 nclips, per clip {u32 0x24, u32 first-curve offset (from file
+        offset 8), f32 1.0, f32 1.0, u32 0, u32 0, name block}
+    Returns {"clips": {name: {"duration", "curves": [{"node", "prop", "step", "keys": [[t, v, idx, idy,
+    odx, ody], ...]}]}}}.
+    """
+    if len(d) < 8:
+        raise UiFormatError("anims too short")
+    nclips = _u32(d, 0)
+    if nclips > 10000:
+        raise UiFormatError("not an .anims file")
+    groups = []          # [(start offset rel 8, duration, curves)]
+    o = 8
+    cur = {"start": 0, "duration": struct.unpack_from(">f", d, 4)[0], "curves": []}
+    groups.append(cur)
+    if not _is_curve(d, o):          # some files pad the first group header
+        nxt = next((o + k for k in range(4, 36, 4) if _is_curve(d, o + k)), None)
+        if nxt is not None:
+            cur["start"] = nxt - 8
+            o = nxt
+    guard = 0
+    while o < len(d) and guard < 100000:
+        guard += 1
+        if _is_curve(d, o):
+            first, size, no, po, to, _ff = struct.unpack_from(">6I", d, o)
+            nk = _u32(d, o + 24)
+            flags = _u32(d, o + 28)
+            base = o - 8          # name offsets count from 8 bytes before the curve
+            if o + 0x28 + 24 * nk > base + no:
+                raise UiFormatError("keys overlap the names at 0x%X" % o)
+            keys = [list(struct.unpack_from(">6f", d, o + 0x28 + 24 * k)) for k in range(nk)]
+            node, _ = _name_block(d, base + no)
+            prop, _ = _name_block(d, base + po)
+            cur["curves"].append({"node": node, "prop": prop, "step": bool(flags & 0x10000), "keys": keys})
+            o += size
+            continue
+        nxt = next((o + k for k in range(4, 36, 4) if _is_curve(d, o + k)), None)
+        if nxt is not None:
+            cur = {"start": nxt - 8, "duration": struct.unpack_from(">f", d, nxt - 4)[0], "curves": []}
+            groups.append(cur)
+            o = nxt
+            continue
+        break
+    # clip table
+    clips = {}
+    t = None
+    for k in range(0, 36, 4):
+        if o + k + 8 <= len(d) and _u32(d, o + k) < 10000 and _u32(d, o + k + 4) == 0x24:
+            nclips = _u32(d, o + k)
+            t = o + k + 4
+            break
+    by_start = {g["start"]: g for g in groups}
+    if t is not None:
+        for _ in range(nclips):
+            if _u32(d, t) != 0x24:
+                break
+            start = _u32(d, t + 4)
+            name, t2 = _name_block(d, t + 24)
+            g = by_start.get(start)
+            clips[name] = {"duration": g["duration"] if g else 0.0, "curves": g["curves"] if g else [],
+                           "speed": struct.unpack_from(">f", d, t + 8)[0]}
+            t = t2
+    names = sorted({c["node"] for g in groups for c in g["curves"]})
+    return {"clips": clips, "nodes": names}
 
 
 def main(argv=None):

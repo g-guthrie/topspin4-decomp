@@ -85,6 +85,9 @@ DOMAINS = {
     "UserAIState?": (R_AI, 0x000), "e9ca839c": (R_AI, 0x000), "ShotComponents": (R_AI, 0x23C),
     "ServeComponents": (R_AI, 0x1FC), "RepositioningComponents": (R_AI, 0x1E0), "PositioningComponents": (R_AI, 0x1D0),
 }
+# Profile.CustomAttribute list payloads live outside the PlayerState object (player 0's payload at element offset
+# 0x5AC0, graphs-decoded.md s6.1): the port keeps them in an extension of its PlayerState image.
+PS_EXTENSION = {0x5AC4: 0x1070, 0x5ACC: 0x1074}
 RANDOM_MEMBERS = ("Random", "Random1", "Random2", "RandSlot", "RandSlot??", "Random?", "Random1?", "Random2?")
 
 
@@ -243,6 +246,8 @@ def bind_ports(graphs, skills=None, anim=None):
                 region = R_NONE
             else:
                 off = base + p["offset"]
+                if region in (R_SELF, R_OPP):
+                    off = PS_EXTENSION.get(off, off)
                 if p["member"] in RANDOM_MEMBERS or p["path"].split(".")[-1].rstrip("?") in ("Random", "Random1", "Random2", "RandSlot"):
                     flags |= F_RANDOM
                 if p["default"] is not None and region in (R_SELF, R_OPP, R_TEAM, R_AI, R_MATCH):

@@ -12,7 +12,8 @@ WARN    := -std=c99 -Wall -Wextra -Werror
 FP      := -ffp-contract=off -fno-fast-math
 INC     := -I$(HERE)/shim -I$(HERE)/include -I$(HERE)/src -I$(REPO)/src/xbox360 -I$(REF)
 
-CORE_SRCS := $(HERE)/src/softmath.c $(HERE)/src/data.c $(HERE)/src/ball.c $(HERE)/src/shot.c $(HERE)/src/sim.c
+CORE_SRCS := $(HERE)/src/softmath.c $(HERE)/src/data.c $(HERE)/src/ball.c $(HERE)/src/shot.c $(HERE)/src/sim.c \
+             $(HERE)/src/fields.c $(HERE)/src/anim.c $(HERE)/src/shotsel.c $(HERE)/src/swingcat.c
 REF_SRCS  := $(REF)/rules.c $(REF)/movement.c $(REF)/ai_driver.c $(REF)/stats.c $(REF)/swing_window.c $(REF)/clip_fit.c
 DRAFT     := $(REPO)/src/xbox360/drafts/gp4b_ball_model.c
 

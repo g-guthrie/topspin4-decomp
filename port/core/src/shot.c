@@ -85,41 +85,24 @@ int32_t ts4_tree_select(const Ts4Core *c, const Ts4ShotRequest *rq)
 /* ================================================================================================ */
 /* outcome decision and launch plan                                                                  */
 /* ================================================================================================ */
-typedef struct CourtBounds { float xmax, zlo, zhi; } CourtBounds;
-
-static CourtBounds court_bounds(const Ts4Core *c, int serve, float box_sign)
-{
-    CourtBounds b;
-    float tol = 2.0f * TUN(c, BALL_RADIUS_CM);
-    float w = TUN(c, COURT_HALF_WIDTH_S_CM);
-    if (serve) {
-        b.xmax = TUN(c, COURT_SERVICE_X_CM) + tol;
-        if (box_sign > 0.0f) { b.zlo = -tol; b.zhi = w + tol; } else { b.zlo = -w - tol; b.zhi = tol; }
-    } else {
-        b.xmax = TUN(c, COURT_HALF_LENGTH_CM) + tol;
-        b.zlo = -(w + tol);
-        b.zhi = w + tol;
-    }
-    return b;
-}
-
 static float clampf(float v, float lo, float hi) { return v < lo ? lo : (v > hi ? hi : v); }
 
-/* gp8_shot_error_decide() of the draft, with b50 = b51 = 1 (fn_88671B10 not decoded). */
-static uint32_t decide(const float *vars, int net_let, float roll1, float roll2, float roll3, int outside)
+/* gp8_shot_error_decide() / ball_outcome_decide (G3): f2 = !f1 && (!b50 || (!C && b51 && A) || out). */
+static uint32_t decide(float p_err, float net_share, float let_prob, int net_let, float roll1, float roll2, float roll3,
+                       int outside, int b50, int b51, int *forced)
 {
-    float p = vars[TS4_V_ERROR_PROB] + vars[TS4_V_ERROR_ADDED];
+    float p = clampf(p_err, 0.0f, 1.0f);
     int C, A, B, F1, F2;
-    p = clampf(p, 0.0f, 1.0f);
-    C = net_let && (roll3 < vars[TS4_V_LET_PROB]);
+    C = net_let && (roll3 < let_prob);
     A = roll1 < p;
-    B = A && (roll2 < vars[TS4_V_NET_SHARE]);
+    B = A && (roll2 < net_share);
     F1 = !C && A && B && net_let;
-    F2 = !F1 && ((!C && A) || outside);   /* b50 = b51 = 1: error pushes the target out */
-    if (C && !F2) return TS4_HASH_LET;
+    F2 = !F1 && (!b50 || (!C && b51 && A) || outside);
+    *forced = F2 && !C && b51 && A;
     if (F1) return TS4_HASH_NET;
     if (F2) return TS4_HASH_OUT;
-    return TS4_HASH_IN;
+    if (!C) return TS4_HASH_IN;
+    return TS4_HASH_LET;
 }
 
 /* Build the launch for one swing. own_sign = sign of x on the shooter's half (-1 / +1). stick_fwd is toward the
@@ -130,11 +113,13 @@ int32_t ts4_shot_plan(Ts4Core *c, Ts4SimPlayer *p, const Ts4ShotRequest *rq, con
 {
     float *vars = p->vars;
     float opp_sign = -own_sign, right_sign = -own_sign;   /* facing +x (own_sign -1): right is +z */
-    float tx, tz, nx, roll1, roll2, roll3, tol;
-    CourtBounds cb;
-    int outside, net_let;
+    float tx, tz, roll1, roll2, roll3, p_err, net_share, let_prob, tgt[3];
+    Ts4Bounds bb;
+    int outside, net_let, b50 = 1, b51 = 1, forced = 0, pi = (int)(p - c->pl);
+    int bound = ts4_bound(c) && c->ext.n_classes;
     int32_t row = ts4_tree_select(c, rq);
-    uint32_t outcome;
+    uint32_t outcome, mode;
+    int wood = 0;
     Ts4ShotIn *in = &plan->in;
     Gp4bSolve O;
     Ts4Ball tmp;
@@ -143,40 +128,58 @@ int32_t ts4_shot_plan(Ts4Core *c, Ts4SimPlayer *p, const Ts4ShotRequest *rq, con
 
     memset(plan, 0, sizeof *plan);
     plan->row = row;
+    wood = ts4_template_id(c, (uint32_t)row) == TS4_HASH_WOOD;
 
-    /* ---- per-shot variable refresh, then the graphs that fill them (roles) ---- */
-    vars[TS4_V_POWER] = power;
-    vars[TS4_V_HIT_HEIGHT_CM] = contact[1];
-    vars[TS4_V_ERROR_PROB] = TUN(c, SHOT_ERR_BASE);
-    vars[TS4_V_ERROR_ADDED] = TUN(c, SHOT_ERR_ADD);
-    vars[TS4_V_LET_PROB] = TUN(c, SHOT_LET_PROB);
-    vars[TS4_V_NET_SHARE] = TUN(c, SHOT_NET_SHARE);
-    vars[TS4_V_SPIN_BLEND] = TUN(c, SHOT_SPIN_BLEND);
-    vars[TS4_V_F4C] = TUN(c, SHOT_F4C);
-    {
-        int volley = !serve && !rq->baseline && !rq->smash;
-        const Ts4SimPlayer *pp = p;
-        float fh = pp->vars[TS4_V_STAT_FOREHAND], bh = pp->vars[TS4_V_STAT_BACKHAND];
-        GpPlayerStats st;
-        st.serve = vars[TS4_V_STAT_SERVE]; st.ret = vars[TS4_V_STAT_RETURN]; st.forehand = fh; st.backhand = bh;
-        st.volley = vars[TS4_V_STAT_VOLLEY]; st.power = vars[TS4_V_STAT_POWER]; st.speed = vars[TS4_V_STAT_SPEED];
-        st.stamina = vars[TS4_V_STAT_STAMINA];
+    if (bound) {
+        /* ---- decoded path (G1/G1b): HandAttributeQuality, then the shot-class graphs (net, fault, wood, power,
+         *      aiming) of the row's class write FaultProbability S+0x718 and OutcomeNet S+0x720 ---- */
+        int fh_side = ((contact[2] * right_sign) >= (p->pos[2] * right_sign)) != (p->setup.left_handed != 0);
+        PS_SET(p, 0x74C, serve ? PS_GET(p, 0x64C) : PS_GET(p, fh_side ? 0x654 : 0x658));
+        ts4_bgraph_h(c, ts4_crc32("ShotDifficulty"), pi);
+        ts4_class_run(c, ts4_shot_class(c, (uint32_t)row, (int)c->hit_is_return), pi);
+        p_err = PS_GET(p, 0x718) + PS_GET(p, 0x564);
+        net_share = PS_GET(p, 0x720);
+        let_prob = PS_GET(p, 0x71C);
+    } else {
+        /* ---- earlier path: per-shot variable refresh, then the graphs that fill them (roles) ---- */
+        vars[TS4_V_POWER] = power;
+        vars[TS4_V_HIT_HEIGHT_CM] = contact[1];
+        vars[TS4_V_ERROR_PROB] = TUN(c, SHOT_ERR_BASE);
+        vars[TS4_V_ERROR_ADDED] = TUN(c, SHOT_ERR_ADD);
+        vars[TS4_V_LET_PROB] = TUN(c, SHOT_LET_PROB);
+        vars[TS4_V_NET_SHARE] = TUN(c, SHOT_NET_SHARE);
+        vars[TS4_V_SPIN_BLEND] = TUN(c, SHOT_SPIN_BLEND);
+        vars[TS4_V_F4C] = TUN(c, SHOT_F4C);
         {
-            /* forehand side: contact on the shooter's right half of the body (left-handers mirror) */
+            int volley = !serve && !rq->baseline && !rq->smash;
+            float fh = p->vars[TS4_V_STAT_FOREHAND], bh = p->vars[TS4_V_STAT_BACKHAND];
+            GpPlayerStats st;
             int fh_side = ((contact[2] * right_sign) >= (p->pos[2] * right_sign)) != (p->setup.left_handed != 0);
+            st.serve = vars[TS4_V_STAT_SERVE]; st.ret = vars[TS4_V_STAT_RETURN]; st.forehand = fh; st.backhand = bh;
+            st.volley = vars[TS4_V_STAT_VOLLEY]; st.power = vars[TS4_V_STAT_POWER]; st.speed = vars[TS4_V_STAT_SPEED];
+            st.stamina = vars[TS4_V_STAT_STAMINA];
             vars[TS4_V_CURRENT_SKILL] = gp_stat_for_stroke(&st, serve ? GP_STROKE_SERVE : (volley ? GP_STROKE_VOLLEY : GP_STROKE_GROUND), fh_side);
+            ts4_role_run(c, volley ? TS4_R_TIMING_VOLLEY : TS4_R_TIMING_BASELINE, vars);
         }
-        ts4_role_run(c, volley ? TS4_R_TIMING_VOLLEY : TS4_R_TIMING_BASELINE, vars);
+        ts4_role_run(c, TS4_R_SHOT_ERROR, vars);
+        p_err = vars[TS4_V_ERROR_PROB] + vars[TS4_V_ERROR_ADDED];
+        net_share = vars[TS4_V_NET_SHARE];
+        let_prob = vars[TS4_V_LET_PROB];
     }
-    ts4_role_run(c, TS4_R_SHOT_ERROR, vars);
 
-    /* ---- the three rolls (roll3 after the let graph, as in fn_886807C0) ---- */
+    /* ---- the three rolls; LetProbability / LetSettings run between roll 2 and roll 3 (fn_886807C0, fn_886B7A60) ---- */
     roll1 = ts4_rng_range(&c->rng, 0.0f, 1.0f);
     roll2 = ts4_rng_range(&c->rng, 0.0f, 1.0f);
-    ts4_role_run(c, TS4_R_LET_PROBABILITY, vars);
+    if (bound) {
+        if (ts4_bgraph_h(c, ts4_crc32("LetProbability"), pi)) let_prob = PS_GET(p, 0x71C);
+        ts4_bgraph_h(c, ts4_crc32("LetSettings"), pi);   /* cord Angle/SideAngle/speed/spin loss -> ball let block */
+    } else {
+        ts4_role_run(c, TS4_R_LET_PROBABILITY, vars);
+        let_prob = vars[TS4_V_LET_PROB];
+    }
     roll3 = ts4_rng_range(&c->rng, 0.0f, 1.0f);
 
-    /* ---- aim point (port policy) ---- */
+    /* ---- aim point (port policy: the aiming graphs' AimingState outputs are not turned into a point yet) ---- */
     if (serve) {
         tx = opp_sign * TUN(c, AIM_SERVE_X_CM);
         tz = box_sign * TUN(c, AIM_SERVE_Z_CM) + stick_side * right_sign * TUN(c, AIM_WIDTH_STICK_CM);
@@ -184,44 +187,53 @@ int32_t ts4_shot_plan(Ts4Core *c, Ts4SimPlayer *p, const Ts4ShotRequest *rq, con
         tx = opp_sign * (TUN(c, AIM_DEPTH_CM) + stick_fwd * TUN(c, AIM_DEPTH_STICK_CM));
         tz = stick_side * right_sign * TUN(c, AIM_WIDTH_STICK_CM);
     }
-    cb = court_bounds(c, serve, box_sign);
-    tol = 2.0f * TUN(c, BALL_RADIUS_CM);
-    (void)tol;
-    nx = tx * opp_sign;                               /* normalised: > 0 = opponent half */
-    outside = (nx > cb.xmax) || (tz < cb.zlo) || (tz > cb.zhi) || (nx < 0.0f);
+    /* receiver-normalised target (x > 0 = the opponent's half), court bounds widened by 2 radii (G3) */
+    ts4s_court_bounds(c, serve, box_sign > 0.0f, &bb);
+    tgt[0] = tx * opp_sign; tgt[1] = 0.0f; tgt[2] = tz;
+    outside = ts4s_target_out(tgt, &bb);
     net_let = TUN(c, SHOT_NET_LET_ENABLED) != 0.0f;
-    outcome = decide(vars, net_let, roll1, roll2, roll3, outside);
-
-    /* ---- landing point per outcome (gp4b s10.3) ---- */
-    if (outcome == TS4_HASH_OUT) {
-        if (!outside) {                               /* push to just outside the nearest line */
-            float dx = cb.xmax - nx, dzh = cb.zhi - tz, dzl = tz - cb.zlo, dz = dzh < dzl ? dzh : dzl;
-            float margin = TUN(c, SHOT_OUT_MARGIN_CM);
-            if (dx <= dz) nx = cb.xmax + margin;
-            else if (dzh <= dzl) tz = cb.zhi + margin;
-            else tz = cb.zlo - margin;
-        }
-    } else {
-        nx = clampf(nx, TUN(c, SHOT_MIN_DEPTH_CM), cb.xmax);
-        tz = clampf(tz, cb.zlo, cb.zhi);
-        if (!serve && outcome == TS4_HASH_IN) {       /* uniform dispersion box of a normal groundstroke */
-            float ddx = ts4_rng_range(&c->rng, TUN(c, BALL_DISP_X_LO), TUN(c, BALL_DISP_X_HI));
-            float ddz = ts4_rng_range(&c->rng, TUN(c, BALL_DISP_Z_LO), TUN(c, BALL_DISP_Z_HI));
-            float wx = nx * opp_sign;
-            if (wx < 0.0f) { wx += ddx; tz += ddz; } else { wx -= ddx; tz -= ddz; }
-            nx = wx * opp_sign;
-        }
+    if (bound && PS_GET(p, 0x7E0) > 0.0f) {   /* reach flags b50/b51 (fn_88671B10); fan angles not modelled: 0 */
+        float wtgt[3];
+        wtgt[0] = tgt[0]; wtgt[1] = 0.0f; wtgt[2] = tgt[2];
+        ts4s_reach_flags(wtgt, &bb, PS_GET(p, 0x7E0), PS_GET(p, 0x7DC), 0.0f, 0.0f, 0, &b50, &b51);
     }
-    tx = nx * opp_sign;
+    outcome = decide(p_err, net_share, let_prob, net_let, roll1, roll2, roll3, outside, b50, b51, &forced);
+    mode = outcome;
+
+    /* ---- landing point per outcome (G3 / ref/gameplay/ball.c) ---- */
+    if (wood) {
+        float w[3];
+        ts4s_wood_target(c, w, contact, &c->rng);                  /* frame shot: the Wood box, hitter relative */
+        tx = w[0]; tz = w[2];
+        mode = TS4_HASH_WOOD;
+    } else {
+        if (outcome == TS4_HASH_OUT) {
+            if (forced) ts4s_push_out(tgt, &bb, TUN(c, SHOT_OUT_MARGIN_CM));   /* error: 3 cm past the nearest line */
+            else if (TUN_HAS(c, OUT_DEMOTE_D2)) outcome = ts4s_out_nonforced(c, tgt, &bb, &c->rng);
+            else ts4s_push_out(tgt, &bb, TUN(c, SHOT_OUT_MARGIN_CM));
+            mode = outcome;
+            if (outcome == TS4_HASH_OUT && TUN_HAS(c, OUT_GRADE_W)) mode = ts4s_out_class(c, tgt, &bb);   /* Out / OutFar / far */
+        }
+        if (outcome != TS4_HASH_OUT) {
+            ts4s_in_target(tgt, &bb, TUN(c, SHOT_MIN_DEPTH_CM));      /* In has no dispersion (G3) */
+            if (bound && !serve && outcome == TS4_HASH_IN) {
+                float from[3];
+                from[0] = contact[0] * opp_sign; from[1] = contact[1]; from[2] = contact[2];
+                ts4s_in_shortfall(tgt, from, PS_GET(p, 0xD78));       /* AimingState DeepDeviation (S+0xD78) */
+            }
+        }
+        tx = tgt[0] * opp_sign;
+        tz = tgt[2];
+    }
 
     in->struct_size = sizeof(Ts4ShotIn);
     in->row = (uint32_t)row;
     for (i = 0; i < 3; i++) in->from[i] = contact[i];
     in->to[0] = tx; in->to[1] = 0.0f; in->to[2] = tz;
-    in->spin_blend = vars[TS4_V_SPIN_BLEND];
-    in->f4c = vars[TS4_V_F4C];
+    in->spin_blend = bound ? TUN(c, SHOT_SPIN_BLEND) : vars[TS4_V_SPIN_BLEND];
+    in->f4c = bound ? TUN(c, SHOT_F4C) : vars[TS4_V_F4C];
     in->left_handed = p->setup.left_handed;
-    in->mode = (ts4_template_id(c, (uint32_t)row) == TS4_HASH_WOOD) ? TS4_HASH_WOOD : outcome;
+    in->mode = mode;
     in->planned = 1;
     plan->outcome = outcome;
     plan->target[0] = tx; plan->target[1] = 0.0f; plan->target[2] = tz;

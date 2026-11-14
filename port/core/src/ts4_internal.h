@@ -103,7 +103,7 @@ typedef struct Ts4BallEvents {
 
 /* ---- game-state images (fields.c): byte images laid out like the game objects, so bound graphs read and write
  *      the same offsets as the original (graphs-decoded.md s3). Floats are host order. ---- */
-#define TS4_PS_SIZE 0x1070u      /* PlayerState */
+#define TS4_PS_SIZE 0x1080u      /* PlayerState 0x1070 + extension (Profile.CustomAttribute values at 0x1070/0x1074) */
 #define TS4_AI_SIZE 0x274u       /* UserAIState (E9CA839C) */
 #define TS4_TEAM_SIZE 0xC0u      /* TeamState */
 #define TS4_MATCH_SIZE 0x340u    /* MatchState */
@@ -338,6 +338,7 @@ uint32_t ts4s_out_nonforced(const Ts4Core *c, float p[3], const Ts4Bounds *bb, T
 /* ---- ball.c ---------------------------------------------------------------------------------------------- */
 typedef struct Ts4BallEnv {
     float net_restitution, cord_a_deg, cord_b_deg, cord_speed_loss, cord_spin_loss;
+    uint32_t cord_from_let;    /* 1: LetSettings outputs (ball let block): exact cord rotation of G3, signed yaw */
 } Ts4BallEnv;
 void ts4_ball_env(const Ts4Core *c, Ts4BallEnv *e);
 /* Probe + launch a shot. On success *b is in the LOCAL frame, ready for ts4_ball_tick. */

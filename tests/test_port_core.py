@@ -30,7 +30,7 @@ import ts4d  # noqa: E402
 from tools import ts4_analyser as A  # noqa: E402
 from test_analyser import build_expressions  # noqa: E402
 
-CORE_SRCS = [CORE / "src" / n for n in ("softmath.c", "data.c", "ball.c", "shot.c", "sim.c")]
+CORE_SRCS = [CORE / "src" / n for n in ("softmath.c", "data.c", "ball.c", "shot.c", "sim.c", "fields.c", "anim.c", "shotsel.c", "swingcat.c")]
 REF_SRCS = [REF / n for n in ("rules.c", "movement.c", "ai_driver.c", "stats.c", "swing_window.c", "clip_fit.c")]
 FLAGS = ["-std=c99", "-Wall", "-Wextra", "-Werror", "-ffp-contract=off", "-fno-fast-math", "-O2"]
 INCLUDES = ["-I" + str(p) for p in (CORE / "shim", CORE / "include", CORE / "src", ROOT / "src" / "xbox360", REF)]

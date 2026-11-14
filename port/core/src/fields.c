@@ -139,7 +139,7 @@ int32_t ts4_ext_resolve(Ts4Core *c)
         for (i = 0; i < e->an_nclips; i++) {
             const uint8_t *cl = a + e->an_clips + e->an_stride * i;
             int16_t g = (int16_t)(cl[8] | (cl[9] << 8)), sb = (int16_t)(cl[10] | (cl[11] << 8));
-            if (g < 0 || (uint32_t)g >= e->an_ngroups || sb < 0 || (uint32_t)sb >= e->an_nsubs) return TS4_ERR_BAD_BLOB;
+            if (g < -1 || g >= (int32_t)e->an_ngroups || sb < -1 || sb >= (int32_t)e->an_nsubs) return TS4_ERR_BAD_BLOB;
         }
     }
     return TS4_OK;

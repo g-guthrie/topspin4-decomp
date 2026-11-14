@@ -29,6 +29,7 @@ mkdir -p "$OUT"
   -ffp-contract=off -fno-fast-math -fno-math-errno -mbulk-memory -fvisibility=hidden \
   -I"$HERE/shim" -I"$HERE/include" -I"$HERE/src" -I"$REPO/src/xbox360" -I"$REF" \
   "$HERE/src/softmath.c" "$HERE/src/data.c" "$HERE/src/ball.c" "$HERE/src/shot.c" "$HERE/src/sim.c" \
+  "$HERE/src/fields.c" "$HERE/src/anim.c" "$HERE/src/shotsel.c" "$HERE/src/swingcat.c" \
   "$HERE/src/wasm_rt.c" \
   "$REF/rules.c" "$REF/movement.c" "$REF/ai_driver.c" "$REF/stats.c" "$REF/swing_window.c" "$REF/clip_fit.c" \
   -Wl,--no-entry -Wl,--export-dynamic -Wl,-z,stack-size=262144 -Wl,--initial-memory=1048576 \

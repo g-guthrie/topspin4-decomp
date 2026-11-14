@@ -60,7 +60,9 @@ def find_iso(explicit=None):
 
 
 def safe_name(s):
-    return re.sub(r"[^A-Za-z0-9_.-]+", "_", s)[:60] or "sample"
+    """File-system safe stem of an FSB sample name (names are cut at 30 bytes, so ".wav" may be truncated)."""
+    s = re.sub(r"\.(w|wa|wav|mp3|aif|aiff)$", "", s, flags=re.I)
+    return re.sub(r"[^A-Za-z0-9_-]+", "_", s)[:60] or "sample"
 
 
 def ffmpeg_decode(ffmpeg, src, dst):

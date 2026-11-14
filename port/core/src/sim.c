@@ -47,6 +47,61 @@ static float own_sign(const Ts4Core *c, int p) { return ((p ^ (c->rules.ends_swa
 static float right_sign(const Ts4Core *c, int p) { return -own_sign(c, p); }
 static float clampf(float v, float lo, float hi) { return v < lo ? lo : (v > hi ? hi : v); }
 static float absf(float v) { return v < 0.0f ? -v : v; }
+static void ai_react(Ts4Core *c, int i);
+static void fatigue_shot(Ts4Core *c, int i);
+static void fatigue_point(Ts4Core *c);
+
+/* ================================================================================================ */
+/* fatigue: the decoded graphs (FatigueConst, FatigueIngame, 80ce1a10, ErrorMissFatiguePenalty, Vivacity, IsTired,  */
+/* 9c8607a7; brain slots Volley, InputFiltering, daf2ecbd) run on the PlayerState image. How CurrentVigor (S+0xF54) */
+/* is integrated is not decoded: fatigue.* tunables drive a port-policy integrator.                                 */
+/* ================================================================================================ */
+static void fatigue_graphs(Ts4Core *c, int i)
+{
+    static const char *names[] = {"FatigueConst", "FatigueIngame", "ErrorMissFatiguePenalty", "Vivacity", "IsTired",
+                                  "InputFiltering", "Volley", "RushSpeedCoef", "VolleySpeedCoef"};
+    static const uint32_t hashes[] = {0x80CE1A10u, 0x9C8607A7u, 0xDAF2ECBDu};
+    uint32_t k;
+    if (!ts4_bound(c)) return;
+    for (k = 0; k < sizeof names / sizeof names[0]; k++) ts4_bgraph_h(c, ts4_crc32(names[k]), i);
+    for (k = 0; k < 3; k++) ts4_bgraph_h(c, hashes[k], i);
+}
+
+static float vigor_max(const Ts4SimPlayer *p) { float m = PS_GET(p, 0xF64); return m > 0.0f ? m : 1.0f; }
+
+static void fatigue_tick(Ts4Core *c, int i, float dist_cm)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    p->run_dist_cm += dist_cm;
+    if (!ts4_bound(c) || !TUN_HAS(c, FATIGUE_DRAIN)) return;
+    PS_SET(p, 0xF54, clampf(PS_GET(p, 0xF54) - TUN(c, FATIGUE_DRAIN) * dist_cm * 0.01f * (1.0f - 0.5f * PS_GET(p, 0x668)),
+                            0.0f, vigor_max(p)));
+}
+
+static void fatigue_shot(Ts4Core *c, int i)
+{
+    Ts4SimPlayer *p = &c->pl[i];
+    float pf;
+    p->run_dist_cm = 0.0f;
+    if (!ts4_bound(c) || !TUN_HAS(c, FATIGUE_SHOT)) return;
+    pf = clampf(PS_GET(p, 0x778), 0.0f, 1.0f);
+    PS_SET(p, 0xF24, PS_GET(p, 0xF24) + pf);                      /* SumPowerfulFactor */
+    PS_SET(p, 0xF54, clampf(PS_GET(p, 0xF54) - TUN(c, FATIGUE_SHOT) * pf, 0.0f, vigor_max(p)));
+}
+
+static void fatigue_point(Ts4Core *c)
+{
+    int i;
+    for (i = 0; i < 2; i++) {
+        Ts4SimPlayer *p = &c->pl[i];
+        if (!ts4_bound(c)) continue;
+        if (TUN_HAS(c, FATIGUE_RECOVER)) {
+            float r = PS_GET(p, 0xF58) > 0.0f ? PS_GET(p, 0xF58) : 1.0f;
+            PS_SET(p, 0xF54, clampf(PS_GET(p, 0xF54) + TUN(c, FATIGUE_RECOVER) * r, 0.0f, vigor_max(p)));
+        }
+        fatigue_graphs(c, i);
+    }
+}
 
 /* ================================================================================================ */
 /* candidate window parameters from tunables                                                         */
@@ -147,6 +202,13 @@ static void reset_player_point(Ts4SimPlayer *p)
     p->held_ticks = 0;
     p->held_buttons = 0;
     p->ai_press = 0;
+    p->charging = 0;
+    p->charge_committed = 0;
+    p->toss_tick = -1;
+    p->serve_release_tick = -1;
+    p->react_tick = 0;
+    p->ai_stroke = 0;
+    p->inside_out = 0;
     p->vel[0] = p->vel[1] = p->vel[2] = 0.0f;
 }
 
@@ -191,6 +253,7 @@ static void emit_rule_events(Ts4Core *c, unsigned ev)
 static unsigned end_point(Ts4Core *c, rules_end_kind kind, int winner, int reason)
 {
     unsigned ev = rules_end_point(&c->rules, kind, winner);
+    fatigue_point(c);
     emit_rule_events(c, ev);
     ts4_ev(c, TS4_EV_POINT_END, (ev & RULES_EV_POINT) ? c->rules.winner : -1, reason, (int32_t)ev, 0);
     c->ball_live = 0;
@@ -303,6 +366,9 @@ static void launch_plan(Ts4Core *c, int shooter, const Ts4ShotPlan *plan, int se
     c->pl[shooter ^ 1].last_opp_hit_tick = (int32_t)c->tick;
     c->pl[shooter ^ 1].commit_valid = 0;
     c->pl[shooter ^ 1].committed = -1;
+    c->pl[shooter].charging = 0;
+    fatigue_shot(c, shooter);
+    ai_react(c, shooter ^ 1);
     c->phase = TS4_PHASE_RALLY;
     c->phase_tick = 0;
     ts4_ev(c, TS4_EV_HIT, shooter, plan->row, (int32_t)plan->outcome, plan->in.from);
@@ -716,8 +782,9 @@ static void ai_think(Ts4Core *c, int i)
     Ts4Input in;
     GpWindowParams wp;
     float tx, tz, speed = TUN(c, MOVE_SPEED_JOG);
-    int32_t delay = (int32_t)TUN(c, SWING_CONTACT_DELAY);
+    int32_t delay = lead_ticks(c);
     int32_t hold = (int32_t)(TUN(c, FLOW_AI_POWER) * TUN(c, SHOT_CHARGE_TICKS));
+    const uint8_t *rec = ts4_bound(c) ? ts4_ai_record(c, c->extra[i].ai_style, c->extra[i].ai_level) : 0;
     int incoming = c->ball_live && c->last_hitter == (i ^ 1);
     memset(&in, 0, sizeof in);
     window_params(c, p, &wp);
@@ -764,14 +831,16 @@ static void ai_think(Ts4Core *c, int i)
                 mv_update(&p->planner, &c->mvcfg, &w, &out);
             }
             /* swing: press for `hold` ticks ending one tick before the release that starts the swing */
+            if (p->ai_stroke && TUN_HAS(c, SHOT_POWER_DIV))   /* PressAndHold -> frames on the 0..1.25 s power ramp */
+                hold = (int32_t)(p->ai_power * 1.25f * TUN(c, SHOT_POWER_DIV));
             if (dt >= delay + 1 && dt <= delay + 1 + hold) {
-                in.buttons |= (type == GP_ID_BASELINE) ? TS4_BTN_TOPSPIN : TS4_BTN_FLAT;
+                in.buttons |= p->ai_stroke ? p->ai_stroke : ((type == GP_ID_BASELINE) ? TS4_BTN_TOPSPIN : TS4_BTN_FLAT);
             }
             if (dt == delay) {                             /* release tick: the stick is the aim */
                 const Ts4SimPlayer *o = &c->pl[i ^ 1];
                 float away = ((o->pos[2] * right_sign(c, i)) > (p->pos[2] * right_sign(c, i))) ? -1.0f : 1.0f;
-                in.stick_x = 0.0f;
-                in.stick_z = away;
+                in.stick_x = p->ai_stroke ? p->ai_aim_len : 0.0f;
+                in.stick_z = p->ai_stroke ? (p->ai_aim_side != 0.0f ? p->ai_aim_side : away) : away;
                 p->in = in;
                 return;
             }
@@ -780,6 +849,9 @@ static void ai_think(Ts4Core *c, int i)
         }
     }
     if (!incoming) p->planner.state = MV_WAIT;
+    if (rec && ts4_lef32(rec + TS4_AI_SPEED) > 0.0f && speed > 100.0f * ts4_lef32(rec + TS4_AI_SPEED))
+        speed = 100.0f * ts4_lef32(rec + TS4_AI_SPEED);   /* run_speed_limit of the difficulty (m/s) */
+    if (incoming && (int32_t)c->tick < p->react_tick) { in.stick_x = in.stick_z = 0.0f; p->in = in; return; }
     stick_toward(c, i, tx, tz, speed, &in);
     p->in = in;
 }
@@ -818,8 +890,18 @@ static void player_update(Ts4Core *c, int i)
     if (mag > 1.0f) { mx /= mag; mz /= mag; mag = 1.0f; }
     speed = (in->buttons & TS4_BTN_SPRINT) ? TUN(c, MOVE_SPEED_RUSH) : (mag >= 0.5f ? TUN(c, MOVE_SPEED_JOG) : TUN(c, MOVE_SPEED_WALK));
     if (in->buttons & TS4_BTN_SPRINT) {
-        p->vars[TS4_V_RUSH_SPEED_COEF] = 1.0f;
-        if (ts4_role_run(c, TS4_R_RUSH_SPEED_COEF, p->vars) && p->vars[TS4_V_RUSH_SPEED_COEF] > 0.0f) speed *= p->vars[TS4_V_RUSH_SPEED_COEF];
+        if (ts4_bound(c)) {   /* RushSpeedCoef graph (Profile.Speed, CurrentVigor) -> S+0x398 */
+            if (ts4_bgraph_h(c, ts4_crc32("RushSpeedCoef"), i) && PS_GET(p, 0x398) > 0.0f) speed *= PS_GET(p, 0x398);
+        } else {
+            p->vars[TS4_V_RUSH_SPEED_COEF] = 1.0f;
+            if (ts4_role_run(c, TS4_R_RUSH_SPEED_COEF, p->vars) && p->vars[TS4_V_RUSH_SPEED_COEF] > 0.0f) speed *= p->vars[TS4_V_RUSH_SPEED_COEF];
+        }
+    }
+    if (TUN_HAS(c, SPEED_OVERRIDE_EPS)) {   /* speed override S+0xDE8: changes only beyond 0.4 m/s (lo_override_update) */
+        float prop = speed * 0.01f;
+        if (absf(prop - p->speed_override) > TUN(c, SPEED_OVERRIDE_EPS) || mag == 0.0f) p->speed_override = prop;
+        speed = p->speed_override * 100.0f;
+        if (ts4_bound(c)) PS_SET(p, 0xDE8, p->speed_override);
     }
     if (p->swing_state == 1) { mx = mz = 0.0f; }
     dvx = mx * speed - p->vel[0];
@@ -832,6 +914,7 @@ static void player_update(Ts4Core *c, int i)
     p->vel[0] = vx; p->vel[2] = vz;
     p->pos[0] += vx * TICK_DT;
     p->pos[2] += vz * TICK_DT;
+    fatigue_tick(c, i, sqrtf(vx * vx + vz * vz) * TICK_DT);
     p->pos[0] = clampf(p->pos[0] * osign, 10.0f, half_len + 500.0f) * osign;     /* stay on the own half of the net */
     p->pos[2] = clampf(p->pos[2], -(w + 400.0f), w + 400.0f);
     if (vx * vx + vz * vz > 1.0f) p->heading = atan2f(vz, vx);
@@ -842,6 +925,7 @@ static void player_update(Ts4Core *c, int i)
     /* swing state machine */
     if (p->swing_state == 1 && (int32_t)c->tick >= p->swing_contact_tick) perform_hit(c, i);
     else if (p->swing_state == 2 && (int32_t)c->tick >= p->swing_end_tick) p->swing_state = 0;
+    ts4_anim_tick(c, i);
 }
 
 /* ================================================================================================ */
@@ -925,6 +1009,18 @@ int32_t ts4_match_start(Ts4Core *c, const Ts4MatchConfig *cfg)
         for (k = 0; k < TS4_STAT_COUNT; k++) p->vars[TS4_V_STAT_SERVE + k] = cfg->players[i].stats[k];
         ts4_role_run(c, TS4_R_DEFAULT_ATTRIBUTES, p->vars);
         p->committed = -1;
+        p->toss_tick = -1;
+        ts4_anim_reset(c, i);
+    }
+    ts4_images_init(c);   /* State.bin defaults of every bound field (SINI) */
+    c->rally_shots = 0;
+    for (i = 0; i < 2; i++) {
+        Ts4SimPlayer *p = &c->pl[i];
+        for (k = 0; k < TS4_STAT_COUNT; k++) PS_SET(p, 0x620 + 4 * (uint32_t)k, cfg->players[i].stats[k]);   /* raw ratings */
+        if (ts4_bound(c)) {
+            ts4_bgraph_h(c, ts4_crc32("DefaultAttributes"), i);   /* raw ratings -> Profile S+0x64C..0x668 (G4b) */
+            fatigue_graphs(c, i);
+        }
     }
     memset(&c->ball, 0, sizeof c->ball);
     c->tick = 0;
@@ -939,7 +1035,15 @@ int32_t ts4_set_input(Ts4Core *c, uint32_t player, const Ts4Input *in)
 {
     if (!c || c->magic != TS4_MAGIC || player > 1 || !in) return TS4_ERR_ARG;
     if (!c->started) return TS4_ERR_NOT_STARTED;
-    if (c->pl[player].setup.human) c->pl[player].in = *in;
+    if (c->pl[player].setup.human) {
+        Ts4Input v = *in;
+        if (TUN_HAS(c, STICK_DEAD_ZONE)) {   /* radial dead zone, rescaled (InputMapper, G2b) */
+            float dz = TUN(c, STICK_DEAD_ZONE), m = sqrtf(v.stick_x * v.stick_x + v.stick_z * v.stick_z);
+            if (m <= dz) v.stick_x = v.stick_z = 0.0f;
+            else { float o = ((m > 1.0f ? 1.0f : m) - dz) / (1.0f - dz); v.stick_x *= o / m; v.stick_z *= o / m; }
+        }
+        c->pl[player].in = v;
+    }
     return TS4_OK;
 }
 
@@ -976,7 +1080,7 @@ static void update_snapshot(Ts4Core *c)
         v->swing_state = p->swing_state;
         v->swing_t = 0.0f;
         if (p->swing_state == 1) {
-            float total = TUN(c, SWING_CONTACT_DELAY);
+            float total = (float)lead_ticks(c);
             float left = (float)(p->swing_contact_tick - (int32_t)c->tick);
             v->swing_t = total > 0.0f ? clampf(1.0f - left / total, 0.0f, 1.0f) : 1.0f;
         }

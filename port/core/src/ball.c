@@ -29,6 +29,15 @@ void ts4_ball_env(const Ts4Core *c, Ts4BallEnv *e)
     e->cord_b_deg = TUN(c, BALL_CORD_ANGLE_B);
     e->cord_speed_loss = TUN(c, BALL_CORD_SPEED_LOSS);
     e->cord_spin_loss = TUN(c, BALL_CORD_SPIN_LOSS);
+    e->cord_from_let = 0;
+    if (ts4_bound(c) && ts4_gfind(c, ts4_crc32("LetSettings")) >= 0) {
+        /* LetSettings (graph 182) wrote ball+0x494 Angle, +0x498 SideAngle, +0x49C PercentSpeedLost, +0x4A0 PercentSpinLost */
+        e->cord_b_deg = ts4_fget(c->ball_img, 0x494);
+        e->cord_a_deg = ts4_fget(c->ball_img, 0x498);
+        e->cord_speed_loss = ts4_fget(c->ball_img, 0x49C);
+        e->cord_spin_loss = ts4_fget(c->ball_img, 0x4A0);
+        e->cord_from_let = 1;
+    }
 }
 
 int32_t ts4_ball_launch(const Ts4Core *c, Ts4Ball *ball, const Ts4ShotIn *in, uint32_t launch_tick, Gp4bSolve *O)
@@ -57,6 +66,7 @@ int32_t ts4_ball_launch(const Ts4Core *c, Ts4Ball *ball, const Ts4ShotIn *in, ui
     B->shot_id = mode;
     B->sidespin_neg = (uint8_t)(in->left_handed ? 1 : 0);
     B->launch_frame = (int32_t)launch_tick;
+    B->no_sidespin = (uint8_t)(TUN_HAS(c, BALL_NO_SIDESPIN) && TUN(c, BALL_NO_SIDESPIN) != 0.0f);   /* ball block +0x4E1 */
     gp4b_probe(B, row, O);
     if (!(B->tau > 0.0f) || !(B->tau < 100.0f)) return TS4_ERR_UNSOLVABLE;
     gp4b_to_local(B);
@@ -177,6 +187,7 @@ void ts4_ball_tick(const Ts4Core *c, Ts4Ball *ball, const Ts4BallEnv *env, Ts4Ba
     bounce = gp4b_step_flight(TS4_TICKS_PER_SECOND, K_TICK_DT, B, bv);
     if (bounce) {
         ball->ground_bounces++;
+        if (B->bounce_count > 1) B->pos[1] = 0.0f;   /* later bounces snap to the ground (ball_step, G3) */
         bounce_response(B, ball->row, bv);
         ts4_ball_world_pos(ball, ev->at);
         ev->bounced = 1;
@@ -192,7 +203,7 @@ void ts4_ball_tick(const Ts4Core *c, Ts4Ball *ball, const Ts4BallEnv *env, Ts4Ba
             cross[i] = prev[i] + (B->pos[i] - prev[i]) * frac;
             vel[i] = (B->pos[i] - prev[i]) * TS4_TICKS_PER_SECOND;
         }
-        if (same_side_target) hits = !(cross[1] * 100.0f > B->net_height_cm);
+        if (same_side_target) hits = !(B->pos[1] * 100.0f > B->net_height_cm);   /* end-of-tick height (G3) */
         if (hits) {
             ball->net_done = 1;
             ts4_ball_world_pos(ball, ev->at);
@@ -204,7 +215,28 @@ void ts4_ball_tick(const Ts4Core *c, Ts4Ball *ball, const Ts4BallEnv *env, Ts4Ba
                 vel[0] = -vel[0];
                 start_arc2_at_net(B, cross, vel);
                 ev->net_hit = 1;
-            } else if (B->flag33) {                       /* net cord (let): deflect, keep going */
+            } else if (B->flag33 && env->cord_from_let) {   /* net cord, exact form of ref/gameplay/ball.c net_cord */
+                float up[3] = {0.0f, 1.0f, 0.0f}, sp = v_len(vel), n[3], hl, cth, ax[3], ks, kr;
+                for (i = 0; i < 3; i++) n[i] = sp > 0.0f ? vel[i] / sp : 0.0f;
+                hl = sqrtf(n[0] * n[0] + n[2] * n[2]);
+                cth = hl > 0.0f ? (n[0] * n[0] + n[2] * n[2]) / hl : 1.0f;
+                v_cross(n, up, ax);
+                cth = cth < -1.0f ? -1.0f : (cth > 1.0f ? 1.0f : cth);
+                rotate_about(n, ax, atan2f(sqrtf(1.0f - cth * cth), cth) + env->cord_b_deg * (TS4_PI / 180.0f));
+                rotate_about(n, up, env->cord_a_deg * (TS4_PI / 180.0f));
+                ks = 1.0f - env->cord_speed_loss;
+                kr = 1.0f - env->cord_spin_loss;
+                for (i = 0; i < 3; i++) vel[i] = n[i] * sp * ks;
+                B->spin_c *= kr; B->spin_a *= kr; B->spin_b *= kr;
+                if (B->no_sidespin) { B->spin_c = B->spin_b = 0.0f; }
+                else B->spin_c *= kr;                       /* spin_c is scaled twice (original) */
+                start_arc2_at_net(B, cross, vel);
+                /* deviation: the original does not count the cord touch; the port's stepper needs bounce_count > 0
+                 * to fly the arc-2 segment, so ground bounces are counted separately (ball->ground_bounces) */
+                gp4b_spin_accel(B, 0);
+                ev->net_hit = 2;
+            } else if (B->flag33) {
+                      /* net cord (let): deflect, keep going */
                 float h = sqrtf(vel[0] * vel[0] + vel[2] * vel[2]), sp, el, up[3] = {0.0f, 1.0f, 0.0f};
                 for (i = 0; i < 3; i++) vel[i] *= (1.0f - env->cord_speed_loss);
                 rotate_about(vel, up, (float)ball->cord_sign * env->cord_a_deg * (TS4_PI / 180.0f));

@@ -151,7 +151,7 @@ static void test_registry_and_loader(const uint8_t *blob, uint32_t size)
         CHECK(ts4_tunable_key(i) == ts4_crc32(ts4_tunable_name(i)));
     }
     /* before load everything required is missing */
-    CHECK(ts4_missing_tunable_count(c) == ts4_tunable_count());
+    CHECK(ts4_missing_tunable_count(c) > 40 && ts4_missing_tunable_count(c) <= ts4_tunable_count());   /* optional ones are not listed */
     CHECK(ts4_module_status(c, TS4_MOD_DATA) == TS4_STATUS_MISSING_DATA);
     CHECK(ts4_data_load(c, blob, size) == TS4_OK);
     CHECK(ts4_missing_tunable_count(c) == 0);
@@ -438,8 +438,8 @@ static void test_match(const uint8_t *blob, uint32_t size)
     printf("match seed 7 / 6000 ticks: serves %u hits %u bounces %u nets %u points %u faults %u double %u lets %u whiffs %u games %u hash %08x\n",
            a.serves, a.hits, a.bounces, a.nets, a.points, a.faults, a.doubles, a.lets, a.whiffs, a.games, a.hash);
     /* a whole one-set match terminates */
-    CHECK(run_match(c, 3, 60000, &a) == TS4_OK);
-    printf("match seed 3 / 60000 ticks: points %u games %u sets %u matches %u over at tick %u score %d-%d (games %d-%d)\n",
+    CHECK(run_match(c, 3, 200000, &a) == TS4_OK);
+    printf("match seed 3 / 200000 ticks: points %u games %u sets %u matches %u over at tick %u score %d-%d (games %d-%d)\n",
            a.points, a.games, a.sets, a.matches, a.ticks_to_end, a.sets_won[0], a.sets_won[1], a.games0[0], a.games0[1]);
     CHECK(a.matches == 1 && a.sets == 1 && a.ticks_to_end > 0);
     CHECK(a.sets_won[0] + a.sets_won[1] == 1);
@@ -484,9 +484,8 @@ static void test_human(const uint8_t *blob, uint32_t size)
     CHECK(ts4_snapshot(c)->phase == TS4_PHASE_SERVE);       /* a human server waits for the button */
     in.buttons = TS4_BTN_FLAT;
     for (t = 0; t < 30; t++) { ts4_set_input(c, 0, &in); ts4_step(c); }   /* charge */
-    in.buttons = 0;
-    ts4_set_input(c, 0, &in);
-    ts4_step(c);
+    in.buttons = 0;                                         /* release = swing; contact after the toss countdown */
+    for (t = 0; t < 40 && ts4_snapshot(c)->phase == TS4_PHASE_SERVE; t++) { ts4_set_input(c, 0, &in); ts4_step(c); }
     collect(c, &s);
     CHECK(s.serves == 1 && s.hits == 1);
     CHECK(ts4_snapshot(c)->phase == TS4_PHASE_RALLY && ts4_snapshot(c)->ball.live == 1);
