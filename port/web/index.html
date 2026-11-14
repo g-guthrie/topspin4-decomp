@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Top Spin 4 port: viewer</title>
+<title>Top Spin 4 port: play and tune</title>
 <link rel="stylesheet" href="css/style.css">
 <script type="importmap">
 {
@@ -22,13 +22,48 @@
       <div id="backend" class="badge">loading...</div>
     </header>
     <nav id="tabs">
-      <button data-tab="clips" class="active">Clips</button>
+      <button data-tab="play" class="active">Play</button>
+      <button data-tab="tune">Tune</button>
+      <button data-tab="clips">Clips</button>
       <button data-tab="shot">Shot</button>
       <button data-tab="input">Input</button>
       <button data-tab="status">Status</button>
     </nav>
 
-    <section id="tab-clips" class="tab active">
+    <section id="tab-play" class="tab active">
+      <div id="playUnavailable" class="warn" hidden></div>
+      <form id="matchForm" autocomplete="off">
+        <div class="row">
+          <label class="small">format <select id="mFormat"><option value="short">Short (1 game)</option><option value="set" selected>1 set</option><option value="best3">Best of 3</option></select></label>
+          <label class="small">first server <select id="mServer"><option value="0">You</option><option value="1">CPU</option></select></label>
+        </div>
+        <div class="row">
+          <label class="small">your rating <input id="mStats0" type="number" min="0" max="100" value="70"></label>
+          <label class="small">CPU rating <input id="mStats1" type="number" min="0" max="100" value="60"></label>
+        </div>
+        <div class="row">
+          <label class="small">seed <input id="mSeed" type="number" value="1"></label>
+          <label class="small"><input id="mLeft" type="checkbox"> left-handed (mirrors the rig)</label>
+        </div>
+        <div class="row"><button type="submit" id="startBtn">Start / restart match</button><button type="button" id="pauseBtn">Pause</button>
+          <button type="button" id="stepBtn" title="run one 1/60 s tick while paused">Step</button></div>
+        <div class="row small">
+          <label>speed <select id="mScale"><option value="1">1x</option><option value="0.5">0.5x</option><option value="0.25">0.25x</option></select></label>
+          <label><input id="mFollow" type="checkbox" checked> broadcast camera</label>
+          <label><input id="mDebug" type="checkbox"> debug</label>
+        </div>
+      </form>
+      <p class="small"><b>Controls.</b> Move: WASD / arrows (or left stick). Shot: hold <b>J</b> or Space (flat, pad A), <b>K</b> (topspin, B), <b>U</b> (slice, X), <b>I</b> (lob, Y) and release to swing; hold longer for power. <b>L</b> / Ctrl = risk (slice + risk = drop shot), <b>Shift</b> = sprint. Serving: hold a shot button, release to serve; the stick at release is the aim.</p>
+      <div id="playStatus" class="small muted"></div>
+      <div id="clipStatus" class="small muted"></div>
+    </section>
+
+    <section id="tab-tune" class="tab">
+      <div id="tuneUnavailable" class="warn" hidden></div>
+      <div id="tuneRoot"></div>
+    </section>
+
+    <section id="tab-clips" class="tab">
       <div class="row">
         <label><input type="radio" name="clipmode" value="core" checked> Core clips</label>
         <label><input type="radio" name="clipmode" value="records"> Swing records</label>
@@ -107,11 +142,18 @@
   <main id="stage">
     <canvas id="view"></canvas>
     <div id="camBar">
+      <button data-cam="follow">Follow</button>
       <button data-cam="broadcast">Broadcast</button>
       <button data-cam="behind">Behind baseline</button>
       <button data-cam="side">Side</button>
       <button data-cam="top">Top</button>
       <button data-cam="player">Player</button>
+    </div>
+    <div id="hud">
+      <div id="hudScore"></div>
+      <div id="hudMsg"></div>
+      <div id="hudHint"></div>
+      <pre id="hudDebug"></pre>
     </div>
     <div id="toast"></div>
   </main>

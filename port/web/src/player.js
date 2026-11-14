@@ -4,6 +4,7 @@
 // an AnimationClip from any clip file drives the skeleton from skeletons/player_<n>.gltf.
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { loadGltfRobust } from "./gltfload.js";
 
 export class PlayerRig {
   constructor(color = 0xffd34d) {
@@ -40,8 +41,14 @@ export class PlayerRig {
     this.root.add(g);
   }
 
-  async loadSkeleton(url) {
-    const gltf = await this.loader.loadAsync(url);
+  /**
+   * url: skeleton glTF (bones only, drawn as lines) or, with {skinned: true}, a skinned player export of
+   * tools/ts4_assets.py (player.gltf: meshes + the same 71 bones, z-mirrored to right-handed: clips must be mirrored
+   * too, see mirrorClip() in helpers.js).  The bone drawing is skipped for skinned rigs.
+   */
+  async loadSkeleton(url, { skinned = false } = {}) {
+    this.skinned = skinned;
+    const gltf = skinned ? await loadGltfRobust(url) : await this.loader.loadAsync(url);
     if (this.skeletonScene) this.root.remove(this.skeletonScene);
     if (this.placeholder) { this.root.remove(this.placeholder); this.placeholder = null; }
     const scene = gltf.scene;
@@ -61,6 +68,12 @@ export class PlayerRig {
       foot.getWorldPosition(a); toe.getWorldPosition(b);
       this.forwardYaw = Math.atan2(-(b.z - a.z), b.x - a.x);
       this.facing.rotation.y = -this.forwardYaw;                      // rotate so that (toe - foot) points to +x
+    }
+    if (skinned) {
+      scene.traverse((o) => { if (o.isMesh || o.isSkinnedMesh) { o.castShadow = true; o.frustumCulled = false; } });
+      this.mixer = new THREE.AnimationMixer(scene);
+      this.action = null;
+      return { bones: this.bones.length, skinned: true };
     }
     // drawing
     const lineGeo = new THREE.BufferGeometry();

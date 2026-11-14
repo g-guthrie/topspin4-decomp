@@ -1,6 +1,6 @@
 # Browser front end and asset pipeline (`port/web/`, `tools/port/`)
 
-Agent `portweb`. This is milestone 1 of the browser port: a static viewer that loads the user's own exported
+Agents `portweb` (milestone 1) and `portplay` (milestone 2, section 6). Milestone 1 of the browser port is a static viewer that loads the user's own exported
 assets, plays the Havok animation clips on the player skeleton, and flies a ball trajectory computed by `ts4core`
 (WebAssembly) or by a labelled JavaScript fallback. Nothing from the game is committed or hosted: the export writes
 under `work/port/` (git-ignored) and the viewer reads it from a local web server.
@@ -115,13 +115,13 @@ graphs are not decoded), the stick to landing point mapping (the aim tables are 
 
 ## 4. Known limits
 
-* No player or venue meshes yet: the court is procedural and the player is a bone drawing. A static mannequin is
-  shown only when no skeleton was exported.
-* Which swing record belongs to which Havok clip is unknown (docs/havok.md), and which of the two Core skeletons is
-  which player is unknown. 2,092 `CutScenes.arc` wavelet clips and the net rig are not exported.
-* The WASM adapter was exercised against a scratch wasm32 build, not against a released `work/port/ts4core.wasm`
-  from the core agent's CI. `port/core/js/ts4core.mjs` (their binding) writes `struct_size` 64 for `Ts4ShotIn`
-  while the header's `sizeof` is 60; harmless today because the core does not check it.
+* The procedural court and the bone drawing remain as the fallback when no mesh export exists (`?venue=none`,
+  `?p0=none`). Which of the two Core skeletons is which player is unknown. AOD clips (`CutScenes.arc`) and the net rig are not exported.
+* The Shot tab's adapter (`core.js`) is a separate WASM instance from the one the Play and Tune tabs use
+  (`port/core/js/ts4core.mjs`), so tunable edits made in Tune do not affect the Shot tab. Struct sizes: `Ts4ShotIn`
+  is 60 bytes in the header, in `core.js` and in `ts4core.mjs` (`SIZES.shotIn`); an earlier note that the binding wrote 64
+  was stale. `tests/test_port_web.py` now recomputes every boundary struct size from `ts4core.h` and compares it with
+  both JavaScript sides (the core accepts `struct_size >= sizeof`).
 * Clips use the default skeleton 0 (`--skeleton`); the additive composition convention is the assumption recorded in
   docs/havok.md section 8 (`--raw-additive` exports raw deltas).
 
@@ -150,3 +150,106 @@ graphs are not decoded), the stick to landing point mapping (the aim tables are 
    bounce buckets); music and umpire calls.
 9. **Packaging.** A loader page that lets the user point at their ISO (or pick files) and runs the export pipeline
    in a worker, so no local Python is needed; asset caching in IndexedDB.
+
+## 6. Playable match (milestone 2, agent `portplay`)
+
+Open `http://127.0.0.1:8000/port/web/` (the **Play** tab is the default). The page needs `work/port/ts4core.wasm`
+(`sh port/core/build_wasm.sh`) and the exported blob; everything else degrades (no meshes: procedural court and
+bone drawing; no animation export: static rigs).
+
+### 6.1 What runs
+
+```
+frame clock --FixedStepper(60 Hz, <= 6 ticks/frame)--> MatchSession.tick():
+    ts4_set_input(0, keyboard/pad)  ->  ts4_step  ->  ts4_snapshot  ->  ts4_poll_events
+render: interpolateSnapshot(prev, cur, alpha)  ->  rigs, ball, camera, HUD     (positions and headings blend; a jump above 150 cm
+        per tick or a new serve phase snaps instead of sliding)
+```
+
+| File | Role |
+|---|---|
+| `src/match.js` | `MatchSession`: wraps `Ts4Core` (`port/core/js/ts4core.mjs`), the accumulator, snapshot pair, event queue, `onTick` hook |
+| `src/helpers.js` | every pure function (stepper, interpolation, locomotion class, swing class guess and clip choice, swing clip time, camera goal, scoreboard rows, event text, `.def` parsers, probe summaries). Unit-tested without a browser |
+| `src/animator.js` | `ClipLibrary` (clip glTF loading, root motion removal, z mirror for the skinned export) and `RigAnimator` (mixer weights) |
+| `src/play.js` | `PlayMode`: scene objects, per-tick animation triggers, camera, HUD, probe overlay |
+| `src/tuning.js` | the retuning panel |
+| `src/gltfload.js` | glTF loading with throttled, retried texture fetches (python's `http.server` resets connections under 90 parallel requests) |
+| `clipmap.config.json` | animation mapping configuration (see 6.3) |
+| `test/helpers.test.mjs`, `test/session_smoke.mjs` | node tests; `tests/test_port_web.py` runs them and skips when node, the wasm or the blob is missing |
+
+URL parameters added: `?meshes=` (default `../../work/assets/`), `?venue=` (default `venue_Amsterdam`, `none` = procedural court),
+`?p0=` / `?p1=` (default `player_Federer0` / `player_Safina1`, `none` = bone drawing). The exports come from
+`tools/ts4_assets.py` (docs/assets.md). The venue glTF replaces the procedural court (the procedural net is kept: the export
+has posts only); players load as skinned meshes (the 71 Havok bones plus meshes). The exported skinned players are z-mirrored
+into a right-handed frame (docs/assets.md section 7), so every Havok clip is mirrored on load (`mirrorTrackValues`: position z
+negated, quaternion `(x,y,z,w) -> (-x,-y,z,w)`) before it drives them. The bone-line fallback uses the clips unmirrored.
+A `window.__ts4` hook (state, input, play) exists for console debugging.
+
+### 6.2 Controls and flow
+
+Move WASD / arrows or left stick (stick x = toward the opponent, shooter relative, as in `ts4core.h`). Hold J or Space (flat, pad A),
+K (topspin, B), U (slice, X) or I (lob, Y) and release to swing; the hold time is the power (the core's `shot.charge_full_ticks`).
+L or Ctrl = risk (slice + risk = drop shot), Shift = sprint, stick at release = aim. Serving: the server holds a shot button
+(charging; the ball rises in the hand) and releases to serve; the core launches the ball on the release tick. The scoreboard
+(sets won by games per set, current game points, server dot, second serve, tiebreak), point/fault/game messages and a one-line hint
+come from the snapshot and events. Match panel: format (short, 1 set, best of 3), first server, ratings, seed, pause, single
+step, 0.5x and 0.25x, camera, debug overlay (tick, state hash, per-player speed class / planner state / swing state, chosen
+clip and its contact time scale, recent events). Typing in a form field neutralises the input.
+
+Camera: a broadcast-style camera behind the human's baseline (8.5 m behind, 5.2 m high) that slides with the human's z and
+leans toward the ball, smoothed with frame-rate independent exponential damping (`damp`); it snaps when the ends change. The
+framing numbers (`CAM` in `helpers.js`) are port choices. The Follow button returns from the orbit presets.
+
+### 6.3 Animation: what is measured and what is a port choice
+
+* **Swing clip choice** uses `work/port/assets/clip_map.json` (`tools/port/clip_map.py`, docs/port/clip-map.md): record to Core clip
+  exact for 3,183 of 3,184 records. `pickSwingClip()` takes the swing class (below), keeps the records of `animations.json` whose tags match
+  `recordTags` in `clipmap.config.json`, requires their clip to be exported, and prefers the most `prefer` tags. The tag filters and the
+  preferences are port choices (which of the many variants to show). The contact time is the record's `EventRacket` as a fraction of the
+  clip (verified against racket-handle speed in clip-map.md). Only records that map to one Core clip (single clips and the base of sets)
+  and the primary of two-clip blends are used; records with an appended AOD clip are skipped because their contact fraction refers to the
+  summed length. Sets are played as their base clip (the eight additive layers are not applied). AOD clips are not exported or used.
+* **Swing class** of a row follows `shot-to-template.md` (`swingClassForRow`). At swing start the core has not reported the row yet
+  (`Ts4PlayerView.template_row` is valid after the hit), so the rig **guesses** the class (`guessSwingClass`: the buttons released, the
+  ball position classified with the `reach.*` zone tunables, forehand when the ball is on the right for a right-hander). The hit event's row is
+  shown next to the guess in the debug overlay. The AI's guess is topspin from the baseline.
+* **Contact lands on the contact tick.** While `swing_state` is 1 the clip time is `contact * swing_t`, where `swing_t` is the core's
+  progress to the contact tick (0 until the contact tick is `swing.contact_delay_ticks` away, then linear). `swing_t = 1` is reached at the
+  contact tick, so the racket-contact marker lands exactly there; the effective time scale is `contact / (delay / 60)` (printed in the debug
+  overlay). At contact the follow-through plays out over `swing.recovery_ticks`. Serves are launched on the release tick, so the serve clip
+  jumps to its contact time at the serve event (a wind-up pose scrubbed by the charge while the button is held hides most of it).
+* **Locomotion** (`idle`, `jog`, `run`, `rush`): classes from the planar speed with thresholds at the midpoints of `move.speed_walk_cms`,
+  `move.speed_jog_cms`, `move.speed_rush_cms`. Clips are named records (`Idle_Baseline`, `Jog_Front_IK`, `Rush_Front`) that are real game clips;
+  the choice of those variants, `run` reusing the jog clip, and the nominal root speeds that set the playback rate are **placeholders**
+  (`nominalSpeedCms`). Root motion is removed from every clip (the hips' x/z are pinned to the first key): the sim owns position.
+* The `core:N` entries of `clipmap.config.json` are fallbacks used only when the record's clip is not exported, and are labelled
+  `PLACEHOLDER` in the debug overlay. Export what the page asks for (it lists missing clips in the Play tab):
+  `python3 tools/port/export_assets.py --only havok animdb --clip-map auto --core-clips 0-31,281,290,421,607,617,1003,1054,1885,1994,2057,2302,2318,2334`
+  (this is the set that the default mapping selects; `work/agents/portplay/needed.mjs` recomputes it).
+
+### 6.4 Retuning panel (Tune tab)
+
+* **Tunables.** Every entry of the core's registry (`ts4_tunable_count/name/get`), grouped by prefix, with unit, origin badge (G = decoded from the
+  game, P = invented by the port) and the doc string of `include/ts4_tunables.def` (parsed by `parseTunablesDef`; the C ABI exposes none of these).
+  Editing a value calls `ts4_set_tunable` immediately and re-reads it (float32). Changed rows are highlighted; filter by text or
+  "modified only"; per-row reset; Reset all; Export overrides as JSON; Import. Overrides persist in `localStorage` and are re-applied (and the
+  match restarted) on load. Values the core copies at match start (`APPLY_ON_RESTART`: the `move.*` planner settings) are marked R and need a
+  restart; "restart match on edit" does it automatically. Everything else is read each tick.
+* **Shot probe.** Pick a template (names from `shots.json`), contact point, landing target, spin blend, f4C, handedness and mode (In, Out, Net,
+  LetIn). Probe runs `ts4_shot_probe` and `ts4_shot_trace` and reports flight time, bounce tick, launch and arrival speed, net height,
+  apex, landing point; side and top views are drawn on canvases and, optionally, as a line over the court. **Pin baseline** keeps a result: later
+  probes show the difference per field and draw the baseline in grey, so the effect of a tunable edit is visible at once. "Re-probe on edit"
+  runs the probe after every tunable change.
+* **Graphs and roles.** The roles of `ts4_roles.def` (what the sim runs when), the module status table, and an evaluator for any of the analyser
+  graphs (`ts4_graph_eval`, inputs labelled from `analyser.json` when the name is known). The blob's ROLE section is not exported yet, so roles are
+  unbound (modules read `degraded`).
+
+### 6.5 Next steps
+
+1. Export the ROLE/CURV blob sections so the shot/reach/move/swing modules leave `degraded` and the tuning panel can show per-role bindings.
+2. Real swing selection data: have the core report the candidate swing record (or template row) at swing start so the rig does not guess.
+3. Records with an appended AOD clip, AOD-only records and set layers (additive clips); then locomotion by direction (the `Jog_*`/`Rush_*` families
+   exist for eight directions) and turn clips, with the real root-motion speeds from the clips instead of `nominalSpeedCms`.
+4. A toss model in the core (the ball is drawn in the hand and lifted by the charge on the render side only).
+5. Left-handed players use a mirrored rig; the game's own left-hand clips are not selected.
+6. Use the Tune core for the Shot tab (one wasm instance), venue picker, audio cues from the events, replay camera, gamepad rumble.

@@ -8,6 +8,8 @@ import { BallView } from "./ballview.js";
 import { loadCore, MODE } from "./core.js";
 import { InputMapper } from "./input.js";
 import { cfg, fetchJson, fmt } from "./config.js";
+import { PlayMode } from "./play.js";
+import { TuningPanel } from "./tuning.js";
 
 const $ = (id) => document.getElementById(id);
 const state = { manifest: null, anim: null, shots: null, core: null, wasmNote: null, errors: [], selClip: null, selRecord: null, pairs: {} };
@@ -36,9 +38,11 @@ sun.position.set(-12, 25, 10); sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
 Object.assign(sun.shadow.camera, { left: -20, right: 20, top: 14, bottom: -14, near: 1, far: 70 });
 scene.add(sun);
-scene.add(buildCourt(cfg.surface));
+const courtGroup = buildCourt(cfg.surface);      // procedural fallback; hidden (net kept) once the exported venue loads
+scene.add(courtGroup);
 const grid = new THREE.AxesHelper(1); grid.position.set(-COURT.halfLength - 1, 0.01, -COURT.doublesHalfWidth - 1); scene.add(grid);
 
+let play = null;                                  // PlayMode, created below
 const CAMS = {
   broadcast: [[-24, 12, 0], [0, 0.5, 0]],
   behind: [[-19, 4.5, 0], [0, 1, 0]],
@@ -47,6 +51,8 @@ const CAMS = {
   player: [[-14, 2.2, 3.5], [-9, 1, 0]],
 };
 function setCam(name) {
+  if (name === "follow") { play?.setFollow(true); $("mFollow").checked = true; return; }
+  play?.setFollow(false); $("mFollow").checked = false;
   const [p, t] = CAMS[name];
   camera.position.set(...p); controls.target.set(...t); controls.update();
 }
@@ -70,10 +76,16 @@ const fromMark = new THREE.Mesh(new THREE.RingGeometry(0.1, 0.16, 24), new THREE
 fromMark.rotation.x = -Math.PI / 2; fromMark.position.y = 0.012; scene.add(fromMark);
 
 // ---------------------------------------------------------------------------------------------- tabs
-document.querySelectorAll("#tabs button").forEach((b) => b.addEventListener("click", () => {
-  document.querySelectorAll("#tabs button").forEach((x) => x.classList.toggle("active", x === b));
-  document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.id === "tab-" + b.dataset.tab));
-}));
+function showTab(name) {
+  document.querySelectorAll("#tabs button").forEach((x) => x.classList.toggle("active", x.dataset.tab === name));
+  document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.id === "tab-" + name));
+  const playing = (name === "play" || name === "tune") && play.ready;
+  play.setActive(playing);
+  $("hud").classList.toggle("on", playing);
+  rig.root.visible = !playing; ballView.group.visible = !playing; targetMark.visible = fromMark.visible = !playing;
+}
+document.querySelectorAll("#tabs button").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
+play = new PlayMode({ scene, camera, controls, canvas, cfg, manifest: null, anim: null, toast, $ });
 
 // ---------------------------------------------------------------------------------------------- loading
 async function loadAll() {
@@ -101,7 +113,51 @@ async function loadAll() {
     badge.className = "badge " + state.core.kind;
   } else { badge.textContent = "no gameplay data: run the export"; badge.className = "badge"; }
   initClips(); initShot(); renderStatus();
+  await initPlay();
 }
+
+// ---------------------------------------------------------------------------------------------- play and tune
+async function initPlay() {
+  play.env.manifest = state.manifest; play.env.anim = state.anim;
+  const ok = await play.init();
+  $("playStatus").textContent = "ts4core: " + play.status + (play.meshNote ? " | " + play.meshNote : "");
+  if (!ok) {
+    $("playUnavailable").hidden = $("tuneUnavailable").hidden = false;
+    $("playUnavailable").textContent = $("tuneUnavailable").textContent = play.status;
+    return;
+  }
+  const lib = play.lib;
+  $("clipStatus").innerHTML = "Animation mapping: <b>" + (play.clipMapLoaded ? "clip_map.json present" : "PLACEHOLDER (clipmap.config.json)") + "</b>; " + lib.loaded.size + " clips loaded" +
+    (lib.missing.size ? "; not exported: core:" + [...lib.missing].join(", core:") + " (export them with --core-clips)" : "") + (lib.failed.length ? "; failed: " + lib.failed.join("; ") : "");
+  play.refreshTunables();
+  $("matchForm").addEventListener("submit", (e) => { e.preventDefault(); startMatch(); });
+  $("pauseBtn").addEventListener("click", () => { play.session.paused = !play.session.paused; $("pauseBtn").textContent = play.session.paused ? "Resume" : "Pause"; });
+  $("stepBtn").addEventListener("click", () => { if (play.session.paused) play.session.tick(); });
+  $("mScale").addEventListener("change", () => (play.session.timeScale = +$("mScale").value));
+  $("mFollow").addEventListener("change", () => play.setFollow($("mFollow").checked));
+  $("mDebug").addEventListener("change", () => { play.debug = $("mDebug").checked; $("hud").classList.toggle("dbg", play.debug); });
+  $("mFollow").checked = play.follow;
+  startMatch();
+  showTab(document.querySelector("#tabs button.active").dataset.tab);
+  const venue = await play.loadVenue(courtGroup);
+  $("playStatus").textContent = "ts4core: " + play.status + (play.meshNote ? " | " + play.meshNote : "") + (venue ? " | venue: " + cfg.venue : "");
+  if (!venue) $("playStatus").textContent += " | venue: procedural court" + (cfg.venue === "none" ? "" : " (exported venue not found at " + cfg.meshes + cfg.venue + ")");
+  const text = async (u) => { try { const r = await fetch(u); return r.ok ? r.text() : ""; } catch { return ""; } };
+  const [defsText, rolesText] = await Promise.all([text("../core/include/ts4_tunables.def"), text("../core/include/ts4_roles.def")]);
+  let analyser = null; try { analyser = await fetchJson(cfg.assets + "gameplay/analyser.json"); } catch { analyser = null; }
+  const panel = new TuningPanel({ root: $("tuneRoot"), core: play.session.core, play, defsText, rolesText, shots: state.shots, analyser, toast, restart: startMatch });
+  if (Object.keys(panel.overrides()).length) { play.refreshTunables(); startMatch(); toast("restored saved tunable overrides"); }
+  if (!defsText) $("tuneUnavailable").hidden = false, $("tuneUnavailable").textContent = "ts4_tunables.def not served: units and docs are missing";
+}
+function startMatch() {
+  const rc = play.start({ format: $("mFormat").value, firstServer: +$("mServer").value, stats0: +$("mStats0").value, stats1: +$("mStats1").value,
+                          seed: +$("mSeed").value, left0: $("mLeft").checked, surface: cfg.surface });
+  if (rc !== 0) toast("ts4_match_start failed: " + rc + " (TS4_ERR_*)", 6000);
+  play.session.paused = false; $("pauseBtn").textContent = "Pause";
+}
+addEventListener("keydown", (e) => {
+  if (play.active && ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code) && !/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) e.preventDefault();
+});
 
 // ---------------------------------------------------------------------------------------------- clips
 function contactSeconds(record, duration) {
@@ -343,8 +399,8 @@ let last = performance.now();
 function frame(now) {
   const dt = Math.min((now - last) / 1000, 0.1); last = now;
   input.update(dt);
-  handleRequests();
-  if (rig.mixer) {
+  if (play.active) { input.takeRequests(); play.update(dt, input.toTs4Input()); } else handleRequests();
+  if (rig.mixer && !play.active) {
     rig.update(dt);
     if (rig.clip) {
       const d = rig.duration || 1;
@@ -357,9 +413,11 @@ function frame(now) {
   if ($("tab-input").classList.contains("active")) {
     $("inputState").textContent = JSON.stringify({ ...input.state, ts4_input: input.toTs4Input(), latched: input.latched }, null, 1);
   }
-  controls.update();
+  if (!(play.active && play.follow)) controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }
+window.__ts4 = { state, input, get play() { return play; } };      // console hook for debugging
 initInput();
-loadAll().then(() => { requestAnimationFrame(frame); }).catch((e) => { console.error(e); toast("startup error: " + e.message, 8000); requestAnimationFrame(frame); });
+requestAnimationFrame(frame);                    // the loop runs while assets load (the venue is large)
+loadAll().catch((e) => { console.error(e); toast("startup error: " + e.message, 8000); });

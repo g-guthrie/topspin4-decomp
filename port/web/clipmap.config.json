@@ -1,0 +1,375 @@
+{
+  "_status": "Swing clips are chosen through the record -> clip link (work/port/assets/clip_map.json from tools/port/clip_map.py, exact for 3183 of 3184 records) with the tag filters in 'recordTags'; only the 'core:N' entries below are PLACEHOLDERS: they are used for any class whose record clips are not exported, and for locomotion when the named record is missing. Locomotion clips are looked up by exact record name (idle/jog/rush) and are real clips of the game, but which of the game's many idle/jog/rush variants to use, and the nominal speeds, are port choices. Export the clips the page asks for: see the 'clips' line of the Play tab, or python3 tools/port/export_assets.py --only havok animdb --core-clips <list>.",
+  "placeholder": true,
+  "defaultContactPhase": 0.4,
+  "_defaultContactPhase": "PLACEHOLDER: racket contact as a fraction of the clip duration when no swing record supplies EventRacket.",
+  "locomotion": {
+    "_note": "Per class: 'record' = exact AnimationsDB record name resolved through clip_map.json (real clip), 'clip' = PLACEHOLDER fallback. nominalSpeedCms = root-motion speed assumed for the clip (UNKNOWN, port choice): the playback rate is sim speed / nominal clamped to 0.6..1.6. Root motion of every clip is removed (the sim owns the position). idleMaxCms = speed below which the player is idle. Class thresholds sit at the midpoints of the core's walk / jog / rush speed tunables.",
+    "idleMaxCms": 30,
+    "idle": {
+      "record": "Idle_Baseline",
+      "clip": "core:19",
+      "nominalSpeedCms": 0
+    },
+    "jog": {
+      "record": "Jog_Front_IK",
+      "clip": "core:18",
+      "nominalSpeedCms": 260
+    },
+    "run": {
+      "record": "Jog_Front_IK",
+      "clip": "core:17",
+      "nominalSpeedCms": 480
+    },
+    "rush": {
+      "record": "Rush_Front",
+      "clip": "core:17",
+      "nominalSpeedCms": 600
+    }
+  },
+  "swing": {
+    "_note": "PLACEHOLDER clip per swing class (see swingClassForRow in src/helpers.js). Lookup order: exact class, then 'fh' / 'bh', then 'default'. contactSeconds, when set, overrides defaultContactPhase * duration.",
+    "default": {
+      "clip": "core:0"
+    },
+    "fh": {
+      "clip": "core:0"
+    },
+    "bh": {
+      "clip": "core:3"
+    },
+    "fh_flat": {
+      "clip": "core:0"
+    },
+    "fh_topspin": {
+      "clip": "core:1"
+    },
+    "fh_slice": {
+      "clip": "core:2"
+    },
+    "bh_flat": {
+      "clip": "core:3"
+    },
+    "bh_topspin": {
+      "clip": "core:4"
+    },
+    "bh_slice": {
+      "clip": "core:5"
+    },
+    "volley_fh": {
+      "clip": "core:6"
+    },
+    "volley_bh": {
+      "clip": "core:7"
+    },
+    "lob": {
+      "clip": "core:8"
+    },
+    "drop": {
+      "clip": "core:9"
+    },
+    "smash": {
+      "clip": "core:10"
+    },
+    "defensive": {
+      "clip": "core:11"
+    },
+    "serve": {
+      "clip": "core:20"
+    }
+  },
+  "recordTags": {
+    "_note": "Tag filters of animations.json swing records, used when the record has an exported clip (via clip_map.json). Among the matches the one with the most 'prefer' tags wins (first on ties). The filters are port choices (which of the many variants to show), not game data; the record -> clip link itself is measured.",
+    "fh_flat": {
+      "all": [
+        "Swing",
+        "FH",
+        "Flat"
+      ],
+      "none": [
+        "Return",
+        "Volley",
+        "Cutscene",
+        "EndOfPoint",
+        "Smash",
+        "DropShot",
+        "Photo",
+        "Fatality",
+        "BadReach",
+        "TooLate",
+        "BarelyPrepared",
+        "Clay"
+      ],
+      "prefer": [
+        "Power",
+        "Stand",
+        "OpenStance",
+        "GoodPos",
+        "Waist"
+      ]
+    },
+    "fh_topspin": {
+      "all": [
+        "Swing",
+        "FH",
+        "Flat"
+      ],
+      "none": [
+        "Return",
+        "Volley",
+        "Cutscene",
+        "EndOfPoint",
+        "Smash",
+        "DropShot",
+        "Photo",
+        "Fatality",
+        "BadReach",
+        "TooLate",
+        "BarelyPrepared",
+        "Clay"
+      ],
+      "prefer": [
+        "Power",
+        "Stand",
+        "OpenStance",
+        "GoodPos",
+        "Waist"
+      ]
+    },
+    "fh_slice": {
+      "all": [
+        "Swing",
+        "FH",
+        "Slice"
+      ],
+      "none": [
+        "Return",
+        "Volley",
+        "Cutscene",
+        "EndOfPoint",
+        "Smash",
+        "DropShot",
+        "Photo",
+        "Fatality",
+        "BadReach",
+        "TooLate",
+        "BarelyPrepared",
+        "Clay"
+      ],
+      "prefer": [
+        "Power",
+        "Stand",
+        "OpenStance",
+        "GoodPos",
+        "Waist"
+      ]
+    },
+    "volley_fh": {
+      "all": [
+        "Swing",
+        "FH",
+        "Volley"
+      ],
+      "none": [
+        "Cutscene",
+        "EndOfPoint",
+        "Clay",
+        "Photo"
+      ],
+      "prefer": [
+        "Standard",
+        "GoodPos",
+        "Shoulder",
+        "Power"
+      ]
+    },
+    "bh_flat": {
+      "all": [
+        "Swing",
+        "BH",
+        "Flat"
+      ],
+      "none": [
+        "Return",
+        "Volley",
+        "Cutscene",
+        "EndOfPoint",
+        "Smash",
+        "DropShot",
+        "Photo",
+        "Fatality",
+        "BadReach",
+        "TooLate",
+        "BarelyPrepared",
+        "Clay"
+      ],
+      "prefer": [
+        "Power",
+        "Stand",
+        "OpenStance",
+        "GoodPos",
+        "Waist"
+      ]
+    },
+    "bh_topspin": {
+      "all": [
+        "Swing",
+        "BH",
+        "Flat"
+      ],
+      "none": [
+        "Return",
+        "Volley",
+        "Cutscene",
+        "EndOfPoint",
+        "Smash",
+        "DropShot",
+        "Photo",
+        "Fatality",
+        "BadReach",
+        "TooLate",
+        "BarelyPrepared",
+        "Clay"
+      ],
+      "prefer": [
+        "Power",
+        "Stand",
+        "OpenStance",
+        "GoodPos",
+        "Waist"
+      ]
+    },
+    "bh_slice": {
+      "all": [
+        "Swing",
+        "BH",
+        "Slice"
+      ],
+      "none": [
+        "Return",
+        "Volley",
+        "Cutscene",
+        "EndOfPoint",
+        "Smash",
+        "DropShot",
+        "Photo",
+        "Fatality",
+        "BadReach",
+        "TooLate",
+        "BarelyPrepared",
+        "Clay"
+      ],
+      "prefer": [
+        "Power",
+        "Stand",
+        "OpenStance",
+        "GoodPos",
+        "Waist"
+      ]
+    },
+    "volley_bh": {
+      "all": [
+        "Swing",
+        "BH",
+        "Volley"
+      ],
+      "none": [
+        "Cutscene",
+        "EndOfPoint",
+        "Clay",
+        "Photo"
+      ],
+      "prefer": [
+        "Standard",
+        "GoodPos",
+        "Shoulder",
+        "Power"
+      ]
+    },
+    "smash": {
+      "all": [
+        "Swing",
+        "Smash"
+      ],
+      "none": [
+        "Cutscene",
+        "EndOfPoint",
+        "Jump"
+      ],
+      "prefer": [
+        "Front"
+      ]
+    },
+    "drop": {
+      "all": [
+        "Swing",
+        "DropShot"
+      ],
+      "none": [
+        "Cutscene",
+        "EndOfPoint"
+      ],
+      "prefer": [
+        "Stand",
+        "GoodPos",
+        "Waist"
+      ]
+    },
+    "serve": {
+      "all": [
+        "Swing",
+        "Serve"
+      ],
+      "none": [
+        "Cutscene",
+        "EndOfPoint",
+        "WalkServe"
+      ],
+      "prefer": [
+        "Federer"
+      ]
+    },
+    "lob": {
+      "all": [
+        "Swing",
+        "FH",
+        "Flat"
+      ],
+      "none": [
+        "Return",
+        "Volley",
+        "Cutscene",
+        "EndOfPoint",
+        "Smash",
+        "DropShot",
+        "Photo",
+        "Fatality",
+        "BadReach",
+        "TooLate",
+        "BarelyPrepared",
+        "Clay"
+      ],
+      "prefer": [
+        "Power",
+        "Stand",
+        "OpenStance",
+        "GoodPos",
+        "Waist"
+      ]
+    },
+    "defensive": {
+      "all": [
+        "Swing",
+        "Reflex"
+      ],
+      "none": [
+        "Cutscene",
+        "EndOfPoint"
+      ],
+      "prefer": [
+        "Stand",
+        "GoodPos"
+      ]
+    }
+  }
+}
