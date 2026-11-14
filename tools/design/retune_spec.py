@@ -580,7 +580,7 @@ def sec_power(a):
         finally:
             c["overcharge_past_full"] = saved
         tee_f.sort()
-        rows.append(["%d%s" % (wait, " (systems note)" if wait == 25 else ""), "%.2f / %.3f" % (oc * 1000.0 / n, oc * FH_PER_MATCH / n),
+        rows.append(["%d%s" % (wait, " (systems note)" if wait == saved else ""), "%.2f / %.3f" % (oc * 1000.0 / n, oc * FH_PER_MATCH / n),
                      "%.2f / %.3f" % (sum(1 for x in v if x > 109) * 1000.0 / n, sum(1 for x in v if x > 109) * FH_PER_MATCH / n),
                      "%.2f / %.3f" % (sum(1 for x in v if x > 109.9) * 1000.0 / n, sum(1 for x in v if x > 109.9) * FH_PER_MATCH / n),
                      "%d / %d" % (pct(tee_f, .5), pct(tee_f, .9))])
