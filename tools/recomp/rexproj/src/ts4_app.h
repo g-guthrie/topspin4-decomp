@@ -13,6 +13,7 @@
 //   TS4_WATCH_OUT=file.csv   ... one row per VdSwap (default <TS4_SHOT_DIR>/watch.csv)
 //   TS4_FRAME_LOG=file.csv   swap count and wall time per second (frame rate measurement)
 //   TS4_EXIT_AT_SWAP=n       hard-exit after n VdSwap calls
+//   TS4_DUMP_PHYS=addr:size  dump a guest physical range next to each capture (phys_<swap>.bin)
 
 #pragma once
 
@@ -152,6 +153,7 @@ class Ts4App : public rex::ReXApp {
         if (shot_dir && every > 0 && n >= last_shot + uint64_t(every)) {
           last_shot = n;
           Capture(std::string(shot_dir), n);
+          DumpGuestRange(std::string(shot_dir), n);
         }
         if (exit_at && n >= uint64_t(exit_at)) {
           if (wf) std::fclose(wf);
@@ -203,6 +205,25 @@ class Ts4App : public rex::ReXApp {
       for (uint32_t x = 0; x < img.width; x++) std::fwrite(row + 4 * x, 1, 3, f);
     }
     std::fclose(f);
+  }
+
+  // TS4_DUMP_PHYS=ADDR:SIZE writes that guest physical range to <dir>/phys_<swap>.bin next to each
+  // capture (for example the front-buffer texture, untiled by tools/recomp/untile_xenos.py).
+  // Only meaningful with --readback_resolve=full, otherwise GPU resolves never reach guest memory.
+  void DumpGuestRange(const std::string& dir, uint64_t swap) {
+    const char* v = std::getenv("TS4_DUMP_PHYS");
+    if (!v) return;
+    char* end;
+    uint32_t addr = uint32_t(std::strtoul(v, &end, 0));
+    uint32_t size = *end == ':' ? uint32_t(std::strtoul(end + 1, nullptr, 0)) : 0;
+    if (!size) return;
+    const uint8_t* p = runtime()->memory()->TranslatePhysical<const uint8_t*>(addr);
+    char name[64];
+    std::snprintf(name, sizeof(name), "/phys_%06llu.bin", (unsigned long long)swap);
+    if (FILE* f = std::fopen((dir + name).c_str(), "wb")) {
+      std::fwrite(p, 1, size, f);
+      std::fclose(f);
+    }
   }
 
   std::atomic<bool> stop_{false};
