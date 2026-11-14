@@ -16,7 +16,7 @@ typedef unsigned long ts4_word;
 
 extern char __imp_XboxKrnlVersion[];
 extern char fn_884F62E8[];
-extern char fn_884F6450[];
+extern char ts4_atomic_interlocked_xchg_884F6450[];
 extern char fn_884F6478[];
 extern char ts4_locked_get_field_884F6560[];
 extern char ts4_get_nested_field_884F65B8[];
@@ -26,7 +26,7 @@ extern char fn_884F73B0[];
 extern char fn_884F7470[];
 extern char ts4_locked_lookup_884F74E8[];
 extern char fn_884F7628[];
-extern char fn_88593EC0[];
+extern char ts4_atomic_interlocked_inc_88593EC0[];
 extern char ts4_call_seq_RtlEnterCriticalSection_884F6518[];
 extern char ts4_get_u32_offec_884F65E8[];
 extern char ts4_if_call_seq_RtlEnterCriticalSection_884F6370[];
@@ -42,7 +42,7 @@ extern char ts4_if_call_seq_RtlEnterCriticalSection_884F77F8[];
 ts4_word XamInputGetCapabilities();
 ts4_word XamInputSetState();
 
-/* Swing_DLL.xex 0x884F7918: if_get u32@0x0, fn_88593EC0, fn_884F6FA8, fn_884F62E8, u32@0x0, u32@0x4 */
+/* Swing_DLL.xex 0x884F7918: if_get u32@0x0, ts4_atomic_interlocked_inc_88593EC0, fn_884F6FA8, fn_884F62E8, u32@0x0, u32@0x4 */
 void ts4_if_get_u32_off0_884F7918(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word t1;
@@ -56,14 +56,14 @@ void ts4_if_get_u32_off0_884F7918(ts4_word a0, ts4_word a1, ts4_word a2, ts4_wor
     (void)a7;
     t1 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 0);
     if ((ts4_word)t1 == 0) {
-        *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)fn_88593EC0;
+        *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)ts4_atomic_interlocked_inc_88593EC0;
         *(ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)(ts4_word)fn_884F6FA8;
         *(ts4_word *)((char *)(ts4_word)(a0) + 8) = (ts4_word)(ts4_word)fn_884F62E8;
         *(ts4_word *)((char *)(ts4_word)(a0) + 12) = (ts4_word)(ts4_word)ts4_if_call_seq_RtlEnterCriticalSection_884F6370;
         *(ts4_word *)((char *)(ts4_word)(a0) + 16) = (ts4_word)(ts4_word)ts4_if_call_seq_RtlEnterCriticalSection_884F63E0;
         *(ts4_word *)((char *)(ts4_word)(a0) + 20) = (ts4_word)(ts4_word)ts4_if_call_seq_RtlEnterCriticalSection_884F7168;
         *(ts4_word *)((char *)(ts4_word)(a0) + 24) = (ts4_word)(ts4_word)ts4_if_call_seq_RtlEnterCriticalSection_884F71D8;
-        *(ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)(ts4_word)fn_884F6450;
+        *(ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)(ts4_word)ts4_atomic_interlocked_xchg_884F6450;
         *(ts4_word *)((char *)(ts4_word)(a0) + 32) = (ts4_word)(ts4_word)fn_884F6478;
         *(ts4_word *)((char *)(ts4_word)(a0) + 36) = (ts4_word)(ts4_word)ts4_call_seq_RtlEnterCriticalSection_884F6518;
         *(ts4_word *)((char *)(ts4_word)(a0) + 40) = (ts4_word)(ts4_word)fn_884F7248;

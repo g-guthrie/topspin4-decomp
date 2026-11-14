@@ -42,7 +42,7 @@ extern void fn_88797798(char *);
 extern void fn_88613418(char *);
 extern void fn_881B9148(char *);
 extern void fn_887ED9F0(char *);
-extern void fn_888EE890(char *);
+extern void ts4_loop_call_seq_ts4_if_addr_lbl_88D45908_888E7A80_888EE890(char *);
 extern void * fn_88951BB8(void *);
 extern void * fn_888DF630(void *);
 extern void * fn_88951690(void *);
@@ -223,7 +223,7 @@ extern u32 fn_884AA7D8(char *);
 extern u32 fn_884B1008(char *);
 extern u32 fn_8859F380(char *);
 extern u32 fn_8885EDD8(char *);
-extern void fn_885949C0(char *);
+extern void ts4_if_atomic_interlocked_dec_885949C0(char *);
 extern char * fn_88801428(int);
 extern u32 fn_8860DBC8(char *);
 extern u32 fn_8841B5E0(char *);
@@ -406,7 +406,7 @@ void ts4_init_base_then_clear_byte8_then_sub16_887EE3F0(char *a)
 /* Swing_DLL.xex 0x888F1DC8 */
 void ts4_init_base_then_clear_byte8_then_sub16_888F1DC8(char *a)
 {
-    fn_888EE890(a);
+    ts4_loop_call_seq_ts4_if_addr_lbl_88D45908_888E7A80_888EE890(a);
     B(a, 8) = 0;
     fn_881B9148(a + 16);
 }
@@ -2982,7 +2982,7 @@ u32 ts4_forward_field60_888622C0(char *a)
 /* Swing_DLL.xex 0x885A6190 */
 void ts4_forward_this_plus_16_885A6190(char *a)
 {
-    fn_885949C0(a + 16);
+    ts4_if_atomic_interlocked_dec_885949C0(a + 16);
 }
 
 /* Swing_DLL.xex 0x8865A2C0 */

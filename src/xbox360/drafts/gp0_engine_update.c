@@ -26,7 +26,7 @@ struct GamePlayEngine {
     u8 u_04[8];
     void *heap;                        /* +0x0C */
     u8 u_10[0x0C];
-    int cfg_1c[4];                     /* +0x1C..0x2B copied from XData config (fn_886BC568: +0x48..) */
+    int cfg_1c[4];                     /* +0x1C..0x2B copied from XData config (ts4_loop_set_ts4_find_service_886BC568: +0x48..) */
     u8 cfg_30;                         /* +0x30 */
     u8 u_31[3];
     int cfg_34[4];                     /* +0x34..0x43 */

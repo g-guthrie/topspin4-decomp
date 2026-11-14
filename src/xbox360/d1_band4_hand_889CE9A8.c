@@ -8,7 +8,7 @@ extern double g_ts4_script_constants[];
 extern void fn_888240B8(void *, double);
 extern char lbl_88D4DABE;
 extern void fn_889D1A88(void);
-extern void fn_889D19B8(void);
+extern void ts4_get_fn_889D1918_889D19B8(void);
 extern void fn_8830EC08(char *);
 extern void fn_88563470(void (*)(void));
 extern char lbl_88C6E268[];

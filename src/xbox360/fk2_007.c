@@ -138,7 +138,7 @@ ts4_word fn_881A9BE8();
 ts4_word fn_881AB108();
 ts4_word fn_881B19A0();
 ts4_word fn_881B9148();
-ts4_word fn_88288530();
+ts4_word ts4_if_atomic_interlocked_dec_88288530();
 ts4_word fn_882908C0();
 ts4_word fn_88290C68();
 ts4_word fn_882C7288();
@@ -224,7 +224,7 @@ ts4_word fn_888CF650();
 ts4_word fn_888D3648();
 ts4_word fn_888D7920();
 ts4_word fn_888D84B8();
-ts4_word fn_888D85B0();
+ts4_word ts4_if_call_seq_fn_8817EA90_888D85B0();
 ts4_word fn_888DD008();
 ts4_word fn_888E7720();
 ts4_word fn_888EC548();
@@ -2848,7 +2848,7 @@ ts4_word ts4_call_seq_fn_8817B998_888D8558(ts4_word a0, ts4_word a1, ts4_word a2
     return t4;
 }
 
-/* Swing_DLL.xex 0x888D8630: call_seq ts4_call_seq_u32_off0_8817B998, fn_8817EA90, fn_888D85B0, ts4_if_call_seq_u32_off4_8817E430 */
+/* Swing_DLL.xex 0x888D8630: call_seq ts4_call_seq_u32_off0_8817B998, fn_8817EA90, ts4_if_call_seq_fn_8817EA90_888D85B0, ts4_if_call_seq_u32_off4_8817E430 */
 ts4_word ts4_call_seq_fn_8817B998_888D8630(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word loc50[4];
@@ -2857,7 +2857,7 @@ ts4_word ts4_call_seq_fn_8817B998_888D8630(ts4_word a0, ts4_word a1, ts4_word a2
 
     ts4_call_seq_u32_off0_8817B998((ts4_word)(ts4_word)&loc50[0]);
     fn_8817EA90((ts4_word)(ts4_word)&loc60[0], (ts4_word)(ts4_word)&loc50[0]);
-    fn_888D85B0((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)(ts4_word)&loc60[0]);
+    ts4_if_call_seq_fn_8817EA90_888D85B0((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)(ts4_word)&loc60[0]);
     t4 = ts4_if_call_seq_u32_off4_8817E430((ts4_word)(ts4_word)&loc50[0]);
     return t4;
 }
@@ -2982,7 +2982,7 @@ ts4_word ts4_call_seq_lbl_880DB580_888DC958(ts4_word a0)
     return t3;
 }
 
-/* Swing_DLL.xex 0x888DDA80: loop_call_seq u32@0x18, u32@0x14, u32@0x8, fn_88288530 */
+/* Swing_DLL.xex 0x888DDA80: loop_call_seq u32@0x18, u32@0x14, u32@0x8, ts4_if_atomic_interlocked_dec_88288530 */
 ts4_word ts4_loop_call_seq_u32_off18_888DDA80(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word lv3;
@@ -3010,7 +3010,7 @@ ts4_word ts4_loop_call_seq_u32_off18_888DDA80(ts4_word a0, ts4_word a1, ts4_word
             t4 = *(ts4_word *)((char *)(ts4_word)(lv3) + 8);
             p6 = (ts4_word)t4;
             if ((ts4_word)t4 != 0) {
-                t5 = fn_88288530((ts4_word)t4);
+                t5 = ts4_if_atomic_interlocked_dec_88288530((ts4_word)t4);
                 p6 = (ts4_word)t5;
             }
             p7 = (ts4_word)(lv3 + 12);

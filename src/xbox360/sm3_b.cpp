@@ -72,7 +72,7 @@ extern void *ts4_find_record_by_key_881AD0A8(void *, u32 *);
 extern void fn_88865388(void *, int, int, u8 *);
 extern char *lbl_88D459DC;
 extern void *fn_888B1AE0(void *);
-extern void *fn_88884B20(void *, int, void *, int);
+extern void *ts4_loop_call_seq_fn_88563230_88884B20(void *, int, void *, int);
 extern void ts4_resume_thread(void *);
 extern char lbl_880D9334[], lbl_880D9354[];
 extern void fn_888BFC20(void);
@@ -332,10 +332,10 @@ void ts4_call_with_zero_byte_and_minus1_88865648(void) { u8 t = 0; fn_88865388(l
 void ts4_call_with_zero_byte_and_arg_888656C8(int a) { u8 t = 0; fn_88865388(lbl_88D459DC, 1, a, &t); }
 
 /* 0x888C2290: create thread running fn_888BFC20 (stack 0x20000) and resume it */
-void ts4_spawn_and_resume_thread_888C2290(void) { ts4_resume_thread(fn_88884B20((void *)fn_888BFC20, 0, lbl_880D9334, 0x20000)); }
+void ts4_spawn_and_resume_thread_888C2290(void) { ts4_resume_thread(ts4_loop_call_seq_fn_88563230_88884B20((void *)fn_888BFC20, 0, lbl_880D9334, 0x20000)); }
 
 /* 0x889058D0: create thread running fn_889055A0 with the given argument and resume it */
-void ts4_spawn_and_resume_thread_889058D0(int a) { ts4_resume_thread(fn_88884B20((void *)fn_889055A0, a, lbl_880D9354, 0x20000)); }
+void ts4_spawn_and_resume_thread_889058D0(int a) { ts4_resume_thread(ts4_loop_call_seq_fn_88563230_88884B20((void *)fn_889055A0, a, lbl_880D9354, 0x20000)); }
 
 /* 0x888C4278: copy 3 floats from the pointer at +0xCC+i*4 into slot i (stride 12) of the array at +0xA0 */
 void ts4_copy_vec3_from_ptr_slot_888C4278(char *self, int i) { float *d = (float *)(*(char **)(self + 0xa0) + i * 12); float *s = *(float **)(self + (i + 0x33) * 4); d[0] = s[0]; d[1] = s[1]; d[2] = s[2]; }

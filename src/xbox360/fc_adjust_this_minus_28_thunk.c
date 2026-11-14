@@ -38,7 +38,7 @@ void *fn_883434E8(void *);
 void *fn_88343638(void *);
 void *fn_88343800(void *);
 void *fn_883438A0(void *);
-void *fn_88343BF0(void *);
+void *ts4_if_set_u32_off150_88343BF0(void *);
 void *fn_88343C80(void *);
 void *fn_88343EB0(void *);
 void *fn_88343F30(void *);
@@ -262,7 +262,7 @@ ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_88343D48, fn_88343800)
 ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_88343D88, fn_883438A0)
 
 /* Swing_DLL.xex 0x88343DA0 */
-ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_88343DA0, fn_88343BF0)
+ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_88343DA0, ts4_if_set_u32_off150_88343BF0)
 
 /* Swing_DLL.xex 0x88343DB8 */
 ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_88343DB8, fn_88343C80)

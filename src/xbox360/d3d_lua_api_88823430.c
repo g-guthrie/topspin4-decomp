@@ -7,7 +7,7 @@ typedef Ts4LuaState lua_State;
 
 extern TValue *fn_88821F98(lua_State *L, int idx);
 extern TValue *fn_888122E8(lua_State *L, void *t, TValue *key);
-extern TValue *fn_88812188(void *t, TValue *key);
+extern TValue *ts4_if_call_seq_u32_off0_88812188(void *t, TValue *key);
 extern Ts4LuaObject *fn_888131A0(lua_State *L, const char *s, u32 len);
 extern void ts4_call_seq_fn_8881C130_8881C200(lua_State *L);
 extern TValue *ts4_lua_v_tonumber_8880CAF0(lua_State *L, TValue *obj, TValue *n);
@@ -135,7 +135,7 @@ void ts4_lua_rawget_88823AE8(lua_State *L, int idx)
     TValue *o2;
     TValue *o1;
     t = (idx > 0) ? L->base + (idx - 1) : fn_88821F98(L, idx);
-    o2 = fn_88812188(t->u.p, L->top - 1);
+    o2 = ts4_if_call_seq_u32_off0_88812188(t->u.p, L->top - 1);
     o1 = L->top - 1;
     if (o2->tt >= 4) o2->u.gc->refs++;
     if (o1->tt >= 4) {

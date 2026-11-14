@@ -114,7 +114,7 @@ ts4_word ts4_call_seq_u32_off3c_888061B8();
 ts4_word ts4_call_seq_fn_88832F70_88806570();
 ts4_word fn_88813BA8();
 ts4_word fn_88814470();
-ts4_word fn_88814950();
+ts4_word ts4_loop_call_seq_fn_88814418_88814950();
 ts4_word fn_88814A70();
 ts4_word fn_88814BB8();
 ts4_word fn_88814D20();

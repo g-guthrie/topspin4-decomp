@@ -55,7 +55,7 @@ ts4_word fn_881506A0();
 ts4_word fn_88152DF8();
 ts4_word ts4_if_call_seq_u32_off8_88160D30();
 ts4_word fn_881705B0();
-ts4_word fn_881876D0();
+ts4_word ts4_if_atomic_interlocked_dec_881876D0();
 ts4_word fn_88198CE0();
 ts4_word fn_881A4F30();
 ts4_word fn_881A5088();

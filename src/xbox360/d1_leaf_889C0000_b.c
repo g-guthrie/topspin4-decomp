@@ -6,12 +6,12 @@ extern void fn_881B9148(void *);
 extern void fn_889122D8(void *);
 extern void fn_889BE668(void *);
 extern void ts4_if_call_seq_fn_889BD910_889BFAB8(void *);
-extern void fn_889BFB60(void *);
-extern void fn_889BFBD0(void *);
+extern void ts4_if_call_seq_fn_889BD910_889BFB60(void *);
+extern void ts4_if_call_seq_fn_889BD910_889BFBD0(void *);
 extern void fn_889BFC40(void *);
 extern void fn_889BFDA8(void *);
 extern void fn_889C0298(void *);
-extern void fn_889C0778(void *);
+extern void ts4_if_call_seq_fn_889BD910_889C0778(void *);
 extern void ts4_finish_889C0878(void *);
 extern void fn_889C8148(void *);
 

@@ -20,7 +20,7 @@ ts4_uptr __savegprlr_28(void);
 ts4_uptr __savegprlr_29(void);
 ts4_uptr fn_88152DF8(ts4_uptr);
 ts4_uptr fn_881705B0(ts4_uptr, ts4_uptr);
-ts4_uptr fn_881876D0(ts4_uptr);
+ts4_uptr ts4_if_atomic_interlocked_dec_881876D0(ts4_uptr);
 ts4_uptr fn_88198CE0(ts4_uptr);
 ts4_uptr fn_881A50F0(ts4_uptr);
 ts4_uptr fn_881B9148(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);

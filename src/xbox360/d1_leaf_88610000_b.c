@@ -3,7 +3,7 @@
  * describe that behaviour and end in the function address. */
 
 extern void fn_881B9148(void *);
-extern void fn_886178A0(void *);
+extern void ts4_loop_call_seq_u32_off4_886178A0(void *);
 extern void fn_88617D28(void *);
 extern char lbl_880F7C54[];
 extern char lbl_880F7F0C[];

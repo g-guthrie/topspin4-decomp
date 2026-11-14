@@ -142,7 +142,7 @@ void fn_887A7578(void);
 void fn_887A75F0(void);
 void fn_887A7668(void);
 void fn_887A76A0(void);
-void fn_887A76F0(void);
+void ts4_if_get_u32_lbl_88D45A60_887A76F0(void);
 void fn_887A7790(void);
 void fn_887AACE0(void);
 void fn_887AB068(void);
@@ -376,7 +376,7 @@ void ts4_callback_table_build_887BAF90(void *self, lg1_table_source *source)
     fn_88836968(&ctx, lbl_880EED80, fn_881B1860, 0, 0, &cell, 4);
     cell.fn = fn_88789E40;
     fn_88836968(&ctx, lbl_880EED98, fn_881B1860, 0, 0, &cell, 4);
-    cell.fn = fn_887A76F0;
+    cell.fn = ts4_if_get_u32_lbl_88D45A60_887A76F0;
     fn_88836968(&ctx, lbl_880EEDAC, fn_881B1860, 0, 0, &cell, 4);
     cell.fn = fn_887A76A0;
     fn_88836968(&ctx, lbl_880EEDC0, fn_881B1860, 0, 0, &cell, 4);

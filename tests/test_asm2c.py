@@ -1,5 +1,6 @@
 """Pure-logic tests for tools/asm2c (no compiler or game files needed)."""
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -412,6 +413,20 @@ class EmitTests(unittest.TestCase):
         self.assertEqual(maps, [("??_9ts4_vcall_slot3_88000000@@$BM@AA", 0x88000000)])
         self.assertIn("&ts4_vcall_slot3_88000000::s3;", text)
         self.assertIn('extern "C" {', text)
+
+    def test_same_file_call_goes_through_unprototyped_cast(self):
+        res = {0x88000000: {"kind": "x", "detail": ["rec"], "sig": "ts4_word NAME(ts4_word a0)",
+                            "body": "    return fn_88000000((ts4_word)a0);\n", "externs": [],
+                            "protos": {"fn_88000000": 1}}}
+        saved = emit._A2N
+        emit._A2N = {0x88000000: "fn_88000000"}
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                emit.build(res, [0x88000000], Path(d) / "x.c")
+                text = (Path(d) / "x.c").read_text()
+        finally:
+            emit._A2N = saved
+        self.assertIn("return ((ts4_word (*)())fn_88000000)((ts4_word)a0);", text)
 
     def test_func_name(self):
         r = {"kind": "get", "detail": ["u32@0x8"]}

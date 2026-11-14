@@ -102,7 +102,7 @@ void fn_881F41E8(void *);
 void fn_882804F0(void *);
 void fn_882806A8(void *);
 void fn_8860BBD8(void *);
-void fn_886178A0(void *);
+void ts4_loop_call_seq_u32_off4_886178A0(void *);
 void fn_88617D28(void *);
 void fn_8861B4D8(void *);
 void fn_88638FC8(void *);
@@ -128,7 +128,7 @@ void name(void **self) \
 }
 
 /* Swing_DLL.xex 0x88617AE8 */
-SET_VTABLE_THEN_CALL(ts4_set_vtable_then_call_88617AE8, lbl_880F8C74, fn_886178A0)
+SET_VTABLE_THEN_CALL(ts4_set_vtable_then_call_88617AE8, lbl_880F8C74, ts4_loop_call_seq_u32_off4_886178A0)
 
 /* Swing_DLL.xex 0x886188A0 */
 SET_VTABLE_THEN_CALL(ts4_set_vtable_then_call_886188A0, lbl_880F8978, fn_88617D28)

@@ -78,6 +78,28 @@ def vthunk_name(a, off):
     return cls, f'??_9{cls}@@$B{mangle_num(off)}AA'
 
 
+_A2N = None
+
+
+def _symbol_names():
+    global _A2N
+    if _A2N is None:
+        import source
+        _A2N = source.symbol_at()
+    return _A2N
+
+
+def cast_same_file_calls(body, protos, own_names, cpp=False):
+    """Calls to a function that is defined in the same file go through an unprototyped
+    function-pointer cast.  The call site names the callee's old placeholder (fn_XXXXXXXX);
+    once that placeholder is renamed to the name the definition has, a plain call would be
+    checked against the definition's prototype (too few arguments)."""
+    for p in sorted(own_names & set(protos), key=len, reverse=True):
+        pt = ', '.join(['ts4_word'] * protos[p]) if cpp else ''
+        body = re.sub(r'(?<![\w.>])' + re.escape(p) + r'\(', f'((ts4_word (*)({pt})){p})(', body)
+    return body
+
+
 def build(res, group, path, cpp=False):
     """Write `group` (addresses into dict `res`) to `path`.
     Returns ([(name, addr)], {addr: (first_line, last_line)}). """
@@ -118,6 +140,8 @@ def build(res, group, path, cpp=False):
         o.append(f'ts4_word {p}({", ".join(["ts4_word"] * n)});' if cpp else f'ts4_word {p}();')
     o.append('')
     maps, rng = [], {}
+    a2n = _symbol_names()
+    own_names = {a2n[a] for a in kept if a in a2n}
     for a in kept:
         r = res[a]
         if 'vthunk' in r:
@@ -127,6 +151,7 @@ def build(res, group, path, cpp=False):
         o.append(f'/* Swing_DLL.xex 0x{a:08X}: {r["kind"]} {", ".join(r["detail"][:6])} */')
         start = len('\n'.join(o).split('\n')) + 1   # first line of the definition (entries hold several lines)
         body = strip_dead_locals(r['body'])
+        body = cast_same_file_calls(body, protos, own_names, cpp)
         unused = [p for p in re.findall(r'\ba\d+\b', r['sig']) if not re.search(r'\b' + p + r'\b', body)]
         if unused:
             bl = body.split('\n'); k = 0

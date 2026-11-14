@@ -4,12 +4,12 @@ extern long _InterlockedIncrement(volatile long *value);
 #pragma intrinsic(_InterlockedIncrement)
 #endif
 struct counted { void *vt; volatile long refs; };
-extern long fn_881876D0(struct counted *c);
+extern long ts4_if_atomic_interlocked_dec_881876D0(struct counted *c);
 struct counted **ts4_assign_counted_8820AB10(struct counted **self, struct counted *value)
 {
     if (*self != value) {
         if (*self != 0) {
-            fn_881876D0(*self);
+            ts4_if_atomic_interlocked_dec_881876D0(*self);
             *self = 0;
         }
         *self = value;

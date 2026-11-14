@@ -86,7 +86,7 @@ ts4_word fn_8822C518();
 ts4_word fn_88255AA0();
 ts4_word fn_8825DA28();
 ts4_word ts4_if_call_seq_u32_off8_88280958();
-ts4_word fn_88288530();
+ts4_word ts4_if_atomic_interlocked_dec_88288530();
 ts4_word fn_882886B8();
 ts4_word fn_88608590();
 ts4_word fn_8860BBD8();
@@ -127,7 +127,7 @@ ts4_word fn_887EB080();
 ts4_word fn_887EB4A0();
 ts4_word ts4_set_u8_off42_887F9318();
 ts4_word fn_88803198();
-ts4_word fn_88865818();
+ts4_word ts4_loop_get_u32_lbl_88D45B1C_88865818();
 ts4_word fn_888860A0();
 ts4_word fn_88888668();
 ts4_word ts4_if_call_seq_ts4_find_service_888C1C28();
@@ -147,15 +147,15 @@ ts4_word ts4_find_service();
 ts4_word ts4_object_finalize();
 ts4_word ts4_script_string_equals();
 
-/* Swing_DLL.xex 0x8871AD10: call_seq u32@0x48, fn_88288530, u32@0x4c, fn_88288530, u32@0x40, fn_88288530 */
+/* Swing_DLL.xex 0x8871AD10: call_seq u32@0x48, ts4_if_atomic_interlocked_dec_88288530, u32@0x4c, ts4_if_atomic_interlocked_dec_88288530, u32@0x40, ts4_if_atomic_interlocked_dec_88288530 */
 ts4_word ts4_call_seq_u32_off48_8871AD10(ts4_word a0)
 {
     ts4_word t8;
 
-    fn_88288530((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 72)));
-    fn_88288530((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 76)));
-    fn_88288530((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 64)));
-    t8 = fn_88288530((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 68)));
+    ts4_if_atomic_interlocked_dec_88288530((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 72)));
+    ts4_if_atomic_interlocked_dec_88288530((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 76)));
+    ts4_if_atomic_interlocked_dec_88288530((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 64)));
+    t8 = ts4_if_atomic_interlocked_dec_88288530((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 68)));
     return t8;
 }
 
@@ -1780,10 +1780,10 @@ ts4_word ts4_if_call_seq_lbl_880EF580_8877DFF0(ts4_word a0)
     return t5;
 }
 
-/* Swing_DLL.xex 0x8877E330: call_seq u32@lbl_88D45A60, u32@0x314, fn_88865818 */
+/* Swing_DLL.xex 0x8877E330: call_seq u32@lbl_88D45A60, u32@0x314, ts4_loop_get_u32_lbl_88D45B1C_88865818 */
 ts4_word ts4_call_seq_u32_lbl_88D45A60_8877E330(void)
 {
-    fn_88865818((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45A60)) + 788)));
+    ts4_loop_get_u32_lbl_88D45B1C_88865818((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45A60)) + 788)));
     return 0;
 }
 

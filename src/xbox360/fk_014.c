@@ -117,7 +117,7 @@ ts4_word ts4_set_u32_lbl_88D2E598_8856D2B0();
 ts4_word ts4_set_u32_lbl_88D2E5AC_8856D8E0();
 ts4_word fn_8856F440();
 ts4_word fn_8856F4E8();
-ts4_word fn_8856F558();
+ts4_word ts4_addr_lbl_88C31510_8856F558();
 ts4_word fn_8856F7D8();
 ts4_word ts4_addr_fn_8856F840_8856F898();
 ts4_word ts4_set_u32_lbl_88D2E73C_8856F8B0();
@@ -137,7 +137,7 @@ ts4_word fn_8857C078();
 ts4_word fn_8857F1A0();
 ts4_word fn_88582660();
 ts4_word fn_885827E0();
-ts4_word fn_88582F30();
+ts4_word ts4_loop_call_seq_fn_885846A0_88582F30();
 ts4_word fn_88584548();
 ts4_word fn_88586238();
 ts4_word fn_885872A8();
@@ -151,7 +151,7 @@ ts4_word ts4_set_u32_off2ec0_8858E8F0();
 ts4_word fn_8858EF48();
 ts4_word fn_88593C30();
 ts4_word fn_88593F30();
-ts4_word fn_88595FD8();
+ts4_word ts4_atomic_interlocked_inc_88595FD8();
 ts4_word ts4_tailcall_fn_885949C0_88596010();
 ts4_word fn_88596578();
 ts4_word fn_88598CF8();
@@ -511,10 +511,10 @@ ts4_word ts4_tailcall_fn_8856F7D8_88564158(void)
     return fn_8856F7D8((ts4_word)8);
 }
 
-/* Swing_DLL.xex 0x88564160: tailcall fn_8856F558 */
+/* Swing_DLL.xex 0x88564160: tailcall ts4_addr_lbl_88C31510_8856F558 */
 ts4_word ts4_tailcall_fn_8856F558_88564160(void)
 {
-    return fn_8856F558((ts4_word)8);
+    return ts4_addr_lbl_88C31510_8856F558((ts4_word)8);
 }
 
 /* Swing_DLL.xex 0x88564168: call_seq ts4_set_u32_lbl_88D2E73C_8856F8B0, ts4_set_u32_lbl_88D2E598_8856D2B0, ts4_set_u32_lbl_88D2E5AC_8856D8E0, ts4_addr_fn_8856F840_8856F898 */
@@ -826,10 +826,10 @@ ts4_word ts4_tailcall_fn_88564400_885793B8(void)
     return fn_88564400((ts4_word)2);
 }
 
-/* Swing_DLL.xex 0x8857A128: tailcall fn_88582F30 */
+/* Swing_DLL.xex 0x8857A128: tailcall ts4_loop_call_seq_fn_885846A0_88582F30 */
 ts4_word ts4_tailcall_fn_88582F30_8857A128(ts4_word a0, ts4_word a1)
 {
-    return fn_88582F30((ts4_word)a0, (ts4_word)a1, (ts4_word)0);
+    return ts4_loop_call_seq_fn_885846A0_88582F30((ts4_word)a0, (ts4_word)a1, (ts4_word)0);
 }
 
 /* Swing_DLL.xex 0x8857A1C8: tailcall XamEnumerate */
@@ -1203,10 +1203,10 @@ ts4_word ts4_tailcall_fn_88596578_88595FD0(ts4_word a0)
     return fn_88596578((ts4_word)(a0 + -8));
 }
 
-/* Swing_DLL.xex 0x88596000: tailcall fn_88595FD8 */
+/* Swing_DLL.xex 0x88596000: tailcall ts4_atomic_interlocked_inc_88595FD8 */
 ts4_word ts4_tailcall_fn_88595FD8_88596000(ts4_word a0)
 {
-    return fn_88595FD8((ts4_word)(a0 + -8));
+    return ts4_atomic_interlocked_inc_88595FD8((ts4_word)(a0 + -8));
 }
 
 /* Swing_DLL.xex 0x88596008: tailcall fn_88593F30 */

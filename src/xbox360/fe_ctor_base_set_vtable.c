@@ -8,7 +8,7 @@ extern void fn_88723C70(Ts4Object *object);
 extern void fn_8872CD50(Ts4Object *object);
 extern void fn_8873C048(Ts4Object *object);
 extern void fn_887EC668(Ts4Object *object);
-extern void fn_887F5400(Ts4Object *object);
+extern void ts4_call_seq_fn_887F4BA0_887F5400(Ts4Object *object);
 extern void fn_888B1D08(Ts4Object *object);
 extern char lbl_880F8978;
 extern char lbl_880F8950;
@@ -69,7 +69,7 @@ TS4_CTOR(ts4_ctor_set_vtable_8874AD88, fn_8873C048, lbl_880F2E88) /* Swing_DLL.x
 TS4_CTOR(ts4_ctor_set_vtable_887C7E30, fn_88617D88, lbl_880EA60C) /* Swing_DLL.xex 0x887C7E30 */
 TS4_CTOR(ts4_ctor_set_vtable_887CC040, fn_887EC668, lbl_880EA318) /* Swing_DLL.xex 0x887CC040 */
 TS4_CTOR(ts4_ctor_set_vtable_887D3108, fn_88617D88, lbl_880E7084) /* Swing_DLL.xex 0x887D3108 */
-TS4_CTOR(ts4_ctor_set_vtable_887F5598, fn_887F5400, lbl_880E46C8) /* Swing_DLL.xex 0x887F5598 */
+TS4_CTOR(ts4_ctor_set_vtable_887F5598, ts4_call_seq_fn_887F4BA0_887F5400, lbl_880E46C8) /* Swing_DLL.xex 0x887F5598 */
 TS4_CTOR(ts4_ctor_set_vtable_88890288, fn_8841B550, lbl_880DCE70) /* Swing_DLL.xex 0x88890288 */
 TS4_CTOR(ts4_ctor_set_vtable_888B82F8, fn_888B1D08, lbl_880DC680) /* Swing_DLL.xex 0x888B82F8 */
 TS4_CTOR(ts4_ctor_set_vtable_888C7850, fn_88617D88, lbl_880DB834) /* Swing_DLL.xex 0x888C7850 */

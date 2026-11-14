@@ -77,7 +77,7 @@ ts4_word fn_881816D8();
 ts4_word fn_881882D0();
 ts4_word fn_881A6A00();
 ts4_word fn_881B9148();
-ts4_word fn_88288530();
+ts4_word ts4_if_atomic_interlocked_dec_88288530();
 ts4_word fn_882908C0();
 ts4_word fn_88290C68();
 ts4_word fn_8841B618();

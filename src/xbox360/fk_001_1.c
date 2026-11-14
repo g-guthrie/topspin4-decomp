@@ -62,7 +62,7 @@ ts4_word KeTlsGetValue();
 ts4_word fn_881519D0();
 ts4_word fn_88155A40();
 ts4_word fn_8817D318();
-ts4_word fn_881876D0();
+ts4_word ts4_if_atomic_interlocked_dec_881876D0();
 ts4_word fn_8818A4C8();
 ts4_word fn_8818C868();
 ts4_word fn_8818E2D8();
