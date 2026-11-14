@@ -197,7 +197,7 @@ class Gen:
         self.calls = 0; self.rets = []; self.localnames = []
         self.signed = set(); self.unsigned = set()   # value names compared with signed / unsigned compares
         self.pending = {}
-        self.intrinsics = set()
+        self.intrinsics = set(); self.nsteps = 0
         self.vec = False; self.vparams = set(); self.vdecls = []
         self.has_vmx = any(is_vmx(i.mn) for i in self.insns)
 
@@ -817,6 +817,9 @@ class Gen:
         st['fwritten'].clear()
 
     def exec_insns(self, insns, st, out):
+        self.nsteps += len(insns)
+        if self.nsteps > 4000:     # arms that never rejoin duplicate the code behind them
+            raise Skip('too big')
         for ins in insns:
             self.step(ins, st, out)
 
