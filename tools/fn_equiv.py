@@ -403,7 +403,8 @@ class Analysis:
     def __init__(self, code_of, is_helper=lambda a: False):
         self.code_of = code_of
         self.is_helper = is_helper
-        self.funcs, self.live, self.defs = {}, {}, {}
+        self.funcs, self.live, self.defs, self._slots = {}, {}, {}, {}
+        self.varargs = set()
         self._busy_live, self._busy_defs = set(), set()
 
     def func(self, addr):
@@ -411,6 +412,36 @@ class Analysis:
             code = self.code_of(addr)
             self.funcs[addr] = Func(code, addr) if code else None
         return self.funcs[addr]
+
+    def stack_arg_slots(self, addr):
+        """Indices j of stack arguments 9+j the function reads (loads from its caller's
+        r1+0x54+8j), or None when that cannot be told (varargs, frame pointer, no code)."""
+        if addr in self._slots:
+            return self._slots[addr]
+        f = self.func(addr)
+        res = None
+        if f is not None:
+            frame, out = 0, set()
+            res = frozenset()
+            for _, ins in f.code_words():
+                w = ins.word
+                op, rd, ra, imm = w >> 26, (w >> 21) & 31, (w >> 16) & 31, sext(w & 0xFFFF, 16)
+                if op == 37 and rd == 1 and ra == 1 and imm < 0 and not frame:
+                    frame = -imm                       # stwu r1, -F(r1)
+                    continue
+                if ra == 1 and op in (32, 34, 40, 42, 48, 50, 58) and imm >= frame + 0x54:
+                    out.add((imm - frame - 0x54) // 8)  # a load from the caller's argument area
+                elif ra == 1 and op == 14 and rd != 1 and imm >= frame + 0x14:
+                    res = None                         # address of the home/argument area taken:
+                    self.varargs.add(addr)             # va_start (a variadic function)
+                    break
+                elif op == 14 and ra == 1 and rd not in (1,) and imm < 0:
+                    res = None                         # frame pointer below r1 (subi rX, r1, n)
+                    break
+            if res is not None:
+                res = frozenset(out)
+        self._slots[addr] = res
+        return res
 
     def defs_of(self, addr, depth=0):
         """Registers (GPR/FPR) the function at addr may write, transitively; VOLATILE if unknown."""
@@ -1299,8 +1330,9 @@ class Machine:
         frame = {}
         for j, reg in enumerate(GPR_ARGS):
             v = vals[j] & 0xFFFFFFFF
-            if STACK_LO <= v < STACK_TOP:
-                # pointer into the function's own frame: compare the object, not its address
+            if STACK_LO <= v < STACK_HI:
+                # pointer into the stack (own frame, or the caller's home/argument area):
+                # compare the object, not its address
                 frame[reg] = tuple(self.stack_buf[x - STACK_LO]
                                    if x in self.stack_touched and not self._save_slot(x) else None
                                    for x in range(v, min(v + STACK_ARG_WINDOW, STACK_HI)))
@@ -1310,7 +1342,10 @@ class Machine:
             sp = uc.reg_read(P.UC_PPC_REG_1) & 0xFFFFFFFF
             for j in range(8):
                 lo = sp + 0x54 + 8 * j
-                if any(x in self.stack_since for x in range(lo, lo + 8)) and STACK_LO <= lo < STACK_HI - 8:
+                if not (STACK_LO <= lo and lo + 8 <= STACK_TOP) or \
+                        any(self._save_slot(x) for x in range(lo, lo + 8)):
+                    continue                 # outside the function's frame, or a save slot
+                if any(x in self.stack_since for x in range(lo, lo + 8)):
                     sargs[j] = bytes(self.stack_buf[lo - STACK_LO: lo - STACK_LO + 8])
         self.stack_since = set()
         self.events.append((a, vals, args, self.delta(), frame, sargs))
@@ -1511,8 +1546,15 @@ def compare(world, A, B, rkind, nonvol=True):
         tb, vb, _, db, fb, sb = eb[i]
         if ta != tb:
             return f"call #{i + 1}: original calls {world.label(ta)}, candidate calls {world.label(tb)}"
-        if sa != sb:
-            j = min(k for k in set(sa) | set(sb) if sa.get(k) != sb.get(k))
+        # stack arguments: only slots the original wrote (an unset slot is not an argument it
+        # passes), and only those the callee reads when its code shows which
+        slots = world.analysis.stack_arg_slots(ta) if ta in world.func_size else None
+        variadic = ta in world.analysis.varargs
+        # a variadic callee's argument count is not known statically: compare only what both pass
+        diffj = [k for k in sa if sa[k] != sb.get(k) and (slots is None or k in slots)
+                 and not (variadic and k not in sb)]
+        if diffj:
+            j = min(diffj)
             fmt = lambda b: "unset" if b is None else b.hex()
             return (f"call #{i + 1} to {world.label(ta)}: stack argument {9 + j} differs: original "
                     f"{fmt(sa.get(j))}, candidate {fmt(sb.get(j))}")
@@ -1535,7 +1577,7 @@ def compare(world, A, B, rkind, nonvol=True):
                 # an original value that is poison is a register the original never computed (or a
                 # callee left behind): the callee's static liveness over-approximates there, and
                 # the original's behaviour cannot depend on it, so the candidate's value is free
-                if reg in args and not is_poison(reg, va[j]):
+                if reg in args and not is_poison(reg, va[j]) and not (variadic and is_poison(reg, vb[j])):
                     return (f"call #{i + 1} to {world.label(ta)}: argument {regname(reg)} original {x:#x}, "
                             f"candidate {y:#x}")
             elif not is_poison(reg, va[j]) and not is_poison(reg, vb[j]):

@@ -88,9 +88,10 @@ basic-block hook and recorded as an event: callee address; the argument register
 reads (static liveness of the image function; for an indirect or unanalysable callee, r3 plus
 every r4-r10/f1-f13 whose last write in the straight-line code before the original's call site
 is not read again before the call, so vtable and address temporaries are not mistaken for
-arguments); arguments 9 and up, which live in the caller's frame at r1+0x54 (8-byte slots,
-compared when the callee takes 8 register arguments or is unknown); objects in the function's
-own frame passed by pointer (their first word as written by the function, not their address,
+arguments); arguments 9 and up, which live in the caller's frame at r1+0x54 (8-byte slots inside the
+function's frame, save slots excluded; a slot is compared when the original wrote it and the
+callee reads it, which is known from the callee's own loads above its frame, or for every slot
+the original wrote when the callee's code does not tell); objects on the stack passed by pointer (their first word as written by the function, not their address,
 which depends on frame layout; bytes holding a saved LR or callee-saved register are masked); and
 the memory delta so far. A callee given a pointer into the function's own frame then stores a
 seeded word there (out-parameter model: `n = f(L, &len)`), into the bytes of that word the
@@ -197,8 +198,13 @@ pointer fixer replaced values read from *read-only* image data (jump tables, flo
 which the candidate keeps at its own address, so the two runs saw different inputs (8: jump-table
 switches, a float constant, a hash table); (4) callee liveness over-approximation through
 unanalysable CRT chains made stale temporaries count as call arguments; (5) a candidate file that
-defined a context copy of a callee called that copy instead of the image function (4 and 5 were
-false DIFFERENT verdicts in near-miss runs). After (3) was fixed, the run above has no DIFFERENT. Its coverage figures
+defined a context copy of a callee called that copy instead of the image function; (6) the
+decoder counted `mr r8, r8` (`or rX,rX,rX`, a no-op hint in the CRT heap code) as a read, so every
+caller of `free` appeared to pass r8; (7) a pure out-parameter the candidate pre-initialised and
+the original did not was reported; (8) stack-argument slots beyond the frame, or slots that the
+original never wrote, were compared, as were varargs registers (see 7.1). Items 4-8 gave false
+DIFFERENT verdicts in the near-miss and asm2c runs, found by reading every DIFFERENT report of
+the sample. After (3) was fixed, the run above has no DIFFERENT. Its coverage figures
 are honest. With the bug, the mutated jump tables had inflated coverage on switch functions, and
 that is why the fix also seeds jump-table case values.
 
@@ -329,6 +335,14 @@ the checker does **not** observe at all:
   are compared, because 32-bit values are allowed to carry garbage above bit 31).
 - **Concurrency** (`lwarx/stwcx.` run single-threaded) and timing (`mftb`).
 - **Recursion depth**: a recursive call is intercepted like any other.
+- **Missing variadic arguments.** A variadic callee (`ts4_format_text` and other printf-style
+  functions, recognised by `va_start` taking the address of the home area) home-stores r3-r10
+  whatever the format consumes, so its liveness cannot say how many arguments are real. For
+  these calls only registers and stack slots that *both* sides pass are compared: a wrong value
+  is caught, an argument the candidate leaves out is not.
+- **Sub-word locals passed by pointer.** The out-parameter model stores a whole word; for a
+  `char`/`short` local passed by address this can reach a neighbouring local, which sits at a
+  different place in the two frames.
 
 ### 7.2 Translator output is not the goal state
 

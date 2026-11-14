@@ -113,7 +113,8 @@ GRADE_EDGES = [0.8, 2.0, 3.4, 5.0]          # VeryGood | Good | Normal | Bad | V
 #   waist to shoulder      contact height 95..145 cm (Ball+0x344)
 #   time                   >= 60 frames since the opponent's hit (S+0xCF0 >= 60, as AutoSwing graph 179)
 #   no reach               required run speed < 3.5 m/s (PT+0x1B0, the FlatGoodReach threshold), not stretched
-#   feet set               within 100 cm of the hit point and arrived >= 20 frames before contact
+#   feet set               planted within 100 cm of the hit point (racket reach, no lunge) and arrived >= 20 frames
+#                          before contact; the run that got him there does not matter
 #   not backing up         own contact point not more than 150 cm behind the baseline and not moving back
 TEEOFF = {"pace_max": 52.0, "h_lo": 95.0, "h_hi": 145.0, "frames_min": 60, "vreq_max": 3.5, "run_max": 100.0,
           "set_min": 20, "depth_max": 150.0}
@@ -148,7 +149,7 @@ def grade_of(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick=
     q = max(0.0, sum(pts.values()))
     t = TEEOFF
     if (pace <= t["pace_max"] and t["h_lo"] <= height <= t["h_hi"] and frames >= t["frames_min"]
-            and v_req < t["vreq_max"] and not stretch and run_cm <= t["run_max"] and set_f >= t["set_min"]
+            and v_req < t["vreq_max"] and not stretch and set_f >= t["set_min"]
             and depth_x <= t["depth_max"]):
         return "Tee-off", q, pts
     for g, edge in zip(GRADES[1:], GRADE_EDGES):
@@ -512,7 +513,7 @@ def return_quality(rng, ret, serve_mph, placement=0.5, opp_timing="Average", opp
 
 RALLY = {
     "e_timing": {"Perfect": 0.012, "Good": 0.035, "Poor": 0.16, "Mistimed": 0.45},
-    "pace_margin": {"Flat": 78.0, "TopSpin": 84.0, "Slice": 68.0, "Lob": 60.0},   # mph where the pace term starts
+    "pace_margin": {"Flat": 81.0, "TopSpin": 84.0, "Slice": 68.0, "Lob": 60.0},   # mph where the pace term starts
     "pace_err": 0.006,                 # error per mph above the margin speed
     "margin_hand": 10.0,                # margin speed added per unit of hand stat
     "kick": {"Flat": 0.08, "TopSpin": 0.20, "Slice": 0.0, "Lob": 0.2},
@@ -522,7 +523,7 @@ RALLY = {
     "floor_err": 0.20,                  # error added per unit of floor penalty of the stroke's rating
     "pass_err": 0.07,                   # added error for a passing shot against a net player
     "low_drive_err": 0.004,             # per mph above 70 when driving a ball below 60 cm (x depth below 60 / 30)
-    "vigor_cost": {"Finesse": 0.002, "Medium": 0.004, "Powerful": 0.008, "Rushed": 0.008, "Overcharge": 0.018},
+    "vigor_cost": {"Finesse": 0.002, "Medium": 0.004, "Powerful": 0.006, "Rushed": 0.006, "Overcharge": 0.018},
     "run_cost": 0.0012,                 # vigor per m/s of required run speed
     "recover_point": 0.022, "recover_set": 0.12,
     "net_rush": {"volley_style": 0.55, "approach_on_short": 0.35},
@@ -664,8 +665,8 @@ def hit(rng, p, b, at_net, prm):
     # aim (spec section 7): the retail chain Efficiency -> FinalEfficiency (graph 196) -> quad, fed by grade, timing
     # and hand.  The stick is direction-only: "corner" = the diagonal (deep corner), otherwise a safer direction.
     angle_back = ANGLE_BACK * b.width if g in ("Tee-off", "VeryGood", "Good") else 0.0
-    width = clamp(WIDTH_SCALE * fe * (1.0 if corner else SAFE_LAT) + angle_back + rng.gauss(0.0, 0.12)
-                  + (0.10 if at_net else 0.0), 0.0, 1.0)
+    width = clamp(WIDTH_SCALE * fe * (1.0 if corner else SAFE_LAT) * (NET_WIDTH if at_net else 1.0) + angle_back
+                  + rng.gauss(0.0, 0.12), 0.0, 1.0)
     if corner:
         depth = clamp(depth + 0.04, 0.0, 1.0)
     kick = R["kick"][cls] * fx["spin"] + (R["kick_hand"] * stat * fx["spin"] if cls == "TopSpin" else 0.0)
@@ -677,7 +678,8 @@ def hit(rng, p, b, at_net, prm):
 
 CORNER_SHARE = 0.5           # default share of balls aimed at the deep corner (the rest: deep middle / mid-wide)
 SAFE_LAT = 0.45               # lateral reach of the safer directions relative to a corner aim
-WIDTH_SCALE = 0.80            # FinalEfficiency -> rally-model width (opponent's run)
+WIDTH_SCALE = 1.10            # FinalEfficiency -> rally-model width (opponent's run); sized for rally length (spec 9)
+NET_WIDTH = 0.85              # volley aim configs reach 350 cm to the side against 550 for groundstrokes (aim_tables)
 ANGLE_BACK = 0.25             # a wide incoming ball opens the angle for a reply from a Good-or-better grade
 ANTICIPATION = 0.35           # judgement: how much a receiver who reads the hitter's corner habit saves (see 7e)
 LINE_RISK = 0.0               # OPTION for the owner (not in the agreed rules): added error per unit of how close the
