@@ -6,14 +6,15 @@ Formats were decoded from the retail files (no code reference yet; see docs/port
 
 ``.actions``::
 
-    u32 nactions, u32 pool_bytes
+    u32 nactions, u32 record_bytes (the string pool follows the record area)
     nactions x u32 record offset          (relative to the record area)
     u32 nstrings, nstrings x u32 offset   (relative to the string pool)
     record area:  per action
         u32 0, u16 name_len, name, u16 nparams, u8 params_len, params (u8 len + chars each),
-        u8 has_body, [u16 flags, statements...]  up to the next record
+        u8 nblocks, nblocks x {u16 cond_len, cond (tokens, first byte 0x01; empty = unconditional),
+                               statements..., u8 0}
         statement = u8 len, len token bytes; a byte >= 0x80 starts a 2-byte string reference
-        ((b & 0x7F) << 8 | next) into the pool, any other byte is a literal character
+        ((b & 0x7F) | next << 7) into the pool, any other byte is a literal character
     string pool: u8 len + chars per string (at the end of the file)
 
 The statements are a small command language: ``SceneOn``, ``Wait(5)``, ``ChangeScene('S4Loading')``,
@@ -68,7 +69,7 @@ def detokenize(tok: bytes, pool):
         if b >= 0x80:
             if i + 1 >= len(tok):
                 raise UiFormatError("dangling string reference")
-            idx = ((b & 0x7F) << 8) | tok[i + 1]
+            idx = (b & 0x7F) | (tok[i + 1] << 7)
             if idx >= len(pool):
                 raise UiFormatError("string reference %d out of range" % idx)
             out.append(pool[idx])
@@ -82,8 +83,8 @@ def detokenize(tok: bytes, pool):
 def parse_actions(d: bytes):
     """Return {"actions": [{"name", "params", "flags", "body": [statement, ...]}], "strings": [...]}."""
     n = _u32(d, 0)
-    pool_bytes = _u32(d, 4)
-    if n > 100000 or pool_bytes > len(d):
+    rec_bytes = _u32(d, 4)
+    if n > 100000 or rec_bytes > len(d):
         raise UiFormatError("not an .actions file")
     offs = [_u32(d, 8 + 4 * i) for i in range(n)]
     p = 8 + 4 * n
@@ -92,9 +93,9 @@ def parse_actions(d: bytes):
         raise UiFormatError("bad string count")
     soffs = [_u32(d, p + 4 + 4 * i) for i in range(ns)]
     rec_base = p + 4 + 4 * ns
-    pool_base = len(d) - pool_bytes
-    if pool_base < rec_base:
-        raise UiFormatError("pool overlaps records")
+    pool_base = rec_base + rec_bytes
+    if pool_base > len(d):
+        raise UiFormatError("record area past the end")
     pool = [_pstr(d, pool_base + o)[0] for o in soffs]
     ends = offs[1:] + [pool_base - rec_base]
     actions = []
@@ -116,18 +117,29 @@ def parse_actions(d: bytes):
             s, q = _pstr(d, q)
             params.append(s)
         o += plen
-        body = []
-        flags = None
-        if o < stop and d[o]:
-            flags = _u16(d, o + 1)
-            o += 3
+        blocks = []
+        nblocks = d[o] if o < stop else 0
+        o += 1
+        for _ in range(nblocks):
+            if o + 2 > stop:
+                raise UiFormatError("truncated block")
+            cl = _u16(d, o)
+            cond = d[o + 2:o + 2 + cl]
+            o += 2 + cl
+            stmts = []
             while o < stop:
                 ln = d[o]
+                o += 1
                 if ln == 0:
                     break
-                body.append(detokenize(d[o + 1:o + 1 + ln], pool))
-                o += 1 + ln
-        actions.append({"name": name, "params": params, "flags": flags, "body": body})
+                if o + ln > stop:
+                    raise UiFormatError("statement past the record end")
+                stmts.append(detokenize(d[o:o + ln], pool))
+                o += ln
+            c = detokenize(cond, pool) if cond else None
+            blocks.append({"if": c.lstrip("\x01") if c else None, "do": stmts})
+        body = [x for b in blocks for x in b["do"]]
+        actions.append({"name": name, "params": params, "blocks": blocks, "body": body})
     return {"actions": actions, "strings": pool}
 
 
@@ -165,8 +177,13 @@ def main(argv=None):
         r = parse_actions(d)
         for act in r["actions"]:
             print("action %s(%s)" % (act["name"], ", ".join(act["params"])))
-            for s in act["body"]:
-                print("    " + s)
+            for b in act["blocks"]:
+                ind = "    "
+                if b["if"]:
+                    print("    if %s then" % b["if"])
+                    ind = "        "
+                for s in b["do"]:
+                    print(ind + s)
     else:
         print(json.dumps(parse_anims(d), indent=1))
 

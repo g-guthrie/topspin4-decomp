@@ -180,7 +180,7 @@ values:
   - [0x201b0, float, 0.0, "/AimingAreaConfig[7]/Volley/Size[3]"]
   - [0x201b4, float, 100.0, "/AimingAreaConfig[7]/Volley/Width"]
   - [0x201b8, float, 50.0, "/AimingAreaConfig[7]/Volley/CurveRadius"]
-  - [0x201c4, key, 0x1a01f803, "/AimingAreaConfig[7]/Id"]
+  - [0x201c4, key, 0x1a01f803, "/AimingAreaConfig[7]/Id"]  # ServeFlatRisky
   - [0x201d4, float, 500.0, "/AimingAreaConfig[8]/Baseline/Position[0]"]
   - [0x201d8, float, 0.0, "/AimingAreaConfig[8]/Baseline/Position[1]"]
   - [0x201dc, float, 200.0, "/AimingAreaConfig[8]/Baseline/Position[2]"]
@@ -222,7 +222,7 @@ values:
   - [0x20290, float, 0.0, "/AimingAreaConfig[9]/Volley/Size[3]"]
   - [0x20294, float, 120.0, "/AimingAreaConfig[9]/Volley/Width"]
   - [0x20298, float, 50.0, "/AimingAreaConfig[9]/Volley/CurveRadius"]
-  - [0x202a4, key, 0x000c7857, "/AimingAreaConfig[9]/Id"]
+  - [0x202a4, key, 0x000c7857, "/AimingAreaConfig[9]/Id"]  # ServeTopSpinRisky
   - [0x202b4, float, 500.0, "/AimingAreaConfig[10]/Baseline/Position[0]"]
   - [0x202b8, float, 0.0, "/AimingAreaConfig[10]/Baseline/Position[1]"]
   - [0x202bc, float, 200.0, "/AimingAreaConfig[10]/Baseline/Position[2]"]
@@ -264,7 +264,7 @@ values:
   - [0x20370, float, 0.0, "/AimingAreaConfig[11]/Volley/Size[3]"]
   - [0x20374, float, 120.0, "/AimingAreaConfig[11]/Volley/Width"]
   - [0x20378, float, 50.0, "/AimingAreaConfig[11]/Volley/CurveRadius"]
-  - [0x20384, key, 0x48380e6c, "/AimingAreaConfig[11]/Id"]
+  - [0x20384, key, 0x48380e6c, "/AimingAreaConfig[11]/Id"]  # ServeSliceRisky
   - [0x20394, float, 1000.0, "/AimingAreaConfig[12]/Baseline/Position[0]"]
   - [0x20398, float, 0.0, "/AimingAreaConfig[12]/Baseline/Position[1]"]
   - [0x2039c, float, 0.0, "/AimingAreaConfig[12]/Baseline/Position[2]"]

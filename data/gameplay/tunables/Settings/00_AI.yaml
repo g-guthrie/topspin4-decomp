@@ -7208,7 +7208,7 @@ values:
   - [0x14c64, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[91]/ConditionRule[0]/Condition[1]/Name"]
   - [0x14c68, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[91]/ConditionRule[0]/Condition[1]/Value"]  # Baseline
   - [0x14c6c, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[91]/ConditionRule[1]/Condition[0]/Name"]
-  - [0x14c70, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[91]/ConditionRule[1]/Condition[0]/Value"]
+  - [0x14c70, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[91]/ConditionRule[1]/Condition[0]/Value"]  # ZoneLob
   - [0x14c74, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[91]/ConditionRule[1]/Condition[1]/Name"]
   - [0x14c78, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[91]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x14c88, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[92]/c46ec870[0]/Condition[0]/Name"]
@@ -7222,7 +7222,7 @@ values:
   - [0x14ccc, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[92]/ConditionRule[1]/Condition[1]/Name"]
   - [0x14cd0, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[92]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x14cd4, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[92]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x14cd8, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[92]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x14cd8, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[92]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x14cdc, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[92]/ConditionRule[2]/Condition[1]/Name"]
   - [0x14ce0, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[92]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x14cf0, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[93]/c46ec870[0]/Condition[0]/Name"]
@@ -7236,7 +7236,7 @@ values:
   - [0x14d34, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[93]/ConditionRule[1]/Condition[1]/Name"]
   - [0x14d38, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[93]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x14d3c, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[93]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x14d40, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[93]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x14d40, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[93]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x14d44, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[93]/ConditionRule[2]/Condition[1]/Name"]
   - [0x14d48, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[93]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x14d58, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[94]/c46ec870[0]/Condition[0]/Name"]
@@ -7246,7 +7246,7 @@ values:
   - [0x14d8c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[94]/ConditionRule[0]/Condition[1]/Name"]
   - [0x14d90, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[94]/ConditionRule[0]/Condition[1]/Value"]  # Baseline
   - [0x14d94, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[94]/ConditionRule[1]/Condition[0]/Name"]
-  - [0x14d98, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[94]/ConditionRule[1]/Condition[0]/Value"]
+  - [0x14d98, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[94]/ConditionRule[1]/Condition[0]/Value"]  # ZoneLob
   - [0x14d9c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[94]/ConditionRule[1]/Condition[1]/Name"]
   - [0x14da0, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[94]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x14da4, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[94]/ConditionRule[2]/Condition[0]/Name"]
@@ -7264,7 +7264,7 @@ values:
   - [0x14e04, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[95]/ConditionRule[1]/Condition[1]/Name"]
   - [0x14e08, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[95]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x14e0c, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[95]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x14e10, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[95]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x14e10, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[95]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x14e14, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[95]/ConditionRule[2]/Condition[1]/Name"]
   - [0x14e18, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[95]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x14e28, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[96]/c46ec870[0]/Condition[0]/Name"]
@@ -7278,7 +7278,7 @@ values:
   - [0x14e6c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[96]/ConditionRule[1]/Condition[1]/Name"]
   - [0x14e70, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[96]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x14e74, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[96]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x14e78, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[96]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x14e78, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[96]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x14e7c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[96]/ConditionRule[2]/Condition[1]/Name"]
   - [0x14e80, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[96]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x14e90, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[97]/c46ec870[0]/Condition[0]/Name"]
@@ -7292,7 +7292,7 @@ values:
   - [0x14ed4, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[97]/ConditionRule[1]/Condition[1]/Name"]
   - [0x14ed8, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[97]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x14edc, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[97]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x14ee0, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[97]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x14ee0, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[97]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x14ee4, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[97]/ConditionRule[2]/Condition[1]/Name"]
   - [0x14ee8, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[97]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x14ef8, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[98]/c46ec870[0]/Condition[0]/Name"]
@@ -7306,7 +7306,7 @@ values:
   - [0x14f3c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[98]/ConditionRule[1]/Condition[1]/Name"]
   - [0x14f40, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[98]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x14f44, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[98]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x14f48, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[98]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x14f48, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[98]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x14f4c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[98]/ConditionRule[2]/Condition[1]/Name"]
   - [0x14f50, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[98]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x14f60, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[99]/c46ec870[0]/Condition[0]/Name"]
@@ -7320,7 +7320,7 @@ values:
   - [0x14fa4, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[99]/ConditionRule[1]/Condition[1]/Name"]
   - [0x14fa8, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[99]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x14fac, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[99]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x14fb0, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[99]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x14fb0, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[99]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x14fb4, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[99]/ConditionRule[2]/Condition[1]/Name"]
   - [0x14fb8, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[99]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x14fc8, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[100]/c46ec870[0]/Condition[0]/Name"]
@@ -7334,7 +7334,7 @@ values:
   - [0x1500c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[100]/ConditionRule[1]/Condition[1]/Name"]
   - [0x15010, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[100]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x15014, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[100]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x15018, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[100]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x15018, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[100]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x1501c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[100]/ConditionRule[2]/Condition[1]/Name"]
   - [0x15020, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[100]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x15030, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[101]/c46ec870[0]/Condition[0]/Name"]
@@ -7348,7 +7348,7 @@ values:
   - [0x15074, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[101]/ConditionRule[1]/Condition[1]/Name"]
   - [0x15078, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[101]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x1507c, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[101]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x15080, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[101]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x15080, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[101]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x15084, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[101]/ConditionRule[2]/Condition[1]/Name"]
   - [0x15088, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[101]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x15098, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[102]/c46ec870[0]/Condition[0]/Name"]
@@ -7362,7 +7362,7 @@ values:
   - [0x150dc, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[102]/ConditionRule[1]/Condition[1]/Name"]
   - [0x150e0, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[102]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x150e4, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[102]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x150e8, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[102]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x150e8, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[102]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x150ec, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[102]/ConditionRule[2]/Condition[1]/Name"]
   - [0x150f0, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[102]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x15100, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[103]/c46ec870[0]/Condition[0]/Name"]
@@ -7376,7 +7376,7 @@ values:
   - [0x15144, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[103]/ConditionRule[1]/Condition[1]/Name"]
   - [0x15148, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[103]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x1514c, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[103]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x15150, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[103]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x15150, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[103]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x15154, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[103]/ConditionRule[2]/Condition[1]/Name"]
   - [0x15158, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[103]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x15168, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[104]/c46ec870[0]/Condition[0]/Name"]
@@ -7390,7 +7390,7 @@ values:
   - [0x151ac, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[104]/ConditionRule[1]/Condition[1]/Name"]
   - [0x151b0, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[104]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x151b4, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[104]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x151b8, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[104]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x151b8, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[104]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x151bc, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[104]/ConditionRule[2]/Condition[1]/Name"]
   - [0x151c0, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[104]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x151d0, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[105]/c46ec870[0]/Condition[0]/Name"]
@@ -7404,7 +7404,7 @@ values:
   - [0x15214, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[105]/ConditionRule[1]/Condition[1]/Name"]
   - [0x15218, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[105]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x1521c, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[105]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x15220, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[105]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x15220, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[105]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x15224, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[105]/ConditionRule[2]/Condition[1]/Name"]
   - [0x15228, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[105]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x15238, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[106]/c46ec870[0]/Condition[0]/Name"]
@@ -7418,7 +7418,7 @@ values:
   - [0x1527c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[106]/ConditionRule[1]/Condition[1]/Name"]
   - [0x15280, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[106]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x15284, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[106]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x15288, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[106]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x15288, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[106]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x1528c, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[106]/ConditionRule[2]/Condition[1]/Name"]
   - [0x15290, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[106]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x152a0, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[107]/c46ec870[0]/Condition[0]/Name"]
@@ -7432,7 +7432,7 @@ values:
   - [0x152e4, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[107]/ConditionRule[1]/Condition[1]/Name"]
   - [0x152e8, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[107]/ConditionRule[1]/Condition[1]/Value"]  # Baseline
   - [0x152ec, key, 0xeeee6acf, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[107]/ConditionRule[2]/Condition[0]/Name"]
-  - [0x152f0, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[107]/ConditionRule[2]/Condition[0]/Value"]
+  - [0x152f0, key, 0xf1c819ad, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[107]/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x152f4, key, 0xcb294e51, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[107]/ConditionRule[2]/Condition[1]/Name"]
   - [0x152f8, key, 0x0f6fb110, "/AISettings/bf2c744c/f37f2a66[1]/3e63d005/Shoot[107]/ConditionRule[2]/Condition[1]/Value"]  # Baseline
   - [0x15314, key, 0xa5c9a652, "/AISettings/bf2c744c/f37f2a66[2]/3e63d005/Shoot[0]/Name"]
@@ -8811,7 +8811,7 @@ values:
   - [0x18264, key, 0xeeee6acf, "/AISettings/ce55641b/407c5123[23]/Context/ConditionRule[0]/Condition[0]/Name"]
   - [0x18268, key, 0x43e941c8, "/AISettings/ce55641b/407c5123[23]/Context/ConditionRule[0]/Condition[0]/Value"]
   - [0x1826c, key, 0xeeee6acf, "/AISettings/ce55641b/407c5123[23]/Context/ConditionRule[1]/Condition[0]/Name"]
-  - [0x18270, key, 0xf1c819ad, "/AISettings/ce55641b/407c5123[23]/Context/ConditionRule[1]/Condition[0]/Value"]
+  - [0x18270, key, 0xf1c819ad, "/AISettings/ce55641b/407c5123[23]/Context/ConditionRule[1]/Condition[0]/Value"]  # ZoneLob
   - [0x18274, key, 0xeeee6acf, "/AISettings/ce55641b/407c5123[23]/Context/ConditionRule[2]/Condition[0]/Name"]
   - [0x18278, key, 0x71198650, "/AISettings/ce55641b/407c5123[23]/Context/ConditionRule[2]/Condition[0]/Value"]  # Volley
   - [0x18288, key, 0xe4725321, "/AISettings/ce55641b/407c5123[24]/43c9be6a/Generic/Preference[0]/Id"]
@@ -10209,7 +10209,7 @@ values:
   - [0x1ad14, key, 0xeeee6acf, "/AISettings/ce55641b/407c5123[77]/Context/ConditionRule[1]/Condition[0]/Name"]
   - [0x1ad18, key, 0x71198650, "/AISettings/ce55641b/407c5123[77]/Context/ConditionRule[1]/Condition[0]/Value"]  # Volley
   - [0x1ad1c, key, 0xeeee6acf, "/AISettings/ce55641b/407c5123[77]/Context/ConditionRule[2]/Condition[0]/Name"]
-  - [0x1ad20, key, 0xf1c819ad, "/AISettings/ce55641b/407c5123[77]/Context/ConditionRule[2]/Condition[0]/Value"]
+  - [0x1ad20, key, 0xf1c819ad, "/AISettings/ce55641b/407c5123[77]/Context/ConditionRule[2]/Condition[0]/Value"]  # ZoneLob
   - [0x1ad30, key, 0xe4725321, "/AISettings/ce55641b/407c5123[78]/43c9be6a/Generic/Preference[0]/Id"]
   - [0x1ad34, float, 0.9, "/AISettings/ce55641b/407c5123[78]/43c9be6a/Generic/Preference[0]/WantedValue"]
   - [0x1ad38, float, 0.3, "/AISettings/ce55641b/407c5123[78]/43c9be6a/Generic/Preference[0]/MaxDelta"]
@@ -10354,7 +10354,7 @@ values:
   - [0x1b130, key, 0x0f6fb110, "/AISettings/ce55641b/407c5123[81]/Context/ConditionRule[0]/Condition[0]/Value"]  # Baseline
   - [0x1b134, key, 0xc0b91099, "/AISettings/ce55641b/407c5123[81]/Context/ConditionRule[0]/Condition[1]/Name"]
   - [0x1b138, key, 0xe95035a9, "/AISettings/ce55641b/407c5123[81]/Context/ConditionRule[0]/Condition[1]/Value"]  # Easy
-  - [0x1b148, key, 0xf1c819ad, "/AISettings/f92edcae/UsedSpace[0]/Id"]
+  - [0x1b148, key, 0xf1c819ad, "/AISettings/f92edcae/UsedSpace[0]/Id"]  # ZoneLob
   - [0x1b158, key, 0x43e941c8, "/AISettings/f92edcae/UsedSpace[1]/Id"]
   - [0x1b168, key, 0x71198650, "/AISettings/f92edcae/UsedSpace[2]/Id"]  # Volley
   - [0x1b178, key, 0xf3065473, "/AISettings/f92edcae/UsedSpace[3]/Id"]

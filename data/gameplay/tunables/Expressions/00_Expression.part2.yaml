@@ -13,6 +13,7 @@ root_type: 0xd2968089
 section: "<Pam::SwingGamePlay::Data::Expressions>/Expression"
 part: 2 of 2
 values:
+  - [0x48c5c, int, 37, "[226]/OperationList/Element[8]<993894c6>/DestValueIndex"]
   - [0x48c60, float, -1.0, "[226]/OperationList/Element[8]<993894c6>/ResponseCurve/Range[0]/InStart"]
   - [0x48c64, float, 0.0, "[226]/OperationList/Element[8]<993894c6>/ResponseCurve/Range[0]/InStop"]
   - [0x48c68, float, 0.0, "[226]/OperationList/Element[8]<993894c6>/ResponseCurve/Range[0]/OutStart"]

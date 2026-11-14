@@ -23,13 +23,16 @@ object (file offset 0x24, see section 3), so the file offset is `0x24 + X`.
 3. **274,020 editable scalars** are dumped from 12 files. Each scalar has its file offset, type and member
    path. `tools/ts4data/patch_tunables.py` writes edited values back in place and verifies the result.
    It can rebuild `Core.arc` (or a venue archive) for Xenia with the existing archive writer.
-4. **Names** (I, G5b): 4,445 of 12,609 target hashes are named (35%; G5 had 2,743, 21%, of which some were
-   junk). Types 651 / 3,678 (G5: 383), members 3,585 / 7,335 (G5: 2,004). The Settings and State roots are
+4. **Names** (I, G5b): 4,456 of 12,609 target hashes are named (35%). G5 had 2,743 of 12,988 by its own
+   count (21%), some of them junk. Types 650 / 3,678 (G5: 383), members 3,582 / 7,335 (G5: 2,004). The Settings and State roots are
    `Pam::SwingGamePlay::Data::SettingsData` / `StateData` (the data tree is `...::SwingData`, from the XPath
    `GamePlayState:/SwingData/State/...`). The dictionary with source and confidence per entry is committed as
-   `data/gameplay/names.yaml` (certain 653, high 1,487, medium 1,293, low 1,012; the 868 two-word `combo2`
-   names carry an expected 14 false hits). Method and CRC caveats: section 2.3. Unnamed members print as 8 hex
-   digits.
+   `data/gameplay/names.yaml` (certain 653, high 1,489, medium 1,307, low 1,007; the 864 two-word `combo2`
+   names carry an expected 14 false hits). It merges G1b's `analyser_names.json` (first, so its confirmed
+   names win over guesses) and the hand entries of G4c / G7, and keeps a `rejected:` list of known false hits.
+   `names.py --check data/gameplay/names.yaml data/gameplay/analyser_names.json` lists hashes that two
+   dictionaries name differently (0 at the time of writing). Method and CRC caveats: section 2.3. Unnamed
+   members print as 8 hex digits.
 5. **Consumer code** (M): `tools/ts4data/xref_fields.py` finds 135 code reads of Settings root fields whose
    access width matches the member type. Each consistent read with a neighbouring read is printed as
    `# code? <addr>` in the YAML. These reads match every documented anchor: cfg+0x134/0x138 (net and let aim
@@ -119,14 +122,16 @@ python3 tools/ts4data/names.py --layout work/disc/root/Layoutall.bin \
     --strings work/disc/core_all orig/54540859/Swing_DLL.dll orig/54540859/disc/Loader_DLL.dll work/disc/root \
               work/disc/tu1_arc --dump-strings work/disc/names/strings.txt \
     --xbin work/disc/core_all/{334e7e0d,623d0979,fa94f637}.bin \
-    --merge work/disc/crc_dict.json data/gameplay/analyser_names.json \
+    --merge data/gameplay/analyser_names.json work/disc/crc_dict.json \
     --out work/disc/values/names.json --yaml data/gameplay/names.yaml --top 3000
 # later runs: --strings work/disc/core_all/{136bf02a,c6d33a45}.bin --strings-from work/disc/names/strings.txt
 ```
 
 (`work/disc/tu1_arc` = the 56 members of Title Update #1 `TitleUpdate.arc`, extracted with `ts4_arc.Arc`;
 TU1's `Layoutall.bin`, sha256 `d734143d...`, has the same 3,642 types as the disc one.) About 7 minutes in
-CPython 3.13. Hand-added entries (any `src` that is not a rule of the tool) are kept on regeneration.
+CPython 3.13. Hand-added entries (any `src` that is not a rule of the tool, e.g. `G4c`, `G7`, `brute4`) and the
+`rejected:` section are kept on regeneration; a rejected name is never re-added. Merge order matters: the first
+`--merge` file wins a conflict unless a later one has higher confidence, and conflicts are printed (`CONFLICT ...`).
 
 * **CRC algebra.** zlib crc32 is affine, so `crc32(P + w) ^ crc32(w)` depends only on `crc32(P)` and `len(w)`.
   The `Parent_Member` rule is therefore *not* two independent 32-bit checks (as section 0 of the G5 version
@@ -232,9 +237,7 @@ constant that the code re-reads every frame. Treat these as defaults.
 ```sh
 ISO="orig/54540859/disc_archive/Top Spin 4 (World) (En,Fr,De,Es,It).iso"
 python3 tools/xiso.py extract "$ISO" work/disc/root Layoutall.bin CoreTech_Xenon.bin
-python3 tools/ts4data/names.py --layout work/disc/root/Layoutall.bin \
-    --strings work/disc/core_all orig/54540859/Swing_DLL.dll work/disc/root \
-    --xbin work/disc/core_all/{334e7e0d,623d0979,fa94f637}.bin --out work/disc/values/names.json  # optional
+# names: see section 2.3 (optional; data/gameplay/names.yaml is committed)
 python3 tools/ts4data/xref_fields.py --dll orig/54540859/Swing_DLL.dll --layout work/disc/root/Layoutall.bin \
     --type 9b4fb082 --out work/disc/values/xref_settings.json                                     # optional
 python3 tools/ts4data/dump_tunables.py --iso "$ISO" --out data/gameplay/tunables

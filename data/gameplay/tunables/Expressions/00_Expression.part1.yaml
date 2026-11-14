@@ -90,7 +90,7 @@ values:
   - [0x684, int, 1, "[37]/VarListSingle/Values/Count"]
   - [0x6ac, key, 0x4fcc3eb8, "[37]/Id"]  # VolleySpeedCoef
   - [0x6b0, int, 11, "[38]/VarListSingle/Values/Count"]
-  - [0x6d8, key, 0xdf1f8733, "[38]/Id"]
+  - [0x6d8, key, 0xdf1f8733, "[38]/Id"]  # InputFiltering
   - [0x6dc, int, 2, "[39]/VarListSingle/Values/Count"]
   - [0x704, key, 0xdaf2ecbd, "[39]/Id"]
   - [0x708, int, 2, "[40]/VarListSingle/Values/Count"]
@@ -45049,4 +45049,3 @@ values:
   - [0x48c44, float, 0.0, "[226]/OperationList/Element[7]<993894c6>/ResponseCurve/Range[1]/OutCoef"]
   - [0x48c48, float, -0.1, "[226]/OperationList/Element[7]<993894c6>/ResponseCurve/Range[1]/OutStop"]
   - [0x48c58, int, 36, "[226]/OperationList/Element[8]<993894c6>/SourceValueIndex"]
-  - [0x48c5c, int, 37, "[226]/OperationList/Element[8]<993894c6>/DestValueIndex"]

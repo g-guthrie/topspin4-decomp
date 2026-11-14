@@ -63,8 +63,8 @@ files:
     values: 79454
     objects: 30914
     parts:
-      - {yaml: Expressions/00_Expression.part1.yaml, section: "<Pam::SwingGamePlay::Data::Expressions>/Expression", values: 45037}
-      - {yaml: Expressions/00_Expression.part2.yaml, section: "<Pam::SwingGamePlay::Data::Expressions>/Expression", values: 34417}
+      - {yaml: Expressions/00_Expression.part1.yaml, section: "<Pam::SwingGamePlay::Data::Expressions>/Expression", values: 45036}
+      - {yaml: Expressions/00_Expression.part2.yaml, section: "<Pam::SwingGamePlay::Data::Expressions>/Expression", values: 34418}
   - file: GameplayInterface.bin
     archive: Core.arc
     key: 0xf26cdc20

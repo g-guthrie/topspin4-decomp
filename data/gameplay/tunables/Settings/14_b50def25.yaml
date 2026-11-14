@@ -51,7 +51,7 @@ values:
   - [0x205f8, float, 0.0, "/AimingConfig[1]/b04737a5/546a639e[1]"]
   - [0x205fc, float, 144.41933, "/AimingConfig[1]/b04737a5/546a639e[2]"]
   - [0x20600, float, 0.0, "/AimingConfig[1]/b04737a5/546a639e[3]"]
-  - [0x20604, key, 0xa4e4dc7f, "/AimingConfig[1]/Id"]
+  - [0x20604, key, 0xa4e4dc7f, "/AimingConfig[1]/Id"]  # ServeSlice
   - [0x20608, float, 300.0, "/AimingConfig[1]/VolleyDistance"]
   - [0x2060c, float, 1300.0, "/AimingConfig[1]/BaselineDistance"]
   - [0x20610, float, 0.0, "/AimingConfig[1]/CenterDistance"]
@@ -73,7 +73,7 @@ values:
   - [0x20698, float, 0.0, "/AimingConfig[2]/b04737a5/546a639e[1]"]
   - [0x2069c, float, 170.46216, "/AimingConfig[2]/b04737a5/546a639e[2]"]
   - [0x206a0, float, 0.0, "/AimingConfig[2]/b04737a5/546a639e[3]"]
-  - [0x206a4, key, 0x60f2096d, "/AimingConfig[2]/Id"]
+  - [0x206a4, key, 0x60f2096d, "/AimingConfig[2]/Id"]  # ServeAdvanced
   - [0x206a8, float, 300.0, "/AimingConfig[2]/VolleyDistance"]
   - [0x206ac, float, 1300.0, "/AimingConfig[2]/BaselineDistance"]
   - [0x206b0, float, 0.0, "/AimingConfig[2]/CenterDistance"]
