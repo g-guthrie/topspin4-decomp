@@ -49,6 +49,8 @@ void fn_885651F8(void *p);                                        /* free */
 void *ts4_crt_nh_malloc_88565258(unsigned int n);                                /* malloc */
 void *fn_88565320(void *p, unsigned int n);                       /* realloc */
 void *fn_8856C298(unsigned int n, unsigned int m);                /* calloc */
+#undef memcpy
+#undef memset
 #define memcpy fn_8857ACB8
 #define memset ts4_memset
 #define free fn_885651F8

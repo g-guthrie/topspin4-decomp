@@ -1,3 +1,6 @@
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wunused-const-variable"
+#endif
 /* Derived from zlib 1.1.4 (zlib license); see THIRD_PARTY_NOTICES.md. Altered to match Swing_DLL.xex. */
 /* Family PNG2: trees.c of the second statically linked zlib copy (object auto_03_883022AC, /Os).
  * Huffman tree construction and block emission for deflate; non-DEBUG build, _tr_tally dead-stripped. */

@@ -7304,3 +7304,101 @@ src/loader/l34_small_o1_830FBB40.c:
 	.text       start:0x832A3AC8 end:0x832A3AF0
 	.text       start:0x833F7BE8 end:0x833F7C00
 	.text       start:0x833FA2A0 end:0x833FA2B8
+
+src/loader/l35_advance_range_o1_834665A0.c:
+	.pdata      start:0x83099B98 end:0x83099BA0
+	.text       start:0x834665A0 end:0x834665F0
+
+src/loader/l35_blit_flags_833C9B78.c:
+	.pdata      start:0x83096990 end:0x830969A0
+	.text       start:0x833C9B78 end:0x833C9C60
+
+src/loader/l35_clamp_s8_833A3B28.c:
+	.text       start:0x833A3B28 end:0x833A3B70
+	.text       start:0x833A3F20 end:0x833A3F78
+
+src/loader/l35_coord_adjust_833C6868.c:
+	.text       start:0x833C6868 end:0x833C68C8
+
+src/loader/l35_copy_clamped_o1_83401490.c:
+	.text       start:0x83401490 end:0x834014D8
+
+src/loader/l35_image_update_833C5700.c:
+	.pdata      start:0x83096870 end:0x83096878
+	.text       start:0x833C5700 end:0x833C5798
+
+src/loader/l35_phys_alloc_o1_8340CF90.c:
+	.pdata      start:0x83097F20 end:0x83097F28
+	.text       start:0x8340CF90 end:0x8340D018
+
+src/loader/l35_query_notify_8348A348.cpp:
+	.pdata      start:0x8309A7A0 end:0x8309A7A8
+	.text       start:0x8348A348 end:0x8348A410
+
+src/loader/l35_queue_cmd2_833A2EA8.c:
+	.pdata      start:0x83096528 end:0x83096530
+	.pdata      start:0x83096538 end:0x83096540
+	.text       start:0x833A2EA8 end:0x833A2F30
+	.text       start:0x833A3120 end:0x833A31B0
+
+src/loader/l35_queue_cmd_833A2C30.c:
+	.pdata      start:0x83096508 end:0x83096510
+	.pdata      start:0x83096518 end:0x83096520
+	.text       start:0x833A2C30 end:0x833A2CB0
+	.text       start:0x833A2D00 end:0x833A2D80
+
+src/loader/l35_read_rect_o1_83482538.c:
+	.pdata      start:0x8309A298 end:0x8309A2A0
+	.text       start:0x83482538 end:0x834825D8
+
+src/loader/l35_submit_entry_833C1068.c:
+	.pdata      start:0x83096768 end:0x83096770
+	.text       start:0x833C1068 end:0x833C10E0
+
+src/loader/l37_crt_o1_83400718.c:
+	.pdata      start:0x83097E50 end:0x83097E58
+	.pdata      start:0x83097F08 end:0x83097F10
+	.pdata      start:0x83099D10 end:0x83099D18
+	.text       start:0x833E4AB8 end:0x833E4AF8
+	.text       start:0x83400718 end:0x83400738
+	.text       start:0x83400778 end:0x834007A0
+	.text       start:0x834007C0 end:0x834007E8
+	.text       start:0x834008F0 end:0x83400920
+	.text       start:0x83400998 end:0x834009F0
+	.text       start:0x83400A80 end:0x83400AB0
+	.text       start:0x83400AB8 end:0x83400AD8
+	.text       start:0x83400EE0 end:0x83400F20
+	.text       start:0x8340BA40 end:0x8340BA68
+	.text       start:0x8340BD08 end:0x8340BD40
+	.text       start:0x8340CE58 end:0x8340CE90
+	.text       start:0x83415810 end:0x83415830
+	.text       start:0x83415BF0 end:0x83415C10
+	.text       start:0x83423438 end:0x83423470
+	.text       start:0x8346C708 end:0x8346C730
+	.text       start:0x8346C7E0 end:0x8346C810
+	.text       start:0x8346D150 end:0x8346D170
+	.text       start:0x83489310 end:0x83489330
+
+src/loader/l37_small_misc_83488F30.c:
+	.pdata      start:0x8309A6A0 end:0x8309A6A8
+	.pdata      start:0x8309A6B8 end:0x8309A6C0
+	.text       start:0x832DE8F8 end:0x832DE938
+	.text       start:0x83323608 end:0x83323630
+	.text       start:0x833C2CB0 end:0x833C2CF0
+	.text       start:0x833D6C20 end:0x833D6C40
+	.text       start:0x833FC458 end:0x833FC490
+	.text       start:0x83488F30 end:0x83488F80
+	.text       start:0x83489068 end:0x834890B0
+	.text       start:0x83489850 end:0x83489880
+	.text       start:0x834898D8 end:0x83489908
+	.text       start:0x8348A690 end:0x8348A6D8
+	.text       start:0x8348A910 end:0x8348A938
+	.text       start:0x8348AA00 end:0x8348AA20
+	.text       start:0x8348ADE0 end:0x8348AE10
+	.text       start:0x8348B8B8 end:0x8348B8D8
+	.text       start:0x83499420 end:0x83499478
+
+src/loader/l37_vecmath_o1_83429458.c:
+	.pdata      start:0x83098850 end:0x83098888
+	.text       start:0x83429458 end:0x834294C0
+	.text       start:0x83429600 end:0x83429C68
