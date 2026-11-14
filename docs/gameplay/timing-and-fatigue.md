@@ -77,9 +77,11 @@ is 2 and the rally clock runs):
 1. Movement load: `a = |second difference of the look-ahead positions at 10 and 20 frames| x
    0.1 x 0.001` (`g_ts4_script_constants+0x2AC`, `+0x80`; I for the geometric meaning). If
    `a > 0.02` (`+0x408`), `SumAcceleration += a`.
-2. Animation load (`fn_8866ECA8`): for each animation tag event of the frame that matches an
-   entry of the `PT+0x618` fatigue table (`/Fatigue` list, entries `{tag, key, cost +8, inside-out
-   extra +0xC, once-flag +0x10}`), `#080853e1 += cost` (+ the extra when `IsInsideOut`).
+2. Animation load (`fn_8866ECA8`): for each animation qualifier of the frame that matches an
+   entry of the `PT+0x618` table `/Fatigue/AnimationFeedback/Qualifier[]` (entries `{Name +0,
+   Value +4, RecoveryValue +8, InsideOut +0xC, #be15a7a9 +0x10}`), `#080853e1 += RecoveryValue`
+   (+ `InsideOut` when `IsInsideOut`). Shipped (D, file 0x2BC30): `Effort` = Low 4, Medium 10,
+   High 15 (InsideOut +1 each), `Recover` -0.1 (InsideOut 0).
 3. FatigueIngame (graph 10) turns the sums into this point's cost `#3122036a`.
 4. **`CurrentVigor = max(0, 1 - (carried + cost) / (2 x capacity))`**.
 

@@ -433,7 +433,8 @@ UNRESOLVED = re.compile(r"unresolved external symbol (\S+)")
 
 
 def build(primary: Path, contexts: list[str], flags: list[str], includes: list[str],
-          toolchain: Path, wibo: Path, workdir: Path) -> tuple[Image, list[MapSymbol], dict[str, str]]:
+          toolchain: Path, wibo: Path, workdir: Path, code_names: set[str] | None = None,
+          verbose: bool = True) -> tuple[Image, list[MapSymbol], dict[str, str]]:
     cl, link = toolchain / "cl.exe", toolchain / "link.exe"
     objects = []
     sources = [("gl", primary)] + [
@@ -456,7 +457,8 @@ def build(primary: Path, contexts: list[str], flags: list[str], includes: list[s
     first = run(base_cmd + ["/FORCE:UNRESOLVED", "/out:probe.dll", *objects], workdir)
     unresolved = sorted({m.group(1) for m in UNRESOLVED.finditer(first.stdout + first.stderr)
                          if not m.group(1).startswith("__imp_")})
-    code_names = {e[0] for e in load_symbols() if e[1] == ".text"}
+    if code_names is None:
+        code_names = {e[0] for e in load_symbols() if e[1] == ".text"}
     stub_c, alias = stub_source(unresolved, code_names)
     (workdir / "lt1stubs.c").write_text(stub_c)
     result = run([str(wibo), str(cl), *BASE_FLAGS, "lt1stubs.c"], workdir)
@@ -471,7 +473,7 @@ def build(primary: Path, contexts: list[str], flags: list[str], includes: list[s
         sys.stdout.write(second.stdout + second.stderr)
         raise SystemExit("link failed")
     for line in (second.stdout + second.stderr).splitlines():
-        if "error" in line or "warning" in line:
+        if verbose and ("error" in line or "warning" in line):
             print("  " + line.strip())
     image = parse_pe((workdir / "out.dll").read_bytes())
     symbols = parse_map((workdir / "out.map").read_text(errors="replace"))
@@ -495,6 +497,71 @@ def function_extent(image: Image, symbols: list[MapSymbol], address: int) -> int
     return (later[0] if later else text_end) - address
 
 
+@dataclass
+class Checked:
+    candidate: str
+    target: str
+    t_start: int
+    result: Result | None      # None: the candidate is not in the linked image
+    c_code: bytes = b""
+    t_code: bytes = b""
+    c_sites: list = field(default_factory=list)
+    t_sites: list = field(default_factory=list)
+
+
+class LazyImage:
+    """The original module image, read only when a pooled constant needs its value."""
+
+    def __init__(self, path: Path):
+        self.path, self.image = path, None
+
+    def read(self, address: int, size: int) -> bytes:
+        if self.image is None:
+            if not self.path.is_file():
+                raise SystemExit(f"{self.path} is needed to compare a pooled constant")
+            self.image = parse_pe(self.path.read_bytes(), base_relocs=False)
+        return self.image.read(address, size)
+
+
+def verify(source: Path, contexts: list[str], flags: list[str], pairs: list[tuple[str, str]],
+           find_target, symbols: list, no_include: bool = False, toolchain: Path = TOOLCHAIN,
+           wibo: Path = WIBO, target_image: Path = TARGET_IMAGE, keep: bool = False,
+           verbose: bool = True) -> tuple[list[Checked], SymbolIndex, SymbolIndex, Path]:
+    """Compile+link once and compare every (candidate, target name) pair.
+
+    find_target(name) -> (start address, code bytes, relocations) reads the split
+    target object; its code bytes are the linked original (Jeff keeps them).
+    """
+    if not (toolchain / "OLEAUT32.dll").is_file():
+        raise SystemExit(f"{toolchain} is not prepared: run tools/fn_check_ltcg.py --setup")
+    known_names = {e[0] for e in symbols}
+    code_names = {e[0] for e in symbols if e[1] == ".text"}
+    t_index = SymbolIndex([(e[0], e[2]) for e in symbols])
+    t_read = LazyImage(target_image).read
+    workdir = Path(tempfile.mkdtemp(prefix="ltcgcheck-", dir=ROOT / "work"))
+    includes = [] if no_include else [c for c, _ in pairs]
+    image, map_symbols, alias = build(source, contexts, flags, includes, toolchain, wibo,
+                                      workdir, code_names, verbose)
+    c_index = SymbolIndex([(s.name, s.address) for s in map_symbols], alias)
+    out = []
+    for cand, tname in pairs:
+        t_start, t_code, t_relocs = find_target(tname)
+        entry = next((s for s in map_symbols if s.name == cand), None)
+        if entry is None:
+            out.append(Checked(cand, tname, t_start, None, t_code=t_code))
+            continue
+        length = function_extent(image, map_symbols, entry.address)
+        c_code = image.read(entry.address, length)
+        c_sites = candidate_sites(image, entry.address, c_code)
+        t_sites = target_sites(t_code, t_start, t_relocs)
+        res = compare(c_code, c_sites, entry.address, c_index, image.read,
+                      t_code, t_sites, t_start, t_index, t_read, known_names)
+        out.append(Checked(cand, tname, t_start, res, c_code, t_code, c_sites, t_sites))
+    if not keep and all(c.result and c.result.ok for c in out):
+        shutil.rmtree(workdir, ignore_errors=True)
+    return out, c_index, t_index, workdir
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -516,17 +583,11 @@ def main() -> int:
         return 0
     if args.source is None or not args.mappings:
         parser.error("source and at least one mapping are required")
-    if not (args.toolchain / "OLEAUT32.dll").is_file():
-        raise SystemExit(f"{args.toolchain} is not prepared: run tools/fn_check_ltcg.py --setup")
 
     from fn_asm import disassemble, find_function
 
     symbols = load_symbols()
     by_addr = {e[2]: e[0] for e in symbols if e[1] == ".text"}
-    known_names = {e[0] for e in symbols}
-    t_index = SymbolIndex([(e[0], e[2]) for e in symbols])
-    target_image = parse_pe(TARGET_IMAGE.read_bytes(), base_relocs=False)
-
     pairs = []
     for mapping in args.mappings:
         cand, _, target = mapping.partition("=")
@@ -535,26 +596,21 @@ def main() -> int:
             raise SystemExit(f"no .text symbol at {target}")
         pairs.append((cand, tname))
 
-    workdir = Path(tempfile.mkdtemp(prefix="ltcgcheck-", dir=ROOT / "work"))
-    includes = [] if args.no_include else [c for c, _ in pairs]
-    image, map_symbols, alias = build(args.source, args.context, args.flags, includes,
-                                      args.toolchain, args.wibo, workdir)
-    c_index = SymbolIndex([(s.name, s.address) for s in map_symbols], alias)
+    def find_target(name):
+        _path, start, code, relocs = find_function(name)
+        return start, code, relocs
+
+    checked, c_index, t_index, workdir = verify(
+        args.source, args.context, args.flags, pairs, find_target, symbols,
+        no_include=args.no_include, toolchain=args.toolchain, wibo=args.wibo, keep=args.keep)
     failures, renames = 0, {}
-    for cand, tname in pairs:
-        entry = next((s for s in map_symbols if s.name == cand), None)
-        if entry is None:
+    for item in checked:
+        cand, tname, t_start, res = item.candidate, item.target, item.t_start, item.result
+        c_code, t_code, c_sites, t_sites = item.c_code, item.t_code, item.c_sites, item.t_sites
+        if res is None:
             print(f"FAIL {cand}: not in the linked image (inlined or discarded?)")
             failures += 1
             continue
-        length = function_extent(image, map_symbols, entry.address)
-        c_code = image.read(entry.address, length)
-        c_sites = candidate_sites(image, entry.address, c_code)
-        _path, t_start, t_code, t_relocs = find_function(tname)
-        t_code = target_image.read(t_start, len(t_code))  # linked bytes, relocations applied
-        t_sites = target_sites(t_code, t_start, t_relocs)
-        res = compare(c_code, c_sites, entry.address, c_index, image.read,
-                      t_code, t_sites, t_start, t_index, target_image.read, known_names)
         if res.ok:
             renames.update(res.renames)
             print(f"MATCH {cand} vs {tname} @ {t_start:08X} size {len(t_code):#x} (ltcg)")
@@ -582,9 +638,7 @@ def main() -> int:
             print(f"{'*' if i in res.diff_words else ' '} {left.ljust(width)} | {right}")
     for old, new in sorted(renames.items()):
         print(f"RENAME {old} -> {new}")
-    if not failures and not args.keep:
-        shutil.rmtree(workdir, ignore_errors=True)
-    elif args.keep or failures:
+    if args.keep or failures:
         print(f"scratch: {workdir}")
     return 1 if failures else 0
 

@@ -120,7 +120,7 @@ TimingState `c11ed16a`, `3fe3a099` (frames to contact), `d2797eb6` (depth differ
 (auto-swing good); hit-point block `c7b7bdac` members `2c63ee31`, `8760acf5`, `420a6cfc`,
 `2f6930a4`, `e00ec629`; `#1407106c`, `#03d2be3d`, `#5cf9de02`, `#07902e50`, `#7bb6a318`,
 `#8ea88f9f`, `#6906754b`, `#7afa6edb`; about 290 graph names; the 11 kernel type names; the
-unresolved PlayerTuning words `baaa713d`, `32b6d5c1`, `8946f070`. A 1-3 word search over 190
+unresolved PlayerTuning words `baaa713d` (PT+0x740, file 0x8E4 = 12: the auto-commit lead in frames, controls s4), `32b6d5c1`, `8946f070`. A 1-3 word search over 190
 gameplay words (GE1, `crc32`) found none of them; the G5b/G4c searches are wider.
 
 ## 10. Progress log

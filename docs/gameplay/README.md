@@ -4,6 +4,12 @@ Working notes from the gameplay-first decompilation (see `docs/gameplay-map.md`
 for the subsystem map). Each file is one work package. Where a note corrects
 the map, the note is newer and wins.
 
+**Start here:** [GAMEPLAY.md](GAMEPLAY.md) is the current end-to-end account of the engine,
+[TUNING.md](TUNING.md) says which data values control each player-felt quantity and how to patch
+them, [OPEN.md](OPEN.md) lists every open item, and [symbols.md](symbols.md) holds GE1's
+function names, prototypes and layouts. The notes below are the evidence; where an older note
+has a superseded passage it carries a pointer to the note that corrects it.
+
 | Note | Package | Main findings |
 |---|---|---|
 | [gp0.md](gp0.md) | Scheduler, recorders, XData glue | Vtable slots ([2] Update, [4] Init, [5] Exit); module order is data (CoreTech_Xenon.bin); gameplay engine singleton and per-instance step order; XData handle protocol; name hashes are zlib crc32 |
@@ -29,6 +35,19 @@ the map, the note is newer and wins.
 | [traits-and-skills.md](traits-and-skills.md) | Every skill/trait with magnitudes (G4b) | 30 working skills, 2 cut; all effects via shot-quality outputs (none touch ball parameters); checked against the community reference; `data/gameplay/traits_skills.yaml` |
 | [movement-and-animation.md](movement-and-animation.md) | Movement and animation end to end (G6) | Clip record and qualifier masks decoded (46 types), selection-procedure filter DSL, move-set sectors, transition matrix/rules/events, clip clock (gp7 "ratio" is FrameCount), Dive volley trigger, special-swing classes and rewards; `tools/ts4data/anim_rules.py`, `data/gameplay/animation_rules.yaml`, `ref/gameplay/locomotion.c`, `anim_select.c` |
 | [community-reference.md](community-reference.md) | Public documentation (R1) | Manual, patch notes, press and community claims with sources and confidence; 26 hypotheses for code verification; `data/gameplay/skills_community.yaml` |
+| [GAMEPLAY.md](GAMEPLAY.md) | Consolidated account (GE1) | One shot from pad to score with real numbers and links; supersedes the summaries of older notes |
+| [TUNING.md](TUNING.md) | Tuning guide (GE1) | Per felt quantity: data values, shipped numbers, YAML paths, patch workflow; code-only constants flagged |
+| [OPEN.md](OPEN.md) | Open items (GE1) | Every open/inferred/unnamed item by subsystem, what would settle it, status and progress log |
+| [symbols.md](symbols.md) | Names and layouts (GE1) | Functions, prototypes, AimingState/TimingState/Fatigue/AimingConfig layouts, script constants |
+| [aiming.md](aiming.md) | Aim point (GE1) | Stick to landing target: selector `fn_886935A0`, 25 AimingConfig rows of four zones x four quads, QuadEfficiency, DeepDeviation, Out path; `tools/ts4data/aim_tables.py`, `ref/gameplay/aim.c` |
+| [ai-inputs.md](ai-inputs.md) | AI inputs (GE1) | AI component weights to pad-equivalent inputs by weighted random draws (stroke, nine aim directions, Risk, follow-to-net, power); corrects movement-and-ai B.2 |
+| [timing-and-fatigue.md](timing-and-fatigue.md) | Timing and vigor (GE1) | TimingValue from frames-to-ball (perfect = 20 frames), TimingAbility inert in retail; vigor per frame and between points; `ref/gameplay/timing.c`, `fatigue.c` |
+| [shot-templates.md](shot-templates.md) | Shot template decoder | Template field meanings and what the numbers say |
+| [movement-and-ai.md](movement-and-ai.md) | Movement planner and opponent input | Planner states, AI input path (B.2 aim corrected by ai-inputs.md) |
+| [rules-and-scoring.md](rules-and-scoring.md) | Rules and scoring | Standard scoring class, tie-break serving and ends, serve rules, umpire calls; `ref/gameplay/rules.c` |
+| [stats-swing-clipfit.md](stats-swing-clipfit.md) | Stats, swing window, clip fit | Stats application, swing-selection window, clip-fit cost |
+| [title-update-balance.md](title-update-balance.md) | Title Update 1 | April/May 2011 balance changes in data; September 2011 changes absent |
+| [analyser-graphs.md](analyser-graphs.md) | Analyser graph format (early) | Superseded in detail by graphs-decoded.md |
 
 Readable C for understood but not yet byte-matching functions lives in
 `src/xbox360/drafts/`. Drafts are not part of the matching build and do not
