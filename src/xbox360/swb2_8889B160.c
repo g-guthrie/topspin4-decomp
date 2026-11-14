@@ -2,7 +2,7 @@
 /* Family SWB2 (jump-table switch): expat scanRef (normal encoding). One function per file (fn_check label names repeat). */
 #include "swb2_expat.h"
 
-int fn_88899350(const SwbEnc *enc, const char *ptr, const char *end, const char **next);
+int ex5_xml_scan_char_ref_normal_88899350(const SwbEnc *enc, const char *ptr, const char *end, const char **next);
 
 int ts4_xml_scan_ref_8889B160(const SwbEnc *enc, const char *ptr, const char *end, const char **next)
 {
@@ -32,7 +32,7 @@ int ts4_xml_scan_ref_8889B160(const SwbEnc *enc, const char *ptr, const char *en
         ptr += 4;
         break;
     case SWB_BT_NUM:
-        return fn_88899350(enc, ptr + 1, end, next);
+        return ex5_xml_scan_char_ref_normal_88899350(enc, ptr + 1, end, next);
     default:
         *next = ptr;
         return SWB_TOK_INVALID;

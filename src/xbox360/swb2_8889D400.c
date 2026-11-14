@@ -2,8 +2,8 @@
 /* Family SWB2 (jump-table switch): expat entityValueTok for big-endian UTF-16. One function per file (fn_check label names repeat). */
 #include "swb2_expat.h"
 
-int fn_8889BDB8(const SwbEnc *enc, const unsigned char *ptr, const unsigned char *end, const unsigned char **next);
-int fn_888961E0(const SwbEnc *enc, const unsigned char *ptr, const unsigned char *end, const unsigned char **next);
+int ex5_xml_scan_ref_big2_8889BDB8(const SwbEnc *enc, const unsigned char *ptr, const unsigned char *end, const unsigned char **next);
+int ex5_xml_scan_percent_big2_888961E0(const SwbEnc *enc, const unsigned char *ptr, const unsigned char *end, const unsigned char **next);
 
 int ts4_xml_entity_value_tok_big2_8889D400(const SwbEnc *enc, const unsigned char *ptr, const unsigned char *end, const unsigned char **next)
 {
@@ -29,12 +29,12 @@ int ts4_xml_entity_value_tok_big2_8889D400(const SwbEnc *enc, const unsigned cha
             break;
         case SWB_BT_AMP:
             if (ptr == start)
-                return fn_8889BDB8(enc, ptr + 2, end, next);
+                return ex5_xml_scan_ref_big2_8889BDB8(enc, ptr + 2, end, next);
             *next = ptr;
             return 6;
         case 30:
             if (ptr == start) {
-                int tok = fn_888961E0(enc, ptr + 2, end, next);
+                int tok = ex5_xml_scan_percent_big2_888961E0(enc, ptr + 2, end, next);
                 return (tok == 22) ? 0 : tok;
             }
             *next = ptr;

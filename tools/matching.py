@@ -28619,6 +28619,105 @@ MATCHING_UNITS = (
         "object": "ex3_zlib_inftrees.obj",
         "symbols": {"ex3_inflate_table_88873AB0": 1328},
     },
+    {
+        "source": "src/xbox360/ex5_xmltok_attribute_value_little2_8889E258.c",
+        "object": "ex5_xmltok_attribute_value_little2_8889E258.obj",
+        "symbols": {"ex5_xml_attribute_value_tok_little2_8889E258": 572},
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_char_ref_16.c",
+        "object": "ex5_xmltok_char_ref_16.obj",
+        "symbols": {
+            "ex5_xml_scan_char_ref_big2_8889A2A8": 272,
+            "ex5_xml_scan_char_ref_little2_8889A5C8": 272,
+        },
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_char_ref_normal_88899350.c",
+        "object": "ex5_xmltok_char_ref_normal_88899350.obj",
+        "symbols": {"ex5_xml_scan_char_ref_normal_88899350": 148},
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_content_big2_888A01B0.c",
+        "object": "ex5_xmltok_content_big2_888A01B0.obj",
+        "symbols": {"ex5_xml_content_tok_big2_888A01B0": 1028},
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_decl_big2_8889A3B8.c",
+        "object": "ex5_xmltok_decl_big2_8889A3B8.obj",
+        "symbols": {"ex5_xml_scan_decl_big2_8889A3B8": 524},
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_end_tag_16.c",
+        "object": "ex5_xmltok_end_tag_16.obj",
+        "symbols": {
+            "ex5_xml_scan_end_tag_big2_88896578": 820,
+            "ex5_xml_scan_end_tag_little2_88898678": 804,
+        },
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_entity_value_little2_8889E008.c",
+        "object": "ex5_xmltok_entity_value_little2_8889E008.obj",
+        "symbols": {"ex5_xml_entity_value_tok_little2_8889E008": 592},
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_find_encoding.c",
+        "object": "ex5_xmltok_find_encoding.obj",
+        "symbols": {
+            "ex5_xmltok_find_encoding_888999E0": 196,
+            "ex5_xmltok_find_encoding_88899B28": 196,
+        },
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_hex_char_ref_16.c",
+        "object": "ex5_xmltok_hex_char_ref_16.obj",
+        "symbols": {
+            "ex5_xml_scan_hex_char_ref_big2_88896488": 236,
+            "ex5_xml_scan_hex_char_ref_little2_88898588": 236,
+        },
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_percent_16.c",
+        "object": "ex5_xmltok_percent_16.obj",
+        "symbols": {
+            "ex5_xml_scan_percent_big2_888961E0": 676,
+            "ex5_xml_scan_percent_little2_888982F0": 660,
+        },
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_pi_16.c",
+        "object": "ex5_xmltok_pi_16.obj",
+        "symbols": {
+            "ex5_xml_scan_pi_big2_88896BE8": 1144,
+            "ex5_xml_scan_pi_little2_88898CD8": 1128,
+        },
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_pi_normal_888993E8.c",
+        "object": "ex5_xmltok_pi_normal_888993E8.obj",
+        "symbols": {"ex5_xml_scan_pi_normal_888993E8": 1156},
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_pound_name_16.c",
+        "object": "ex5_xmltok_pound_name_16.obj",
+        "symbols": {
+            "ex5_xml_scan_pound_name_big2_88895F30": 684,
+            "ex5_xml_scan_pound_name_little2_88898050": 668,
+        },
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_pseudo_attr_88894E60.c",
+        "object": "ex5_xmltok_pseudo_attr_88894E60.obj",
+        "symbols": {"ex5_xmltok_parse_pseudo_attribute_88894E60": 732},
+    },
+    {
+        "source": "src/xbox360/ex5_xmltok_ref_16.c",
+        "object": "ex5_xmltok_ref_16.obj",
+        "symbols": {
+            "ex5_xml_scan_ref_big2_8889BDB8": 680,
+            "ex5_xml_scan_ref_little2_8889C890": 664,
+        },
+    },
 )
 
 

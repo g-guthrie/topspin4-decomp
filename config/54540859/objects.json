@@ -2528,6 +2528,66 @@
       "src/xbox360/ex3_zlib_inftrees.c": {
         "status": "Matching",
         "source": "xbox360/ex3_zlib_inftrees.c"
+      },
+      "src/xbox360/ex5_xmltok_attribute_value_little2_8889E258.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_attribute_value_little2_8889E258.c"
+      },
+      "src/xbox360/ex5_xmltok_char_ref_16.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_char_ref_16.c"
+      },
+      "src/xbox360/ex5_xmltok_char_ref_normal_88899350.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_char_ref_normal_88899350.c"
+      },
+      "src/xbox360/ex5_xmltok_content_big2_888A01B0.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_content_big2_888A01B0.c"
+      },
+      "src/xbox360/ex5_xmltok_decl_big2_8889A3B8.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_decl_big2_8889A3B8.c"
+      },
+      "src/xbox360/ex5_xmltok_end_tag_16.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_end_tag_16.c"
+      },
+      "src/xbox360/ex5_xmltok_entity_value_little2_8889E008.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_entity_value_little2_8889E008.c"
+      },
+      "src/xbox360/ex5_xmltok_find_encoding.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_find_encoding.c"
+      },
+      "src/xbox360/ex5_xmltok_hex_char_ref_16.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_hex_char_ref_16.c"
+      },
+      "src/xbox360/ex5_xmltok_percent_16.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_percent_16.c"
+      },
+      "src/xbox360/ex5_xmltok_pi_16.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_pi_16.c"
+      },
+      "src/xbox360/ex5_xmltok_pi_normal_888993E8.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_pi_normal_888993E8.c"
+      },
+      "src/xbox360/ex5_xmltok_pound_name_16.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_pound_name_16.c"
+      },
+      "src/xbox360/ex5_xmltok_pseudo_attr_88894E60.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_pseudo_attr_88894E60.c"
+      },
+      "src/xbox360/ex5_xmltok_ref_16.c": {
+        "status": "Matching",
+        "source": "xbox360/ex5_xmltok_ref_16.c"
       }
     }
   }

@@ -3,7 +3,7 @@
 #include "swb2_expat.h"
 
 int fn_8889F878(const SwbEnc *enc, const unsigned char *ptr, const unsigned char *end, const unsigned char **next);
-int fn_8889C890(const SwbEnc *enc, const unsigned char *ptr, const unsigned char *end, const unsigned char **next);
+int ex5_xml_scan_ref_little2_8889C890(const SwbEnc *enc, const unsigned char *ptr, const unsigned char *end, const unsigned char **next);
 
 int ts4_xml_content_tok_16_888A05B8(const SwbEnc *enc, const unsigned char *ptr, const unsigned char *end, const unsigned char **next)
 {
@@ -22,7 +22,7 @@ int ts4_xml_content_tok_16_888A05B8(const SwbEnc *enc, const unsigned char *ptr,
     case SWB_BT_LT:
         return fn_8889F878(enc, ptr + 2, end, next);
     case SWB_BT_AMP:
-        return fn_8889C890(enc, ptr + 2, end, next);
+        return ex5_xml_scan_ref_little2_8889C890(enc, ptr + 2, end, next);
     case SWB_BT_CR:
         ptr += 2;
         if (ptr == end)

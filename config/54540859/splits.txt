@@ -35710,3 +35710,78 @@ src/xbox360/nm2_gp3_groups.c:
 src/xbox360/ex3_zlib_inftrees.c:
 	.pdata      start:0x8812D610 end:0x8812D618
 	.text       start:0x88873AB0 end:0x88873FE0
+
+src/xbox360/ex5_xmltok_attribute_value_little2_8889E258.c:
+	.pdata      start:0x8812E198 end:0x8812E1A0
+	.text       start:0x8889E258 end:0x8889E494
+
+src/xbox360/ex5_xmltok_char_ref_16.c:
+	.pdata      start:0x8812E100 end:0x8812E108
+	.pdata      start:0x8812E110 end:0x8812E118
+	.text       start:0x8889A2A8 end:0x8889A3B8
+	.text       start:0x8889A5C8 end:0x8889A6D8
+
+src/xbox360/ex5_xmltok_char_ref_normal_88899350.c:
+	.text       start:0x88899350 end:0x888993E4
+
+src/xbox360/ex5_xmltok_content_big2_888A01B0.c:
+	.pdata      start:0x8812E1C8 end:0x8812E1D0
+	.text       start:0x888A01B0 end:0x888A05B4
+
+src/xbox360/ex5_xmltok_decl_big2_8889A3B8.c:
+	.pdata      start:0x8812E108 end:0x8812E110
+	.text       start:0x8889A3B8 end:0x8889A5C4
+
+src/xbox360/ex5_xmltok_end_tag_16.c:
+	.pdata      start:0x8812E050 end:0x8812E058
+	.pdata      start:0x8812E0A8 end:0x8812E0B0
+	.text       start:0x88896578 end:0x888968AC
+	.text       start:0x88898678 end:0x8889899C
+
+src/xbox360/ex5_xmltok_entity_value_little2_8889E008.c:
+	.pdata      start:0x8812E190 end:0x8812E198
+	.text       start:0x8889E008 end:0x8889E258
+
+src/xbox360/ex5_xmltok_find_encoding.c:
+	.pdata      start:0x8812E0D0 end:0x8812E0D8
+	.pdata      start:0x8812E0E0 end:0x8812E0E8
+	.text       start:0x888999E0 end:0x88899AA4
+	.text       start:0x88899B28 end:0x88899BEC
+
+src/xbox360/ex5_xmltok_hex_char_ref_16.c:
+	.pdata      start:0x8812E048 end:0x8812E050
+	.pdata      start:0x8812E0A0 end:0x8812E0A8
+	.text       start:0x88896488 end:0x88896574
+	.text       start:0x88898588 end:0x88898674
+
+src/xbox360/ex5_xmltok_percent_16.c:
+	.pdata      start:0x8812E040 end:0x8812E048
+	.pdata      start:0x8812E098 end:0x8812E0A0
+	.text       start:0x888961E0 end:0x88896484
+	.text       start:0x888982F0 end:0x88898584
+
+src/xbox360/ex5_xmltok_pi_16.c:
+	.pdata      start:0x8812E060 end:0x8812E068
+	.pdata      start:0x8812E0B8 end:0x8812E0C0
+	.text       start:0x88896BE8 end:0x88897060
+	.text       start:0x88898CD8 end:0x88899140
+
+src/xbox360/ex5_xmltok_pi_normal_888993E8.c:
+	.pdata      start:0x8812E0C8 end:0x8812E0D0
+	.text       start:0x888993E8 end:0x8889986C
+
+src/xbox360/ex5_xmltok_pound_name_16.c:
+	.pdata      start:0x8812E038 end:0x8812E040
+	.pdata      start:0x8812E090 end:0x8812E098
+	.text       start:0x88895F30 end:0x888961DC
+	.text       start:0x88898050 end:0x888982EC
+
+src/xbox360/ex5_xmltok_pseudo_attr_88894E60.c:
+	.pdata      start:0x8812E010 end:0x8812E018
+	.text       start:0x88894E60 end:0x8889513C
+
+src/xbox360/ex5_xmltok_ref_16.c:
+	.pdata      start:0x8812E150 end:0x8812E158
+	.pdata      start:0x8812E160 end:0x8812E168
+	.text       start:0x8889BDB8 end:0x8889C060
+	.text       start:0x8889C890 end:0x8889CB28
