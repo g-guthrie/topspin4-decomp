@@ -1118,6 +1118,15 @@ class K6Tests(unittest.TestCase):
         out = xforms.sv_all(body, [("fn_88001000", 1)])
         self.assertEqual(out, ["    fn_88001000((ts4_word)a0, *(ts4_sv *)((char *)(ts4_word)(a1) + 8));\n"])
 
+    def test_u64_parameter_from_rldicl_and_clrrwi(self):
+        t = ["mflr r12", "stw r12,-0x8(r1)", "std r31,-0x10(r1)", "stwu r1,-0x60(r1)", "mr r31,r4",
+             "rldicl r4,r31,32,32", "bl 0x0 -> 0x88001000   ; REL24 fn_88001000", "clrrwi r4,r31,0",
+             "bl 0x0 -> 0x88001000   ; REL24 fn_88001000", "addi r1,r1,0x60", "lwz r12,-0x8(r1)", "mtlr r12",
+             "ld r31,-0x10(r1)", "blr"]
+        r = gen(t, mode=2)
+        self.assertEqual(r["sig"], "ts4_word NAME(ts4_word a0, ts4_u64 a1)")
+        self.assertIn("(ts4_word)(ts4_word)a1)", r["body"])
+
     def test_perm_u64_parameter(self):
         import perm
         b, s = perm.m_u64("    f((ts4_word)((ts4_u64)a1 >> 32));\n    f((ts4_word)(a1 & 0xffffffff));\n",

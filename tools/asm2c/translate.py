@@ -2948,15 +2948,29 @@ def _gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
         return dict(kind='vthunk', detail=[f'slot{off // 4}'], sig='', body='', externs=[], protos={},
                     vthunk=off)
     try:
-        return _gen1(lines_all, env, mode, orient, infer_signed, vol)
+        return u64_params(_gen1(lines_all, env, mode, orient, infer_signed, vol))
     except Skip as e:
         if str(e) != 'irregular exit':
             raise
     Gen.ljoin = True
     try:
-        return _gen1(lines_all, env, mode, orient, infer_signed, vol)
+        return u64_params(_gen1(lines_all, env, mode, orient, infer_signed, vol))
     finally:
         Gen.ljoin = False
+
+
+def u64_params(res):
+    """A word parameter used as both halves of a 64-bit value (`(ts4_u64)aN >> 32` from
+    rldicl, `(aN & 0xffffffff)` from `clrrwi rK,rX,0`) is a ts4_u64 parameter: MSVC emits
+    `clrrwi rK,rX,0` for the conversion of a 64-bit integer to a word."""
+    b, sig = res.get('body', ''), res.get('sig', '')
+    for p in dict.fromkeys(re.findall(r'\((a\d+) & 0xffffffff\)', b)):
+        if f'(ts4_u64){p} >> 32' in b and re.search(r'\bts4_word ' + p + r'\b', sig):
+            b = b.replace(f'({p} & 0xffffffff)', f'(ts4_word){p}')
+            sig = re.sub(r'\bts4_word ' + p + r'\b', 'ts4_u64 ' + p, sig)
+    if b != res.get('body', ''):
+        res = dict(res, body=b, sig=sig)
+    return res
 
 
 def _gen1(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):

@@ -8,11 +8,12 @@ section 1, docs/gameplay/df.md 4.x, measured on the retail disc in docs/gameplay
 All integers/floats are big-endian.  Every ``rel`` is a signed 32-bit offset relative to the address
 of the field that holds it.  A row is 0x8C bytes (``row``); ``tpl = row + 0x18``:
 
-  row+0x00 u32 row type 0x85B71A2B   (Settings.bin only)
-  row+0x04 u32 name hash             crc32 of the template name ("FlatNormal", "ServeSlice", ...)
-  row+0x08 u32 group hash            (0, or e.g. crc32("FlatReturn"))
-  row+0x0C u32 base hash             (0 or a name hash; a related template)
-  row+0x10 / +0x14  {rel or -1}      two optional pointers to a float block (meaning unknown)
+  row+0x00 u32 row type 0x85B71A2B   (Settings.bin only) class of the selector object X built from the row
+  row+0x04 u32 name hash             crc32 of the template name; X.init (fn_886707C8) looks it up in the aim table
+  row+0x08 u32 group hash            (0, or e.g. crc32("FlatReturn")): second aim-table key -> X+0x0C
+  row+0x0C u32 base hash             (0 or a name hash): third aim-table key -> X+0x10
+  row+0x10 {rel or -1}               serve rows: pointer to a serve parameter sub-record (speed, spin elements)
+  row+0x14 {rel or -1}               stroke rows: pointer to 20 (lo, hi) float ranges -> selector entry+0x10
   tpl+0x00 node0 {rel, type, kind}   primary node (curve of the distance), kind = solver kind
   tpl+0x0C node1 {rel, type, kind}   secondary node, kind = secondary kind
   tpl+0x18/+0x24/+0x30 {rel,count=2,cap=2}  -> 2 elements {rel,type} = (lo, hi): spin_a, spin_c, spin_b
@@ -27,6 +28,8 @@ Value types ({rel,type}): 0x33799CCE float, 0xF9F12A60 curve20 (keys {x0,x1,y0,s
 Usage:
   templates.py --settings Settings.bin [--state State.bin] [--out templates_decoded.json]
   templates.py --arc Core.arc [--iso DISC.iso] ...    (extracts entries 0x334E7E0D / 0x623D0979 via tools/ts4_arc.py)
+  templates.py --settings S --state ST --yaml data/gameplay/ball_templates.yaml \
+               --trajectories data/gameplay/ball_trajectories.csv [--curve-mode step|ramp|both]
 """
 from __future__ import annotations
 
@@ -154,8 +157,15 @@ def read_value(b: Buf, addr: int):
     return {"type": "unknown", "type_hash": "%08x" % typ}
 
 
-def eval_curve20(keys, x):
-    """fn_8817A688: last key with x0 <= x (first if none); y = y0 + slope * clamp(x - x0, 0, x1 - x0)."""
+CURVE_MODES = ("step", "ramp")
+
+
+def eval_curve20(keys, x, mode="step"):
+    """fn_8817A688: last key with x0 <= x (first if none); y = y0 + slope * clamp(x - x0, 0, x1 - x0).
+
+    mode "step" uses the stored slope (+0x0C, 0.0 in every retail key: the curve holds y0);
+    mode "ramp" assumes a load-time fixup sets slope = (y1 - y0) / (x1 - x0) from the end value y1 at
+    +0x10 (docs/gameplay/analyser-graphs.md section 4, open question)."""
     if not keys:
         return 0.0
     sel = keys[0]
@@ -164,6 +174,8 @@ def eval_curve20(keys, x):
             break
         sel = k
     x0, x1, y0, slope = sel[0], sel[1], sel[2], sel[3]
+    if mode == "ramp" and x1 != x0:
+        slope = (sel[4] - y0) / (x1 - x0)
     t = max(min(x - x0, x1 - x0), 0.0)
     return y0 + t * slope
 
@@ -203,13 +215,13 @@ def eval_table2d(rows, a, bval):
     return v0
 
 
-def eval_value(val, x, y=0.0):
+def eval_value(val, x, y=0.0, mode="step"):
     """Evaluate a decoded value dict (x = distance in cm for curves/tables, y = hit height in cm for tables)."""
     t = val["type"]
     if t == "const":
         return val["value"]
     if t == "curve20":
-        return eval_curve20(val["keys"], x)
+        return eval_curve20(val["keys"], x, mode)
     if t == "table2d":
         return eval_table2d(val["rows"], x, y)
     return 0.0
@@ -285,8 +297,12 @@ def decode_row(b: Buf, row: int, names: dict):
         r["group"] = nm(hdr[2]) if hdr[2] else None
         r["base_hash"] = "%08x" % hdr[3]
         r["base"] = nm(hdr[3]) if hdr[3] else None
-        r["aux_ptr_10"] = read_aux(b, row + 0x10)
-        r["aux_ptr_14"] = read_aux(b, row + 0x14)
+        r["aux_ptr_10"] = read_aux(b, row + 0x10, 8)
+        if r["aux_ptr_10"] and b.inb(r["aux_ptr_10"]["addr"] + 0x20, 16):
+            # serve sub-record: 8 scalar floats (+0x18 speed km/h, +0x1C ?) then two {rel, type} elements
+            base = r["aux_ptr_10"]["addr"]
+            r["aux_ptr_10"]["elements"] = [read_value(b, base + 0x20), read_value(b, base + 0x28)]
+        r["aux_ptr_14"] = read_aux(b, row + 0x14, 40)
         r["trailer_name_hash"] = "%08x" % b.u32(row + 0x88)
     return r
 
@@ -322,6 +338,200 @@ def summarize(dec):
     return "\n".join(lines)
 
 
+# ---------------------------------------------------------------- named view, evaluated tables, YAML / CSV writers
+
+SETTINGS_CFG = 0x24          # Settings.bin root typed struct (cfg); ball+0x360 = row file offset - cfg
+DIST_GRID_CM = [500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000]
+HEIGHT_GRID_CM = [60, 90, 120, 150, 180, 250]
+SPIN_GRID = [-0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4]
+BLENDS = [0.0, 0.5, 1.0]
+VALUE_UNITS = {"DropTime": "s", "InitialSpeed": "km/h", "BounceSpeed": "km/h", "AverageSpeed": "km/h", "Apogee": "m"}
+
+
+def _named_value(v):
+    t = v["type"]
+    if t == "const":
+        return {"type": "const", "value": v["value"]}
+    if t == "curve20":
+        return {"type": "curve20", "keys": [dict(zip(("x0", "x1", "y0", "slope", "y1"), k)) for k in v["keys"]]}
+    if t == "table2d":
+        return {"type": "table2d", "rows": [{"a_dist_cm": r["a"], "keys_over_height_cm": [dict(zip(("x0", "x1", "y0", "y1"), k))
+                                                                                        for k in r["keys"]]} for r in v["rows"]]}
+    return dict(v)
+
+
+def _c16(keys):
+    return [dict(zip(("x0", "x1", "y0", "y1"), k)) for k in keys]
+
+
+def _r(x, n=4):
+    return float("%.*g" % (n + 2, x))
+
+
+def named_row(r, mode_list=CURVE_MODES):
+    """One template row with every field named and the speed/time, spin and bounce tables evaluated."""
+    out = {
+        "index": r["index"], "file": r["file"], "row_offset": "0x%X" % r["row_offset"],
+        "ball_0x360": ("0x%X" % (r["row_offset"] - SETTINGS_CFG)) if r["file"] == "Settings.bin" else None,
+        "name": r.get("name"), "name_hash": r.get("name_hash"),
+        "id": r.get("trailer_name_hash"),
+        "header": {
+            "row_type": r["header_words"][0],
+            "aim_key_group": r.get("group") or r.get("group_hash"),
+            "aim_key_base": r.get("base") or r.get("base_hash"),
+            "serve_params_rel": r["header_words"][4], "stroke_ranges_rel": r["header_words"][5],
+        },
+        "serve_params": None if not r.get("aux_ptr_10") else {
+            "floats": r["aux_ptr_10"].get("floats"),
+            "elements": [_named_value(v) for v in r["aux_ptr_10"].get("elements", [])]},
+        "stroke_ranges_lo_hi": None if not (r.get("aux_ptr_14") or {}).get("floats") else
+            [r["aux_ptr_14"]["floats"][i:i + 2] for i in range(0, 40, 2)],
+        "kind": r["kind"], "secondary_kind": r["secondary_kind"],
+        "primary_unit": VALUE_UNITS.get(r["kind"]),
+        "secondary_unit": ("km/h delta" if r["secondary_kind"] in ("InitialSpeed", "BounceSpeed")
+                           else "s offset" if r["secondary_kind"] == "DropTime" else VALUE_UNITS.get(r["secondary_kind"])),
+        "T": r["T"], "k_at_a4_0.06": _r(r["T"] / 0.06),
+        "primary": _named_value(r["primary"]), "secondary": _named_value(r["secondary"]),
+        "spin": {name: {"lo": _named_value(r["spin"][key]["lo"]), "hi": _named_value(r["spin"][key]["hi"])}
+                 for name, key in (("vertical_a", "a"), ("lateral_b", "b"), ("along_c", "c"))},
+        "bounce": {"speed_loss_vs_spin_a": _c16(r["bounce"]["speed_loss"]),
+                   "spin_decay_vs_spin_a": _c16(r["bounce"]["spin_decay"]),
+                   "out_elevation_vs_in_elevation_rad": _c16(r["bounce"]["out_elevation"]),
+                   "yaw_kick_vs_spin_b_rad": _c16(r["bounce"]["yaw_kick"])},
+    }
+    ev = {}
+    for mode in mode_list:
+        tab = {}
+        for which in ("primary", "secondary"):
+            v = r[which]
+            if v["type"] == "table2d":
+                tab[which] = {"h%d" % h: [_r(eval_value(v, d, h, mode)) for d in DIST_GRID_CM] for h in HEIGHT_GRID_CM}
+            else:
+                tab[which] = [_r(eval_value(v, d, 100.0, mode)) for d in DIST_GRID_CM]
+        h_m = 2.7 if (r.get("name") or "").startswith("Serve") else 1.0
+        spins = {}
+        for name, key in (("a", "a"), ("b", "b"), ("c", "c")):
+            lo = eval_value(r["spin"][key]["lo"], h_m, 0.0, mode)
+            hi = eval_value(r["spin"][key]["hi"], h_m, 0.0, mode)
+            spins[name] = [_r(lo + (hi - lo) * bl) for bl in BLENDS]
+        tab["spin_at_blend_0_0.5_1"] = spins
+        tab["spin_eval_height_m"] = h_m
+        ev[mode] = tab
+    out["evaluated"] = {"distance_grid_cm": DIST_GRID_CM, **ev}
+    out["bounce_evaluated"] = {
+        "spin_a_grid": SPIN_GRID,
+        "speed_factor": [_r(1.0 - eval_curve16(r["bounce"]["speed_loss"], s)) for s in SPIN_GRID],
+        "spin_retained": [_r(1.0 - eval_curve16(r["bounce"]["spin_decay"], s)) for s in SPIN_GRID],
+        "tilt_weight": [_r(abs(5.0 * s)) for s in SPIN_GRID],
+    }
+    return out
+
+
+def _yaml_scalar(v):
+    if v is None:
+        return "null"
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, (int, float)):
+        return repr(v)
+    s = str(v)
+    if s == "" or any(c in s for c in ":#{}[],&*!|>'\"%@`") or s.strip() != s or s.lower() in ("null", "true", "false", "yes", "no"):
+        return '"%s"' % s.replace("\\", "\\\\").replace('"', '\\"')
+    return s
+
+
+def to_yaml(obj, indent=0):
+    """Minimal YAML emitter (block mappings, flow lists of scalars, block lists of mappings)."""
+    pad = "  " * indent
+    lines = []
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if isinstance(v, dict) and v:
+                lines.append("%s%s:" % (pad, k))
+                lines.append(to_yaml(v, indent + 1))
+            elif isinstance(v, list) and v and isinstance(v[0], (dict, list)):
+                lines.append("%s%s:" % (pad, k))
+                for item in v:
+                    if isinstance(item, dict):
+                        sub = to_yaml(item, indent + 2).split("\n")
+                        sub[0] = "%s- %s" % ("  " * (indent + 1), sub[0].lstrip())
+                        lines.extend(sub)
+                    else:
+                        lines.append("%s- [%s]" % ("  " * (indent + 1), ", ".join(_yaml_scalar(x) for x in item)))
+            elif isinstance(v, list):
+                lines.append("%s%s: [%s]" % (pad, k, ", ".join(_yaml_scalar(x) for x in v)))
+            elif isinstance(v, dict):
+                lines.append("%s%s: {}" % (pad, k))
+            else:
+                lines.append("%s%s: %s" % (pad, k, _yaml_scalar(v)))
+    return "\n".join(lines)
+
+
+def _header(cmd, dec, extra=()):
+    out = ["Generated by: %s" % cmd, "Tool: tools/ts4data/templates.py (Python %s, standard library)" % sys.version.split()[0]]
+    for f in dec["files"]:
+        out.append("Source: %s %d bytes sha256 %s" % (f["file"], f["size"], f["sha256"]))
+    out.extend(extra)
+    return out
+
+
+def write_yaml(dec, path, cmd, mode):
+    rows = [named_row(r) for f in dec["files"] for r in f["rows"]]
+    hdr = _header(cmd, dec, [
+        "Shot-template rows of Core.arc Settings.bin (+ State.bin), every field named; spec docs/gameplay/ball-physics.md.",
+        "Curve20 keys store slope 0 and the end value y1 at +0x10; 'evaluated.step' is the shipped evaluator",
+        "(holds y0), 'evaluated.ramp' assumes a load-time slope fixup (open question). Trajectory mode: %s." % mode,
+    ])
+    with open(path, "w") as fh:
+        fh.write("".join("# %s\n" % h for h in hdr))
+        fh.write(to_yaml({"generator": {"command": cmd, "curve_mode_for_trajectories": mode},
+                          "sources": [{"file": f["file"], "size": f["size"], "sha256": f["sha256"]} for f in dec["files"]],
+                          "rows": rows}))
+        fh.write("\n")
+
+
+TRAJ_COLUMNS = ["file", "index", "id", "name", "kind", "secondary", "T", "curve_mode", "scenario", "f4c", "blend",
+                "dist_m", "tau", "bounce_tick", "tau_min", "has_min", "speed_limited", "raised", "net_unreachable",
+                "init_kmh", "arrive_kmh", "out_kmh", "launch_deg", "arrive_deg", "out_deg", "apex_m", "net_clear_m",
+                "spin_a", "spin_b", "spin_c", "k", "bounce_speed_loss", "bounce_spin_decay"]
+
+
+def trajectory_rows(dec, modes=("step",), blends=(0.5,), f4cs=(1.0, 0.0)):
+    import ball_model  # noqa: E402  (same directory)
+    import template_sim  # scenarios
+    out = []
+    for f in dec["files"]:
+        for r in f["rows"]:
+            for sc in template_sim.scenarios_for(r.get("name")):
+                frm, to = template_sim.SCENARIOS[sc]
+                for mode in modes:
+                    for f4c in f4cs:
+                        for bl in blends:
+                            m = ball_model.simulate(r, sys.modules[__name__], frm, to, blend=bl, sec_weight=f4c, mode=mode)
+                            rec = {"file": f["file"], "index": r["index"], "id": r.get("trailer_name_hash", ""),
+                                   "name": r.get("name") or "", "kind": r["kind"], "secondary": r["secondary_kind"],
+                                   "T": r["T"], "curve_mode": mode, "scenario": sc, "f4c": f4c, "blend": bl}
+                            rec.update(m)
+                            out.append(rec)
+    return out
+
+
+def write_trajectories(dec, path, cmd, modes):
+    import csv
+    rows = trajectory_rows(dec, modes)
+    hdr = _header(cmd, dec, [
+        "Per-shot trajectories from tools/ts4data/ball_model.py (port of ref/gameplay/ball.c), a4 0.06, g 9.81,",
+        "radius 4 cm, net 91.4 cm (assumed), scenarios in tools/ts4data/template_sim.py; f4c 1 = primary only, 0 = full",
+        "secondary; heights are ball-centre heights; net_clear_m = centre height at x = 0 + radius - net.",
+    ])
+    with open(path, "w", newline="") as fh:
+        fh.write("".join("# %s\n" % h for h in hdr))
+        w = csv.DictWriter(fh, fieldnames=TRAJ_COLUMNS, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+    return len(rows)
+
+
 def _load_from_arc(arc_path, iso):
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     import ts4_arc  # noqa: E402
@@ -336,6 +546,10 @@ def main(argv=None):
     ap.add_argument("--arc", help="Core.arc (extract both files from it)")
     ap.add_argument("--iso", help="read --arc from this disc image")
     ap.add_argument("--out", default=None, help="JSON output (default: print a summary only)")
+    ap.add_argument("--yaml", default=None, help="named YAML dump (e.g. data/gameplay/ball_templates.yaml)")
+    ap.add_argument("--trajectories", default=None, help="per-shot trajectory CSV (e.g. data/gameplay/ball_trajectories.csv)")
+    ap.add_argument("--curve-mode", choices=CURVE_MODES + ("both",), default="step",
+                    help="curve20 reading for the trajectory table: step (shipped evaluator), ramp, or both")
     a = ap.parse_args(argv)
     if a.arc:
         s, st = _load_from_arc(a.arc, a.iso)
@@ -352,6 +566,17 @@ def main(argv=None):
             json.dump(dec, fh, indent=1)
             fh.write("\n")
         print("wrote", a.out)
+    cmd = "python3 tools/ts4data/templates.py " + " ".join(argv if argv is not None else sys.argv[1:])
+    modes = CURVE_MODES if a.curve_mode == "both" else (a.curve_mode,)
+    if a.yaml:
+        os.makedirs(os.path.dirname(os.path.abspath(a.yaml)), exist_ok=True)
+        write_yaml(dec, a.yaml, cmd, a.curve_mode)
+        print("wrote", a.yaml)
+    if a.trajectories:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        os.makedirs(os.path.dirname(os.path.abspath(a.trajectories)), exist_ok=True)
+        n = write_trajectories(dec, a.trajectories, cmd, modes)
+        print("wrote %s (%d rows)" % (a.trajectories, n))
     return 0
 
 

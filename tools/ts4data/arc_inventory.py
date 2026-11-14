@@ -99,7 +99,12 @@ def main(argv=None):
             continue
         if not low.endswith(".arc") or (only and path not in only):
             continue
-        arc = ts4_arc.Arc(fs.open_slice(path))
+        try:
+            arc = ts4_arc.Arc(fs.open_slice(path))
+        except ValueError as e:
+            summary["archives"][path] = {"error": str(e)}
+            print("%-32s not readable: %s" % (path, e), flush=True)
+            continue
         info, rows = inventory_arc(arc, path, a.out, a.extract_xbin, want)
         summary["archives"][path] = info
         for key, _s, _u, _h, rt, ln in rows:

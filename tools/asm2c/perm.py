@@ -98,6 +98,9 @@ def m_commute(body, sig, rng):
     s = lines[k]
     a, b = s[o + 1:i], s[i + len(op):c]
     lines[k] = s[:o + 1] + b + REL.get(op, op) + a + s[c:]
+    if rng.random() < 0.5:      # the same expression elsewhere (a common subexpression) too
+        old, new = s[o:c + 1], '(' + b + REL.get(op, op) + a + ')'
+        lines = [l.replace(old, new) for l in lines]
     return '\n'.join(lines), sig
 
 
