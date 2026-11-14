@@ -36890,3 +36890,173 @@ src/xbox360/sm2_vthunk_v.c:
 	.text       start:0x884EF1E8 end:0x884EF204
 	.text       start:0x884EF208 end:0x884EF224
 	.text       start:0x884EF228 end:0x884EF244
+
+src/xbox360/jp1_jpeg_apistd.c:
+	.pdata      start:0x88111570 end:0x88111578
+	.text       start:0x882E3228 end:0x882E339C
+
+src/xbox360/jp1_jpeg_coefct.c:
+	.pdata      start:0x88111AD0 end:0x88111AD8
+	.pdata      start:0x88111AD8 end:0x88111AE0
+	.pdata      start:0x88111AE0 end:0x88111AE8
+	.pdata      start:0x88111AE8 end:0x88111AF0
+	.pdata      start:0x88111AF0 end:0x88111AF8
+	.pdata      start:0x88111AF8 end:0x88111B00
+	.pdata      start:0x88111B00 end:0x88111B08
+	.text       start:0x882F5C70 end:0x882F5CE0
+	.text       start:0x882F5CF0 end:0x882F5F8C
+	.text       start:0x882F5F90 end:0x882F63A4
+	.text       start:0x882F63A8 end:0x882F6544
+	.text       start:0x882F6548 end:0x882F6F20
+
+src/xbox360/jp1_jpeg_color.c:
+	.pdata      start:0x88111BC8 end:0x88111BD0
+	.pdata      start:0x88111BD0 end:0x88111BD8
+	.pdata      start:0x88111BD8 end:0x88111BE0
+	.pdata      start:0x88111BE0 end:0x88111BE8
+	.pdata      start:0x88111BE8 end:0x88111BF0
+	.pdata      start:0x88111BF0 end:0x88111BF8
+	.pdata      start:0x88111BF8 end:0x88111C00
+	.pdata      start:0x88111C00 end:0x88111C08
+	.pdata      start:0x88111C08 end:0x88111C10
+	.text       start:0x882F99A8 end:0x882F9AC4
+	.text       start:0x882F9AC8 end:0x882F9C20
+	.text       start:0x882F9C40 end:0x882F9CA4
+	.text       start:0x882F9CA8 end:0x882FA1E4
+	.text       start:0x882FA1E8 end:0x882FA34C
+	.text       start:0x882FA350 end:0x882FA7C8
+
+src/xbox360/jp1_jpeg_huffd.c:
+	.pdata      start:0x88111B10 end:0x88111B18
+	.pdata      start:0x88111B18 end:0x88111B20
+	.pdata      start:0x88111B20 end:0x88111B28
+	.pdata      start:0x88111B28 end:0x88111B30
+	.pdata      start:0x88111B30 end:0x88111B38
+	.text       start:0x882F7288 end:0x882F7514
+	.text       start:0x882F7518 end:0x882F79EC
+	.text       start:0x882F79F0 end:0x882F7B8C
+	.text       start:0x882F7B90 end:0x882F7C08
+
+src/xbox360/jp1_jpeg_idctmgr.c:
+	.pdata      start:0x88111B78 end:0x88111B80
+	.text       start:0x882F8E68 end:0x882F8F08
+
+src/xbox360/jp1_jpeg_input.c:
+	.pdata      start:0x881117B0 end:0x881117B8
+	.pdata      start:0x881117B8 end:0x881117C0
+	.pdata      start:0x881117C0 end:0x881117C8
+	.pdata      start:0x881117D0 end:0x881117D8
+	.text       start:0x882EC360 end:0x882EC5DC
+	.text       start:0x882EC5E0 end:0x882EC7CC
+	.text       start:0x882EC7D0 end:0x882EC8A8
+	.text       start:0x882EC918 end:0x882ECA44
+
+src/xbox360/jp1_jpeg_mainct.c:
+	.pdata      start:0x88111A90 end:0x88111A98
+	.pdata      start:0x88111A98 end:0x88111AA0
+	.pdata      start:0x88111AA0 end:0x88111AA8
+	.pdata      start:0x88111AA8 end:0x88111AB0
+	.pdata      start:0x88111AB0 end:0x88111AB8
+	.pdata      start:0x88111AB8 end:0x88111AC0
+	.pdata      start:0x88111AC8 end:0x88111AD0
+	.text       start:0x882F5448 end:0x882F5534
+	.text       start:0x882F5538 end:0x882F565C
+	.text       start:0x882F5660 end:0x882F574C
+	.text       start:0x882F5750 end:0x882F583C
+	.text       start:0x882F5840 end:0x882F58E4
+	.text       start:0x882F58E8 end:0x882F5A8C
+	.text       start:0x882F5B30 end:0x882F5C70
+
+src/xbox360/jp1_jpeg_marker.c:
+	.pdata      start:0x88111578 end:0x88111580
+	.pdata      start:0x881115A0 end:0x881115A8
+	.pdata      start:0x881115B0 end:0x881115B8
+	.pdata      start:0x881115B8 end:0x881115C0
+	.pdata      start:0x881115C0 end:0x881115C8
+	.pdata      start:0x881115C8 end:0x881115D0
+	.pdata      start:0x881115D0 end:0x881115D8
+	.text       start:0x882E33A0 end:0x882E3488
+	.text       start:0x882E4340 end:0x882E44A8
+	.text       start:0x882E47B8 end:0x882E4DD0
+
+src/xbox360/jp1_jpeg_master.c:
+	.pdata      start:0x88111878 end:0x88111880
+	.pdata      start:0x88111888 end:0x88111890
+	.pdata      start:0x88111898 end:0x881118A0
+	.text       start:0x882EDEC8 end:0x882EE21C
+	.text       start:0x882EE568 end:0x882EE788
+	.text       start:0x882EE7D8 end:0x882EE848
+
+src/xbox360/jp1_jpeg_merge.c:
+	.pdata      start:0x88111C10 end:0x88111C18
+	.pdata      start:0x88111C18 end:0x88111C20
+	.pdata      start:0x88111C20 end:0x88111C28
+	.pdata      start:0x88111C28 end:0x88111C30
+	.pdata      start:0x88111C30 end:0x88111C38
+	.pdata      start:0x88111C38 end:0x88111C40
+	.text       start:0x882FA7C8 end:0x882FA8E4
+	.text       start:0x882FA900 end:0x882FAA04
+	.text       start:0x882FAA08 end:0x882FAA74
+	.text       start:0x882FAA78 end:0x882FABBC
+	.text       start:0x882FABC0 end:0x882FAD98
+	.text       start:0x882FADA0 end:0x882FAE80
+
+src/xbox360/jp1_jpeg_phuff.c:
+	.pdata      start:0x88111B38 end:0x88111B40
+	.pdata      start:0x88111B40 end:0x88111B48
+	.pdata      start:0x88111B48 end:0x88111B50
+	.pdata      start:0x88111B50 end:0x88111B58
+	.pdata      start:0x88111B58 end:0x88111B60
+	.pdata      start:0x88111B60 end:0x88111B68
+	.pdata      start:0x88111B68 end:0x88111B70
+	.text       start:0x882F7C08 end:0x882F7EFC
+	.text       start:0x882F7F00 end:0x882F815C
+	.text       start:0x882F8160 end:0x882F8A74
+
+src/xbox360/jp1_jpeg_post.c:
+	.pdata      start:0x88111B80 end:0x88111B88
+	.pdata      start:0x88111B90 end:0x88111B98
+	.text       start:0x882F8F08 end:0x882F8FA0
+	.text       start:0x882F9058 end:0x882F9118
+
+src/xbox360/jp1_jpeg_sample.c:
+	.pdata      start:0x88111B98 end:0x88111BA0
+	.pdata      start:0x88111BA0 end:0x88111BA8
+	.pdata      start:0x88111BA8 end:0x88111BB0
+	.pdata      start:0x88111BB0 end:0x88111BB8
+	.pdata      start:0x88111BB8 end:0x88111BC0
+	.pdata      start:0x88111BC0 end:0x88111BC8
+	.text       start:0x882F9130 end:0x882F9268
+	.text       start:0x882F9280 end:0x882F9354
+	.text       start:0x882F9358 end:0x882F93BC
+	.text       start:0x882F93C0 end:0x882F945C
+	.text       start:0x882F9460 end:0x882F9544
+	.text       start:0x882F9548 end:0x882F96AC
+	.text       start:0x882F96C0 end:0x882F99A8
+
+src/xbox360/jp1_jpeg_utils.c:
+	.pdata      start:0x881118A0 end:0x881118A8
+	.text       start:0x882EE848 end:0x882EE86C
+	.text       start:0x882EE870 end:0x882EE8F4
+
+src/xbox360/jp1_zlib_deflate.c:
+	.pdata      start:0x88111980 end:0x88111988
+	.pdata      start:0x88111990 end:0x88111998
+	.pdata      start:0x88111998 end:0x881119A0
+	.pdata      start:0x881119A0 end:0x881119A8
+	.pdata      start:0x881119A8 end:0x881119B0
+	.pdata      start:0x881119C0 end:0x881119C8
+	.pdata      start:0x881119C8 end:0x881119D0
+	.text       start:0x882F16C8 end:0x882F1784
+	.text       start:0x882F1B70 end:0x882F1C84
+	.text       start:0x882F1C88 end:0x882F1E3C
+	.text       start:0x882F1E40 end:0x882F2044
+	.text       start:0x882F2048 end:0x882F2214
+	.text       start:0x882F2B58 end:0x882F2F0C
+
+src/xbox360/jp1_zlib_inflate_api.c:
+	.pdata      start:0x881119D0 end:0x881119D8
+	.pdata      start:0x881119D8 end:0x881119E0
+	.pdata      start:0x881119E0 end:0x881119E8
+	.text       start:0x882F2F10 end:0x882F300C
+	.text       start:0x882F3010 end:0x882F3164

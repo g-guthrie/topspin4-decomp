@@ -3,11 +3,11 @@
  * auto_03_882E3224. Kept apart from the per-marker readers so they stay calls. (RM3) */
 #include "rm3_jpeg.h"
 
-int fn_882E4CF0(struct ts4_jpeg_decomp *cinfo); /* first_marker */
-int fn_882E4B70(struct ts4_jpeg_decomp *cinfo); /* next_marker */
-int fn_882E33A0(struct ts4_jpeg_decomp *cinfo); /* get_soi */
-int fn_882E4340(struct ts4_jpeg_decomp *cinfo); /* get_dri */
-int fn_882E4A70(struct ts4_jpeg_decomp *cinfo); /* skip_variable */
+int ts4_jpeg_first_marker_882E4CF0(struct ts4_jpeg_decomp *cinfo); /* first_marker */
+int ts4_jpeg_next_marker_882E4B70(struct ts4_jpeg_decomp *cinfo); /* next_marker */
+int ts4_jpeg_get_soi_882E33A0(struct ts4_jpeg_decomp *cinfo); /* get_soi */
+int ts4_jpeg_get_dri_882E4340(struct ts4_jpeg_decomp *cinfo); /* get_dri */
+int ts4_jpeg_skip_variable_882E4A70(struct ts4_jpeg_decomp *cinfo); /* skip_variable */
 int ts4_jpeg_get_sof_882E3488(struct ts4_jpeg_decomp *cinfo, int is_prog, int is_arith);
 int ts4_jpeg_get_sos_882E38D8(struct ts4_jpeg_decomp *cinfo);
 int ts4_jpeg_get_dht_882E3C90(struct ts4_jpeg_decomp *cinfo);
@@ -27,16 +27,16 @@ int ts4_jpeg_read_markers_882E4DD0(struct ts4_jpeg_decomp *cinfo)
     for (;;) {
         if (cinfo->unread_marker == 0) {
             if (!cinfo->marker->saw_SOI) {
-                if (!fn_882E4CF0(cinfo))
+                if (!ts4_jpeg_first_marker_882E4CF0(cinfo))
                     return 0;
             } else {
-                if (!fn_882E4B70(cinfo))
+                if (!ts4_jpeg_next_marker_882E4B70(cinfo))
                     return 0;
             }
         }
         switch (cinfo->unread_marker) {
         case 0xd8:
-            if (!fn_882E33A0(cinfo))
+            if (!ts4_jpeg_get_soi_882E33A0(cinfo))
                 return 0;
             break;
 
@@ -86,7 +86,7 @@ int ts4_jpeg_read_markers_882E4DD0(struct ts4_jpeg_decomp *cinfo)
             return 2;
 
         case 0xcc:
-            if (!fn_882E4A70(cinfo))
+            if (!ts4_jpeg_skip_variable_882E4A70(cinfo))
                 return 0;
             break;
 
@@ -101,7 +101,7 @@ int ts4_jpeg_read_markers_882E4DD0(struct ts4_jpeg_decomp *cinfo)
             break;
 
         case 0xdd:
-            if (!fn_882E4340(cinfo))
+            if (!ts4_jpeg_get_dri_882E4340(cinfo))
                 return 0;
             break;
 
@@ -143,7 +143,7 @@ int ts4_jpeg_read_markers_882E4DD0(struct ts4_jpeg_decomp *cinfo)
             break;
 
         case 0xdc:
-            if (!fn_882E4A70(cinfo))
+            if (!ts4_jpeg_skip_variable_882E4A70(cinfo))
                 return 0;
             break;
 

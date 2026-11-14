@@ -100,9 +100,9 @@ extern const char *const lbl_88027644[10]; /* z_errmsg */
 extern const unsigned char lbl_88027218[512]; /* _dist_code */
 extern const unsigned char lbl_88027418[256]; /* _length_code */
 
-void fn_882F16C8(rm3_z_stream *strm); /* flush_pending */
-void fn_882F1E40(rm3_deflate_state *s); /* fill_window */
-unsigned int fn_882F1C88(rm3_deflate_state *s, unsigned int cur_match); /* longest_match */
+void ts4_zlib_flush_pending_882F16C8(rm3_z_stream *strm); /* flush_pending */
+void ts4_zlib_fill_window_882F1E40(rm3_deflate_state *s); /* fill_window */
+unsigned int ts4_zlib_longest_match_882F1C88(rm3_deflate_state *s, unsigned int cur_match); /* longest_match */
 void fn_88303CE0(rm3_deflate_state *s, char *buf, unsigned long stored_len, int eof); /* _tr_flush_block */
 void fn_883039B0(rm3_deflate_state *s); /* _tr_align */
 void fn_88303828(rm3_deflate_state *s, char *buf, unsigned long stored_len, int eof); /* _tr_stored_block */
@@ -177,7 +177,7 @@ int ts4_zlib_deflate_882F1788(rm3_z_stream *strm, int flush)
     }
 
     if (s->pending != 0) {
-        fn_882F16C8(strm);
+        ts4_zlib_flush_pending_882F16C8(strm);
         if (strm->avail_out == 0) {
             s->last_flush = -1;
             return RM3_Z_OK;
@@ -215,7 +215,7 @@ int ts4_zlib_deflate_882F1788(rm3_z_stream *strm, int flush)
                     memset((unsigned char *)s->head, 0, (unsigned)(s->hash_size - 1) * sizeof(*s->head));
                 }
             }
-            fn_882F16C8(strm);
+            ts4_zlib_flush_pending_882F16C8(strm);
             if (strm->avail_out == 0) {
                 s->last_flush = -1;
                 return RM3_Z_OK;
@@ -230,7 +230,7 @@ int ts4_zlib_deflate_882F1788(rm3_z_stream *strm, int flush)
 
     putShortMSB(s, (unsigned int)(strm->adler >> 16));
     putShortMSB(s, (unsigned int)(strm->adler & 0xffff));
-    fn_882F16C8(strm);
+    ts4_zlib_flush_pending_882F16C8(strm);
     s->noheader = -1;
     return s->pending != 0 ? RM3_Z_OK : RM3_Z_STREAM_END;
 }
@@ -273,7 +273,7 @@ int ts4_zlib_deflate_882F1788(rm3_z_stream *strm, int flush)
                                                  : (char *)0),                                  \
                     (unsigned long)((long)(s)->strstart - (s)->block_start), (eof));            \
         (s)->block_start = (s)->strstart;                                                       \
-        fn_882F16C8((s)->strm);                                                                 \
+        ts4_zlib_flush_pending_882F16C8((s)->strm);                                                                 \
     }
 #define FLUSH_BLOCK(s, eof)                                                     \
     {                                                                           \
@@ -291,7 +291,7 @@ int ts4_zlib_deflate_fast_882F2218(rm3_deflate_state *s, int flush)
 
     for (;;) {
         if (s->lookahead < MIN_LOOKAHEAD) {
-            fn_882F1E40(s);
+            ts4_zlib_fill_window_882F1E40(s);
             if (s->lookahead < MIN_LOOKAHEAD && flush == RM3_Z_NO_FLUSH) {
                 return need_more;
             }
@@ -305,7 +305,7 @@ int ts4_zlib_deflate_fast_882F2218(rm3_deflate_state *s, int flush)
 
         if (hash_head != 0 && s->strstart - hash_head <= MAX_DIST(s)) {
             if (s->strategy != 2) {
-                s->match_length = fn_882F1C88(s, hash_head);
+                s->match_length = ts4_zlib_longest_match_882F1C88(s, hash_head);
             }
         }
         if (s->match_length >= 3) {
@@ -347,7 +347,7 @@ int ts4_zlib_deflate_slow_882F2630(rm3_deflate_state *s, int flush)
 
     for (;;) {
         if (s->lookahead < MIN_LOOKAHEAD) {
-            fn_882F1E40(s);
+            ts4_zlib_fill_window_882F1E40(s);
             if (s->lookahead < MIN_LOOKAHEAD && flush == RM3_Z_NO_FLUSH) {
                 return need_more;
             }
@@ -365,7 +365,7 @@ int ts4_zlib_deflate_slow_882F2630(rm3_deflate_state *s, int flush)
         if (hash_head != 0 && s->prev_length < s->max_lazy_match &&
             s->strstart - hash_head <= MAX_DIST(s)) {
             if (s->strategy != 2) {
-                s->match_length = fn_882F1C88(s, hash_head);
+                s->match_length = ts4_zlib_longest_match_882F1C88(s, hash_head);
             }
             if (s->match_length <= 5 &&
                 (s->strategy == 1 || (s->match_length == 3 && s->strstart - s->match_start > TOO_FAR))) {

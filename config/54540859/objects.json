@@ -3120,6 +3120,70 @@
       "src/xbox360/sm2_vthunk_v.c": {
         "status": "Matching",
         "source": "xbox360/sm2_vthunk_v.c"
+      },
+      "src/xbox360/jp1_jpeg_apistd.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_apistd.c"
+      },
+      "src/xbox360/jp1_jpeg_coefct.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_coefct.c"
+      },
+      "src/xbox360/jp1_jpeg_color.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_color.c"
+      },
+      "src/xbox360/jp1_jpeg_huffd.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_huffd.c"
+      },
+      "src/xbox360/jp1_jpeg_idctmgr.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_idctmgr.c"
+      },
+      "src/xbox360/jp1_jpeg_input.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_input.c"
+      },
+      "src/xbox360/jp1_jpeg_mainct.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_mainct.c"
+      },
+      "src/xbox360/jp1_jpeg_marker.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_marker.c"
+      },
+      "src/xbox360/jp1_jpeg_master.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_master.c"
+      },
+      "src/xbox360/jp1_jpeg_merge.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_merge.c"
+      },
+      "src/xbox360/jp1_jpeg_phuff.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_phuff.c"
+      },
+      "src/xbox360/jp1_jpeg_post.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_post.c"
+      },
+      "src/xbox360/jp1_jpeg_sample.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_sample.c"
+      },
+      "src/xbox360/jp1_jpeg_utils.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_jpeg_utils.c"
+      },
+      "src/xbox360/jp1_zlib_deflate.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_zlib_deflate.c"
+      },
+      "src/xbox360/jp1_zlib_inflate_api.c": {
+        "status": "Matching",
+        "source": "xbox360/jp1_zlib_inflate_api.c"
       }
     }
   }

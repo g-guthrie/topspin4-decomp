@@ -66,7 +66,7 @@ void ex7_png_write_flush_882E6B98(ex7_png_struct *png_ptr)
     ts4_if_get_u32_off620_882E71C0(png_ptr);
 }
 
-void fn_882F1B70(ex7_z_stream *strm);                                  /* deflateEnd */
+void ts4_zlib_deflateEnd_882F1B70(ex7_z_stream *strm);                                  /* deflateEnd */
 void fn_882EC1E0(ex7_png_struct *png_ptr, void *ptr);                  /* png_free */
 
 /* Free the write-side buffers and reset the png_struct while keeping the error handlers (libpng png_write_destroy). Swing_DLL.xex 0x882E6C68 */
@@ -77,7 +77,7 @@ void ex7_png_write_destroy_882E6C68(ex7_png_struct *png_ptr)
     void *warning_fn;
     void *error_ptr;
 
-    fn_882F1B70(&png_ptr->zstream);
+    ts4_zlib_deflateEnd_882F1B70(&png_ptr->zstream);
     fn_882EC1E0(png_ptr, png_ptr->zbuf);
     fn_882EC1E0(png_ptr, png_ptr->row_buf);
     fn_882EC1E0(png_ptr, png_ptr->prev_row);

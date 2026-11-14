@@ -3,17 +3,17 @@
  * auto_03_882EDEC4. This build has no color quantizers or arithmetic decoding. (RM3) */
 #include "rm3_jpeg.h"
 
-void fn_882EDF90(struct ts4_jpeg_decomp *cinfo);       /* jpeg_calc_output_dimensions */
-int fn_882EDEC8(struct ts4_jpeg_decomp *cinfo);        /* use_merged_upsample */
-void fn_882FADA0(struct ts4_jpeg_decomp *cinfo);       /* jinit_merged_upsampler */
-void fn_882FA518(struct ts4_jpeg_decomp *cinfo);       /* jinit_color_deconverter */
-void fn_882F96C0(struct ts4_jpeg_decomp *cinfo);       /* jinit_upsampler */
-void fn_882F9058(struct ts4_jpeg_decomp *cinfo, int need_full_buffer); /* jinit_d_post_controller */
-void fn_882F8E68(struct ts4_jpeg_decomp *cinfo);       /* jinit_inverse_dct */
-void fn_882F89A0(struct ts4_jpeg_decomp *cinfo);       /* jinit_phuff_decoder */
-void fn_882F7B90(struct ts4_jpeg_decomp *cinfo);       /* jinit_huff_decoder */
-void fn_882F6D80(struct ts4_jpeg_decomp *cinfo, int need_full_buffer); /* jinit_d_coef_controller */
-void fn_882F5B30(struct ts4_jpeg_decomp *cinfo, int need_full_buffer); /* jinit_d_main_controller */
+void ts4_jpeg_calc_output_dimensions_882EDF90(struct ts4_jpeg_decomp *cinfo);       /* jpeg_calc_output_dimensions */
+int ts4_jpeg_use_merged_upsample_882EDEC8(struct ts4_jpeg_decomp *cinfo);        /* use_merged_upsample */
+void ts4_jpeg_jinit_merged_upsampler_882FADA0(struct ts4_jpeg_decomp *cinfo);       /* jinit_merged_upsampler */
+void ts4_jpeg_jinit_color_deconverter_882FA518(struct ts4_jpeg_decomp *cinfo);       /* jinit_color_deconverter */
+void ts4_jpeg_jinit_upsampler_882F96C0(struct ts4_jpeg_decomp *cinfo);       /* jinit_upsampler */
+void ts4_jpeg_jinit_d_post_controller_882F9058(struct ts4_jpeg_decomp *cinfo, int need_full_buffer); /* jinit_d_post_controller */
+void ts4_jpeg_jinit_inverse_dct_882F8E68(struct ts4_jpeg_decomp *cinfo);       /* jinit_inverse_dct */
+void ts4_jpeg_jinit_phuff_decoder_882F89A0(struct ts4_jpeg_decomp *cinfo);       /* jinit_phuff_decoder */
+void ts4_jpeg_jinit_huff_decoder_882F7B90(struct ts4_jpeg_decomp *cinfo);       /* jinit_huff_decoder */
+void ts4_jpeg_jinit_d_coef_controller_882F6D80(struct ts4_jpeg_decomp *cinfo, int need_full_buffer); /* jinit_d_coef_controller */
+void ts4_jpeg_jinit_d_main_controller_882F5B30(struct ts4_jpeg_decomp *cinfo, int need_full_buffer); /* jinit_d_main_controller */
 
 enum {
     TS4_JERR_ARITH_NOTIMPL = 0x01,
@@ -47,11 +47,11 @@ void ts4_jpeg_master_selection_882EE220(struct ts4_jpeg_decomp *cinfo)
     struct ts4_jpeg_decomp_master *master = cinfo->master;
     int use_c_buffer;
 
-    fn_882EDF90(cinfo);
+    ts4_jpeg_calc_output_dimensions_882EDF90(cinfo);
     prepare_range_limit_table(cinfo);
 
     master->pass_number = 0;
-    master->using_merged_upsample = fn_882EDEC8(cinfo);
+    master->using_merged_upsample = ts4_jpeg_use_merged_upsample_882EDEC8(cinfo);
 
     master->quantizer_1pass = 0;
     master->quantizer_2pass = 0;
@@ -85,28 +85,28 @@ void ts4_jpeg_master_selection_882EE220(struct ts4_jpeg_decomp *cinfo)
 
     if (!cinfo->raw_data_out) {
         if (master->using_merged_upsample) {
-            fn_882FADA0(cinfo);
+            ts4_jpeg_jinit_merged_upsampler_882FADA0(cinfo);
         } else {
-            fn_882FA518(cinfo);
-            fn_882F96C0(cinfo);
+            ts4_jpeg_jinit_color_deconverter_882FA518(cinfo);
+            ts4_jpeg_jinit_upsampler_882F96C0(cinfo);
         }
-        fn_882F9058(cinfo, cinfo->enable_2pass_quant);
+        ts4_jpeg_jinit_d_post_controller_882F9058(cinfo, cinfo->enable_2pass_quant);
     }
-    fn_882F8E68(cinfo);
+    ts4_jpeg_jinit_inverse_dct_882F8E68(cinfo);
     if (cinfo->arith_code) {
         JPEG_ERREXIT(cinfo, TS4_JERR_ARITH_NOTIMPL);
     } else {
         if (cinfo->progressive_mode)
-            fn_882F89A0(cinfo);
+            ts4_jpeg_jinit_phuff_decoder_882F89A0(cinfo);
         else
-            fn_882F7B90(cinfo);
+            ts4_jpeg_jinit_huff_decoder_882F7B90(cinfo);
     }
 
     use_c_buffer = cinfo->inputctl->has_multiple_scans || cinfo->buffered_image;
-    fn_882F6D80(cinfo, use_c_buffer);
+    ts4_jpeg_jinit_d_coef_controller_882F6D80(cinfo, use_c_buffer);
 
     if (!cinfo->raw_data_out)
-        fn_882F5B30(cinfo, 0);
+        ts4_jpeg_jinit_d_main_controller_882F5B30(cinfo, 0);
 
     (*cinfo->mem->realize_virt_arrays)(cinfo);
 

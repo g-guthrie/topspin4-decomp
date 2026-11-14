@@ -12,7 +12,7 @@ typedef unsigned long ts4_word;
 
 extern char __imp_VdGlobalDevice[];
 extern char ts4_get_fn_882EC5E0_882EC8A8[];
-extern char fn_882EC918[];
+extern char ts4_jpeg_consume_markers_882EC918[];
 extern char ts4_get_u32_off1b8_882ECA48[];
 extern char ts4_get_u32_off1b8_882ECAC8[];
 extern char ts4_if_get_u32_off0_882EF788[];
@@ -67,12 +67,12 @@ ts4_word fn_882E26E8();
 ts4_word fn_882E2900();
 ts4_word ts4_if_get_u32_off550_882EA0A0();
 ts4_word fn_882EC228();
-ts4_word fn_882EC5E0();
-ts4_word fn_882EC7D0();
+ts4_word ts4_jpeg_per_scan_setup_882EC5E0();
+ts4_word ts4_jpeg_latch_quant_tables_882EC7D0();
 ts4_word fn_882ECB68();
-ts4_word fn_882EE8A0();
+ts4_word ts4_jpeg_jcopy_sample_rows_882EE8A0();
 ts4_word fn_882EE920();
-ts4_word fn_882F5C70();
+ts4_word ts4_jpeg_start_iMCU_row_882F5C70();
 ts4_word fn_882FD0D8();
 ts4_word fn_882FD3C8();
 ts4_word fn_883089E0();
@@ -163,14 +163,14 @@ ts4_word ts4_get_u32_off554_882E2970(ts4_word a0)
     return (*(ts4_word *)((char *)(ts4_word)(a0) + 1364));
 }
 
-/* Swing_DLL.xex 0x882ECAE0: get u32@0x4, u32@0x0, vcall, u32@0x1b8, fn_882EC918, ts4_get_u32_off1b8_882ECA48 */
+/* Swing_DLL.xex 0x882ECAE0: get u32@0x4, u32@0x0, vcall, u32@0x1b8, ts4_jpeg_consume_markers_882EC918, ts4_get_u32_off1b8_882ECA48 */
 ts4_word ts4_get_u32_off4_882ECAE0(ts4_word a0)
 {
     ts4_word t3;
 
     t3 = ((ts4_word (*)(ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 0))))((ts4_word)a0, (ts4_word)0, (ts4_word)28);
     *(ts4_word *)((char *)(ts4_word)(a0) + 440) = (ts4_word)t3;
-    *(ts4_word *)((char *)(ts4_word)(t3) + 0) = (ts4_word)(ts4_word)fn_882EC918;
+    *(ts4_word *)((char *)(ts4_word)(t3) + 0) = (ts4_word)(ts4_word)ts4_jpeg_consume_markers_882EC918;
     *(ts4_word *)((char *)(ts4_word)(t3) + 4) = (ts4_word)(ts4_word)ts4_get_u32_off1b8_882ECA48;
     *(ts4_word *)((char *)(ts4_word)(t3) + 16) = (ts4_word)0;
     *(ts4_word *)((char *)(ts4_word)(t3) + 8) = (ts4_word)(ts4_word)ts4_get_fn_882EC5E0_882EC8A8;

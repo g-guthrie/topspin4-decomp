@@ -13,7 +13,7 @@ extern void *memset(void *, int, unsigned int);
 void ts4_tailcall_fn_8856ABA0_882E2960(ex7_png_struct *png_ptr, ex7_png_info *info_ptr); /* png_info_destroy */
 void fn_882EC1E0(ex7_png_struct *png_ptr, void *ptr);                                    /* png_free */
 void ts4_forward_882E28B8(ex7_png_struct *png_ptr, void *ptr);                           /* png_zfree */
-int fn_882F2F88(ex7_z_stream *strm);                                                     /* inflateEnd */
+int ts4_zlib_inflateEnd_882F2F88(ex7_z_stream *strm);                                                     /* inflateEnd */
 
 /* Free the read-side buffers and tables and reset the png_struct while keeping the error handlers (libpng png_read_destroy). Swing_DLL.xex 0x882E7E30 */
 void ex7_png_read_destroy_882E7E30(ex7_png_struct *png_ptr, ex7_png_info *info_ptr, ex7_png_info *end_info_ptr)
@@ -44,7 +44,7 @@ void ex7_png_read_destroy_882E7E30(ex7_png_struct *png_ptr, ex7_png_info *info_p
             fn_882EC1E0(png_ptr, png_ptr->gamma_16_table[i]);
         fn_882EC1E0(png_ptr, png_ptr->gamma_16_table);
     }
-    fn_882F2F88(&png_ptr->zstream);
+    ts4_zlib_inflateEnd_882F2F88(&png_ptr->zstream);
     memcpy(tmp_jmp, png_ptr->jmpbuf, sizeof(tmp_jmp));
     error_fn = png_ptr->error_fn;
     warning_fn = png_ptr->warning_fn;
