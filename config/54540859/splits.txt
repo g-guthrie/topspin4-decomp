@@ -42178,3 +42178,38 @@ src/xbox360/fam5_nm_000.c:
 src/xbox360/fam5_nm_001.c:
 	.pdata      start:0x88132F78 end:0x88132F80
 	.text       start:0x8899B2E8 end:0x8899B358
+
+src/xbox360/lib4_trio.c:
+	.pdata      start:0x88109E70 end:0x88109E78
+	.pdata      start:0x88109E80 end:0x88109E88
+	.pdata      start:0x88109E90 end:0x88109E98
+	.pdata      start:0x88109E98 end:0x88109EA0
+	.pdata      start:0x88109EA0 end:0x88109EA8
+	.pdata      start:0x88109EA8 end:0x88109EB0
+	.pdata      start:0x88109EB8 end:0x88109EC0
+	.pdata      start:0x88109EC0 end:0x88109EC8
+	.pdata      start:0x88109ED0 end:0x88109ED8
+	.text       start:0x8819CA18 end:0x8819CB30
+	.text       start:0x8819CC70 end:0x8819CCE8
+	.text       start:0x8819CEB0 end:0x8819CF3C
+	.text       start:0x8819D060 end:0x8819E274
+	.text       start:0x8819E278 end:0x8819E4F0
+	.text       start:0x8819EFD8 end:0x8819F47C
+	.text       start:0x8819F480 end:0x8819F528
+	.text       start:0x8819F650 end:0x8819F69C
+
+src/xbox360/lib4_trio_wcstol.c:
+	.pdata      start:0x88109EE8 end:0x88109EF0
+	.text       start:0x8819F8B0 end:0x8819F954
+
+src/xbox360/lib4_trio_wide.c:
+	.pdata      start:0x88109EF0 end:0x88109EF8
+	.pdata      start:0x88109F08 end:0x88109F10
+	.pdata      start:0x88109F10 end:0x88109F18
+	.pdata      start:0x88109F20 end:0x88109F28
+	.pdata      start:0x88109F28 end:0x88109F30
+	.text       start:0x8819FA70 end:0x8819FAF0
+	.text       start:0x881A0B90 end:0x881A0CFC
+	.text       start:0x881A0D00 end:0x881A0E64
+	.text       start:0x881A18E0 end:0x881A1CDC
+	.text       start:0x881A1CE0 end:0x881A1D74

@@ -34781,6 +34781,38 @@ MATCHING_UNITS = (
         "object": "fam5_nm_001.obj",
         "symbols": {"ts4_if_call_seq_fn_8893CD70_8899B2E8": 112},
     },
+    {
+        "source": "src/xbox360/lib4_trio.c",
+        "object": "lib4_trio.obj",
+        "symbols": {
+            "lib4_trio_TrioIsQualifier_8819CA18": 280,
+            "lib4_trio_TrioGetPosition_8819CC70": 120,
+            "lib4_trio_TrioLogarithm_8819CEB0": 140,
+            "lib4_trio_TrioWriteNumber_8819DD48": 960,
+            "lib4_trio_TrioWriteStringCharacterAlt_8819E108": 364,
+            "lib4_trio_TrioWriteString_8819E278": 632,
+            "fn_8819F480": 168,
+            "fn_8819F650": 76,
+            "lib4_trio_TrioParse_8819D060": 3304,
+            "lib4_trio_TrioFormatProcess_8819EFD8": 1188,
+        },
+    },
+    {
+        "source": "src/xbox360/lib4_trio_wcstol.c",
+        "object": "lib4_trio_wcstol.obj",
+        "symbols": {"lib4_trio_wide_wcstol_8819F8B0": 164},
+    },
+    {
+        "source": "src/xbox360/lib4_trio_wide.c",
+        "object": "lib4_trio_wide.obj",
+        "symbols": {
+            "lib4_trio_wide_TrioGetPosition_8819FA70": 128,
+            "lib4_trio_wide_TrioWriteStringCharacterAlt_881A0B90": 364,
+            "lib4_trio_wide_TrioWriteString_881A0D00": 356,
+            "lib4_trio_wide_TrioFormatProcess_881A18E0": 1020,
+            "lib4_trio_wide_TrioFormat_881A1CE0": 148,
+        },
+    },
 )
 
 

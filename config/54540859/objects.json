@@ -4336,6 +4336,18 @@
       "src/xbox360/fam5_nm_001.c": {
         "status": "Matching",
         "source": "xbox360/fam5_nm_001.c"
+      },
+      "src/xbox360/lib4_trio.c": {
+        "status": "Matching",
+        "source": "xbox360/lib4_trio.c"
+      },
+      "src/xbox360/lib4_trio_wcstol.c": {
+        "status": "Matching",
+        "source": "xbox360/lib4_trio_wcstol.c"
+      },
+      "src/xbox360/lib4_trio_wide.c": {
+        "status": "Matching",
+        "source": "xbox360/lib4_trio_wide.c"
       }
     }
   }
