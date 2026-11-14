@@ -9,7 +9,7 @@ extern void *memcpy(void *, const void *, unsigned int);
 #include <string.h>
 #endif
 
-void fn_882EFD50(ex7_jpeg_compress_struct *cinfo); /* jinit_compress_master */
+void ex8_jinit_compress_master_882EFD50(ex7_jpeg_compress_struct *cinfo); /* jinit_compress_master */
 void ex7_jpeg_suppress_tables_882E57F0(ex7_jpeg_compress_struct *cinfo, int suppress);
 
 /* Mark the quantization and Huffman tables as sent or suppressed (jpeg_suppress_tables). Swing_DLL.xex 0x882E57F0 */
@@ -43,7 +43,7 @@ void ex7_jpeg_start_compress_882E5A10(ex7_jpeg_compress_struct *cinfo, int write
         ex7_jpeg_suppress_tables_882E57F0(cinfo, 0);
     (*cinfo->err->reset_error_mgr)(cinfo);
     (*cinfo->dest->init_destination)(cinfo);
-    fn_882EFD50(cinfo);
+    ex8_jinit_compress_master_882EFD50(cinfo);
     (*cinfo->master->prepare_for_pass)(cinfo);
     cinfo->next_scanline = 0;
     cinfo->global_state = cinfo->raw_data_in ? 102 : 101;

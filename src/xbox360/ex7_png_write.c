@@ -15,7 +15,7 @@ void ts4_get_u8_off61c_882EFF30(ex7_png_struct *png_ptr);       /* png_write_sig
 void fn_882F0460(ex7_png_struct *png_ptr, unsigned int width, unsigned int height, int bit_depth, int color_type,
                  int compression_type, int filter_type, int interlace_type); /* png_write_IHDR */
 void fn_882EFF48(ex7_png_struct *png_ptr, const unsigned char *palette, unsigned int num_pal); /* png_write_PLTE */
-void fn_882F07B8(ex7_png_struct *png_ptr, const unsigned char *data, unsigned int length); /* png_write_IDAT */
+void ts4_report_default_and_flag_882F07B8(ex7_png_struct *png_ptr, const unsigned char *data, unsigned int length); /* png_write_IDAT */
 int ts4_zlib_deflate_882F1788(ex7_z_stream *strm, int flush);                                            /* deflate */
 void ts4_if_get_u32_off620_882E71C0(ex7_png_struct *png_ptr);                              /* png_flush */
 extern const char lbl_88009650[]; /* "Valid palette required for paletted images\n" */
@@ -51,14 +51,14 @@ void ex7_png_write_flush_882E6B98(ex7_png_struct *png_ptr)
                 fn_882E26E8(png_ptr, lbl_88009770);
         }
         if (!png_ptr->zstream.avail_out) {
-            fn_882F07B8(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size);
+            ts4_report_default_and_flag_882F07B8(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size);
             png_ptr->zstream.next_out = png_ptr->zbuf;
             png_ptr->zstream.avail_out = png_ptr->zbuf_size;
             wrote_IDAT = 1;
         }
     } while (wrote_IDAT == 1);
     if (png_ptr->zbuf_size != png_ptr->zstream.avail_out) {
-        fn_882F07B8(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size - png_ptr->zstream.avail_out);
+        ts4_report_default_and_flag_882F07B8(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size - png_ptr->zstream.avail_out);
         png_ptr->zstream.next_out = png_ptr->zbuf;
         png_ptr->zstream.avail_out = png_ptr->zbuf_size;
     }

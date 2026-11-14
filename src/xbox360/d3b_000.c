@@ -35,7 +35,7 @@ extern char lbl_88CAD330[];
 extern char lbl_88CAD334[];
 ts4_word KeTlsGetValue();
 ts4_word fn_88189D98();
-ts4_word fn_883199C0();
+ts4_word ts4_read_u8_to_u8_883199C0();
 ts4_word fn_88319C40();
 ts4_word fn_883296A0();
 ts4_word fn_883332F0();
@@ -78,7 +78,7 @@ ts4_word ts4_index_u16_array_at_field0_88428A08();
 ts4_word ts4_memset();
 ts4_word ts4_tailcall_memcpy_88421450();
 
-/* Swing_DLL.xex 0x8834E490: if_call_seq u32@0x108, fn_883199C0, u32@0x108, fn_88319C40 */
+/* Swing_DLL.xex 0x8834E490: if_call_seq u32@0x108, ts4_read_u8_to_u8_883199C0, u32@0x108, fn_88319C40 */
 ts4_word ts4_if_call_seq_u32_off108_8834E490(ts4_word a0, ts4_word a1)
 {
     ts4_word loc50[4];
@@ -87,7 +87,7 @@ ts4_word ts4_if_call_seq_u32_off108_8834E490(ts4_word a0, ts4_word a1)
         if ((int)((signed char)a1) != 13) {
             return 0;
         }
-        fn_883199C0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 264)), (ts4_word)(ts4_word)&loc50[0]);
+        ts4_read_u8_to_u8_883199C0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 264)), (ts4_word)(ts4_word)&loc50[0]);
         fn_88319C40((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 264)), (ts4_word)-1, (ts4_word)1);
         return (((*(unsigned char *)((char *)loc50 + 0)) + -10) != 0);
     }

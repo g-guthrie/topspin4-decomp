@@ -6,7 +6,7 @@
 void *fn_882EC0E0(int type);                                         /* png_create_struct */
 int _setjmp(void *env);
 void fn_882EC1E0(ex7_png_struct *png_ptr, void *ptr);                /* png_free */
-void fn_882EC158(ex7_png_struct *png_ptr);                           /* png_destroy_struct */
+void ts4_call_with_tag_if_nonnull_882EC158(ex7_png_struct *png_ptr);                           /* png_destroy_struct */
 void ts4_set_u32_off548_882E26D8(ex7_png_struct *png_ptr, void *error_ptr, void *error_fn, void *warning_fn);
 void fn_882E26E8(ex7_png_struct *png_ptr, const char *message);
 void *ts4_if_call_seq_fn_88888668_882EC170(ex7_png_struct *png_ptr, unsigned int size);
@@ -25,7 +25,7 @@ ex7_png_struct *ex7_png_create_write_struct_882E7000(const char *user_png_ver, v
         return 0;
     if (_setjmp(png_ptr->jmpbuf)) {
         fn_882EC1E0(png_ptr, png_ptr->zbuf);
-        fn_882EC158(png_ptr);
+        ts4_call_with_tag_if_nonnull_882EC158(png_ptr);
         return 0;
     }
     ts4_set_u32_off548_882E26D8(png_ptr, error_ptr, error_fn, warning_fn);
@@ -41,7 +41,7 @@ ex7_png_struct *ex7_png_create_write_struct_882E7000(const char *user_png_ver, v
 void *fn_882EC0E0(int type);                                         /* png_create_struct */
 int _setjmp(void *env);                                              /* setjmp */
 void fn_882EC1E0(ex7_png_struct *png_ptr, void *ptr);                /* png_free */
-void fn_882EC158(ex7_png_struct *png_ptr);                           /* png_destroy_struct */
+void ts4_call_with_tag_if_nonnull_882EC158(ex7_png_struct *png_ptr);                           /* png_destroy_struct */
 void ts4_set_u32_off548_882E26D8(ex7_png_struct *png_ptr, void *error_ptr, void *error_fn, void *warning_fn);
 void fn_882E26E8(ex7_png_struct *png_ptr, const char *message);
 void *ts4_if_call_seq_fn_88888668_882EC170(ex7_png_struct *png_ptr, unsigned int size);
@@ -66,7 +66,7 @@ ex7_png_struct *ex7_png_create_read_struct_882E7470(const char *user_png_ver, vo
         return 0;
     if (_setjmp(png_ptr->jmpbuf)) {
         fn_882EC1E0(png_ptr, png_ptr->zbuf);
-        fn_882EC158(png_ptr);
+        ts4_call_with_tag_if_nonnull_882EC158(png_ptr);
         return 0;
     }
     ts4_set_u32_off548_882E26D8(png_ptr, error_ptr, error_fn, warning_fn);

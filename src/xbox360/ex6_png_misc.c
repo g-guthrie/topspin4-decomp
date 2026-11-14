@@ -87,9 +87,9 @@ void ex6_png_set_gamma_882E8458(ex6_png_struct *png_ptr, double screen_gamma, do
     png_ptr->screen_gamma = (float)screen_gamma;
 }
 
-void fn_882E6918(ex6_png_struct *png_ptr, unsigned char *row);                       /* png_write_row */
+void ex8_png_write_row_882E6918(ex6_png_struct *png_ptr, unsigned char *row);                       /* png_write_row */
 void ex7_png_write_destroy_882E6C68(ex6_png_struct *png_ptr);                                          /* png_write_destroy */
-void fn_882EC158(void *ptr);                                                        /* png_free */
+void ts4_call_with_tag_if_nonnull_882EC158(void *ptr);                                                        /* png_free */
 void fn_882E7940(ex6_png_struct *png_ptr, unsigned char *row, int arg);             /* png_write_row, 3-arg form */
 int ts4_if_get_u8_off613_882E8278(ex6_png_struct *png_ptr);                         /* png_set_interlace_handling */
 
@@ -99,7 +99,7 @@ void ex6_png_write_rows_882E70F8(ex6_png_struct *png_ptr, unsigned char **row_po
     unsigned int i;
     unsigned char **rp = row_pointers;
     for (i = 0; i < num_rows; i++, rp++)
-        fn_882E6918(png_ptr, *rp);
+        ex8_png_write_row_882E6918(png_ptr, *rp);
 }
 
 /* Free the info struct and the write struct and clear the caller's pointers (libpng png_destroy_write_struct).
@@ -110,12 +110,12 @@ void ex6_png_destroy_write_struct_882E7138(ex6_png_struct **png_ptr_ptr, void **
     if (png_ptr_ptr != 0)
         png_ptr = *png_ptr_ptr;
     if (info_ptr_ptr != 0 && *info_ptr_ptr != 0) {
-        fn_882EC158(*info_ptr_ptr);
+        ts4_call_with_tag_if_nonnull_882EC158(*info_ptr_ptr);
         *info_ptr_ptr = 0;
     }
     if (png_ptr != 0) {
         ex7_png_write_destroy_882E6C68(png_ptr);
-        fn_882EC158(png_ptr);
+        ts4_call_with_tag_if_nonnull_882EC158(png_ptr);
         *png_ptr_ptr = 0;
     }
 }

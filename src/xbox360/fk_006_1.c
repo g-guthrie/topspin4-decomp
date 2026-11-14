@@ -82,7 +82,7 @@ ts4_word fn_88326940();
 ts4_word fn_88327480();
 ts4_word fn_88327878();
 ts4_word fn_883290D0();
-ts4_word fn_88329658();
+ts4_word ts4_strlen_88329658();
 ts4_word fn_883296A0();
 ts4_word fn_8832AEE0();
 ts4_word ts4_if_get_u32_offd8_8832AFB0();

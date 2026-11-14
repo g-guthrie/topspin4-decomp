@@ -59,7 +59,7 @@ extern char lbl_88CAD578[];
 extern char lbl_88D26FCC[];
 ts4_word KeTlsGetValue();
 ts4_word fn_88315F10();
-ts4_word fn_88317A60();
+ts4_word ts4_fetch_then_use_float_88317A60();
 ts4_word ts4_call_then_conditionally_forward_result_88317BD8();
 ts4_word fn_8832EDB0();
 ts4_word fn_883DD2B0();
@@ -255,10 +255,10 @@ ts4_word ts4_set_u8_off1d_883FB510(ts4_word a0)
     return 0;
 }
 
-/* Swing_DLL.xex 0x883FB590: get u32@0x80, fn_88317A60 */
+/* Swing_DLL.xex 0x883FB590: get u32@0x80, ts4_fetch_then_use_float_88317A60 */
 ts4_word ts4_get_u32_off80_883FB590(ts4_word a0)
 {
-    return fn_88317A60((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 128)));
+    return ts4_fetch_then_use_float_88317A60((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 128)));
 }
 
 /* Swing_DLL.xex 0x883FB598: get u32@0x80, ts4_lookup_then_forward_88317AA8 */

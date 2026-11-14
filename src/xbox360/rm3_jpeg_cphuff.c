@@ -29,10 +29,10 @@ struct ts4_jpeg_phuff_entropy {
     long *count_ptrs[4];                  /* 0x5c */
 };
 
-void fn_882FD0D8(struct ts4_jpeg_phuff_entropy *entropy, unsigned int code, int size); /* emit_bits */
-void fn_882FD238(struct ts4_jpeg_phuff_entropy *entropy, char *bufstart, unsigned int nbits); /* emit_buffered_bits */
-void fn_882FD3C8(struct ts4_jpeg_phuff_entropy *entropy); /* emit_eobrun */
-void fn_882FD4C0(struct ts4_jpeg_phuff_entropy *entropy, int restart_num); /* emit_restart */
+void ex8_emit_bits_882FD0D8(struct ts4_jpeg_phuff_entropy *entropy, unsigned int code, int size); /* emit_bits */
+void ex8_emit_buffered_bits_882FD238(struct ts4_jpeg_phuff_entropy *entropy, char *bufstart, unsigned int nbits); /* emit_buffered_bits */
+void ex8_emit_eobrun_882FD3C8(struct ts4_jpeg_phuff_entropy *entropy); /* emit_eobrun */
+void ex8_emit_restart_882FD4C0(struct ts4_jpeg_phuff_entropy *entropy, int restart_num); /* emit_restart */
 
 /* Counts or emits one Huffman symbol (IJG emit_symbol, inlined). */
 static void emit_symbol(struct ts4_jpeg_phuff_entropy *entropy, int tbl_no, int symbol)
@@ -41,7 +41,7 @@ static void emit_symbol(struct ts4_jpeg_phuff_entropy *entropy, int tbl_no, int 
         entropy->count_ptrs[tbl_no][symbol]++;
     else {
         struct ts4_jpeg_c_derived_tbl *tbl = entropy->derived_tbls[tbl_no];
-        fn_882FD0D8(entropy, tbl->ehufco[symbol], tbl->ehufsi[symbol]);
+        ex8_emit_bits_882FD0D8(entropy, tbl->ehufco[symbol], tbl->ehufsi[symbol]);
     }
 }
 
@@ -65,7 +65,7 @@ int ts4_jpeg_encode_mcu_AC_refine_882FDB30(struct ts4_jpeg_comp *cinfo, short (*
 
     if (cinfo->restart_interval)
         if (entropy->restarts_to_go == 0)
-            fn_882FD4C0(entropy, entropy->next_restart_num);
+            ex8_emit_restart_882FD4C0(entropy, entropy->next_restart_num);
 
     block = MCU_data[0];
 
@@ -91,10 +91,10 @@ int ts4_jpeg_encode_mcu_AC_refine_882FDB30(struct ts4_jpeg_comp *cinfo, short (*
         }
 
         while (r > 15 && k <= EOB) {
-            fn_882FD3C8(entropy);
+            ex8_emit_eobrun_882FD3C8(entropy);
             emit_symbol(entropy, entropy->ac_tbl_no, 0xF0);
             r -= 16;
-            fn_882FD238(entropy, BR_buffer, BR);
+            ex8_emit_buffered_bits_882FD238(entropy, BR_buffer, BR);
             BR_buffer = entropy->bit_buffer;
             BR = 0;
         }
@@ -104,14 +104,14 @@ int ts4_jpeg_encode_mcu_AC_refine_882FDB30(struct ts4_jpeg_comp *cinfo, short (*
             continue;
         }
 
-        fn_882FD3C8(entropy);
+        ex8_emit_eobrun_882FD3C8(entropy);
 
         emit_symbol(entropy, entropy->ac_tbl_no, (r << 4) + 1);
 
         temp = ((*block)[lbl_88025F10[k]] < 0) ? 0 : 1;
-        fn_882FD0D8(entropy, (unsigned int)temp, 1);
+        ex8_emit_bits_882FD0D8(entropy, (unsigned int)temp, 1);
 
-        fn_882FD238(entropy, BR_buffer, BR);
+        ex8_emit_buffered_bits_882FD238(entropy, BR_buffer, BR);
         BR_buffer = entropy->bit_buffer;
         BR = 0;
         r = 0;
@@ -121,7 +121,7 @@ int ts4_jpeg_encode_mcu_AC_refine_882FDB30(struct ts4_jpeg_comp *cinfo, short (*
         entropy->EOBRUN++;
         entropy->BE += BR;
         if (entropy->EOBRUN == 0x7FFF || entropy->BE > (1000 - 64 + 1))
-            fn_882FD3C8(entropy);
+            ex8_emit_eobrun_882FD3C8(entropy);
     }
 
     cinfo->dest->next_output_byte = entropy->next_output_byte;

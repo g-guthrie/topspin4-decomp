@@ -58,7 +58,7 @@ float gp4_wrap_angle(float a);                       /* fn_8817B608: wraps into 
  * to_local:  v = (v - origin) * 0.01  for +0x40 (pos), +0x60 (pos_prev), +0x100 (p_from), +0x130 (arc2_pos)
  *            v = v * 0.01             for +0x110 (p_to), +0x140 (arc2_vel)        (no origin shift)
  * to_world:  inverse (v * 100 + origin / v * 100). Guarded by S->local_frame (+0x40) so it is idempotent.
- * (lbl_88D46390 = (0.01,0.01,0.01,0), lbl_88D463A0 = (100,100,100,0), both set up at start by fn_889D22A8/fn_889D22D0.)
+ * (lbl_88D46390 = (0.01,0.01,0.01,0), lbl_88D463A0 = (100,100,100,0), both set up at start by ts4_copy_vec_const_then_call_889D22A8/ts4_copy_vec_const_then_call_889D22D0.)
  * fn_889C0F70 / fn_889C0EF8 apply only the scaling (no origin) to the launch command vectors +0x340 and +0x350,
  * guarded by S->launch_local_frame (+0x41). Note: the launch writes p_from/p_to straight from the scaled command vectors. */
 void gp4_to_local(struct Gp4Stepper *S, void *B)      /* fn_889C1160 */

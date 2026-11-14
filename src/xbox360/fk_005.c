@@ -13,9 +13,9 @@ typedef unsigned long ts4_word;
 extern char __imp_VdGlobalDevice[];
 extern char ts4_jpeg_consume_markers_882EC918[];
 extern char fn_882EF810[];
-extern char fn_882EF888[];
-extern char fn_882EF9D8[];
-extern char fn_882EFB30[];
+extern char ex8_write_frame_header_882EF888[];
+extern char ex8_write_scan_header_882EF9D8[];
+extern char ex8_write_tables_only_882EFB30[];
 extern char fn_882F5260[];
 extern char fn_882F52F8[];
 extern char ts4_forward_field12_of_second_arg_882F5390[];
@@ -70,11 +70,11 @@ ts4_word ts4_if_get_u32_off4_882EDDF8();
 ts4_word ts4_jpeg_jcopy_sample_rows_882EE8A0();
 ts4_word fn_882EE920();
 ts4_word ts4_jpeg_start_iMCU_row_882F5C70();
-ts4_word fn_882FD0D8();
-ts4_word fn_882FD3C8();
+ts4_word ex8_emit_bits_882FD0D8();
+ts4_word ex8_emit_eobrun_882FD3C8();
 ts4_word fn_883089E0();
 ts4_word fn_88309DB8();
-ts4_word fn_8830B140();
+ts4_word ts4_get_unit_and_chunks_8830B140();
 ts4_word fn_8830B4C8();
 ts4_word fn_8830B570();
 ts4_word fn_8830B840();
@@ -1868,8 +1868,8 @@ ts4_word ts4_call_seq_u32_off18_882FDE30(ts4_word a0)
     t2 = *(ts4_word *)((char *)(ts4_word)(a0) + 372);
     *(ts4_word *)((char *)(ts4_word)(t2) + 16) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t1) + 0));
     *(ts4_word *)((char *)(ts4_word)(t2) + 20) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 24))) + 4));
-    fn_882FD3C8((ts4_word)t2);
-    t7 = fn_882FD0D8((ts4_word)t2, (ts4_word)127, (ts4_word)7);
+    ex8_emit_eobrun_882FD3C8((ts4_word)t2);
+    t7 = ex8_emit_bits_882FD0D8((ts4_word)t2, (ts4_word)127, (ts4_word)7);
     t8 = *(ts4_word *)((char *)(ts4_word)(t2) + 16);
     *(ts4_word *)((char *)(ts4_word)(t2) + 24) = (ts4_word)0;
     *(ts4_word *)((char *)(ts4_word)(t2) + 28) = (ts4_word)0;
@@ -1964,7 +1964,7 @@ ts4_word ts4_if_call_seq_fn_88309DB8_88308B60(ts4_word a0, ts4_word a1, ts4_word
     return p4;
 }
 
-/* Swing_DLL.xex 0x88308BC0: if_call_seq fn_88309DB8, fn_8830B140 */
+/* Swing_DLL.xex 0x88308BC0: if_call_seq fn_88309DB8, ts4_get_unit_and_chunks_8830B140 */
 ts4_word ts4_if_call_seq_fn_88309DB8_88308BC0(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word p4;
@@ -1977,7 +1977,7 @@ ts4_word ts4_if_call_seq_fn_88309DB8_88308BC0(ts4_word a0, ts4_word a1, ts4_word
     p4 = (ts4_word)t1;
     if ((int)t1 == 0) {
         t2 = loc50[0];
-        t3 = fn_8830B140((ts4_word)t2, (ts4_word)a1, (ts4_word)a2);
+        t3 = ts4_get_unit_and_chunks_8830B140((ts4_word)t2, (ts4_word)a1, (ts4_word)a2);
         p4 = (ts4_word)t3;
     }
     return p4;

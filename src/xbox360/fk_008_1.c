@@ -59,7 +59,7 @@ extern char lbl_88CAD578[];
 extern char lbl_88D26FCC[];
 ts4_word KeTlsGetValue();
 ts4_word fn_88315F10();
-ts4_word fn_88317A60();
+ts4_word ts4_fetch_then_use_float_88317A60();
 ts4_word ts4_call_then_conditionally_forward_result_88317BD8();
 ts4_word fn_8832EDB0();
 ts4_word fn_883DD2B0();
