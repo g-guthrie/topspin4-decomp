@@ -170,6 +170,7 @@ class Gen:
         self.loops = cfg.natural_loops(self.order, self.blocks)
         self.pdom = cfg.post_dominators(self.blocks)
         self.active = []          # loop headers being emitted (innermost last)
+        self.exits = []           # exit block of each loop being emitted (None when unknown)
         self.latch = None         # (continue condition, exit block) recorded by a do-while latch
         self._stack_layout()
         self.ntmp = 0
@@ -805,6 +806,8 @@ class Gen:
         do-while latch condition is recorded ('latch').  `entering` lets the
         first block be the header of the loop that is being emitted."""
         while True:
+            if self.exits and bid == self.exits[-1] and not entering:
+                return 'brk'
             if bid in stop:
                 return bid
             if bid in self.active and not entering:
@@ -851,8 +854,20 @@ class Gen:
         J = cfg.ipdom(self.pdom, bid)
         if J in absorbed:
             raise Skip('fold join')
-        sA, oA, rA = self.arm(A, stop, st, J) if A != J else (None, [], J)
-        sB, oB, rB = self.arm(B, stop, st, J) if B != J else (None, [], J)
+        X = self.exits[-1] if self.exits else None
+        sA, oA, rA = self.arm(A, stop, st, J) if A != J or (J == X and X is not None) else (None, [], J)
+        sB, oB, rB = self.arm(B, stop, st, J) if B != J or (J == X and X is not None) else (None, [], J)
+        if (rA == 'brk') != (rB == 'brk'):
+            # one arm leaves the loop: `if (c) { ...; break; }` then carry on in the other arm
+            (e1, o1, sk, ok2, rk) = (e, oA, sB, oB, rB) if rA == 'brk' else (cfg.neg(e), oB, sA, oA, rA)
+            if rk is None:
+                raise Skip('break/return mix')
+            out.append(('if', cfg.cstr(e1), o1 + ['break;'])); out.extend(ok2)
+            for k in sk:
+                st[k] = sk[k]
+            return rk
+        if rA == 'brk' and rB == 'brk':
+            raise Skip('double break')
         if (rA is None) != (rB is None):
             # one arm leaves the function (early return, also inside loops): emit it as
             # `if (c) { ...; return; }` and carry on in the other arm's state
@@ -1000,13 +1015,24 @@ class Gen:
             out.append(f'{n} = (ts4_word){val};')
             sw['regs'][r] = n; sw['written'].add(r); sw['clobbered'].discard(r)
         self.active.append(h)
+        X = None
+        if whileform:
+            X = [x for x in cfg.succs(hb) if x not in L]
+            X = X[0] if len(X) == 1 and X[0] > 0 else None
+        else:
+            for b in L:
+                bb = self.blocks[b]
+                if h in cfg.succs(bb) and bb.term[0] == 'cond':
+                    o = [x for x in cfg.succs(bb) if x not in L]
+                    X = o[0] if len(o) == 1 and o[0] > 0 else None
+        self.exits.append(X)
         try:
             if whileform:
                 res = self._while(h, hb, L, sw, lv, out)
             else:
                 res = self._dowhile(h, L, sw, lv, out)
         finally:
-            self.active.pop()
+            self.active.pop(); self.exits.pop()
         # continue from the loop exit with the exit state
         exit_id, exit_st = res
         for k in ('regs', 'written', 'clobbered', 'fregs', 'fwritten', 'ctr', 'ctr_reg', 'cmps', 'stackargs', 'cnt'):

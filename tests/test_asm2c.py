@@ -167,6 +167,13 @@ class StructurizerTests(unittest.TestCase):
         self.assertIn("do {", r["body"])
         self.assertRegex(r["body"], r"while \(--c\d+ != 0\)")
 
+    def test_break_inside_while_loop(self):
+        t = ["cmplwi cr6,r3,0", f"beq cr6,0x0 -> {tgt(9)}", "lwz r4,0(r3)", "stw r4,8(r5)", "cmpwi cr6,r4,5",
+             f"beq cr6,0x0 -> {tgt(9)}", "stw r4,12(r5)", "lwz r3,4(r3)", f"b 0x0 -> {tgt(0)}", "blr"]
+        r = gen(t)
+        self.assertIn("while (", r["body"])
+        self.assertIn("break;", r["body"])
+
     def test_typed_stack_locals(self):
         t = ["stfd f1,0x50(r1)", "lwz r3,0x54(r1)", "lbz r4,0x58(r1)", "stb r4,0x59(r1)", "blr"]
         r = gen(t)
