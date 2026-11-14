@@ -1086,6 +1086,21 @@ class K6Tests(unittest.TestCase):
         self.assertIn("while (", gen(t, mode=2)["body"])
         self.assertFalse(translate.Gen.ljoin)
 
+    def test_both_arms_break(self):
+        b = lambda m, i: f"{m} 0x0 -> {tgt(i)}"
+        t = ["li r4,0", "lwz r11,0(r3)", "cmpwi cr6,r11,0", b("bne cr6,", 10), "cmpwi cr6,r5,1", b("beq cr6,", 8),
+             "stw r4,0(r3)", b("b", 13), "stw r5,4(r3)", b("b", 13), "addi r3,r3,4", "cmplw cr6,r3,r6",
+             b("bne cr6,", 1), "mr r3,r4", "blr"]
+        body = gen(t, mode=2)["body"]
+        self.assertIn("            if ((int)a2 == 1) {\n                *(ts4_word *)((char *)(ts4_word)(lv1) + 4) = (ts4_word)a2;\n"
+                      "                break;\n            }\n            *(ts4_word *)((char *)(ts4_word)(lv1) + 0) = (ts4_word)0;\n"
+                      "            break;\n", body)
+
+    def test_int_to_float_spill_without_extension(self):
+        # lha leaves a sign-extended value: std/lfd/fcfid converts it without extsw
+        t = ["lha r11,0x1c(r3)", "std r11,-0x10(r1)", "lfd f0,-0x10(r1)", "fcfid f0,f0", "frsp f1,f0", "blr"]
+        self.assertIn("((float)((double)((ts4_s64)(*(short *)((char *)(ts4_word)(a0) + 28)))))", gen(t, mode=2)["body"])
+
     def test_xforms_bool_temporary(self):
         import xforms
         body = ("    ts4_word p1;\n    ts4_word p2;\n\n    if ((int)a0 == 0) {\n        p1 = (ts4_word)1;\n"

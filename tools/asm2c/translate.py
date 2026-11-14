@@ -2408,8 +2408,8 @@ class Gen:
         X = self.exits[-1] if self.exits else None
         sA, oA, rA = self.arm(A, stop, st, J) if A != J or (J == X and X is not None) else (None, [], J)
         sB, oB, rB = self.arm(B, stop, st, J) if B != J or (J == X and X is not None) else (None, [], J)
-        if (rA == 'brk') != (rB == 'brk'):
-            # one arm leaves the loop: `if (c) { ...; break; }` then carry on in the other arm
+        if (rA == 'brk') != (rB == 'brk') or (rA == 'brk' and rB == 'brk' and sA is not None and sB is not None):
+            # one arm leaves the loop (both: the second one's break is the caller's): `if (c) { ...; break; }` then carry on in the other arm
             (e1, o1, sk, ok2, rk) = (e, oA, sB, oB, rB) if rA == 'brk' else (cfg.neg(e), oB, sA, oA, rA)
             sbrk = sA if rA == 'brk' else sB
             tail_ = self._break_as_return(sbrk) if self.rbrk else None
