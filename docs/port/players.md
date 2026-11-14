@@ -184,12 +184,23 @@ skin through the clothes. Confidence: data **V**, "listed = visible" **I** (cons
 * `anim_rules.json` (`animrules`) holds the 3,184 AnimationsDB records (frames, group/sub, SpeedCoef, IgnoreSpeedCoef,
   NoMirror, AnimEvents, TransitionEvents, RotY, qualifiers), 126 groups, 34 move sets, the transition rules and the
   sparse matrix. Source: AnimationsDB.bin `3a3a98cf...`, swinganimation.bin `901b8cef...`.
-* `clip_map.json` (`tools/port/clip_map.py`, docs/port/clip-map.md) maps records to clips. A run without cutscenes
-  links 2,143 records to Core clips. **Locomotion clips (Jog_*, Rush_*, Sidesteps_*) are AOD clips** in
-  `CutScenes.arc`, either alone or after a Core lead-in.
-* `aodclips` exports the AOD clips a record list needs and writes `players/clip_chains.json`
-  (`{record: {core, aod, kind}}`). `ClipStore.concatClips` joins the lead-in and the AOD clip, offset by one 60 Hz frame
-  (record frames = Core + AOD frames, V).
+* `clip_map.json` (`tools/port/clip_map.py`, docs/port/clip-map.md) maps records to clips: 2,143 exporter links
+  (run with cutscenes, 2,093 AOD headers scanned). Some records are linked only through `records[].variants`, not the
+  `"#i"` map. Jog_Right (#1632 to core 1068) and Sidesteps_Right (#1916 to core 38) are examples. `ClipStore` therefore
+  seeds its record-to-clip table from `clip_chains.json` as well.
+* `aodclips` resolves a record list through the clip map and writes `players/clip_chains.json`
+  (`{record: {core, aod, kind}}`). It exports AOD clips when a record needs one, and `ClipStore.concatClips` joins a
+  lead-in and an AOD clip offset by one 60 Hz frame (record frames = Core + AOD frames, V). M: for the 162 records the
+  viewer needs (Men and Women: Jog, Rush and sidestep sectors, idle, and the swing picks), every chain is `kind: core`.
+  None needs an AOD clip; the 162 Core clips are listed in `core_needed`.
+* The Core clips must be exported together with the clip index in a single run:
+  `export_assets.py --iso ... --only havok animdb --core-clips <list> --clip-map auto`. An animdb run alone indexes only
+  the clips its own havok pass wrote, so `animations.json` loses the `file` of the others.
+* **Facing (M).** Every exported Core clip has `B_Hips` at about -90 deg yaw in Havok space (Jog_Front -80, Jog_Right
+  -87, Rush_Front -76, Idle -104). The bind pose is +90 deg. An animated player therefore faces 180 deg from the
+  bind-pose forward that `PlayerRig` aligns to +x (foot to toe). `GameAnimator.calibrateFacing()` (after preload) adds
+  `facingOffset(rest, clip)` (0 or PI) to the rig's facing node, so heading 0 faces +x for the clips. The legacy
+  `animator.js` path does not do this.
 
 ### 6.2 Per-tick state: P1's core first
 P1 is adding `Ts4AnimView` / `ts4_anim_view()` to `port/core/include/ts4core.h` (64 bytes: layer, clip, clip_hash,
@@ -252,6 +263,12 @@ exactly this way is **I** (it plays right-handed clips mirrored, V; its handling
 * Headless render of `players.html` (Chrome 153, SwiftShader, three.js 0.160.0 copied into git-ignored `work/a4_preview/`
   because the sandboxed browser cannot reach the CDN): Nadal0 in the T pose before clips were linked. The orange
   sleeveless top, white shorts, headband and wristbands are correct, and no skin shows through the clothes.
-  (Post-animation renders: see the agent report.)
-* `python3 -m unittest tests.test_players` (16 OK), `node port/web/test/players.test.mjs` (pure logic, mirror,
-  appearance, Ts4AnimView decode OK).
+* After the clip export, headless renders of `players.html?t=...` (Federer0 right-handed, Nadal0 left-handed):
+  * t=1.0: Federer plays Sidesteps_Right and Nadal plays Jog_Right (sector 6, faster scripted speed).
+  * t=5.0: the same players play Sidesteps_Left and Jog_Left (sector 2).
+  * t=2.6, swing: Federer plays Swing_FH_Flat_Power_InsideOut (racket in his right hand, forehand on his right).
+    Nadal's swing is mirrored: Swing_BH_BadReach_Jog_FrontLeft (racket in his left hand, reaching to his right).
+  * t=3.2: both play Idle_Wait_Loop facing the camera (heading +z) after `calibrateFacing`. Before the fix they faced
+    away.
+* `python3 -m unittest tests.test_players` (16 OK), `node port/web/test/players.test.mjs` (9 tests: pure logic, mirror,
+  appearance, facing offset, Ts4AnimView decode OK).

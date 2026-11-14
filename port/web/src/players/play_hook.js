@@ -33,6 +33,7 @@ export async function attachGameAnimation(pm) {
       pm.game.push(an);
       pm.gameModels.push(new PlayerModel().attach(rig.skeletonScene, cfg.meshes + cfg.players[i] + "/player.gltf"));
       await store.preload(an.wanted());
+      an.calibrateFacing();
     }
     pm.gameStore = store;
     pm.status += "; game animation driver: " + store.raw.size + " clips" + (store.missing.size ? ", " + store.missing.size + " records not exported" : "");

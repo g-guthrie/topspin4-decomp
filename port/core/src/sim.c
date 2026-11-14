@@ -67,7 +67,9 @@ static void fatigue_graphs(Ts4Core *c, int i)
     for (k = 0; k < 3; k++) ts4_bgraph_h(c, hashes[k], i);
 }
 
-static float vigor_max(const Ts4SimPlayer *p) { float m = PS_GET(p, 0xF64); return m > 0.0f ? m : 1.0f; }
+/* S+0xF64 (#80ce1a10 OUT 1) is only labelled "VigorMax?" by the gameplay work and comes out near 0.69 for an
+ * average profile, so it is not used as a cap: vigor stays in [0,1] (port policy). */
+static float vigor_max(const Ts4SimPlayer *p) { (void)p; return 1.0f; }
 
 static void fatigue_tick(Ts4Core *c, int i, float dist_cm)
 {

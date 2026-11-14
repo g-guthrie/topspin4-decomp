@@ -224,6 +224,73 @@ def node_types(obj, out):
             node_types(v, out)
 
 
+def _action_index(actions):
+    return {a["name"]: a for a in actions}
+
+
+def reachable_transitions(actions, start, depth=6, seen=None):
+    """Scene transitions (ChangeScene / PushScene / PushLayer) reachable from one action by following
+    ``$Scene.Action(...)`` and ``$Action`` calls of the same script (both branches of every condition)."""
+    idx = _action_index(actions)
+    seen = set() if seen is None else seen
+    out = []
+    if start in seen or depth < 0 or start not in idx:
+        return out
+    seen.add(start)
+    for blk in idx[start].get("blocks", []):
+        for st in blk["do"]:
+            for m in re.finditer(r"\b(ChangeScene|PushScene|PushLayer)\('([^']+)'", st):
+                out.append([m.group(1), m.group(2)])
+            m = re.match(r"^\$(?:[A-Za-z0-9_]+\.)?([A-Za-z_][A-Za-z0-9_]*)", st.strip())
+            if m:
+                out.extend(reachable_transitions(actions, m.group(1), depth - 1, seen))
+    return out
+
+
+ID_TEST = re.compile(r"\.Id (~=|==) (-?\d+)")
+
+
+def menu_targets(rec):
+    """For list menus: {item Id: [[command, scene], ...]} from the scene's conditional actions.
+
+    A Switch/If action has one block per case whose condition calls a closure testing
+    ``currentControl.Items[curSel + 1].Id`` against a constant; the case action's transitions are
+    collected with ``reachable_transitions``."""
+    acts = rec.get("actions") or []
+    lua = rec.get("lua") or {}
+    clos = rec.get("action_closures") or {}
+    out = {}
+    for a in acts:
+        for blk in a.get("blocks", []):
+            cond = blk.get("if") or ""
+            m = re.search(r"self\.(__Action_\d+)\(", cond)
+            if not m or m.group(1) not in clos:
+                continue
+            body = "\n".join(lua.get(clos[m.group(1)], []))
+            t = ID_TEST.search(body)
+            if not t:
+                continue
+            item = int(t.group(2)) & 0xFFFFFFFF
+            for st in blk["do"]:
+                c = re.match(r"^\$(?:[A-Za-z0-9_]+\.)?([A-Za-z_][A-Za-z0-9_]*)", st.strip())
+                if c:
+                    tr = reachable_transitions(acts, c.group(1))
+                    if tr:
+                        out.setdefault("%08x" % item, []).extend(tr)
+    return out
+
+
+def static_lists(rec):
+    """{control: {"items": [...], "mapping": [...]}} from the closure writes (last write wins)."""
+    out = {}
+    for _clo, writes in (rec.get("closure_writes") or {}).items():
+        for path, val in writes:
+            m = re.match(r"^currentScene\.Controls\.(.+)\.(Items|ItemMapping)$", path)
+            if m and isinstance(val, list) and val:
+                out.setdefault(m.group(1), {})["items" if m.group(2) == "Items" else "mapping"] = val
+    return out
+
+
 # ------------------------------------------------------------------------------------------ export
 
 class Exporter:
@@ -376,6 +443,8 @@ class Exporter:
             self.lua_strings.update(acts["strings"])
         if ".anims" in parts:
             rec["anims"] = ui_actions.parse_anims(parts[".anims"])
+        rec["menu_targets"] = menu_targets(rec)
+        rec["lists"] = static_lists(rec)
         self.scenes[key] = rec
 
     def read_ui_meshes(self, data):

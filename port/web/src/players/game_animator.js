@@ -14,6 +14,7 @@ import { makeMirror } from "./pose_mirror.js";
 import {
   FPS, SECTOR, sector8, movesetPick, playRate, cyclePhase, cycleWindow, chooseInSector, swingClipTime,
   swingMatches, SWING_KEYS, mirrorFor, eventPhase, viewHeadingToYaw, viewDirToLo,
+  facingOffset,
 } from "./anim_logic.js";
 
 const BLEND_FRAMES = 15;                      // TransitionRule BlendIn/OutFrameCount (15/15, V data)
@@ -39,6 +40,8 @@ export class ClipStore {
   constructor(loader, base, animDb, rec2core, chains = null) {
     this.loader = loader; this.base = base; this.rec2core = rec2core;
     this.chains = chains?.chains || {}; this.aodFiles = chains?.aod_files || {};
+    // Core-only chains come from clip_map records[].variants, which recordToCore's "#i" map may not list
+    for (const [r, ch] of Object.entries(this.chains)) if (!ch.aod && ch.core != null && !rec2core.has(+r)) rec2core.set(+r, ch.core);
     this.files = new Map((animDb?.clips || []).map((c) => [c.index, c.file]));
     this.raw = new Map(); this.byKey = new Map(); this.rootSpeed = new Map(); this.missing = new Set(); this.mirrors = new WeakMap();
   }
@@ -174,9 +177,25 @@ export class GameAnimator {
     this.fading = [];          // actions fading out
     this.swing = null;         // {record, clip, action, w}
     this.info = {};
+    const hips = rig.skeletonScene?.getObjectByName("B_Hips");
+    this.restHips = hips ? hips.quaternion.toArray() : null;
+    this.baseFacing = rig.facing ? rig.facing.rotation.y : 0;
   }
 
   playable = (c) => this.store.playable(c.i);
+
+  /** turn the rig's facing node so that the clips' forward (not the bind pose's) points to +x; call after preload */
+  calibrateFacing() {
+    if (!this.restHips || !this.rig.facing) return 0;
+    for (const clip of this.store.raw.values()) {
+      const t = clip?.tracks?.find((k) => k.name === "B_Hips.quaternion");
+      if (!t) continue;
+      const off = facingOffset(this.restHips, Array.from(t.values.slice(0, 4)));
+      this.rig.facing.rotation.y = this.baseFacing + off;
+      return (this.facingOffset = off);
+    }
+    return 0;
+  }
 
   /** locomotion move set for a planar speed (cm/s) and the sim thresholds (PORT: regime from speed; the planner's
    *  regime (Rush 20 / JogJogPrepared 21 / JogPrepared 22) is not in Ts4PlayerView yet) */

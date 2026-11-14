@@ -303,10 +303,14 @@ void ts4_anim_swing(Ts4Core *c, int player, uint32_t stroke, int volley, int sma
     {
         const uint8_t *cl = clip_at(c, q.best);
         float cf = ts4_lef32(cl + 12) * ts4_lef32(cl + 4);
-        float rate = ticks_to_contact > 0 ? cf / (float)ticks_to_contact : gcoef;   /* contact frame lands on contact */
+        /* the contact frame lands on the contact tick (gp7 time scaling): play at the global rate from the frame
+         * that leaves exactly ticks_to_contact, scaling only when the clip is too short for that (policy) */
+        float f0 = cf - (float)ticks_to_contact * gcoef, rate;
+        if (f0 < 0.0f) f0 = 0.0f;
+        rate = ticks_to_contact > 0 ? (cf - f0) / (float)ticks_to_contact : gcoef;
         memmove(&s->occ[1], &s->occ[0], 7 * sizeof s->occ[0]);
         s->occ[0] = ts4_le32(cl);
-        play(c, s, TS4_ANIM_SWING, q.best, 0.0f, rate);
+        play(c, s, TS4_ANIM_SWING, q.best, f0, rate);
         s->contact_frame = cf;
         s->moveset = -1;
     }

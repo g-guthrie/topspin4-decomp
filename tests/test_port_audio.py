@@ -137,6 +137,7 @@ class FevTest(unittest.TestCase):
         rec = audio_export.event_record(fev, fev.event("/Root/Shot/Flat"), {("Bank", 0): "banks/x/000_a.wav"})
         waves = rec["layers"][0]["sounds"][0]["waves"]
         self.assertEqual(waves[0]["file"], "banks/x/000_a.wav")
+        self.assertFalse(waves[0]["loop"])
         self.assertIsNone(waves[1]["file"])
         self.assertEqual(rec["layers"][0]["sounds"][0]["playmode"], "random_no_repeat")
 

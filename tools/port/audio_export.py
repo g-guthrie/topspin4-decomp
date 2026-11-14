@@ -13,7 +13,8 @@ Reads the user's own disc image in place and writes everything below --out (git-
          .mp3  MPEG samples copied as they are (browsers play them)
          .xma.wav  with --format native, or when ffmpeg is missing: XMA2 RIFF, decodable with ffmpeg only
   <venue>/events.json   event path -> {type, category, volume, pitch, randomisation, max_playbacks, params,
-                        layers: [{param, envelopes, sounds: [{start, length, playmode, waves: [{file, weight}]}]}]}
+                        layers: [{param, envelopes, sounds: [{start, length, playmode, waves: [{file, loop, weight}]}]}]}
+                        (loop = FSB sample mode bit 0x2, FSOUND_LOOP_NORMAL)
   manifest.json         venues, banks, source entries (arc, entry hash, size, sha256), tool versions
 
 Bank lookup for a .fev bank name: `<bank>.fsb` in the same archive, then Media/Sounds/<bank>.fsb on the disc
@@ -85,7 +86,10 @@ def event_record(fev, ev, bank_files):
             for w in sd["waves"]:
                 if w["type"] != 0:
                     continue
-                waves.append({"file": bank_files.get((w["bank"], w["index"])), "weight": w["weight"],
+                info = bank_files.get((w["bank"], w["index"])) or {}
+                if isinstance(info, str):
+                    info = {"file": info}
+                waves.append({"file": info.get("file"), "loop": bool(info.get("loop")), "weight": w["weight"],
                               "length_ms": w["length_ms"], "name": os.path.basename(w["file"].replace("\\", "/"))})
             sounds.append({"sounddef": sd["name"], "start": inst["start"], "length": inst["length"],
                            "playmode": fmod_fev.PLAYMODES.get(tpl.get("playmode"), tpl.get("playmode")),
@@ -180,9 +184,9 @@ class Exporter:
                     else:
                         self.warnings.append("ffmpeg failed on %s/%s" % (rel, base))
                         target = base + ext
-                files[i] = rel + "/" + target
+                files[i] = {"file": rel + "/" + target, "loop": bool(s["mode"] & fmod_fsb.MODE_LOOP_NORMAL)}
                 continue
-            files[i] = rel + "/" + base + ext
+            files[i] = {"file": rel + "/" + base + ext, "loop": bool(s["mode"] & fmod_fsb.MODE_LOOP_NORMAL)}
             if not self.a.events_only:
                 with open(os.path.join(d, base + ext), "wb") as f:
                     f.write(blob)

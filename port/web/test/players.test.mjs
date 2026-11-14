@@ -97,6 +97,12 @@ test("appearance helpers", () => {
   assert.equal(pickVariant({ sweat1: "a" }, 2, "grass"), "a");
   assert.equal(pickVariant(null, 1, "hard"), null);
 });
+test("facing offset", () => {
+  const yq = (a) => [0, Math.sin(a / 2), 0, Math.cos(a / 2)];
+  close(L.quatYaw(yq(0.7)), 0.7);
+  close(L.facingOffset(yq(-Math.PI / 2), yq(1.81)), Math.PI);          // bind -90 deg, idle +104 deg -> half turn
+  close(L.facingOffset(yq(0.1), yq(0.4)), 0);
+});
 console.log("players.test.mjs: " + n + " tests passed");
 import { crc32, decodeAnimView, viewToState } from "../src/players/core_anim.js";
 {

@@ -177,3 +177,18 @@ export function swingMatches(clip, keys) {
   for (const [k, v] of Object.entries(keys)) { const have = q[k]; if (have && have.length && !have.includes(v)) return false; if (!have && k === "SwingType") return false; }
   return eventPhase(clip, "EventRacket") != null;
 }
+
+/** yaw (rad, about +y) of a quaternion [x, y, z, w] */
+export function quatYaw([x, y, z, w]) { return Math.atan2(2 * (w * y + x * z), 1 - 2 * (x * x + y * y)); }
+
+/**
+ * Facing correction between the bind pose and the game's clips (M: every exported Core clip carries B_Hips at yaw
+ * about -90 deg in Havok space, the bind pose at +90 deg, so an animated player faces 180 deg from the bind-pose forward
+ * PlayerRig aligns to +x).  Returns 0 or PI: the hips yaw difference rounded to a half turn (stance twist, e.g. the
+ * idle's -104 deg, is ignored).
+ */
+export function facingOffset(restHipsQ, clipHipsQ) {
+  let d = quatYaw(clipHipsQ) - quatYaw(restHipsQ);
+  d = Math.atan2(Math.sin(d), Math.cos(d));
+  return Math.abs(d) > Math.PI / 2 ? Math.PI : 0;
+}

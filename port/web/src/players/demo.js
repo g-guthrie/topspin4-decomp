@@ -43,6 +43,7 @@ async function main() {
     store ||= new ClipStore(rig.loader, assets, animDb, recordToCore(clipMap), chains);
     const an = new GameAnimator(rig, tables, store, { setup: e.gender === "Female" ? "Women" : "Men", leftHanded: e.plays === "LeftHanded" });
     await store.preload(an.wanted());
+    an.calibrateFacing();
     const model = new PlayerModel().attach(rig.skeletonScene, url);
     scene.add(rig.root);
     players.push({ e, rig, an, model, x0: i ? 1.3 : -1.3 });

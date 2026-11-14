@@ -180,8 +180,8 @@ column. `PORT` = invented by the port; `provisional.tunables.json` supplies it. 
 | `shot.let_aim_cm` | cm | GAME | R | cfg+0x138 = S+0x754 Let outcome aim height (90.0 on disc) |
 | `shot.min_depth_cm` | cm | GAME | R | pool+0x604/0x610 = 75: minimum depth past the net for an In shot |
 | `shot.out_margin_cm` | cm | GAME | R | pool+0x4C = 3: how far outside the line an Out shot lands |
-| `shot.tier_medium` | 0..1 | GAME | R | cfg+0xC70 = 0.4 (power above which the Medium tier applies; role M) |
-| `shot.tier_powerful` | 0..1 | GAME | R | cfg+0xC74 = 0.7 |
+| `shot.tier_medium` | 0..1 | GAME | R | Medium analyser graph edge 0.15 on S+0xE00 (fallback when the tier graphs are not bound; cfg+0xC70 is NOT a tier, G6b) |
+| `shot.tier_powerful` | 0..1 | GAME | R | Powerful analyser graph edge 0.70 on S+0xE00 (fallback; cfg+0xC74 = 0.7 is Objective8AllAround, gates Risky +0x3F only, G6b) |
 | `shot.charge_full_ticks` | ticks | PORT | R | ticks of holding a shot button for full power (game: curves cfg+0x8FC..0x920 over *(flags+0x44)) |
 | `shot.error_prob` | 0..1 | PORT | R | initial S+0x718 (graph ERROR refines it) |
 | `shot.error_added` | 0..1 | PORT | R | initial S+0x564 |
@@ -235,6 +235,44 @@ column. `PORT` = invented by the port; `provisional.tunables.json` supplies it. 
 | `flow.point_end_ticks` | ticks | PORT | R | pause after a point before the next serve |
 | `flow.ai_serve_delay_ticks` | ticks | PORT | R | AI waits this long before serving |
 | `flow.ai_power` | 0..1 | PORT | R | AI holds the shot button for this fraction of shot.charge_full_ticks |
+| `shot.power_divisor_ticks` | ticks | GAME | O | GameplayInterface EngineConfig/@Frequency D = 60 (power = curve(frames/D), G2b) |
+| `shot.swing_lead_ticks` | ticks | GAME | O | Settings cfg+0x8C0 = 12: auto commit and row choice when contact - now <= this (G2b) |
+| `serve.lead_ticks` | ticks | GAME | O | Settings cfg+0x8C4 = 12 (G2b) |
+| `serve.input_delay_ticks` | ticks | GAME | O | Settings cfg+0x9A8 = 30: serve input ignored before this (G2b) |
+| `serve.auto_ticks` | ticks | GAME | O | Settings cfg+0x9AC = 480: automatic toss after this (G2b) |
+| `serve.release_countdown_ticks` | ticks | GAME | O | Settings cfg+0x8CC = 40; used as the toss length of the serve power fraction (I) |
+| `serve.powerful_threshold` | 1 | GAME | O | script constant +0x110 = 0.8: PressAndHold > this = IsPowerful (G2b) |
+| `serve.medium_threshold` | 1 | GAME | O | script constant +0x2AC = 0.1: PressAndHold >= this = IsMedium (G2b) |
+| `input.stick_dead_zone` | 1 | GAME | O | InputMapper stick dead zone 0.4, radial, rescaled (input_map.yaml) |
+| `input.lt_commit_power` | 1 | GAME | O | script constant +0x10C = 0.2 (fn LT forced side commit) |
+| `input.lt_commit_angle` | rad | GAME | O | script constant +0x778 = 0.8727 |
+| `shot.wood_timing` | 1 | GAME | O | |ManualShotTiming| >= 0.1 arms the Wood request (G2b) |
+| `ball.skip_launch_step` | flag | GAME | O | ball block +0x4E0 = 1 (ball_templates.yaml) |
+| `ball.no_sidespin` | flag | GAME | O | ball block +0x4E1 = 1: spin_b/spin_c zeroed at every bounce and cord touch (G3) |
+| `shot.out_grade_w_cm` | cm | GAME | O | Settings cfg+0x13C = 50 (ball_out_class) |
+| `shot.out_grade_a_cm` | cm | GAME | O | cfg+0x140 = 100 |
+| `shot.out_grade_b_cm` | cm | GAME | O | cfg+0x144 = 100 |
+| `shot.out_grade_c_cm` | cm | GAME | O | cfg+0x148 = 200 |
+| `shot.out_nonforced_max_cm` | cm | GAME | O | pool+0x364 = 200: non-forced Out roll upper bound (G3) |
+| `shot.out_demote_d2_cm2` | cm^2 | GAME | O | pool+0x614 = 40000: farther than this from every line demotes Out to In (G3) |
+| `move.override_eps` | m/s | GAME | O | speed override S+0xDE8 changes only when the new value differs by more than 0.4 (G4) |
+| `anim.speed_coef` | 1 | GAME | O | animation parameters SpeedCoef = 1.0 (animation_rules.yaml) |
+| `anim.blend_frames` | frames | GAME | O | default transition blend 15 frames (lo_rule_defaults) |
+| `anim.dive_x_min_cm` | cm | GAME | O | dive volley: local x > -600 (G6) |
+| `anim.dive_d00_min` | 1 | GAME | O | dive volley: S+0xD00 > 60 (G6) |
+| `anim.dive_cf0_max` | 1 | GAME | O | dive volley: S+0xCF0 < 45 (G6) |
+| `timing.ideal_ticks` | ticks | PORT | O | human ManualShotTiming = clamp((ideal - commit lead) / scale): commit lead of a perfect shot |
+| `timing.scale_ticks` | ticks | PORT | O | ticks of commit lead per unit of ManualShotTiming |
+| `shotdef.error_res_min` | 1 | PORT | O | ShotSpecific.ErrorResolution.Min (S+0x6D4); the ShotDef grade row is not decoded (Good/Normal grade: 0) |
+| `shotdef.error_res_max` | 1 | PORT | O | ShotSpecific.ErrorResolution.Max (S+0x6D8); Good/Normal grade: 1 |
+| `shotdef.power_res_min` | 1 | PORT | O | ShotSpecific.PowerResolution.Min (S+0x6BC) |
+| `shotdef.power_res_max` | 1 | PORT | O | ShotSpecific.PowerResolution.Max (S+0x6C0) |
+| `shotdef.aim_res_min` | 1 | PORT | O | ShotSpecific.AimingResolution Min (S+0x6C4, S+0x6CC) |
+| `shotdef.aim_res_max` | 1 | PORT | O | ShotSpecific.AimingResolution Max (S+0x6C8, S+0x6D0) |
+| `fatigue.drain_per_m` | 1/m | PORT | O | vigor integrator (policy): CurrentVigor lost per metre run, scaled by (1 - Stamina/2) |
+| `fatigue.drain_per_shot` | 1 | PORT | O | vigor lost per shot, times PowerfulFactor |
+| `fatigue.recover_per_point` | 1 | PORT | O | vigor regained at each point end, times CurrentRecovery when the graphs give one |
+| `ai.reaction_ticks_per_unit` | ticks | PORT | O | AI reaction delay = PositioningComponents #79b99b60 (AI+0x1DC) x this |
 
 ## 9. Roles and variables
 
