@@ -256,11 +256,14 @@ def cpr(mu, e):
     return 100.0 * (1.0 - mu) + 150.0 * (0.81 - e)
 
 
-def _accel(v, w_rpm, topspin=True):
+CL_MAX_AFTER_BOUNCE = 0.20   # judgement: the grip regime leaves 5,000+ rpm; the free-flight lift law is not valid there
+
+
+def _accel(v, w_rpm, topspin=True, cl_max=0.5):
     s = math.hypot(v[0], v[1])
     kd = 0.5 * RHO * CD * math.pi * RADIUS ** 2 / MASS
     w = w_rpm * 2 * math.pi / 60.0
-    cl = 0.0 if w == 0 else 1.0 / (2.0 + s / (RADIUS * abs(w)))
+    cl = 0.0 if w == 0 else min(cl_max, 1.0 / (2.0 + s / (RADIUS * abs(w))))
     kl = 0.5 * RHO * cl * math.pi * RADIUS ** 2 / MASS
     sg = 1.0 if topspin else -1.0       # topspin pushes down (perpendicular to v, rotated)
     ax = -kd * s * v[0] + sg * kl * s * v[1]
@@ -301,7 +304,7 @@ def real_fly(speed_kmh, angle_deg, spin_rpm, h0=1.0, x0=-11.885, topspin=True, s
         vx_out = max(vx - dvx, vx_grip)
     else:
         vx_out = min(vx + dvx, vx_grip)
-    w_out = vx_out / RADIUS if vx_out == vx_grip else w + (vx_out - vx) / (ALPHA * RADIUS)
+    w_out = vx_out / RADIUS if vx_out == vx_grip else w - (vx_out - vx) / (ALPHA * RADIUS)
     # after the bounce: fly on to the bounce apex and the baseline plane
     q = [p[0], 0.0]
     u = [vx_out, vy_out]
@@ -309,7 +312,7 @@ def real_fly(speed_kmh, angle_deg, spin_rpm, h0=1.0, x0=-11.885, topspin=True, s
     spin2 = abs(w_out) * 60 / (2 * math.pi)
     top2 = w_out >= 0
     while t2 < 3:
-        ax, ay = _accel(u, spin2, top2)
+        ax, ay = _accel(u, spin2, top2, CL_MAX_AFTER_BOUNCE)
         q = [q[0] + u[0] * dt, q[1] + u[1] * dt]
         u = [u[0] + ax * dt, u[1] + ay * dt]
         t2 += dt

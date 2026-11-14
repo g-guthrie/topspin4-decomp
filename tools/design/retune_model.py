@@ -230,14 +230,15 @@ def window_halfwidths(pace_kmh, react_ms, height, kick=0.0, v_req=0.0, set_f=0, 
 HUMAN_SIGMA_F = 3.4          # sd of a human's release error in frames (judgement, see spec section 5)
 
 
-def p_window(half, sigma=HUMAN_SIGMA_F):
+def p_window(half, sigma=None):
     """P(|release error| <= half) for a normal release error; release frames are whole frames, so the
     half-width is widened by half a frame (a half-width of 0.5 = only the exact frame)."""
+    sigma = HUMAN_SIGMA_F if sigma is None else sigma
     return math.erf((half + 0.5) / (sigma * math.sqrt(2.0)))
 
 
-def timing_outcome(rng, perfect_half, good_half, sigma=HUMAN_SIGMA_F):
-    e = abs(rng.gauss(0.0, sigma))
+def timing_outcome(rng, perfect_half, good_half, sigma=None):
+    e = abs(rng.gauss(0.0, HUMAN_SIGMA_F if sigma is None else sigma))
     if e <= perfect_half + 0.5:
         return "Perfect"
     if e <= good_half + 0.5:
@@ -257,7 +258,6 @@ SKILL_MPH = 2.0               # a pace skill (InstantRocket / HighlyFlammable cl
 FATIGUE_MPH = 6.0             # mph lost at vigor 0
 NOISE_MPH = 1.7               # execution spread (sd)
 CAP_SOFTNESS = 0.30           # above the grade cap only 30 % of the excess survives
-SPIN_MPH = {"Flat": 0.0, "TopSpin": 0.0, "Slice": 0.0, "Lob": 0.0}
 
 
 def stack_speed(cls, grade, hold, timing, power_stat, hand_stat, vigor=1.0, skill=False, noise=0.0):
@@ -401,10 +401,11 @@ def policy_forehand(rng, p, sit, grade, overcharge_try=0.8):
 
 
 def forehand_shot(rng, p, sit, opp_timing="Good", opp_scale=1.0, overcharge_try=0.8):
-    g, q, _ = grade_of(sit.frames, sit.v_req, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
+    vr = sit.v_req * TOP_SPEED_REF / (RALLY["max_run_base"] + RALLY["max_run_speed"] * p.s["speed"])
+    g, q, _ = grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
                        sit.stretch, sit.kick)
     cls, hold = policy_forehand(rng, p, sit, g, overcharge_try)
-    hp, hg, e = window_halfwidths(sit.pace, sit.react_ms, sit.height, sit.kick, sit.v_req, sit.set_f,
+    hp, hg, e = window_halfwidths(sit.pace, sit.react_ms, sit.height, sit.kick, vr, sit.set_f,
                                   sit.stretch, sit.dist_net_cm, sit.floating, p.s["fh"], opp_timing, opp_scale)
     if hold == "Overcharge":            # biggest swing, smallest margin: Perfect window halved
         hp *= 0.5
@@ -786,3 +787,57 @@ def round_robin(builds, matches, seed, prm=None, sets_to_win=2):
             res[a][b] = wa / matches
             res[b][a] = 1.0 - wa / matches
     return res
+
+
+# =========================================================================== placement, drop shots, recovery
+
+DEPTH_TIMING_CM = {"Perfect": -30.0, "Good": 0.0, "Poor": 80.0, "Mistimed": 180.0}
+DEPTH_SD_CM = 45.0
+
+
+def depth_shortfall(grade, timing):
+    """Mean and sd (cm) of how far an In groundstroke lands short of the aimed depth.  Replaces the retail
+    uniform 0..310 cm DeepDeviation (aiming graphs' Random branch) with a quality-earned value."""
+    return max(0.0, GRADE_FX[grade]["depth_cm"] + DEPTH_TIMING_CM[timing]), DEPTH_SD_CM
+
+
+STICK_MARGIN = [(0.4, 0.55), (0.6, 0.75), (0.8, 0.90), (1.0, 1.0)]   # stick magnitude -> fraction of the quad reach
+STICK_ERR = [(0.4, 0.70), (0.6, 0.80), (0.8, 0.92), (1.0, 1.0)]      # and the error multiplier it buys
+
+
+def stick_margin(mag):
+    """(quad-efficiency cap, error multiplier) for a stick push of magnitude mag (0.4 dead zone .. 1)."""
+    return pwl(STICK_MARGIN, mag), pwl(STICK_ERR, mag)
+
+
+def angle_access(depth_x_cm, grade, hand_stat):
+    """Largest usable angle as a fraction of the sideline reach (aim quad lateral efficiency): more from inside
+    the court and from good grades, scaled by the stroke rating."""
+    pos = pwl([(-500, 1.0), (-150, 0.9), (0, 0.8), (200, 0.7), (400, 0.6)], depth_x_cm)
+    g = {"Tee-off": 1.0, "VeryGood": 0.95, "Good": 0.85, "Normal": 0.75, "Bad": 0.6, "VeryBad": 0.45}[grade]
+    return clamp(pos * g * (0.85 + 0.15 * hand_stat), 0.0, 1.0)
+
+
+def drop_quality(incoming_kmh, height, grade, timing, touch_stat):
+    """Drop shot: landing distance past the net (cm), bounce height (cm), error probability.
+    Easy to play off a slow, mid-height ball from inside the court; hard off pace or a low ball."""
+    base_land = {"Tee-off": 180, "VeryGood": 220, "Good": 270, "Normal": 330, "Bad": 420, "VeryBad": 520}[grade]
+    land = base_land * (1.0 + 0.004 * max(0.0, incoming_kmh - 50.0)) * (1.15 - 0.3 * touch_stat)
+    land += {"Perfect": -30, "Good": 0, "Poor": 80, "Mistimed": 160}[timing]
+    bounce = 35.0 + 0.25 * max(0.0, land - 200.0) + 0.2 * max(0.0, incoming_kmh - 60.0)
+    err = (0.03 + 0.0035 * max(0.0, incoming_kmh - 45.0) + pwl([(20, 0.20), (50, 0.08), (80, 0.0)], height)
+           + {"Perfect": 0.0, "Good": 0.03, "Poor": 0.18, "Mistimed": 0.45}[timing]) * GRADE_FX[grade]["err"]
+    err *= 1.2 - 0.4 * touch_stat
+    return land, bounce, clamp(err, 0.0, 0.95)
+
+
+RECOVERY = {"Finesse": 8, "Medium": 12, "Powerful": 18, "Rushed": 20, "Overcharge": 26}
+RECOVERY_GRADE = {"Tee-off": -2, "VeryGood": 0, "Good": 0, "Normal": 2, "Bad": 5, "VeryBad": 8}
+
+
+def recovery_frames(hold, grade, stretch=False, vigor=1.0):
+    """(frames until a recovery step may start, frames until full-speed movement) after contact.
+    Replaces the swing clip's Out window (median 36 frames after a groundstroke, retune-baseline 8a)."""
+    lock = RECOVERY[hold] + RECOVERY_GRADE[grade] + (6 if stretch else 0) + int(round(6 * (1.0 - vigor)))
+    lock = max(6, lock)
+    return lock, lock + 10
