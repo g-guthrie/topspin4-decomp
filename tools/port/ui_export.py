@@ -569,7 +569,7 @@ def write_summary(ex, outdir):
     """Game-free readable summaries for data/ui/: names, counts, edges, hashes. No text, no images."""
     os.makedirs(outdir, exist_ok=True)
     src = {a: i["sha256"] for a, i in ex.manifest["archives"].items()}
-    cmd = "python3 tools/port/ui_export.py --iso <disc> --summary data/ui"
+    cmd = "python3 tools/port/ui_export.py --iso <disc> --summary data/ui (python %s)" % sys.version.split()[0]
     screens = []
     for name, rec in sorted(ex.scenes.items()):
         nt = {}
@@ -582,6 +582,7 @@ def write_summary(ex, outdir):
             "nodes": (rec.get("data") or {}).get("NodeCount"), "node_types": nt,
             "actions": [a["name"] for a in rec.get("actions", [])],
             "exports": [a["name"] for a in rec.get("actions", []) if a["name"].startswith("EXPORT_")],
+            "menu_targets": rec.get("menu_targets") or None,
         })
     flow = []
     for name, rec in sorted(ex.scenes.items()):

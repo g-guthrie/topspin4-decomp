@@ -2,7 +2,7 @@
 """Export the in-game (TV) camera shots of Top Spin 4 from a venue archive.
 
   python3 tools/port/camera_export.py [--iso DISC.iso] [--venue Amsterdam] [--out work/port/assets/cameras]
-  python3 tools/port/camera_export.py --summary data/camera          # readable tv_cameras.yaml
+  python3 tools/port/camera_export.py --summary data/gameplay/camera          # readable tv_cameras.yaml
 
 Source: `<venue>.arc` member Shots.bin in directory 0x53e083e4 (root type 0x5b3a654f, ShotList/Element[] of CAny),
 decoded with the disc's type layouts (Layoutall.bin on the disc root) through tools/ts4_xbin.py.  Each element of type

@@ -1,7 +1,7 @@
 // Match audio for the browser port: plays the game's own FMOD events (exported from the user's disc by
 // tools/port/audio_export.py into <assets>/audio/) in response to ts4core events, the way the game's sound-event
 // controller does (Swing_DLL.dll 0x8888A000-0x88890000, docs/port/presentation-and-audio.md section 3,
-// data/audio/events.yaml).
+// data/gameplay/audio/events.yaml).
 //
 // Two parts:
 //   * AudioDirector: pure logic (node-testable).  onTick(prev, cur, events) and frame(dt, view) turn core events into

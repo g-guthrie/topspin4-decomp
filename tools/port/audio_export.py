@@ -3,7 +3,7 @@
 
   python3 tools/port/audio_export.py [--iso DISC.iso] [--venue Amsterdam ...|all] [--no-core]
                                      [--out work/port/assets/audio] [--format wav|native] [--events-only]
-  python3 tools/port/audio_export.py --summary data/audio      # readable event inventory (no audio)
+  python3 tools/port/audio_export.py --summary data/gameplay/audio      # readable event inventory (no audio)
 
 Reads the user's own disc image in place and writes everything below --out (git-ignored):
 
@@ -266,7 +266,7 @@ def ffmpeg_version(ffmpeg):
 
 
 def summary(args):
-    """data/audio/fev_inventory.yaml: every event of the chosen venue + Core, with params and wave counts."""
+    """data/gameplay/audio/fev_inventory.yaml: every event of the chosen venue + Core, with params and wave counts."""
     ex = Exporter(args)
     lines = []
     srcs = []
@@ -286,7 +286,7 @@ def summary(args):
                     json.dumps(ev["path"]), ev["type"], ev.get("category"), ev["base"]["volume"], len(waves),
                     ", ".join(str(m) for m in (ms[:1] + ms[-1:] if len(ms) > 1 else ms)),
                     (", params: " + json.dumps(params)) if params else ""))
-    cmd = "python3 tools/port/audio_export.py --summary data/audio" + (
+    cmd = "python3 tools/port/audio_export.py --summary data/gameplay/audio" + (
         "" if not args.venue else " --venue " + " ".join(args.venue))
     head = ["# FMOD event inventory of Top Spin 4 (Xbox 360): every event of the venue and Core event projects,",
             "# with type, category, base volume, number of reachable waves, shortest/longest wave and parameters.",

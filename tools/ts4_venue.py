@@ -887,6 +887,112 @@ def inventory(iso, log=None):
     return {"venues": rows, "desc_only": sorted(set(descs) - {r["venue"] for r in rows})}
 
 
+# --------------------------------------------------------------------------------------------- crowd.yaml
+
+SETTINGS = 0x334E7E0D                       # Core.arc Settings.bin
+CROWD_EVENT_NAMES = ["LoseUnforcedError", "LoseUnforcedErrorEasyBall", "LoseWinner", "WinWinner",
+                     "WinWinnerPowerfulShot", "WinPassingShot", "WinSmash", "WinTwentyShots",
+                     "WinServeAndVolley", "WinAce"]
+
+
+def settings_crowd_tables(buf):
+    """Crowd excitement tables of Settings.bin (file offset = cfg offset + 0x24).
+
+    0x848 {rel,count,cap} -> rows {rel,count,cap, f32 level limit} -> (f32 ratio key, f32 gain) pairs  (cfg+0x824)
+    0x854 {rel,count,cap} -> (u32 shot count, f32 cap)                                               (cfg+0x830)
+    0x860 {rel,count,cap} -> (u32 event name crc32, f32 delta)                                       (cfg+0x83C)"""
+    out = {}
+    t, n, _ = _desc(buf, 0x848)
+    rows = []
+    for i in range(n):
+        o = t + 16 * i
+        p, m, _ = _desc(buf, o)
+        rows.append({"level_limit": round(struct.unpack_from(">f", buf, o + 12)[0], 4),
+                     "ratio_gain": [[round(v, 4) for v in struct.unpack_from(">2f", buf, p + 8 * k)] for k in range(m)]})
+    out["gain_table"] = rows
+    t, n, _ = _desc(buf, 0x854)
+    out["cap_by_shots"] = [[a, round(b, 4)] for a, b in (struct.unpack_from(">If", buf, t + 8 * k) for k in range(n))]
+    t, n, _ = _desc(buf, 0x860)
+    names = {crc(x): x for x in CROWD_EVENT_NAMES}
+    out["event_deltas"] = [{"event": names.get(h, "%08x" % h), "crc32": "%08x" % h, "delta": round(d, 4)}
+                           for h, d in (struct.unpack_from(">If", buf, t + 8 * k) for k in range(n))]
+    return out
+
+
+def _yaml(o, ind=0):
+    sp = "  " * ind
+    if isinstance(o, dict):
+        lines = []
+        for k, v in o.items():
+            if isinstance(v, (dict, list)) and v and not _flat(v):
+                lines.append("%s%s:" % (sp, k))
+                lines.append(_yaml(v, ind + 1))
+            else:
+                lines.append("%s%s: %s" % (sp, k, _scalar(v)))
+        return "\n".join(lines)
+    lines = []
+    for v in o:
+        if isinstance(v, dict):
+            sub = _yaml(v, ind + 1).lstrip()
+            lines.append("%s- %s" % (sp, sub))
+        else:
+            lines.append("%s- %s" % (sp, _scalar(v)))
+    return "\n".join(lines)
+
+
+def _flat(v):
+    return isinstance(v, list) and all(not isinstance(x, (dict, list)) or
+                                       (isinstance(x, list) and all(not isinstance(y, (dict, list)) for y in x)) for x in v)
+
+
+def _scalar(v):
+    return json.dumps(v)
+
+
+def crowd_yaml(iso, log=print):
+    """data/gameplay/crowd.yaml: Settings.bin excitement tables, per-venue crowd counts, behaviour graph summary."""
+    import ts4_assets as A
+    core = A.Archive("Core.arc", iso)
+    sbuf = core.arc.read(core.arc.find(SETTINGS))
+    inv = inventory(iso)
+    ar = A.Archive("Amsterdam.arc", iso)
+    keys = read_anim_list(core.arc.read(core.arc.find(CORE_TS_ANIMLIST)))
+    bbuf = ar.read(ar.find_name(TS_BEHAVIOR_LIST))
+    graph = build_behaviours([(lf.path, lf.tag, lf.value) for lf in walk_leaves(bbuf, iso)], keys)
+    seen_roles = {}
+    for lst in graph:
+        r = lst["role"]
+        seen_roles.setdefault(r, {"setup_indices": [], "behaviours": None})
+        seen_roles[r]["setup_indices"].append(lst["setup_index"])
+        if seen_roles[r]["behaviours"] is None:
+            seen_roles[r]["behaviours"] = [
+                b["name"] + ("" if b["clip"] is not None else
+                             " (no clip resolved)" if not b["start"] else " = start " + "+".join(b["start"]) +
+                             ("; stop " + "+".join(b["stop"]) if b["stop"] else "")) for b in lst["behaviours"]]
+    venues = []
+    for v in inv["venues"]:
+        venues.append({"venue": v["venue"], "crowd_file": v.get("crowd_file"), "count": v.get("crowd_count", 0),
+                       "groups_start_count": [list(g) for g in v.get("crowd_groups", [])],
+                       "capacity": v.get("capacity"), "inout": v.get("inout"), "type": v.get("type"),
+                       "crowd_sound": v.get("crowd_sound")})
+    doc = {
+        "generated_by": "python3 -I tools/ts4_venue.py crowd-yaml --out data/gameplay/crowd.yaml",
+        "sources_sha256": {
+            "Settings.bin (Core.arc 334e7e0d)": hashlib.sha256(sbuf).hexdigest(),
+            "TrackSideBehaviorList.bin (Amsterdam.arc)": hashlib.sha256(bbuf).hexdigest(),
+            "TrackSideAnimationList.bin (Core.arc be22e5c4)": hashlib.sha256(core.arc.read(core.arc.find(CORE_TS_ANIMLIST))).hexdigest(),
+        },
+        "notes": "Formats, code addresses and confidence: docs/port/venues-and-crowd.md. Update rule (gp1 s6, "
+                 "fn_8868EA30): level = clamp(level + sum(event_deltas) + clamp(gain(level, ratio), -cap, cap), 0, 1). "
+                 "Per-venue counts come from each archive's Crowd<Venue>.bin; groups are LOW/MEDIUM/HIGH quality tiers (inferred).",
+        "excitement": settings_crowd_tables(sbuf),
+        "behaviour_graph": seen_roles,
+        "venues": venues,
+        "desc_only_venues": inv["desc_only"],
+    }
+    return "# Top Spin 4 crowd tunables and crowd placement summary (readable dump, no assets).\n" + _yaml(doc) + "\n"
+
+
 def cmd_inventory(a):
     inv = inventory(iso_path(a.iso), log=None if a.json else print)
     if a.json:
@@ -946,7 +1052,15 @@ def main(argv=None):
     p.add_argument("--arc", default="Amsterdam.arc")
     p.add_argument("--out", required=True)
     p.add_argument("--clips", default="behaviours", choices=["behaviours", "all", "none"])
+    p = sub.add_parser("crowd-yaml")
+    p.add_argument("--out", required=True)
     a = ap.parse_args(argv)
+    if a.cmd == "crowd-yaml":
+        text = crowd_yaml(iso_path(a.iso))
+        with open(a.out, "w") as f:
+            f.write(text)
+        print("wrote", a.out, len(text), "bytes")
+        return
     {"inventory": cmd_inventory, "crowd": cmd_crowd, "export": cmd_export, "trackside": cmd_trackside}[a.cmd](a)
 
 

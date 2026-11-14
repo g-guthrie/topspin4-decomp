@@ -3,7 +3,7 @@
 // Shots.bin.  Pure functions + one small stateful class; no DOM, no three.js (node tests run it).
 //
 // Data: tools/port/camera_export.py writes <assets>/cameras/shots.json (all 96 shots of the venue); the readable copy of
-// the in-game shots is data/camera/tv_cameras.yaml.  Units: centimetres (core frame: x along the court, net at x = 0,
+// the in-game shots is data/gameplay/camera/tv_cameras.yaml.  Units: centimetres (core frame: x along the court, net at x = 0,
 // y up, z lateral), fov in radians as full angles.  The game frames a 4:3 picture: fov[0] is the angle across the 4:3
 // width, fov[1] the vertical angle (tan(fov[0]/2) : tan(fov[1]/2) = 4 : 3 on every record).
 //
@@ -25,7 +25,7 @@
 export const TV_OPTIONS = ['TV', 'TVFar', 'TVClose', 'TVZoom', 'TVZoomFar', 'TVZoomClose', 'TV3D'];
 
 /** Fallback when shots.json is not exported: CameraInGameWidescreenLeftSinglesTV as decoded from Amsterdam Shots.bin
- *  (data/camera/tv_cameras.yaml).  Used only when no export is present; labelled so the HUD can say so. */
+ *  (data/gameplay/camera/tv_cameras.yaml).  Used only when no export is present; labelled so the HUD can say so. */
 export const TV_FALLBACK = {
   name: 'CameraInGameWidescreenLeftSinglesTV', fallback: true,
   from: [-3300, 900, 0], up: [0, 100, 0], fov: [0.430438, 0.325015], fov_max: [0.464416, 0.351061],
