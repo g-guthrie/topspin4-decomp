@@ -90,7 +90,7 @@ static void floor1_free_info(void *ctx, vorbis_info_floor *i)
     vorbis_info_floor1 *info = (vorbis_info_floor1 *)i;
     if (info) {
         ts4_memset(info, 0, sizeof(*info));
-        fn_8836CD70(ctx, info);
+        ts4_if_get_u32_off500_8836CD70(ctx, info);
     }
 }
 

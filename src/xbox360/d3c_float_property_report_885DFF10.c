@@ -2,7 +2,7 @@
 typedef unsigned int u32;
 
 extern void fn_885DC838(void *obj, const void *a, const void *b, const void *c, u32 line);
-extern float fn_885DD0D8(void *obj, u32 code);
+extern float ts4_if_call_seq_u32_off44_885DD0D8(void *obj, u32 code);
 extern void fn_885DD4C8(float v, char *buf);
 extern char lbl_880B9788[], lbl_880B4598[], lbl_880B4540[], lbl_880B9804[];
 extern u32 lbl_88C42CC8[];
@@ -18,7 +18,7 @@ typedef void (*Ts4ReportCb)(void *dst, const void *str, u32 a, u32 size, void *a
         float v; \
         (void)unused; \
         if (obj == 0) fn_885DC838(obj, lbl_880B4540, lbl_880B4598, lbl_880B9788, LINE); \
-        v = fn_885DD0D8(obj, CODE); \
+        v = ts4_if_call_seq_u32_off44_885DD0D8(obj, CODE); \
         *out = v; \
         if (cb && dst) { \
             fn_885DD4C8(v, buf); \

@@ -64,7 +64,7 @@ ts4_word fn_88922B28();
 ts4_word fn_88923380();
 ts4_word fn_88929308();
 ts4_word fn_88929420();
-ts4_word fn_889298D8();
+ts4_word ts4_call_seq_lbl_880D60F8_889298D8();
 ts4_word fn_8892EB28();
 ts4_word fn_8892F508();
 ts4_word fn_889310A0();
@@ -1174,16 +1174,16 @@ ts4_word ts4_call_seq_fn_88929308_8892A018(ts4_word a0, ts4_word a1, ts4_word a2
     return t1;
 }
 
-/* Swing_DLL.xex 0x8892A150: addr lbl_880CFF36, fn_889298D8 */
+/* Swing_DLL.xex 0x8892A150: addr lbl_880CFF36, ts4_call_seq_lbl_880D60F8_889298D8 */
 ts4_word ts4_addr_lbl_880CFF36_8892A150(void)
 {
-    return fn_889298D8((ts4_word)(ts4_word)lbl_880CFF36);
+    return ts4_call_seq_lbl_880D60F8_889298D8((ts4_word)(ts4_word)lbl_880CFF36);
 }
 
-/* Swing_DLL.xex 0x8892A160: addr lbl_880CFC4F, fn_889298D8 */
+/* Swing_DLL.xex 0x8892A160: addr lbl_880CFC4F, ts4_call_seq_lbl_880D60F8_889298D8 */
 ts4_word ts4_addr_lbl_880CFC4F_8892A160(void)
 {
-    return fn_889298D8((ts4_word)(ts4_word)lbl_880CFC4F);
+    return ts4_call_seq_lbl_880D60F8_889298D8((ts4_word)(ts4_word)lbl_880CFC4F);
 }
 
 /* Swing_DLL.xex 0x8892A910: get fn_88628098, u32@0x1c, ts4_find_service, u32@0x0, u32@0x4c, vcall */
@@ -1199,21 +1199,21 @@ ts4_word ts4_get_fn_88628098_8892A910(ts4_word a0, ts4_word a1)
     return t6;
 }
 
-/* Swing_DLL.xex 0x8892B608: call_seq lbl_880CFF36, fn_889298D8, u8@0x8, fn_881B9148 */
+/* Swing_DLL.xex 0x8892B608: call_seq lbl_880CFF36, ts4_call_seq_lbl_880D60F8_889298D8, u8@0x8, fn_881B9148 */
 ts4_word ts4_call_seq_lbl_880CFF36_8892B608(ts4_word a0)
 {
     ts4_word t2;
 
-    fn_889298D8((ts4_word)(ts4_word)lbl_880CFF36);
+    ts4_call_seq_lbl_880D60F8_889298D8((ts4_word)(ts4_word)lbl_880CFF36);
     *(unsigned char *)((char *)(ts4_word)(a0) + 8) = (unsigned char)0;
     t2 = fn_881B9148((ts4_word)(a0 + 16));
     return t2;
 }
 
-/* Swing_DLL.xex 0x8892B688: addr lbl_880CFC4F, fn_889298D8 */
+/* Swing_DLL.xex 0x8892B688: addr lbl_880CFC4F, ts4_call_seq_lbl_880D60F8_889298D8 */
 ts4_word ts4_addr_lbl_880CFC4F_8892B688(void)
 {
-    return fn_889298D8((ts4_word)(ts4_word)lbl_880CFC4F);
+    return ts4_call_seq_lbl_880D60F8_889298D8((ts4_word)(ts4_word)lbl_880CFC4F);
 }
 
 /* Swing_DLL.xex 0x8892ED88: if_call_seq u32@0x8, fn_8892EB28, u32@0x0, lbl_880C1320 */

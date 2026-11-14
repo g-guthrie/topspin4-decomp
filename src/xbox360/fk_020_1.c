@@ -103,7 +103,7 @@ ts4_word fn_886C71C8();
 ts4_word fn_886C73B8();
 ts4_word fn_886E61E0();
 ts4_word ts4_call_seq_lbl_880F345C_886E8448();
-ts4_word fn_886ECE38();
+ts4_word ts4_loop_get_u32_off48_886ECE38();
 ts4_word fn_886F1900();
 ts4_word fn_886F5A00();
 ts4_word fn_886F5CB8();

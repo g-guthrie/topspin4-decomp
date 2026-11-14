@@ -35,7 +35,7 @@ ts4_word lua2_luaK_exp2anyreg_888216D0();
 ts4_word lua2_luaK_exp2RK_88821878();
 ts4_word fn_88837880();
 ts4_word ts4_call_seq_lbl_880DF600_8887E558();
-ts4_word fn_88884FD0();
+ts4_word ts4_loop_call_seq_u32_off0_88884FD0();
 ts4_word ts4_tailcall_XamContentClose_8857B2D8();
 ts4_word ts4_tailcall_XamContentDelete_8857B2D0();
 ts4_word ts4_tailcall_fn_88582660_8857B840();

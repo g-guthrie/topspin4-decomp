@@ -14,7 +14,7 @@ extern struct ts4_vtbl_slot2 lbl_88D25D84;
 extern void ts4_set_u32_off8_8847FA60(unsigned *, unsigned);
 extern char lbl_880842B8[];
 extern char lbl_880456A4[];
-extern void fn_884693F0(void);
+extern void ts4_if_addr_lbl_880842B8_884693F0(void);
 extern void ts4_vcall0_thunk_884693D8(void);
 extern struct ts4_vtbl_slot2 lbl_88D248F0;
 
@@ -55,7 +55,7 @@ void ts4_init_vtbl_slot4_88AF7BD8(void)
     local.s1 = 1;
     ts4_set_u32_off8_8847FA60(local.sub, local.sub[2]);
     lbl_88D248F0.vtbl = lbl_880456A4;
-    lbl_88D248F0.destroy = (void *)fn_884693F0;
+    lbl_88D248F0.destroy = (void *)ts4_if_addr_lbl_880842B8_884693F0;
     lbl_88D248F0.thunk = (void *)ts4_vcall0_thunk_884693D8;
     lbl_88D248F0.data = local.vt;
 }

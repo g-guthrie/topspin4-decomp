@@ -16,7 +16,7 @@ typedef struct Ts4PropTable {
 
 extern void fn_885DC838(void *obj, const void *a, const void *b, const void *c, u32 line);
 extern u32 ts4_if_call_seq_u32_off44_885DCD38(void *obj, u32 addr);
-extern float fn_885DD0D8(void *obj, u32 addr);
+extern float ts4_if_call_seq_u32_off44_885DD0D8(void *obj, u32 addr);
 extern char lbl_880B4540[], lbl_880B45A8[], lbl_880B4648[], lbl_880B4600[];
 
 /* Range-checked read of element SUB of record IDX as an integer property. */
@@ -38,5 +38,5 @@ float ts4_read_indexed_float_property_885DD148(Ts4PropTable *p, u32 idx, u32 sub
     rec = (Ts4PropRecord *)((char *)p->records + idx * 0xc);
     if (sub >= rec->count) fn_885DC838(0, lbl_880B4540, lbl_880B4600, lbl_880B45A8, 0x29e);
     rec = (Ts4PropRecord *)((char *)p->records + idx * 0xc);
-    return fn_885DD0D8(p, rec->base + rec->stride * sub);
+    return ts4_if_call_seq_u32_off44_885DD0D8(p, rec->base + rec->stride * sub);
 }

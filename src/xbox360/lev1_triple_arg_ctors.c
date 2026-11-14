@@ -22,7 +22,7 @@ void ts4_type_register_88638D10(void *object);
 void fn_8863C218(void *object, int arg, struct TS4TripleArg value);
 extern void *lbl_88D45914;
 void ts4_loop_call_seq_u32_off20_888C3220(void *object);
-void fn_886F7B38(void *object, struct TS4TripleArg value);
+void ts4_if_call_seq_u32_off0_886F7B38(void *object, struct TS4TripleArg value);
 void *fn_88923458(void *owner, struct TS4TripleArg value, unsigned int size);
 void fn_88633BD8(void *object, void *child);
 void ts4_call_seq_lbl_880F5230_88652A90(void);
@@ -32,7 +32,7 @@ void fn_887DBFD0(void *object, struct TS4TripleArg value, int mask);
 void fn_88801428(int arg);
 extern void *lbl_88D459F8;
 void fn_8863E750(void *object, int a, int b, struct TS4TripleArg value, int d);
-void fn_886F7A70(void *object, struct TS4TripleArg value, int *a, int *b);
+void ts4_if_call_seq_u32_off0_886F7A70(void *object, struct TS4TripleArg value, int *a, int *b);
 
 struct TS4VirtualObject {
     void (**vtbl)(struct TS4VirtualObject *, ...);
@@ -77,7 +77,7 @@ void ts4_triple_ctor_notify_888DDC98(void *self, struct TS4TripleArg value)
 /* Call base(self, value) and return self. */
 void *ts4_triple_ctor_return_self_88945AC8(void *self, struct TS4TripleArg value)
 {
-    fn_886F7B38(self, value);
+    ts4_if_call_seq_u32_off0_886F7B38(self, value);
     return self;
 }
 
@@ -136,7 +136,7 @@ void *ts4_triple_ctor_forward_abc_8863EF00(void *self, int unused, int a, int b,
 /* Construct passing two in/out ints by address; return self. */
 void *ts4_triple_ctor_inout_88945A78(void *self, struct TS4TripleArg value, int a, int b)
 {
-    fn_886F7A70(self, value, &a, &b);
+    ts4_if_call_seq_u32_off0_886F7A70(self, value, &a, &b);
     return self;
 }
 

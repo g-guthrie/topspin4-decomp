@@ -105,9 +105,9 @@ double lib4_trio_TrioLogarithm_8819CEB0(double number, int base)
         result = (number == TRIO_ZERO) ? fn_8819F650() : fn_8819F6A0();
     } else {
         if (base == 10)
-            result = fn_885640B0(number);
+            result = ts4_call_seq_fn_88563F20_885640B0(number);
         else
-            result = fn_885640B0(number) / fn_885640B0((double)base);
+            result = ts4_call_seq_fn_88563F20_885640B0(number) / ts4_call_seq_fn_88563F20_885640B0((double)base);
     }
     return result;
 }

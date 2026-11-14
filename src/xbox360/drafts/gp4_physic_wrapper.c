@@ -38,7 +38,7 @@ struct Gp4WorldCfg {
  *       for (p in m->processors) p->vtbl[3](p);               // CPhysicEngineCommandProcessor pre-step (+0x28 list)
  *       if (m->dirty (+0x18)) { cache = fn_8846BE08(world); fn_88472130(world, cache); fn_88471F10(world, cache);  m->dirty = 0 }  // refresh collision filters
  *       if (world && m->timestep > 0 && m->substeps > 0)
- *           for (i = 0; i < m->substeps; i++)  fn_8846B398(world, m->timestep / (float)m->substeps);   // hkpWorld::stepDeltaTime
+ *           for (i = 0; i < m->substeps; i++)  ts4_if_get_u32_off8_8846B398(world, m->timestep / (float)m->substeps);   // hkpWorld::stepDeltaTime
  *   }
  *   for (b in m->bodies) { fn_8887DCF0(b); b->vel_sample = ...; }   // read back Havok transforms -> FrameSynchro (below)
  *   for (p in m->processors) p->vtbl[1](p);                   // post-step
@@ -52,7 +52,7 @@ struct Gp4WorldCfg {
 /* ---------- collision filter: fn_8887B148(manager, mode_hash)  (called with 0x26296DD2 = "Normal") ---------- */
 /*
  * f = new hkpGroupFilter (fn_88439218: all 32 layer masks = -1 (collide), nextFreeSystemGroup = 2)
- * fn_884391C8(f, -2, -2)           // disable collisions between every pair of layers 1..31 (layer 0 keeps colliding with all)
+ * ts4_loop_get_u32_off0_884391C8(f, -2, -2)           // disable collisions between every pair of layers 1..31 (layer 0 keeps colliding with all)
  * then fn_88439158(f, a, b) = enableCollisionsBetween(a, b) for these layer pairs:
  *   if (mode != 0x2B05E119)       (1,2) (7,2) (5,2) (1,3) (7,3) (1,4) (7,4)
  *   (7,7) (7,1)                    always
@@ -112,7 +112,7 @@ struct Gp4WorldCfg {
  *   from = BallNPlus1.Position * 0.01  (m),   to = BallNPlus2.Position * 0.01 (m)
  *   if (|to - from| components all <= 0.001) skip
  *   hkpWorldRayCastInput { from, to, enableShapeCollectionFilter = 0, filterInfo = 4 }   // filter layer 4: collides with layers 1,7,6
- *   hkpWorld::castRay(world, in, out) (fn_8846B810);   if (out.rootCollidable != null) *(obj->+0x70) = 1;   // FrameSynchro BallDetectCollision
+ *   hkpWorld::castRay(world, in, out) (ts4_call_seq_u32_off70_8846B810);   if (out.rootCollidable != null) *(obj->+0x70) = 1;   // FrameSynchro BallDetectCollision
  * i.e. the gameplay ball path (stepper) is checked against the static scenery (+ players) by a segment test one tick ahead.
  */
 

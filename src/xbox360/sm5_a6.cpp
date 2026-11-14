@@ -14,7 +14,7 @@ extern float lbl_8814B910;
 extern double floor(float);
 extern char *g_ts4_session_context;
 extern void fn_88703AC0(u64, u64);
-extern void fn_886131F0(void *, void *, u32);
+extern void ts4_if_call_seq_fn_881F04B8_886131F0(void *, void *, u32);
 extern void fn_885651F8(void *);
 extern void fn_887DD110(void *, u32, u8, int);
 extern void fn_88150600(void *, void *);

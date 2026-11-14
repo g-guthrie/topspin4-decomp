@@ -69,7 +69,7 @@ ts4_word fn_881ACBA8();
 ts4_word fn_881B9148();
 ts4_word ts4_tailcall_NetDll_WSACleanup_884F0238();
 ts4_word fn_88563F20();
-ts4_word fn_885640B0();
+ts4_word ts4_call_seq_fn_88563F20_885640B0();
 #ifndef _MSC_VER
 #define floor ts4_floor_non_msvc /* avoid gcc builtin floor(double) prototype clash */
 #endif
@@ -110,7 +110,7 @@ ts4_word fn_888F70A0();
 ts4_word fn_88912090();
 ts4_word fn_889122D8();
 ts4_word ts4_call_seq_lbl_880D72B0_88912AC0();
-ts4_word fn_889298D8();
+ts4_word ts4_call_seq_lbl_880D60F8_889298D8();
 ts4_word fn_889333F0();
 ts4_word ts4_call_seq_u32_off8_889343E8();
 ts4_word fn_88934458();

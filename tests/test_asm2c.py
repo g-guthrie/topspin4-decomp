@@ -428,6 +428,18 @@ class EmitTests(unittest.TestCase):
             emit._A2N = saved
         self.assertIn("return ((ts4_word (*)())fn_88000000)((ts4_word)a0);", text)
 
+    def test_host_clean_discarded_read_unused_float_param_and_set_only_local(self):
+        r = {"kind": "x", "detail": ["d"], "sig": "ts4_word NAME(ts4_word a0, float f1, float f2)",
+             "body": "    __vector4 pv1;\n\n    sp0.w[2];\n    pv1 = vv7;\n    return a0 + (ts4_word)f1;\n",
+             "externs": [], "protos": {}}
+        with tempfile.TemporaryDirectory() as d:
+            emit.build({0x88000000: r}, [0x88000000], Path(d) / "x.c")
+            text = (Path(d) / "x.c").read_text()
+        self.assertIn("    (void)sp0.w[2];", text)
+        self.assertIn("    (void)f2;", text)
+        self.assertIn("    (void)pv1;", text)
+        self.assertNotIn("(void)f1;", text)
+
     def test_func_name(self):
         r = {"kind": "get", "detail": ["u32@0x8"]}
         self.assertEqual(emit.func_name(r, 0x88167CF0), "ts4_get_u32_off8_88167CF0")

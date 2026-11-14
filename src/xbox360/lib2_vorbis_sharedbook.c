@@ -70,7 +70,7 @@ ogg_uint32_t *lib2__make_words_883BD3A0(void *ctx, long *l, long n, long sparsec
             /* update ourself */
             if (length < 32 && (entry >> length)) {
                 /* error condition; the lengths must specify an overpopulated tree */
-                fn_8836CD70(ctx, r);
+                ts4_if_get_u32_off500_8836CD70(ctx, r);
                 return (0);
             }
             r[count++] = entry;
@@ -106,7 +106,7 @@ ogg_uint32_t *lib2__make_words_883BD3A0(void *ctx, long *l, long n, long sparsec
     if (sparsecount != 1) {
         for (i = 1; i < 33; i++)
             if (marker[i] & (0xffffffffUL >> (32 - i))) {
-                fn_8836CD70(ctx, r);
+                ts4_if_get_u32_off500_8836CD70(ctx, r);
                 return (0);
             }
     }

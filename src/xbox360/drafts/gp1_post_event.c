@@ -1,5 +1,5 @@
 /*
- * GP1 draft (near match): fn_88683D78, 3 instructions differ: the compiler stores the float payload
+ * GP1 draft (near match): ts4_call_seq_u32_off0_88683D78, 3 instructions differ: the compiler stores the float payload
  * field (+0x14) before the two leading integer fields, the original stores it third.
  * Parameter order is (this, name_hash, target, arg_a, arg_b, arg_c, float value): the float travels in f1.
  */

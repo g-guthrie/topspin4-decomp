@@ -2,8 +2,8 @@
  * Small leaf functions whose instructions are a single idiom; the names
  * describe that behaviour and end in the function address. */
 
-extern void fn_88434E40(void *);
-extern void fn_88435198(void *);
+extern void ts4_call_seq_lbl_8803D1C8_88434E40(void *);
+extern void ts4_call_seq_lbl_8803D1C8_88435198(void *);
 extern void ts4_if_call_seq_fn_8843B590_884372E0(void *);
 extern void ts4_if_call_seq_fn_8843C100_884373B8(void *);
 extern void ts4_if_call_seq_lbl_8807FF50_884374A0(void *);

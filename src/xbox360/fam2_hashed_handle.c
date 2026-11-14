@@ -16,7 +16,7 @@ typedef struct Ts4Res { char pad[0x1c]; void *service_key; } Ts4Res;
 typedef struct Ts4ServiceRef { char pad[0x1c]; void *service; } Ts4ServiceRef;
 extern void *fn_88923530(u32 pool, Ts4Handle12 h, u32 hash);
 extern void fn_88627EC0(void *object, Ts4Handle12 h);
-extern void fn_88628D48(void *object, Ts4Handle12 h);
+extern void ts4_if_call_seq_fn_88627EC0_88628D48(void *object, Ts4Handle12 h);
 extern void *ts4_find_service(void *key);
 extern void fn_88888F90(void *self, void *target);
 

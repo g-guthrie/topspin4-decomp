@@ -5,9 +5,9 @@ struct TS4Triple {
     unsigned int third;
 };
 void fn_886F7CD8(struct TS4Triple value, unsigned int *extra);
-void fn_886F7DA0(struct TS4Triple value, unsigned int *extra);
+void ts4_if_call_seq_u32_off0_886F7DA0(struct TS4Triple value, unsigned int *extra);
 void fn_886F7E68(struct TS4Triple value, unsigned int *extra);
-void fn_88714908(struct TS4Triple value, unsigned int *extra);
+void ts4_if_call_seq_u32_off0_88714908(struct TS4Triple value, unsigned int *extra);
 
 void ts4_forward_triple_extra_88945B38(struct TS4Triple value, unsigned int extra)
 {
@@ -16,7 +16,7 @@ void ts4_forward_triple_extra_88945B38(struct TS4Triple value, unsigned int extr
 
 void ts4_forward_triple_extra_88945B70(struct TS4Triple value, unsigned int extra)
 {
-    fn_886F7DA0(value, &extra);
+    ts4_if_call_seq_u32_off0_886F7DA0(value, &extra);
 }
 
 void ts4_forward_triple_extra_88945BA8(struct TS4Triple value, unsigned int extra)
@@ -26,5 +26,5 @@ void ts4_forward_triple_extra_88945BA8(struct TS4Triple value, unsigned int extr
 
 void ts4_forward_triple_extra_88952D58(struct TS4Triple value, unsigned int extra)
 {
-    fn_88714908(value, &extra);
+    ts4_if_call_seq_u32_off0_88714908(value, &extra);
 }

@@ -117,7 +117,7 @@ extern struct trio_locale_block lbl_88C6A6A8[];
 struct lconv_lib4 *ts4_get_u32_lbl_88C311F0_88567FB8(void); /* localeconv */
 extern char *ts4_copy_bytes(char *dst, const char *src, unsigned int n); /* strncpy */
 long ts4_tailcall_fn_88564828_88564B00(const char *s, char **end, int base); /* strtol */
-double fn_885640B0(double x); /* log10 */
+double ts4_call_seq_fn_88563F20_885640B0(double x); /* log10 */
 double floor(double x);
 #ifdef _MSC_VER
 double __cdecl fabs(double x);

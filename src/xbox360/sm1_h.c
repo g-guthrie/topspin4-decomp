@@ -28,9 +28,9 @@ int ts4_set_float_capped_by_index_adj1c_8834C558(char *t, int idx, float x) {
 
 /* 0x883AFBC0: record the owner in the descriptor and run the defaults initialiser */
 extern float lbl_88001A20;
-extern int fn_883BEDA8(void *, void *, float, float, int, void *, float, float);
+extern int ts4_if_get_u32_off0_883BEDA8(void *, void *, float, float, int, void *, float, float);
 typedef struct Ts4Desc20 { char pad[0x20]; void *owner; } Ts4Desc20;
-int ts4_init_descriptor_defaults_883AFBC0(void *t, Ts4Desc20 *a) { a->owner = t; fn_883BEDA8(t, a, lbl_88001A20, lbl_88001A20, 0, a, lbl_88001A20, lbl_88001A20); return 0; }
+int ts4_init_descriptor_defaults_883AFBC0(void *t, Ts4Desc20 *a) { a->owner = t; ts4_if_get_u32_off0_883BEDA8(t, a, lbl_88001A20, lbl_88001A20, 0, a, lbl_88001A20, lbl_88001A20); return 0; }
 
 /* 0x88197D60: true when x lies in [a, b) or [c, d + a) */
 typedef struct Ts4Ranges { char pad[0x7c]; u32 a; char pad2[8]; u32 b; u32 c; u32 d; } Ts4Ranges;

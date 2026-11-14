@@ -94,9 +94,9 @@ ts4_word fn_88617D88();
 ts4_word ts4_if_get_u32_off1c_88655518();
 ts4_word fn_886F5700();
 ts4_word fn_88713190();
-ts4_word fn_88716458();
-ts4_word fn_88719768();
-ts4_word fn_887197C8();
+ts4_word ts4_get_u32_offe0_88716458();
+ts4_word ts4_get_u32_off0_88719768();
+ts4_word ts4_if_get_u32_off0_887197C8();
 ts4_word fn_8871F260();
 ts4_word fn_88721100();
 ts4_word fn_88721CB0();
@@ -159,20 +159,20 @@ ts4_word ts4_call_seq_u32_off48_8871AD10(ts4_word a0)
     return t8;
 }
 
-/* Swing_DLL.xex 0x8871AEC0: if_get fn_88719768, u32@lbl_88D45AD0, u32@0x0, u32@0x38, vcall, fn_88716458 */
+/* Swing_DLL.xex 0x8871AEC0: if_get ts4_get_u32_off0_88719768, u32@lbl_88D45AD0, u32@0x0, u32@0x38, vcall, ts4_get_u32_offe0_88716458 */
 ts4_word ts4_if_get_fn_88719768_8871AEC0(ts4_word a0, ts4_word a1)
 {
     ts4_word p8;
     ts4_word t1;
     ts4_word t2;
 
-    t1 = fn_88719768((ts4_word)a0, (ts4_word)a1);
+    t1 = ts4_get_u32_off0_88719768((ts4_word)a0, (ts4_word)a1);
     if ((ts4_word)(t1 & 0xff) != 0) {
         t2 = *(ts4_word *)lbl_88D45AD0;
         if ((ts4_word)t2 != 0) {
             ((ts4_word (*)(ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t2) + 0))) + 56))))((ts4_word)t2, (ts4_word)a1);
         }
-        fn_88716458((ts4_word)a0, (ts4_word)a1);
+        ts4_get_u32_offe0_88716458((ts4_word)a0, (ts4_word)a1);
         p8 = (ts4_word)1;
     } else {
         p8 = (ts4_word)0;
@@ -180,10 +180,10 @@ ts4_word ts4_if_get_fn_88719768_8871AEC0(ts4_word a0, ts4_word a1)
     return p8;
 }
 
-/* Swing_DLL.xex 0x8871B698: get u32@0x38, fn_887197C8 */
+/* Swing_DLL.xex 0x8871B698: get u32@0x38, ts4_if_get_u32_off0_887197C8 */
 ts4_word ts4_get_u32_off38_8871B698(ts4_word a0, ts4_word a1)
 {
-    return fn_887197C8((ts4_word)a0, (ts4_word)a1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 56)));
+    return ts4_if_get_u32_off0_887197C8((ts4_word)a0, (ts4_word)a1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 56)));
 }
 
 /* Swing_DLL.xex 0x8871C530: if_call_seq ts4_object_finalize, ts4_object_finalize, u32@0x1c, ts4_destroy_owned_object, u32@0x0, ts4_destroy_owned_object */

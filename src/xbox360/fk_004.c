@@ -88,16 +88,16 @@ ts4_word fn_881AC6A0();
 ts4_word fn_88255AA0();
 ts4_word fn_8825B3A8();
 ts4_word fn_8825B918();
-ts4_word fn_8825C6C0();
+ts4_word ts4_loop_call_seq_u32_offc_8825C6C0();
 ts4_word fn_8825C8E8();
-ts4_word fn_8825D140();
-ts4_word fn_8825E5F8();
+ts4_word ts4_loop_call_seq_u32_offc_8825D140();
+ts4_word ts4_loop_call_seq_u32_offc_8825E5F8();
 ts4_word fn_8825EBD0();
-ts4_word fn_8825F798();
+ts4_word ts4_call_seq_fn_8825EE00_8825F798();
 ts4_word fn_8825FD78();
 ts4_word fn_882604C0();
 ts4_word fn_882609C8();
-ts4_word fn_882619C0();
+ts4_word ts4_loop_call_seq_u32_offc_882619C0();
 ts4_word fn_882781B0();
 ts4_word fn_882782A8();
 ts4_word fn_88278368();
@@ -279,11 +279,11 @@ ts4_word ts4_if_call_seq_lbl_880F3430_8825C298(ts4_word a0, ts4_word a1)
     return a0;
 }
 
-/* Swing_DLL.xex 0x8825C2F8: call_seq u32@0x10, u32@0x10, fn_8825F798, u8@0xa0, u8@0xa0, u8@0xa1 */
+/* Swing_DLL.xex 0x8825C2F8: call_seq u32@0x10, u32@0x10, ts4_call_seq_fn_8825EE00_8825F798, u8@0xa0, u8@0xa0, u8@0xa1 */
 ts4_word ts4_call_seq_u32_off10_8825C2F8(ts4_word a0, ts4_word a1)
 {
     *(ts4_word *)((char *)(ts4_word)(a0) + 16) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 16));
-    fn_8825F798((ts4_word)(a0 + 32), (ts4_word)(a1 + 32));
+    ts4_call_seq_fn_8825EE00_8825F798((ts4_word)(a0 + 32), (ts4_word)(a1 + 32));
     *(unsigned char *)((char *)(ts4_word)(a0) + 160) = (unsigned char)(*(unsigned char *)((char *)(ts4_word)(a1) + 160));
     *(unsigned char *)((char *)(ts4_word)(a0) + 161) = (unsigned char)(*(unsigned char *)((char *)(ts4_word)(a1) + 161));
     return a0;
@@ -337,7 +337,7 @@ ts4_word ts4_call_seq_fn_88255AA0_8825C7E8(ts4_word a0)
     return a0;
 }
 
-/* Swing_DLL.xex 0x8825D1A8: if_call_seq u32@0x10, u32@0xc, u32@0x4, fn_8825D140, u32@0xc, u32@0x8 */
+/* Swing_DLL.xex 0x8825D1A8: if_call_seq u32@0x10, u32@0xc, u32@0x4, ts4_loop_call_seq_u32_offc_8825D140, u32@0xc, u32@0x8 */
 ts4_word ts4_if_call_seq_u32_off10_8825D1A8(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p10;
@@ -356,7 +356,7 @@ ts4_word ts4_if_call_seq_u32_off10_8825D1A8(ts4_word a0, ts4_word a1, ts4_word a
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 16);
     p10 = (ts4_word)a0;
     if ((ts4_word)t1 != 0) {
-        t4 = fn_8825D140((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 12))) + 4)));
+        t4 = ts4_loop_call_seq_u32_offc_8825D140((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 12))) + 4)));
         t5 = *(ts4_word *)((char *)(ts4_word)(a0) + 12);
         *(ts4_word *)((char *)(ts4_word)(t5) + 8) = (ts4_word)t5;
         *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 12))) + 4) = (ts4_word)0;
@@ -404,7 +404,7 @@ void ts4_get_u32_off4_8825E048(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x8825E668: if_call_seq u32@0x8, u32@0x4, u32@0x4, fn_8825E5F8, u32@0x4, u32@0x8 */
+/* Swing_DLL.xex 0x8825E668: if_call_seq u32@0x8, u32@0x4, u32@0x4, ts4_loop_call_seq_u32_offc_8825E5F8, u32@0x4, u32@0x8 */
 ts4_word ts4_if_call_seq_u32_off8_8825E668(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p10;
@@ -423,7 +423,7 @@ ts4_word ts4_if_call_seq_u32_off8_8825E668(ts4_word a0, ts4_word a1, ts4_word a2
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 8);
     p10 = (ts4_word)a0;
     if ((ts4_word)t1 != 0) {
-        t4 = fn_8825E5F8((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 4)));
+        t4 = ts4_loop_call_seq_u32_offc_8825E5F8((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 4)));
         t5 = *(ts4_word *)((char *)(ts4_word)(a0) + 4);
         *(ts4_word *)((char *)(ts4_word)(t5) + 8) = (ts4_word)t5;
         *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 4) = (ts4_word)0;
@@ -482,7 +482,7 @@ ts4_word ts4_call_seq_fn_88255AA0_88260D28(ts4_word a0)
     return a0;
 }
 
-/* Swing_DLL.xex 0x88261A30: if_call_seq u32@0x8, u32@0x4, u32@0x4, fn_882619C0, u32@0x4, u32@0x8 */
+/* Swing_DLL.xex 0x88261A30: if_call_seq u32@0x8, u32@0x4, u32@0x4, ts4_loop_call_seq_u32_offc_882619C0, u32@0x4, u32@0x8 */
 ts4_word ts4_if_call_seq_u32_off8_88261A30(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p10;
@@ -501,7 +501,7 @@ ts4_word ts4_if_call_seq_u32_off8_88261A30(ts4_word a0, ts4_word a1, ts4_word a2
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 8);
     p10 = (ts4_word)a0;
     if ((ts4_word)t1 != 0) {
-        t4 = fn_882619C0((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 4)));
+        t4 = ts4_loop_call_seq_u32_offc_882619C0((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 4)));
         t5 = *(ts4_word *)((char *)(ts4_word)(a0) + 4);
         *(ts4_word *)((char *)(ts4_word)(t5) + 8) = (ts4_word)t5;
         *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 4) = (ts4_word)0;
@@ -2829,7 +2829,7 @@ ts4_word ts4_if_call_seq_lbl_880F8CC0_882806A8(ts4_word a0)
     return t5;
 }
 
-/* Swing_DLL.xex 0x88280958: if_call_seq u32@0x8, u32@0x4, u32@0x4, fn_8825C6C0, u32@0x4, u32@0x8 */
+/* Swing_DLL.xex 0x88280958: if_call_seq u32@0x8, u32@0x4, u32@0x4, ts4_loop_call_seq_u32_offc_8825C6C0, u32@0x4, u32@0x8 */
 ts4_word ts4_if_call_seq_u32_off8_88280958(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p10;
@@ -2848,7 +2848,7 @@ ts4_word ts4_if_call_seq_u32_off8_88280958(ts4_word a0, ts4_word a1, ts4_word a2
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 8);
     p10 = (ts4_word)a0;
     if ((ts4_word)t1 != 0) {
-        t4 = fn_8825C6C0((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 4)));
+        t4 = ts4_loop_call_seq_u32_offc_8825C6C0((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 4)));
         t5 = *(ts4_word *)((char *)(ts4_word)(a0) + 4);
         *(ts4_word *)((char *)(ts4_word)(t5) + 8) = (ts4_word)t5;
         *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 4) = (ts4_word)0;

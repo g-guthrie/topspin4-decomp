@@ -5,7 +5,7 @@ extern Mgr *lbl_88B3302C;
 extern char lbl_88039A20[];
 void fn_88315F10(void *heap, void *buf, const char *file, int line);
 int ts4_call_seq_fn_883E4E70_883E5060(void *p);
-void fn_883E6250(void *p);
+void ts4_if_call_seq_u32_off4_883E6250(void *p);
 
 int ts4_release_buffer_883E8C08(Obj *self)
 {
@@ -17,6 +17,6 @@ int ts4_release_buffer_883E8C08(Obj *self)
     self->buf = 0;
     self->aux = 0;
     self->cnt = 0;
-    fn_883E6250(self->tail);
+    ts4_if_call_seq_u32_off4_883E6250(self->tail);
     return 0;
 }

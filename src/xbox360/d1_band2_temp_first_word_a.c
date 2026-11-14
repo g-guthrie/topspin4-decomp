@@ -27,7 +27,7 @@ void fn_88481278(void *result, int arg);
 void fn_88486018(void *result, int arg);
 void fn_884A1278(void *result, int arg);
 void fn_884A1438(void *result, int arg);
-void fn_884A15C0(void *result, int arg);
+void ts4_call_seq_fn_8843AE88_884A15C0(void *result, int arg);
 void fn_884A1878(void *result, int arg);
 
 unsigned int ts4_construct_temp_first_word_88437218(void)
@@ -229,7 +229,7 @@ unsigned int ts4_construct_temp_first_word_884A1408(void)
 unsigned int ts4_construct_temp_first_word_884A1590(void)
 {
     struct { unsigned int first; char rest[188]; } temp;
-    fn_884A15C0(&temp, 0);
+    ts4_call_seq_fn_8843AE88_884A15C0(&temp, 0);
     return temp.first;
 }
 

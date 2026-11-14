@@ -117,13 +117,13 @@ ts4_word fn_888CCCC8();
 ts4_word fn_888CEBA8();
 ts4_word fn_888D3330();
 ts4_word fn_888D3648();
-ts4_word fn_888D73B0();
+ts4_word ts4_if_call_seq_u32_off15c_888D73B0();
 ts4_word ts4_if_call_seq_fn_888C39A0_888D8078();
 ts4_word fn_888DA428();
 ts4_word fn_888DA698();
 ts4_word fn_888DA850();
 ts4_word fn_888DDA80();
-ts4_word fn_888DF008();
+ts4_word ts4_loop_call_seq_u32_off20_888DF008();
 ts4_word ts4_hash_lookup_null_release_888E38A8();
 ts4_word ts4_hash_lookup_null_release_888E3908();
 ts4_word fn_888F14D8();
@@ -945,7 +945,7 @@ ts4_word ts4_get_u32_off1c_888DA978(ts4_word a0)
     return fn_88871108((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 28)));
 }
 
-/* Swing_DLL.xex 0x888DAEE8: if_call_seq u32@lbl_88D45B1C, u32@0x27c, fn_888D73B0, u32@0x0, u32@0x0, u32@0x4 */
+/* Swing_DLL.xex 0x888DAEE8: if_call_seq u32@lbl_88D45B1C, u32@0x27c, ts4_if_call_seq_u32_off15c_888D73B0, u32@0x0, u32@0x0, u32@0x4 */
 ts4_word ts4_if_call_seq_u32_lbl_88D45B1C_888DAEE8(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6)
 {
     ts4_word loc50[1];
@@ -954,7 +954,7 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45B1C_888DAEE8(ts4_word a0, ts4_word a1, ts4
 
     t2 = *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 636);
     loc50[0] = (ts4_word)t2;
-    t3 = fn_888D73B0((ts4_word)a0, (ts4_word)(ts4_word)&loc50[0], (ts4_word)a2, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)a6, (ts4_word)t2);
+    t3 = ts4_if_call_seq_u32_off15c_888D73B0((ts4_word)a0, (ts4_word)(ts4_word)&loc50[0], (ts4_word)a2, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)a6, (ts4_word)t2);
     if ((ts4_word)t3 != 0) {
         *(ts4_word *)((char *)(ts4_word)(t3) + 0) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0));
         *(ts4_word *)((char *)(ts4_word)(t3) + 4) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 4));
@@ -1138,7 +1138,7 @@ void ts4_set_u32_off0_888E3678(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x888E6680: call_seq fn_888CC2C8, fn_888CC890, fn_888DF008, fn_888DA850 */
+/* Swing_DLL.xex 0x888E6680: call_seq fn_888CC2C8, fn_888CC890, ts4_loop_call_seq_u32_off20_888DF008, fn_888DA850 */
 ts4_word ts4_call_seq_fn_888CC2C8_888E6680(ts4_word a0)
 {
     ts4_word t1;
@@ -1146,7 +1146,7 @@ ts4_word ts4_call_seq_fn_888CC2C8_888E6680(ts4_word a0)
 
     t1 = fn_888CC2C8();
     fn_888CC890((ts4_word)t1);
-    fn_888DF008((ts4_word)a0);
+    ts4_loop_call_seq_u32_off20_888DF008((ts4_word)a0);
     t4 = fn_888DA850((ts4_word)a0);
     return t4;
 }

@@ -39,7 +39,7 @@ void ts4_call_seq_lbl_880E4A34_887EC120(void *object);
 extern void *lbl_88D458DC;
 extern void *lbl_88D45848;
 extern void *lbl_88D45838;
-void *fn_887ED750(void *object, struct TS4Triple value);
+void *ts4_if_call_seq_fn_88627EC0_887ED750(void *object, struct TS4Triple value);
 void *fn_888FF738(void *object, struct TS4Triple value);
 void *fn_8893F548(void *object, struct TS4Triple value);
 unsigned int ts4_tailcall_XamNotifyCreateListener_8857A988(int index);
@@ -99,7 +99,7 @@ void ts4_construct_named_887EE5D8(struct TS4Base *self, struct TS4Triple value)
 
 void ts4_construct_named_887CC2D8(struct TS4W50 *self, struct TS4Triple value)
 {
-    fn_887ED750(self, value);
+    ts4_if_call_seq_fn_88627EC0_887ED750(self, value);
     self->value = ts4_tailcall_XamNotifyCreateListener_8857A988(3);
 }
 

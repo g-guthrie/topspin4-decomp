@@ -23,7 +23,7 @@ int fn_888CDF68(int);
 char *ts4_find_service(unsigned);
 int ts4_profile_internal_is_available(char *, int, int);
 void ts4_if_addr_fn_8883F238_888F3338(char *, int);
-void fn_888CFBC8(char *);
+void ts4_call_seq_fn_888CF650_888CFBC8(char *);
 
 /* Read script argument 0 (or 1) as a double: number, integer, else pool[11]. */
 #define TS4_SCRIPT_ARG_NUMBER(context, index, number) do { \
@@ -124,6 +124,6 @@ int ts4_script_profile_available_dispatch_8879C0C0(struct TS4ScriptContext *cont
     if ((unsigned char)ts4_profile_internal_is_available(g_ts4_online_state, profile, 0) == 1)
         ts4_if_addr_fn_8883F238_888F3338(ts4_find_service(0xE3767AD6), profile);
     else
-        fn_888CFBC8(ts4_find_service(0xE3767AD6));
+        ts4_call_seq_fn_888CF650_888CFBC8(ts4_find_service(0xE3767AD6));
     return 0;
 }

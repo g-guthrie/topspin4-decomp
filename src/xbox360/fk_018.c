@@ -99,7 +99,7 @@ ts4_word fn_8861E938();
 ts4_word fn_88625478();
 ts4_word fn_88625798();
 ts4_word ts4_name_keys_register_88626F70();
-ts4_word fn_88627B30();
+ts4_word ts4_if_call_seq_u32_off2c_88627B30();
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88628E70();
 ts4_word fn_8862BB50();
 ts4_word fn_8862BE08();
@@ -138,7 +138,7 @@ ts4_word fn_88641A58();
 ts4_word fn_88644138();
 ts4_word fn_88883CD0();
 ts4_word fn_888860A0();
-ts4_word fn_88888338();
+ts4_word ts4_call_seq_lbl_880DF0F0_88888338();
 ts4_word fn_888D7230();
 ts4_word fn_888D72F0();
 ts4_word fn_888DF110();
@@ -1240,7 +1240,7 @@ ts4_word ts4_call_seq_u32_off0_88627AD0(ts4_word a0)
     return a0;
 }
 
-/* Swing_DLL.xex 0x88627BB0: get u32@0x4, u32@0x4, u32@0x4, u32@0x4, fn_88627B30 */
+/* Swing_DLL.xex 0x88627BB0: get u32@0x4, u32@0x4, u32@0x4, u32@0x4, ts4_if_call_seq_u32_off2c_88627B30 */
 ts4_word ts4_get_u32_off4_88627BB0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5)
 {
     ts4_word t1;
@@ -1250,7 +1250,7 @@ ts4_word ts4_get_u32_off4_88627BB0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_wo
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 4);
     *(ts4_word *)((char *)(ts4_word)(a3) + 4) = (ts4_word)t1;
     t2 = *(ts4_word *)((char *)(ts4_word)(a1) + 4);
-    return fn_88627B30((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 4)), (ts4_word)a2, (ts4_word)t2, (ts4_word)(a3 + 8), (ts4_word)(a3 + 20), (ts4_word)a5, (ts4_word)t1, (ts4_word)a1);
+    return ts4_if_call_seq_u32_off2c_88627B30((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 4)), (ts4_word)a2, (ts4_word)t2, (ts4_word)(a3 + 8), (ts4_word)(a3 + 20), (ts4_word)a5, (ts4_word)t1, (ts4_word)a1);
 }
 
 /* Swing_DLL.xex 0x88627DE8: call_seq lbl_880F8CF8, u32@0x0, fn_88625798, fn_881A5088, u32@0x28, fn_881A4F30 */
@@ -1354,7 +1354,7 @@ ts4_word ts4_if_call_seq_lbl_880F83C0_8862A120(ts4_word a0)
     return t5;
 }
 
-/* Swing_DLL.xex 0x8862BA60: call_seq ts4_if_call_seq_u32_lbl_88D45B38_88628E70, ts4_name_keys_register_88626F70, fn_88888338 */
+/* Swing_DLL.xex 0x8862BA60: call_seq ts4_if_call_seq_u32_lbl_88D45B38_88628E70, ts4_name_keys_register_88626F70, ts4_call_seq_lbl_880DF0F0_88888338 */
 ts4_word ts4_call_seq_fn_88628E70_8862BA60(void)
 {
     ts4_word t1;
@@ -1363,7 +1363,7 @@ ts4_word ts4_call_seq_fn_88628E70_8862BA60(void)
 
     t1 = ts4_if_call_seq_u32_lbl_88D45B38_88628E70();
     t2 = ts4_name_keys_register_88626F70((ts4_word)t1);
-    t3 = fn_88888338((ts4_word)t2);
+    t3 = ts4_call_seq_lbl_880DF0F0_88888338((ts4_word)t2);
     return t3;
 }
 

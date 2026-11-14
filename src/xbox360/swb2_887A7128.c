@@ -1,6 +1,6 @@
 /* Family SWB2 (jump-table switch). */
 unsigned int ts4_map_id_to_slot_88883F38(void);
-void fn_881B1A98(void *out, void *obj, unsigned int hash);
+void ts4_call_seq_u32_off0_881B1A98(void *out, void *obj, unsigned int hash);
 
 int ts4_hash_by_kind_887A7128(void *obj)
 {
@@ -21,7 +21,7 @@ int ts4_hash_by_kind_887A7128(void *obj)
     case 10: hash = 0xD7A33283; break;
     case 11: hash = 0x96C17F36; break;
     }
-    fn_881B1A98(buf, obj, hash);
+    ts4_call_seq_u32_off0_881B1A98(buf, obj, hash);
     return 1;
 }
 

@@ -153,7 +153,7 @@ ts4_word ts4_if_call_seq_fn_884EDB18_884EE568();
 ts4_word fn_884EE5D0();
 ts4_word ts4_call_seq_fn_884EEF90_884EEFF0();
 ts4_word ts4_if_call_seq_fn_884EE5D0_884EF048();
-ts4_word fn_884EF320();
+ts4_word ts4_call_seq_lbl_8808D660_884EF320();
 ts4_word ts4_call_seq_fn_884EF3A0_884EF3F0();
 ts4_word ts4_if_call_seq_fn_884EF320_884EF450();
 ts4_word fn_884EFDD0();

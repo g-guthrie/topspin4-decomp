@@ -13,7 +13,7 @@
  *
  * Evidence: disassembly of fn_88611760 (tools/fn_asm.py), hash 0xC89FA93B ==
  * crc32("Xenon"), the vtable dump of ts4_keyed_item_list_add_unique_8861E648's
- * factory (fn_882859D8 -> ctor fn_88625DA0 -> vtable 0x880F8C44).
+ * factory (fn_882859D8 -> ctor ts4_if_call_seq_fn_88617D88_88625DA0 -> vtable 0x880F8C44).
  * Does not match byte-exactly (not attempted: 18-register prologue, relative
  * XData arrays and threaded branches); behaviour is believed correct.
  */

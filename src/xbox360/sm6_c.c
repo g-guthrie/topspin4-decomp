@@ -62,7 +62,7 @@ char *ts4_vec_erase_0c_88160DB0(v0c_b_t *v, char *pos) { char *next = pos + 0xc;
 /* Swing_DLL.xex 0x88166838: uninitialized copy of 0x20-byte text pairs */
 char *ts4_uninit_copy_text2_88166838(char *first, char *last, char *dst) { for (; first != last; first += 0x20, dst += 0x20) { if (dst) { ts4_assign_formatted_text(dst, *(int *)first); ts4_assign_formatted_text(dst + 0xc, *(int *)(first + 0xc)); *(int *)(dst + 0x18) = *(int *)(first + 0x18); *(int *)(dst + 0x1c) = *(int *)(first + 0x1c); } } return dst; }
 
-void fn_881F4108(void *);
+void ts4_addr_fn_881F7958_881F4108(void *);
 extern char lbl_880E7810[];
 extern const float lbl_8814B440;
 

@@ -26,7 +26,7 @@ ts4_word RtlEnterCriticalSection();
 ts4_word RtlLeaveCriticalSection();
 ts4_word ts4_if_atomic_interlocked_dec_881876D0();
 ts4_word fn_881B19A0();
-ts4_word fn_881B1A98();
+ts4_word ts4_call_seq_u32_off0_881B1A98();
 ts4_word ts4_call_seq_fn_88837880_881E2F68();
 ts4_word ts4_if_atomic_interlocked_dec_885B5E88();
 ts4_word fn_88608590();
@@ -207,7 +207,7 @@ ts4_word ts4_if_get_u32_lbl_88D45A60_887A76F0(ts4_word a0, ts4_word a1, ts4_word
     if ((ts4_word)t4 != 0) {
         _InterlockedIncrement((volatile long *)(ts4_word)((t4 + 4)));
         t7 = fn_88608590((ts4_word)0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t4) + 96)));
-        fn_881B1A98((ts4_word)(ts4_word)&loc50[0], (ts4_word)a0, (ts4_word)t7);
+        ts4_call_seq_u32_off0_881B1A98((ts4_word)(ts4_word)&loc50[0], (ts4_word)a0, (ts4_word)t7);
         ts4_if_atomic_interlocked_dec_881876D0((ts4_word)t4);
         p10 = (ts4_word)1;
     } else {

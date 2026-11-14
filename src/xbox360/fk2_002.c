@@ -106,7 +106,7 @@ ts4_word ts4_get_u32_off18_8828B1E0();
 ts4_word fn_88315C60();
 ts4_word fn_88315F10();
 ts4_word ts4_tailcall_fn_88315C60_88316068();
-ts4_word fn_88318298();
+ts4_word ts4_if_call_seq_ts4_if_set_u32_off0_8832BFC0_88318298();
 ts4_word ts4_if_call_seq_fn_8832BFC0_88318300();
 ts4_word fn_88318550();
 ts4_word ts4_if_call_seq_lbl_88028EA4_8831ACF0();
@@ -138,7 +138,7 @@ ts4_word fn_8834FB00();
 ts4_word fn_88356728();
 ts4_word fn_88358250();
 ts4_word fn_8836CBE8();
-ts4_word fn_8836CD70();
+ts4_word ts4_if_get_u32_off500_8836CD70();
 ts4_word fn_8837C680();
 ts4_word fn_8837D100();
 ts4_word fn_88381170();
@@ -2488,7 +2488,7 @@ ts4_word ts4_if_get_u32_off14_883BD0F0(ts4_word a0, int a1)
     return 0;
 }
 
-/* Swing_DLL.xex 0x883BDA50: if_call_seq u32@0x24, ts4_if_call_seq_u32_off24_883BD9D8, fn_8836CD70 */
+/* Swing_DLL.xex 0x883BDA50: if_call_seq u32@0x24, ts4_if_call_seq_u32_off24_883BD9D8, ts4_if_get_u32_off500_8836CD70 */
 ts4_word ts4_if_call_seq_u32_off24_883BDA50(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p4;
@@ -2505,7 +2505,7 @@ ts4_word ts4_if_call_seq_u32_off24_883BDA50(ts4_word a0, ts4_word a1, ts4_word a
     p4 = (ts4_word)a0;
     if ((int)t1 != 0) {
         ts4_if_call_seq_u32_off24_883BD9D8((ts4_word)a0, (ts4_word)a1);
-        t3 = fn_8836CD70((ts4_word)a0, (ts4_word)a1);
+        t3 = ts4_if_get_u32_off500_8836CD70((ts4_word)a0, (ts4_word)a1);
         p4 = (ts4_word)t3;
     }
     return p4;
@@ -2586,14 +2586,14 @@ ts4_word ts4_if_get_u32_off9c_883EE5B0(ts4_word a0)
     return 36;
 }
 
-/* Swing_DLL.xex 0x883EE5E0: if_get u32@0x9c, fn_88318298 */
+/* Swing_DLL.xex 0x883EE5E0: if_get u32@0x9c, ts4_if_call_seq_ts4_if_set_u32_off0_8832BFC0_88318298 */
 ts4_word ts4_if_get_u32_off9c_883EE5E0(ts4_word a0)
 {
     ts4_word t1;
 
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 156);
     if ((ts4_word)t1 != 0) {
-        return fn_88318298((ts4_word)t1);
+        return ts4_if_call_seq_ts4_if_set_u32_off0_8832BFC0_88318298((ts4_word)t1);
     }
     return 36;
 }

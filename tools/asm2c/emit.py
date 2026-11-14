@@ -180,7 +180,14 @@ def build(res, group, path, cpp=False):
         start = len('\n'.join(o).split('\n')) + 1   # first line of the definition (entries hold several lines)
         body = strip_dead_locals(r['body'])
         body = cast_same_file_calls(body, protos, own_names, cpp)
-        unused = [p for p in re.findall(r'\ba\d+\b', r['sig']) if not re.search(r'\b' + p + r'\b', body)]
+        # a discarded read (`sp0.w[2];`) is written as a void cast for the host -Wunused-value check
+        body = re.sub(r'(?m)^(\s+)(?!return;|break;|continue;)([A-Za-z_]\w*(?:\.\w+)?(?:\[\d+\])*);$', r'\1(void)\2;', body)
+        params = re.findall(r'\b(?:a|f|vp)\d+\b', r['sig'][r['sig'].find('('):])
+        # params never read, and locals only ever assigned (set-but-unused), get a void cast
+        setonly = [v for v in re.findall(r'(?m)^    [A-Za-z_][\w ]*?\b(\w+);$', body)
+                   if re.search(r'\b' + v + r' = ', body)
+                   and len(re.findall(r'\b' + v + r'\b', body)) == 1 + len(re.findall(r'\b' + v + r' = ', body))]
+        unused = [p for p in params if not re.search(r'\b' + p + r'\b', body)] + setonly
         if unused:
             bl = body.split('\n'); k = 0
             while k < len(bl) and (bl[k].strip() == '' or re.match(r'^    [A-Za-z0-9_ ]+ \w+(\[\d+\])?;$', bl[k])):

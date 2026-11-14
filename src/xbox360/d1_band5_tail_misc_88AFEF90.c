@@ -85,7 +85,7 @@ typedef struct Ts4Pending {
 
 extern Ts4Pending lbl_88D492B0;
 extern void *lbl_88D45B38;
-extern void fn_886131F0(void *owner, void *item, int extra);
+extern void ts4_if_call_seq_fn_881F04B8_886131F0(void *owner, void *item, int extra);
 extern void fn_885651F8(void *item);
 
 void ts4_flush_pending_88AFF328(void)
@@ -94,7 +94,7 @@ void ts4_flush_pending_88AFF328(void)
         return;
     }
     if (lbl_88D45B38 != 0) {
-        fn_886131F0(lbl_88D45B38, lbl_88D492B0.item, lbl_88D492B0.extra);
+        ts4_if_call_seq_fn_881F04B8_886131F0(lbl_88D45B38, lbl_88D492B0.item, lbl_88D492B0.extra);
         return;
     }
     fn_885651F8(lbl_88D492B0.item);

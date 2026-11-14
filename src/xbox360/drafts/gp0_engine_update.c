@@ -47,7 +47,7 @@ struct GamePlayEngine {
     struct Instance **instances_end;   /* +0x7C */
     void *type_84;                     /* +0x84 object created from registry class 0x36594CC8 */
     void *u_88[0x13];
-    void *recorder_c8;                 /* +0xC8 service 0x3CC3B6C0: input record/replay writer (fn_88913BD8 opens its file) */
+    void *recorder_c8;                 /* +0xC8 service 0x3CC3B6C0: input record/replay writer (ts4_if_set_u32_off48_88913BD8 opens its file) */
     void *svc_cc;                      /* +0xCC service 0x21AC4822 */
     void *input_mapper_d0;             /* +0xD0 service 0x8B430A2D == crc32("InputMapper") */
     u8 u_d4;                           /* +0xD4 "restart in progress" guard around fn_886A65F8/fn_886AA940 */
@@ -72,7 +72,7 @@ struct GamePlayEngine {
  *       current heap snapshots are (re)written through the FS object (g_engine+0x224 vtbl+0x28
  *       open, then each registered heap service 0x85E88173 / 0xB20FF443 / 0x14E2D892 and
  *       engine->heap are asked to serialize via vtbl+0x8C(file) / vtbl+0x88(stream, 0, 1)).
- *     * recorder_c8 = fn_88913BD8(recorder, "Input_%d.rec", 1): opens the input record for
+ *     * recorder_c8 = ts4_if_set_u32_off48_88913BD8(recorder, "Input_%d.rec", 1): opens the input record for
  *       WRITE through the engine FS (vtbl+0x34, access 2); mode != 1 opens for READ (vtbl+0x28, 1).
  *     * (the open is followed by inst0->+0x98 = 0 and ++match->+0, see step 6).
  *     CAVEAT: the middle of the function (0x886C2A00..0x886C3060, ~600 instructions of FS/heap-service
@@ -159,7 +159,7 @@ struct MatchFrameState {               /* instance->u30 */
  *         if (!(match->60 valid)) fn_8868FCC0(inst);
  *         if (inst->+0x35 == 1) { fn_8865C170(inst->u68); fn_8869EF08(inst); inst->+0x35 = 0; }
  *         inst->u68->vtbl[1]();                                             // sub-object update
- *         if (flags->+0x68) { flags->+0x68 = 0; fn_8866E448(inst); }       // sync per-player active flag (+0x4E5)
+ *         if (flags->+0x68) { flags->+0x68 = 0; ts4_loop_get_u32_off8_8866E448(inst); }       // sync per-player active flag (+0x4E5)
  *         for (p in players) {
  *             p->anim->+0x3F8 = match->+0x4A ? 0.0f : p->state->+0x9F4;
  *             p->state->+0x530 = world->+0x520;

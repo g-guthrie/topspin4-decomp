@@ -196,7 +196,7 @@ extern char * lbl_88D45A08;
 extern u32 fn_888C7AF8(u32);
 extern u32 ts4_query_size_8857BF40(char *, int);
 extern void ts4_counted_ptr_assign_881C38D0(char *);
-extern void fn_8890E988(char *);
+extern void ts4_loop_call_seq_u32_off2c_8890E988(char *);
 extern u32 fn_88319C40(int, int, int);
 extern u32 fn_88336AD8(int, int, int);
 extern u32 fn_887D7D98(int, int, int);
@@ -236,7 +236,7 @@ extern void fn_889D0020(void);
 extern void fn_889AC440(void);
 extern void fn_889AC4B0(void);
 extern void * lbl_88C6CBFC;
-extern u32 fn_887961A0(int, void *, int);
+extern u32 ts4_if_call_seq_u32_off70_887961A0(int, void *, int);
 extern void * lbl_88C6CBF8;
 
 /* allocate_object_in_global_heap_and_construct */
@@ -2289,7 +2289,7 @@ void ts4_forward_this_plus_24_881DD850(char *a)
 /* Swing_DLL.xex 0x886811D0 */
 void ts4_forward_this_plus_24_886811D0(char *a)
 {
-    fn_8890E988(a + 24);
+    ts4_loop_call_seq_u32_off2c_8890E988(a + 24);
 }
 
 /* Swing_DLL.xex 0x887CDBB8 */
@@ -3151,11 +3151,11 @@ void ts4_tail_call_noargs_b_889ACC88(void)
 /* Swing_DLL.xex 0x887975E8 */
 u32 ts4_call_with_one_and_global_second_887975E8(int a)
 {
-    return fn_887961A0(a, lbl_88C6CBFC, 1);
+    return ts4_if_call_seq_u32_off70_887961A0(a, lbl_88C6CBFC, 1);
 }
 
 /* Swing_DLL.xex 0x887975F8 */
 u32 ts4_call_with_one_and_global_second_887975F8(int a)
 {
-    return fn_887961A0(a, lbl_88C6CBF8, 1);
+    return ts4_if_call_seq_u32_off70_887961A0(a, lbl_88C6CBF8, 1);
 }

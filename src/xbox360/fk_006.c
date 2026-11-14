@@ -71,7 +71,7 @@ ts4_word fn_8831CBA8();
 ts4_word fn_8831CD30();
 ts4_word fn_8831CE30();
 ts4_word fn_8831DAC0();
-ts4_word fn_8831E730();
+ts4_word ts4_if_call_seq_u32_off11c_8831E730();
 ts4_word fn_8831E890();
 ts4_word fn_88322CA8();
 ts4_word fn_88324160();
@@ -101,7 +101,7 @@ ts4_word ts4_if_get_u32_off14_88330948();
 ts4_word fn_88335DF8();
 ts4_word fn_88336050();
 ts4_word ts4_if_call_seq_lbl_88028B5C_88339B50();
-ts4_word fn_88376FC0();
+ts4_word ts4_if_get_u32_off108_88376FC0();
 ts4_word fn_88377118();
 ts4_word fn_88381F90();
 ts4_word fn_88396320();
@@ -1152,10 +1152,10 @@ ts4_word ts4_if_get_u32_off14_8831DB88(ts4_word a0, ts4_word a1, ts4_word a2)
     return fn_8831CBA8((ts4_word)a0, (ts4_word)a1, (ts4_word)1, (ts4_word)0, (ts4_word)a2);
 }
 
-/* Swing_DLL.xex 0x8831E9B0: tailcall fn_8831E730 */
+/* Swing_DLL.xex 0x8831E9B0: tailcall ts4_if_call_seq_u32_off11c_8831E730 */
 ts4_word ts4_tailcall_fn_8831E730_8831E9B0(ts4_word a0)
 {
-    return fn_8831E730((ts4_word)a0, (ts4_word)1);
+    return ts4_if_call_seq_u32_off11c_8831E730((ts4_word)a0, (ts4_word)1);
 }
 
 /* Swing_DLL.xex 0x8831E9B8: get u32@0x0, u32@0x4c, vcall, fn_8831E890 */
@@ -1786,7 +1786,7 @@ ts4_word ts4_if_call_seq_u32_off14_883342A8(ts4_word a0, ts4_word a1, ts4_word a
     return 0;
 }
 
-/* Swing_DLL.xex 0x88334890: if_get u32@0x44, u32@0x108, fn_88377118, u32@0x44, fn_88376FC0, u32@0x104 */
+/* Swing_DLL.xex 0x88334890: if_get u32@0x44, u32@0x108, fn_88377118, u32@0x44, ts4_if_get_u32_off108_88376FC0, u32@0x104 */
 ts4_word ts4_if_get_u32_off44_88334890(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word loc50[1];
@@ -1803,7 +1803,7 @@ ts4_word ts4_if_get_u32_off44_88334890(ts4_word a0, ts4_word a1, ts4_word a2)
     }
     t3 = fn_88377118((ts4_word)t1, (ts4_word)a1, (ts4_word)a2, (ts4_word)2);
     loc50[0] = (ts4_word)a2;
-    fn_88376FC0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 68)), (ts4_word)(ts4_word)&loc50[0], (ts4_word)2);
+    ts4_if_get_u32_off108_88376FC0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 68)), (ts4_word)(ts4_word)&loc50[0], (ts4_word)2);
     t6 = loc50[0];
     t7 = *(ts4_word *)((char *)(ts4_word)(a0) + 260);
     *(ts4_word *)((char *)(ts4_word)(a0) + 40) = (ts4_word)t6;

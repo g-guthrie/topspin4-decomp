@@ -8,7 +8,7 @@ extern void *g_ts4_session_state;
 extern void *lbl_88D45954, *lbl_88D45878, *lbl_88D4593C, *lbl_88D45A64, *lbl_88D459DC, *lbl_88D45A04;
 extern void *lbl_88D45B0C, *lbl_88D459E0, *lbl_88D45A60, *lbl_88D45960, *lbl_88D41FC4, *lbl_88D45B1C;
 extern void *g_ts4_online_context;
-extern void fn_88931FE0(void *, ts4_script_u32 *);
+extern void ts4_loop_get_u32_off1c_88931FE0(void *, ts4_script_u32 *);
 extern ts4_script_u8 fn_88865388(void *, int, int, ts4_script_u8 *);
 extern ts4_script_u32 fn_887EA5C8(void *, int);
 extern void ts4_if_get_u32_off1c_886570B8(void *, ts4_script_u32);

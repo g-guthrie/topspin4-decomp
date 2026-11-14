@@ -3,7 +3,7 @@
 extern double g_ts4_script_constants[];
 double fn_8819F650(void);
 double fn_8819F6A0(void);
-double fn_885640B0(double value);
+double ts4_call_seq_fn_88563F20_885640B0(double value);
 
 /* Swing_DLL.xex 0x8819CF40: returns a table constant for a few radix values (2, 8, 10, 16); otherwise computes
  * from the value by comparing it against a threshold constant, falling back to log(value) / log(base). */
@@ -26,7 +26,7 @@ double ts4_radix_constant_8819CF40(int radix)
             }
             return fn_8819F6A0();
         }
-        return fn_885640B0(value) / fn_885640B0(g_ts4_script_constants[46]);
+        return ts4_call_seq_fn_88563F20_885640B0(value) / ts4_call_seq_fn_88563F20_885640B0(g_ts4_script_constants[46]);
     }
     }
 }

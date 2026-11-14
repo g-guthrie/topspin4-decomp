@@ -54,7 +54,7 @@ void gp3_tag_edges_88697118(struct Gp3TagTracker *t, const struct Gp3PlayerRef *
     /* cells 13/14/15 falling edges request 1ad280af / 83dbd115 / f4dce183 unless ShotRecord+0x99 */
     /* Rush tag active: */
     if (gp3_cell_active(t, 2, p) /* && (prev==0 || hitter anim flag) */) {
-        /* d     = |ball_pos(fn_8865EC70) - player.state+0xBF0|
+        /* d     = |ball_pos(ts4_if_get_u32_off4c_8865EC70) - player.state+0xBF0|
          * ratio = state[+0xC28] * 60.0 / (state[+0xC24] * 100.0)     (only when state[+0xC24] != 0)
          * if (d > cfg->+0xC4 && ratio > cfg->+0xC8 && !paused && !prev(2))  reward RUSHING_TO_BALL, request 7d322733/5312a160
          * else reward RUSHING (39afbba7) and request 39afbba7/a6924c6a */

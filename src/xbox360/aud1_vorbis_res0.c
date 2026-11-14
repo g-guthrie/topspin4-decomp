@@ -64,7 +64,7 @@ static void res0_free_info(void *ctx, vorbis_info_residue *i)
     vorbis_info_residue0 *info = (vorbis_info_residue0 *)i;
     if (info) {
         ts4_memset(info, 0, sizeof(*info));
-        fn_8836CD70(ctx, info);
+        ts4_if_get_u32_off500_8836CD70(ctx, info);
     }
 }
 
@@ -76,14 +76,14 @@ void aud1_res0_free_look_883C4C10(void *ctx, vorbis_look_residue *i)
         vorbis_look_residue0 *look = (vorbis_look_residue0 *)i;
 
         for (j = 0; j < look->parts; j++)
-            if (look->partbooks[j]) fn_8836CD70(ctx, look->partbooks[j]);
-        fn_8836CD70(ctx, look->partbooks);
+            if (look->partbooks[j]) ts4_if_get_u32_off500_8836CD70(ctx, look->partbooks[j]);
+        ts4_if_get_u32_off500_8836CD70(ctx, look->partbooks);
         for (j = 0; j < look->partvals; j++)
-            fn_8836CD70(ctx, look->decodemap[j]);
-        fn_8836CD70(ctx, look->decodemap);
+            ts4_if_get_u32_off500_8836CD70(ctx, look->decodemap[j]);
+        ts4_if_get_u32_off500_8836CD70(ctx, look->decodemap);
 
         ts4_memset(look, 0, sizeof(*look));
-        fn_8836CD70(ctx, look);
+        ts4_if_get_u32_off500_8836CD70(ctx, look);
     }
 }
 

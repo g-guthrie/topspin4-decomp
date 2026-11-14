@@ -83,7 +83,7 @@ ts4_uptr ts4_pool1_clear_88599CF8(ts4_uptr);
 ts4_uptr fn_8859F280(ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_885A50D0(ts4_uptr);
 ts4_uptr ts4_pool16_clear_885A5E20(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
-ts4_uptr fn_885A6ED0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr ts4_if_call_seq_u32_off30_885A6ED0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_885A7A00(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_885A9120(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_885AA008(ts4_uptr, ts4_uptr, ts4_uptr);

@@ -62,6 +62,6 @@ struct sm4_b { unsigned char hi : 4; unsigned char lo : 4; };
 void ts4_set_flag_hi_nibble_88482710(char *s, signed char v) { struct sm4_b b; b.hi = (v != 0); b.lo = 0; *(struct sm4_b *)(s + 0x9a) = b; }
 
 /* tail call with two constant pointer arguments appended */
-extern void fn_884350B0(int, int, int, void *, void *);
+extern void ts4_get_ts4_if_call_seq_u32_off4_88428890_884350B0(int, int, int, void *, void *);
 extern char lbl_880410E4, fn_88434F80;
-void ts4_tail_884350B0_with_ptrs_88435168(int a, int b, int c) { fn_884350B0(a, b, c, &lbl_880410E4, &fn_88434F80); }
+void ts4_tail_884350B0_with_ptrs_88435168(int a, int b, int c) { ts4_get_ts4_if_call_seq_u32_off4_88428890_884350B0(a, b, c, &lbl_880410E4, &fn_88434F80); }

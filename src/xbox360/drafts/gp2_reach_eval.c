@@ -8,7 +8,7 @@
  * Read from machine code (VMX128 vector math rewritten as plain float code). Not byte-identical:
  * the originals are vector/fsel heavy and were not attempted for matching. Uncertain parts: `/ * ? * /`.
  * Units: positions cm, time = 60 Hz ticks, 0.6 = 60/100 turns cm/tick into m/s.
- * Axes (hypothesis): x = along court toward the net (mirrored per court side by fn_8865EC70), y = up, z = across.
+ * Axes (hypothesis): x = along court toward the net (mirrored per court side by ts4_if_get_u32_off4c_8865EC70), y = up, z = across.
  */
 #include "../gp2_types.h"
 

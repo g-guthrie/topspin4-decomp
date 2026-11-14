@@ -5,7 +5,7 @@
  *
  * Covers: fn_886CE170 (enqueue), fn_886CE5B0 (request by clip), fn_886CE2D8 / fn_886D2B58 (start the next
  * file read, single / loop form), fn_886D2E78 (per-frame tick), fn_886CE648 (finish a read),
- * fn_886C52F0 (cancel), fn_886C3D50 / ts4_find_by_id_886C3DC0 / fn_886C3DA8 (queries), fn_886D7970 / fn_886D79D8 /
+ * ts4_if_set_u32_off0_886C52F0 (cancel), fn_886C3D50 / ts4_find_by_id_886C3DC0 / fn_886C3DA8 (queries), fn_886D7970 / fn_886D79D8 /
  * fn_886D7A60 (blocking waits), fn_886472C0 (hkx packfile -> animation object).
  *
  * What it does: clips live in one file each, "Media\Animation\AOD\%u.hkx" (%u = clip id, the u32 at +0 of
@@ -26,7 +26,7 @@ enum {
     AOD_READ_DONE = 2, /* read finished, needs fn_886CE648 */
     AOD_LOADED    = 3, /* hkx parsed, clip+0xc valid (also set immediately when the clip already had data) */
     AOD_CANCEL_A  = 4, /* cancel requested while queued */
-    AOD_CANCEL_B  = 5, /* cancel while reading -> fn_886C52F0 */
+    AOD_CANCEL_B  = 5, /* cancel while reading -> ts4_if_set_u32_off0_886C52F0 */
     AOD_REMOVE    = 6  /* closed; tick removes it from the vector and recycles the object */
 };
 
@@ -107,7 +107,7 @@ void aod_start_next_886D2B58(struct AodManager *m)
             r->state = AOD_READING;
             m->needed_size = 0 /* service->vtbl[+0x38](r->file_size) */;
             if (m->buffer_size < m->needed_size) {
-                /* does not fit in the staging buffer: fn_886C52F0 (cancel) */
+                /* does not fit in the staging buffer: ts4_if_set_u32_off0_886C52F0 (cancel) */
                 return;
             }
             /* file->vtbl: seek(0,2); r->read_done = 0; async read of needed_size bytes, tag 0x2800,
@@ -137,7 +137,7 @@ void aod_tick_886D2E78(struct AodManager *m)
             /* fn_886CE648: state = LOADED; close the file; fn_886472C0(buffer, clip) builds the hkaAnimation;
              * *done_flag = 1; if (m->current == r) m->current = 0 */
         } else if (r->state == AOD_CANCEL_B) {
-            /* fn_886C52F0: state = REMOVE; close the file; *done_flag = 0; if (m->current == r) m->current = 0 */
+            /* ts4_if_set_u32_off0_886C52F0: state = REMOVE; close the file; *done_flag = 0; if (m->current == r) m->current = 0 */
         }
         ++it;
     }

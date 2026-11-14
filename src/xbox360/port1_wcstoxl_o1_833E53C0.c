@@ -8,7 +8,7 @@
 #define FL_READDIGIT 8
 
 extern int fn_88569800(unsigned short c, int type);
-extern int fn_88578BE0(unsigned short c);
+extern int ts4_if_fn_88578BE0(unsigned short c);
 extern int *ts4_if_call_seq_fn_8856CD88_88567ED8(void);
 extern void fn_8856D2C0(void);
 
@@ -45,7 +45,7 @@ unsigned long ts4_wcstoxl_88575668(const unsigned short *nptr, const unsigned sh
         c = *p++;
     }
     if (ibase == 0) {
-        if (fn_88578BE0(c) != 0)
+        if (ts4_if_fn_88578BE0(c) != 0)
             ibase = 10;
         else if (*p == 'x' || *p == 'X')
             ibase = 16;
@@ -53,14 +53,14 @@ unsigned long ts4_wcstoxl_88575668(const unsigned short *nptr, const unsigned sh
             ibase = 8;
     }
     if (ibase == 16) {
-        if (fn_88578BE0(c) == 0 && (*p == 'x' || *p == 'X')) {
+        if (ts4_if_fn_88578BE0(c) == 0 && (*p == 'x' || *p == 'X')) {
             ++p;
             c = *p++;
         }
     }
     maxval = 0xFFFFFFFFUL / (unsigned long)ibase;
     for (;;) {
-        digval = fn_88578BE0(c);
+        digval = ts4_if_fn_88578BE0(c);
         if (digval == (unsigned int)-1) {
             if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
                 unsigned int t = c;

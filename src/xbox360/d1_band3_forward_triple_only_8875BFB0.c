@@ -6,7 +6,7 @@ struct TS4Triple {
 };
 void fn_8875B8D8(struct TS4Triple value);
 void fn_88707908(struct TS4Triple value);
-void fn_886F7C08(struct TS4Triple value);
+void ts4_if_get_fn_88150770_886F7C08(struct TS4Triple value);
 
 void ts4_forward_triple_8875BFB0(struct TS4Triple value)
 {
@@ -25,5 +25,5 @@ void ts4_forward_triple_888B1D98(struct TS4Triple value)
 
 void ts4_forward_triple_88945B08(struct TS4Triple value)
 {
-    fn_886F7C08(value);
+    ts4_if_get_fn_88150770_886F7C08(value);
 }

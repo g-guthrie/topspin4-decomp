@@ -43,7 +43,7 @@ static void mapping0_free_info(void *ctx, vorbis_info_mapping *i)
     vorbis_info_mapping0 *info = (vorbis_info_mapping0 *)i;
     if (info) {
         ts4_memset(info, 0, sizeof(*info));
-        fn_8836CD70(ctx, info);
+        ts4_if_get_u32_off500_8836CD70(ctx, info);
     }
 }
 

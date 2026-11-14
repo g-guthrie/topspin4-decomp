@@ -12,7 +12,7 @@ extern void fn_884530E8();
 extern void fn_88453520();
 extern void fn_88454588();
 extern void fn_88454800();
-extern void fn_88454958();
+extern void ts4_if_call_seq_u32_lbl_88CAD338_88454958();
 extern void fn_884557F8();
 extern void fn_884572B8();
 extern void fn_8845A698();
@@ -59,7 +59,7 @@ void ts4_call_88454800_88454940(int p0, int p1, int p2, int p3, int p4)
 
 void ts4_call_88454958_88454A98(int p0, int p1, int p2, int p3, int p4, int p5)
 {
-    ((void (*)(int, int, int, int, int))fn_88454958)(p1, p2, p3, p4, p5);
+    ((void (*)(int, int, int, int, int))ts4_if_call_seq_u32_lbl_88CAD338_88454958)(p1, p2, p3, p4, p5);
 }
 
 void ts4_call_884557F8_88456648(int p0, int p1, int p2, int p3, int p4, int p5)

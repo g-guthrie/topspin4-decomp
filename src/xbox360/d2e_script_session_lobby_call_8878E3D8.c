@@ -10,7 +10,7 @@ extern struct TS4ScriptValue *g_ts4_default_script_value;
 extern double g_ts4_script_constants[];
 extern struct TS4RemoveFakePlayerSessionContext *g_ts4_session_context;
 
-void fn_889B0F70(void *lobby, int player_index);
+void ts4_loop_get_u32_off1c_889B0F70(void *lobby, int player_index);
 
 /* Swing_DLL.xex 0x8878E3D8: script callback that forwards a numeric argument to the session lobby. */
 ts4_script_u32 ts4_script_session_lobby_number_call_8878E3D8(
@@ -37,7 +37,7 @@ ts4_script_u32 ts4_script_session_lobby_number_call_8878E3D8(
 
     lobby = g_ts4_session_context->lobby;
     if (lobby != 0) {
-        fn_889B0F70(lobby, (int)player_index);
+        ts4_loop_get_u32_off1c_889B0F70(lobby, (int)player_index);
     }
     return 0;
 }

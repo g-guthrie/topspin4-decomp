@@ -9,7 +9,7 @@
 
 extern "C" {
 void ts4_destroy_owned_object(void *object);
-void fn_886131F0(void *heap, void *data, int size); /* heap free */
+void ts4_if_call_seq_fn_881F04B8_886131F0(void *heap, void *data, int size); /* heap free */
 void fn_885651F8(void *data);                       /* free */
 void ts4_tsu_cleanup_end(void *object);             /* operator delete */
 extern void *lbl_88D45B38;                          /* game heap */
@@ -147,7 +147,7 @@ struct Ts4HeapBuf {
     {
         if (data) {
             if (lbl_88D45B38)
-                fn_886131F0(lbl_88D45B38, data, size);
+                ts4_if_call_seq_fn_881F04B8_886131F0(lbl_88D45B38, data, size);
             else
                 fn_885651F8(data);
         }

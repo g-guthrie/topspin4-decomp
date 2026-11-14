@@ -8,7 +8,7 @@ extern void *g_ts4_session_state;
 extern void *lbl_88D45954, *lbl_88D45878, *lbl_88D4593C, *lbl_88D45A64, *lbl_88D459DC, *lbl_88D45A04;
 extern void *lbl_88D45B0C, *lbl_88D459E0, *lbl_88D45A60, *lbl_88D45960, *lbl_88D41FC4, *lbl_88D45B1C;
 extern void *g_ts4_online_context;
-extern void fn_88931FE0(void *, ts4_script_u32 *);
+extern void ts4_loop_get_u32_off1c_88931FE0(void *, ts4_script_u32 *);
 extern ts4_script_u8 fn_88865388(void *, int, int, ts4_script_u8 *);
 extern ts4_script_u32 fn_887EA5C8(void *, int);
 extern void ts4_if_get_u32_off1c_886570B8(void *, ts4_script_u32);
@@ -49,7 +49,7 @@ ts4_script_u32 ts4_script_set_float_f80_8877B7F0(struct TS4ScriptContext *contex
 /* Swing_DLL.xex 0x8877B9B0 */
 ts4_script_u32 ts4_script_set_float_f24_8877B9B0(struct TS4ScriptContext *context) { struct TS4ScriptValue *value; double number; struct G24 *g; TS4_SCRIPT_NUM(context, number) g = lbl_88D45878; if (g) g->f = (float)number; return 0; }
 /* Swing_DLL.xex 0x8877BEB8 */
-ts4_script_u32 ts4_script_session_state_call_8877BEB8(struct TS4ScriptContext *context) { struct TS4ScriptValue *value; double number; ts4_script_u32 v; TS4_SCRIPT_NUM(context, number) v = (ts4_script_u32)number; fn_88931FE0(g_ts4_session_state, &v); return 0; }
+ts4_script_u32 ts4_script_session_state_call_8877BEB8(struct TS4ScriptContext *context) { struct TS4ScriptValue *value; double number; ts4_script_u32 v; TS4_SCRIPT_NUM(context, number) v = (ts4_script_u32)number; ts4_loop_get_u32_off1c_88931FE0(g_ts4_session_state, &v); return 0; }
 /* Swing_DLL.xex 0x88780C90 */
 ts4_script_u32 ts4_script_forward_int_88780C90(struct TS4ScriptContext *context) { struct TS4ScriptValue *value; double number;  TS4_SCRIPT_NUM(context, number) return fn_887EA5C8(lbl_88D45A04, (int)number); }
 /* Swing_DLL.xex 0x88780D28 */

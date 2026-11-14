@@ -63,9 +63,9 @@ int aud1__vorbis_block_ripcord_883BBE98(void *ctx, vorbis_block *vb)
     int ret = 0;
     while (reap) {
         struct alloc_chain *next = reap->next;
-        fn_8836CD70(ctx, reap->ptr);
+        ts4_if_get_u32_off500_8836CD70(ctx, reap->ptr);
         ts4_memset(reap, 0, sizeof(*reap));
-        fn_8836CD70(ctx, reap);
+        ts4_if_get_u32_off500_8836CD70(ctx, reap);
         reap = next;
     }
     /* consolidate storage */

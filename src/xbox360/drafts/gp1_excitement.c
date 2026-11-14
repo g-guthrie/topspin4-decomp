@@ -10,7 +10,7 @@
 
 /* Reward collector (evaluator+0x38). Only fields used by fn_88683FA8, fn_88684AE0 and fn_88697890. */
 struct Gp1RewardCollector {
-    void *event_sink;                 /* +0x00 object whose first word is the event queue (fn_88683D78) */
+    void *event_sink;                 /* +0x00 object whose first word is the event queue (ts4_call_seq_u32_off0_88683D78) */
     void *game_mode_block;            /* +0x04 (+0x34 -> +0x78 -> +4 == 2 selects the doubles columns?) */
     struct Gp1U32Vector rewards;      /* +0x08 reward hashes of the current shot (push_back in fn_88673630) */
     unsigned char pad0[0x14 - 0x14];
@@ -34,7 +34,7 @@ struct Gp1RewardCollector {
     int shot_window[10];              /* +0x768..+0x78c ring of the last shot totals, shifted once per shot */
 };
 
-void gp1_post_event(void *source, gp1_u32 event_hash, int target, int a, int b, int c, float value); /* fn_88683D78 */
+void gp1_post_event(void *source, gp1_u32 event_hash, int target, int a, int b, int c, float value); /* ts4_call_seq_u32_off0_88683D78 */
 int gp1_global_side_id(void);                     /* *(lbl_88D45B1C + 0x27c) */
 
 /*

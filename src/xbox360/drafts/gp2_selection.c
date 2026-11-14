@@ -16,11 +16,11 @@
 #include "../gp2_types.h"
 
 /* ---- Analyser (data driven decision graph; CAnalyserFramework class, vtable lbl_880D7600, 0x44 bytes) ----
- * fn_8890E988(a): copy bound input floats (a+0x2c list of {float *src, int slot}) into a+0x14[],
+ * ts4_loop_call_seq_u32_off2c_8890E988(a): copy bound input floats (a+0x2c list of {float *src, int slot}) into a+0x14[],
  * run the node graph (fn_8890E8B0, node hash 0x993894c6 = leaf copy, others via vtable), copy outputs
  * back (a+0x20 list of {float *dst, int slot}). The Selection Score and the hit-quality value are outputs
  * of such graphs; their weights/thresholds are NOT in code (loaded from the analyser data). */
-extern void fn_8890E988(void *analyser);
+extern void ts4_loop_call_seq_u32_off2c_8890E988(void *analyser);
 
 /* Swing_DLL.xex 0x88689508 (called twice by fn_88689AF0, side 0 with record[0]/set[0], side 1 with +0x34/+0x60).
  * Fills record->selection_score[i] for every sample i of every window of this side. */
@@ -65,7 +65,7 @@ void gp2_write_selection_score(
                 /* Which analyser runs: human: volley -> SelectionScorer+0x94, else (state 0xbd5 ? +0x50 : +0x0c);
                    AI (is_human_controlled == 0): volley -> PlayerCtx->0x50 + 0x19c, else +0x158. */
                 void *analyser = is_volley ? analysers[2] : analysers[0];
-                fn_8890E988(analyser);
+                ts4_loop_call_seq_u32_off2c_8890E988(analyser);
                 score[i] = query->selection_score;                /* analyser output (+0x28) */
             }
         }

@@ -42,7 +42,7 @@ struct Gp0PlayerAnim;     /* player->u_0078, size >= 0x3FC  */
 
 struct Gp0Player {
     gp0_u8 u_0000[0x10];
-    gp0_u8 is_active;                 /* +0x10 (fn_8866E448) */
+    gp0_u8 is_active;                 /* +0x10 (ts4_loop_get_u32_off8_8866E448) */
     gp0_u8 u_0011[3];
     int player_index;                 /* +0x14 */
     gp0_u8 u_0018[0x5c];

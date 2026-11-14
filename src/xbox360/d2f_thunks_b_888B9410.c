@@ -318,7 +318,7 @@ ts4_word fn_8857A798();
 ts4_word fn_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_8860DCF8();
-ts4_word fn_886131F0();
+ts4_word ts4_if_call_seq_fn_881F04B8_886131F0();
 ts4_word fn_88613268();
 ts4_word fn_88614938();
 ts4_word ts4_if_call_seq_lbl_880F7EE4_88617D28();

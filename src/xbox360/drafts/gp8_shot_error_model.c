@@ -73,7 +73,7 @@ static float gp8_rng_range(Gp8Rng *r, float lo, float hi)
 /* ------------------------------------------------------------------ fn_88671B10 (final combine only) */
 /*
  * fn_88671B10(shot_rec, PC, &b50, &b51).  Geometry (decoded only partly, marked ?): from the shot origin
- * (shot_rec vec, brought into court space by fn_8865E730), the court bounds of fn_8866E318 and the player
+ * (shot_rec vec, brought into court space by ts4_if_get_8865E730), the court bounds of fn_8866E318 and the player
  * state floats S+0x7DC / 0x7E0 (lengths) and S+0x44C / 0x450 (angles in degrees, scaled by pool+0x184 = pi/180)
  * it builds five end points (sin/cos fans via fn_8817B3F8/B500) and two sets of four distance tests
  * against max(S.7E0, S.7DC) and S.7E0.  The final result is exact:

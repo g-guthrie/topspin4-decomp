@@ -7,7 +7,7 @@
  *    0x58 here; block scoping did not change that). Logic is exact.
  *  - fn_88169350 (u32 attribute read, type code 9) - written as C below; 31 instructions differ
  *    (original reloads the tree pointer into r4 in the default branch and keeps `mr r9,r3`).
- *  - fn_8866E448 (sync per-player active flag) - differs only by lwzx operand order
+ *  - ts4_loop_get_u32_off8_8866E448 (sync per-player active flag) - differs only by lwzx operand order
  *    (original: lwzx r11,r10,r11 = index,base; MSVC emits base,index for every source form tried).
  *  - fn_88669040 (consume one-shot requests) - NOT matchable by fn_check: the original keeps r3/r5
  *    live across the calls to fn_88668DF8/fn_88668D70, i.e. those callees use a custom register
@@ -89,7 +89,7 @@ gp0_u32 *xdata_get_u32_88169350(gp0_u32 *out, struct Gp0XHandle *h)
 }
 */
 
-/* ---------------- fn_8866E448 (0x70 B) ----------------------------------------------- */
+/* ---------------- ts4_loop_get_u32_off8_8866E448 (0x70 B) ----------------------------------------------- */
 /*
 void sync_player_active_flag_8866E448(struct Gp0Instance *inst)
 {

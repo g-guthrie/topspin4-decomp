@@ -270,7 +270,7 @@ int aud1__fetch_headers_883A85D0(void *ctx, OggVorbis_File *vf, vorbis_info *vi,
         if (serialno_list) {
             if (fn_883A83B8(og_ptr, *serialno_list, *serialno_n)) {
                 /* a dupe serialnumber in an initial header packet set == invalid stream */
-                if (*serialno_list) fn_8836CD70(ctx, *serialno_list);
+                if (*serialno_list) ts4_if_get_u32_off500_8836CD70(ctx, *serialno_list);
                 *serialno_list = 0;
                 *serialno_n = 0;
                 ret = OV_EBADHEADER;
@@ -462,13 +462,13 @@ int aud1_ov_clear_883A9440(void *ctx, OggVorbis_File *vf)
                 aud1_vorbis_info_clear_883AAE58(ctx, vf->vi + i);
                 aud1_vorbis_comment_clear_883AAD18(ctx, vf->vc + i);
             }
-            fn_8836CD70(ctx, vf->vi);
-            fn_8836CD70(ctx, vf->vc);
+            ts4_if_get_u32_off500_8836CD70(ctx, vf->vi);
+            ts4_if_get_u32_off500_8836CD70(ctx, vf->vc);
         }
-        if (vf->dataoffsets) fn_8836CD70(ctx, vf->dataoffsets);
-        if (vf->pcmlengths) fn_8836CD70(ctx, vf->pcmlengths);
-        if (vf->serialnos) fn_8836CD70(ctx, vf->serialnos);
-        if (vf->offsets) fn_8836CD70(ctx, vf->offsets);
+        if (vf->dataoffsets) ts4_if_get_u32_off500_8836CD70(ctx, vf->dataoffsets);
+        if (vf->pcmlengths) ts4_if_get_u32_off500_8836CD70(ctx, vf->pcmlengths);
+        if (vf->serialnos) ts4_if_get_u32_off500_8836CD70(ctx, vf->serialnos);
+        if (vf->offsets) ts4_if_get_u32_off500_8836CD70(ctx, vf->offsets);
         ts4_if_call_seq_u32_off0_883BADF0(ctx, &vf->oy);
         if (vf->datasource && vf->callbacks.close_func)
             (vf->callbacks.close_func)(vf->datasource);
@@ -563,6 +563,6 @@ int aud1__ov_open1_883AA9E0(void *ctx, void *f, OggVorbis_File *vf, char *initia
 
         vf->ready_state = PARTOPEN;
     }
-    if (serialno_list) fn_8836CD70(ctx, serialno_list);
+    if (serialno_list) ts4_if_get_u32_off500_8836CD70(ctx, serialno_list);
     return (ret);
 }

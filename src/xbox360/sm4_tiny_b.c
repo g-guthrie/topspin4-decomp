@@ -13,10 +13,10 @@ GET_BLOCK(ts4_get_block_60_884E57E0, 0x60)
 GET_BLOCK(ts4_get_block_70_884E57F8, 0x70)
 
 /* tail call with two constant pointers appended (ts4_tail_884350B0_with_ptrs_88435168 is the handler of the sibling above) */
-extern void fn_884350B0(int, int, int, void *, void *);
+extern void ts4_get_ts4_if_call_seq_u32_off4_88428890_884350B0(int, int, int, void *, void *);
 extern char lbl_880410F0;
 extern void ts4_tail_884350B0_with_ptrs_88435168(void);
-void ts4_tail_884350B0_with_ptrs_88435180(int a, int b, int c) { fn_884350B0(a, b, c, &lbl_880410F0, (void *)ts4_tail_884350B0_with_ptrs_88435168); }
+void ts4_tail_884350B0_with_ptrs_88435180(int a, int b, int c) { ts4_get_ts4_if_call_seq_u32_off4_88428890_884350B0(a, b, c, &lbl_880410F0, (void *)ts4_tail_884350B0_with_ptrs_88435168); }
 
 /* call fn_88472530 on the object at +0xb4 of the object at +8 when both exist */
 extern void fn_88472530(void *);

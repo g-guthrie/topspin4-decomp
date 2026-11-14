@@ -39,11 +39,11 @@ void aud1_vorbis_comment_clear_883AAD18(void *ctx, vorbis_comment *vc)
         long i;
         if (vc->user_comments) {
             for (i = 0; i < vc->comments; i++)
-                if (vc->user_comments[i]) fn_8836CD70(ctx, vc->user_comments[i]);
-            fn_8836CD70(ctx, vc->user_comments);
+                if (vc->user_comments[i]) ts4_if_get_u32_off500_8836CD70(ctx, vc->user_comments[i]);
+            ts4_if_get_u32_off500_8836CD70(ctx, vc->user_comments);
         }
-        if (vc->comment_lengths) fn_8836CD70(ctx, vc->comment_lengths);
-        if (vc->vendor) fn_8836CD70(ctx, vc->vendor);
+        if (vc->comment_lengths) ts4_if_get_u32_off500_8836CD70(ctx, vc->comment_lengths);
+        if (vc->vendor) ts4_if_get_u32_off500_8836CD70(ctx, vc->vendor);
         ts4_memset(vc, 0, sizeof(*vc));
     }
 }
@@ -65,7 +65,7 @@ void aud1_vorbis_info_clear_883AAE58(void *ctx, vorbis_info *vi)
     if (ci) {
 
         for (i = 0; i < ci->modes; i++)
-            if (ci->mode_param[i]) fn_8836CD70(ctx, ci->mode_param[i]);
+            if (ci->mode_param[i]) ts4_if_get_u32_off500_8836CD70(ctx, ci->mode_param[i]);
 
         for (i = 0; i < ci->maps; i++) /* unpack does the range checking */
             if (ci->map_param[i])
@@ -88,9 +88,9 @@ void aud1_vorbis_info_clear_883AAE58(void *ctx, vorbis_info *vi)
                 ts4_if_call_seq_u32_off10_883BDAA0(ctx, ci->fullbooks + i);
         }
         if (ci->fullbooks)
-            fn_8836CD70(ctx, ci->fullbooks);
+            ts4_if_get_u32_off500_8836CD70(ctx, ci->fullbooks);
 
-        fn_8836CD70(ctx, ci);
+        ts4_if_get_u32_off500_8836CD70(ctx, ci);
     }
 
     ts4_memset(vi, 0, sizeof(*vi));
