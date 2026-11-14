@@ -621,7 +621,10 @@ def return_quality(rng, ret, serve_mph, placement=0.5, opp_timing="Average", opp
     return ({"Perfect": "good", "Good": "neutral", "Poor": "weak", "Mistimed": "weak"}[t]), tf
 
 
-RETURN_ERR = {"Perfect": 0.03, "Good": 0.10, "Poor": 0.40, "Mistimed": 0.80}   # model calibration (section 2d)
+RETURN_ERR = {"Perfect": 0.03, "Good": 0.10, "Poor": 0.40, "Mistimed": 0.80}
+# The ball a return hands the server (rally model): pace mph before rating terms, depth 0..1, width 0..1.
+RETURN_BALL = {"pace": {"good": 74.0, "neutral": 68.0, "weak": 55.0}, "depth": {"good": 0.7, "neutral": 0.5, "weak": 0.15},
+               "width": {"good": 0.5, "neutral": 0.3, "weak": 0.3}}   # model calibration (section 2d)
 
 
 # =========================================================================== rally / match simulation
@@ -932,10 +935,10 @@ def _play_point(rng, server, receiver, prm):
         return server, 1, "ace_unret", rt
     # a slow serve can be attacked: the return gains pace, depth and angle (through the ball, spec s8)
     attack = clamp((100.0 - v) / 30.0, 0.0, 1.0) if q != "weak" else 0.0
-    pace = ({"good": 74.0, "neutral": 68.0, "weak": 55.0}[q] + 12.0 * receiver.s["ret"] + 6.0 * receiver.s["power"]
-            + 10.0 * attack)
-    depth = {"good": 0.7, "neutral": 0.5, "weak": 0.15}[q] + 0.2 * attack
-    width = (0.3 if q != "good" else 0.5) + 0.25 * attack
+    rb = RETURN_BALL
+    pace = rb["pace"][q] + 12.0 * receiver.s["ret"] + 6.0 * receiver.s["power"] + 10.0 * attack
+    depth = rb["depth"][q] + 0.2 * attack
+    width = rb["width"][q] + 0.25 * attack
     ball = Ball(pace, clamp(depth, 0.0, 1.0), width, 0.15, False, rt, short=q == "weak")
     ball.sv_first = rng.random() < server.style.get("serve_volley", 0.0)
     hitter, other = server, receiver
