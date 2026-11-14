@@ -11,6 +11,12 @@
 //   +60 A
 //   +6 -
 // Button edges are also delivered as XamInputGetKeystroke(Ex) events (VK_PAD_*).
+// Two kinds of line block the script until the game reaches a point, so menus can be driven
+// without knowing load times; a following "+N" counts from the swap at which the block cleared:
+//   wait <type> <expr> <op> <value> [max=N]   guest-memory condition (op == != < > <= >=)
+//   idle <import> <N> [max=N]                 import counter unchanged for N swaps, e.g.
+//                                             "idle NtReadFile 90" = file loading has stopped
+// max=N gives up after N swaps (logged) and carries on. The pad state is held while blocked.
 //
 // Watch list (TS4_WATCH), one value per line:  <name> <type> <expr>
 //   type  u8 u16 u32 s32 f32 f32x3 (three consecutive floats -> name.x/.y/.z)
@@ -66,31 +72,115 @@ inline constexpr ButtonName kButtons[] = {
     {"X", 0x4000, 0x5802},     {"Y", 0x8000, 0x5803},
 };
 
+// Guest memory used by script conditions; set by the app once the title is loaded.
+inline rex::memory::Memory*& ScriptMemory() {
+  static rex::memory::Memory* mem = nullptr;
+  return mem;
+}
+
+// Guest ranges that are mapped while the title runs: heaps 0x40000000.., XEX images
+// 0x82000000.., physical views 0xA0000000... A null-page pointer is rejected.
+inline bool GuestReadable(uint32_t a) { return a >= 0x40000000u && a < 0xFFFF0000u; }
+
+inline uint32_t LoadBE32(const uint8_t* p) {
+  return uint32_t(p[0]) << 24 | uint32_t(p[1]) << 16 | uint32_t(p[2]) << 8 | p[3];
+}
+
+// expr := number | '[' expr ']' ; followed by any number of (+|-) number.
+inline bool EvalExpr(const std::string& e, size_t& pos, rex::memory::Memory* mem, uint32_t& out) {
+  uint32_t v;
+  if (pos < e.size() && e[pos] == '[') {
+    pos++;
+    uint32_t inner;
+    if (!EvalExpr(e, pos, mem, inner)) return false;
+    if (pos >= e.size() || e[pos] != ']') return false;
+    pos++;
+    if (!mem || !GuestReadable(inner)) return false;
+    v = LoadBE32(mem->TranslateVirtual<const uint8_t*>(inner));
+  } else {
+    char* end;
+    v = uint32_t(std::strtoul(e.c_str() + pos, &end, 0));
+    pos = size_t(end - e.c_str());
+  }
+  while (pos < e.size() && (e[pos] == '+' || e[pos] == '-')) {
+    char op = e[pos++];
+    char* end;
+    uint32_t off = uint32_t(std::strtoul(e.c_str() + pos, &end, 0));
+    pos = size_t(end - e.c_str());
+    v = op == '+' ? v + off : v - off;
+  }
+  out = v;
+  return true;
+}
+
+// Reads one typed value (u8 u16 u32 s32 f32) at the address an expression gives.
+inline bool ReadTyped(const std::string& type, const std::string& expr, rex::memory::Memory* mem,
+                      double& value) {
+  size_t pos = 0;
+  uint32_t addr;
+  if (!EvalExpr(expr, pos, mem, addr) || !mem || !GuestReadable(addr)) return false;
+  const uint8_t* p = mem->TranslateVirtual<const uint8_t*>(addr);
+  if (type == "u8") value = p[0];
+  else if (type == "u16") value = uint16_t(p[0] << 8 | p[1]);
+  else if (type == "u32") value = LoadBE32(p);
+  else if (type == "s32") value = int32_t(LoadBE32(p));
+  else if (type == "f32") {
+    uint32_t b = LoadBE32(p);
+    float f;
+    std::memcpy(&f, &b, 4);
+    value = f;
+  } else return false;
+  return true;
+}
+
 class InputScript {
  public:
   bool Load(const std::string& path) {
     std::ifstream in(path);
     if (!in) return false;
     std::string line;
-    uint64_t prev = 0;
     int lineno = 0;
     while (std::getline(in, line)) {
       lineno++;
       if (auto h = line.find('#'); h != std::string::npos) line.resize(h);
       std::istringstream ss(line);
-      std::string frame_s, buttons_s;
-      if (!(ss >> frame_s)) continue;
+      std::string first;
+      if (!(ss >> first)) continue;
+      Event ev;
+      ev.line = lineno;
+      if (first == "wait" || first == "idle") {
+        ev.kind = first == "wait" ? Event::kWait : Event::kIdle;
+        bool ok = ev.kind == Event::kWait
+                      ? bool(ss >> ev.type >> ev.expr >> ev.op >> ev.value_s)
+                      : bool(ss >> ev.expr >> ev.count);
+        if (!ok) {
+          REXLOG_WARN("[ts4] input script line {}: malformed '{}'", lineno, first);
+          continue;
+        }
+        if (ev.kind == Event::kIdle && ev.expr.rfind("__imp__", 0) != 0) ev.expr = "__imp__" + ev.expr;
+        if (ev.kind == Event::kWait) {
+          bool hex = ev.value_s.rfind("0x", 0) == 0 || ev.value_s.rfind("0X", 0) == 0;
+          ev.value = hex ? double(std::strtoul(ev.value_s.c_str(), nullptr, 16))
+                         : std::strtod(ev.value_s.c_str(), nullptr);
+        }
+        std::string kv;
+        while (ss >> kv)
+          if (kv.rfind("max=", 0) == 0) ev.max = std::strtoull(kv.c_str() + 4, nullptr, 0);
+        events_.push_back(ev);
+        continue;
+      }
+      std::string buttons_s;
       if (!(ss >> buttons_s)) buttons_s = "-";
-      uint64_t frame = frame_s[0] == '+' ? prev + std::strtoull(frame_s.c_str() + 1, nullptr, 0)
-                                         : std::strtoull(frame_s.c_str(), nullptr, 0);
-      PadState st;
+      ev.kind = Event::kState;
+      ev.relative = first[0] == '+';
+      ev.frame = std::strtoull(first.c_str() + (ev.relative ? 1 : 0), nullptr, 0);
       if (buttons_s != "-") {
         std::stringstream bs(buttons_s);
         std::string b;
         while (std::getline(bs, b, '+')) {
           bool ok = false;
           for (auto& k : kButtons)
-            if (b == k.name) st.buttons |= k.mask, ok = true;
+            if (b == k.name) ev.state.buttons |= k.mask, ok = true;
           if (!ok) REXLOG_WARN("[ts4] input script line {}: unknown button '{}'", lineno, b);
         }
       }
@@ -100,36 +190,96 @@ class InputScript {
         if (eq == std::string::npos) continue;
         std::string k = kv.substr(0, eq);
         long v = std::strtol(kv.c_str() + eq + 1, nullptr, 0);
-        if (k == "lt") st.lt = uint8_t(v);
-        else if (k == "rt") st.rt = uint8_t(v);
-        else if (k == "lx") st.lx = int16_t(v);
-        else if (k == "ly") st.ly = int16_t(v);
-        else if (k == "rx") st.rx = int16_t(v);
-        else if (k == "ry") st.ry = int16_t(v);
+        if (k == "lt") ev.state.lt = uint8_t(v);
+        else if (k == "rt") ev.state.rt = uint8_t(v);
+        else if (k == "lx") ev.state.lx = int16_t(v);
+        else if (k == "ly") ev.state.ly = int16_t(v);
+        else if (k == "rx") ev.state.rx = int16_t(v);
+        else if (k == "ry") ev.state.ry = int16_t(v);
       }
-      events_.push_back({frame, st});
-      prev = frame;
+      events_.push_back(ev);
     }
     return true;
   }
 
-  PadState At(uint64_t frame) const {
-    PadState st;
-    for (auto& e : events_) {
-      if (e.frame > frame) break;
-      st = e.state;
+  // Advances the script to `swap` and returns the pad state. Call with non-decreasing swaps.
+  // `counter` reads an import counter, `mem` is the guest memory for wait conditions.
+  template <typename Counter>
+  PadState Step(uint64_t swap, Counter&& counter, rex::memory::Memory* mem) {
+    while (cursor_ < events_.size()) {
+      Event& e = events_[cursor_];
+      if (e.kind == Event::kState) {
+        uint64_t due = e.relative ? anchor_ + e.frame : e.frame;
+        if (swap < due) break;
+        state_ = e.state;
+        Advance(due);
+        continue;
+      }
+      if (!blocked_) {
+        blocked_ = true;
+        block_start_ = idle_since_ = swap;
+        if (e.kind == Event::kIdle) idle_value_ = counter(e.expr);
+      }
+      bool done = false;
+      if (e.kind == Event::kWait) {
+        double v;
+        if (ReadTyped(e.type, e.expr, mem, v)) done = Compare(v, e.op, e.value);
+      } else {
+        uint64_t c = counter(e.expr);
+        if (c != idle_value_) idle_value_ = c, idle_since_ = swap;
+        done = swap - idle_since_ >= e.count;
+      }
+      bool timed_out = !done && e.max && swap - block_start_ >= e.max;
+      if (!done && !timed_out) break;
+      REXLOG_INFO("[ts4] script line {} {} at swap {} (blocked {} swaps)", e.line,
+                  done ? "satisfied" : "TIMED OUT", swap, swap - block_start_);
+      if (log_) {
+        std::fprintf(log_, "%llu,%d,%s\n", (unsigned long long)swap, e.line,
+                     done ? "satisfied" : "timeout");
+        std::fflush(log_);
+      }
+      blocked_ = false;
+      Advance(swap);
     }
-    return st;
+    return state_;
   }
 
   size_t size() const { return events_.size(); }
+  void SetLog(FILE* f) { log_ = f; }
 
  private:
   struct Event {
-    uint64_t frame;
+    enum Kind { kState, kWait, kIdle } kind = kState;
+    int line = 0;
+    bool relative = false;
+    uint64_t frame = 0;
     PadState state;
+    std::string type, expr, op, value_s;
+    double value = 0;
+    uint64_t count = 0, max = 0;
   };
+
+  static bool Compare(double v, const std::string& op, double ref) {
+    if (op == "==") return v == ref;
+    if (op == "!=") return v != ref;
+    if (op == "<") return v < ref;
+    if (op == ">") return v > ref;
+    if (op == "<=") return v <= ref;
+    if (op == ">=") return v >= ref;
+    return false;
+  }
+
+  void Advance(uint64_t at) {
+    anchor_ = at;
+    cursor_++;
+  }
+
   std::vector<Event> events_;
+  size_t cursor_ = 0;
+  uint64_t anchor_ = 0, block_start_ = 0, idle_since_ = 0, idle_value_ = 0;
+  bool blocked_ = false;
+  PadState state_;
+  FILE* log_ = nullptr;
 };
 
 class ScriptInputDriver final : public rex::input::InputDriver {
@@ -141,7 +291,10 @@ class ScriptInputDriver final : public rex::input::InputDriver {
       REXLOG_ERROR("[ts4] cannot read input script {}", path_);
       return X_STATUS_UNSUCCESSFUL;
     }
-    REXLOG_INFO("[ts4] input script: {} states", script_.size());
+    REXLOG_INFO("[ts4] input script: {} lines", script_.size());
+    if (const char* lp = std::getenv("TS4_SCRIPT_LOG")) {
+      if (FILE* f = std::fopen(lp, "w")) std::fprintf(f, "swap,line,result\n"), script_.SetLog(f);
+    }
     return X_STATUS_SUCCESS;
   }
 
@@ -220,7 +373,14 @@ class ScriptInputDriver final : public rex::input::InputDriver {
 
  private:
   static constexpr auto kDevice = static_cast<rex::input::DeviceId>(0x54533400);
-  PadState Current() const { return script_.At(rex::trace::GetImportCount("__imp__VdSwap")); }
+  PadState Current() {
+    uint64_t swap = rex::trace::GetImportCount("__imp__VdSwap");
+    if (swap < last_swap_) swap = last_swap_;
+    last_swap_ = swap;
+    return script_.Step(swap, [](const std::string& n) { return rex::trace::GetImportCount(n.c_str()); },
+                        ScriptMemory());
+  }
+  uint64_t last_swap_ = 0;
 
   std::string path_;
   InputScript script_;
@@ -305,36 +465,10 @@ class WatchList {
     std::string name, type, expr;
   };
 
-  // Guest ranges that are mapped while the title runs: heaps 0x40000000.., XEX images
-  // 0x82000000.., physical views 0xA0000000... A null-page pointer is rejected.
-  static bool Readable(uint32_t a) { return a >= 0x40000000u && a < 0xFFFF0000u; }
-
   static bool Eval(const std::string& e, size_t& pos, rex::memory::Memory* mem, uint32_t& out) {
-    uint32_t v;
-    if (pos < e.size() && e[pos] == '[') {
-      pos++;
-      uint32_t inner;
-      if (!Eval(e, pos, mem, inner)) return false;
-      if (pos >= e.size() || e[pos] != ']') return false;
-      pos++;
-      if (!Readable(inner)) return false;
-      const uint8_t* p = mem->TranslateVirtual<const uint8_t*>(inner);
-      v = uint32_t(p[0]) << 24 | uint32_t(p[1]) << 16 | uint32_t(p[2]) << 8 | p[3];
-    } else {
-      char* end;
-      v = uint32_t(std::strtoul(e.c_str() + pos, &end, 0));
-      pos = size_t(end - e.c_str());
-    }
-    while (pos < e.size() && (e[pos] == '+' || e[pos] == '-')) {
-      char op = e[pos++];
-      char* end;
-      uint32_t off = uint32_t(std::strtoul(e.c_str() + pos, &end, 0));
-      pos = size_t(end - e.c_str());
-      v = op == '+' ? v + off : v - off;
-    }
-    out = v;
-    return true;
+    return EvalExpr(e, pos, mem, out);
   }
+  static bool Readable(uint32_t a) { return GuestReadable(a); }
 
   std::vector<Item> items_;
 };

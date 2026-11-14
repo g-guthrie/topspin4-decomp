@@ -6,6 +6,7 @@
 //   REX_IMPORT_TRACE_DIR=d   import-call counters -> d/imports_latest.tsv every 2 s
 //   TS4_INPUT_SCRIPT=file    scripted pad for user 0 (see ts4_script.h for the format); replaces
 //                            the SDL / keyboard drivers
+//   TS4_SCRIPT_LOG=file.csv  swap at which each wait/idle line of the script cleared or timed out
 //   TS4_SHOT_DIR=d           capture the guest output image to d/frame_<swap>.ppm ...
 //   TS4_SHOT_EVERY=n         ... every n VdSwap calls (default 30)
 //   TS4_WATCH=file           guest-memory values to log (see ts4_script.h) ...
@@ -60,6 +61,7 @@ class Ts4App : public rex::ReXApp {
   }
 
   void OnPostLoadXexImage() override {
+    ts4::ScriptMemory() = runtime()->memory();
     StartImportDumper();
     StartFrameThread();
     const char* iso = std::getenv("TS4_ISO");
