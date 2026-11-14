@@ -871,10 +871,10 @@ def main():
     table = {}
     if a.name_table and os.path.exists(a.name_table):
         table = load_name_table(a.name_table)
-    for k, v in table.items():
-        names.setdefault(k, v[0])
     for k, v in names.items():          # built-in names and --names dictionaries are vouched for
         table[k] = (v, "high")
+    for k, v in table.items():          # name-table entries keep their own confidence
+        names.setdefault(k, v[0])
     if a.module:
         print(framework_module_summary(open(a.module, "rb").read()))
     if a.list:

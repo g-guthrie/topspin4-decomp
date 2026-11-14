@@ -147,6 +147,8 @@ key if none; an unordered compare does not stop the scan), `d = min(max(x - x0, 
 is flat after its last `x1`; below the first key it holds the first segment's `y0`. The type-crc preimages of the 11
 nodes are not known (U); the names above are by function.
 
+**Answered (G1, 2026-11-14): ramps.** `fn_88179740` (called from `fn_8890DFC8` for every CURVE node at load) writes `slope = (y1-y0)/(x1-x0)`; see `graphs-decoded.md` section 2. The original question follows for the record.
+
 **Open question: are the curves steps or ramps? (measured 2026-11-14)** In the retail data every curve key has
 `slope` (+0xC) = 0.0. That covers all 9,124 CURVE keys in `Expressions.bin` (sha256 `fd3bc49b…dee9`) and all 121
 curve20 keys in `Settings.bin`/`State.bin`. Word +0x10 holds a float that is the segment's end value `y1`: in 4,095 of
