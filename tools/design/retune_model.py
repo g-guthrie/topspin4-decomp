@@ -163,12 +163,12 @@ def grade_of(frames, v_req, run_cm, height, pace, depth_x, set_f, stretch, kick=
 # shortfall of an In shot (replaces the uniform 0..310 cm DeepDeviation), window = typical window multiplier
 # (informative; the window is computed from the same inputs by window_halfwidths).
 GRADE_FX = {
-    "Tee-off": dict(pace=9.0, cap=None, spin=1.10, aim=0.15, err=0.5, err_add=0.0, depth_cm=40, window=1.6),
-    "VeryGood": dict(pace=5.0, cap=108.0, spin=1.05, aim=0.08, err=0.7, err_add=0.0, depth_cm=70, window=1.3),
-    "Good": dict(pace=0.0, cap=103.0, spin=1.00, aim=0.0, err=1.0, err_add=0.0, depth_cm=110, window=1.0),
-    "Normal": dict(pace=-3.0, cap=97.0, spin=0.95, aim=-0.08, err=1.3, err_add=0.02, depth_cm=160, window=0.85),
-    "Bad": dict(pace=-7.0, cap=89.0, spin=0.85, aim=-0.18, err=1.8, err_add=0.05, depth_cm=230, window=0.65),
-    "VeryBad": dict(pace=-12.0, cap=80.0, spin=0.70, aim=-0.30, err=2.5, err_add=0.10, depth_cm=300, window=0.45),
+    "Tee-off": dict(pace=9.0, cap=None, spin=1.10, aim=0.15, err=0.5, err_add=0.0, depth_cm=15, window=1.6),
+    "VeryGood": dict(pace=5.0, cap=108.0, spin=1.05, aim=0.08, err=0.7, err_add=0.0, depth_cm=30, window=1.3),
+    "Good": dict(pace=0.0, cap=103.0, spin=1.00, aim=0.0, err=1.0, err_add=0.0, depth_cm=45, window=1.0),
+    "Normal": dict(pace=-3.0, cap=97.0, spin=0.95, aim=-0.08, err=1.3, err_add=0.02, depth_cm=80, window=0.85),
+    "Bad": dict(pace=-7.0, cap=89.0, spin=0.85, aim=-0.18, err=1.8, err_add=0.05, depth_cm=130, window=0.65),
+    "VeryBad": dict(pace=-12.0, cap=80.0, spin=0.70, aim=-0.30, err=2.5, err_add=0.10, depth_cm=190, window=0.45),
 }
 
 
@@ -534,11 +534,12 @@ PUTAWAY = {"Tee-off": 0.75, "VeryGood": 0.50, "Good": 0.30, "Normal": 0.12}   # 
 
 
 class Ball:
-    __slots__ = ("pace", "depth", "width", "kick", "low", "timing", "short", "hitter_net")
+    __slots__ = ("pace", "depth", "width", "kick", "low", "timing", "short", "hitter_net", "corner", "share")
 
     def __init__(self, pace, depth, width, kick, low, timing, short=False, hitter_net=False):
         self.pace, self.depth, self.width, self.kick, self.low = pace, depth, width, kick, low
         self.timing, self.short, self.hitter_net = timing, short, hitter_net
+        self.corner, self.share = False, CORNER_SHARE
 
 
 def situation_from_ball(rng, b, at_net=False):
@@ -549,7 +550,11 @@ def situation_from_ball(rng, b, at_net=False):
     v_avg = kmh(pace) / 3.6 * (0.70 if not at_net else 0.85)
     s.frames = int(FPS * (dist / v_avg + ((0.30 if not b.short else 0.45) if not at_net else 0.0)))
     s.react_ms = s.frames * 1000.0 / FPS
-    s.run_cm = max(0.0, 30.0 + 640.0 * b.width + rng.gauss(0.0, 70.0)) * (0.55 if at_net else 1.0)
+    run = 30.0 + 640.0 * b.width
+    # anticipation (judgement): a receiver reads how often this hitter goes for the corner and cheats toward it;
+    # a predictable corner aim is reached sooner, a safe ball then catches the cheat (wrong-footing)
+    run *= (1.0 - ANTICIPATION * b.share) if b.corner else (1.0 + 0.6 * ANTICIPATION * b.share)
+    s.run_cm = max(0.0, run + rng.gauss(0.0, 70.0)) * (0.55 if at_net else 1.0)
     avail = max(0.15, s.frames / FPS - 0.30)
     s.v_req = s.run_cm / 100.0 / avail
     s.stretch = s.v_req > 5.2 or s.run_cm > 380
@@ -641,6 +646,11 @@ def hit(rng, p, b, at_net, prm):
     err += R["floor_err"] * flo + 0.12 * (1.0 - p.vigor) ** 1.5
     if at_net and sit.height < 50:            # half-volley / ball at the feet
         err += 0.08 * (1.2 - stat)
+    key = aim_key(cls, hold, at_net)
+    fe = final_efficiency(aim_efficiency(key, g, tf, stat), rng.random())
+    corner = rng.random() < st.get("corner", CORNER_SHARE)
+    if corner and not at_net:
+        err += LINE_RISK * fe
     p.spend(R["vigor_cost"][hold] + R["run_cost"] * sit.v_req)
     info = {"grade": g, "timing": t, "fine": tf, "cls": cls, "hold": hold, "mph": v}
     if rng.random() < err:
@@ -649,14 +659,41 @@ def hit(rng, p, b, at_net, prm):
         if rng.random() < PUTAWAY.get(g, 0.0) * (0.7 + 0.3 * stat) * (1.0 if t == "Perfect" else 0.8):
             return "putaway", None, info
     tb = {"Perfect": 0.12, "Good": 0.0, "Poor": -0.15, "Mistimed": -0.3}[t]
-    depth = clamp(0.62 - fx["depth_cm"] / 600.0 + 0.5 * tb + rng.gauss(0.0, 0.12) + (0.08 if cls == "TopSpin" else 0.0),
+    depth = clamp(0.55 - fx["depth_cm"] / 405.0 + 0.5 * tb + rng.gauss(0.0, 0.12) + (0.08 if cls == "TopSpin" else 0.0),
                   0.0, 1.0)
-    width = clamp(0.32 + fx["aim"] + 0.3 * tb + 0.18 * stat + rng.gauss(0.0, 0.18)
+    # aim (spec section 7): the retail chain Efficiency -> FinalEfficiency (graph 196) -> quad, fed by grade, timing
+    # and hand.  The stick is direction-only: "corner" = the diagonal (deep corner), otherwise a safer direction.
+    angle_back = ANGLE_BACK * b.width if g in ("Tee-off", "VeryGood", "Good") else 0.0
+    width = clamp(WIDTH_SCALE * fe * (1.0 if corner else SAFE_LAT) + angle_back + rng.gauss(0.0, 0.12)
                   + (0.10 if at_net else 0.0), 0.0, 1.0)
+    if corner:
+        depth = clamp(depth + 0.04, 0.0, 1.0)
     kick = R["kick"][cls] * fx["spin"] + (R["kick_hand"] * stat * fx["spin"] if cls == "TopSpin" else 0.0)
     short = depth < 0.12 and not at_net
     nb = Ball(v, depth, width, kick, cls == "Slice", tf, short, at_net)
+    nb.corner, nb.share = corner, st.get("corner", CORNER_SHARE)
     return "in", nb, info
+
+
+CORNER_SHARE = 0.5           # default share of balls aimed at the deep corner (the rest: deep middle / mid-wide)
+SAFE_LAT = 0.45               # lateral reach of the safer directions relative to a corner aim
+WIDTH_SCALE = 0.80            # FinalEfficiency -> rally-model width (opponent's run)
+ANGLE_BACK = 0.25             # a wide incoming ball opens the angle for a reply from a Good-or-better grade
+ANTICIPATION = 0.35           # judgement: how much a receiver who reads the hitter's corner habit saves (see 7e)
+LINE_RISK = 0.0               # OPTION for the owner (not in the agreed rules): added error per unit of how close the
+                              # FinalEfficiency puts a corner aim to both lines; 0 = retail / owner's rule
+
+
+def aim_key(cls, hold, at_net):
+    if at_net:
+        return "FlatMedium"
+    if cls == "TopSpin":
+        return "TopSpinMedium"
+    if cls == "Slice":
+        return "SliceMedium"
+    if cls == "Lob":
+        return "FlatFinesse"
+    return {"Finesse": "FlatFinesse", "Medium": "FlatMedium", "Rushed": "FlatMedium"}.get(hold, "FlatPower")
 
 
 def play_point(rng, server, receiver, prm):
@@ -823,30 +860,47 @@ DEPTH_SD_CM = 45.0
 
 
 def depth_shortfall(grade, timing):
-    """Mean and sd (cm) of how far an In groundstroke lands short of the aimed depth.  Replaces the retail
-    uniform 0..310 cm DeepDeviation (aiming graphs' Random branch) with a quality-earned value."""
-    return max(0.0, GRADE_FX[grade]["depth_cm"] + DEPTH_TIMING_CM[timing]), DEPTH_SD_CM
+    """Mean and sd (cm) of how far an In groundstroke lands short of the aimed depth (DeepDeviation by quality,
+    replacing the retail uniform 0..310 cm)."""
+    return min(DEEP_MAX_CM, DEEP_GRADE_CM[grade] + DEEP_TIMING_CM[timing]), DEEP_SD_CM
 
 
-# Aim settle (owner decision): the stick stays direction-only; a push to the rim is never penalised.  Closeness to the
-# lines is earned through the aim score as in retail, with one new input: frames the current stick direction has been
-# held for this ball, counted from the opponent's contact (reset each shot) to the commit (release, or the 12-frame
-# auto-commit, after which aim is frozen).  The value multiplies the usable reach toward the lines (aim quad
-# efficiency): a late flick stays nearer the middle, an early, steady aim settles outward.  A direction change of
-# more than 30 degrees restarts the count (judgement).
-AIM_SETTLE = [(0, 0.55), (6, 0.60), (12, 0.70), (20, 0.82), (30, 0.93), (40, 1.0)]
-AIM_RESTART_DEG = 30.0
+# Aim (owner decision): the retail aim system stays (direction-only stick, nested quads, Efficiency picks the quad,
+# FinalEfficiency graph 196 with its random roll).  The proposal only changes how Efficiency is fed (spec section 7):
+#   Efficiency = class_peak x lerp(AimingResolution.Min, .Max of the grade row, quality)
+#   quality    = timing term (against the new variable window) x hand term
+# The grade rows exist (ShotSpecific.AimingResolution, selected by the Control key S+0x3B8); retail always uses Good.
+AIM_CLASS_PEAK = {"TopSpinMedium": 0.80, "FlatMedium": 0.76, "FlatFinesse": 0.80, "SliceMedium": 0.76,
+                  "FlatPower": 0.60, "DropShot": 0.40}              # retail Efficiency at perfect timing (aiming.md s4)
+AIM_GRADE_ROW = {"Tee-off": (0.30, 1.25), "VeryGood": (0.20, 1.15), "Good": (0.00, 1.00), "Normal": (0.00, 0.85),
+                 "Bad": (0.00, 0.65), "VeryBad": (0.00, 0.45)}    # (Min, Max); Tee-off = VeryGood row + code offset
+AIM_TIMING_Q = {"Perfect": 1.00, "Good": 0.85, "Average": 0.70, "Poor": 0.45, "Mistimed": 0.25}
+AIM_HAND = (0.65, 0.35)       # hand term = 0.65 + 0.35 x hand stat (retail: hand 0.3 costs 0.03-0.05)
+EFF_MAX = 0.98                # keep Efficiency below the lines quad (m > 1 would aim outside the court)
+# DeepDeviation by quality (replaces uniform 0..310 cm at perfect timing): mean cm by grade + timing, sd, cap.
+DEEP_GRADE_CM = {"Tee-off": 15.0, "VeryGood": 30.0, "Good": 45.0, "Normal": 80.0, "Bad": 130.0, "VeryBad": 190.0}
+DEEP_TIMING_CM = {"Perfect": 0.0, "Good": 15.0, "Average": 30.0, "Poor": 90.0, "Mistimed": 200.0}
+DEEP_SD_CM, DEEP_MAX_CM = 25.0, 310.0
 
 
-def aim_settle(frames_held):
-    """Fraction of the line reach usable after holding one direction for frames_held frames before the commit."""
-    return pwl(AIM_SETTLE, frames_held)
+def aim_efficiency(cls_key, grade, timing_fine, hand_stat):
+    lo, hi = AIM_GRADE_ROW[grade]
+    q = AIM_TIMING_Q[timing_fine] * (AIM_HAND[0] + AIM_HAND[1] * hand_stat)
+    return min(EFF_MAX, AIM_CLASS_PEAK[cls_key] * (lo + (hi - lo) * q))
 
 
-def frames_held_typical(frames_to_contact, react_frames=15, commit_lead=12):
-    """Frames a player who picks a direction react_frames after the opponent's contact and keeps it can hold it
-    before the commit."""
-    return max(0, frames_to_contact - commit_lead - react_frames)
+def final_efficiency(eff, rnd):
+    """Retail graph 196 (human), hand 0.8, timing 0 (aiming.md s4), bilinear in (Efficiency, Random)."""
+    rows = {0.0: (0.00, 0.17, 0.68), 0.5: (0.49, 0.63, 0.84), 1.0: (0.79, 0.90, 1.00)}
+    def row(e):
+        return [pwl([(0.0, rows[0.0][k]), (0.5, rows[0.5][k]), (1.0, rows[1.0][k])], e) for k in range(3)]
+    r = row(eff)
+    return pwl([(0.0, r[0]), (0.5, r[1]), (1.0, r[2])], rnd)
+
+
+def deep_deviation(rng, grade, timing_fine):
+    m = DEEP_GRADE_CM[grade] + DEEP_TIMING_CM[timing_fine]
+    return clamp(rng.gauss(m, DEEP_SD_CM), 0.0, DEEP_MAX_CM)
 
 
 def angle_access(depth_x_cm, grade, hand_stat):

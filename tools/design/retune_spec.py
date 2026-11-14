@@ -386,9 +386,9 @@ def sec_grade(a):
     for g in M.GRADES:
         fx = M.GRADE_FX[g]
         rows.append([g, "%+g" % fx["pace"], "none (peak reachable)" if fx["cap"] is None else "%g (topspin %g)" % (fx["cap"], fx["cap"] - 4),
-                     "x%.2f" % fx["spin"], "%+.2f" % fx["aim"], "x%.1f %+.2f" % (fx["err"], fx["err_add"]), "%d" % fx["depth_cm"],
+                     "x%.2f" % fx["spin"], "%.2f-%.2f" % M.AIM_GRADE_ROW[g], "x%.1f %+.2f" % (fx["err"], fx["err_add"]), "%d" % fx["depth_cm"],
                      "x%.2f" % fx["window"]])
-    out.append(md(["grade", "pace mph", "soft pace cap mph", "spin", "aim efficiency", "error (x, +)", "mean depth shortfall cm", "typical window"], rows))
+    out.append(md(["grade", "pace mph", "soft pace cap mph", "spin", "AimingResolution Min-Max (7a)", "error (x, +)", "DeepDeviation at Perfect, cm (7b)", "typical window"], rows))
     out += ["", "### 4c. Worked situations *(computed)*", ""]
     rows = []
     for c in GRADE_CASES:
@@ -531,30 +531,105 @@ def sec_power(a):
 
 # --------------------------------------------------------------------------- section 7: placement
 
+TIMING_MIX = (("Perfect", 0.45), ("Good", 0.25), ("Average", 0.20), ("Poor", 0.08), ("Mistimed", 0.02))
+AIM_CLASS = {"FlatMedium": ("Flat", "Medium", 76), "TopSpinMedium": ("TopSpin", "Medium", 72), "FlatPower": ("Flat", "Powerful", 84)}
+COARSE = {"Perfect": "Perfect", "Good": "Good", "Average": "Good", "Poor": "Poor", "Mistimed": "Mistimed"}
+
+
+def timing_sampler(rng):
+    r = rng.random()
+    for t, w in TIMING_MIX:
+        r -= w
+        if r < 0:
+            return t
+    return "Mistimed"
+
+
+def shot_error(cls, grade, tf, stat=0.76, mph=None):
+    """The rally model's error probability for a neutral ball (no run, no fatigue, no pass)."""
+    c, hold, v = AIM_CLASS[cls]
+    v = mph if mph is not None else v + M.GRADE_FX[grade]["pace"]
+    fx = M.GRADE_FX[grade]
+    margin = M.RALLY["pace_margin"][c] + M.RALLY["margin_hand"] * stat
+    return fx["err"] * (M.RALLY["e_timing"][COARSE[tf]] + M.RALLY["pace_err"] * max(0.0, v - margin)) + fx["err_add"]
+
+
 def sec_placement(a):
-    out = ["### 7a. Depth earned by quality (replaces the uniform 0..310 cm DeepDeviation) *(proposal)*", ""]
+    import retune_aim as AIM
+    n = 1500 if a.quick else 8000
+    T5 = ("Perfect", "Good", "Average", "Poor", "Mistimed")
+    out = ["### 7a. How the existing Efficiency is fed *(proposal; retail chain kept)*", "",
+           "Efficiency = class peak x lerp(AimingResolution.Min, .Max of the grade row, quality); quality = timing term x "
+           "(%.2f + %.2f x hand stat); capped at %.2f. Then retail graph 196 (FinalEfficiency, random roll) picks the quad." % (
+               M.AIM_HAND[0], M.AIM_HAND[1], M.EFF_MAX), ""]
+    out.append(md(["grade", "AimingResolution Min", "Max", "retail row values (Good used for every shot)"],
+                  [[g, f2(M.AIM_GRADE_ROW[g][0]), f2(M.AIM_GRADE_ROW[g][1]),
+                    {"Tee-off": "none (VeryGood row + code offset)", "VeryGood": "0-0.2 / 0.6-1", "Good": "0-0.2 / 0.6-1",
+                     "Normal": "0 / 0.4-1", "Bad": "0 / 0.1-1", "VeryBad": "0 / 0.1-1"}[g]] for g in M.GRADES]))
+    out += ["", "Timing term against the new variable window: " + ", ".join("%s %.2f" % (t, M.AIM_TIMING_Q[t]) for t in T5) +
+            " (retail FlatMedium: 0.76 at t = 0, 0.40 at |t| = 0.3, 0.20 at 0.6, so the same shape). Class peaks (retail, kept): " +
+            ", ".join("%s %.2f" % kv for kv in M.AIM_CLASS_PEAK.items()) + ".", "",
+            "Efficiency, FlatMedium, by grade and timing, hand 0.3 / 0.9 (retail: Good row only; hand 0.3 costs 0.03-0.05):", ""]
     rows = []
     for g in M.GRADES:
-        rows.append([g] + ["%.0f" % M.depth_shortfall(g, t)[0] for t in ("Perfect", "Good", "Poor", "Mistimed")])
-    out.append(md(["grade", "Perfect", "Good", "Poor", "Mistimed"], rows))
-    out += ["", "Mean shortfall in cm; sd %.0f cm around it (retail: uniform 0..310 cm whatever the shot, mean 155)." % M.DEPTH_SD_CM, ""]
-    out += ["### 7b. Aim settle: how long the direction has been held *(proposal; the stick stays direction-only)*", ""]
-    pts = [x for x, _ in M.AIM_SETTLE]
-    out.append(md(["frames held before the commit"] + ["%d" % x for x in pts] + ["%d+" % (pts[-1] + 10)],
-                  [["usable reach toward the lines"] + [f2(y) for _, y in M.AIM_SETTLE] + ["1.00"]]))
-    out += ["", "Typical holds (direction picked %d frames after the opponent's contact and kept; commit %d frames before contact):" % (15, M.AUTO_COMMIT), ""]
+        rows.append([g] + ["%.2f / %.2f" % (M.aim_efficiency("FlatMedium", g, t, 0.3), M.aim_efficiency("FlatMedium", g, t, 0.9)) for t in T5])
+    out.append(md(["grade"] + list(T5), rows))
+    out += ["", "### 7b. DeepDeviation by quality (replaces uniform 0..310 cm at perfect timing) *(proposal)*", ""]
+    rows = [[g] + ["%.0f" % min(M.DEEP_MAX_CM, M.DEEP_GRADE_CM[g] + M.DEEP_TIMING_CM[t]) for t in T5] for g in M.GRADES]
+    out.append(md(["grade"] + list(T5), rows))
+    out += ["", "Mean cm short of the aimed point along the hitter-to-target line; sd %.0f cm, capped at %.0f. Retail: uniform 0..310 cm "
+            "(mean 155) at perfect timing, 200-300 cm fixed when mistimed." % (M.DEEP_SD_CM, M.DEEP_MAX_CM), ""]
+    out += ["### 7c. Where corner aims land, on the retail aim quads *(computed, %d shots per row)*" % n, "",
+            "Stick up-right (deep corner), hitter at (-1188, -50), FlatNormal / TopSpinNormal configs from `aim_tables.yaml`; timing mix "
+            + ", ".join("%s %.0f%%" % (t, 100 * w) for t, w in TIMING_MIX) + " (a rating-80 player on neutral balls, section 5); hand 0.76. "
+            "Distances in cm: short of the baseline (1188) and in from the sideline (411). P(error) from the rally model on a neutral ball "
+            "at the class's typical speed (flat pace raises it).", ""]
+    cfgs = AIM.load_configs()
     rows = []
-    for lab, fr in (("neutral rally ball", 78), ("hard flat drive", 58), ("short floater (Tee-off)", 100), ("return of a 120 mph serve", 31),
-                    ("return of a 145 mph serve", 26), ("first volley off a hard pass", 22), ("late flick on a rally ball (aim set 8 frames before the commit)", None)):
-        h = 8 if fr is None else M.frames_held_typical(fr)
-        rows.append([lab, "-" if fr is None else fr, h, f2(M.aim_settle(h))])
-    out.append(md(["ball", "frames to contact", "frames held", "usable reach"], rows))
-    out += ["", "### 7c. Angle access (fraction of the sideline reach usable) *(proposal)*", ""]
+    rng = random.Random(9)
+    for cls, cfgname in (("TopSpinMedium", "TopSpinNormal"), ("FlatMedium", "FlatNormal"), ("FlatPower", "FlatNormal")):
+        for g in M.GRADES:
+            pts, perr = AIM.corner_landings(rng, cfgs[cfgname], cls, g, timing_sampler, 0.76, n, lambda gg, tf: shot_error(cls, gg, tf))
+            sb = sorted(1188.0 - x for x, z in pts)
+            ss = sorted(411.0 - z for x, z in pts)
+            box = sum(1 for x, z in pts if 1188 - x < 100 and 411 - z < 100) / max(1, len(pts))
+            rows.append([cls, g, "%.0f (%.0f-%.0f)" % (pct(sb, .5), pct(sb, .1), pct(sb, .9)), "%.0f (%.0f-%.0f)" % (pct(ss, .5), pct(ss, .1), pct(ss, .9)),
+                         f2(box), f3(perr)])
+        # retail reference: Good row, retail timing values, uniform deep 0..310
+        pts = []
+        for _ in range(n):
+            tf = timing_sampler(rng)
+            eff = M.AIM_CLASS_PEAK[cls] * {"Perfect": 1.0, "Good": 0.85, "Average": 0.6, "Poor": 0.5, "Mistimed": 0.26}[tf]
+            fe = M.final_efficiency(eff, rng.random())
+            dd = rng.uniform(0, 310) if tf in ("Perfect", "Good", "Average") else rng.uniform(200, 300)
+            pts.append(AIM.land(cfgs[cfgname], fe, dd, 1.0, 1.0))
+        sb = sorted(1188.0 - x for x, z in pts)
+        ss = sorted(411.0 - z for x, z in pts)
+        box = sum(1 for x, z in pts if 1188 - x < 100 and 411 - z < 100) / len(pts)
+        rows.append([cls, "retail (Good row)", "%.0f (%.0f-%.0f)" % (pct(sb, .5), pct(sb, .1), pct(sb, .9)),
+                     "%.0f (%.0f-%.0f)" % (pct(ss, .5), pct(ss, .1), pct(ss, .9)), f2(box), "-"])
+    out.append(md(["class", "grade", "short of baseline: median (p10-p90)", "in from sideline: median (p10-p90)", "share within 1 m of both lines", "P(error)"], rows))
+    out += ["", "### 7d. Is aiming at the corner on every ball dominant? *(computed, elite mirror, %d matches per pair)*" % (16 if a.quick else 80), "",
+            "Each build is the elite all-rounder with a different share of balls aimed at the deep corner (the rest at safer directions). "
+            "The stick is direction-only, so the corner costs no error in the agreed rules. Row: field share.", ""]
+    rows = []
+    A = M.ARCH["elite all-rounder"]
+    for an in (0.0, M.ANTICIPATION):
+        sv = M.ANTICIPATION
+        M.ANTICIPATION = an
+        try:
+            B = {("corner %.2f" % c): (A, {"flat": 0.35, "corner": c}) for c in (0.0, 0.25, 0.5, 0.75, 1.0)}
+            r = M.round_robin(B, 16 if a.quick else 80, 3)
+        finally:
+            M.ANTICIPATION = sv
+        rows.append(["%.2f" % an] + [f3(sum(r[k].values()) / 4.0) for k in B])
+    out.append(md(["receiver anticipation", "corner 0 %", "25 %", "50 %", "75 %", "100 %"], rows))
+    out += ["", "### 7e. Angle access (fraction of the sideline reach usable) *(proposal)*", ""]
     rows = []
     for dx, lab in ((-400, "4 m inside"), (-150, "1.5 m inside"), (0, "on the baseline"), (200, "2 m behind"), (400, "4 m behind")):
         rows.append([lab] + [f2(M.angle_access(dx, g, 0.76)) for g in M.GRADES])
     out.append(md(["position (rating 80)"] + M.GRADES, rows))
-    out += ["", "### 7d. Drop shot quality against the incoming ball (touch rating 70) *(proposal)*", ""]
+    out += ["", "### 7f. Drop shot quality against the incoming ball (touch rating 70) *(proposal)*", ""]
     rows = []
     for lab, pace, h, g in (("slow, mid-height, inside the court", 45, 100, "VeryGood"), ("neutral rally ball", 68, 100, "Good"),
                             ("hard drive", 95, 95, "Normal"), ("low slice", 50, 40, "Good"), ("on the run", 70, 80, "Bad")):
@@ -580,8 +655,8 @@ def sec_net(a):
         vr = run / 100.0 / max(0.2, frames / 60.0 - 0.3)
         g, q, _ = M.grade_of(frames, vr, run, height, pace, depth_x, max(0, frames - 30 - int(run / 100 / 6 * 60)), vr > 5.2 or run > 380)
         hp, hg, e = M.window_halfwidths(pace, frames * 1000 / 60.0, height, 0.1, vr, 10, vr > 5.2, 1188 + depth_x, False, 0.64)
-        rows.append([lab, frames, g, f2(q), "%.1f / %.1f" % (hp, hg), "%+.2f" % M.GRADE_FX[g]["aim"], f2(M.angle_access(depth_x, g, 0.64))])
-    out.append(md(["approach", "passer's frames", "passer's grade", "Q", "Perfect / Good half (rating 70)", "aim efficiency", "angle access"], rows))
+        rows.append([lab, frames, g, f2(q), "%.1f / %.1f" % (hp, hg), f2(M.aim_efficiency("FlatMedium", g, "Perfect", 0.64)), f2(M.angle_access(depth_x, g, 0.64))])
+    out.append(md(["approach", "passer's frames", "passer's grade", "Q", "Perfect / Good half (rating 70)", "passer's Efficiency (FlatMedium, Perfect)", "angle access"], rows))
     out += ["", "### 8b. The volleyer *(computed)*", ""]
     rows = []
     for lab, pace_mph, h, dist_m, stat in (("floater above the net, 2.5 m from the net", 35, 150, 10, 0.64),

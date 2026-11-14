@@ -187,6 +187,8 @@ def decode(w: int, pc: int) -> Insn:
     ra0 = (a,) if a else ()
     if op in (4, 5, 6):
         return Insn(w, kind="vec")
+    if op == 31 and (w >> 1) & 0x3FF == 444 and d == a == b and not w & 1:
+        return Insn(w)            # `or rX,rX,rX` (mr rX,rX): a no-op hint, reads nothing
     if op == 18:
         li = sext(w & 0x03FFFFFC, 26)
         tgt = (li if w & 2 else pc + li) & 0xFFFFFFFF

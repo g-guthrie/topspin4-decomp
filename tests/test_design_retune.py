@@ -44,6 +44,10 @@ class Grade(unittest.TestCase):
         g, q, _ = M.grade_of(100, 0.8, 60, 110, 45, -250, 40, False, 0.1)
         self.assertEqual(g, "Tee-off")
 
+    def test_ordinary_ball_standing_still_is_not_teeoff(self):
+        g, _, _ = M.grade_of(90, 0.0, 0, 110, 68, 80, 40, False, 0.1)
+        self.assertEqual(g, "VeryGood")
+
     def test_teeoff_needs_slow_ball(self):
         g, _, _ = M.grade_of(100, 0.8, 60, 110, 70, -250, 40, False, 0.1)
         self.assertNotEqual(g, "Tee-off")
@@ -92,13 +96,15 @@ class Window(unittest.TestCase):
         self.assertGreaterEqual(hg, 2.0)
 
     def test_opponent_term_and_cap(self):
-        g = self.w(opp_timing="Good")[1]
+        self.assertLess(self.w(opp_timing="Good")[1], self.w(opp_timing="Average")[1])
+        g = self.w(opp_timing="Average")[1]
         self.assertLess(self.w(opp_timing="Perfect")[1], g)
         self.assertGreater(self.w(opp_timing="Mistimed")[1], self.w(opp_timing="Poor")[1])
         big = self.w(opp_timing="Mistimed", opp_scale=10.0)[1]
-        small = self.w(opp_timing="Perfect", opp_scale=10.0)[1]
         self.assertLessEqual(big / g, M.OPP_FX_CAP[1] + 1e-9)
-        self.assertGreaterEqual(small / g, M.OPP_FX_CAP[0] - 1e-9)
+        # total floor: ball ease x opponent term never below TOTAL_FLOOR of the normal window
+        hp, hg, e = self.w(pace_kmh=160, react_ms=300, opp_timing="Perfect", stat=0.5)
+        self.assertGreaterEqual(e, M.TOTAL_FLOOR * M.rating_factor(0.5) - 1e-9)
 
     def test_p_window(self):
         self.assertLess(M.p_window(1.0), M.p_window(3.0))
@@ -181,6 +187,32 @@ class Flight(unittest.TestCase):
         self.assertGreater(h["clay"], h["hard"])
         self.assertGreater(h["hard"], h["grass"])
         self.assertAlmostEqual(F.cpr(0.62, 0.81), 38.0)
+
+
+class Aim(unittest.TestCase):
+    def test_quads_match_aiming_doc(self):
+        import retune_aim as A
+        c = A.load_configs()["FlatNormal"]
+        for m, up, upright in ((0.0, (737, -12), (739, 31)), (0.8, (1074, -3), (1074, 339)), (1.0, (1188, 0), (1188, 411))):
+            q = A.quad_at(c, m)
+            self.assertEqual(tuple(round(v) for v in A.stick_target(q, 0, 1)), up)
+            self.assertEqual(tuple(round(v) for v in A.stick_target(q, 1, 1)), upright)
+
+    def test_efficiency_feed(self):
+        e = [M.aim_efficiency("FlatMedium", g, "Perfect", 0.8) for g in M.GRADES]
+        self.assertEqual(e, sorted(e, reverse=True))
+        self.assertLessEqual(max(e), M.EFF_MAX)
+        # the hand stat now matters: 0.3 against 0.9 costs more than retail's 0.03-0.05
+        self.assertGreater(M.aim_efficiency("FlatMedium", "Good", "Perfect", 0.9) - M.aim_efficiency("FlatMedium", "Good", "Perfect", 0.3), 0.1)
+        self.assertGreater(M.aim_efficiency("TopSpinMedium", "Good", "Perfect", 0.8), M.aim_efficiency("FlatPower", "Good", "Perfect", 0.8))
+
+    def test_final_efficiency_table(self):
+        self.assertAlmostEqual(M.final_efficiency(0.5, 0.5), 0.63)
+        self.assertAlmostEqual(M.final_efficiency(1.0, 1.0), 1.0)
+
+    def test_deep_deviation(self):
+        self.assertLess(M.depth_shortfall("Good", "Perfect")[0], 60)
+        self.assertGreater(M.depth_shortfall("Good", "Mistimed")[0], 200)
 
 
 class Sim(unittest.TestCase):
