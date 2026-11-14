@@ -8509,3 +8509,59 @@ src/loader/l50_o1_small_83112130.c:
 src/loader/l50_wfx_valid_8317E2D8.c:
 	.text       start:0x8317E2D8 end:0x8317E3A8
 	.text       start:0x831A2EC8 end:0x831A2F98
+
+src/loader/l51_jpeg_forward_dct_8345F9F8.c:
+	.pdata      start:0x83099A08 end:0x83099A10
+	.text       start:0x8345F9F8 end:0x8345FF08
+
+src/loader/l51_jpeg_grayscale_convert_834623B8.c:
+	.pdata      start:0x83099AC8 end:0x83099AD0
+	.text       start:0x834623B8 end:0x83462428
+
+src/loader/l51_jpeg_jcmaster_83462898.c:
+	.pdata      start:0x83099AE0 end:0x83099AF0
+	.text       start:0x83462898 end:0x83462FE8
+
+src/loader/l51_jpeg_jinit_downsampler_83461BE8.c:
+	.pdata      start:0x83099A90 end:0x83099A98
+	.text       start:0x83461BE8 end:0x83461E30
+
+src/loader/l51_jpeg_per_scan_setup_83463130.c:
+	.pdata      start:0x83099AF8 end:0x83099B00
+	.text       start:0x83463130 end:0x83463340
+
+src/loader/l51_jpeg_prep_data_83460B00.c:
+	.pdata      start:0x83099A30 end:0x83099A40
+	.text       start:0x83460B00 end:0x83460F90
+
+src/loader/l51_jpeg_prepare_for_pass_83463340.c:
+	.pdata      start:0x83099B00 end:0x83099B08
+	.text       start:0x83463340 end:0x834635E8
+
+src/loader/l51_jpeg_smooth_downsample_834616C8.c:
+	.pdata      start:0x83099A78 end:0x83099A88
+	.text       start:0x834616C8 end:0x83461B10
+
+src/loader/l53_list_push_834012B8.c:
+	.pdata      start:0x83097A28 end:0x83097A30
+	.text       start:0x834012B8 end:0x83401360
+
+src/loader/l53_png_handle_plte_83455690.c:
+	.pdata      start:0x830996D0 end:0x830996D8
+	.text       start:0x83455690 end:0x83455848
+
+src/loader/l53_request_post_thunks_831A05C0.c:
+	.pdata      start:0x83090CA0 end:0x83090CB0
+	.text       start:0x831A05C0 end:0x831A0730
+
+src/loader/l53_size_select_831A4D98.c:
+	.pdata      start:0x83090F20 end:0x83090F28
+	.text       start:0x831A4D98 end:0x831A4E20
+
+src/loader/l53_state_clear_831C7640.c:
+	.pdata      start:0x83091520 end:0x83091528
+	.text       start:0x831C7640 end:0x831C7748
+
+src/loader/l53_texture_copy_8342F060.c:
+	.pdata      start:0x830989E0 end:0x830989E8
+	.text       start:0x8342F060 end:0x8342F158

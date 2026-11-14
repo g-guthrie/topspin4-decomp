@@ -13551,6 +13551,120 @@
         "ts4l_wfx_valid_8317E2D8": 204,
         "ts4l_wfx_valid_831A2EC8": 204
       }
+    },
+    {
+      "source": "src/loader/l51_jpeg_forward_dct_8345F9F8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_forward_DCT_8345F9F8": 1296
+      }
+    },
+    {
+      "source": "src/loader/l51_jpeg_grayscale_convert_834623B8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_grayscale_convert_834623B8": 108
+      }
+    },
+    {
+      "source": "src/loader/l51_jpeg_jcmaster_83462898.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_initial_setup_83462898": 656,
+        "ts4l_jpeg_validate_script_83462B28": 1212
+      }
+    },
+    {
+      "source": "src/loader/l51_jpeg_jinit_downsampler_83461BE8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_jinit_downsampler_83461BE8": 584
+      }
+    },
+    {
+      "source": "src/loader/l51_jpeg_per_scan_setup_83463130.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_per_scan_setup_83463130": 528
+      }
+    },
+    {
+      "source": "src/loader/l51_jpeg_prep_data_83460B00.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_pre_process_data_83460B00": 564,
+        "ts4l_jpeg_pre_process_context_83460D38": 600
+      }
+    },
+    {
+      "source": "src/loader/l51_jpeg_prepare_for_pass_83463340.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_prepare_for_pass_83463340": 676
+      }
+    },
+    {
+      "source": "src/loader/l51_jpeg_smooth_downsample_834616C8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_h2v2_smooth_downsample_834616C8": 684,
+        "ts4l_jpeg_fullsize_smooth_downsample_83461978": 404
+      }
+    },
+    {
+      "source": "src/loader/l53_list_push_834012B8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_list_push_834012B8": 168
+      }
+    },
+    {
+      "source": "src/loader/l53_png_handle_plte_83455690.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_png_handle_PLTE_83455690": 440
+      }
+    },
+    {
+      "source": "src/loader/l53_request_post_thunks_831A05C0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4_if_get_u32_offc_831A05C0": 180,
+        "ts4_if_get_u32_offc_831A0678": 180
+      }
+    },
+    {
+      "source": "src/loader/l53_size_select_831A4D98.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4_if_call_seq_u16_off0_831A4D98": 132
+      }
+    },
+    {
+      "source": "src/loader/l53_state_clear_831C7640.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4_call_seq_fn_833E3A30_831C7640": 260
+      }
+    },
+    {
+      "source": "src/loader/l53_texture_copy_8342F060.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_texture_copy_8342F060": 244
+      }
     }
   ]
 }

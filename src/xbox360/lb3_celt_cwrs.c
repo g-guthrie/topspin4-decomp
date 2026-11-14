@@ -1,3 +1,6 @@
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 /* (C) 2007-2008 Timothy B. Terriberry
    (C) 2008 Jean-Marc Valin */
 /* Derived from CELT 0.6.1 libcelt/cwrs.c (BSD license); see

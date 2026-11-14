@@ -1,3 +1,6 @@
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 /*
  * GA6: gameplay node binding, scoped worker call and singleton construction.
  */

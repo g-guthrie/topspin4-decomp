@@ -1,3 +1,6 @@
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 /*
  * GA6: gameplay object init / teardown helpers (call-through and field-reset wrappers).
  */
