@@ -25,7 +25,7 @@ typedef unsigned int   gp4_u32;
 #define GP4_HASH_MODE_LIVE_B   0x5D25ED1Du /* unnamed: same for LetOut */
 #define GP4_HASH_MODE_CA68AAEC 0xCA68AAECu /* unnamed: treated like Out by fn_889C0C70 */
 #define GP4_HASH_CURVE_1D      0xF9F12A60u /* template node type: 1-D piecewise-linear curve (fn_8817A688, 20-byte keys) */
-#define GP4_HASH_CURVE_2D      0x7A330099u /* template node type: 2-D table (fn_8826D278) */
+#define GP4_HASH_CURVE_2D      0x7A330099u /* template node type: 2-D table (ts4_table2d_eval_8826D278) */
 #define GP4_HASH_CONST         0x33799CCEu /* template node type: plain float */
 /* shot "solver kind" stored at template+0x20 (= tpl_ptr+0x8, tpl_ptr = table + index + 0x18), names unknown */
 #define GP4_KIND_AB8D0         0x5D90675Bu /* -> fn_888AB8D0 : min-speed / commanded-speed flight-time bisection */

@@ -54,7 +54,7 @@ ts4_word fn_88580EB8();
 ts4_word fn_885E75E0();
 ts4_word ts4_get_u32_off8_885E76A0();
 ts4_word fn_885E76C0();
-ts4_word fn_8862C0E8();
+ts4_word ts4_if_set_u32_off0_8862C0E8();
 ts4_word fn_886A0EC8();
 ts4_word fn_886B6448();
 ts4_word fn_887013A8();
@@ -462,7 +462,7 @@ void ts4_if_call_seq_u32_off1c_886BB698(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x88727058: addr lbl_880F10A0, fn_8862C0E8, ts4_handle_forward_88610A48, ts4_handle_forward_88150770, u32@0x0, u32@0x28 */
+/* Swing_DLL.xex 0x88727058: addr lbl_880F10A0, ts4_if_set_u32_off0_8862C0E8, ts4_handle_forward_88610A48, ts4_handle_forward_88150770, u32@0x0, u32@0x28 */
 void ts4_addr_lbl_880F10A0_88727058(void)
 {
     ts4_word loc68[3];
@@ -474,7 +474,7 @@ void ts4_addr_lbl_880F10A0_88727058(void)
     ts4_word t5;
     ts4_word t8;
 
-    fn_8862C0E8((ts4_word)(ts4_word)&loc68[0], (ts4_word)(ts4_word)lbl_880F10A0);
+    ts4_if_set_u32_off0_8862C0E8((ts4_word)(ts4_word)&loc68[0], (ts4_word)(ts4_word)lbl_880F10A0);
     loc54[0] = (ts4_word)((4094427136) | 52484);
     loc50[0] = (ts4_word)((3734700032) | 61892);
     ts4_handle_forward_88150770((ts4_word)(ts4_word)&loc58[0], (ts4_word)(ts4_handle_forward_88610A48((ts4_word)(ts4_word)&loc78[0], (ts4_word)(ts4_word)&loc68[0], (ts4_word)(ts4_word)&loc50[0])), (ts4_word)(ts4_word)&loc54[0]);

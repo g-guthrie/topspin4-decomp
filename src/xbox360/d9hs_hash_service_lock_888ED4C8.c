@@ -12,7 +12,7 @@ typedef struct Ts4Self { char pad0[8]; u8 flag; char pad1[7]; char sub[0x10]; ch
 extern Ts4Glob *lbl_88D45B1C;
 extern void fn_881B9148(void *);
 extern void fn_888EC6A8(void *self, u32 a);
-extern void fn_8862C0E8(Out *out, const void *name);
+extern void ts4_if_set_u32_off0_8862C0E8(Out *out, const void *name);
 extern void ts4_handle_forward_88610778(Out *out, Out *in, u32 *key);
 extern void *ts4_init_range_and_run_service_88165088(Out *out, In *in, u32 a);
 extern void *ts4_init_range_and_run_service_opt_88164450(Out *out, In *in, u32 a, u32 count);
@@ -31,7 +31,7 @@ void ts4_hash_service_888ED4C8(char *self)
     *(u8 *)(self + 8) = 0;
     fn_881B9148(self + 0x10);
     fn_888EC6A8(self, 0);
-    fn_8862C0E8(&cp, self + 0x124);
+    ts4_if_set_u32_off0_8862C0E8(&cp, self + 0x124);
     g = lbl_88D45B1C;
     lk = &g->lock;
     lk->vt->acquire(lk);

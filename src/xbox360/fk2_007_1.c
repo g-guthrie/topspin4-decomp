@@ -172,7 +172,7 @@ ts4_word fn_88619E50();
 ts4_word fn_8861AB88();
 ts4_word fn_88622E88();
 ts4_word fn_8862A1F0();
-ts4_word fn_8862C0E8();
+ts4_word ts4_if_set_u32_off0_8862C0E8();
 ts4_word fn_88631048();
 ts4_word fn_88636CF0();
 ts4_word fn_887D9C90();

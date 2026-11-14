@@ -6,7 +6,7 @@ struct Gp0XHandle {
     gp0_u32 extra;
 };
 
-struct Gp0XHandle *fn_8862BE08(struct Gp0XHandle *out, const char *xpath);
+struct Gp0XHandle *ts4_if_set_u32_off0_8862BE08(struct Gp0XHandle *out, const char *xpath);
 void fn_88169350(gp0_u32 *out, struct Gp0XHandle *handle);
 gp0_u8 ts4_gp0_xdata_get_bool_88163C60(struct Gp0XHandle *handle);
 
@@ -28,9 +28,9 @@ gp0_u8 ts4_gp0_next_module_is_local_match_887911B8(void)
     struct Gp0XHandle online_handle;
     gp0_u8 is_online;
 
-    fn_8862BE08(&next_module_handle, lbl_880D8D64);
+    ts4_if_set_u32_off0_8862BE08(&next_module_handle, lbl_880D8D64);
     fn_88169350(&next_module, &next_module_handle);
-    fn_8862BE08(&online_handle, lbl_880D8270);
+    ts4_if_set_u32_off0_8862BE08(&online_handle, lbl_880D8270);
     is_online = ts4_gp0_xdata_get_bool_88163C60(&online_handle);
     if (lbl_88C4589D != 0 && !is_online) {
         if (next_module == 0x1DCA7285 || next_module == 0xF202BB09) {

@@ -6,7 +6,7 @@ typedef struct In { void *svc; u32 tag; } In;
 typedef struct Ts4Obj { void **vt; } Ts4Obj;
 typedef void *(*Ts4Slot10)(Ts4Obj *self, Out *arg, u32 a, u32 b);
 extern char lbl_880D7A20[];
-extern void fn_8862C0E8(Out *out, const char *name);
+extern void ts4_if_set_u32_off0_8862C0E8(Out *out, const char *name);
 extern void ts4_handle_forward_88610778(Out *out, Out *in, u32 *key);
 extern void *ts4_init_range_and_run_service_opt_88164F60(Out *out, In *in, u32 a, u32 count);
 extern void *ts4_init_range_and_run_service_opt_88164450(Out *out, In *in, u32 a, u32 count);
@@ -20,7 +20,7 @@ void ts4_hash_service_named_888E62C8(void)
     Out *p;
     u32 *slot;
     u8 *r;
-    fn_8862C0E8(&cp, lbl_880D7A20);
+    ts4_if_set_u32_off0_8862C0E8(&cp, lbl_880D7A20);
     k1 = 0xFC26CEFFu;
     ts4_handle_forward_88610778(&o1, &cp, &k1);
     k2 = 0x37F8E895u;
@@ -41,7 +41,7 @@ void ts4_hash_service_named_888E66C0(u32 value)
     Out *p;
     u32 *slot;
     u8 *r;
-    fn_8862C0E8(&cp, lbl_880D7A20);
+    ts4_if_set_u32_off0_8862C0E8(&cp, lbl_880D7A20);
     k1 = 0xFC26CEFFu;
     ts4_handle_forward_88610778(&o1, &cp, &k1);
     k2 = 0x37F8E895u;

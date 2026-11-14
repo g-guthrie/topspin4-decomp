@@ -3,7 +3,7 @@
 /*
  * XData typed value readers (Swing_DLL.xex). A handle names one attribute
  * node of an XData tree: { tree, node id, extra }. Id 0x000FFFFF is the
- * invalid / not-yet-resolved id (see fn_8862BE08, which resolves an XPath
+ * invalid / not-yet-resolved id (see ts4_if_set_u32_off0_8862BE08, which resolves an XPath
  * string such as "GamePlayInterface:/...@IsOnlineMatch" into a handle).
  * The tree's vtable has, among others:
  *   +0x24 get_value_ptr(tree, handle, node_id, size)

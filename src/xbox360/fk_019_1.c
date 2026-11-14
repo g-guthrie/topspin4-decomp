@@ -101,7 +101,7 @@ ts4_word fn_8864E310();
 ts4_word fn_88655718();
 ts4_word fn_88655BC8();
 ts4_word fn_88658B90();
-ts4_word fn_8865A938();
+ts4_word ts4_shot_tree_walk_8865A938();
 ts4_word fn_8865A9C8();
 ts4_word fn_8865D6E8();
 ts4_word fn_88669C30();

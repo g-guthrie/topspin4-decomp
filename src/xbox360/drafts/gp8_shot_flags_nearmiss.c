@@ -41,7 +41,7 @@ struct Gp8ShotEval {
     struct Gp8PlayerState *state;      /* +4 */
 };
 
-void fn_8865ED78(struct Gp8PlayerCtx *pc);
+void ts4_shot_select_row_8865ED78(struct Gp8PlayerCtx *pc);
 void fn_886629C8(struct Gp8ShotEval *eval, void *shot_record);
 
 /* Swing_DLL.xex 0x88662B60 */
@@ -59,6 +59,6 @@ void ts4_shot_eval_refresh_flags_88662B60(struct Gp8ShotEval *eval)
         s = eval->state;
         s->flag_57d = s->src_e6e;
     }
-    fn_8865ED78(eval->pc);
+    ts4_shot_select_row_8865ED78(eval->pc);
     fn_886629C8(eval, eval->pc->shot_record);
 }

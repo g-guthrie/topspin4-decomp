@@ -17,8 +17,8 @@
 
 struct Gp3Player;
 
-/* lookup: 2-D piecewise linear table of fn_8826D278: rows stride 0x10 keyed by `row_key` (float at +0xC), each row a 1-D curve evaluated at `col` */
-float fn_8826D278(const void *table, float row_key, float col);
+/* lookup: 2-D piecewise linear table of ts4_table2d_eval_8826D278: rows stride 0x10 keyed by `row_key` (float at +0xC), each row a 1-D curve evaluated at `col` */
+float ts4_table2d_eval_8826D278(const void *table, float row_key, float col);
 
 struct Gp3ValidityCfg {                  /* player cfg (player+0x2C) pieces used here */
     gp3_u8 pad0[0x17C];
@@ -31,9 +31,9 @@ float gp3_mode_validity_886887C0(float contact_dist, float contact_angle_abs, fl
                                  int frames_to_contact, float lead_frames,
                                  const void *prep_table_17c, const struct Gp3MoveModeCfg *mode)
 {
-    float prep = fn_8826D278(prep_table_17c, ball_value_world68, contact_angle_abs);   /* ticks needed to prepare the swing */
+    float prep = ts4_table2d_eval_8826D278(prep_table_17c, ball_value_world68, contact_angle_abs);   /* ticks needed to prepare the swing */
     float slack = (float)frames_to_contact - prep - lead_frames;                        /* ticks to spare */
-    return fn_8826D278(mode, contact_dist, slack);                                      /* margin table of this mode */
+    return ts4_table2d_eval_8826D278(mode, contact_dist, slack);                                      /* margin table of this mode */
 }
 
 /* ---- fn_88688948: is this movement mode usable for the committed ball sample? ------------------ */

@@ -20,7 +20,7 @@ extern int ts4_if_get_u32_off0_8871E468(void *);
 extern void ts4_call_seq_lbl_880F2148_88736F30(void *);
 extern void fn_88222D28(void *);
 extern void fn_88744C70(void *);
-extern void fn_8862C0E8(void *, void *);
+extern void ts4_if_set_u32_off0_8862C0E8(void *, void *);
 extern int fn_88923530(u64, u64, u32);
 extern int fn_88923530b(u64, u64, u32);
 /* Swing_DLL.xex 0x887146C0 */

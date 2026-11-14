@@ -115,7 +115,7 @@ static float curve20_eval(float x, const uint8_t *c)
     }
 }
 
-/* fn_8826D278: 2-D table.  Header {i32 first_row_offset (-1 = none), i32 row_count}; rows are 16 bytes
+/* ts4_table2d_eval_8826D278: 2-D table.  Header {i32 first_row_offset (-1 = none), i32 row_count}; rows are 16 bytes
  * {i32 key_off, i32 key_count, i32 ?, f32 a_key} where the first 8 bytes of a row are a curve16 header (relative to the
  * ROW) and a_key (row+0xC) is ascending.  Linear interpolation in `a` between the curve16 values at `b` of the two rows
  * enclosing `a`; clamps to the first/last row. */

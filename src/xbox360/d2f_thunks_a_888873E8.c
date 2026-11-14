@@ -177,7 +177,7 @@ ts4_word ts4_if_call_seq_lbl_880F7EE4_88617D28();
 ts4_word fn_88617D88();
 ts4_word fn_88622E88();
 ts4_word fn_886263E8();
-ts4_word fn_8862C0E8();
+ts4_word ts4_if_set_u32_off0_8862C0E8();
 ts4_word fn_88636CF0();
 ts4_word fn_8886B1B0();
 ts4_word ts4_registry_dispatch_888860A0();

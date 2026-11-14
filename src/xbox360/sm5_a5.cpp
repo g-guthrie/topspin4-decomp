@@ -17,8 +17,8 @@ extern void fn_88290568(void *, int, void *, int, int);
 extern void ts4_if_call_seq_fn_881F04B8_886131F0(void *, void *, u32);
 extern void fn_885651F8(void *);
 extern char *g_ts4_session_context;
-extern void fn_8862C0E8(void *, void *);
-extern void fn_8862BE08(void *, void *);
+extern void ts4_if_set_u32_off0_8862C0E8(void *, void *);
+extern void ts4_if_set_u32_off0_8862BE08(void *, void *);
 extern void fn_88169350(void *, void *);
 extern void fn_887934A8(void *);
 extern int fn_88923530(u64, u64, u32);
@@ -28,7 +28,7 @@ extern void fn_887DD110(void *, u32, int, int);
 extern void ts4_if_call_seq_NtSetEvent_8857C1F8(void *);
 
 /* Swing_DLL.xex 0x887935C8 */
-int ts4_call_chain_return_zero_887935C8(void) { u64 t1; void *t2; fn_8862BE08(&t1, lbl_880D82D0); fn_88169350(&t2, &t1); fn_887934A8(t2); return 0; }
+int ts4_call_chain_return_zero_887935C8(void) { u64 t1; void *t2; ts4_if_set_u32_off0_8862BE08(&t1, lbl_880D82D0); fn_88169350(&t2, &t1); fn_887934A8(t2); return 0; }
 /* Swing_DLL.xex 0x887CDBC0 */
 int ts4_set_slot_if_empty_887CDBC0(char *s, int i, u32 v) { if (i >= 0 && i < 4) { u32 *p = (u32*)s + i + 2; if (*p == 0) { *p = v; return 1; } } return 0; }
 /* Swing_DLL.xex 0x887CDCC0 */

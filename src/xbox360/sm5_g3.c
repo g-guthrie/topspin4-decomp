@@ -46,7 +46,7 @@ extern void *lbl_88D459E0;
 extern void *ts4_find_service(ts4_script_u32);
 extern void fn_889A6BE0(void *, ts4_script_u32);
 extern void fn_8879FF30(void *, int, int);
-extern void fn_8862BE08(void *, void *);
+extern void ts4_if_set_u32_off0_8862BE08(void *, void *);
 extern void fn_88169350(void *, void *);
 extern char lbl_880D41AC[];
 extern void ts4_assign_formatted_text(void *, void *);

@@ -31,7 +31,7 @@ ts4_word fn_88161540();
 ts4_word fn_88608590();
 ts4_word ts4_if_call_seq_fn_88883CD0_8860D5B8();
 ts4_word fn_88627EC0();
-ts4_word fn_8862C0E8();
+ts4_word ts4_if_set_u32_off0_8862C0E8();
 ts4_word ts4_call_seq_u32_off8_8869FD88();
 ts4_word fn_8877D388();
 ts4_word ts4_if_call_seq_u32_off50_88793A78();
@@ -307,7 +307,7 @@ ts4_word ts4_call_seq_u32_off20_8895B3C0(ts4_word a0, ts4_word a1)
     return t4;
 }
 
-/* Swing_DLL.xex 0x8895E320: if_call_seq u32@lbl_88D458D0, u32@0x1c, fn_8862C0E8, fn_88923530, u32@0x0, u32@0x4 */
+/* Swing_DLL.xex 0x8895E320: if_call_seq u32@lbl_88D458D0, u32@0x1c, ts4_if_set_u32_off0_8862C0E8, fn_88923530, u32@0x0, u32@0x4 */
 ts4_word ts4_if_call_seq_u32_lbl_88D458D0_8895E320(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6)
 {
     ts4_word p9;
@@ -325,7 +325,7 @@ ts4_word ts4_if_call_seq_u32_lbl_88D458D0_8895E320(ts4_word a0, ts4_word a1, ts4
     if ((ts4_word)t1 == 0) {
         p9 = (ts4_word)0;
     } else {
-        fn_8862C0E8((ts4_word)(ts4_word)&loc50[0], (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 28)));
+        ts4_if_set_u32_off0_8862C0E8((ts4_word)(ts4_word)&loc50[0], (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 28)));
         t4 = loc50[2];
         t5 = fn_88923530((ts4_word)t4, *(ts4_args3 *)&loc50[0], (ts4_word)((3317366784) | 46560));
         t6 = *(ts4_word *)((char *)(ts4_word)(t5) + 0);
@@ -392,7 +392,7 @@ void ts4_if_call_seq_u32_off30_889639F8(ts4_word a0)
         } else {
             p15 = (ts4_word)(ts4_word)lbl_880C1320;
         }
-        t16 = fn_8862C0E8((ts4_word)(ts4_word)&loc60[0], (ts4_word)p15);
+        t16 = ts4_if_set_u32_off0_8862C0E8((ts4_word)(ts4_word)&loc60[0], (ts4_word)p15);
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 56) = (ts4_word)(*(volatile ts4_word *)((char *)(ts4_word)(t16) + 0));
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 60) = (ts4_word)(*(volatile ts4_word *)((char *)(ts4_word)(t16) + 4));
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 64) = (ts4_word)(*(volatile ts4_word *)((char *)(ts4_word)(t16) + 8));

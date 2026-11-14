@@ -28,7 +28,7 @@ typedef struct Obj Obj;
 typedef struct ObjVtbl { void *s[10]; u8 *(*get)(Obj *, void *out, u32 x, int flag); } ObjVtbl;
 struct Obj { ObjVtbl *vt; };
 typedef struct Pair { Obj *obj; u32 x; } Pair;
-extern Pair *fn_8862BE08(Pair *out, const char *name);
+extern Pair *ts4_if_set_u32_off0_8862BE08(Pair *out, const char *name);
 
 u32 ts4_script_set_flag_from_string_88793610(Ctx *c)
 {
@@ -36,7 +36,7 @@ u32 ts4_script_set_flag_from_string_88793610(Ctx *c)
     Pair *p;
     u8 *dst;
     u8 eq = (u8)ts4_script_string_equals((char *)arg_at(c->args, 0) + 0x10, g_ts4_true_string);
-    p = fn_8862BE08(&tmp, lbl_880EAF00);
+    p = ts4_if_set_u32_off0_8862BE08(&tmp, lbl_880EAF00);
     dst = p->obj->vt->get(p->obj, p, p->x, 1);
     *dst = eq;
     return 0;

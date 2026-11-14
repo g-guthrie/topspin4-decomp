@@ -44,7 +44,7 @@ extern char fn_88522C48[];
 extern char fn_885234A0[];
 extern char fn_88524258[];
 extern char fn_88525208[];
-extern char fn_885ECFF0[];
+extern char ts4_if_get_u8_offc_885ECFF0[];
 extern char lbl_88001A20[];
 extern char lbl_88001A68[];
 extern char lbl_88007998[];
@@ -6021,7 +6021,7 @@ ts4_word ts4_if_call_seq_ts4_if_get_u8_offc_885ECDC0_885ED0A8(ts4_word a0, ts4_w
     }
     p8 = (ts4_word)p6;
     if ((int)a2 < 5) {
-        t7 = fn_885ECCD8((ts4_word)a0, (ts4_word)a1, (ts4_word)8, (ts4_word)(ts4_word)fn_885ECFF0);
+        t7 = fn_885ECCD8((ts4_word)a0, (ts4_word)a1, (ts4_word)8, (ts4_word)(ts4_word)ts4_if_get_u8_offc_885ECFF0);
         p8 = (ts4_word)t7;
     }
     return p8;

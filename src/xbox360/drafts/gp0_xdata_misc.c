@@ -34,7 +34,7 @@ extern struct TS4ScriptValue *g_ts4_default_script_value;
 extern double g_ts4_script_constants[];
 extern const char lbl_880ED6A4[];     /* "GamePlayInterface:/SwingGameplayInterface/GameplayInputs" */
 
-struct Gp0XHandle *fn_8862C0E8(struct Gp0XHandle *out, const char *xpath);
+struct Gp0XHandle *ts4_if_set_u32_off0_8862C0E8(struct Gp0XHandle *out, const char *xpath);
 void *fn_88923530(void *pool, struct Gp0XHandle handle, gp0_u32 type_hash);
 int fn_88780288(int value);
 
@@ -62,7 +62,7 @@ gp0_u32 ts4_gp0_script_set_engine_frequency_88790DA0(struct TS4ScriptContext *co
     }
     {
         struct Gp0XHandle handle;
-        fn_8862C0E8(&handle, lbl_880ED6A4);
+        ts4_if_set_u32_off0_8862C0E8(&handle, lbl_880ED6A4);
         inputs = (struct Gp0GameplayInputs *)fn_88923530(handle.pool, handle, 0x63F5A11F);
     }
     inputs->engine_config_valid = 1;

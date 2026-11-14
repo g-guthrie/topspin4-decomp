@@ -61,7 +61,7 @@ struct Ts4VwDescF { char pad[0x150]; u32 base; u32 n; int cap; };
 struct Ts4VwDescG { char pad[0x8c]; u32 base; u32 n; int cap; };
 struct Ts4VwDescH { char pad[0x20]; u32 base; u32 n; int cap; };
 extern "C" {
-void fn_884774D0(void *obj, Ts4VwVisitor *v);
+void ts4_if_get_fn_88475E20_884774D0(void *obj, Ts4VwVisitor *v);
 extern const char lbl_88086F98[];
 extern const char lbl_88086F88[];
 extern const char lbl_880871BC[];
@@ -73,7 +73,7 @@ void ts4_describe_88477EF8(Ts4VwDescE *d, Ts4VwVisitor *v)
 {
     int cap;
     v->begin(lbl_88086F98, 2, d);
-    fn_884774D0(d, v);
+    ts4_if_get_fn_88475E20_884774D0(d, v);
     cap = d->cap;
     if ((cap & (int)0x80000000) == 0)
         v->array(lbl_88086F88, 8, d->base, d->n << 2, cap << 2);
@@ -83,7 +83,7 @@ void ts4_describe_88482F10(Ts4VwDescF *d, Ts4VwVisitor *v)
 {
     int cap;
     v->begin(lbl_880871BC, 2, d);
-    fn_884774D0(d, v);
+    ts4_if_get_fn_88475E20_884774D0(d, v);
     cap = d->cap;
     if ((cap & (int)0x80000000) == 0)
         v->array(lbl_880871B0, 8, d->base, d->n << 2, cap << 2);
@@ -170,7 +170,7 @@ void ts4_describe_8847A348(Ts4VwDescM *d, Ts4VwVisitor *v)
     int cap;
     int i;
     v->begin(lbl_88087060, 2, d);
-    fn_884774D0(d, v);
+    ts4_if_get_fn_88475E20_884774D0(d, v);
     cap = d->cap;
     if ((cap & (int)0x80000000) == 0)
         v->array(lbl_88087054, 8, (u32)d->base, d->n << 3, cap << 3);

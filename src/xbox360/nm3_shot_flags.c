@@ -48,7 +48,7 @@ struct nm3_gp8_ShotEval {
     struct nm3_gp8_PlayerState *state;      /* +4 */
 };
 
-void fn_8865ED78(struct nm3_gp8_PlayerCtx *pc);
+void ts4_shot_select_row_8865ED78(struct nm3_gp8_PlayerCtx *pc);
 void fn_886629C8(struct nm3_gp8_ShotEval *eval, void *shot_record);
 
 #ifdef _MSC_VER
@@ -78,6 +78,6 @@ void ts4_shot_eval_refresh_flags_88662B60(struct nm3_gp8_ShotEval *eval)
         eval->state->flag_575 = (unsigned char)(kind_b == 0x7EB30F90u);
         eval->state->flag_57d = eval->state->src_e6e;
     }
-    fn_8865ED78(eval->pc);
+    ts4_shot_select_row_8865ED78(eval->pc);
     fn_886629C8(eval, eval->pc->shot_record);
 }
