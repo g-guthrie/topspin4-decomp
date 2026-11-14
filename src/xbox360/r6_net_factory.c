@@ -11,7 +11,7 @@ typedef struct Ts4NetMessageObject {
     u32 pad[2];
 } Ts4NetMessageObject;
 
-void fn_8864DFF0(void);
+void ts4_msg_pool_service_get_8864DFF0(void);
 void fn_888860A0(void *block);
 Ts4NetMessageObject *fn_8899F760(u32 size);
 u8 fn_889BE7B0(Ts4NetMessageObject *object, Ts4NetMessageSource *source);
@@ -24,7 +24,7 @@ Ts4NetMessageObject *ts4_net_create_message_889BF980(Ts4NetMessageSource *source
 {
     Ts4NetMessageObject *object;
 
-    fn_8864DFF0();
+    ts4_msg_pool_service_get_8864DFF0();
     object = fn_8899F760(8);
     if (object != 0) {
         switch (source->kind) {
@@ -51,7 +51,7 @@ Ts4NetMessageObject *ts4_net_create_message_889BF980(Ts4NetMessageSource *source
         default:
             break;
         }
-        fn_8864DFF0();
+        ts4_msg_pool_service_get_8864DFF0();
         fn_888860A0(object);
     }
     return 0;

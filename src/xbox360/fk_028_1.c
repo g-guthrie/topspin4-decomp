@@ -91,7 +91,7 @@ ts4_word fn_8864B468();
 ts4_word fn_8864BBB0();
 ts4_word ts4_if_call_seq_u32_off0_8864BC08();
 ts4_word fn_8864C170();
-ts4_word fn_8864DFF0();
+ts4_word ts4_msg_pool_service_get_8864DFF0();
 ts4_word fn_88823320();
 ts4_word fn_88823FC0();
 ts4_word fn_888240B8();

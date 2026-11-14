@@ -14,13 +14,13 @@ typedef unsigned char gp5_u8;
 
 /*
  * Fixed 256-byte string with begin/end pointers (size 0x110).
- * ctor from C string = fn_881A5020, operator= = fn_8816D090.
+ * ctor from C string = fn_881A5020, operator= = ts4_byte_string_assign_8816D090.
  * Layout from fn_881A5020: +0 begin, +4 end, +8 char[0x100] storage,
  * +0x108 pointer to storage+8, +0x10C unused.
  */
 struct Gp5Str256;
 extern "C" Gp5Str256 *fn_881A5020(Gp5Str256 *self, const char *text);
-extern "C" Gp5Str256 *fn_8816D090(Gp5Str256 *self, const Gp5Str256 *other);
+extern "C" Gp5Str256 *ts4_byte_string_assign_8816D090(Gp5Str256 *self, const Gp5Str256 *other);
 
 struct Gp5Str256 {
     char *begin;
@@ -32,7 +32,7 @@ struct Gp5Str256 {
     inline Gp5Str256(const char *text) { fn_881A5020(this, text); }
     inline Gp5Str256 &operator=(const Gp5Str256 &other)
     {
-        fn_8816D090(this, &other);
+        ts4_byte_string_assign_8816D090(this, &other);
         return *this;
     }
     inline const char *c_str() const { return begin; }

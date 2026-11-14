@@ -2,7 +2,7 @@
 typedef unsigned int u32;
 extern void ts4_registry_dispatch_888860A0(void *p);
 extern void ts4_tsu_cleanup_end(void *p);
-extern void fn_8869CD68(void *p);
+extern void ts4_object_dtor_8869CD68(void *p);
 extern void fn_886A7988(void *p);
 extern void fn_886ACB08(void *p);
 extern void fn_886B4C10(void *p);
@@ -41,14 +41,14 @@ void *ts4_vector_deleting_destructor_88270EC0(char *self, u32 flags)
         int i;
         for (i = n - 1; i >= 0; --i) {
             e -= 432;
-            fn_8869CD68(e);
+            ts4_object_dtor_8869CD68(e);
         }
         if (flags & 1) {
             ts4_registry_dispatch_888860A0(base);
         }
         return base;
     }
-    fn_8869CD68(self);
+    ts4_object_dtor_8869CD68(self);
     if (flags & 1) {
         ts4_tsu_cleanup_end(self);
     }

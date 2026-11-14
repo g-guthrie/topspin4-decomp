@@ -80,7 +80,7 @@ extern void fn_889055A0(void);
 extern int ts4_format_text(void *, int, void *, int);
 extern char lbl_880D1B40[];
 extern void *fn_886F7B38(void *, int, u64);
-extern void fn_88158908(void *);
+extern void ts4_byte_string_assign_88158908(void *);
 extern float g_ts4_script_constants[];
 extern void fn_88652CC0(void *, float *);
 extern char *lbl_88D45940;
@@ -350,7 +350,7 @@ int ts4_state2_flags_26_27_clear24_889329C0(char *self) { if (*(int *)(self + 0x
 int ts4_four_flags_all_set_88932A00(char *self) { if (self[0x26] != 0 && self[0x27] != 0 && self[0x24] != 0 && self[0x25] != 0) return 1; return 0; }
 
 /* 0x8898EE30: init sub-object at +0x10, then store 0x30 into byte +5 of the object it points to */
-void ts4_init_sub_and_set_byte5_8898EE30(char *self) { fn_88158908(self + 0x10); (*(char **)(self + 0x10))[5] = 0x30; }
+void ts4_init_sub_and_set_byte5_8898EE30(char *self) { ts4_byte_string_assign_88158908(self + 0x10); (*(char **)(self + 0x10))[5] = 0x30; }
 
 /* 0x88778878: clear byte +0x65 in each 0x98-byte record (count at +0x1C4) */
 void ts4_clear_byte_65_in_all_records_88778878(char *self) { u32 i; for (i = 0; i < *(u32 *)(self + 0x1c4); i++) { char *b = *(char **)(self + 0xa4); u32 o = i * 0x98; b[o + 0x65] = 0; } }

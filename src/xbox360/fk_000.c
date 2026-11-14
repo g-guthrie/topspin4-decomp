@@ -61,7 +61,7 @@ extern char lbl_88D45B38[];
 ts4_word fn_88150600();
 ts4_word fn_88155A40();
 ts4_word fn_88157B78();
-ts4_word fn_88158908();
+ts4_word ts4_byte_string_assign_88158908();
 ts4_word fn_88159870();
 ts4_word fn_8815B060();
 ts4_word fn_8815C9E8();
@@ -589,8 +589,8 @@ ts4_word ts4_call_seq_u32_off0_88158890(ts4_word a0, ts4_word a1)
     *(ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 4));
     *(ts4_word *)((char *)(ts4_word)(a0) + 8) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 8));
     *(ts4_word *)((char *)(ts4_word)(a0) + 12) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 12));
-    fn_88158908((ts4_word)(a0 + 16), (ts4_word)(a1 + 16));
-    fn_88158908((ts4_word)(a0 + 28), (ts4_word)(a1 + 28));
+    ts4_byte_string_assign_88158908((ts4_word)(a0 + 16), (ts4_word)(a1 + 16));
+    ts4_byte_string_assign_88158908((ts4_word)(a0 + 28), (ts4_word)(a1 + 28));
     *(unsigned char *)((char *)(ts4_word)(a0) + 40) = (unsigned char)(*(unsigned char *)((char *)(ts4_word)(a1) + 40));
     return a0;
 }

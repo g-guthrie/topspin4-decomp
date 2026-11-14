@@ -72,7 +72,7 @@ ts4_word fn_88157B78();
 ts4_word fn_88157C20();
 ts4_word fn_88157DA8();
 ts4_word fn_88157E60();
-ts4_word fn_88158908();
+ts4_word ts4_byte_string_assign_88158908();
 ts4_word fn_88159488();
 ts4_word fn_88159870();
 ts4_word fn_881599B8();
@@ -84,7 +84,7 @@ ts4_word ts4_if_call_seq_u32_off8_88160D30();
 ts4_word fn_88161620();
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_881629B0();
 ts4_word fn_8816A1E8();
-ts4_word fn_8816B5A8();
+ts4_word ts4_chunk_reader_read_8816B5A8();
 ts4_word ts4_if_call_seq_u32_off0_8816D140();
 ts4_word fn_8816D1A8();
 ts4_word ts4_call_seq_fn_8816DFB8_8816D728();
@@ -1097,13 +1097,13 @@ ts4_word ts4_if_get_u32_off0_88943C40(ts4_word a0, ts4_word a1, ts4_word a2)
     return p9;
 }
 
-/* Swing_DLL.xex 0x889445F8: call_seq u32@0x8, fn_8816B5A8 */
+/* Swing_DLL.xex 0x889445F8: call_seq u32@0x8, ts4_chunk_reader_read_8816B5A8 */
 ts4_word ts4_call_seq_u32_off8_889445F8(ts4_word a0, ts4_word a1)
 {
     ts4_word loc50[1];
 
     loc50[0] = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 8));
-    fn_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
+    ts4_chunk_reader_read_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
     return 1;
 }
 
@@ -1672,7 +1672,7 @@ ts4_word ts4_if_get_u32_off1c_8898EDC8(ts4_word a0, ts4_word a1, ts4_word a2, ts
     return t7;
 }
 
-/* Swing_DLL.xex 0x8898EE70: call_seq lbl_880D3118, u32@0x0, ts4_call_seq_u32_off0_88159AC0, ts4_call_seq_u32_off0_88159AC0, fn_88158908, u32@0x10 */
+/* Swing_DLL.xex 0x8898EE70: call_seq lbl_880D3118, u32@0x0, ts4_call_seq_u32_off0_88159AC0, ts4_call_seq_u32_off0_88159AC0, ts4_byte_string_assign_88158908, u32@0x10 */
 ts4_word ts4_call_seq_lbl_880D3118_8898EE70(ts4_word a0, ts4_word a1)
 {
     ts4_word t4;
@@ -1680,7 +1680,7 @@ ts4_word ts4_call_seq_lbl_880D3118_8898EE70(ts4_word a0, ts4_word a1)
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880D3118;
     ts4_call_seq_u32_off0_88159AC0((ts4_word)(a0 + 4));
     ts4_call_seq_u32_off0_88159AC0((ts4_word)(a0 + 16));
-    fn_88158908((ts4_word)(a0 + 16), (ts4_word)a1);
+    ts4_byte_string_assign_88158908((ts4_word)(a0 + 16), (ts4_word)a1);
     t4 = *(ts4_word *)((char *)(ts4_word)(a0) + 16);
     *(ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)0;
     *(unsigned char *)((char *)(ts4_word)(t4) + 5) = (unsigned char)48;

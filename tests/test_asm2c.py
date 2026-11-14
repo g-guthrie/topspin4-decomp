@@ -520,6 +520,59 @@ class K5Tests(unittest.TestCase):
         r = gen(t, mode=2)
         self.assertIn("break;", r["body"])
 
+    def test_variadic_callee_gets_prototype_and_ignores_lis_temp(self):
+        callee = prog(["mflr r12", "stw r12,-0x8(r1)", "std r6,0x28(r1)", "std r7,0x30(r1)", "std r8,0x38(r1)",
+                       "std r9,0x40(r1)", "std r10,0x48(r1)", "stwu r1,-0x70(r1)", "blr"])
+        env = translate.Env(lambda s: callee if s == "fn_88009000" else None)
+        self.assertEqual(env.variadic("fn_88009000"), 3)
+        t = ["lwz r6,0x0(r4)", "lis r10,0x880d   ; REFHI lbl_880D312C", "mr r3,r5", "li r4,0x20",
+             "addi r5,r10,0x312c   ; REFLO lbl_880D312C", "b 0x0 -> 0x88009000   ; REL24 fn_88009000"]
+        r = translate.gen(prog(t), env, mode=1)
+        self.assertEqual(r["fprotos"]["fn_88009000"], ["ts4_word", "ts4_word", "ts4_word", "..."])
+        self.assertIn("lbl_880D312C, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)))", r["body"])
+
+    def test_struct_argument_copied_from_memory(self):
+        # vcall(obj, *(struct {w0,w1,w2} *)(a0 + 0x30)): ld for r4, lwz + rldicr 32,63 for r5
+        t = ["mr r11,r3", "lwz r3,0x2c(r3)", "lwz r10,0x0(r3)", "lwz r9,0x38(r11)", "ld r4,0x30(r11)",
+             "rldicr r5,r9,32,63", "lwz r8,0x10(r10)", "mtctr r8", "bctr"]
+        r = gen(t, mode=1)
+        self.assertIn("(ts4_word (*)(ts4_word, ts4_args3))", r["body"])
+        self.assertIn("*(ts4_args3 *)((char *)(ts4_word)(a0) + 48))", r["body"])
+        self.assertNotIn("+ 56", r["body"])
+        self.assertEqual(r["structs"], [3])
+
+    def test_subfc_subfe_unsigned_less(self):
+        r = gen(["lwz r11,0x28(r3)", "subfc r10,r11,r4", "subfe r8,r9,r9", "clrlwi r3,r8,31", "blr"])
+        self.assertIn("return ((ts4_word)a1 < (ts4_word)", r["body"])
+
+    def test_subfc_adde_signed_greater_equal(self):
+        r = gen(["lwz r11,0x8(r4)", "srwi r10,r5,31", "srawi r9,r11,31", "subfc r8,r5,r11",
+                 "adde r11,r10,r9", "stb r11,0x0(r3)", "blr"])
+        self.assertIn("(unsigned char)((int)(*(ts4_word *)((char *)(ts4_word)(a1) + 8)) >= (int)a2)", r["body"])
+
+    def test_subfc_eqv_addze_signed_less(self):
+        r = gen(["lwz r11,0x18(r3)", "subfc r9,r4,r11", "eqv r8,r4,r11", "srwi r7,r8,31",
+                 "addze r6,r7", "clrlwi r3,r6,31", "blr"])
+        self.assertIn("< (int)a1);", r["body"])
+
+    def test_u64_shifts_and_return(self):
+        r = gen(["subf r11,r3,r4", "li r10,0x1", "rldicl r9,r11,0,32", "rldicr r10,r10,63,63",
+                 "rldicl r8,r3,0,32", "srad r7,r10,r9", "srd r3,r7,r8", "blr"])
+        self.assertTrue(r["sig"].startswith("ts4_u64 NAME"))
+        self.assertIn("((ts4_s64)((ts4_u64)1 << 63) >>", r["body"])
+
+    def test_float_param_kept_in_f31_across_calls(self):
+        # f(a0, float f, ..., a4, a5): f survives the first call in f31, then goes to the
+        # second callee in the GPR slot r5 left free; r7/r8 move down to r6/r7
+        t = ["mflr r12", "bl 0x0 -> 0x8856ac7c   ; REL24 __savegprlr_29", "stfd f31,-0x28(r1)",
+             "stwu r1,-0x90(r1)", "mr r31,r3", "fmr f31,f1", "addi r3,r1,0x50", "mr r30,r7", "mr r29,r8",
+             "bl 0x0 -> 0x88001000   ; REL24 fn_88001000", "mr r7,r29", "fmr f1,f31", "mr r6,r30",
+             "addi r4,r1,0x50", "mr r3,r31", "bl 0x0 -> 0x88002000   ; REL24 fn_88002000",
+             "addi r1,r1,0x90", "lfd f31,-0x28(r1)", "b 0x0 -> 0x8856accc   ; REL24 __restgprlr_29"]
+        r = gen(t, mode=2)
+        self.assertEqual(r["sig"], "ts4_word NAME(ts4_word a0, float f1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5)")
+        self.assertIn("fn_88002000((ts4_word)a0, (ts4_word)(ts4_word)&loc50[0], f1, (ts4_word)a4, (ts4_word)a5)", r["body"])
+
     def test_address_taken_word_parameter(self):
         # struct in r3/r4 at F+0x10, then a word parameter in r5 whose address is taken
         t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x80(r1)", "std r3,0x90(r1)", "std r4,0x98(r1)",

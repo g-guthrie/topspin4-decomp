@@ -13,10 +13,10 @@ void ts4_destroy_owned_object(int);
 void ts4_tsu_cleanup_end(void *);
 void ts4_assign_formatted_text(void *, int);
 
-void fn_88158908(void *, void *);
+void ts4_byte_string_assign_88158908(void *, void *);
 typedef struct { int a; char x[0xc]; char y[0xc]; u8 b; } e20_fill_t;
 /* Swing_DLL.xex 0x8815CBD0: assign a value (int, two sub-objects, byte) into every 0x20-byte element of a range */
-void ts4_fill_range_8815CBD0(e20_fill_t *first, e20_fill_t *last, e20_fill_t *val) { for (; first != last; first++) { first->a = val->a; fn_88158908(first->x, val->x); fn_88158908(first->y, val->y); first->b = val->b; } }
+void ts4_fill_range_8815CBD0(e20_fill_t *first, e20_fill_t *last, e20_fill_t *val) { for (; first != last; first++) { first->a = val->a; ts4_byte_string_assign_88158908(first->x, val->x); ts4_byte_string_assign_88158908(first->y, val->y); first->b = val->b; } }
 void fn_88166AF8(void *, void *);
 void fn_8817E890(void *, void *, void *);
 typedef struct { int pad; char *end; char *cap; } v50_t;
@@ -54,7 +54,7 @@ u8 ts4_if_fn_88567730(int);
 void fn_88218FE0(void *, void *);
 typedef struct { u8 a; char x[0xc]; char y[0xc]; char z[0xc]; } e28_fill_t;
 /* Swing_DLL.xex 0x8815CCB8: assign a value into every 0x28-byte element of a range */
-void ts4_fill_range_8815CCB8(char *first, char *last, char *val) { for (; first != last; first += 0x28) { *first = *val; fn_88158908(first + 4, val + 4); fn_88158908(first + 0x10, val + 0x10); fn_88218FE0(first + 0x1c, val + 0x1c); } }
+void ts4_fill_range_8815CCB8(char *first, char *last, char *val) { for (; first != last; first += 0x28) { *first = *val; ts4_byte_string_assign_88158908(first + 4, val + 4); ts4_byte_string_assign_88158908(first + 0x10, val + 0x10); fn_88218FE0(first + 0x1c, val + 0x1c); } }
 void fn_88150600(void *, void *);
 typedef struct { int pad; char *end; } v0c_b_t;
 /* Swing_DLL.xex 0x88160DB0: erase one 0xC-byte element, moving the tail down and destroying the last */

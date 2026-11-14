@@ -12,7 +12,7 @@ extern void *memcpy(void *, const void *, unsigned int);
 #include <string.h>
 #endif
 extern char lbl_880F9884[];
-extern void fn_8864DFF0(u32 a, u32 b);
+extern void ts4_msg_pool_service_get_8864DFF0(u32 a, u32 b);
 extern void *fn_8899F760(u32 size);
 extern char lbl_880F9870[];
 extern char lbl_880F985C[];
@@ -48,7 +48,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u32 f10; u16 f14;
 O_885FDD20 *ts4_create_object_18_885FDD20(u32 a, u32 b)
 {
     O_885FDD20 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FDD20 *)fn_8899F760(24);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9884;
@@ -68,7 +68,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u16 f10; u16 f12;
 O_885FDDA0 *ts4_create_object_38_885FDDA0(u32 a, u32 b)
 {
     O_885FDDA0 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FDDA0 *)fn_8899F760(56);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9870;
@@ -94,7 +94,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; } O_885FDE38;
 O_885FDE38 *ts4_create_object_10_885FDE38(u32 a, u32 b)
 {
     O_885FDE38 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FDE38 *)fn_8899F760(16);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F985C;
@@ -112,7 +112,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u32 f10; u32 f14;
 O_885FDEB0 *ts4_create_object_18_885FDEB0(u32 a, u32 b)
 {
     O_885FDEB0 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FDEB0 *)fn_8899F760(24);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9848;
@@ -132,7 +132,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; u16 fe; u16 f10; 
 O_885FDF90 *ts4_create_object_28_885FDF90(u32 a, u32 b)
 {
     O_885FDF90 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FDF90 *)fn_8899F760(40);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F980C;
@@ -155,7 +155,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; char pad10[2]; u3
 O_885FE018 *ts4_create_object_20_885FE018(u32 a, u32 b)
 {
     O_885FE018 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE018 *)fn_8899F760(32);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F97F8;
@@ -176,7 +176,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; u16 fe; u32 f10; 
 O_885FE098 *ts4_create_object_14_885FE098(u32 a, u32 b)
 {
     O_885FE098 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE098 *)fn_8899F760(20);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F97E4;
@@ -196,7 +196,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; } O_885FE118;
 O_885FE118 *ts4_create_object_10_885FE118(u32 a, u32 b)
 {
     O_885FE118 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE118 *)fn_8899F760(16);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F97D0;
@@ -214,7 +214,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; } O_885FE190;
 O_885FE190 *ts4_create_object_10_885FE190(u32 a, u32 b)
 {
     O_885FE190 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE190 *)fn_8899F760(16);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F97BC;
@@ -232,7 +232,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u32 f10; u16 f14;
 O_885FE208 *ts4_create_object_18_885FE208(u32 a, u32 b)
 {
     O_885FE208 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE208 *)fn_8899F760(24);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F97A8;
@@ -252,7 +252,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u32 f10; u32 f14;
 O_885FE288 *ts4_create_object_18_885FE288(u32 a, u32 b)
 {
     O_885FE288 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE288 *)fn_8899F760(24);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9794;
@@ -272,7 +272,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; u16 fe; u16 f10; 
 O_885FE308 *ts4_create_object_18_885FE308(u32 a, u32 b)
 {
     O_885FE308 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE308 *)fn_8899F760(24);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9780;
@@ -294,7 +294,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; u16 fe; u16 f10; 
 O_885FE390 *ts4_create_object_14_885FE390(u32 a, u32 b)
 {
     O_885FE390 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE390 *)fn_8899F760(20);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F976C;
@@ -314,7 +314,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; char pad10[2]; u3
 O_885FE410 *ts4_create_object_14_885FE410(u32 a, u32 b)
 {
     O_885FE410 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE410 *)fn_8899F760(20);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9758;
@@ -333,7 +333,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; u16 fe; u16 f10; 
 O_885FE488 *ts4_create_object_18_885FE488(u32 a, u32 b)
 {
     O_885FE488 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE488 *)fn_8899F760(24);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9744;
@@ -356,7 +356,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; } O_885FE510;
 O_885FE510 *ts4_create_object_10_885FE510(u32 a, u32 b)
 {
     O_885FE510 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE510 *)fn_8899F760(16);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9730;
@@ -374,7 +374,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; u16 fe; u16 f10; 
 O_885FE588 *ts4_create_object_18_885FE588(u32 a, u32 b)
 {
     O_885FE588 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE588 *)fn_8899F760(24);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F971C;
@@ -397,7 +397,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; } O_885FE610;
 O_885FE610 *ts4_create_object_10_885FE610(u32 a, u32 b)
 {
     O_885FE610 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE610 *)fn_8899F760(16);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9708;
@@ -415,7 +415,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u32 f10; u16 f14;
 O_885FE688 *ts4_create_object_18_885FE688(u32 a, u32 b)
 {
     O_885FE688 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE688 *)fn_8899F760(24);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F96F4;
@@ -436,7 +436,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; } O_885FE708;
 O_885FE708 *ts4_create_object_c_885FE708(u32 a, u32 b)
 {
     O_885FE708 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE708 *)fn_8899F760(12);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F96E0;
@@ -453,7 +453,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u16 f10; } O_885F
 O_885FE778 *ts4_create_object_14_885FE778(u32 a, u32 b)
 {
     O_885FE778 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE778 *)fn_8899F760(20);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F96CC;
@@ -472,7 +472,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; } O_885FE7F0;
 O_885FE7F0 *ts4_create_object_10_885FE7F0(u32 a, u32 b)
 {
     O_885FE7F0 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE7F0 *)fn_8899F760(16);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F96B8;
@@ -490,7 +490,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u16 f10; } O_885F
 O_885FE868 *ts4_create_object_14_885FE868(u32 a, u32 b)
 {
     O_885FE868 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE868 *)fn_8899F760(20);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F96A4;
@@ -509,7 +509,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; u16 fe; u16 f10; 
 O_885FE8E0 *ts4_create_object_24_885FE8E0(u32 a, u32 b)
 {
     O_885FE8E0 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE8E0 *)fn_8899F760(36);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9690;
@@ -536,7 +536,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; u16 fe; u16 f10; 
 O_885FE978 *ts4_create_object_28_885FE978(u32 a, u32 b)
 {
     O_885FE978 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FE978 *)fn_8899F760(40);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F967C;
@@ -564,7 +564,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u32 f10; u32 f14;
 O_885FEA18 *ts4_create_object_2c_885FEA18(u32 a, u32 b)
 {
     O_885FEA18 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FEA18 *)fn_8899F760(44);
     if (o != 0) {
         o->f4 = 0;
@@ -589,7 +589,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u32 fc; u16 f10; } O_885F
 O_885FEAA8 *ts4_create_object_14_885FEAA8(u32 a, u32 b)
 {
     O_885FEAA8 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FEAA8 *)fn_8899F760(20);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9654;
@@ -608,7 +608,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; char pad10[2]; u3
 O_885FEB20 *ts4_create_object_14_885FEB20(u32 a, u32 b)
 {
     O_885FEB20 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FEB20 *)fn_8899F760(20);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9640;
@@ -627,7 +627,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; } O_885FEB98;
 O_885FEB98 *ts4_create_object_10_885FEB98(u32 a, u32 b)
 {
     O_885FEB98 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FEB98 *)fn_8899F760(16);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F962C;
@@ -645,7 +645,7 @@ typedef struct { u32 f0; u32 f4; u16 f8; u8 fa; u8 fb; u16 fc; char pad10[2]; u3
 O_885FEC10 *ts4_create_object_14_885FEC10(u32 a, u32 b)
 {
     O_885FEC10 *o;
-    fn_8864DFF0(a, b);
+    ts4_msg_pool_service_get_8864DFF0(a, b);
     o = (O_885FEC10 *)fn_8899F760(20);
     if (o != 0) {
         o->f0 = (u32)(unsigned long)lbl_880F9618;

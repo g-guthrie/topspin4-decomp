@@ -50,7 +50,7 @@ void fn_882114A0(void);
 void ts4_factory_obj28_tag2_88216030(void);
 void fn_88222F38(void);
 void fn_8825DA28(void);
-void fn_88278620(void);
+void ts4_msg_buffer_alloc_88278620(void);
 void fn_8827C048(void);
 void fn_8827DC68(void);
 void fn_882812E0(void);
@@ -295,7 +295,7 @@ TS4_FORWARD(88600D78, fn_889BD910)
 TS4_FORWARD(88600D80, fn_889BD8B0)
 TS4_FORWARD(88602050, fn_88603F38)
 TS4_FORWARD(88603348, fn_88603F38)
-TS4_FORWARD(886042C0, fn_88278620)
+TS4_FORWARD(886042C0, ts4_msg_buffer_alloc_88278620)
 TS4_FORWARD(88606510, fn_885651F8)
 TS4_FORWARD(88606518, ts4_crt_nh_malloc_88565258)
 TS4_FORWARD(88608988, fn_88606788)

@@ -1,16 +1,16 @@
 /* FAM2: record string setters.  Each duplicates a C string into a fresh
- * fn_88278620 allocation stored at OFF and returns 1. */
+ * ts4_msg_buffer_alloc_88278620 allocation stored at OFF and returns 1. */
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-extern char *fn_88278620(u32 size);
+extern char *ts4_msg_buffer_alloc_88278620(u32 size);
 unsigned long strlen(const char *s);
 
 #define TS4_FIELD_SET_STRING(A, OFF) \
 int ts4_field_set_string_##A(char *self, const char *s) \
 { \
-    char *d = fn_88278620((u32)strlen(s) + 1); \
+    char *d = ts4_msg_buffer_alloc_88278620((u32)strlen(s) + 1); \
     *(char **)(self + OFF) = d; \
     { \
         const char *q = s - 1; \

@@ -1,16 +1,16 @@
 /* Swing_DLL.xex, MSVC 16.00.10224.00 /O2 /Oi. One macro per cluster; one line per original address. */
 typedef unsigned int u32;
 
-void fn_8864DFF0(void);
+void ts4_msg_pool_service_get_8864DFF0(void);
 void fn_888860A0(void *);
 
-/* Calls vtable slot 0 of self with argument 0, then fn_8864DFF0(), then fn_888860A0(self).
+/* Calls vtable slot 0 of self with argument 0, then ts4_msg_pool_service_get_8864DFF0(), then fn_888860A0(self).
    (Looks like a deleting/scalar destructor tail; callee roles not established.) */
 #define VCALL0_THEN_TWO_CALLS(name) \
 void name(void **self) \
 { \
     ((void (*)(void *, int))(*(void ***)self)[0])(self, 0); \
-    fn_8864DFF0(); \
+    ts4_msg_pool_service_get_8864DFF0(); \
     fn_888860A0(self); \
 }
 

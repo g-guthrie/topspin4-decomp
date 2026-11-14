@@ -112,7 +112,7 @@ ts4_word memset();
 ts4_word fn_8856C130();
 ts4_word fn_8857A1E0();
 ts4_word ts4_call_seq_RtlInitAnsiString_88582148();
-ts4_word fn_886047F8();
+ts4_word ts4_msg_view_dtor_886047F8();
 ts4_word fn_886121A0();
 ts4_word fn_88613268();
 ts4_word fn_88617D28();

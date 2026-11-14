@@ -61,7 +61,7 @@ extern char lbl_88D45B38[];
 ts4_word fn_88150600();
 ts4_word fn_88155A40();
 ts4_word fn_88157B78();
-ts4_word fn_88158908();
+ts4_word ts4_byte_string_assign_88158908();
 ts4_word fn_88159870();
 ts4_word ts4_if_call_seq_u32_off0_88159A58();
 ts4_word fn_8815B060();

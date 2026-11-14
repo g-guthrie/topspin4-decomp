@@ -102,7 +102,7 @@ ts4_word fn_88157F10();
 ts4_word fn_88161540();
 ts4_word fn_88166108();
 ts4_word fn_88166178();
-ts4_word fn_8816B5A8();
+ts4_word ts4_chunk_reader_read_8816B5A8();
 ts4_word fn_8816D1A8();
 ts4_word fn_881705B0();
 ts4_word fn_8817B608();
@@ -6283,27 +6283,27 @@ ts4_word ts4_loop_get_u32_off0_88940E48(ts4_word a0, ts4_word a1, ts4_word a2)
     return 1;
 }
 
-/* Swing_DLL.xex 0x889445C0: call_seq fn_8816B5A8 */
+/* Swing_DLL.xex 0x889445C0: call_seq ts4_chunk_reader_read_8816B5A8 */
 ts4_word ts4_call_seq_fn_8816B5A8_889445C0(ts4_word a0, ts4_word a1)
 {
     ts4_word loc50[2];
 
     *(float *)((char *)loc50 + 0) = (*(float *)((char *)(ts4_word)(a1) + 8));
-    fn_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
+    ts4_chunk_reader_read_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
     return 1;
 }
 
-/* Swing_DLL.xex 0x88945190: call_seq fn_8816B5A8, fn_8816B5A8, fn_8816B5A8 */
+/* Swing_DLL.xex 0x88945190: call_seq ts4_chunk_reader_read_8816B5A8, ts4_chunk_reader_read_8816B5A8, ts4_chunk_reader_read_8816B5A8 */
 ts4_word ts4_call_seq_fn_8816B5A8_88945190(ts4_word a0, ts4_word a1)
 {
     ts4_word loc50[2];
 
     *(float *)((char *)loc50 + 0) = (*(float *)((char *)(ts4_word)(a1) + 8));
-    fn_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
+    ts4_chunk_reader_read_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
     *(float *)((char *)loc50 + 0) = (*(float *)((char *)(ts4_word)(a1) + 12));
-    fn_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
+    ts4_chunk_reader_read_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
     *(float *)((char *)loc50 + 0) = (*(float *)((char *)(ts4_word)(a1) + 16));
-    fn_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
+    ts4_chunk_reader_read_8816B5A8((ts4_word)(a0 + 112), (ts4_word)(ts4_word)&loc50[0]);
     return 1;
 }
 

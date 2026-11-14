@@ -4096,6 +4096,30 @@
       "src/xbox360/lib3_lua_wstrlib_bracket.c": {
         "status": "Matching",
         "source": "xbox360/lib3_lua_wstrlib_bracket.c"
+      },
+      "src/xbox360/fam3_byte_string.c": {
+        "status": "Matching",
+        "source": "xbox360/fam3_byte_string.c"
+      },
+      "src/xbox360/fam3_chunk_reader.c": {
+        "status": "Matching",
+        "source": "xbox360/fam3_chunk_reader.c"
+      },
+      "src/xbox360/fam3_fixed_string_append.c": {
+        "status": "Matching",
+        "source": "xbox360/fam3_fixed_string_append.c"
+      },
+      "src/xbox360/fam3_msg_dtor.cpp": {
+        "status": "Matching",
+        "source": "xbox360/fam3_msg_dtor.cpp"
+      },
+      "src/xbox360/fam3_service_dtor.cpp": {
+        "status": "Matching",
+        "source": "xbox360/fam3_service_dtor.cpp"
+      },
+      "src/xbox360/fam3_singleton_dtor.c": {
+        "status": "Matching",
+        "source": "xbox360/fam3_singleton_dtor.c"
       }
     }
   }

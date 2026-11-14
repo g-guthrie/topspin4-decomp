@@ -1,6 +1,6 @@
 /* Swing_DLL.xex 0x889C6B78-0x889C6BA4, executable version 0.0.0.3. */
 
-extern void fn_8864DFF0(void *);
+extern void ts4_msg_pool_service_get_8864DFF0(void *);
 extern void fn_888860A0(void *);
 extern int ts4_if_call_seq_u32_off44_8864BB40(void *);
 extern int ts4_tailcall_fn_88582F30_8857A128(void *, int);

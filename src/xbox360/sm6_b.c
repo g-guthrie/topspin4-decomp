@@ -37,17 +37,17 @@ extern void *memcpy(void *, const void *, unsigned int);
         return t; \
     }
 /* Swing_DLL.xex 0x881638C0 / 0x88163928 / 0x88180008 / 0x881810D0 */
-SB(ts4_sbuf_ctor_881638C0, 0x40, 0x48, ts4_sbuf_shrink_88169260, fn_88166D08, a)
-SB(ts4_sbuf_ctor_88163928, 0x40, 0x48, ts4_sbuf_shrink_88169260, fn_88166D08, *(void **)a)
-SB(ts4_sbuf_ctor_88180008, 0xff, 0x108, ts4_sbuf_shrink_881855E8, fn_88182330, a)
-SB(ts4_sbuf_ctor_881810D0, 0x32, 0x3c, ts4_sbuf_shrink_88185800, fn_88182828, a)
+SB(ts4_sbuf_ctor_881638C0, 0x40, 0x48, ts4_sbuf_shrink_88169260, ts4_byte_string_assign_cstr_88166D08, a)
+SB(ts4_sbuf_ctor_88163928, 0x40, 0x48, ts4_sbuf_shrink_88169260, ts4_byte_string_assign_cstr_88166D08, *(void **)a)
+SB(ts4_sbuf_ctor_88180008, 0xff, 0x108, ts4_sbuf_shrink_881855E8, ts4_byte_string_assign_cstr_88182330, a)
+SB(ts4_sbuf_ctor_881810D0, 0x32, 0x3c, ts4_sbuf_shrink_88185800, ts4_byte_string_assign_cstr_88182828, a)
 /* 0x88181138 / 0x88281740: init only */
 SB0(ts4_sbuf_ctor_init_88181138, 0x32, 0x3c, ts4_sbuf_shrink_88185800)
 SB0(ts4_sbuf_ctor_init_88281740, 0xff, 0x108, ts4_sbuf_shrink_881855E8)
 
 /* 0x8821B490: 0x80-byte buffer, assign, then store an extra word */
 void *fn_88236690(void *);
-void *fn_88235298(void *, int);
+void *ts4_byte_string_assign_cstr_88235298(void *, int);
 void *ts4_sbuf_ctor_ext_8821B490(char *t, int a, int b)
 {
     char buf[0x80]; char *p = t + 8; char *q = t + 0x88;
@@ -57,7 +57,7 @@ void *ts4_sbuf_ctor_ext_8821B490(char *t, int a, int b)
     *(volatile char **)q = p + 8;
     t[8] = 0;
     fn_88236690(t);
-    fn_88235298(t, a);
+    ts4_byte_string_assign_cstr_88235298(t, a);
     *(int *)(t + 0x8c) = b;
     return t;
 }

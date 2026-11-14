@@ -116,7 +116,7 @@ extern char lbl_880F9498;
 extern char lbl_880F93F8;
 extern u32 fn_886328B0(char *);
 extern char lbl_880D44A8[];
-extern char * fn_8816CF48(char *, char *, char *);
+extern char * ts4_fixed_string_append_8816CF48(char *, char *, char *);
 extern void fn_8881C828(u32 *, int, u32);
 extern u32 fn_888367F8(int, int, u32 *);
 extern u32 fn_888368B0(int, int, u32 *);
@@ -1156,7 +1156,7 @@ char * ts4_skip_if_dot_before_cursor_else_call_88713850(char *a)
     char *p = LP(a, 4);
     if (B(p, -4) == 0x2e) return a;
     if (B(p, -5) == 0x2e) return a;
-    return fn_8816CF48(a, lbl_880D44A8, lbl_880D44A8 + 4);
+    return ts4_fixed_string_append_8816CF48(a, lbl_880D44A8, lbl_880D44A8 + 4);
 }
 
 /* Swing_DLL.xex 0x88714650 */
@@ -1165,7 +1165,7 @@ char * ts4_skip_if_dot_before_cursor_else_call_88714650(char *a)
     char *p = LP(a, 4);
     if (B(p, -4) == 0x2e) return a;
     if (B(p, -5) == 0x2e) return a;
-    return fn_8816CF48(a, lbl_880D44A8, lbl_880D44A8 + 4);
+    return ts4_fixed_string_append_8816CF48(a, lbl_880D44A8, lbl_880D44A8 + 4);
 }
 
 /* call_with_address_of_arg_and_4 */

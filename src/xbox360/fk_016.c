@@ -12,11 +12,11 @@ typedef unsigned long ts4_word;
 
 extern char lbl_880F9574[];
 extern char lbl_880F9820[];
-ts4_word fn_88278620();
+ts4_word ts4_msg_buffer_alloc_88278620();
 ts4_word fn_885FA208();
 ts4_word fn_886042C8();
 ts4_word fn_886049F0();
-ts4_word fn_8864DFF0();
+ts4_word ts4_msg_pool_service_get_8864DFF0();
 ts4_word fn_8899F760();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
@@ -994,14 +994,14 @@ ts4_word ts4_fn_885FB818(void)
     return 10;
 }
 
-/* Swing_DLL.xex 0x885FDF30: if_call_seq fn_8864DFF0, fn_8899F760, fn_885FA208 */
+/* Swing_DLL.xex 0x885FDF30: if_call_seq ts4_msg_pool_service_get_8864DFF0, fn_8899F760, fn_885FA208 */
 ts4_word ts4_if_call_seq_fn_8864DFF0_885FDF30(ts4_word a0, ts4_word a1)
 {
     ts4_word p4;
     ts4_word t2;
     ts4_word t3;
 
-    fn_8864DFF0();
+    ts4_msg_pool_service_get_8864DFF0();
     t2 = fn_8899F760((ts4_word)88);
     if ((ts4_word)t2 != 0) {
         t3 = fn_885FA208((ts4_word)t2, (ts4_word)a0, (ts4_word)a1);
@@ -1027,7 +1027,7 @@ ts4_word ts4_if_call_seq_u32_off0_88600290(ts4_word a0, ts4_word a1, ts4_word a2
     return 1;
 }
 
-/* Swing_DLL.xex 0x886005B8: if_call_seq u32@0x18, fn_88278620, u32@0x14, u32@0x18, memcpy */
+/* Swing_DLL.xex 0x886005B8: if_call_seq u32@0x18, ts4_msg_buffer_alloc_88278620, u32@0x14, u32@0x18, memcpy */
 ts4_word ts4_if_call_seq_u32_off18_886005B8(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word t1;
@@ -1039,14 +1039,14 @@ ts4_word ts4_if_call_seq_u32_off18_886005B8(ts4_word a0, ts4_word a1, ts4_word a
     (void)a7;
     if ((ts4_word)a2 != 0) {
         *(ts4_word *)((char *)(ts4_word)(a0) + 24) = (ts4_word)a2;
-        t1 = fn_88278620((ts4_word)a2);
+        t1 = ts4_msg_buffer_alloc_88278620((ts4_word)a2);
         *(ts4_word *)((char *)(ts4_word)(a0) + 20) = (ts4_word)t1;
         memcpy((ts4_word)t1, (ts4_word)a1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 24)));
     }
     return 1;
 }
 
-/* Swing_DLL.xex 0x88600618: if_call_seq u32@0x10, fn_88278620, u32@0xc, u32@0x10, memcpy */
+/* Swing_DLL.xex 0x88600618: if_call_seq u32@0x10, ts4_msg_buffer_alloc_88278620, u32@0xc, u32@0x10, memcpy */
 ts4_word ts4_if_call_seq_u32_off10_88600618(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word t1;
@@ -1058,7 +1058,7 @@ ts4_word ts4_if_call_seq_u32_off10_88600618(ts4_word a0, ts4_word a1, ts4_word a
     (void)a7;
     if ((ts4_word)a2 != 0) {
         *(ts4_word *)((char *)(ts4_word)(a0) + 16) = (ts4_word)a2;
-        t1 = fn_88278620((ts4_word)a2);
+        t1 = ts4_msg_buffer_alloc_88278620((ts4_word)a2);
         *(ts4_word *)((char *)(ts4_word)(a0) + 12) = (ts4_word)t1;
         memcpy((ts4_word)t1, (ts4_word)a1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 16)));
     }
