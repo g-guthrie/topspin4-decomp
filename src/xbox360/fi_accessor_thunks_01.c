@@ -72,8 +72,8 @@ ts4_word fn_887563A8(ts4_word);
 ts4_word fn_887D7D98(ts4_word, ts4_word, ts4_word);
 ts4_word fn_887EC120(ts4_word);
 ts4_word fn_887ECBD0();
-ts4_word fn_888207C8(ts4_word, ts4_word);
-ts4_word fn_88820AF0(ts4_word, ts4_word);
+ts4_word lua2_luaK_wstringK_888207C8(ts4_word, ts4_word);
+ts4_word lua2_luaK_stringK_88820AF0(ts4_word, ts4_word);
 ts4_word fn_88822420(ts4_word, ts4_word, ts4_word, ts4_word, ts4_word);
 ts4_word lib3_lua_type_88822738(ts4_word, ts4_word);
 ts4_word fn_8883F238();
@@ -946,12 +946,12 @@ void ts4_set_u32_off6c_888134C0(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x88814AE0: call_seq u32@0x30, fn_888207C8, u32@0x4, u32@0xc, u32@0x10, u32@0x0 */
+/* Swing_DLL.xex 0x88814AE0: call_seq u32@0x30, lua2_luaK_wstringK_888207C8, u32@0x4, u32@0xc, u32@0x10, u32@0x0 */
 ts4_word ts4_call_seq_u32_off30_88814AE0(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t2;
 
-    t2 = fn_888207C8((ts4_word)(*(ts4_word *)((char *)(a0) + 48)), (ts4_word)a2);
+    t2 = lua2_luaK_wstringK_888207C8((ts4_word)(*(ts4_word *)((char *)(a0) + 48)), (ts4_word)a2);
     *(ts4_word *)((char *)(a1) + 4) = (ts4_word)t2;
     *(ts4_word *)((char *)(a1) + 12) = (ts4_word)-1;
     *(ts4_word *)((char *)(a1) + 16) = (ts4_word)-1;
@@ -959,12 +959,12 @@ ts4_word ts4_call_seq_u32_off30_88814AE0(ts4_word a0, ts4_word a1, ts4_word a2)
     return t2;
 }
 
-/* Swing_DLL.xex 0x88814B30: call_seq u32@0x30, fn_88820AF0, u32@0x4, u32@0xc, u32@0x10, u32@0x0 */
+/* Swing_DLL.xex 0x88814B30: call_seq u32@0x30, lua2_luaK_stringK_88820AF0, u32@0x4, u32@0xc, u32@0x10, u32@0x0 */
 ts4_word ts4_call_seq_u32_off30_88814B30(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t2;
 
-    t2 = fn_88820AF0((ts4_word)(*(ts4_word *)((char *)(a0) + 48)), (ts4_word)a2);
+    t2 = lua2_luaK_stringK_88820AF0((ts4_word)(*(ts4_word *)((char *)(a0) + 48)), (ts4_word)a2);
     *(ts4_word *)((char *)(a1) + 4) = (ts4_word)t2;
     *(ts4_word *)((char *)(a1) + 12) = (ts4_word)-1;
     *(ts4_word *)((char *)(a1) + 16) = (ts4_word)-1;

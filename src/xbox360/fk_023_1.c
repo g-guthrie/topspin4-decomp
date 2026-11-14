@@ -72,49 +72,49 @@ ts4_word fn_88617D28();
 ts4_word fn_88617D88();
 ts4_word fn_88804B18();
 ts4_word fn_8880C738();
-ts4_word fn_8880D278();
-ts4_word fn_888102D8();
-ts4_word fn_88810408();
-ts4_word fn_88810F00();
-ts4_word fn_88811688();
-ts4_word fn_88811768();
+ts4_word lua2_luaV_settable_8880D278();
+ts4_word lua2_LoadBlock_888102D8();
+ts4_word lua2_LoadHeader_88810408();
+ts4_word lua2_LoadFunction_88810F00();
+ts4_word lua2_setnodevector_88811688();
+ts4_word lua2_setarrayvector_88811768();
 ts4_word fn_88811930();
 ts4_word ts4_if_call_seq_fn_889CE718_88811AC0();
 ts4_word fn_88811B98();
 ts4_word ts4_if_call_seq_u32_off0_88812188();
-ts4_word fn_88812378();
-ts4_word fn_88813598();
-ts4_word fn_888140E0();
-ts4_word fn_88814BB8();
-ts4_word fn_888153C0();
+ts4_word lua2_resize_88812378();
+ts4_word lua2_freestack_88813598();
+ts4_word lua2_lua_open_888140E0();
+ts4_word lua2_next_88814BB8();
+ts4_word lua2_block_888153C0();
 ts4_word fn_888154C8();
-ts4_word fn_88815580();
-ts4_word fn_88815628();
-ts4_word fn_88816C30();
+ts4_word lua2_check_match_88815580();
+ts4_word lua2_check_88815628();
+ts4_word lua2_subexpr_88816C30();
 ts4_word fn_88817030();
 ts4_word fn_888182A8();
 ts4_word fn_888188F8();
-ts4_word fn_88819520();
-ts4_word fn_888195F0();
-ts4_word fn_8881A6E8();
-ts4_word fn_8881AB98();
-ts4_word fn_8881B108();
-ts4_word fn_8881B230();
-ts4_word fn_8881B770();
-ts4_word fn_8881B888();
-ts4_word fn_8881B950();
-ts4_word fn_8881BE58();
-ts4_word fn_8881BF80();
-ts4_word fn_8881C030();
+ts4_word lua2_luaX_errorline_88819520();
+ts4_word lua2_luaX_syntaxerror_888195F0();
+ts4_word lua2_luaX_lex_8881A6E8();
+ts4_word lua2_checkSizes_8881AB98();
+ts4_word lua2_cleartablevalues_8881B108();
+ts4_word lua2_cleartablekeys_8881B230();
+ts4_word lua2_luaC_separateudata_8881B770();
+ts4_word lua2_marktmu_8881B888();
+ts4_word lua2_luaC_callGCTM_8881B950();
+ts4_word lua2_markroot_8881BE58();
+ts4_word lua2_luaC_sweep_8881BF80();
+ts4_word lua2_propagatemarks_8881C030();
 ts4_word ts4_call_seq_u32_off14_8881C130();
-ts4_word fn_8881C3C0();
+ts4_word lua2_luaF_close_8881C3C0();
 ts4_word fn_8881C630();
-ts4_word fn_8881E258();
-ts4_word fn_888203F0();
-ts4_word fn_88820468();
-ts4_word fn_888208A8();
-ts4_word fn_88820C30();
-ts4_word fn_88821878();
+ts4_word lua2_luaD_call_8881E258();
+ts4_word lua2_luaK_concat_888203F0();
+ts4_word lua2_luaK_patchlistaux_88820468();
+ts4_word lua2_luaK_code_888208A8();
+ts4_word lua2_luaK_dischargevars_88820C30();
+ts4_word lua2_luaK_exp2RK_88821878();
 ts4_word lib3_lua_negindex_88821F98();
 ts4_word lib3_lua_touserdata_88822230();
 ts4_word lib3_lua_type_88822738();
@@ -230,16 +230,16 @@ ts4_word ts4_call_seq_u32_off34_888145C8(ts4_word a0, ts4_word a1)
     return t6;
 }
 
-/* Swing_DLL.xex 0x8881C200: call_seq ts4_call_seq_u32_off14_8881C130, fn_8881BF80, fn_8881AB98, fn_8881B950 */
+/* Swing_DLL.xex 0x8881C200: call_seq ts4_call_seq_u32_off14_8881C130, lua2_luaC_sweep_8881BF80, lua2_checkSizes_8881AB98, lua2_luaC_callGCTM_8881B950 */
 ts4_word ts4_call_seq_fn_8881C130_8881C200(ts4_word a0)
 {
     ts4_word t1;
     ts4_word t4;
 
     t1 = ts4_call_seq_u32_off14_8881C130();
-    fn_8881BF80((ts4_word)a0, (ts4_word)0);
-    fn_8881AB98((ts4_word)a0, (ts4_word)t1);
-    t4 = fn_8881B950((ts4_word)a0);
+    lua2_luaC_sweep_8881BF80((ts4_word)a0, (ts4_word)0);
+    lua2_checkSizes_8881AB98((ts4_word)a0, (ts4_word)t1);
+    t4 = lua2_luaC_callGCTM_8881B950((ts4_word)a0);
     return t4;
 }
 

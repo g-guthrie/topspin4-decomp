@@ -88,7 +88,7 @@ extern void ts4_lua_rawseti_88823320(lua_State *L, int idx, int n);
 extern TValue *ts4_lua_v_tonumber_8880CAF0(lua_State *L, TValue *obj, TValue *n);
 extern void lib3_lua_getglobal_top_88823BA8(lua_State *L);
 extern void ts4_lua_insert_88824438(lua_State *L, int idx);
-extern void fn_8881E258(lua_State *L, TValue *func, int nresults);
+extern void lua2_luaD_call_8881E258(lua_State *L, TValue *func, int nresults);
 extern const char *lib3_lua_tostring_88822888(lua_State *L, int idx);
 extern char *ts4_addr_lbl_88C30DA8_88567BC8(void);
 extern int fn_88569190(void *stream, const char *fmt, ...);
@@ -305,7 +305,7 @@ void lib3_callalert_8882DDD0(lua_State *L)
     o = L->top - 1;
     if (o != 0 && o->tt == 6) {
         ts4_lua_insert_88824438(L, -2);
-        fn_8881E258(L, L->top - 2, 0);
+        lua2_luaD_call_8881E258(L, L->top - 2, 0);
     } else {
         const char *msg = lib3_lua_tostring_88822888(L, -2);
         fn_88569190(ts4_addr_lbl_88C30DA8_88567BC8() + 0x40, lbl_880D3108, msg);
@@ -397,7 +397,7 @@ int lib3_luaL_callmeta_8882E560(lua_State *L)
     if (!lib3_getmetafield(L, 1, lbl_880E1FAC))
         return 0;
     ts4_lua_pushvalue_88824248(L, 1);
-    fn_8881E258(L, L->top - 2, 1);
+    lua2_luaD_call_8881E258(L, L->top - 2, 1);
     return 1;
 }
 
@@ -1175,7 +1175,7 @@ void lib3_add_s_88825D00(Lib3MatchState *ms, Lib3Buffer *b, const char *s, const
         int n;
         ts4_lua_pushvalue_88824248(L, 3);
         n = lib3_push_captures_88825B08(ms, s, e);
-        fn_8881E258(L, L->top - (n + 1), 1);
+        lua2_luaD_call_8881E258(L, L->top - (n + 1), 1);
         if (lib3_isstring_top(L))
             lib3_luaL_addvalue_8882E3E8(b);
         else

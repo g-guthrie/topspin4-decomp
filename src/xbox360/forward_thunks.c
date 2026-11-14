@@ -165,7 +165,7 @@ void ts4_type_register_887F48B8(void);
 void fn_887F7588(void);
 void fn_88803A30(void);
 void fn_88807AF8(void);
-void fn_8881B950(void);
+void lua2_luaC_callGCTM_8881B950(void);
 void fn_8881F900(void);
 void ts4_lua_opt_number_default_8882EA98(void);
 void fn_88835A88(void);
@@ -377,7 +377,7 @@ TS4_FORWARD(88803D58, fn_88803A30)
 TS4_FORWARD(88807BC8, fn_88807AF8)
 TS4_FORWARD(88807BD0, fn_88807AF8)
 TS4_FORWARD(88807BD8, fn_88807AF8)
-TS4_FORWARD(88813590, fn_8881B950)
+TS4_FORWARD(88813590, lua2_luaC_callGCTM_8881B950)
 TS4_FORWARD(88822958, fn_8881F900)
 TS4_FORWARD(8882EBE8, ts4_lua_opt_number_default_8882EA98)
 TS4_FORWARD(88835D80, fn_88835A88)

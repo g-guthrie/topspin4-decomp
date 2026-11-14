@@ -13,16 +13,16 @@ typedef struct Ctx {
     int limit;      /* 0x34 */
 } Ctx;
 
-void fn_88820C30(Ctx *ctx, Ev *ev);
-void fn_888201E0(Ctx *ctx, Ev *ev);
-void fn_88821260(Ctx *ctx, Ev *ev);
-int fn_888208A8(Ctx *ctx, int arg);
+void lua2_luaK_dischargevars_88820C30(Ctx *ctx, Ev *ev);
+void lua2_invertjump_888201E0(Ctx *ctx, Ev *ev);
+void lua2_discharge2anyreg_88821260(Ctx *ctx, Ev *ev);
+int lua2_luaK_code_888208A8(Ctx *ctx, int arg);
 
 void ts4_event_dispatch_888212B8(Ctx *ctx, Ev *ev)
 {
     int tmp;
 
-    fn_88820C30(ctx, ev);
+    lua2_luaK_dischargevars_88820C30(ctx, ev);
     switch (ev->kind) {
     case 1:
     case 3:
@@ -33,17 +33,17 @@ void ts4_event_dispatch_888212B8(Ctx *ctx, Ev *ev)
         ev->kind = 3;
         break;
     case 9:
-        fn_888201E0(ctx, ev);
+        lua2_invertjump_888201E0(ctx, ev);
         break;
     case 10:
     case 11:
-        fn_88821260(ctx, ev);
+        lua2_discharge2anyreg_88821260(ctx, ev);
         if (ev->kind == 11) {
             int v = ev->value;
             if (v >= ctx->limit && v < 250)
                 ctx->count--;
         }
-        ev->value = fn_888208A8(ctx, 0x16 | (ev->value << 15));
+        ev->value = lua2_luaK_code_888208A8(ctx, 0x16 | (ev->value << 15));
         ev->kind = 10;
         break;
     }

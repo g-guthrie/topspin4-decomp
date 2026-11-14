@@ -117,7 +117,7 @@ extern char lbl_880F93F8;
 extern u32 fn_886328B0(char *);
 extern char lbl_880D44A8[];
 extern char * ts4_fixed_string_append_8816CF48(char *, char *, char *);
-extern void fn_8881C828(u32 *, int, u32);
+extern void lua2_DumpBlock_8881C828(u32 *, int, u32);
 extern u32 fn_888367F8(int, int, u32 *);
 extern u32 fn_888368B0(int, int, u32 *);
 extern void ts4_loop_get_u32_off1c_887EA320(void);
@@ -228,7 +228,7 @@ extern char * fn_88801428(int);
 extern u32 fn_8860DBC8(char *);
 extern u32 fn_8841B5E0(char *);
 extern u32 fn_886917F8(int, int, int);
-extern u32 fn_88816C30(int, int, int);
+extern u32 lua2_subexpr_88816C30(int, int, int);
 extern char * fn_885643D0(int);
 extern u32 fn_888364F8(int, int, u32 *);
 extern void fn_884259B8(void);
@@ -1172,13 +1172,13 @@ char * ts4_skip_if_dot_before_cursor_else_call_88714650(char *a)
 /* Swing_DLL.xex 0x8881C9A0 */
 void ts4_call_with_address_of_arg_and_4_8881C9A0(u32 a, u32 b)
 {
-    fn_8881C828(&a, 4, b);
+    lua2_DumpBlock_8881C828(&a, 4, b);
 }
 
 /* Swing_DLL.xex 0x8881C9D0 */
 void ts4_call_with_address_of_arg_and_4_8881C9D0(u32 a, u32 b)
 {
-    fn_8881C828(&a, 4, b);
+    lua2_DumpBlock_8881C828(&a, 4, b);
 }
 
 /* call_with_local_tag2_record */
@@ -3066,7 +3066,7 @@ u32 ts4_forward_with_minus1_third_arg_886918F8(int a, int b)
 /* Swing_DLL.xex 0x88816D50 */
 u32 ts4_forward_with_minus1_third_arg_88816D50(int a, int b)
 {
-    return fn_88816C30(a, b, -1);
+    return lua2_subexpr_88816C30(a, b, -1);
 }
 
 /* forward_with_one_first_arg */

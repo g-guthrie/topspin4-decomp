@@ -62,7 +62,7 @@ extern void *fn_88923238(void *, int, u32, u32);
 extern void fn_88563470(void *);
 extern char ts4_noop_88AFF300[], ts4_noop_88AFF308[];
 extern char lbl_88D488B8[], lbl_88D48A98[];
-extern double fn_88564430(float);
+extern double floor(float);
 extern float lbl_8814B910;
 extern float lbl_8814B440;
 extern void *fn_8819B0C8(void *, void *);

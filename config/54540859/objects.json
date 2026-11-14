@@ -4168,6 +4168,66 @@
       "src/xbox360/fam4_v_003.c": {
         "status": "Matching",
         "source": "xbox360/fam4_v_003.c"
+      },
+      "src/xbox360/lua2_lcode.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_lcode.c"
+      },
+      "src/xbox360/lua2_ldo.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_ldo.c"
+      },
+      "src/xbox360/lua2_ldo_yield.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_ldo_yield.c"
+      },
+      "src/xbox360/lua2_ldump.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_ldump.c"
+      },
+      "src/xbox360/lua2_lfunc.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_lfunc.c"
+      },
+      "src/xbox360/lua2_lgc.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_lgc.c"
+      },
+      "src/xbox360/lua2_llex.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_llex.c"
+      },
+      "src/xbox360/lua2_lparser.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_lparser.c"
+      },
+      "src/xbox360/lua2_lstate.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_lstate.c"
+      },
+      "src/xbox360/lua2_lstring.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_lstring.c"
+      },
+      "src/xbox360/lua2_ltable.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_ltable.c"
+      },
+      "src/xbox360/lua2_ltable_next.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_ltable_next.c"
+      },
+      "src/xbox360/lua2_ltm.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_ltm.c"
+      },
+      "src/xbox360/lua2_lundump.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_lundump.c"
+      },
+      "src/xbox360/lua2_lvm.c": {
+        "status": "Matching",
+        "source": "xbox360/lua2_lvm.c"
       }
     }
   }

@@ -70,7 +70,10 @@ ts4_word fn_881B9148();
 ts4_word ts4_tailcall_NetDll_WSACleanup_884F0238();
 ts4_word fn_88563F20();
 ts4_word fn_885640B0();
-ts4_word fn_88564430();
+#ifndef _MSC_VER
+#define floor ts4_floor_non_msvc /* avoid gcc builtin floor(double) prototype clash */
+#endif
+ts4_word floor();
 ts4_word fn_88564B10();
 ts4_word fn_88564D28();
 ts4_word fn_88565040();

@@ -11,7 +11,7 @@ extern char lbl_880F3388[], lbl_88C47630[];
 extern E32 lbl_88C6C948[];
 extern void *lbl_88D45B38;
 extern float lbl_8814B910;
-extern double fn_88564430(float);
+extern double floor(float);
 extern char *g_ts4_session_context;
 extern void fn_88703AC0(u64, u64);
 extern void fn_886131F0(void *, void *, u32);

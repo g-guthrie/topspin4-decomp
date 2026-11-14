@@ -70,7 +70,10 @@ ts4_word fn_881B9148();
 ts4_word ts4_tailcall_NetDll_WSACleanup_884F0238();
 ts4_word fn_88563F20();
 ts4_word fn_885640B0();
-ts4_word fn_88564430();
+#ifndef _MSC_VER
+#define floor ts4_floor_non_msvc /* avoid gcc builtin floor(double) prototype clash */
+#endif
+ts4_word floor();
 ts4_word fn_88564B10();
 ts4_word fn_88564D28();
 ts4_word fn_88565040();
@@ -2400,13 +2403,13 @@ ts4_word ts4_call_seq_fn_8882EA98_889CFB98(ts4_word a0)
     return 1;
 }
 
-/* Swing_DLL.xex 0x889CFCD8: call_seq ts4_lua_opt_number_default_8882EA98, fn_88564430, fn_888240B8 */
+/* Swing_DLL.xex 0x889CFCD8: call_seq ts4_lua_opt_number_default_8882EA98, floor, fn_888240B8 */
 ts4_word ts4_call_seq_fn_8882EA98_889CFCD8(ts4_word a0)
 {
     ts4_word t1;
 
     t1 = ts4_lua_opt_number_default_8882EA98((ts4_word)a0, (ts4_word)1);
-    fn_88564430((ts4_word)t1);
+    floor((ts4_word)t1);
     fn_888240B8((ts4_word)a0);
     return 1;
 }

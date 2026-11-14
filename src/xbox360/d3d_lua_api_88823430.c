@@ -6,18 +6,18 @@ typedef Ts4LuaValue TValue;
 typedef Ts4LuaState lua_State;
 
 extern TValue *lib3_lua_negindex_88821F98(lua_State *L, int idx);
-extern TValue *fn_888122E8(lua_State *L, void *t, TValue *key);
+extern TValue *lua2_luaH_set_888122E8(lua_State *L, void *t, TValue *key);
 extern TValue *ts4_if_call_seq_u32_off0_88812188(void *t, TValue *key);
-extern Ts4LuaObject *fn_888131A0(lua_State *L, const char *s, u32 len);
+extern Ts4LuaObject *lua2_luaS_newlstr_888131A0(lua_State *L, const char *s, u32 len);
 extern void ts4_call_seq_fn_8881C130_8881C200(lua_State *L);
 extern TValue *ts4_lua_v_tonumber_8880CAF0(lua_State *L, TValue *obj, TValue *n);
 extern void fn_8880FA80(lua_State *L, int total, int last);
-extern void fn_8880D278(lua_State *L, TValue *t, TValue *key, TValue *val);
+extern void lua2_luaV_settable_8880D278(lua_State *L, TValue *t, TValue *key, TValue *val);
 extern void *ts4_if_call_seq_fn_889CE718_88811AC0(lua_State *L, int narray, int nhash);
 extern TValue *fn_88811930(void *t, int n);
 extern lua_State *fn_88813970(lua_State *L);
-extern int fn_88812A88(lua_State *L, void *t, TValue *key);
-extern TValue *fn_88812968(lua_State *L, void *t, int n);
+extern int lua2_luaH_next_88812A88(lua_State *L, void *t, TValue *key);
+extern TValue *lua2_luaH_setnum_88812968(lua_State *L, void *t, int n);
 
 /* Closure header: C-function flag at +0xC, environment value at +0x18. */
 typedef struct Ts4LuaClosure {
@@ -105,7 +105,7 @@ void ts4_lua_concat_88822DB0(lua_State *L, int n)
         TValue old;
         TValue *top = L->top;
         old = *top;
-        top->u.gc = fn_888131A0(L, 0, 0);
+        top->u.gc = lua2_luaS_newlstr_888131A0(L, 0, 0);
         top->tt = 4;
         top->u.gc->refs++;
         TS4_RELEASE(L, &old);
@@ -121,7 +121,7 @@ void ts4_lua_rawset_88823430(lua_State *L, int idx)
     TValue *top;
     t = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     top = L->top;
-    slot = fn_888122E8(L, t->u.p, top - 2);
+    slot = lua2_luaH_set_888122E8(L, t->u.p, top - 2);
     TS4_SETOBJ(L, slot, top - 1);
     L->top -= 2;
     TS4_SETNIL(L, L->top);
@@ -191,7 +191,7 @@ void ts4_lua_pushlstring_88823FC0(lua_State *L, const char *s, u32 len)
         ts4_call_seq_fn_8881C130_8881C200(L);
     top = L->top;
     old = *top;
-    top->u.gc = fn_888131A0(L, s, len);
+    top->u.gc = lua2_luaS_newlstr_888131A0(L, s, len);
     top->tt = 4;
     top->u.gc->refs++;
     TS4_RELEASE(L, &old);
@@ -261,7 +261,7 @@ void ts4_lua_settable_88823580(lua_State *L, int idx)
     TValue *top;
     t = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     top = L->top;
-    fn_8880D278(L, t, top - 2, top - 1);
+    lua2_luaV_settable_8880D278(L, t, top - 2, top - 1);
     L->top -= 2;
     TS4_SETNIL(L, L->top);
     TS4_SETNIL(L, L->top + 1);
@@ -360,8 +360,8 @@ void ts4_lua_pushobject_88824AA8(lua_State *L, TValue *o)
     o1->tt = o->tt;
     o1->u = o->u;
     if ((char *)L->stack_last - (char *)L->top <= 16) {
-        if (1 <= L->stacksize) fn_8881D478(L, 2 * L->stacksize);
-        else fn_8881D478(L, L->stacksize + 1 + 5);
+        if (1 <= L->stacksize) lua2_luaD_reallocstack_8881D478(L, 2 * L->stacksize);
+        else lua2_luaD_reallocstack_8881D478(L, L->stacksize + 1 + 5);
     }
     L->top++;
 }
@@ -369,7 +369,7 @@ void ts4_lua_pushobject_88824AA8(lua_State *L, TValue *o)
 /* lua_next on the table in slot 1. */
 int ts4_lua_next_first_88824B68(lua_State *L)
 {
-    int more = fn_88812A88(L, L->base->u.p, L->top - 1);
+    int more = lua2_luaH_next_88812A88(L, L->base->u.p, L->top - 1);
     if (more) {
         TS4_INCR_TOP(L);
     } else {
@@ -398,7 +398,7 @@ void ts4_lua_rawseti_88823320(lua_State *L, int idx, int n)
     TValue *top;
     o = (idx > 0) ? L->base + (idx - 1) : lib3_lua_negindex_88821F98(L, idx);
     top = L->top;
-    slot = fn_88812968(L, o->u.p, n);
+    slot = lua2_luaH_setnum_88812968(L, o->u.p, n);
     TS4_SETOBJ(L, slot, top - 1);
     L->top--;
     TS4_SETNIL(L, L->top);

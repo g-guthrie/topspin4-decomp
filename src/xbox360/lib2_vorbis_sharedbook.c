@@ -50,7 +50,7 @@ typedef struct codebook {
 } codebook;
 
 double fn_88563A38(double x, double y);   /* pow */
-double fn_88564430(double x);             /* floor */
+double floor(double x);             /* floor */
 extern const float lbl_88001A68;          /* 1.0f */
 
 /* _make_words: given a list of word lengths, generate a list of codewords. */
@@ -132,7 +132,7 @@ ogg_uint32_t *lib2__make_words_883BD3A0(void *ctx, long *l, long n, long sparsec
 /* _book_maptype1_quantvals: greatest vals with vals^dim <= entries. */
 long lib2__book_maptype1_quantvals_883BD5D0(const static_codebook *b)
 {
-    long vals = (long)(float)fn_88564430((float)fn_88563A38((float)b->entries, lbl_88001A68 / b->dim));
+    long vals = (long)(float)floor((float)fn_88563A38((float)b->entries, lbl_88001A68 / b->dim));
 
     /* verify via integer means; treat the above as an initial guess */
     while (1) {

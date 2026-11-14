@@ -16,14 +16,14 @@ extern unsigned int strlen(const char *);
 #endif
 
 extern int ex3_l_strcmp_8880C2B0(const TString *ls, const TString *rs);
-extern int fn_8880C360(void *L, const TValue *p1, const TValue *p2, int event);
+extern int lua2_call_orderTM_8880C360(void *L, const TValue *p1, const TValue *p2, int event);
 extern int fn_8881EBA8(void *L, const TValue *p1, const TValue *p2);
 extern int fn_88818190(const char *, double *);
 extern int fn_88818768(const char *, double *);
 extern void fn_88818C88(void *L, Ts4LuaObject *o);
 extern int fn_885635D0(char *, const char *, ...);
 extern char lbl_880E18A4[];
-extern Ts4LuaObject *fn_888131A0(void *L, const char *str, u32 len);
+extern Ts4LuaObject *lua2_luaS_newlstr_888131A0(void *L, const char *str, u32 len);
 
 /* luaV_lessequal */
 int ts4_lua_v_lessequal_8880C660(void *L, const TValue *l, const TValue *r)
@@ -35,9 +35,9 @@ int ts4_lua_v_lessequal_8880C660(void *L, const TValue *l, const TValue *r)
         return l->u.n <= r->u.n;
     else if (l->tt == 4)
         return ex3_l_strcmp_8880C2B0((const TString *)l->u.p, (const TString *)r->u.p) <= 0;
-    else if ((res = fn_8880C360(L, l, r, 0xc)) != -1)
+    else if ((res = lua2_call_orderTM_8880C360(L, l, r, 0xc)) != -1)
         return res;
-    else if ((res = fn_8880C360(L, r, l, 0xb)) != -1)
+    else if ((res = lua2_call_orderTM_8880C360(L, r, l, 0xb)) != -1)
         return !res;
     return fn_8881EBA8(L, l, r);
 }
@@ -52,7 +52,7 @@ int ts4_lua_v_lessthan_8880C738(void *L, const TValue *l, const TValue *r)
         return l->u.n < r->u.n;
     else if (l->tt == 4)
         return ex3_l_strcmp_8880C2B0((const TString *)l->u.p, (const TString *)r->u.p) < 0;
-    else if ((res = fn_8880C360(L, l, r, 0xb)) != -1)
+    else if ((res = lua2_call_orderTM_8880C360(L, l, r, 0xb)) != -1)
         return res;
     return fn_8881EBA8(L, l, r);
 }
@@ -91,7 +91,7 @@ int ts4_lua_v_tostring_8880C9F8(void *L, TValue *obj)
         TValue old;
         fn_885635D0(s, lbl_880E18A4, n);
         old = *obj;
-        obj->u.gc = fn_888131A0(L, s, strlen(s));
+        obj->u.gc = lua2_luaS_newlstr_888131A0(L, s, strlen(s));
         obj->tt = 4;
         obj->u.gc->refs++;
         if (old.tt >= 4) {

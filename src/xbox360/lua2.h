@@ -295,15 +295,15 @@ extern void fn_88818C88(lua_State *L, GCheader *o);
         } \
     }
 
-extern void fn_8881D478(lua_State *L, int newsize); /* luaD_reallocstack */
+extern void lua2_luaD_reallocstack_8881D478(lua_State *L, int newsize); /* luaD_reallocstack */
 
 /* luaD_checkstack with luaD_growstack expanded. */
 #define luaD_checkstack(L, n) \
     if ((char *)(L)->stack_last - (char *)(L)->top <= (n) * (int)sizeof(TValue)) { \
         if ((n) <= (L)->stacksize) \
-            fn_8881D478((L), 2 * (L)->stacksize); \
+            lua2_luaD_reallocstack_8881D478((L), 2 * (L)->stacksize); \
         else \
-            fn_8881D478((L), (L)->stacksize + (n) + 5); \
+            lua2_luaD_reallocstack_8881D478((L), (L)->stacksize + (n) + 5); \
     }
 
 #define savestack(L, p) ((char *)(p) - (char *)(L)->stack)

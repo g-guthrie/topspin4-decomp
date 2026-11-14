@@ -75,7 +75,7 @@ TS4_FORCEINLINE int ts4_lua_gettop(Ts4LuaState *L)
 
 /* Reference-counted copy and stack growth helpers shared by the API wrappers. */
 extern void fn_88818C88(void *L, Ts4LuaObject *o);
-extern void fn_8881D478(void *L, int n);
+extern void lua2_luaD_reallocstack_8881D478(void *L, int n);
 
 #define TS4_ADDREF(o2) \
     if ((o2)->tt >= 4) (o2)->u.gc->refs++
@@ -92,9 +92,9 @@ extern void fn_8881D478(void *L, int n);
         if ((L)->top >= (L)->ci->top) { \
             if ((char *)(L)->stack_last - (char *)(L)->top <= 16) { \
                 if (1 <= (L)->stacksize) \
-                    fn_8881D478((L), 2 * (L)->stacksize); \
+                    lua2_luaD_reallocstack_8881D478((L), 2 * (L)->stacksize); \
                 else \
-                    fn_8881D478((L), (L)->stacksize + 1 + 5); \
+                    lua2_luaD_reallocstack_8881D478((L), (L)->stacksize + 1 + 5); \
             } \
         } \
         (L)->top++; \

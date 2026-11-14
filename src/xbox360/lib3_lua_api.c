@@ -28,8 +28,8 @@ typedef struct Lib3Closure {
     u8 isC;
 } Lib3Closure;
 extern TValue *ts4_if_call_seq_u32_off0_88812188(void *t, TValue *key);
-extern TValue *fn_8880D540(lua_State *L, TValue *t, TValue *key, int loop);
-extern TValue *fn_8880CBC8(lua_State *L, TValue *t, TValue *key, int loop);
+extern TValue *lua2_luaV_index_8880D540(lua_State *L, TValue *t, TValue *key, int loop);
+extern TValue *lua2_luaV_getnotable_8880CBC8(lua_State *L, TValue *t, TValue *key, int loop);
 
 /* luaV_gettable: primitive table get, then the __index paths (luaV_index / luaV_getnotable). */
 TS4_FORCEINLINE TValue *lib3_gettable(lua_State *L, TValue *t, TValue *key)
@@ -37,9 +37,9 @@ TS4_FORCEINLINE TValue *lib3_gettable(lua_State *L, TValue *t, TValue *key)
     if (t->tt == 5) {
         TValue *v = ts4_if_call_seq_u32_off0_88812188(t->u.p, key);
         if (v->tt != 0) return v;
-        return fn_8880D540(L, t, key, 1);
+        return lua2_luaV_index_8880D540(L, t, key, 1);
     }
-    return fn_8880CBC8(L, t, key, 1);
+    return lua2_luaV_getnotable_8880CBC8(L, t, key, 1);
 }
 
 /* lua_gettable(L, LUA_GLOBALSINDEX): replace the key on top with globals[key]. */
@@ -50,17 +50,17 @@ void lib3_lua_getglobal_top_88823BA8(lua_State *L)
     TS4_SETOBJ(L, L->top - 1, v);
 }
 
-extern void *fn_8881C768(lua_State *L, int nelems);
-extern void fn_8881E258(lua_State *L, TValue *func, int nresults);
+extern void *lua2_luaF_newCclosure_8881C768(lua_State *L, int nelems);
+extern void lua2_luaD_call_8881E258(lua_State *L, TValue *func, int nresults);
 
 /* incr_top (ldo.h): luaD_checkstack(L, 1); L->top++ (no ci->top check). */
 #define LIB3_INCR_TOP(L) \
     { \
         if ((char *)(L)->stack_last - (char *)(L)->top <= 16) { \
             if (1 <= (L)->stacksize) \
-                fn_8881D478((L), 2 * (L)->stacksize); \
+                lua2_luaD_reallocstack_8881D478((L), 2 * (L)->stacksize); \
             else \
-                fn_8881D478((L), (L)->stacksize + 1 + 5); \
+                lua2_luaD_reallocstack_8881D478((L), (L)->stacksize + 1 + 5); \
         } \
         (L)->top++; \
     }
@@ -81,7 +81,7 @@ typedef struct Lib3CCallS {
 /* f_Ccall: push a new C closure for c->func and the light userdata c->ud, then call it. */
 void lib3_lua_f_Ccall_88822F08(lua_State *L, Lib3CCallS *c)
 {
-    Lib3CClosure *cl = fn_8881C768(L, 0);
+    Lib3CClosure *cl = lua2_luaF_newCclosure_8881C768(L, 0);
     TValue old;
     TValue *top;
     cl->f = c->func;
@@ -99,7 +99,7 @@ void lib3_lua_f_Ccall_88822F08(lua_State *L, Lib3CCallS *c)
         o->u.p = c->ud;
     }
     LIB3_INCR_TOP(L);
-    fn_8881E258(L, L->top - 2, 0);
+    lua2_luaD_call_8881E258(L, L->top - 2, 0);
 }
 
 
@@ -225,7 +225,7 @@ const char *lib3_lua_tostring_88822888(lua_State *L, int idx)
 /* lua_call */
 void lib3_lua_call_88822970(lua_State *L, int nargs, int nresults)
 {
-    fn_8881E258(L, L->top - (nargs + 1), nresults);
+    lua2_luaD_call_8881E258(L, L->top - (nargs + 1), nresults);
 }
 
 extern const char *fn_888188F8(lua_State *L, const char *fmt, va_list argp);
@@ -306,7 +306,7 @@ void lib3_lua_pushcclosure_88823E00(lua_State *L, void *fn, int n)
     Lib3CClosureUp *cl;
     if (((Ts4LuaGlobal *)L->l_G)->nblocks >= ((Ts4LuaGlobal *)L->l_G)->GCthreshold)
         ts4_call_seq_fn_8881C130_8881C200(L);
-    cl = fn_8881C768(L, n);
+    cl = lua2_luaF_newCclosure_8881C768(L, n);
     cl->f = fn;
     L->top -= n;
     while (n--) {
@@ -449,9 +449,9 @@ int lib3_lua_checkstack_88822028(lua_State *L, int size)
     else {
         if ((char *)L->stack_last - (char *)L->top <= size * (int)sizeof(TValue)) {
             if (size <= L->stacksize)
-                fn_8881D478(L, 2 * L->stacksize);
+                lua2_luaD_reallocstack_8881D478(L, 2 * L->stacksize);
             else
-                fn_8881D478(L, L->stacksize + size + 5);
+                lua2_luaD_reallocstack_8881D478(L, L->stacksize + size + 5);
         }
         if (L->ci->top < L->top + size)
             L->ci->top = L->top + size;

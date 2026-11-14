@@ -10,7 +10,7 @@ extern char *lbl_88D45AD4;
 extern char lbl_880F3388[], lbl_88C47630[], lbl_88C6C948[], lbl_880D85CC[], lbl_880D82D0[], lbl_880E4BA0[];
 extern void *lbl_88D45B38;
 extern float lbl_8814B910;
-extern double fn_88564430(float);
+extern double floor(float);
 extern void fn_88703AC0(u64, u64);
 extern void fn_88707360(void *, int, int, int);
 extern void fn_88290568(void *, int, void *, int, int);
