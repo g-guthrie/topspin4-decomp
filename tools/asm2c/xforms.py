@@ -511,10 +511,46 @@ def t_blockcse(b, rng=None):
     return _pick(blockcse_all(b), rng)
 
 
+def uncse_all(b):
+    """(T1) `tN = LOAD; if (c) { ..tN.. } else { ..tN.. }` with tN not in c and not used after
+    the if/else: the load is repeated in each arm, so the compiler schedules it after the
+    compare (the original wrote the field access in both arms)."""
+    L, out = b.split('\n'), []
+    for i, l in enumerate(L[:-1]):
+        m = re.match(r'^( *)(t\d+) = (\*\([\w ]+ \*\)\(.*\));$', l)
+        if not m:
+            continue
+        ind, t, e = m.groups()
+        m2 = re.match(r'^' + ind + r'if \((.*)\) \{$', L[i + 1])
+        if not m2 or re.search(r'\b' + t + r'\b', m2.group(1)):
+            continue
+        j = i + 2
+        while j < len(L) and not L[j].startswith(ind + '}'):
+            j += 1
+        if j >= len(L) or L[j] != ind + '} else {':
+            continue
+        k = j + 1
+        while k < len(L) and L[k] != ind + '}':
+            k += 1
+        if k >= len(L) or re.search(r'\b' + t + r'\b', '\n'.join(L[k + 1:])):
+            continue
+        A, B = '\n'.join(L[i + 2:j]), '\n'.join(L[j + 1:k])
+        if not (re.search(r'\b' + t + r'\b', A) and re.search(r'\b' + t + r'\b', B)):
+            continue
+        L2 = L[:i] + [re.sub(r'\b' + t + r'\b', lambda _: '(' + e + ')', x) for x in L[i + 1:k + 1]] + L[k + 1:]
+        nb = re.sub(r'^    [\w ]+ ' + t + r';\n', '', '\n'.join(L2), flags=re.M)
+        out.append(nb)
+    return out
+
+
+def t_uncse(b, rng=None):
+    return _pick(uncse_all(b), rng)
+
+
 # (transform, weight) for perm.py; t_sv is added there because it needs the target's sites
 TRANSFORMS = [(t_bool, 2), (t_strlen, 2), (t_strl_cse, 1), (t_compound, 2), (t_nz, 1), (t_unvol, 2),
               (t_homecopy, 1), (t_locsize, 2), (t_locperm, 2), (t_earlyinv, 2), (t_cse, 2), (t_hoist, 2),
-              (t_ldfirst, 3), (t_idx, 3), (t_stswap, 2), (t_ptrtemp, 1), (t_blockcse, 2)]
+              (t_ldfirst, 3), (t_idx, 3), (t_stswap, 2), (t_ptrtemp, 1), (t_blockcse, 2), (t_uncse, 2)]
 
 
 def deterministic(b, sites=()):
@@ -535,5 +571,5 @@ def deterministic(b, sites=()):
         out += [x] if x else []
         out += hoist_all(s)[:3] + ldfirst_all(s, 3)
     out += sv_all(b, sites)
-    out += blockcse_all(b)[:3] + ptrtemp_all(b)[:3] + hoist_all(b)[:4] + ldfirst_all(b, 4) + idx_all(b)[:4] + stswap_all(b)[:4]
+    out += uncse_all(b)[:3] + blockcse_all(b)[:3] + ptrtemp_all(b)[:3] + hoist_all(b)[:4] + ldfirst_all(b, 4) + idx_all(b)[:4] + stswap_all(b)[:4]
     return list(dict.fromkeys(x for x in out if x and x != b))

@@ -58,3 +58,24 @@ class BlockCseTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class UncseTests(unittest.TestCase):
+    def test_load_repeated_in_both_arms(self):
+        b = ("    ts4_word t11;\n\n"
+             "    t11 = *(ts4_word *)((char *)(ts4_word)(a0) + 40);\n"
+             "    if ((ts4_word)(t10 & 0xff) != 0) {\n"
+             "        *(ts4_word *)((char *)(ts4_word)(t11) + 8) = (ts4_word)2;\n"
+             "    } else {\n"
+             "        *(ts4_word *)((char *)(ts4_word)(t11) + 8) = (ts4_word)1;\n"
+             "    }\n"
+             "    return;\n")
+        out = xforms.uncse_all(b)
+        self.assertEqual(len(out), 1)
+        self.assertNotIn("t11", out[0])
+        self.assertEqual(out[0].count("(*(ts4_word *)((char *)(ts4_word)(a0) + 40))"), 2)
+
+    def test_not_when_used_after(self):
+        b = ("    t11 = *(ts4_word *)((char *)(ts4_word)(a0) + 40);\n"
+             "    if (c) {\n        f(t11);\n    } else {\n        g(t11);\n    }\n    h(t11);\n")
+        self.assertEqual(xforms.uncse_all(b), [])

@@ -192,6 +192,8 @@ def main():
     ap.add_argument('--skip-addrs', default='', help='file of extra addresses (hex per line) to skip, e.g. ones already matched elsewhere')
     ap.add_argument('--only-addrs', default='', help='file of addresses (hex per line): verification passes try only these')
     ap.add_argument('--fresh', action='store_true')
+    ap.add_argument('--changed-only', action='store_true',
+                    help='check only translations that differ from the pre-T1 translator (variant letter x, no F)')
     ap.add_argument('--no-final', action='store_true', help='only the verification passes')
     ap.add_argument('--final-only', action='store_true', help='skip the verification passes, only write files for the cached matches')
     a = ap.parse_args()
@@ -217,10 +219,18 @@ def main():
         for v in a.variants.split(','):
             todo = [c for c in cands if c[1] not in matched and (only is None or c[1] in only)]
             res, fails = translate_all(todo, dis, env, v)
+            if a.changed_only and 'F' not in v:
+                # only texts the pre-T1 translator (no loop-exit join, no frame model) did not produce
+                leg, _ = translate_all([c for c in todo if c[1] in res], dis, env, v.replace('F', '').replace('x', '') + 'x')
+                same = {ad for ad, r in res.items() if ad in leg and digest(leg[ad]) == digest(r)}
+                res = {ad: r for ad, r in res.items() if ad not in same}
             if 'F' in v:
                 fst = collections.Counter()
                 res = frame_select(res, dis, addr2name, a.work, f'{v}{fs}', flags, a.jobs, a.chunk, fst)
                 print(f'  frame check: {dict(fst)}', flush=True)
+                if a.changed_only:
+                    leg, _ = translate_all([c for c in todo if c[1] in res], dis, env, v.replace('F', '').replace('x', '') + 'x')
+                    res = {ad: r for ad, r in res.items() if not (ad in leg and digest(leg[ad]) == digest(r))}
             lastfail.update({ad: ('translate', r) for ad, r in fails.items() if lastfail.get(ad, ('translate',))[0] == 'translate'})
             fresh = {}
             for ad, r in res.items():
