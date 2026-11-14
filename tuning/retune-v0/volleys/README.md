@@ -27,7 +27,7 @@ Files:
 | VolleyStandard depth pull switched on | Expressions graph 230 node 3 | 0 | 1 | spec 8b (DeepDeviation per band; retail multiplies it by 0) |
 | VolleyStandard depth pull | Expressions graph 230 node 4 | [0.0, 0.5, 400.0, 200.0] [0.5, 1.0, 200.0, 0.0] | [0.0, 0.5, 500.0, 400.0] [0.5, 1.0, 400.0, 300.0] | spec 8b bands 3-4 |
 | VolleyStandard depth pull | Expressions graph 230 node 12 | [0.0, 1.0, 100.0, 0.0] | [0.0, 1.0, 80.0, 0.0] | spec 8b band 1 |
-| VolleyStandard depth pull | Expressions graph 230 node 33 | [0.0, 0.5, 0.0, 0.2] [0.5, 1.0, 0.2, 1.0] | [0.0, 0.5, 0.0, 0.0] [0.5, 0.9, 0.0, 1.0] | judgement (band 2 about 1.2 m) |
+| VolleyStandard depth pull | Expressions graph 230 node 33 | [0.0, 0.5, 0.0, 0.2] [0.5, 1.0, 0.2, 1.0] | [0.0, 0.45, 0.0, 0.0] [0.45, 0.85, 0.0, 1.0] | judgement (band 2 about 1.2 m) |
 | VolleyPower aim: time to contact ramp | Expressions graph 231 node 17 | [20.0, 60.0, 0.0, 1.0] | [25.0, 50.0, 0.0, 1.0] | spec 4g volley arrival edges |
 | VolleyPower aim: little-time penalty | Expressions graph 231 node 6 | [100.0, 300.0, -0.2, -0.4] | [100.0, 300.0, -0.35, -0.55] | judgement (-0.15) |
 | VolleyPower aim: low-contact penalty | Expressions graph 231 node 5 | [50.0, 80.0, -0.6, -0.4] [80.0, 100.0, -0.4, -0.2] [100.0, 110.0, -0.2, 0.0] [110.0, 180.0, 0.0, 0.0] [180.0, 250.0, 0.0, 0.2] | [50.0, 80.0, -0.96000004, -0.64] [80.0, 100.0, -0.64, -0.32] [100.0, 110.0, -0.32, 0.0] [110.0, 180.0, 0.0, 0.0] [180.0, 250.0, 0.0, 0.2] | judgement (x1.6) |
@@ -37,7 +37,7 @@ Files:
 | VolleyPower depth pull switched on | Expressions graph 231 node 2 | 0 | 1 | spec 8b (DeepDeviation per band; retail multiplies it by 0) |
 | VolleyPower depth pull | Expressions graph 231 node 13 | [0.0, 0.5, 400.0, 200.0] [0.5, 1.0, 200.0, 0.0] | [0.0, 0.5, 500.0, 400.0] [0.5, 1.0, 400.0, 300.0] | spec 8b bands 3-4 |
 | VolleyPower depth pull | Expressions graph 231 node 11 | [0.0, 1.0, 100.0, 0.0] | [0.0, 1.0, 80.0, 0.0] | spec 8b band 1 |
-| VolleyPower depth pull | Expressions graph 231 node 33 | [0.0, 0.5, 0.0, 0.2] [0.5, 1.0, 0.2, 1.0] | [0.0, 0.5, 0.0, 0.0] [0.5, 0.9, 0.0, 1.0] | judgement (band 2 about 1.2 m) |
+| VolleyPower depth pull | Expressions graph 231 node 33 | [0.0, 0.5, 0.0, 0.2] [0.5, 1.0, 0.2, 1.0] | [0.0, 0.45, 0.0, 0.0] [0.45, 0.85, 0.0, 1.0] | judgement (band 2 about 1.2 m) |
 
 Notes:
 
