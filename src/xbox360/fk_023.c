@@ -93,7 +93,7 @@ ts4_word lua2_check_88815628();
 ts4_word lua2_subexpr_88816C30();
 ts4_word fn_88817030();
 ts4_word fn_888182A8();
-ts4_word fn_888188F8();
+ts4_word lua3_luaO_pushvfstring_888188F8();
 ts4_word lua2_luaX_errorline_88819520();
 ts4_word lua2_luaX_syntaxerror_888195F0();
 ts4_word lua2_luaX_lex_8881A6E8();
@@ -125,22 +125,22 @@ ts4_word lib3_lua_pushcclosure_88823E00();
 ts4_word fn_88823FC0();
 ts4_word fn_88824188();
 ts4_word fn_88824438();
-ts4_word fn_888246A8();
+ts4_word lua3_lua_settop_888246A8();
 ts4_word lib3_lua_load_buffer_88824CF8();
 ts4_word lib3_capture_to_close_88825A50();
 ts4_word lib3_match_88825EF0();
-ts4_word fn_8882AA90();
+ts4_word lua3_auxupvalue_8882AA90();
 ts4_word lib3_has_fenv_8882B4F8();
 ts4_word fn_8882B6A8();
-ts4_word fn_8882D360();
+ts4_word lua3_getfunc_8882D360();
 ts4_word lib3_adjuststack_8882DBA8();
 ts4_word lib3_emptybuffer_8882DE88();
 ts4_word lib3_aux_do_8882E368();
 ts4_word lib3_luaL_argerror_8882E6B8();
 ts4_word lib3_luaL_addlstring_8882E828();
 ts4_word lib3_lua_dostring_8882ED00();
-ts4_word fn_8882FA70();
-ts4_word fn_8882FEF8();
+ts4_word lua3_wcapture_to_close_8882FA70();
+ts4_word lua3_wmatch_8882FEF8();
 ts4_word fn_888345F8();
 ts4_word fn_888350C8();
 ts4_word fn_88835240();
@@ -901,7 +901,7 @@ ts4_word ts4_get_u32_off4_88822960(ts4_word a0, ts4_word a1)
     return lua2_luaD_call_8881E258((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)), (ts4_word)t1);
 }
 
-/* Swing_DLL.xex 0x88822A08: if_call_seq u32@0x14, u32@0x2c, u32@0x28, ts4_call_seq_fn_8881C130_8881C200, fn_888188F8 */
+/* Swing_DLL.xex 0x88822A08: if_call_seq u32@0x14, u32@0x2c, u32@0x28, ts4_call_seq_fn_8881C130_8881C200, lua3_luaO_pushvfstring_888188F8 */
 ts4_word ts4_if_call_seq_u32_off14_88822A08(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5)
 {
     ts4_word t1;
@@ -918,7 +918,7 @@ ts4_word ts4_if_call_seq_u32_off14_88822A08(ts4_word a0, ts4_word a1, ts4_word a
     if ((ts4_word)t2 >= (ts4_word)t3) {
         ts4_call_seq_fn_8881C130_8881C200((ts4_word)a0);
     }
-    t6 = fn_888188F8((ts4_word)a0, (ts4_word)a1, (ts4_word)a2);
+    t6 = lua3_luaO_pushvfstring_888188F8((ts4_word)a0, (ts4_word)a1, (ts4_word)a2);
     return t6;
 }
 
@@ -963,10 +963,10 @@ ts4_word ts4_call_seq_fn_8882E828_88825CD8(ts4_word a0, ts4_word a1, ts4_word a2
     return 1;
 }
 
-/* Swing_DLL.xex 0x8882AF38: tailcall fn_8882AA90 */
+/* Swing_DLL.xex 0x8882AF38: tailcall lua3_auxupvalue_8882AA90 */
 ts4_word ts4_tailcall_fn_8882AA90_8882AF38(ts4_word a0)
 {
-    return fn_8882AA90((ts4_word)a0, (ts4_word)1);
+    return lua3_auxupvalue_8882AA90((ts4_word)a0, (ts4_word)1);
 }
 
 /* Swing_DLL.xex 0x8882B398: fn  */
@@ -983,7 +983,7 @@ ts4_word ts4_call_seq_fn_88824188_8882B450(ts4_word a0)
     return 2;
 }
 
-/* Swing_DLL.xex 0x8882B568: if_call_seq lbl_880E18EC, fn_88823FC0, lib3_lua_getglobal_top_88823BA8, lib3_lua_tostring_88822888, fn_888246A8, lbl_880E2028 */
+/* Swing_DLL.xex 0x8882B568: if_call_seq lbl_880E18EC, fn_88823FC0, lib3_lua_getglobal_top_88823BA8, lib3_lua_tostring_88822888, lua3_lua_settop_888246A8, lbl_880E2028 */
 ts4_word ts4_if_call_seq_lbl_880E18EC_8882B568(ts4_word a0)
 {
     ts4_word p5;
@@ -992,7 +992,7 @@ ts4_word ts4_if_call_seq_lbl_880E18EC_8882B568(ts4_word a0)
     fn_88823FC0((ts4_word)a0, (ts4_word)(ts4_word)lbl_880E18EC, (ts4_word)8);
     lib3_lua_getglobal_top_88823BA8((ts4_word)a0);
     t3 = lib3_lua_tostring_88822888((ts4_word)a0, (ts4_word)-1);
-    fn_888246A8((ts4_word)a0, (ts4_word)-2);
+    lua3_lua_settop_888246A8((ts4_word)a0, (ts4_word)-2);
     if ((ts4_word)t3 != 0) {
         p5 = (ts4_word)t3;
     } else {
@@ -1009,15 +1009,15 @@ ts4_word ts4_call_seq_fn_8882B6A8_8882C988(ts4_word a0)
     return 1;
 }
 
-/* Swing_DLL.xex 0x8882D9D8: if_call_seq fn_8882D360, lib3_has_fenv_8882B4F8, fn_888246A8 */
+/* Swing_DLL.xex 0x8882D9D8: if_call_seq lua3_getfunc_8882D360, lib3_has_fenv_8882B4F8, lua3_lua_settop_888246A8 */
 ts4_word ts4_if_call_seq_fn_8882D360_8882D9D8(ts4_word a0)
 {
     ts4_word t2;
 
-    fn_8882D360((ts4_word)a0);
+    lua3_getfunc_8882D360((ts4_word)a0);
     t2 = lib3_has_fenv_8882B4F8((ts4_word)a0);
     if ((int)t2 == 0) {
-        fn_888246A8((ts4_word)a0, (ts4_word)-2);
+        lua3_lua_settop_888246A8((ts4_word)a0, (ts4_word)-2);
     }
     return 1;
 }
@@ -1096,17 +1096,17 @@ ts4_word ts4_call_seq_fn_88824CF8_8882ECB8(ts4_word a0, ts4_word a1, ts4_word a2
     return t2;
 }
 
-/* Swing_DLL.xex 0x8882FCA8: if_call_seq fn_8882FA70, u32@0x14, fn_8882FEF8, u32@0x14 */
+/* Swing_DLL.xex 0x8882FCA8: if_call_seq lua3_wcapture_to_close_8882FA70, u32@0x14, lua3_wmatch_8882FEF8, u32@0x14 */
 ts4_word ts4_if_call_seq_fn_8882FA70_8882FCA8(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t1;
     ts4_word t2;
     ts4_word t3;
 
-    t1 = fn_8882FA70((ts4_word)a0);
+    t1 = lua3_wcapture_to_close_8882FA70((ts4_word)a0);
     t2 = *(ts4_word *)((char *)(ts4_word)(((t1 + 2) << 3)) + a0);
     *(ts4_word *)((char *)(ts4_word)(((t1 << 3) + a0)) + 20) = (ts4_word)((int)(a1 - t2) >> 1);
-    t3 = fn_8882FEF8((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)((int)(a1 - t2) >> 1), (ts4_word)(a1 - t2), (ts4_word)t2, (ts4_word)((t1 + 2) << 3), (ts4_word)(t1 + 2));
+    t3 = lua3_wmatch_8882FEF8((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)((int)(a1 - t2) >> 1), (ts4_word)(a1 - t2), (ts4_word)t2, (ts4_word)((t1 + 2) << 3), (ts4_word)(t1 + 2));
     if ((ts4_word)t3 == 0) {
         *(ts4_word *)((char *)(ts4_word)(((t1 << 3) + a0)) + 20) = (ts4_word)-1;
     }
@@ -1668,7 +1668,7 @@ ts4_word ts4_call_seq_fn_88837CB0_88837F48(ts4_word a0)
     t3 = *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 24))) + 0);
     t4 = *(ts4_word *)((char *)(ts4_word)(t3) + 12);
     t6 = fn_888345F8((ts4_word)t3, (ts4_word)((int)(t4 - (*(ts4_word *)((char *)(ts4_word)(t3) + 16))) >> 4));
-    fn_888246A8((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 24))) + 0)), (ts4_word)-2);
+    lua3_lua_settop_888246A8((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 24))) + 0)), (ts4_word)-2);
     return t6;
 }
 

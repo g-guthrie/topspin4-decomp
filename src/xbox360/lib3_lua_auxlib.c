@@ -62,10 +62,10 @@ extern void ts4_lua_rawgeti_888239E0(lua_State *L, int idx, int n);
 extern void ts4_lua_rawset_88823430(lua_State *L, int idx);
 extern void ts4_lua_pushnumber_888240B8(lua_State *L, double n);
 extern void ts4_lua_pushvalue_88824248(lua_State *L, int idx);
-extern void fn_888246A8(lua_State *L, int idx);
+extern void lua3_lua_settop_888246A8(lua_State *L, int idx);
 extern void ts4_lua_remove_below_top_888245A8(lua_State *L);
-extern int fn_8881EED0(lua_State *L, int level, Lib3Debug *ar);
-extern int fn_8881FF18(lua_State *L, const char *what, Lib3Debug *ar);
+extern int lua3_lua_getstack_8881EED0(lua_State *L, int level, Lib3Debug *ar);
+extern int lua3_lua_getinfo_8881FF18(lua_State *L, const char *what, Lib3Debug *ar);
 const char *lib3_lua_pushfstring_88822988(lua_State *L, const char *fmt, ...);
 extern int lib3_checkint_8882DD08(lua_State *L, int i);
 extern void lib3_getsizes_8882DC40(lua_State *L);
@@ -174,8 +174,8 @@ int lib3_emptybuffer_8882DE88(Lib3Buffer *B)
 void lib3_luaL_where_8882E2D0(lua_State *L, int level)
 {
     Lib3Debug ar;
-    if (fn_8881EED0(L, level, &ar)) {
-        fn_8881FF18(L, lbl_880E1C78, &ar);
+    if (lua3_lua_getstack_8881EED0(L, level, &ar)) {
+        lua3_lua_getinfo_8881FF18(L, lbl_880E1C78, &ar);
         if (ar.currentline > 0) {
             lib3_lua_pushfstring_88822988(L, lbl_880E1C7C, ar.short_src, ar.currentline);
             return;
@@ -198,7 +198,7 @@ void lib3_luaL_setn_8882E008(lua_State *L, int n)
         ts4_lua_pushvalue_88824248(L, 1);
         ts4_lua_pushnumber_888240B8(L, (double)n);
         ts4_lua_rawset_88823430(L, -3);
-        fn_888246A8(L, -2);
+        lua3_lua_settop_888246A8(L, -2);
     }
 }
 
@@ -219,9 +219,9 @@ int lib3_luaL_getn_8882DF10(lua_State *L, int t)
         ts4_lua_rawgeti_888239E0(L, t, n);
         o = L->top - 1;
         if (o != 0 && o->tt == 0) break;
-        fn_888246A8(L, -2);
+        lua3_lua_settop_888246A8(L, -2);
     }
-    fn_888246A8(L, -2);
+    lua3_lua_settop_888246A8(L, -2);
     return n - 1;
 }
 
@@ -237,7 +237,7 @@ int lib3_getmetafield_tail_8882E218(lua_State *L, const char *event)
     ts4_lua_rawget_88823AE8(L, -2);
     o = L->top - 1;
     if (o != 0 && o->tt == 0) {
-        fn_888246A8(L, -3);
+        lua3_lua_settop_888246A8(L, -3);
         return 0;
     }
     ts4_lua_remove_below_top_888245A8(L);
@@ -251,7 +251,7 @@ void lib3_getsizes_8882DC40(lua_State *L)
     ts4_lua_rawgeti_888239E0(L, -10000, 2);
     o = L->top - 1;
     if (o != 0 && o->tt == 0) {
-        fn_888246A8(L, -2);
+        lua3_lua_settop_888246A8(L, -2);
         ts4_lua_newtable_888238D8(L);
         ts4_lua_pushvalue_88824248(L, -1);
         lib3_lua_setmetatable_888231A0(L, -2);
@@ -292,7 +292,7 @@ int lib3_checkint_8882DD08(lua_State *L, int topop)
 {
     int n = (int)lib3_tonumber_top(L);
     if (n == 0 && !lib3_isnumber_top(L)) n = -1;
-    fn_888246A8(L, -topop - 1);
+    lua3_lua_settop_888246A8(L, -topop - 1);
     return n;
 }
 
@@ -309,11 +309,11 @@ void lib3_callalert_8882DDD0(lua_State *L)
     } else {
         const char *msg = lib3_lua_tostring_88822888(L, -2);
         fn_88569190(ts4_addr_lbl_88C30DA8_88567BC8() + 0x40, lbl_880D3108, msg);
-        fn_888246A8(L, -3);
+        lua3_lua_settop_888246A8(L, -3);
     }
 }
 
-extern int fn_8881E748(lua_State *L, Ts4LuaCall *c, int oldtop, int ef);
+extern int lua3_luaD_pcall_8881E748(lua_State *L, Ts4LuaCall *c, int oldtop, int ef);
 
 /* aux_do: run the chunk on top when it parsed, report errors through _ALERT. */
 int lib3_aux_do_8882E368(lua_State *L, int status)
@@ -322,7 +322,7 @@ int lib3_aux_do_8882E368(lua_State *L, int status)
         Ts4LuaCall c;
         c.func = L->top - 1;
         c.nresults = -1;
-        status = fn_8881E748(L, &c, (int)((char *)c.func - (char *)L->stack), 0);
+        status = lua3_luaD_pcall_8881E748(L, &c, (int)((char *)c.func - (char *)L->stack), 0);
     }
     if (status != 0) lib3_callalert_8882DDD0(L);
     return status;
@@ -337,7 +337,7 @@ void lib3_luaL_openlib_8882E0D8(lua_State *L, const char *libname, const Lib3Reg
         lib3_lua_getglobal_top_88823BA8(L);
         o = L->top - 1;
         if (o != 0 && o->tt == 0) {
-            fn_888246A8(L, -2);
+            lua3_lua_settop_888246A8(L, -2);
             ts4_lua_newtable_888238D8(L);
             ts4_lua_pushlstring_88823FC0(L, libname, strlen(libname));
             ts4_lua_pushvalue_88824248(L, -2);
@@ -350,7 +350,7 @@ void lib3_luaL_openlib_8882E0D8(lua_State *L, const char *libname, const Lib3Reg
         lib3_lua_pushcclosure_88823E00(L, l->func, 0);
         ts4_lua_settable_88823580(L, -3);
     }
-    fn_888246A8(L, -1);
+    lua3_lua_settop_888246A8(L, -1);
 }
 
 extern int ts4_lua_v_tostring_8880C9F8(lua_State *L, TValue *obj);
@@ -374,7 +374,7 @@ void lib3_luaL_addvalue_8882E3E8(Lib3Buffer *B)
     if (vl <= (unsigned int)(LIB3_BUFFERSIZE - (B->p - B->buffer))) {
         memcpy(B->p, lib3_lua_tostring_88822888(L, -1), vl);
         B->p += vl;
-        fn_888246A8(L, -2);
+        lua3_lua_settop_888246A8(L, -2);
     } else {
         if (lib3_emptybuffer_8882DE88(B)) ts4_lua_insert_88824438(L, -2);
         B->lvl++;
@@ -402,9 +402,9 @@ int lib3_luaL_callmeta_8882E560(lua_State *L)
 }
 
 extern void ts4_call_seq_fn_8881C130_8881C200(lua_State *L);
-extern const char *fn_888188F8(lua_State *L, const char *fmt, va_list argp);
+extern const char *lua3_luaO_pushvfstring_888188F8(lua_State *L, const char *fmt, va_list argp);
 extern void fn_8880FA80(lua_State *L, int total, int last);
-TS4_NORETURN extern void fn_8881F900(lua_State *L);
+TS4_NORETURN extern void lua3_luaG_errormsg_8881F900(lua_State *L);
 
 /* luaC_checkGC */
 #define LIB3_CHECKGC(L) \
@@ -420,12 +420,12 @@ int lib3_luaL_error_8882E5F0(lua_State *L, const char *fmt, ...)
     va_start(argp, fmt);
     lib3_luaL_where_8882E2D0(L, 1);
     LIB3_CHECKGC(L);
-    fn_888188F8(L, fmt, argp);
+    lua3_luaO_pushvfstring_888188F8(L, fmt, argp);
     va_end(argp);
     LIB3_CHECKGC(L);
     fn_8880FA80(L, 2, (int)(L->top - L->base) - 1);
     L->top -= 1;
-    fn_8881F900(L);
+    lua3_luaG_errormsg_8881F900(L);
 #ifndef _MSC_VER
     return 0; /* host syntax check only: lua_error does not return */
 #endif
@@ -449,7 +449,7 @@ void lib3_luaL_argerror_8882E6B8(lua_State *L, int narg, const char *extramsg)
     Lib3CallInfo *ci = (Lib3CallInfo *)L->ci;
     Lib3CallInfo *base_ci = (Lib3CallInfo *)L->base_ci;
     if (ci != base_ci) ar.i_ci = (int)(ci - base_ci);
-    fn_8881FF18(L, lbl_880E18AC, &ar);
+    lua3_lua_getinfo_8881FF18(L, lbl_880E18AC, &ar);
     if (strcmp(ar.namewhat, lbl_880E1C18) == 0) {
         narg--;
         if (narg == 0)
@@ -468,7 +468,7 @@ const char *lib3_lua_pushfstring_88822988(lua_State *L, const char *fmt, ...)
     va_list argp;
     LIB3_CHECKGC(L);
     va_start(argp, fmt);
-    ret = fn_888188F8(L, fmt, argp);
+    ret = lua3_luaO_pushvfstring_888188F8(L, fmt, argp);
     va_end(argp);
     return ret;
 }
@@ -699,7 +699,7 @@ int lib3_luaB_assert_8882D0E0(lua_State *L)
         lib3_luaL_error_8882E5F0(L, lbl_880D1B40, lib3_optstring(L, 2, lbl_880E1F80));
         LIB3_UNREACHABLE();
     }
-    fn_888246A8(L, 1);
+    lua3_lua_settop_888246A8(L, 1);
     return 1;
 }
 
@@ -716,7 +716,7 @@ int lib3_luaB_unpack_8882CB48(lua_State *L)
 }
 
 extern void lib3_lua_xmove_88824958(lua_State *from, lua_State *to, int n);
-extern int fn_8881E858(lua_State *L, int nargs);
+extern int lua3_lua_resume_8881E858(lua_State *L, int nargs);
 extern char lbl_880E20A4[];
 extern char lbl_880E20C4[];
 
@@ -727,7 +727,7 @@ int lib3_auxresume_8882B768(lua_State *L, lua_State *co, int narg)
     if (!lib3_lua_checkstack_88822028(co, narg))
         lib3_luaL_error_8882E5F0(L, lbl_880E20A4);
     lib3_lua_xmove_88824958(L, co, narg);
-    status = fn_8881E858(co, narg);
+    status = lua3_lua_resume_8881E858(co, narg);
     if (status == 0) {
         int nres = (int)(co->top - co->base);
         if (!lib3_lua_checkstack_88822028(L, nres))
@@ -752,7 +752,7 @@ int lib3_luaB_setmetatable_8882CFE0(lua_State *L)
     if (!(t == 0 || t == 5)) lib3_luaL_argerror_8882E6B8(L, 2, lbl_880E1E60);
     if (lib3_getmetafield(L, 1, lbl_880E1E54))
         lib3_luaL_error_8882E5F0(L, lbl_880E1E78);
-    fn_888246A8(L, 2);
+    lua3_lua_settop_888246A8(L, 2);
     lib3_lua_setmetatable_888231A0(L, 1);
     return 1;
 }
@@ -875,7 +875,7 @@ int lib3_luaB_require_8882C9D0(lua_State *L)
 {
     const char *path;
     if (!lib3_lua_tostring_88822888(L, 1)) lib3_luaL_typerror_8882E950(L, 1, lbl_880C9684[4]);
-    fn_888246A8(L, 1);
+    lua3_lua_settop_888246A8(L, 1);
     ts4_lua_pushlstring_88823FC0(L, lbl_880E2054, 7);
     lib3_lua_getglobal_top_88823BA8(L);
     if (ts4_lua_type(L, 2) != 5) lib3_luaL_error_8882E5F0(L, lbl_880E205C);
@@ -883,7 +883,7 @@ int lib3_luaB_require_8882C9D0(lua_State *L)
     ts4_lua_pushvalue_88824248(L, 1);
     ts4_lua_rawget_88823AE8(L, 2);
     if (lib3_toboolean_top(L)) return 1;
-    fn_888246A8(L, 3);
+    lua3_lua_settop_888246A8(L, 3);
     if (lib3_pushnexttemplate_8882B3B8(L, path) != 0) {
         lib3_composename_8882C0A0(L);
         lib3_luaL_error_8882E5F0(L, lbl_880E1CB4, lib3_lua_tostring_88822888(L, -1));
@@ -899,7 +899,7 @@ extern char lbl_880E200C[];
 /* luaB_newproxy */
 int lib3_luaB_newproxy_8882B830(lua_State *L)
 {
-    fn_888246A8(L, 1);
+    lua3_lua_settop_888246A8(L, 1);
     ts4_lua_newuserdata_88822CA0(L, 0);
     if (lib3_toboolean(L, 1) == 0)
         return 1;
@@ -913,7 +913,7 @@ int lib3_luaB_newproxy_8882B830(lua_State *L)
         if (ts4_lua_getmetatable_88823768(L, 1)) {
             ts4_lua_rawget_88823AE8(L, -10002);
             validproxy = lib3_toboolean_top(L);
-            fn_888246A8(L, -2);
+            lua3_lua_settop_888246A8(L, -2);
         }
         if (!validproxy) lib3_luaL_argerror_8882E6B8(L, 1, lbl_880E200C);
         ts4_lua_getmetatable_88823768(L, 1);
@@ -959,7 +959,7 @@ int lib3_auxwrap_8882BEC0(lua_State *L)
             fn_8880FA80(L, 2, (int)(L->top - L->base) - 1);
             L->top -= 1;
         }
-        fn_8881F900(L);
+        lua3_luaG_errormsg_8881F900(L);
     }
     return r;
 }
@@ -1179,7 +1179,7 @@ void lib3_add_s_88825D00(Lib3MatchState *ms, Lib3Buffer *b, const char *s, const
         if (lib3_isstring_top(L))
             lib3_luaL_addvalue_8882E3E8(b);
         else
-            fn_888246A8(L, -2);
+            lua3_lua_settop_888246A8(L, -2);
     }
 }
 

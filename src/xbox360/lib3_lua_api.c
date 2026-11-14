@@ -228,7 +228,7 @@ void lib3_lua_call_88822970(lua_State *L, int nargs, int nresults)
     lua2_luaD_call_8881E258(L, L->top - (nargs + 1), nresults);
 }
 
-extern const char *fn_888188F8(lua_State *L, const char *fmt, va_list argp);
+extern const char *lua3_luaO_pushvfstring_888188F8(lua_State *L, const char *fmt, va_list argp);
 
 
 extern const char *ts4_if_get_u32_off10_88822128(lua_State *L, int n, TValue **val);
@@ -349,7 +349,7 @@ typedef struct Lib3CallS {
     int nresults;
 } Lib3CallS;
 
-extern int fn_8881E748(lua_State *L, Lib3CallS *c, int oldtop, int ef);
+extern int lua3_luaD_pcall_8881E748(lua_State *L, Lib3CallS *c, int oldtop, int ef);
 
 /* lua_pcall: stack positions are passed as byte offsets from L->stack. */
 int lib3_lua_pcall_88824C48(lua_State *L, int nargs, int nresults, int errfunc)
@@ -359,7 +359,7 @@ int lib3_lua_pcall_88824C48(lua_State *L, int nargs, int nresults, int errfunc)
     func = (errfunc == 0) ? 0 : (int)((char *)lib3_index(L, errfunc) - (char *)L->stack);
     c.func = L->top - (nargs + 1);
     c.nresults = nresults;
-    return fn_8881E748(L, &c, (int)((char *)c.func - (char *)L->stack), func);
+    return lua3_luaD_pcall_8881E748(L, &c, (int)((char *)c.func - (char *)L->stack), func);
 }
 
 #ifdef _MSC_VER
@@ -392,7 +392,7 @@ typedef struct Lib3Zio {
 extern const char *ts4_if_get_u32_off4_8882DB60(lua_State *L, void *ud, u32 *size);
 extern char lbl_880E1C40[];
 extern int ex3_luaZ_lookahead_8880C238(Lib3Zio *z);
-extern int fn_8881EAF8(lua_State *L, Lib3Zio *z, int bin);
+extern int lua3_luaD_protectedparser_8881EAF8(lua_State *L, Lib3Zio *z, int bin);
 
 /* lua_load specialised for the luaL_loadbuffer string reader (getS). */
 int lib3_lua_load_buffer_88824CF8(lua_State *L, void *data, const char *chunkname)
@@ -408,7 +408,7 @@ int lib3_lua_load_buffer_88824CF8(lua_State *L, void *data, const char *chunknam
     z.p = 0;
     z.extra = 0;
     c = ex3_luaZ_lookahead_8880C238(&z);
-    return fn_8881EAF8(L, &z, (c == 0x1b));
+    return lua3_luaD_protectedparser_8881EAF8(L, &z, (c == 0x1b));
 }
 
 extern TValue *fn_88811930(void *t, int key);

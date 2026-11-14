@@ -8,8 +8,8 @@ extern const TValue *ts4_if_call_seq_u32_off0_88812188(Table *t, const TValue *k
 extern const TValue *lua2_luaT_gettm_88811168(Table *events, int event, TString *ename);       /* luaT_gettm */
 extern const TValue *lu1_call_orderTM_8880C480(lua_State *L, Table *mt1, Table *mt2); /* get_compTM(.., TM_EQ) */
 extern void lua2_luaD_call_8881E258(lua_State *L, StkId func, int nresults);                   /* luaD_call */
-extern void fn_8881FB60(lua_State *L, const char *fmt, ...);                       /* luaG_runerror */
-extern void fn_8881F6D8(lua_State *L, const TValue *o, const char *opname);         /* luaG_typeerror */
+extern void lua3_luaG_runerror_8881FB60(lua_State *L, const char *fmt, ...);                       /* luaG_runerror */
+extern void lua3_luaG_typeerror_8881F6D8(lua_State *L, const TValue *o, const char *opname);         /* luaG_typeerror */
 extern char lbl_880E2E80[]; /* "index" */
 extern char lbl_880E2E88[]; /* "loop in gettable" */
 
@@ -110,7 +110,7 @@ const TValue *lua2_luaV_getnotable_8880CBC8(lua_State *L, const TValue *t, TValu
         case LUA2_TUSERDATA: mt = uvalue(t)->metatable; break;
         default: mt = hvalue(&G(L)->mt[ttype(t)]); break;
         }
-        if (mt == 0) fn_8881F6D8(L, t, lbl_880E2E80);
+        if (mt == 0) lua3_luaG_typeerror_8881F6D8(L, t, lbl_880E2E80);
         temp.tt = LUA2_TNIL;
         temp.value.p = 0;
         setgcvalue(L, &temp, mt, LUA2_TTABLE);
@@ -139,7 +139,7 @@ const TValue *lua2_luaV_index_8880D540(lua_State *L, const TValue *t, TValue *ke
 /* luaV_gettable */
 const TValue *lua2_luaV_gettable_8880D4B0(lua_State *L, const TValue *t, TValue *key, int loop)
 {
-    if (loop > MAXTAGLOOP) fn_8881FB60(L, lbl_880E2E88);
+    if (loop > MAXTAGLOOP) lua3_luaG_runerror_8881FB60(L, lbl_880E2E88);
     if (ttype(t) == LUA2_TTABLE) {
         const TValue *v = ts4_if_call_seq_u32_off0_88812188(hvalue(t), key);
         if (ttype(v) != LUA2_TNIL) return v;
@@ -239,7 +239,7 @@ void lua2_luaV_settable_8880D278(lua_State *L, const TValue *t, TValue *key, Stk
                 return;
             }
         } else if (ttype(tm = luaT_gettmbyobj(L, t, 1)) == LUA2_TNIL)
-            fn_8881F6D8(L, t, lbl_880E2E80);
+            lua3_luaG_typeerror_8881F6D8(L, t, lbl_880E2E80);
         if (ttype(tm) == LUA2_TFUNCTION) {
             lua2_callTM_8880C7E0(L, tm, t, key, val);
             if (ttype(t) == LUA2_TTABLE) {
@@ -252,11 +252,11 @@ void lua2_luaV_settable_8880D278(lua_State *L, const TValue *t, TValue *key, Stk
         }
         t = tm;
     } while (++loop <= MAXTAGLOOP);
-    fn_8881FB60(L, lbl_880E2E9C);
+    lua3_luaG_runerror_8881FB60(L, lbl_880E2E9C);
 }
 
 extern TValue *ts4_lua_v_tonumber_8880CAF0(lua_State *L, const TValue *obj, TValue *n);
-extern void fn_8881F848(lua_State *L, const TValue *p1, const TValue *p2); /* luaG_aritherror */
+extern void lua3_luaG_aritherror_8881F848(lua_State *L, const TValue *p1, const TValue *p2); /* luaG_aritherror */
 extern char lbl_880E2EC8[]; /* "`__pow' (`^' operator) is not a function" */
 
 #define setnvalue(L, obj, x) \
@@ -288,7 +288,7 @@ void lua2_Arith_8880CEA0(lua_State *L, StkId ra, const TValue *rb, const TValue 
         case 9: {
             const TValue *f = ts4_loop_get_u8_offd_888114E0(hvalue(&L->_gt), G(L)->tmname[9]);
             int res = savestack(L, ra);
-            if (ttype(f) != LUA2_TFUNCTION) fn_8881FB60(L, lbl_880E2EC8);
+            if (ttype(f) != LUA2_TFUNCTION) lua3_luaG_runerror_8881FB60(L, lbl_880E2EC8);
             lua2_callTMres_8880F770(L, f, b, c);
             ra = restorestack(L, res);
             setobj(L, ra, L->top);
@@ -299,7 +299,7 @@ void lua2_Arith_8880CEA0(lua_State *L, StkId ra, const TValue *rb, const TValue 
     } else if (!lua2_call_binTM_8880F928(L, rb, rc, ra, op)) {
         setnilvalue(L, &tempb);
         setnilvalue(L, &tempc);
-        fn_8881F848(L, rb, rc);
+        lua3_luaG_aritherror_8881F848(L, rb, rc);
     }
 }
 

@@ -226,7 +226,7 @@ ts4_word fn_88617D88();
 ts4_word fn_88618998();
 ts4_word ts4_if_call_seq_lbl_880E3E3C_887FC130();
 ts4_word fn_88823430();
-ts4_word fn_888246A8();
+ts4_word lua3_lua_settop_888246A8();
 ts4_word fn_888367F8();
 ts4_word fn_888368B0();
 ts4_word fn_88837880();
@@ -4551,7 +4551,7 @@ ts4_word ts4_call_seq_u32_off30_881CF6E8(ts4_word a0, ts4_word a1, ts4_word a2)
     fn_881B1B68((ts4_word)(ts4_word)&loc50[0], (ts4_word)t7, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
     fn_881B1B68((ts4_word)(ts4_word)&loc50[0], (ts4_word)t7, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a2) + 0)));
     fn_88823430((ts4_word)(*(ts4_word *)((char *)(ts4_word)(t7) + 0)), (ts4_word)-3);
-    fn_888246A8((ts4_word)(*(ts4_word *)((char *)(ts4_word)(t7) + 0)), (ts4_word)-2);
+    lua3_lua_settop_888246A8((ts4_word)(*(ts4_word *)((char *)(ts4_word)(t7) + 0)), (ts4_word)-2);
     t18 = fn_881B19A0((ts4_word)(ts4_word)&loc80[0]);
     return t18;
 }

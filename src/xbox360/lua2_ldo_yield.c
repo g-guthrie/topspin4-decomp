@@ -16,9 +16,9 @@ int lua2_lua_yield_8881E350(lua_State *L, int nresults)
 {
     CallInfo *ci;
     ci = L->ci;
-    if (L->nCcalls > 0) fn_8881FB60(L, lbl_880E2760);
+    if (L->nCcalls > 0) lua3_luaG_runerror_8881FB60(L, lbl_880E2760);
     if (ci->state & CI_C) { /* usual yield */
-        if ((ci - 1)->state & CI_C) fn_8881FB60(L, lbl_880E2794);
+        if ((ci - 1)->state & CI_C) lua3_luaG_runerror_8881FB60(L, lbl_880E2794);
         if (L->top - nresults > L->base) { /* is there garbage in the stack? */
             int i;
             for (i = 0; i < nresults; i++) /* move down results */

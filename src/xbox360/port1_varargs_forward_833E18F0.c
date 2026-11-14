@@ -21,7 +21,7 @@ ts4_word fn_8856A218();
 ts4_word fn_88572018();
 ts4_word fn_885DD340();
 ts4_word ts4_if_call_seq_fn_8856A658_88606208();
-ts4_word fn_888188F8();
+ts4_word lua3_luaO_pushvfstring_888188F8();
 ts4_word ts4_call_worker_clamp_885694D0();
 
 /* Swing_DLL.xex 0x8819BEF0 */
@@ -101,7 +101,7 @@ ts4_word ts4_forward_varargs_88818C40(ts4_word p0, ts4_word p1, ...)
 {
     ts4_va_list ap;
     TS4_VA_START(ap, p1);
-    return fn_888188F8(p0, p1, ap);
+    return lua3_luaO_pushvfstring_888188F8(p0, p1, ap);
 }
 
 /* Swing_DLL.xex 0x88864C60 */

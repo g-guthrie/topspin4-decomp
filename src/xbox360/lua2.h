@@ -311,23 +311,23 @@ extern void lua2_luaD_reallocstack_8881D478(lua_State *L, int newsize); /* luaD_
 
 /* luaG_runerror (0x8881FB60). A caller only gets the original frame layout when the variadic
    callee's body is visible in its translation unit, so files that raise errors define this copy. */
-extern const char *fn_888188F8(lua_State *L, const char *fmt, va_list argp); /* luaO_pushvfstring */
-extern void fn_8881FAD0(lua_State *L, const char *msg);                      /* addinfo */
-extern void fn_8881F900(lua_State *L); /* luaG_errormsg */
+extern const char *lua3_luaO_pushvfstring_888188F8(lua_State *L, const char *fmt, va_list argp); /* luaO_pushvfstring */
+extern void lua3_addinfo_8881FAD0(lua_State *L, const char *msg);                      /* addinfo */
+extern void lua3_luaG_errormsg_8881F900(lua_State *L); /* luaG_errormsg */
 #define LUA2_DEFINE_RUNERROR LUA2_DEFINE_RUNERROR_(LUA2_NORETURN)
 /* Same copy for files whose callers still expect it to return. */
 #define LUA2_DEFINE_RUNERROR_RET LUA2_DEFINE_RUNERROR_(LUA2_EMPTY)
 #define LUA2_EMPTY
 #define LUA2_DEFINE_RUNERROR_(attr) \
-    LUA2_LOCAL attr void fn_8881FB60(lua_State *L, const char *fmt, ...) \
+    LUA2_LOCAL attr void lua3_luaG_runerror_8881FB60(lua_State *L, const char *fmt, ...) \
     { \
         const char *msg; \
         va_list argp; \
         va_start(argp, fmt); \
-        msg = fn_888188F8(L, fmt, argp); \
+        msg = lua3_luaO_pushvfstring_888188F8(L, fmt, argp); \
         va_end(argp); \
-        fn_8881FAD0(L, msg); \
-        fn_8881F900(L); \
+        lua3_addinfo_8881FAD0(L, msg); \
+        lua3_luaG_errormsg_8881F900(L); \
     }
 
 #endif

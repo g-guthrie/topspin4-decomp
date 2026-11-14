@@ -67,7 +67,7 @@ LUA2_LOCAL const char *ts4_forward_varargs_88818C40(lua_State *L, const char *fm
     const char *msg;
     va_list argp;
     va_start(argp, fmt);
-    msg = fn_888188F8(L, fmt, argp);
+    msg = lua3_luaO_pushvfstring_888188F8(L, fmt, argp);
     va_end(argp);
     return msg;
 }

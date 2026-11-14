@@ -16,11 +16,11 @@ extern const char *lbl_880C9684[];
 extern char lbl_880E1C98[];
 extern TS4_NORETURN int lib3_luaL_typerror_8882E950(lua_State *L, int narg, const char *tname);
 extern TS4_NORETURN int lib3_luaL_argerror_8882E6B8(lua_State *L, int narg, const char *extramsg);
-extern int fn_8881E748(lua_State *L, CallS *c, int old_top, int ef);
+extern int lua3_luaD_pcall_8881E748(lua_State *L, CallS *c, int old_top, int ef);
 extern void ts4_lua_pushboolean_88823D48(lua_State *L, int b);
 extern void ts4_lua_insert_88824438(lua_State *L, int idx);
 extern void ts4_lua_replace_88824340(lua_State *L, int idx);
-extern void fn_888246A8(lua_State *L, int idx);
+extern void lua3_lua_settop_888246A8(lua_State *L, int idx);
 extern void ts4_lua_rawget_88823AE8(lua_State *L, int idx);
 extern char lbl_880E17A4[];
 extern void ts4_lua_pushlstring_88823FC0(lua_State *L, const char *s, u32 len);
@@ -37,7 +37,7 @@ TS4_FORCEINLINE int lua_pcall_(lua_State *L, int nargs, int nresults, int errfun
     func = (errfunc == 0) ? 0 : (int)((char *)(L->base + (errfunc - 1)) - (char *)L->stack);
     c.func = L->top - (nargs + 1);
     c.nresults = nresults;
-    return fn_8881E748(L, &c, (int)((char *)c.func - (char *)L->stack), func);
+    return lua3_luaD_pcall_8881E748(L, &c, (int)((char *)c.func - (char *)L->stack), func);
 }
 
 /* luaB_xpcall */
@@ -45,7 +45,7 @@ int ts4_lua_b_xpcall_8882C498(lua_State *L)
 {
     int status;
     if (lua_type_(L, 2) == -1) lib3_luaL_argerror_8882E6B8(L, 2, lbl_880E1C98);
-    fn_888246A8(L, 2);
+    lua3_lua_settop_888246A8(L, 2);
     ts4_lua_insert_88824438(L, 1);
     status = lua_pcall_(L, 0, -1, 1);
     ts4_lua_pushboolean_88823D48(L, status == 0);

@@ -14,7 +14,7 @@ extern void ts4_call_seq_fn_8856CE60_885640E0(u32);
 extern int fn_88564110(void);
 extern int lib3_lua_tostring_88822888(void *L, int idx);
 extern void lib3_luaL_typerror_8882E950(void *L, int idx, int arg);
-extern void fn_888246A8(void *L);
+extern void lua3_lua_settop_888246A8(void *L);
 extern void ts4_lua_pushnumber_888240B8(void *L, double n);
 extern void lib3_lua_pushcclosure_88823E00(void *L, void *fn, int n);
 extern void lib3_gfind_aux_88828338(void);

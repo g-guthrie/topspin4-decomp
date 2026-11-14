@@ -41647,3 +41647,152 @@ src/xbox360/lua2_lvm.c:
 	.text       start:0x8880D278 end:0x8880D53C
 	.text       start:0x8880D540 end:0x8880D5DC
 	.text       start:0x8880F770 end:0x8880FA80
+
+src/xbox360/lua3_lapi.c:
+	.pdata      start:0x8812B600 end:0x8812B608
+	.pdata      start:0x8812B6A8 end:0x8812B6B0
+	.text       start:0x88823068 end:0x888231A0
+	.text       start:0x888246A8 end:0x8882484C
+
+src/xbox360/lua3_lbaselib.c:
+	.pdata      start:0x8812B8D0 end:0x8812B8D8
+	.pdata      start:0x8812B8F8 end:0x8812B900
+	.pdata      start:0x8812B998 end:0x8812B9A0
+	.pdata      start:0x8812B9A0 end:0x8812B9A8
+	.pdata      start:0x8812B9A8 end:0x8812B9B0
+	.pdata      start:0x8812B9B0 end:0x8812B9B8
+	.pdata      start:0x8812B9C0 end:0x8812B9C8
+	.text       start:0x8882B998 end:0x8882BDA0
+	.text       start:0x8882C1A0 end:0x8882C498
+	.text       start:0x8882D360 end:0x8882D5C4
+	.text       start:0x8882D5C8 end:0x8882D8CC
+	.text       start:0x8882D8D0 end:0x8882D9D8
+	.text       start:0x8882DA28 end:0x8882DAEC
+
+src/xbox360/lua3_ldblib.c:
+	.pdata      start:0x8812B828 end:0x8812B830
+	.pdata      start:0x8812B830 end:0x8812B838
+	.pdata      start:0x8812B838 end:0x8812B840
+	.pdata      start:0x8812B840 end:0x8812B848
+	.pdata      start:0x8812B848 end:0x8812B850
+	.pdata      start:0x8812B850 end:0x8812B858
+	.pdata      start:0x8812B858 end:0x8812B860
+	.pdata      start:0x8812B860 end:0x8812B868
+	.pdata      start:0x8812B868 end:0x8812B870
+	.pdata      start:0x8812B870 end:0x8812B878
+	.pdata      start:0x8812B878 end:0x8812B880
+	.pdata      start:0x8812B880 end:0x8812B888
+	.text       start:0x8882A3D0 end:0x8882A42C
+	.text       start:0x8882A430 end:0x8882A4A4
+	.text       start:0x8882A4A8 end:0x8882A854
+	.text       start:0x8882A858 end:0x8882AA8C
+	.text       start:0x8882AA90 end:0x8882ABA4
+	.text       start:0x8882ABA8 end:0x8882AC7C
+	.text       start:0x8882AC80 end:0x8882AEF4
+	.text       start:0x8882AEF8 end:0x8882AF38
+	.text       start:0x8882AF40 end:0x8882B340
+
+src/xbox360/lua3_ldebug.c:
+	.pdata      start:0x8812B418 end:0x8812B420
+	.pdata      start:0x8812B420 end:0x8812B428
+	.pdata      start:0x8812B428 end:0x8812B430
+	.pdata      start:0x8812B430 end:0x8812B438
+	.pdata      start:0x8812B438 end:0x8812B440
+	.pdata      start:0x8812B440 end:0x8812B448
+	.pdata      start:0x8812B450 end:0x8812B458
+	.pdata      start:0x8812B460 end:0x8812B468
+	.pdata      start:0x8812B468 end:0x8812B470
+	.pdata      start:0x8812B470 end:0x8812B478
+	.pdata      start:0x8812B480 end:0x8812B488
+	.text       start:0x8881EBA8 end:0x8881EC24
+	.text       start:0x8881EC60 end:0x8881EC98
+	.text       start:0x8881ECD0 end:0x8881ED1C
+	.text       start:0x8881ED70 end:0x8881EE24
+	.text       start:0x8881EED0 end:0x8881EF5C
+	.text       start:0x8881EF78 end:0x8881EFB4
+	.text       start:0x8881F010 end:0x8881F450
+	.text       start:0x8881F4A8 end:0x8881F6D4
+	.text       start:0x8881F6D8 end:0x8881F794
+	.text       start:0x8881F798 end:0x8881F8DC
+	.text       start:0x8881FAD0 end:0x8881FB5C
+	.text       start:0x8881FBB8 end:0x8881FF18
+	.text       start:0x88820020 end:0x888200BC
+
+src/xbox360/lua3_ldebug_err.c:
+	.pdata      start:0x8812B448 end:0x8812B450
+	.pdata      start:0x8812B458 end:0x8812B460
+	.pdata      start:0x8812B478 end:0x8812B480
+	.text       start:0x8881F900 end:0x8881FAD0
+	.text       start:0x8881FB60 end:0x8881FBB4
+	.text       start:0x8881FF18 end:0x88820020
+
+src/xbox360/lua3_ldo.c:
+	.pdata      start:0x8812B3F8 end:0x8812B400
+	.pdata      start:0x8812B400 end:0x8812B408
+	.pdata      start:0x8812B408 end:0x8812B410
+	.pdata      start:0x8812B410 end:0x8812B418
+	.text       start:0x8881E748 end:0x8881E854
+	.text       start:0x8881E858 end:0x8881EBA4
+
+src/xbox360/lua3_lobject.c:
+	.pdata      start:0x8812B150 end:0x8812B158
+	.pdata      start:0x8812B160 end:0x8812B168
+	.pdata      start:0x8812B168 end:0x8812B170
+	.pdata      start:0x8812B170 end:0x8812B178
+	.pdata      start:0x8812B178 end:0x8812B180
+	.pdata      start:0x8812B188 end:0x8812B190
+	.pdata      start:0x8812B190 end:0x8812B198
+	.pdata      start:0x8812B198 end:0x8812B1A0
+	.text       start:0x88817998 end:0x888179FC
+	.text       start:0x88817A28 end:0x88817B78
+	.text       start:0x88817D00 end:0x88817F84
+	.text       start:0x88817F88 end:0x88818240
+	.text       start:0x88818768 end:0x888187FC
+	.text       start:0x88818800 end:0x88818C3C
+
+src/xbox360/lua3_lwmatch.c:
+	.pdata      start:0x8812BAF0 end:0x8812BAF8
+	.pdata      start:0x8812BAF8 end:0x8812BB00
+	.pdata      start:0x8812BB00 end:0x8812BB08
+	.pdata      start:0x8812BB08 end:0x8812BB10
+	.pdata      start:0x8812BB10 end:0x8812BB18
+	.pdata      start:0x8812BB18 end:0x8812BB20
+	.pdata      start:0x8812BB20 end:0x8812BB28
+	.pdata      start:0x8812BB28 end:0x8812BB30
+	.pdata      start:0x8812BB30 end:0x8812BB38
+	.pdata      start:0x8812BB48 end:0x8812BB50
+	.text       start:0x8882F698 end:0x8882F7D4
+	.text       start:0x8882F7D8 end:0x8882F9AC
+	.text       start:0x8882F9B0 end:0x8882FA6C
+	.text       start:0x8882FA70 end:0x8882FBD4
+	.text       start:0x8882FBD8 end:0x8882FCA4
+	.text       start:0x8882FEF8 end:0x88830178
+
+src/xbox360/lua3_lwmemfind.c:
+	.pdata      start:0x8812BAC8 end:0x8812BAD0
+	.text       start:0x8882F128 end:0x8882F1E4
+
+src/xbox360/lua3_lwstrlib.c:
+	.pdata      start:0x8812BB40 end:0x8812BB48
+	.pdata      start:0x8812BB50 end:0x8812BB58
+	.pdata      start:0x8812BB60 end:0x8812BB68
+	.pdata      start:0x8812BB70 end:0x8812BB78
+	.pdata      start:0x8812BB78 end:0x8812BB80
+	.pdata      start:0x8812BB80 end:0x8812BB88
+	.pdata      start:0x8812BB88 end:0x8812BB90
+	.pdata      start:0x8812BB90 end:0x8812BB98
+	.pdata      start:0x8812BB98 end:0x8812BBA0
+	.pdata      start:0x8812BBA0 end:0x8812BBA8
+	.pdata      start:0x8812BBA8 end:0x8812BBB0
+	.pdata      start:0x8812BBB0 end:0x8812BBB8
+	.text       start:0x8882EE50 end:0x8882EE84
+	.text       start:0x8882EE88 end:0x8882EECC
+	.text       start:0x8882FD10 end:0x8882FEF8
+	.text       start:0x88830178 end:0x888306FC
+	.text       start:0x88831248 end:0x888313DC
+	.text       start:0x88831668 end:0x888317EC
+	.text       start:0x888317F0 end:0x888318BC
+	.text       start:0x888318C0 end:0x8883198C
+	.text       start:0x88831990 end:0x88831FCC
+	.text       start:0x88831FD0 end:0x88832244
+	.text       start:0x88832248 end:0x88832558

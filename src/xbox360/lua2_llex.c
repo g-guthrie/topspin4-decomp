@@ -39,7 +39,7 @@ LUA2_LOCAL const char *ts4_forward_varargs_88818C40(lua_State *L, const char *fm
     const char *msg;
     va_list argp;
     va_start(argp, fmt);
-    msg = fn_888188F8(L, fmt, argp);
+    msg = lua3_luaO_pushvfstring_888188F8(L, fmt, argp);
     va_end(argp);
     return msg;
 }
@@ -51,7 +51,7 @@ extern char lbl_880E28A8[];              /* "ambiguous syntax (decimal point x s
 extern char lbl_880E28E0[];              /* "malformed number" */
 extern char lbl_880E28F4[];              /* "malformed integer" */
 extern int ts4_if_fn_88567730(int c);    /* tolower */
-extern int fn_88818190(const char *s, double *result); /* luaO_str2d */
+extern int lua3_luaO_str2d_88818190(const char *s, double *result); /* luaO_str2d */
 
 /* next: read one character (two bytes from a wide stream) */
 #define lsz(LS) ((ZIO *)(LS)->z)
@@ -322,9 +322,9 @@ LUA2_NOINLINE int lua2_read_numeral_88819698(LexState *LS, int comma, SemInfo *s
     }
     save(LS, '\0', l);
     if (isfloat) {
-        if (!fn_88818190(LS->buff->buffer, &seminfo->r)) lexerror_tok(LS, lbl_880E28E0);
+        if (!lua3_luaO_str2d_88818190(LS->buff->buffer, &seminfo->r)) lexerror_tok(LS, lbl_880E28E0);
     } else {
-        if (!fn_88818190(LS->buff->buffer, &seminfo->r)) lexerror_tok(LS, lbl_880E28F4);
+        if (!lua3_luaO_str2d_88818190(LS->buff->buffer, &seminfo->r)) lexerror_tok(LS, lbl_880E28F4);
     }
     return TK_NUMBER;
 }

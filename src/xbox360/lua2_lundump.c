@@ -63,7 +63,7 @@ LUA2_FORCEINLINE void luaM_free_inl(lua_State *L, void *block, u32 osize)
 /* unexpectedEOZ */
 LUA2_NORETURN void lua2_unexpectedEOZ_88810048(LoadState *S)
 {
-    fn_8881FB60(S->L, lbl_880E2CEC, S->name);
+    lua3_luaG_runerror_8881FB60(S->L, lbl_880E2CEC, S->name);
 }
 
 /* ezgetc */
@@ -129,7 +129,7 @@ LUA2_FORCEINLINE int LoadInt_c(LoadState *S)
 {
     int x;
     lua2_LoadBlock_888102D8(S, &x, sizeof(x));
-    if (x < 0) fn_8881FB60(S->L, lbl_880E2D0C, S->name);
+    if (x < 0) lua3_luaG_runerror_8881FB60(S->L, lbl_880E2D0C, S->name);
     return x;
 }
 
@@ -222,7 +222,7 @@ LUA2_NOINLINE void lua2_LoadUpvalues_88810C80(LoadState *S, Proto *f)
     int i, n;
     n = LoadInt_c(S);
     if (n != 0 && n != f->nups)
-        fn_8881FB60(S->L, lbl_880E2D20, S->name, n, f->nups);
+        lua3_luaG_runerror_8881FB60(S->L, lbl_880E2D20, S->name, n, f->nups);
     f->upvalues = (TString **)luaM_newvector_inl(S->L, n * sizeof(TString *));
     f->sizeupvalues = n;
     for (i = 0; i < n; i++) {
@@ -268,14 +268,14 @@ LUA2_NOINLINE void lua2_LoadSignature_88810188(LoadState *S)
     do {
         if (ezgetc_inl(S) != *s) break;
     } while (*++s != 0);
-    if (*s != 0) fn_8881FB60(S->L, lbl_880E2D6C, S->name);
+    if (*s != 0) lua3_luaG_runerror_8881FB60(S->L, lbl_880E2D6C, S->name);
 }
 
 /* TestSize */
 LUA2_FORCEINLINE void TestSize_inl(LoadState *S, int s, const char *what)
 {
     int r = LoadByte(S);
-    if (r != s) fn_8881FB60(S->L, lbl_880E2D80, S->name, what, s, r);
+    if (r != s) lua3_luaG_runerror_8881FB60(S->L, lbl_880E2D80, S->name, what, s, r);
 }
 
 LUA2_NOINLINE void lua2_TestSize_88810138(LoadState *S, int s, const char *what)
@@ -299,9 +299,9 @@ LUA2_NOINLINE void lua2_LoadHeader_88810408(LoadState *S)
     lua2_LoadSignature_88810188(S);
     version = LoadByte(S);
     if (version > 0x50)
-        fn_8881FB60(S->L, lbl_880E2DC0, S->name, V(version), V(0x50));
+        lua3_luaG_runerror_8881FB60(S->L, lbl_880E2DC0, S->name, V(version), V(0x50));
     if (version < 0x50)
-        fn_8881FB60(S->L, lbl_880E2DF8, S->name, V(version), V(0x50));
+        lua3_luaG_runerror_8881FB60(S->L, lbl_880E2DF8, S->name, V(version), V(0x50));
     S->swap = (luaU_endianness_inl() != LoadByte(S));
     TESTSIZE(4, lbl_880E2E30);
     TESTSIZE(4, lbl_880E2E34);
@@ -313,5 +313,5 @@ LUA2_NOINLINE void lua2_LoadHeader_88810408(LoadState *S)
     TESTSIZE(8, lbl_880E2CDC);
     x = LoadNumber_c(S);
     if ((long)x != 31415926L)
-        fn_8881FB60(S->L, lbl_880E2E54, S->name);
+        lua3_luaG_runerror_8881FB60(S->L, lbl_880E2E54, S->name);
 }

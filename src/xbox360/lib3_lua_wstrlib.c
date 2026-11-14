@@ -20,7 +20,7 @@ typedef struct Lib3WMatchState {
     } capture[32];
 } Lib3WMatchState;
 
-extern const lib3_wchar *fn_8882FEF8(Lib3WMatchState *ms, const lib3_wchar *s, const lib3_wchar *p);
+extern const lib3_wchar *lua3_wmatch_8882FEF8(Lib3WMatchState *ms, const lib3_wchar *s, const lib3_wchar *p);
 extern int ts4_match_flag_char_8882EED0(int c, int cl);
 extern int lib3_wmatchbracketclass_8882F1E8(int c, const lib3_wchar *p, const lib3_wchar *ec);
 
@@ -39,7 +39,7 @@ LIB3_FORCEINLINE int lib3_wsinglematch(int c, const lib3_wchar *p, const lib3_wc
 const lib3_wchar *lib3_wmin_expand_8882F488(Lib3WMatchState *ms, const lib3_wchar *s, const lib3_wchar *p, const lib3_wchar *ep)
 {
     for (;;) {
-        const lib3_wchar *res = fn_8882FEF8(ms, s, ep + 1);
+        const lib3_wchar *res = lua3_wmatch_8882FEF8(ms, s, ep + 1);
         if (res != 0)
             return res;
         else if (s < ms->src_end && lib3_wsinglematch(*s, p, ep))
@@ -55,7 +55,7 @@ const lib3_wchar *lib3_wmax_expand_8882F548(Lib3WMatchState *ms, const lib3_wcha
     while ((s + i) < ms->src_end && lib3_wsinglematch(*(s + i), p, ep))
         i++;
     while (i >= 0) {
-        const lib3_wchar *res = fn_8882FEF8(ms, (s + i), ep + 1);
+        const lib3_wchar *res = lua3_wmatch_8882FEF8(ms, (s + i), ep + 1);
         if (res) return res;
         i--;
     }

@@ -4228,6 +4228,46 @@
       "src/xbox360/lua2_lvm.c": {
         "status": "Matching",
         "source": "xbox360/lua2_lvm.c"
+      },
+      "src/xbox360/lua3_lapi.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_lapi.c"
+      },
+      "src/xbox360/lua3_lbaselib.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_lbaselib.c"
+      },
+      "src/xbox360/lua3_ldblib.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_ldblib.c"
+      },
+      "src/xbox360/lua3_ldebug.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_ldebug.c"
+      },
+      "src/xbox360/lua3_ldebug_err.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_ldebug_err.c"
+      },
+      "src/xbox360/lua3_ldo.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_ldo.c"
+      },
+      "src/xbox360/lua3_lobject.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_lobject.c"
+      },
+      "src/xbox360/lua3_lwmatch.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_lwmatch.c"
+      },
+      "src/xbox360/lua3_lwmemfind.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_lwmemfind.c"
+      },
+      "src/xbox360/lua3_lwstrlib.c": {
+        "status": "Matching",
+        "source": "xbox360/lua3_lwstrlib.c"
       }
     }
   }

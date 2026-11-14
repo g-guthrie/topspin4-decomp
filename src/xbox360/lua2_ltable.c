@@ -11,7 +11,7 @@ void _ReadWriteBarrier(void);
 #include <string.h>
 #endif
 
-extern void fn_8881FB60(lua_State *L, const char *fmt, ...); /* luaG_runerror */
+extern void lua3_luaG_runerror_8881FB60(lua_State *L, const char *fmt, ...); /* luaG_runerror */
 
 extern const double g_ts4_script_constants[]; /* [15] = 1.0 */
 extern char lbl_880E2C2C[];                   /* "table overflow" */
@@ -58,7 +58,7 @@ void lua2_setnodevector_88811688(lua_State *L, Table *t, int lsize)
 {
     int i;
     int size = twoto(lsize);
-    if (lsize > MAXBITS) fn_8881FB60(L, lbl_880E2C2C);
+    if (lsize > MAXBITS) lua3_luaG_runerror_8881FB60(L, lbl_880E2C2C);
     if (lsize == 0) {
         t->node = (Node *)((char *)G(L) + 0x60); /* dummynode */
     } else {
@@ -194,8 +194,8 @@ LUA2_NOINLINE TValue *lua2_luaH_set_888122E8(lua_State *L, Table *t, const TValu
     t->flags = 0;
     if (p != &lbl_880C9748) return (TValue *)p;
     else {
-        if (ttype(key) == LUA2_TNIL) fn_8881FB60(L, lbl_880E2C3C);
-        else if (ttype(key) == LUA2_TNUMBER && nvalue(key) != nvalue(key)) fn_8881FB60(L, lbl_880E2C50);
+        if (ttype(key) == LUA2_TNIL) lua3_luaG_runerror_8881FB60(L, lbl_880E2C3C);
+        else if (ttype(key) == LUA2_TNUMBER && nvalue(key) != nvalue(key)) lua3_luaG_runerror_8881FB60(L, lbl_880E2C50);
         return lua2_newkey_88812790(L, t, key);
     }
 }

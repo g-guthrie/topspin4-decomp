@@ -32,7 +32,7 @@ int lua2_luaH_index_888129D0(lua_State *L, Table *t, StkId key)
     if (0 <= i && i <= t->sizearray) return i - 1;
     else {
         const TValue *v = ts4_if_call_seq_u32_off0_88812188(t, key);
-        if (v == &lbl_880C9748) fn_8881FB60(L, lbl_880E2C14);
+        if (v == &lbl_880C9748) lua3_luaG_runerror_8881FB60(L, lbl_880E2C14);
         i = (int)(((const lu_byte *)v - (const lu_byte *)gval(gnode(t, 0))) / sizeof(Node));
         return i + t->sizearray;
     }

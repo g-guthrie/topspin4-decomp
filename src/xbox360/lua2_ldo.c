@@ -20,8 +20,8 @@ extern LUA2_NORETURN void fn_88569D30(void *jb, int v);                  /* long
 extern LUA2_NORETURN void ts4_tailcall_fn_88564208_885643D0(int status); /* exit */
 extern char lbl_880E26F4[];                                              /* "stack overflow" */
 extern char lbl_880E21DC[];                                              /* "call" */
-extern void fn_8881F6D8(lua_State *L, const TValue *o, const char *opname); /* luaG_typeerror */
-extern void fn_8881FB60(lua_State *L, const char *fmt, ...); /* luaG_runerror */
+extern void lua3_luaG_typeerror_8881F6D8(lua_State *L, const TValue *o, const char *opname); /* luaG_typeerror */
+extern void lua3_luaG_runerror_8881FB60(lua_State *L, const char *fmt, ...); /* luaG_runerror */
 
 extern const TValue *fn_88811930(Table *t, int key);                       /* luaH_getnum */
 extern TValue *lua2_newkey_88812790(lua_State *L, Table *t, const TValue *key);     /* newkey */
@@ -100,7 +100,7 @@ void lua2_luaD_growCI_8881D3D8(lua_State *L)
         luaD_throw_inl(L, LUA_ERRERR);
     else {
         lua2_luaD_reallocCI_8881D170(L, 2 * L->size_ci);
-        if (L->size_ci > LUA_MAXCALLS) fn_8881FB60(L, lbl_880E26F4);
+        if (L->size_ci > LUA_MAXCALLS) lua3_luaG_runerror_8881FB60(L, lbl_880E26F4);
     }
 }
 
@@ -230,7 +230,7 @@ LUA2_NOINLINE StkId lua2_tryfuncTM_8881D7E0(lua_State *L, StkId func)
     const TValue *tm = luaT_gettmbyobj(L, func, TM_CALL);
     StkId p;
     int funcr = savestack(L, func);
-    if (ttype(tm) != LUA2_TFUNCTION) fn_8881F6D8(L, func, lbl_880E21DC);
+    if (ttype(tm) != LUA2_TFUNCTION) lua3_luaG_typeerror_8881F6D8(L, func, lbl_880E21DC);
     /* Open a hole inside the stack at `func' */
     for (p = L->top; p > func; p--) setobj(L, p, p - 1);
     checkstack_ldo(L, 1);
@@ -394,7 +394,7 @@ void lua2_luaD_call_8881E258(lua_State *L, StkId func, int nResults)
     StkId firstResult;
     if (++L->nCcalls >= LUA_MAXCCALLS) {
         if (L->nCcalls == LUA_MAXCCALLS)
-            fn_8881FB60(L, lbl_880E2704);
+            lua3_luaG_runerror_8881FB60(L, lbl_880E2704);
         else if (L->nCcalls >= (LUA_MAXCCALLS + (LUA_MAXCCALLS >> 3)))
             luaD_throw_inl(L, LUA_ERRERR); /* error while handing stack error */
     }
