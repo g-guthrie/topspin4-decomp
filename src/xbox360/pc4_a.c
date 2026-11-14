@@ -6,23 +6,44 @@ typedef unsigned long long u64;
 
 /* Pool declared per translation unit: only this form reproduces the original addressing. */
 static const float g_ts4_script_constants[668] = {1.0f};
-extern float lbl_8814B440;
 
-/* 0x88800CA8: reset a small record, float fields to zero, +0xC to pool[0]. */
-void ts4_init_record_const0_88800CA8(float *self)
+extern double fn_88565040(double);
+extern double fn_88564D68(double, double);
+extern float lbl_88D488B4;
+extern u32 ts4_get_u32__imp_KeTimeStampBundle_8857B830(void);
+extern void ts4_lua_pushnumber_888240B8(void *L, double n);
+
+/* 0x88883BA0: timestamp tick count scaled by pool[32]. */
+float ts4_get_scaled_timestamp_88883BA0(void)
 {
-    int *w = (int *)self;
-    float one = g_ts4_script_constants[0];
-    float zero = lbl_8814B440;
-    w[0x28 / 4] = 0;
-    w[2] = 0;
-    w[1] = 0;
-    w[0] = 0;
-    self[0x18 / 4] = zero;
-    self[0x1C / 4] = zero;
-    self[0x20 / 4] = zero;
-    w[4] = 0;
-    self[5] = zero;
-    self[9] = zero;
-    self[3] = one;
+    return (float)ts4_get_u32__imp_KeTimeStampBundle_8857B830() * g_ts4_script_constants[32];
+}
+
+/* 0x889D2FA0: store pool[0] / (float)fn_88565040(pool double at +0xA68). */
+void ts4_set_inverse_of_const_double_889D2FA0(void)
+{
+    lbl_88D488B4 = g_ts4_script_constants[0] / (float)fn_88565040(*(const double *)&g_ts4_script_constants[0xA68 / 4]);
+}
+
+typedef struct pc4_ptr_holder { char pad[0x20]; float *p; } pc4_ptr_holder;
+
+/* 0x888C0480: self->p[0x2C/4] = (float)fn(self->p[0x2C/4] + pool[109], pool double at +0xD0). */
+void ts4_update_field_via_fn_888C0480(pc4_ptr_holder *self)
+{
+    float x = self->p[0x2C / 4] + g_ts4_script_constants[109];
+    self->p[0x2C / 4] = (float)fn_88564D68(x, *(const double *)&g_ts4_script_constants[0xD0 / 4]);
+}
+
+/* 0x888C0EF8: (int)((float)b * pool[15] / (float)a) from ints at +0x34 and +0x30. */
+int ts4_scaled_ratio_int_888C0EF8(const int *s)
+{
+    return (int)((float)s[0x34 / 4] * g_ts4_script_constants[15] / (float)s[0x30 / 4]);
+}
+
+/* 0x88804D90: Lua binding pushing timestamp * pool[32]; returns 1 result. */
+int ts4_lua_push_scaled_timestamp_88804D90(void **unused, void **state)
+{
+    (void)unused;
+    ts4_lua_pushnumber_888240B8(*state, (float)ts4_get_u32__imp_KeTimeStampBundle_8857B830() * g_ts4_script_constants[32]);
+    return 1;
 }

@@ -35,12 +35,12 @@ def strip_dead_locals(body):
     `x = call(...);` keeps the call as a statement; dead loads are deleted."""
     while True:
         changed = False
-        for m in re.finditer(r'^    (?:ts4_word) ((?:[tp])\d+);$', body, re.M):
+        for m in re.finditer(r'^    (?:ts4_word|float|double) ((?:[tp]f?)\d+);$', body, re.M):
             n = m.group(1)
             assigns = list(re.finditer(r'^( +)' + n + r' = (.*);$', body, re.M))
             if len(re.findall(r'\b' + n + r'\b', body)) != 1 + len(assigns):
                 continue
-            body = re.sub(r'^    ts4_word ' + n + r';\n', '', body, flags=re.M)
+            body = re.sub(r'^    (?:ts4_word|float|double) ' + n + r';\n', '', body, flags=re.M)
             def sub(a):
                 rhs = a.group(2)
                 return '' if rhs.startswith('*(') or not re.search(r'\w\(|\(\*\)\(', rhs) else f'{a.group(1)}{rhs};'

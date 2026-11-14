@@ -104,13 +104,13 @@ class CanonicalBuildTests(unittest.TestCase):
         self.assertFalse(status["artifact_committed"])
 
         forced = status["forced_all_units_probe"]
-        self.assertEqual(forced["input_source_objects"], 842)
-        self.assertEqual(forced["input_matching_functions"], 26828)
-        self.assertEqual(forced["map_matching_public_functions"], 26816)
+        self.assertEqual(forced["input_source_objects"], 876)
+        self.assertEqual(forced["input_matching_functions"], 27054)
+        self.assertEqual(forced["map_matching_public_functions"], 27042)
         self.assertEqual(forced["map_matching_static_functions"], 12)
-        self.assertEqual(forced["map_additional_static_helpers"], 194)
-        self.assertEqual(forced["unresolved_external_symbols"], 30525)
-        self.assertEqual(forced["unresolved_external_references"], 44428)
+        self.assertEqual(forced["map_additional_static_helpers"], 199)
+        self.assertEqual(forced["unresolved_external_symbols"], 30587)
+        self.assertEqual(forced["unresolved_external_references"], 44631)
         self.assertFalse(forced["is_xex"])
         self.assertFalse(forced["is_runnable"])
 
