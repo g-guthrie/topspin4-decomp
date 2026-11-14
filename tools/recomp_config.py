@@ -570,6 +570,9 @@ def select_functions(fns, helpers, img):
             continue
         if a < end:
             continue
+        w0 = img.word(a)
+        if size == 16 and w0 is not None and w0 >> 24 == 0x01 and img.word(a + 12) == BCTR:
+            continue  # XEX import thunk: XenonRecomp names it after the import itself
         chosen.append((a, size))
         end = a + size
     return chosen

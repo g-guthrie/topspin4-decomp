@@ -33,8 +33,11 @@ git-ignored. Every claim is tagged:
    - **Fix:** `recomp_config.py` now merges such adjacent splits (46 merges, 38 unreferenced inner
      entries dropped). After it, a label check over all 47,039 functions finds 0 undeclared gotos,
      and the three affected files compile. Out-of-function branches fell from 71 to 28.
-   - **Size:** 37.0 MB of x86-64 machine code (`size -t`: text 36,976,884, data 796,384) from
-     10.2 MB of PowerPC.
+   - **Size:** 37.6 MB of x86-64 machine code (`size -t`: text 37,585,503) from 10.2 MB of
+     PowerPC.
+   - **It links and runs.** With a 150-line stub harness, the translated `_DllMainCRTStartup`
+     runs the CRT start-up and every static initialiser to completion and returns TRUE, after
+     255 kernel calls and with no fault (section 2.5).
 4. **A complete open runtime already exists. [doc]** ReXGlue SDK (BSD-3-Clause, 2026, derived from
    Xenia) provides:
    - a codegen whose config is a superset of XenonRecomp's, including `is_dll`, switch tables and
@@ -258,15 +261,46 @@ Command (per file, 4 in parallel):
   - the Bink asm target 0x88B14AA8.
 
   They need explicit entries or a XenonRecomp change.
-- The three files holding the merged functions (`ppc_recomp.24/62/63.cpp`) compile cleanly. The
-  full recompile of this config was started; its result is under section 2.5.
+- **All 185 files compile with 0 errors** (`work/recomp/swing5/obj`). Text 37,585,503 bytes, data
+  797,312 bytes.
 
-**Not done here:** a full link. The objects reference the 248 import functions (`__imp__<Name>`),
-which a runtime must define. Section 2.5 is the smoke test that supplies stubs.
+**Link.** The objects reference the 248 import functions (`__imp__<Name>`), which a runtime must
+define. With the stubs of section 2.5, `clang++ -fuse-ld=lld` links them into a 44 MB x86-64
+executable in under a second.
 
 ### 2.5 Smoke run [here]
 
-SMOKE_SECTION
+`work/recomp/swing/harness/` holds a throwaway harness of about 150 lines (work/ only), built
+against the `swing5` objects:
+
+- It reserves 4.5 GiB of host address space, copies the PE sections to guest 0x88000000, and fills
+  the indirect-call table: 47,287 entries.
+- It points the 14 variable imports at zeroed guest blocks.
+- It implements about 25 imports trivially: critical sections, TLS, a bump allocator for
+  `NtAllocateVirtualMemory` and `MmAllocatePhysicalMemoryEx`, and `KeGetCurrentProcessType`.
+- Every other import is a logging stub that returns 0.
+- It calls the entry point `_DllMainCRTStartup` (0x88562DB0) with `DLL_PROCESS_ATTACH`.
+
+```sh
+cd work/recomp/swing/harness && ./harness ../../../../orig/54540859/Swing_DLL.dll
+```
+
+**Result:**
+
+- **The translated CRT start-up and all static initialisers run to completion, and `DllMain`
+  returns TRUE**, after 255 import calls and with no fault.
+- Calls seen, in order: `RtlImageXexHeaderField`, 2 `NtAllocateVirtualMemory` (CRT heap),
+  19 critical-section inits, 4 `KeTlsAlloc`, then `XexLoadImage("xam.xex")` and
+  `XexGetProcedureAddress` for xam ordinals 0xAFF and 0xB00. With our stubs those fail, and the CRT
+  falls back cleanly. Last comes `KeQueryPerformanceFrequency`.
+- The game's main loop is not started by `DllMain`. Loader_DLL presumably calls into Swing after
+  loading it; that handoff is unverified.
+
+**Lesson recorded in the tool.** The first harness run returned FALSE immediately. Our function list
+had claimed the 248 XEX import thunks as ordinary `sub_` functions, so XenonRecomp translated the
+thunk words as code instead of naming them after the import. The harness works around it with
+strong overrides (`thunks.cpp`, `sub_<thunk>` → `__imp__<Name>`). `recomp_config.py config` now
+leaves thunks out of the function list, so future configs get XenonRecomp's import naming directly.
 
 ## 3. What the game needs from a runtime
 
@@ -468,7 +502,7 @@ the videos. Visually identical.
 
 | Stage | Work | Rough effort (agent rounds) [inf] | Feeds from existing assets |
 |---|---|---|---|
-| 0 (done) | Recompiler built, Swing translated, config generator, census | — | `symbols.txt`, Jeff jump tables, `decomp_survey.py` ranges |
+| 0 (done) | Recompiler built, Swing translated, compiled, linked, and `DllMain` run natively with stub imports; config generator; census | — | `symbols.txt`, Jeff jump tables, `decomp_survey.py` ranges |
 | 1 | **Close translation gaps:** add the ~40 missing instruction forms (or switch codegen to ReXGlue's: of 15 mnemonics checked by name, its `src/codegen` handles all but `lhbrx` and `lvehx` [doc]); fix the remaining 28 cross-function branches; emit `switch` on `.u32`; full Loader symbol set from the Jeff split; run Xenia's PPC instruction tests through the chosen codegen | 1-2 | Jeff split for Loader |
 | 2 | **First boot, the first milestone on screen:** default.xex → Loader_DLL → Swing_DLL on ReXGlue's runtime, natively on Linux/Windows, user-supplied ISO. Target: the Loader's logo and loading screens, then the Swing front end rendered by Xenia's GPU path | 2-4 | XEX headers, `tools/xdvdfs.py` |
 | 3 | **Gameplay parity:** play a match; trace the ball state (`ball+0x4C0..0x4DC`) and shot-outcome rolls against `src/xbox360/drafts/gp4b_ball_model.c` and the documented analyser graphs; apply the owner's retune as data patches (`docs/data-patching.md`) | 1-2 | `docs/gameplay/*`, `data/gameplay/` |
