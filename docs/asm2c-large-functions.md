@@ -187,5 +187,44 @@ byte offsets, and callees are unprototyped. A function may still be semantically
 translator guessed an argument count (`mode` in run.py) or a return type (a word return may be a
 leftover r3, which is harmless to a caller that ignores it). The equivalence check has to catch those cases.
 
-GEN_SUMMARY
+Coverage on 2026-11-14 (`work/t1/gen`, matching split b39, all unmatched game + lib `fn_` up to
+16 KB, 9,622 functions, 4,220,188 B; about 2 h 10 min on the loaded 4-core machine). "ok" means the function compiles
+with MSVC and is in a `gen_NNN.c` file; "compile" means it was translated but the compiler rejected it.
+
+| Size (B) | Functions | Bytes | OK | OK bytes | Refused | Compile error |
+|---|---:|---:|---:|---:|---:|---:|
+| 0-128 | 1608 | 145872 | 1479 | 134532 | 112 | 17 |
+| 128-256 | 3295 | 620908 | 2991 | 562388 | 265 | 39 |
+| 256-512 | 2634 | 936640 | 2164 | 765748 | 382 | 88 |
+| 512-1024 | 1292 | 911840 | 853 | 593508 | 368 | 71 |
+| 1024-2048 | 559 | 778916 | 279 | 382708 | 247 | 33 |
+| 2048-4096 | 174 | 480100 | 62 | 166964 | 100 | 12 |
+| 4096-max | 60 | 345912 | 13 | 76304 | 42 | 5 |
+| total | 9622 | 4220188 | 7841 | 2682152 | 1516 | 265 |
+
+Top refusal reasons (translator `Skip` categories):
+
+| Count | Reason |
+|---:|---|
+| 400 | `read r` |
+| 153 | `mfcr` |
+| 99 | `irregular exit` |
+| 97 | `vsldoi` |
+| 79 | `struct arg` |
+| 65 | `freg` |
+| 62 | `loop shape` |
+| 59 | `stack addr` |
+| 55 | `stvewx` |
+| 47 | `vec loop` |
+| 37 | `fret mixed` |
+| 34 | `hi value` |
+
+Meanings: `read r` = a register read before any value was assigned (usually a value kept in a
+callee-saved register across a call to a same-file callee, or a wrongly inferred argument count); `mfcr` =
+the /fp:precise float-compare idiom (codegen-idioms.md); `irregular exit` / `loop shape` /
+`switch in loop` = control flow the structurizer cannot express; `vsldoi`, `stvewx`, `vec loop`,
+`read v`, `vreg clobbered` = VMX not modelled; `struct arg` = a struct passed by value built in a way
+that is not recognised; `freg`/`fret mixed` = float register use the executor cannot type;
+`unrelocated original` = the original builds an image address without a relocation.
+Three functions raise `RecursionError` in the translator (seen in the full pass); they are counted as refused.
 
