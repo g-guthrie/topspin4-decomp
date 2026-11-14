@@ -3,8 +3,8 @@
 # Source: Settings.bin 286492 bytes sha256 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
 # Source: State.bin 273746 bytes sha256 ff871577ad82545a26bca27d220e758734093d52b0f3b2f697337408aa1c4aeb
 # Shot-template rows of Core.arc Settings.bin (+ State.bin), every field named; spec docs/gameplay/ball-physics.md.
-# Curve20 keys store slope 0 and the end value y1 at +0x10; 'evaluated.step' is the shipped evaluator
-# (holds y0), 'evaluated.ramp' assumes a load-time slope fixup (open question). Trajectory mode: both.
+# Curve20 keys store slope 0 and the end value y1 at +0x10; 'evaluated.ramp' is what the game uses
+# (load-time slope fixup fn_8867BB78), 'evaluated.step' holds y0 (stored zero slopes). Trajectory mode: both.
 generator:
   command: python3 tools/ts4data/templates.py --settings work/disc/core/334e7e0d.bin --state work/disc/core/623d0979.bin --yaml data/gameplay/ball_templates.yaml --trajectories data/gameplay/ball_trajectories.csv --curve-mode both
   curve_mode_for_trajectories: both

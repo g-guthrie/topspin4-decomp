@@ -6,6 +6,10 @@ the template rows, and event timing. It consolidates [gp4.md](gp4.md) and [gp4b.
 the machine code says otherwise (section 13), and it adds the routines those notes left as "described, not
 re-derived".
 
+**Curves are ramps (settled 2026-11-14, G1):** template curve20 keys get `slope = (y1 - y0) / (x1 - x0)` at load
+(`fn_8867BB78`), so the "ramp" reading in this note is the game's behaviour; `tools/ts4data/templates.py` now defaults
+to it. See [graphs-decoded.md](graphs-decoded.md).
+
 * **Module.** `Swing_DLL.xex`, sha256 `dfa71292f75a649773c280de7bc2688e6e47e473aba397c248fb4204c45fac44`. The PE image
   `orig/54540859/Swing_DLL.dll` has sha256 `a7f28b29…2ba9`. All addresses are xex VAs.
 * **Disassembly.** `TS4_MATCHING_DIR=work/matching-b9 python3 tools/fn_asm.py <fn>` decodes VMX128.

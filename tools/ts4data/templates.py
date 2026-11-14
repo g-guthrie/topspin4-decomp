@@ -164,8 +164,8 @@ def eval_curve20(keys, x, mode="step"):
     """fn_8817A688: last key with x0 <= x (first if none); y = y0 + slope * clamp(x - x0, 0, x1 - x0).
 
     mode "step" uses the stored slope (+0x0C, 0.0 in every retail key: the curve holds y0);
-    mode "ramp" assumes a load-time fixup sets slope = (y1 - y0) / (x1 - x0) from the end value y1 at
-    +0x10 (docs/gameplay/analyser-graphs.md section 4, open question)."""
+    mode "ramp" is what the game evaluates: at load fn_8867BB78 / fn_88179740 set slope = (y1 - y0) / (x1 - x0)
+    from the end value y1 at +0x10 (docs/gameplay/graphs-decoded.md); "step" uses the stored zero slopes."""
     if not keys:
         return 0.0
     sel = keys[0]
@@ -504,8 +504,8 @@ def write_yaml(dec, path, cmd, mode):
     rows = [named_row(r) for f in dec["files"] for r in f["rows"]]
     hdr = _header(cmd, dec, [
         "Shot-template rows of Core.arc Settings.bin (+ State.bin), every field named; spec docs/gameplay/ball-physics.md.",
-        "Curve20 keys store slope 0 and the end value y1 at +0x10; 'evaluated.step' is the shipped evaluator",
-        "(holds y0), 'evaluated.ramp' assumes a load-time slope fixup (open question). Trajectory mode: %s." % mode,
+        "Curve20 keys store slope 0 and the end value y1 at +0x10; 'evaluated.ramp' is what the game uses",
+        "(load-time slope fixup fn_8867BB78), 'evaluated.step' holds y0 (stored zero slopes). Trajectory mode: %s." % mode,
     ])
     with open(path, "w") as fh:
         fh.write("".join("# %s\n" % h for h in hdr))
@@ -574,8 +574,8 @@ def main(argv=None):
     ap.add_argument("--out", default=None, help="JSON output (default: print a summary only)")
     ap.add_argument("--yaml", default=None, help="named YAML dump (e.g. data/gameplay/ball_templates.yaml)")
     ap.add_argument("--trajectories", default=None, help="per-shot trajectory CSV (e.g. data/gameplay/ball_trajectories.csv)")
-    ap.add_argument("--curve-mode", choices=CURVE_MODES + ("both",), default="step",
-                    help="curve20 reading for the trajectory table: step (shipped evaluator), ramp, or both")
+    ap.add_argument("--curve-mode", choices=CURVE_MODES + ("both",), default="ramp",
+                    help="curve20 reading for the trajectory table: ramp (game behaviour, default), step (stored slopes), or both")
     a = ap.parse_args(argv)
     if a.arc:
         s, st = _load_from_arc(a.arc, a.iso)
