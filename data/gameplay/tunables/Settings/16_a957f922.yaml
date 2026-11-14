@@ -10,7 +10,7 @@ key: 0x334e7e0d
 size: 286492
 sha256: 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
 root_type: 0xd2968089
-section: "<9b4fb082>/a957f922"
+section: "<Pam::SwingGamePlay::Data::SettingsData>/a957f922"
 part: 1 of 1
 values:
   - [0x305bc, float, 0.0, "/7cc618d5/Range[0]/InStart"]

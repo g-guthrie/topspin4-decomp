@@ -57,9 +57,14 @@ PlayerState S (State.bin type 0x25FCD125, 0x1070 bytes)
   The sibling `0x075A2137` is flatter below 60 and steeper above. Its values are in the YAML.
 * **Reflex and Mental** have no in-match float. In PlayerList, Return always equals Reflex, so
   "Return" in State is the Reflex rating (I). Mental is 30 for every pro.
-* **Writer of S+0x620/0x640.** No literal code store was found. The copy from the player record runs
-  through data-driven backstage requests (`BackstageRequests.bin`, whose paths are offline) (I). G4's
-  external record reader `fn_887AC0E0` (14 ints) is the closest code.
+* **Writer of S+0x620/0x640 (G4c, V).** Code, not a request: `fn_886B4B80` (PlayerController vtable slot 21)
+  finds the MatchSettings PlayerList row of the player (`ctx+0x7C`) and calls `fn_886B4700(ctx, PlayerId)`.
+  That looks the id up in the `GameDB.PlayerList` mounts (`fn_8867AB78`, 0x104-byte Player rows), converts the
+  AttributeList ints at record+0x80 to the eight raw floats (Reflex, Mental and Overall are dropped), sets the
+  SkillList values (1.0 for Skill1..4, 0.0 otherwise), copies Plays and the PlayStyle keys, and runs the PT+0x63C
+  analyser list (`DefaultAttributes`, `dc1d59b1`). Details: `player-and-movement.md` s10.1.
+  So the in-match "Return" is the record's Return (+0x84); Reflex (+0x88) never reaches the match. Whether
+  career bonuses are already inside the record's ints for created players is I.
 
 ## 2. Pros (PlayerList.bin, Core `de208ac7`)
 
@@ -195,7 +200,7 @@ type `0x59CCA053`, 0x5C bytes (V layout, Layoutall):
 
 ## 6. Open items
 
-* Names of `824ec12e`, `75c6d60c` and `#79b99b60` (no crc candidate matched).
-* The match-setup writer of S+0x620/S+0x640 (data-driven requests, I).
+* Names of `824ec12e`, `75c6d60c` and `#79b99b60` (no crc candidate matched; G4c two-token search also failed).
+* Resolved (G4c): the match-setup writer of S+0x620/S+0x640 is `fn_886B4700` (s1).
 * Hire-condition variables (XPath strings are offline). PlayerEvolution thresholds and caps are I.
 * The unnamed component expression keys in the AI lists (for example `bfc9cc2c`, `2836a60f`).

@@ -45,6 +45,24 @@ class PlayerDataTest(unittest.TestCase):
         data += struct.pack(">iI", 8, P.zlib.crc32(b"EventRacket")) + s
         self.assertEqual(P.read_crc_dictionary(bytes(data)), {0x3B9AD22E: "EventRacket"})
 
+    def test_layout_members(self):
+        """G4c: layout-driven walk of a reflected block (synthetic two-level type)."""
+        class M:
+            def __init__(self, name, type_, offset, size, kind=None, attr=True):
+                self.name, self.type, self.offset, self.size, self.kind, self.attr = name, type_, offset, size, kind, attr
+
+        class L:
+            types = {
+                0x100: (0x14, 4, [M(0xA, 0x200, 0, 8, P.KIND_INLINE, False), M(0xB, 0x6543E2E6, 8, 4),
+                                  M(0xC, 0x68BABFBD, 0xC, 4), M(0xD, 0xF5E3B036, 0x10, 1)]),
+                0x200: (8, 4, [M(0xE, 0xC692C255, 0, 4), M(0xF, 0xC692C255, 4, 4)]),
+            }
+        buf = struct.pack(">ffiIB3x", 1.5, -2.0, 7, 0x1234, 1)
+        rows = P.layout_members(P.Bin(b"\0" * 4 + buf), L(), 0x100, 4, {0xA: "Outer", 0xE: "x", 0x1234: "Key"})
+        self.assertEqual([r["path"] for r in rows], ["Outer.x", "Outer.0000000f", "0000000b", "0000000c", "0000000d"])
+        self.assertEqual([r["value"] for r in rows], [1.5, -2.0, 7, "Key", 1])
+        self.assertEqual(rows[2]["offset"], "+0x008")
+
     def test_yaml(self):
         text = "\n".join(P.to_yaml({"a": 1, "b": [1.5, 2], "c": {"d": "x: y"}, "e": [{"f": 1}]}))
         self.assertIn("a: 1", text)

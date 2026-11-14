@@ -10,25 +10,25 @@ key: 0x44dc9505
 size: 428
 sha256: 23a18f12da0e55acb3b4aa748bde5ca381e06cfeaae2474325917aeaff90c2de
 root_type: 0xd2968089
-section: "<8070b164>/891987bd"
+section: "<Pam::SwingGamePlay::Data::ModuleData>/ModuleDefEngine"
 part: 1 of 1
 values:
-  - [0x40, key, 0x8e58dac7, "/f9a8e755/286a8ae2/7f301efc"]
-  - [0x44, uint, 0, "/f9a8e755/84f49b40/ec8dc583"]
+  - [0x40, key, 0x8e58dac7, "/ModuleDefPlayer/286a8ae2/7f301efc"]
+  - [0x44, uint, 0, "/ModuleDefPlayer/84f49b40/ec8dc583"]
   - [0x60, int, 4, "/MaxMatch"]
-  - [0x64, int, 2, "/f72c6a0b"]
+  - [0x64, int, 2, "/MaxTeam"]
   - [0x68, int, 4, "/MaxPlayer"]
   - [0x6c, int, 2, "/MaxBall"]
   - [0x70, int, 50, "/4e743ccd"]
-  - [0x80, key, 0x470600f5, "/f9a8e755/0b60a823/b41d729a[0]/Id"]  # Aiming
-  - [0x8c, key, 0xa6a1b2ae, "/f9a8e755/0b60a823/b41d729a[1]/Id"]  # Serve
-  - [0x98, key, 0x96fe1e55, "/f9a8e755/0b60a823/b41d729a[2]/Id"]  # Repositioning
-  - [0xa4, key, 0x7a0291cb, "/f9a8e755/0b60a823/b41d729a[3]/Id"]
-  - [0xb0, key, 0xa8a34e4c, "/f9a8e755/0b60a823/b41d729a[4]/Id"]
-  - [0xbc, key, 0xc4ceeec0, "/f9a8e755/0b60a823/b41d729a[5]/Id"]
-  - [0xc8, key, 0x1ceefd8b, "/f9a8e755/0b60a823/b41d729a[6]/Id"]  # ReturnServe
-  - [0xe8, key, 0xcaa7531f, "/f9a8e755/286a8ae2/ab12ef83[0]/Id"]  # Net
-  - [0xec, key, 0x93b9b1b2, "/f9a8e755/286a8ae2/ab12ef83[1]/Id"]
+  - [0x80, key, 0x470600f5, "/ModuleDefPlayer/0b60a823/b41d729a[0]/Id"]  # Aiming
+  - [0x8c, key, 0xa6a1b2ae, "/ModuleDefPlayer/0b60a823/b41d729a[1]/Id"]  # Serve
+  - [0x98, key, 0x96fe1e55, "/ModuleDefPlayer/0b60a823/b41d729a[2]/Id"]  # Repositioning
+  - [0xa4, key, 0x7a0291cb, "/ModuleDefPlayer/0b60a823/b41d729a[3]/Id"]
+  - [0xb0, key, 0xa8a34e4c, "/ModuleDefPlayer/0b60a823/b41d729a[4]/Id"]
+  - [0xbc, key, 0xc4ceeec0, "/ModuleDefPlayer/0b60a823/b41d729a[5]/Id"]  # Receiver
+  - [0xc8, key, 0x1ceefd8b, "/ModuleDefPlayer/0b60a823/b41d729a[6]/Id"]  # ReturnServe
+  - [0xe8, key, 0xcaa7531f, "/ModuleDefPlayer/286a8ae2/OutcomeDefOrder[0]/Id"]  # Net
+  - [0xec, key, 0x93b9b1b2, "/ModuleDefPlayer/286a8ae2/OutcomeDefOrder[1]/Id"]
   - [0xf8, key, 0x470600f5, "/1fe5549f/e630f16f/5cc71e1a[0]/Id"]  # Aiming
   - [0x104, key, 0xa6a1b2ae, "/1fe5549f/e630f16f/5cc71e1a[1]/Id"]  # Serve
   - [0x110, key, 0x96fe1e55, "/1fe5549f/e630f16f/5cc71e1a[2]/Id"]  # Repositioning

@@ -10,7 +10,7 @@ key: 0x334e7e0d
 size: 286492
 sha256: 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
 root_type: 0xd2968089
-section: "<9b4fb082>/c1f0f632"
+section: "<Pam::SwingGamePlay::Data::SettingsData>/SkillSettings"
 part: 1 of 1
 values:
   - [0xd24, float, 30.0, "/7287bb4c"]  # code? 886718FC

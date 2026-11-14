@@ -132,6 +132,24 @@ static void test_misc(void)
     CHECK(near(pl_excitement_step(0.9f, 0.3f, 0, 1), 1.0f));
 }
 
+static void test_match_setup(void)
+{
+    PlAttributeList r = {60, 50, 55, 52, 49, 52, 47, 52, 43, 30, 10, {0x11u, 0x22u, 0, 0}};
+    PlSkill sk[3] = {{0x11u, 0.5f}, {0x33u, 1.0f}, {0x22u, 0.0f}};
+    float raw[PL_STAT_COUNT];
+    pl_profile_from_record(&r, raw, sk, 3, 0);
+    CHECK(raw[PL_SERVE] == 60 && raw[PL_RETURN] == 50 && raw[PL_FOREHAND] == 52 && raw[PL_STAMINA] == 43);
+    CHECK(sk[0].value == 1.0f && sk[1].value == 0.0f && sk[2].value == 1.0f);
+    sk[1].value = 1.0f;
+    pl_profile_from_record(&r, raw, sk, 3, 1);
+    CHECK(sk[1].value == 1.0f);                    /* skip flag keeps the template values */
+    CHECK(pl_handed_from_plays(0xC4A6567Bu) == pl_crc32("Right"));
+    CHECK(pl_handed_from_plays(0) == pl_crc32("Left"));
+    CHECK(pl_flammable(3) == 0.0f && pl_flammable(4) == 1.0f);
+    CHECK(near(pl_fit_tolerance_from_travel(100), 60) && near(pl_fit_tolerance_from_travel(375), 80));
+    CHECK(near(pl_fit_tolerance_from_travel(900), 100));
+}
+
 int main(void)
 {
     test_curves();
@@ -140,6 +158,7 @@ int main(void)
     test_movement();
     test_swing_and_clip();
     test_misc();
+    test_match_setup();
     if (fails) { printf("%d failures\n", fails); return 1; }
     printf("test_player: all passed\n");
     return 0;

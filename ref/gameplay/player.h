@@ -161,6 +161,34 @@ const PlAiRecord *pl_ai_lookup(const PlAiGroup *g, int ngroups, uint32_t style, 
 /* fn_8868EA30: excitement update per rally. */
 float pl_excitement_step(float level, float events, float gain, float cap);
 
+/* ---------------------------------------------------------------- match setup (G4c) */
+/* fn_886B4700 (PlayerController vtable 0x880F4308 slot 21, via fn_886B4B80): the player record
+ * (PlayerList 0x104-byte row, found by PlayerId in GameDB.PlayerList mounts) -> PlayerState.
+ * AttributeList ints at record+0x80 in the order Serve Return Reflex Forehand Backhand Volley Power
+ * Speed Stamina Mental Overall Skill1..4. Raw ratings S+0x620.. are int->float copies (Reflex,
+ * Mental and Overall are dropped); every skill in the S+0x640 list gets 0.0 and those named by
+ * Skill1..4 get 1.0, unless skip_skills (world+0x28)+0xAB. */
+typedef struct {
+    int32_t serve, ret, reflex, forehand, backhand, volley, power, speed, stamina, mental, overall;
+    uint32_t skill[4];
+} PlAttributeList;
+typedef struct { uint32_t id; float value; } PlSkill;
+void pl_profile_from_record(const PlAttributeList *rec, float raw_out[PL_STAT_COUNT],
+                            PlSkill *skills, int nskills, int skip_skills);
+
+/* fn_886B4700: Profile.PlayStyle.Handed = Right when MainInfo.Plays == 0xC4A6567B, else Left. */
+uint32_t pl_handed_from_plays(uint32_t plays);
+
+/* fn_886BDCC0 @0x886BE0BC: MatchAnalyser.Flammable (S+0xF94) = 1.0 when the team counter
+ * (I: points won in a row) is >= 4; the 4 is a code constant. */
+float pl_flammable(int team_counter);
+
+/* fn_886D3AD8 @0x886D4580..0x886D4638 (no linked offset): reshaped per-axis fit tolerance from the
+ * root-motion length |m| (cm), with float-pool constants 150, 450, 1/450, 40 and 60:
+ * 60 + 40 * clamp(|m| - 150, 0, 450) / 450, i.e. 60..100 cm. How it combines with the base tolerance
+ * (AnimIface+0x3D8/+0x3DC) is a compare-select (I: the larger one). */
+float pl_fit_tolerance_from_travel(float root_motion_len_cm);
+
 uint32_t pl_crc32(const char *s);
 
 #endif

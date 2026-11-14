@@ -23,12 +23,13 @@ object (file offset 0x24, see section 3), so the file offset is `0x24 + X`.
 3. **274,020 editable scalars** are dumped from 12 files. Each scalar has its file offset, type and member
    path. `tools/ts4data/patch_tunables.py` writes edited values back in place and verifies the result.
    It can rebuild `Core.arc` (or a venue archive) for Xenia with the existing archive writer.
-4. **Names** (I): 2,743 of 12,988 target hashes are named (21%). The sources are the game's own two CRC
-   dictionaries, the strings of every Core.arc member and of the executable, tokens of those strings, the
-   `Parent_Member` nested-type rule (two independent 32-bit checks), and two-word combinations (medium
-   confidence, about 19 expected false hits). Each name records its source and confidence in
-   `work/disc/values/names.json` (local, regenerate with `tools/ts4data/names.py`). Unnamed members print
-   as 8 hex digits.
+4. **Names** (I, G5b): 4,445 of 12,609 target hashes are named (35%; G5 had 2,743, 21%, of which some were
+   junk). Types 651 / 3,678 (G5: 383), members 3,585 / 7,335 (G5: 2,004). The Settings and State roots are
+   `Pam::SwingGamePlay::Data::SettingsData` / `StateData` (the data tree is `...::SwingData`, from the XPath
+   `GamePlayState:/SwingData/State/...`). The dictionary with source and confidence per entry is committed as
+   `data/gameplay/names.yaml` (certain 653, high 1,487, medium 1,293, low 1,012; the 868 two-word `combo2`
+   names carry an expected 14 false hits). Method and CRC caveats: section 2.3. Unnamed members print as 8 hex
+   digits.
 5. **Consumer code** (M): `tools/ts4data/xref_fields.py` finds 135 code reads of Settings root fields whose
    access width matches the member type. Each consistent read with a neighbouring read is printed as
    `# code? <addr>` in the YAML. These reads match every documented anchor: cfg+0x134/0x138 (net and let aim
@@ -109,36 +110,94 @@ Header `{u32 sig, u32 root type, u32 version, 0, 0xFFFFFFFF}`. In generic data t
 `D2968089`: Settings, State, Module, Expressions) a polymorphic reference sits at 0x14. Other files have their
 root struct at 0x14. A walker visits each `(offset, type)` once. Shared objects appear under their first path.
 
+### 2.3 Names (G5b)
+
+`tools/ts4data/names.py` regenerates `data/gameplay/names.yaml` (and `work/disc/values/names.json`):
+
+```sh
+python3 tools/ts4data/names.py --layout work/disc/root/Layoutall.bin \
+    --strings work/disc/core_all orig/54540859/Swing_DLL.dll orig/54540859/disc/Loader_DLL.dll work/disc/root \
+              work/disc/tu1_arc --dump-strings work/disc/names/strings.txt \
+    --xbin work/disc/core_all/{334e7e0d,623d0979,fa94f637}.bin \
+    --merge work/disc/crc_dict.json data/gameplay/analyser_names.json \
+    --out work/disc/values/names.json --yaml data/gameplay/names.yaml --top 3000
+# later runs: --strings work/disc/core_all/{136bf02a,c6d33a45}.bin --strings-from work/disc/names/strings.txt
+```
+
+(`work/disc/tu1_arc` = the 56 members of Title Update #1 `TitleUpdate.arc`, extracted with `ts4_arc.Arc`;
+TU1's `Layoutall.bin`, sha256 `d734143d...`, has the same 3,642 types as the disc one.) About 7 minutes in
+CPython 3.13. Hand-added entries (any `src` that is not a rule of the tool) are kept on regeneration.
+
+* **CRC algebra.** zlib crc32 is affine, so `crc32(P + w) ^ crc32(w)` depends only on `crc32(P)` and `len(w)`.
+  The `Parent_Member` rule is therefore *not* two independent 32-bit checks (as section 0 of the G5 version
+  said): it checks the member name hash and its length. It is detected on hashes alone, which gives the length
+  of 1,040 nested member names before any guessing. Running the CRC backwards from a type hash through a known
+  member name gives the prefix state; states voted by many types are namespaces. That is how
+  `Pam::SwingGamePlay::Data::` (30+ votes), `Pam::Swing::GameplayInterface::`, `::SeasonDB::`, `::Season::`,
+  `::SystemData::`, `::MatchSettings::`, `Pam::DisplayAnimation::`, `Pam::PlayerCreator::` and
+  `Pam::Net::Data::` were found and then spelled by a word search.
+* **Guessers.** Length-guided 1-3 word search over a vocabulary built from known names, XML/XPath identifiers and
+  English (not French/German/Italian/Spanish/Polish) localisation words (`guess3`); sibling words of the same
+  type (`sibling`); digit and Min/Max-style swaps (`pattern`); two-word combinations (`combo2`, low).
+* No reflection strings exist in the executables: `Swing_DLL` has only 62 `Pam::` strings (log and class names);
+  the type registry is hash-only. Loader_DLL adds no type names. The TU1 xexp deltas are compressed.
+
 ## 3. Settings.bin (root `9B4FB082`, 0xD20 bytes at file 0x24 = "cfg")
 
 Top-level members in file order. The YAML is `data/gameplay/tunables/Settings/NN_<member>.yaml`.
 
 | cfg+ | member (type, size) | values | content and consumers |
 |---|---|---|---|
-| 0x000 | `761FDECE` (`48125DEB`, 0x14): `Element` ref + list `5F0108A7` | 2,971 | **shot selection tree** (33 nodes `48BFC8B8`, leaves `2C3F7780` {row id}) and the **37 shot template rows** (0x8C each, file 0x137C; curves and constants). Readers: tree `fn_8865A938`, rows `fn_88662390`/`fn_889C19F0` (shot-to-template, gp4b). G2/G3 own the semantics |
-| 0x014 | `3F7BD49D` (`80ABE512`): list `Behavior[]` | 827 | AI behaviour table (keys and ints) |
+| 0x000 | `ShotPalette` (`761FDECE`, type `48125DEB`, 0x14): `Element` ref + list `5F0108A7` | 2,971 | **shot selection tree** (33 nodes `48BFC8B8`, leaves `2C3F7780` {row id}) and the **37 shot template rows** (0x8C each, file 0x137C; curves and constants). Readers: tree `fn_8865A938`, rows `fn_88662390`/`fn_889C19F0` (shot-to-template, gp4b). G2/G3 own the semantics |
+| 0x014 | `BehaviorSettings` (`3F7BD49D`, `80ABE512`): list `Behavior[]` | 827 | AI behaviour table (keys and ints) |
 | 0x020 | `AI` (`F2B24032`, 0xDC) | 14,560 | AI parameters: `Aiming`, `Conditions` (difficulty factors Easy 1.0 / Normal 0.8 / Hard 0.6 / VeryHard 0.4), `Double`, `Service`, per-difficulty curves and decision tables. Consistent reads at 0x8846A8C8, 0x886B11BC |
 | 0x0FC | `11F82B5C` (`5B8D6994`): list `2A2F8871[]` | 315 | 15 records of 20 floats (positions in cm, 800.0 ...): AI/positioning zones (I) |
 | 0x108 | `B50DEF25` (`B1AB555F`): list `C6C76679[]` | 6,950 | 25 records of 276 floats ({x,z} landing points such as 485.3/179.9 cm, plus a key and flag each): aim target tables (I; input-to-shot "aim table", 25 entries in shot-to-template) |
 | 0x114 | `9850102C` (`03A127A3`): list | 0 | empty on the disc |
-| 0x120 | `40DD9EE9` (`DB2CA966`, 0x60) | 637 | **shot outcome geometry**: cfg+0x130/0x134/0x138 = 100 / **80 / 90 cm** (net and let aim heights; reads 0x8867E730/38, 0x886AD908, 0x886AEA6C, 0x886B225C; gp8 S+0x750/0x754), `39801E1E` widths 50/100 cm (reads 0x88662C7C..94), `7106890E` (9 angle or limit floats), list `00236A48` (571 condition flags and keys) |
-| 0x180 | `C4EBA473` (`94729773`, 0x760) | 2,306 | **player movement and positioning profile**: court bounds `0C910649`/`F164EF8E` (-1260/-1250 cm ...), `2906F362` (884 values: positioning grids, 1650/750 cm), `Acting` (200/300/100), `Fatigue` (12 floats, 8 keys), `59F72580` (370 keys, 182 flags: state conditions), `0B337596` (458 floats), `F2300AC2` 100/115, `19543B5D` 300/300/400, `027D6931`, `53EB0CF1`/`E238C406` (8 floats each), 5 ints, `79199F1D` = 1.1 (read 0x8866980C), `FBFB0BC9`/`39185E28` (1.07/1.04/1.00 and 1.12/1.07/1.03 multipliers), `73253DC5`/`5A170C63` (80-float curves) |
+| 0x120 | `ShotResolutionSettings` (`40DD9EE9`, `DB2CA966`, 0x60) | 637 | **shot outcome geometry**: cfg+0x130/0x134/0x138 = 100 / **80 / 90 cm** (net and let aim heights; reads 0x8867E730/38, 0x886AD908, 0x886AEA6C, 0x886B225C; gp8 S+0x750/0x754), `39801E1E` widths 50/100 cm (reads 0x88662C7C..94), `7106890E` (9 angle or limit floats), list `00236A48` (571 condition flags and keys) |
+| 0x180 | `PlayerSettings` (`C4EBA473`, `94729773`, 0x760) | 2,306 | **player movement and positioning profile** (the planner's MoveConfig, see section 3.1): `BeginPointPositions`, court bounds `0C910649`/`F164EF8E` (-1260/-1250 cm ...), `2906F362` (884 values: positioning grids, 1650/750 cm), `Acting` (200/300/100), `Fatigue` (12 floats, 8 keys), `59F72580` (370 keys, 182 flags: state conditions), `0B337596` (458 floats), `F2300AC2` 100/115, `19543B5D` 300/300/400, `027D6931`, `53EB0CF1`/`E238C406` (8 floats each), 5 ints, `79199F1D` = 1.1 (read 0x8866980C), `FBFB0BC9`/`39185E28` (1.07/1.04/1.00 and 1.12/1.07/1.03 multipliers), `73253DC5`/`5A170C63` (80-float curves) |
 | 0x8E0 | `PaddleSettings` (`1A2B0DA3`, 0x18) | 3,402 | **InputMapper** config: buttons, channels, dead zones 0.4, stick scales (input-to-shot s2) |
 | 0x8F8 | `MatchSettings` (`30E10B04`, 1 B) | 0 | no scalar members |
 | 0x8FC | `A957F922` (`39B6FA65`, 0x30) | 16 | **shot power curves**: 4 curve lists at cfg+0x8FC/0x908/0x914/0x920 (keys at file 0x305BC.., x 0..1.25). These are the curves `fn_8869D798` picks between (shot-to-template "cfg+0x8FC..0x920") |
-| 0x92C | `3939C1D9` (`A57BFDA9`, 0x84) | 33 | serve and aiming sectors: five `2D28B4A7` records {0.9, angle (pi, 2.1416 ...), weight}, `0E3C35A0` (read 0x886960C8), `F700452A` (read 0x88681C0C) |
-| 0x9B0 | `47CA727B` (`D23F4DBB`, 0x100) | 61 | **swing and contact window**: `8A5D9F93` (46 floats, -700..400 cm geometry, reads 0x8868C0D8..0x8868C5AC), 5 uints (reads 0x8866F7D0, 0x8869BB7C, 0x886B2FD4, 0x8868C430/54), 90.0 / 1.0 / 30.0 (reads 0x8868C3DC, 0x8868C4D4, 0x8868C5AC), a flag (read 0x886BB1C0) |
-| 0xAB0 | `3FCC8AC9` (`4250E54F`, 0x34) | 360 | **serve rules**: `ServiceConstraint` 40 / 375 cm (read 0x8865E66C), 45 / 40, `C2379436` (256 floats: service-box geometry), `F98D2C03` |
+| 0x92C | `ServeSettings` (`3939C1D9`, `A57BFDA9`, 0x84) | 33 | serve and aiming sectors: five `2D28B4A7` records {0.9, angle (pi, 2.1416 ...), weight}, `0E3C35A0` (read 0x886960C8), `F700452A` (read 0x88681C0C) |
+| 0x9B0 | `RepositioningSettings` (`47CA727B`, `D23F4DBB`, 0x100) | 61 | **swing and contact window**: `8A5D9F93` (46 floats, -700..400 cm geometry, reads 0x8868C0D8..0x8868C5AC), 5 uints (reads 0x8866F7D0, 0x8869BB7C, 0x886B2FD4, 0x8868C430/54), 90.0 / 1.0 / 30.0 (reads 0x8868C3DC, 0x8868C4D4, 0x8868C5AC), a flag (read 0x886BB1C0) |
+| 0xAB0 | `MoveConstraintsSettings` (`3FCC8AC9`, `4250E54F`, 0x34) | 360 | **serve rules**: `ServiceConstraint` 40 / 375 cm (read 0x8865E66C), 45 / 40, `C2379436` (256 floats: service-box geometry), `F98D2C03` |
 | 0xAF0 | `3B896EC8` (C3DVectorA) | 4 | 1900, 0, 900 (court extent in cm, I) |
-| 0xB00 | `DED1BAA5` (`743633C1`): list `899C4C22[]` | 446 | 23 records (key, floats, flag) |
+| 0xB00 | `AmplitudeConfigList` (`DED1BAA5`, `743633C1`): list `899C4C22[]` | 446 | 23 records (key, floats, flag) |
 | 0xB10 | `TopSpinSchool` (`68176BEB`, 0xF0) | 12,352 | tutorial and school lessons (Top Spin Academy): lesson trees, targets, scoring |
-| 0xC00 | `B042EAB4` (`E0DBD9B4`, 0x34) | 13 | **reach**: `BF03EAA1` (0.6, 300, 300 ...), `ReachBall` 8.0 / 300.0 |
-| 0xC34 | `6FF19A2E` (`F2A0BD48`, 0xCC) | 50 | **shot request thresholds**: `4914978D` = 0.3 / **0.4 / 0.7** at cfg+0xC6C/0xC70/0xC74 (Finesse/Medium/Powerful power tiers; read 0x886B5D38), and about 20 {int, float} pairs (8.0, 0.2, 0.8/80, 0.15, 0.35, 0.5, 6.0, 140.0, 0.33 ...) of the timing and charge rules |
-| 0xD00 | `C1F0F632` (`136F0BFA`, 8) | 2 | 30.0 (read 0x886718FC), 2.5 (read 0x8867188C) |
-| 0xD08 | `948988C8` (`01E45DB7`, 0xC) | 14 | one 2-D table `7A330099` (rows {key, curve16}; values 0 / 400 cm), the df.md 4.4 table form |
+| 0xC00 | `DoubleSettings` (`B042EAB4`, `E0DBD9B4`, 0x34) | 13 | **reach**: `BF03EAA1` (0.6, 300, 300 ...), `ReachBall` 8.0 / 300.0 |
+| 0xC34 | `6FF19A2E` (`F2A0BD48`, 0xCC) | 50 | **per-play-style objectives** (all 32 members are `Objective1..8` x `AllAround` / `BaselineAttacker` / `VolleyPlayer` / `BaselineController`, G5b) - earlier read as shot request thresholds: `4914978D` = 0.3 / **0.4 / 0.7** at cfg+0xC6C/0xC70/0xC74 (Finesse/Medium/Powerful power tiers; read 0x886B5D38), and about 20 {int, float} pairs (8.0, 0.2, 0.8/80, 0.15, 0.35, 0.5, 6.0, 140.0, 0.33 ...) of the timing and charge rules |
+| 0xD00 | `SkillSettings` (`C1F0F632`, `136F0BFA`, 8) | 2 | 30.0 (read 0x886718FC), 2.5 (read 0x8867188C) |
+| 0xD08 | `OnlineSettings` (`948988C8`, `01E45DB7`, 0xC) | 14 | one 2-D table `7A330099` (rows {key, curve16}; values 0 / 400 cm), the df.md 4.4 table form |
 
 The first column is the root member offset as the layout gives it (V). These offsets agree with the code anchors
 from earlier notes (cfg+0x134/0x138, cfg+0x8FC..0x920, cfg+0xC70/0xC74).
+
+### 3.1 Planner MoveConfig = `PlayerSettings` (G5b, V for the layout match)
+
+The movement config block of gp3 5.2 / movement-and-ai A.7b (`ctx+0x2C`, "cfg+0x17C..0x630") is the Settings
+member `PlayerSettings` (type `94729773`, 0x760 bytes at Settings cfg+0x180). Its offsets are relative to that
+struct, so planner `+X` = Settings `cfg+0x180+X` = file `0x1A4+X`. Found by matching the typed offsets of the
+planner against every flattened layout type: 14 of 15 typed constraints match at shift 0, and no other type
+gets more than 9.
+
+| planner offset | member path in `PlayerSettings` |
+|---|---|
+| +0x17C, +0x188 | `HitPositionSelection/2a3b1f8a/db933fb2`, `.../c88e0da0` (2-D tables `7A330099` / curve `19B0EBBC`) |
+| +0x1AC, +0x1B0 | `HitPositionSelection/2a3b1f8a/2f038819`, `.../3af9f1bd` (Single) |
+| +0x1E0 | `HitPositionSelection/InputNotation/342ca237` (curve) |
+| +0x1F8..+0x248 (16 B) | `HitPositionSelection/6b347916/{InsideOut, Steps, Jog, Rush, 7e03dae6, 1a6f1fe2}` (type `8E4C98C4`) |
+| +0x230 | `.../Rush/Reachability/MaxSpeed` (the value AI overrides with its skill float) |
+| +0x26C | `HitPositionSelection/6b347916/a9798cc5` (Single) |
+| +0x270, +0x284, +0x298 (0x14 B) | `HitPositionSelection/MovePattern/SelectionList/{950b36ae, da09419b, 140944da}` (Rush, JogPrepared, JogJogPrepared) |
+| +0x2AC, +0x2B8, +0x2F4, +0x300 | `HitPositionSelection/MovePattern/43e5dcbd/{InsideOut, Steps, Jog, Smash}` (zones; +8 radius) |
+| +0x3B0, +0x3BC, +0x3EC, +0x3F4 | `HitPositionSelection/MovePattern/SlowDown/{56325d62, InPositioning, TimeStep, 528878c1}` |
+| +0x630 | `Fatigue/a9957a1c` (Single) |
+
+`+0x1DC` is not a float in this struct (it is the capacity word of the list `HitPositionSelection/InputNotation/58a55236`).
+movement-and-ai reads it from a different object (`ctx+0x50 -> +0x28`, the skill record). gp3 5.2 lists it
+under the config block by mistake. Also, `fn_888BB670` (named in movement-and-ai as the loader) parses camera
+shots (`ShotName`, `Fov4_3`, `FromSmoothTime` ...), not the MoveConfig. The record is the XBin data, read in place.
 
 ## 4. State.bin (root `B77BBB90`)
 
@@ -193,13 +252,12 @@ paths and wrong offsets.
 
 ## 7. Open items
 
-* Names: 79% of hashes are unnamed. The root type names of Settings and State are unknown, which blocks the
-  nested-name rule for their subtrees. Next sources: Title Update #1 data, PlayerCreator `*crc.bin`, and larger
-  two-word searches restricted to member names with a type check.
+* Names: 65% of hashes are still unnamed, mostly scalar attributes (3,374 hashes) for which the layout gives no
+  length. 295 nested / namespaced member names with a known length (mostly 15-33 characters) resist 4-word
+  searches over the top 300 words. `6FF19A2E` (the Objective table, length 33) is one of them. Unnamed
+  namespace prefix states are listed in `work/disc/values/names.json` `_meta.log`.
 * Consumer code exists only for Settings root fields reached through `ctx+0x6C`, and it is heuristic (M).
-  State.bin defaults are consumed as runtime PlayerState fields (documented per field in gp2..gp8). Movement
-  `cfg+0x1DC..0x630` in gp3 / movement-and-ai is a different object (planner profile) and is not yet mapped
-  to a data member.
+  State.bin defaults are consumed as runtime PlayerState fields (documented per field in gp2..gp8).
 * Shared objects are dumped once. Editing one changes every user of the object.
 * Physics.bin per venue holds no numeric tunables in the copies checked. The ball's physical constants are in
   the State.bin ball block (section 4) and in code (gp4).

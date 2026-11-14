@@ -10,12 +10,12 @@ key: 0x334e7e0d
 size: 286492
 sha256: 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
 root_type: 0xd2968089
-section: "<9b4fb082>/b042eab4"
+section: "<Pam::SwingGamePlay::Data::SettingsData>/DoubleSettings"
 part: 1 of 1
 values:
-  - [0xc24, float, 0.6, "/bf03eaa1/22833845/29e3416c"]
-  - [0xc28, float, 300.0, "/bf03eaa1/22833845/a7b7939b"]
-  - [0xc2c, float, 300.0, "/bf03eaa1/22833845/08ec46e0"]
+  - [0xc24, float, 0.6, "/bf03eaa1/HumanHuman/29e3416c"]
+  - [0xc28, float, 300.0, "/bf03eaa1/HumanHuman/a7b7939b"]
+  - [0xc2c, float, 300.0, "/bf03eaa1/HumanHuman/08ec46e0"]
   - [0xc30, float, 0.4, "/bf03eaa1/c11474f9/29e3416c"]
   - [0xc34, float, 250.0, "/bf03eaa1/c11474f9/a7b7939b"]
   - [0xc38, float, 200.0, "/bf03eaa1/c11474f9/08ec46e0"]

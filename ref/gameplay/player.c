@@ -258,3 +258,43 @@ uint32_t pl_crc32(const char *s)
     }
     return ~c;
 }
+
+/* ------------------------------------------------------------ match setup (G4c) */
+
+void pl_profile_from_record(const PlAttributeList *r, float raw[PL_STAT_COUNT], PlSkill *sk, int n, int skip)
+{
+    raw[PL_SERVE] = (float)r->serve;          /* record+0x80 -> S+0x620 */
+    raw[PL_RETURN] = (float)r->ret;           /* +0x84 -> S+0x624 (Reflex +0x88 not copied) */
+    raw[PL_FOREHAND] = (float)r->forehand;    /* +0x8C -> S+0x628 */
+    raw[PL_BACKHAND] = (float)r->backhand;    /* +0x90 -> S+0x62C */
+    raw[PL_VOLLEY] = (float)r->volley;        /* +0x94 -> S+0x630 */
+    raw[PL_POWER] = (float)r->power;          /* +0x98 -> S+0x634 */
+    raw[PL_SPEED] = (float)r->speed;          /* +0x9C -> S+0x638 */
+    raw[PL_STAMINA] = (float)r->stamina;      /* +0xA0 -> S+0x63C */
+    if (skip)
+        return;
+    for (int i = 0; i < n; ++i) {
+        sk[i].value = 0.0f;
+        for (int k = 0; k < 4; ++k)
+            if (sk[i].id == r->skill[k])
+                sk[i].value = 1.0f;
+    }
+}
+
+uint32_t pl_handed_from_plays(uint32_t plays)
+{
+    return plays == 0xC4A6567Bu ? 0x750B5A10u /* "Right" */ : 0xDA554856u /* "Left" */;
+}
+
+float pl_flammable(int team_counter)
+{
+    return team_counter >= 4 ? 1.0f : 0.0f;
+}
+
+float pl_fit_tolerance_from_travel(float len)
+{
+    float a = len - 150.0f;
+    if (a < 0.0f) a = 0.0f;
+    if (a > 450.0f) a = 450.0f;
+    return a * (1.0f / 450.0f) * 40.0f + 60.0f;
+}

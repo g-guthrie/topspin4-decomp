@@ -3,12 +3,7 @@
 # (dict, string, token, nsrule, nested, seed, sibling, pattern, guess3, combo2) are kept on
 # regeneration, so other agents can add names by hand with src: <agent or source>.
 # crc32 is checked on load.  conf: certain > high > medium > low (see names.py).
-# targets: 12609
-# found: 4445
-# types: [651, 3678]
-# members: [3585, 7335]
-# by_confidence: {"certain": 653, "high": 1487, "low": 1012, "medium": 1293}
-# combo2_expected_false_hits: 14.2
+# note: "pre-regeneration"
 names:
   "0032cbaa": {name: "VeryEfficientReturn", src: string, conf: high}
   "00615077": {name: "Weight", src: dict, conf: certain}
@@ -142,7 +137,6 @@ names:
   "084d7ee1": {name: "LastIndex", src: merged, conf: medium, note: "analyser_names"}
   "085923ec": {name: "LevelList", src: string, conf: high}
   "0885625c": {name: "InsideOutDefinition", src: guess3, conf: medium}
-  "08950daa": {name: "Flammable", src: token, conf: high}
   "08986d30": {name: "Pam::SwingAnimation::AnimationDB::TransitionSpecialRule_Transition", src: dict, conf: certain}
   "08b1c95f": {name: "PlayerArea", src: string, conf: high}
   "08c35ef9": {name: "Pam::Net::Data::InGameType", src: nsrule, conf: high}
@@ -545,7 +539,6 @@ names:
   "21b9063d": {name: "GameLogic", src: merged, conf: medium, note: "analyser_names"}
   "21b99080": {name: "Objective5BaselineController", src: brute4, conf: high, note: "members of type F2A0BD48: all 32 = Objective{1..8} x 4 play styles, lengths implied by the nested rule"}
   "21be4b26": {name: "HasHeadset", src: string, conf: high}
-  "2202fddf": {name: "O7U0", src: merged, conf: medium, note: "crc_dict"}
   "220dc37c": {name: "CancelAction", src: combo2, conf: low}
   "2219ed03": {name: "SkillId", src: string, conf: high}
   "221e130f": {name: "Cutscene_BallBounce", src: dict, conf: certain}
@@ -974,7 +967,6 @@ names:
   "3b6773a2": {name: "Objective", src: string, conf: high}
   "3b698329": {name: "SwingSelection", src: merged, conf: medium, note: "analyser_names"}
   "3b6c308d": {name: "AnimationFrom", src: combo2, conf: low}
-  "3b91d48c": {name: "CompanySmoothYear", src: guess3, conf: medium}
   "3b9ad22e": {name: "EventRacket", src: dict, conf: certain}
   "3ba8f989": {name: "PointQuality", src: merged, conf: medium, note: "analyser_names"}
   "3bc79669": {name: "AcceptInvitationEvent", src: guess3, conf: medium}
@@ -1199,7 +1191,6 @@ names:
   "4704e178": {name: "MassSquare", src: merged, conf: medium, note: "analyser_names"}
   "4705df07": {name: "MatchPlayerList", src: guess3, conf: medium}
   "470600f5": {name: "Aiming", src: token, conf: high}
-  "4718ce71": {name: "NotOnlineCompliant", src: guess3, conf: medium}
   "471e936a": {name: "CXBinDataServer", src: string, conf: high}
   "472cb4d9": {name: "AmbientToShadowModulator", src: string, conf: high}
   "472f1803": {name: "NewMailCount", src: token, conf: high}
@@ -3135,7 +3126,6 @@ names:
   "b36ab095": {name: "LessonCategory", src: guess3, conf: medium}
   "b38f6f07": {name: "EventQueue", src: token, conf: high}
   "b39d5c32": {name: "Pam::Net::Data::ProChallengeType", src: nsrule, conf: high}
-  "b3a1d456": {name: "YiPavel", src: combo2, conf: low}
   "b3ac9702": {name: "WonPoints", src: sibling, conf: medium}
   "b3ae3fd9": {name: "XBinPath", src: guess3, conf: medium}
   "b3dc524f": {name: "MatrixList", src: token, conf: high}
@@ -4455,3 +4445,9 @@ names:
   "fff336ad": {name: "AttributePack", src: combo2, conf: low}
   "fff4a028": {name: "ValueXPath", src: sibling, conf: medium}
   "ffff65c0": {name: "HeapChoice", src: combo2, conf: low}
+rejected:
+  "08950daa": {name: "Flammable", src: rejected, conf: low, note: "false hit (G1b, graphs-decoded.md 7.1)"}
+  "2202fddf": {name: "O7U0", src: rejected, conf: low, note: "false hit (G1b, graphs-decoded.md 7.1)"}
+  "3b91d48c": {name: "CompanySmoothYear", src: rejected, conf: low, note: "false hit (G1b, graphs-decoded.md 7.1)"}
+  "4718ce71": {name: "NotOnlineCompliant", src: rejected, conf: low, note: "false hit (G1b, graphs-decoded.md 7.1)"}
+  "b3a1d456": {name: "YiPavel", src: rejected, conf: low, note: "false hit (G1b, graphs-decoded.md 7.1)"}

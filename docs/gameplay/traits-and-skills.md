@@ -123,7 +123,7 @@ Columns:
 | 2 | PassingShotSniper | Passing shot sniper | 6 | 3 | 15 | Aiming efficiency term goes from 0 to `curve2(timing)` = **+0.4..0.6** (graph 188 `lerp(curve31 = 0, curve2, skill)`), before the 0.3 clamp. Also enters the fault graphs 300/302. | ManualShotTiming (passing-shot classes, I) |
 | 3 | SpectacularVolleys | Spectacular volleys | 10 | 5 | 0 | Code flag S+0x388 (s2). | volley geometry in `fn_886BCE88` |
 | 4 | BetterOnLongRallies | Longer, better! | 12 | 7 | 17 | FaultProbability multiplier `lerp(curve18, curve21, skill)` of the rally count. Without the skill 1.0 flat; with it **1.0 at 5 strokes -> 0.8 at 10 -> 0.6 at 15 -> 0.4 at 20 -> 0.2 at 25** (graph 274). Applied to fault and OutEfficiency in 16 graphs. | `MatchState.#8beb922e` (rally stroke count, I) |
-| 5 | HighlyFlammable | Highly flammable | 10 | 6 | 12 | `+0.1` (7 graphs) or `+0.2` (5) × the streak flag on the aiming sum (graph 202 `product(skill, #08950daa, 0.1)`). | `MatchAnalyser.#08950daa` ("on fire" streak, I; the 4-point threshold is not in the graphs) |
+| 5 | HighlyFlammable | Highly flammable | 10 | 6 | 12 | `+0.1` (7 graphs) or `+0.2` (5) × the streak flag on the aiming sum (graph 202 `product(skill, #08950daa, 0.1)`). | `MatchAnalyser.Flammable` (`08950daa`, S+0xF94): 1.0 when the team counter is >= 4, a **code constant** in `fn_886BDCC0` @`0x886BE0BC` (G4c, V) |
 | 6 | PoisonedSlices | Poisoned slices | 4 | 4 | 23 (via S+0x7D0) | Receiver penalty up to **-0.3** on low balls (s2). | incoming Slice from the owner |
 | 7 | DieselReturner | Diesel returner | 4 | 3 | 12 | `+curve15(#b6b22409)` = **0 at 1 -> +0.1 at 5** (graph 224, return classes). | `MatchAnalyser.#b6b22409` (games/points counter, I) |
 | 8 | InstantRocket | Instant rocket | 5 | 4 | 31 | Charge curve (s2). 6 graphs also `lerp` timing curves (graph 248). | charge ticks S+0xE04 |
@@ -175,7 +175,7 @@ Marks:
 | Crushing passing shot | more powerful vs net player | confirmed | +0.2..0.4 PowerfulFactor term |
 | Spectacular volleys | unlocks spectacular volleys | confirmed (flag); clip gating I | S+0x388 in `fn_886BCE88` |
 | Longer, better! | more reliable as rallies lengthen | confirmed | fault multiplier 1.0 -> 0.2 over 5..25 strokes |
-| Highly flammable | on fire after 4+ points | confirmed (streak input); threshold not verified | `#08950daa` × 0.1/0.2 |
+| Highly flammable | on fire after 4+ points | confirmed: threshold 4 in code (G4c) | `Flammable` (`08950daa`) × 0.1/0.2; `fn_886BDCC0` `cmpwi r4,4` |
 | Poisoned slices | low slices weaken the reply | confirmed | receiver flag S+0x7D0, penalty up to -0.3 for low balls |
 | Diesel returner | returns improve over return games | confirmed | +0..0.1 on counter `#b6b22409` |
 | Instant rocket | max power sooner | confirmed | charge curve 0.9 instead of 1.0 (about 11 % sooner) |
@@ -220,7 +220,7 @@ Career claims from R1 s3.3, checked against `CoachList.bin`:
 | 12 | The September 2011 patch changes are data deltas | **not tested** | needs the TU1 `Settings.bin` / `Expressions.bin`, which are not extracted |
 | 14 | Instant rocket shortens the charge time (smaller divisor or scaled curve) | **confirmed, scaled curve** | `fn_8869D720` @`0x8869D750` swaps `cfg+0x908 [0..1]` for `cfg+0x920 [0..0.9]` on S+0xE08 (about 11 % sooner). The divisor (rate) is unchanged. S+0xE00 uses an identical curve pair |
 | 15 | Diesel/Invasion skills scale with counters | **confirmed** (counter identities I) | Longer, better!: `MatchState.#8beb922e`, 5..25. Diesel hard hitter: `MatchAnalyser.#ace1253a`, 2..6, a different counter. Diesel server/returner share `#b6b22409` (1..5 / 0..4). Slice/Topspin invasion: per-type counters `#7595a0b3` / `#125400f0`, 0..10 |
-| 16 | Score-state skills read the score | **confirmed** (input names I except IsGamePoint) | Monster Defense and Focus service read the same `MatchAnalyser.#689dc6f2`. Smell of blood reads `MatchAnalyser.IsGamePoint`. Highly flammable reads `#08950daa`. The 4-point threshold is not in the graphs |
+| 16 | Score-state skills read the score | **confirmed** (input names I except IsGamePoint) | Monster Defense and Focus service read the same `MatchAnalyser.#689dc6f2`. Smell of blood reads `MatchAnalyser.IsGamePoint`. Highly flammable reads `Flammable` (`08950daa`), set by code when the team counter is >= 4 (G4c, `fn_886BDCC0`) |
 | 17 | Position-state skills | **confirmed** for Fatality (SideLeft/SideRight), Reach (reach swing category), Wrong foot (`#af13720a`); **I** for Passing shot sniper / Crushing passing shot (no "opponent at net" input in the skill slice; the gate is the passing-shot class) and Approach (qualifier `8cae3d42/4daa7349`) | s3 |
 | 18 | Shot counter / Return serve counter need Flat Finesse + good timing; extra speed from the incoming ball (graph `491e53f5`) | **different** | Graph `491e53f5` (index 238) and 8 siblings `lerp` between two ManualShotTiming curves. The skill widens the PowerfulFactor timing window (peak ±0.1 -> ±0.2, skirt 0.2 -> 0.4). No incoming-ball-speed operand is in the skill's slice; the output is PowerfulFactor mapped into `ShotSpecific.#033f32d0` Min..Max. Return serve counter: graph 258, same pattern |
 | 19 | Poisoned slices affects the opponent via the opponent's skill or an incoming-ball property | **confirmed** (the second form) | `fn_88695640` sets the receiver's S+0x7D0 when the incoming shot is the owner's Slice. 23 receiver graphs add `curve6(BallState.Commands.From)`, which is -0.3 for low balls |
@@ -232,10 +232,17 @@ Career claims from R1 s3.3, checked against `CoachList.bin`:
 ## 5. Open items
 
 * Names of the trigger inputs marked I:
-  * MatchAnalyser `#08950daa`, `#b6b22409`, `#ace1253a`, `#689dc6f2`, `#7595a0b3`, `#125400f0`;
+  * MatchAnalyser `#b6b22409`, `#ace1253a`, `#689dc6f2`, `#7595a0b3`, `#125400f0`, `#7f50fe07`;
   * MatchState `#8beb922e`;
   * `#693eedbe`, `#af13720a`, `#39b2f234`, `#e1fe010c`.
 
-  Their writers are in the match analyser, which is not traced here.
+  G4c located their writers (all code, no graph writes a MatchAnalyser member; `player-and-movement.md`
+  s10.4): `08950daa` = **Flammable** (crc, G5b token) set at point start from a team counter >= 4;
+  `7f50fe07` from a second team list (> 0, I: game point); `7595a0b3` / `125400f0` cleared at point start and
+  incremented in `fn_886B0490` (slices / topspins); `ace1253a` incremented in `fn_88697890`; `689dc6f2` 1.0 for
+  the team behind in a score comparison (`fn_88674E00`, I); `b6b22409` cleared in `fn_88674BC8`; MatchState
+  `8beb922e` incremented in `fn_886B5128`.
 * The SpectacularVolleys flag S+0x388: which clip query reads it (G6, movement/special animations).
-* Whether the Highly flammable 4-point threshold is in code (MatchAnalyser) or in data.
+* Resolved (G4c): the Highly flammable 4-point threshold is in code (`fn_886BDCC0` @`0x886BE0BC`). The other
+  skill magnitudes and thresholds (5..25 strokes, 2..6 and 0..10 counts, timing windows) are graph curve keys,
+  so they are data.

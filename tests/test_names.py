@@ -108,6 +108,29 @@ class YamlTests(unittest.TestCase):
             self.assertEqual(N.load_merge(p), entries)
             self.assertEqual(X.load_names(p)[crc("Alpha")], "Alpha")
 
+    def test_rejected_section_and_conflict_check(self):
+        entries = {crc("FinalScore"): ("FinalScore", "merged", "medium", None)}
+        rejected = {crc("FinalScore"): {"O7U0": "false hit"}}
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "names.yaml")
+            N.write_yaml_names(p, entries, {}, rejected)
+            rej = {}
+            self.assertEqual(N.read_yaml_names(p, rej), entries)
+            self.assertEqual(rej, rejected)
+            other = os.path.join(d, "other.json")
+            with open(other, "w") as o:
+                o.write('{"%08x": ["Other", "high"], "%08x": ["Alpha", "high"]}' % (crc("FinalScore"), crc("Alpha")))
+            self.assertEqual(N.main(["--check", p, other]), 1)
+            clash = N.conflicts({crc("FinalScore"): "FinalScore"}, [(other, N.load_merge(other))])
+            self.assertEqual([(c[0], c[2]) for c in clash], [(crc("FinalScore"), "Other")])
+
+    def test_rejected_name_is_not_added(self):
+        lay, root, _sub, _other = make_layout()
+        tgt, types, members = N.collect_targets(lay, [])
+        nm = N.Names(tgt | {crc("Speed")}, types, members)
+        nm.rejected = {crc("Speed"): {"Speed": "false hit"}}
+        self.assertFalse(nm.add(crc("Speed"), "Speed", "token"))
+
 
 if __name__ == "__main__":
     unittest.main()

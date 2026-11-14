@@ -13,8 +13,8 @@ root_type: 0x32286f35
 section: "d7c98e3b"
 part: 1 of 1
 values:
-  - [0x20, int, 5, "/5a1d77f7"]
-  - [0x38, int, 4, "/77892d79[0]/LevelValue"]
-  - [0x3c, int, 9, "/77892d79[1]/LevelValue"]
-  - [0x40, int, 14, "/77892d79[2]/LevelValue"]
-  - [0x44, int, 19, "/77892d79[3]/LevelValue"]
+  - [0x20, int, 5, "/IncreaseValue"]
+  - [0x38, int, 4, "/SpecialStep[0]/LevelValue"]
+  - [0x3c, int, 9, "/SpecialStep[1]/LevelValue"]
+  - [0x40, int, 14, "/SpecialStep[2]/LevelValue"]
+  - [0x44, int, 19, "/SpecialStep[3]/LevelValue"]

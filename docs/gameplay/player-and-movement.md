@@ -108,6 +108,8 @@ python3 -m unittest tests.test_player_data
   Speed, Stamina. The Profile values are written by the DefaultAttributes graph (G4b, V; full chain in
   `stats-coaches-career.md` s1).
 * `S+0x640` is the skill list (`{id, value}` pairs). The first four entries with value 1.0 become Skill1..4 (`fn_8869DEF0`).
+* **Writer (G4c, V):** `fn_886B4700` copies both from the player record at match setup (int -> float for the
+  ratings, Value 1.0 for Skill1..4), then runs DefaultAttributes. Full chain in s10.1.
 * The external record (`fn_887AC0E0`) has 14 ints: Serve, Return, Reflex, Forehand, Backhand, Volley, Power, Speed,
   Stamina, Mental, Overall, Skill1..4. Reflex and Mental have no in-match float. They act only through the data (U).
 
@@ -440,12 +442,169 @@ Resolved by G4b: the reaction float and rating writers (s2.1, s3.3), the AI reco
 (s5, `stats-coaches-career.md`), the clip-fit cost (s4.3), coach and career tables, and the order of cells 40..47.
 The curve question is settled: ramps (G1).
 
+Resolved by G4c (s10): the match-setup writer of S+0x620 / S+0x640 (code, not data), the PlayStyle keys, the
+member chain of the whole PlayerTuning block (so every PT offset has a structural name), the readers of
+PT+0x35C/0x36C and of the InPositioning floats, the clip-fit tolerance constants, the Highly flammable threshold.
+
 Still open:
-1. The match-setup writer of the raw ratings S+0x620 and the skill list S+0x640. It is a data-driven backstage
-   request; no literal code store was found (I).
-2. Names of AI style groups `824ec12e` and `75c6d60c` and of `PositioningComponents.#79b99b60` (no crc candidate).
-3. Roles of PT+0x00..0x9F, PT+0x110..0x14B and PT+0x3F8..0x62F. Readers of the speed records PT+0x31C..0x37C other
-   than `+0x34C`. Not traced; the generic dump has every value.
-4. `swinganimation.bin` field roles: no reader traced. The tolerance reshaping constants `f22..f26` in the clip fit
-   come from the caller.
-5. The match-analyser counters that gate the skills (`traits-and-skills.md` s5).
+1. The caller of PlayerController vtable slot 21 (`fn_886B4B80`). It is an indirect call; no static
+   `lwz rX,0x54(vtbl); bctrl` site in the gameplay range resolves to it (I: match start / reset).
+2. How a created player becomes a 0x104-byte row in a `GameDB.PlayerList` mount, and whether coach and level
+   bonuses are already added into its AttributeList ints at that point (career Lua, I).
+3. Names of AI style groups `824ec12e` and `75c6d60c` and of `PositioningComponents.#79b99b60`. A two-token
+   search over the 3,018-token vocabulary of `work/disc/values/names.json`, with prefixes `AIStyle_`, `Style_`,
+   `AI_`, `AIProfile_`, `PlayStyle_`, found nothing. `824ec12e` is also a float **member** of the AI record's
+   Style struct (AI record +0x188), next to `529c7951` = AIStyle_BaselineController.
+4. Readers of PT+0x31C/0x32C/0x33C/0x37C (the other four 0x10-byte speed/Angle records) and of the
+   PT+0x450..0x5D3 blocks (Acting, three style records, shot qualifier tables) are not confirmed: the static scan
+   only follows `lwz rX,0x2C(ctx)` bases (s10.3).
+5. The counter behind Flammable: `((world+0x50)+0x4C)[team].+0x30`, 0x40-byte team records of an engine object
+   (I: points won in a row). Its incrementer is not traced.
+
+## 10. Match setup, PlayerTuning layout and skill gates (agent G4c)
+
+Sources as in the header, plus `Layoutall.bin` sha256 `67793f5b...88c5` (reflection table) and
+`BackstageRequests.bin` (Core `19ce55a5`, 1,053,532 bytes). Disassembly: capstone 5.0.7 over the PE image;
+VMX128 functions with `tools/ppcdis` (`work/ppcdis/target/release/ppcdis`). `player.yaml` gains
+`player_tuning.layout` (one row per member of the block, with the shipped value) and `match_setup`.
+
+```
+python3 -I tools/ts4data/player_data.py --core work/disc/core_all --layout work/disc/root/Layoutall.bin
+```
+
+### 10.1 From a player record to the in-match floats (V)
+
+The raw ratings and skills are **copied by code**, not by an XData request or a Lua script. No backstage request
+writes `GamePlayState:/SwingData/State/PlayerStates/.../Profile` (V: all 1,718 request paths of
+`BackstageRequests.bin` decoded; only 6 touch GamePlayState, none Profile), and no C++ site issues a request
+key except one (`eb189e45`, unrelated). Chain:
+
+1. **Menus / career Lua** fill `GameDB:/GameDB/MatchSettings/PlayerList` (type 46467307). Each 0x20-byte row is
+   `{+0x0 6d237251 (f32), +0x4 {Difficulty, 5a0650d7}, +0xC PlayerIndex, +0x10 PlayerId, +0x14 OutfitIndex,
+   +0x18 Type, +0x1C PadIndex}` (Lua `MatchSettingsLib.lua`: `AttrPlayerId`, `AttrAILevel`, `PadIndex`). The
+   menu side writes PlayerId through `fn_8884E988` (`GameDB:/GameDB/MatchSettings/PlayerList`).
+2. **`fn_886B4B80`** (PlayerController vtable 0x880F4308, slot 21 = +0x54; the vtable also holds Init
+   `fn_886BE1C8` at slot 18 and Skill1..4 `fn_8869DEF0` at slot 22):
+   * scans `(world+0x40)+0x44` (the MatchSettings PlayerList, `world = ctx+0x48`) for the row whose PlayerIndex
+     equals `ctx+0x14`;
+   * stores the row at **`ctx+0x7C`**. This is G4's "player info": `+0x4` AI level key, `+0x8` AI style key,
+     `+0x18` Type (`Human`);
+   * calls `fn_886B4700(ctx, row.PlayerId)`.
+3. **`fn_8867AB78(ctx, id)`** finds the player record: `(world+0x38)` is the GameDB root (type f895ecb1),
+   `+0x13C0` its `PlayerList` **mount point** (CXBinMountPoint, 0x40 bytes). For each mounted file (`+0x13C4`
+   array, `+0x13C8` count) it takes the root list (vtbl+0x48) of 0x104-byte `Player` rows (type cd5f7823, the
+   `PlayerList.bin` layout) and returns the row with `Id` (+0xE0) == id.
+4. **`fn_886B4700(ctx, id)`** (0x47C bytes) writes the PlayerState through `ctx+0x28` (= &S.Profile, S+0x5F0;
+   set in Init at `0x886BE4D8`):
+
+   | Source (record) | Destination | How |
+   |---|---|---|
+   | AttributeList Serve +0x80 | S+0x620 | int -> float (`fcfid; frsp`) |
+   | Return +0x84 | S+0x624 | same |
+   | Reflex +0x88 | — | **not copied** |
+   | Forehand +0x8C, Backhand +0x90 | S+0x628, S+0x62C | |
+   | Volley +0x94, Power +0x98, Speed +0x9C, Stamina +0xA0 | S+0x630..0x63C | |
+   | Mental +0xA4, Overall +0xA8 | — | not copied |
+   | Skill1..4 +0xAC..0xB8 | S+0x640 SkillList | unless `(world+0x28)+0xAB`: every Value = 0.0, then 1.0 where Id is one of the four |
+   | MainInfo.Plays +0x24 | S+0x5FC Handed | `Right` if Plays == 0xC4A6567B, else `Left` |
+   | PlayStyle list +0xC8 `{Type, Value}` | S+0x600..0x620, S+0x314/0x338/0x33C/0x364 | table below |
+
+   Then it loads and runs, once, every analyser named in **PT+0x63C** (Settings `#8b92df82.Expr[]`):
+   `DefaultAttributes` (`8c9b26e0`, raw -> Profile 0..1, S+0x64C..0x668) and `dc1d59b1` (two derived values in
+   the S+0x5F0 list: `lerp(Serve, Forehand, 0.4)` and `lerp(Serve, Power, 0.4)`, ids `592dc8d8` / `32c0be7a`).
+   The graph `075a2137` is not in the shipped list.
+5. In match, `S+0x74C` (per-stroke skill) and the ~100 Profile consumers read the results (s2.2).
+
+PlayStyle keys (V: crc32 of the names; values via `fn_8866DC18`, which maps `None` to `Default`):
+
+| Type key | crc | Destination |
+|---|---|---|
+| BackhandStyle | `062bd4a5` | S+0x600 (template name BHType; TwoHanded / OneHanded); also `AnimationSelection.SwingSelection.BHType` S+0x364 = `d4ad8f2c` if TwoHanded else `ff82dcef` |
+| BackhandProStyle | `35ae9195` | S+0x604 |
+| ForehandProStyle | `0db714cd` | S+0x608 |
+| ReturnServeProStyle | `04a9f2b5` | S+0x60C and `AnimationSelection.ReturnServe.ProStyle` S+0x33C |
+| ServeProStyle | `a305331b` | S+0x610 and `AnimationSelection.Serve.ProStyle` S+0x338 |
+| AttitudeProStyle | `1fc4b4fa` | S+0x614; S+0x618 = (value == `83324b2f`) |
+| BehaviourStyle | `130c33da` | S+0x61C |
+| SignatureStyle | `3d952275` | `AnimationSelection.EndOfPoint.ProStyle` S+0x314 |
+
+So the swinganimation selection procedures `a305331b` / `04a9f2b5` (G6, `movement-and-animation.md` s3) are
+ServeProStyle / ReturnServeProStyle, fed from the player record here. `match_setup` in `player.yaml` and
+`pl_profile_from_record`, `pl_handed_from_plays` in `ref/gameplay/player.c` hold the same facts.
+
+### 10.2 PlayerTuning member chain (V structure, from Layoutall)
+
+`cfg+0x180` is member `c4eba473` of the Settings root, type `94729773`, **0x760 bytes** (the old dump stopped at
+0x660). Every row with its shipped value is in `player.yaml: player_tuning.layout`. Main blocks (unnamed
+members keep their hash):
+
+| PT offset | Member (type) | Content and role |
+|---|---|---|
+| +0x000 | `0c910649` {`8715c61c`, `376a5ab5`} | two `{MainPosition, 776d814a}` vector pairs: (-1260, -150) / (-500, 350), (-1300, -350) / (-600, 220) |
+| +0x040 | `f164ef8e` (same type) | (-1250, -150) / (-1200, 180), (-1400, -350) / (-1300, 180). I: ready/serve anchor sets |
+| +0x080 | `e5b4838f` {curve, 150, 300} | |
+| +0x0A0 | `2906f362.62963458` | four per-stroke-level `Step` lists (racket offsets), vector (1650, 750), the six height bands +0xE0..0xF4, five floats 40/30/70/60/60 |
+| +0x110 | `2906f362.e3f648f3` | five ints 65/35/50/5/8 and floats 300/200/250 (readers U) |
+| +0x130 | `9c82ebf2` | two 2-D tables (50..400 -> 45/30; 0..500 -> 15..30) and int 5 |
+| +0x14C | `0885625c` | side-select curve, 150, two bools (read at `fn_8869AB70`) |
+| +0x160 | `a2dd221a` | look-ahead curve, cap curve, in-zone limit 750 |
+| +0x17C | `2a3b1f8a` | turn table, curve, nine floats (radii, preparation ticks), bool |
+| +0x1BC | `InputNotation` | four curves and a 2-D table |
+| +0x1F8 | `6b347916` | **movement-type records** `InsideOut`, `Steps`, `Jog`, `Rush`, `7e03dae6`, `1a6f1fe2`, each `{Definition: 5 bools, Reachability: {MaxSpeed, a6499cc6}}`. G4's "style records" are these: InsideOut 3 / -1, Steps 3 / 4.25, Jog 6 / 4.75, **Rush 10 / 7** (MaxSpeed replaced by the AI skill float), 3 / 4, 2.5 / 3.5. Then ints 60/40/10/10, floats 300/200 |
+| +0x270 | `bc68b415.2f011a4a` | the three regime records `{Angle{table2d, 6}, min distance}`: 400 / 2000 / 175 cm (Rush, JogJogPrepared, JogPrepared) |
+| +0x2AC | `bc68b415.43e5dcbd` | zones `InsideOut`, `Steps`, `1c640b43`, `c8b24fcd`, `a45fcb53`, `637ca2f2`, `Jog`, `Smash` + 3 floats + bool. G4's swing-ready / approach / regime / alt zones are InsideOut / Steps / Jog / Smash |
+| +0x31C | `bc68b415.46a36509` | seven `{Angle{table2d}, 6.0}` speed-override records at +0x31C, 32C, 33C, 34C, 35C, 36C, 37C (s10.3) |
+| +0x38C | `d1e0199b` {`Rush`, `Jog`, `JogPrepared`} | one curve each: 8 / 20->10 / 20->10 |
+| +0x3B0 | `dd446c94` | jog-ramp step table, **`InPositioning`** twelve floats +0x3BC..0x3E8, `TimeStep` 10 (= jog ramp period +0x3EC), int 20, 100 cm |
+| +0x3F8 | curves `0c3b62d1`, `9e7b1063`, table `e200776d` | read by `fn_8868CB18` (+0x3F8/+0x404) |
+| +0x41C | `GiveUp` | two curves (600 -> 0: 100 -> 0; 300: 200 -> 50), 40, 10, -10 |
+| +0x440 | `df5bba30` | 10 |
+| +0x450 | `Acting` | three floats, three ints |
+| +0x468 | `2ec3852d` {`3ab062ca`, `NormalStyle`, `cab90af1`} | three 3x3 float records (`fn_88697BF8` reads +0x464/+0x488/+0x4AC, I) |
+| +0x4D4 | `3b698329` | one float (read at `0x886BB174`) |
+| +0x4D8 | `59f72580` {`Normal`, `baeb910f`, `3b574c5b`} | per shot class (FlatPower, FlatFinesse, Slice, VolleyStandard, VolleyPower, Smash) `QualifierValue` lists; list +0x5B0 (6 keys); floats 0.1 / -1 / 0.1 / -0.3 / 0.2 / -0.5 |
+| +0x5D4 | `0b337596` {`Baseline`, `Volley`, `Serve`} | two curves 10..40 -> 1..-1 and 50 each; Serve.`Animation` list (Default, Swing_Serve_Style02, ...) |
+| +0x618 | `Fatigue` | Qualifier list (Effort Low ...), 1 / 2 / 3, **+0x630 `a9957a1c` = -1** (the Rush guard of s3.4) |
+| +0x634 | `f2300ac2` | 100, 115 |
+| +0x63C | `8b92df82` | the Profile graph list (s10.1) |
+| +0x648 | `19543b5d` {`Service`, `Rally`} | 300/300, 400/600 |
+| +0x658.. | step lists, ranges, `AutoSwing` six ints, `AI` int, two `{TopLeft, BottomRight}` boxes +0x700/+0x720, ints and floats to +0x75C | +0x6A4..0x6BC are the crowd tables of s1 item 10 |
+
+### 10.3 Readers confirmed in this pass (V)
+
+* **InPositioning floats.** The reach fit (state 19, `fn_886A26E0`) writes AnimIface `+0x3D8 = PT+0x3DC` (60),
+  `+0x3DC = PT+0x3E0` (60), `+0x3D0 = dt - (S+0xBD2 ? PT+0x3C4 : PT+0x3CC)`, `+0x3D4 = dt - (S+0xBD2 ? PT+0x3C8 :
+  PT+0x3D0)` with `dt = sample tick - clock`. The **Miss** fit (`fn_886A58F0`) writes `+0x3D8 = PT+0x3E4` (60),
+  `+0x3DC = PT+0x3E8` (80), `+0x3D0 = PT+0x3D8 + dt` (15), `+0x3D4 = PT+0x3D4 + dt` (-5). So the contact window is
+  `[dt - 20, dt]` (`[dt - 30, dt]` alt) for a reach and `[dt - 5, dt + 15]` for a miss: **+0x3D0 is the late and
+  +0x3D4 the early bound** (I, from the shipped values: the s4.3 wording "+0x3D0 <= t_c <= +0x3D4" should be read
+  with the two names swapped).
+* **PT+0x35C / PT+0x36C.** `fn_88699300` (swing-state entry, the two alt branches that set S+0xBD2 = 1) calls
+  `fn_88698B28(P, PT+0x35C, PT+0x1AC)` at `0x88699884` and `fn_88698B28(P, PT+0x36C, busy + PT+0x1AC)` at
+  `0x88699920`. `fn_88698B28` evaluates `fn_886887C0` once per plan (`P+0x13C`), publishes the value to the speed
+  override S+0xDE8 (`S+0xDEC = 1`) and re-arms the jog ramp (`P+0x140..0x150`). Shipped: 1 -> 0 (+0x35C) and
+  1 -> 0.5 (+0x36C) across a 40-tick slack band that moves from 61..101 at 200 cm to 136..176 at 800 cm.
+* **Clip-fit tolerance constants** (`fn_886D3AD8`, no linked offset): not caller arguments but float-pool words
+  at `0x880D0F70` + 0x15C (60), +0x404 (40), +0x470 (450), +0x710 (1/450) and `0x880C8FD0` (150). For each axis:
+  `tol' = 60 + 40 * clamp(|m| - 150, 0, 450) / 450` (60..100 cm), then a compare-select against the base tolerance
+  `+0x3D8` / `+0x3DC` (I: the larger wins). The best-cost seed is FLT_MAX (pool +0x50). `pl_fit_tolerance_from_travel`.
+* **swinganimation.bin reader.** `fn_886E57A8` (SwingAnimationEngine Init) resolves the `AnimationData:` node,
+  takes the typed view `fn_88923530(..., 0x3A60FEE2)` (engine+0x48 = root), stores root+0x1E8 (`States`) at
+  engine+0x4C and root+0x22 at +0x140, and hands root+0x1D0 (`Projects`) to `fn_886D2A08`, root+0x1DC to
+  `fn_886E5670` and the root to `fn_886E3A00`. Code strings name the tree `AnimationData:/SwingAnimation/...`
+  (`PlannerParameters/@ScaleActivated`, `States/InstanceState[n]/UpdateSetupCommand/@LeftHanded`). Field roles of
+  the selection data are G6's (`movement-and-animation.md` s1.3, s4).
+
+### 10.4 Skill gates (V)
+
+* **Highly flammable.** `fn_886BDCC0` (PlayerController slot 23, point start) at `0x886BE0BC`:
+  `S+0xF94 = (((world+0x50)+0x4C)[team].+0x30 >= 4) ? 1.0 : 0.0`. The **4 is a code constant**
+  (`cmpwi r4, 4`), not data. The member at S+0xF94 is `MatchAnalyser.Flammable` (crc `08950daa`). The same
+  function sets S+0xF98 (`7f50fe07`) = `((world+0x50)+0x3C)[team] > 0` and clears the slice / topspin counters
+  S+0xF8C / S+0xF90 (SliceInvasion / TopSpinInvasion), which `fn_886B0490` increments.
+* **MatchAnalyser writers** (S+0xF80..0xF98, type b6ca3263): `b6b22409` S+0xF80 cleared for all players in
+  `fn_88674BC8`; `689dc6f2` S+0xF88 set to 1.0 / 0.0 per team from a score comparison in `fn_88674E00` (I: the
+  trailing team gets 1.0); `ace1253a` S+0xF84 cleared there and incremented in `fn_88697890`. No analyser graph
+  writes any MatchAnalyser member (V, scan of all graph outputs). `MatchState.8beb922e` (+0x334, Longer, better!)
+  is incremented in `fn_886B5128` (shot apply). `pl_flammable`.
+* Other skill magnitudes stay in data (graphs, `traits-and-skills.md` s3).

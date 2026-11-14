@@ -10,25 +10,25 @@ files:
     values: 45316
     objects: 18763
     parts:
-      - {yaml: Settings/00_AI.yaml, section: "<9b4fb082>/AI", values: 14560}
-      - {yaml: Settings/01_40dd9ee9.yaml, section: "<9b4fb082>/40dd9ee9", values: 637}
-      - {yaml: Settings/02_c4eba473.yaml, section: "<9b4fb082>/c4eba473", values: 2306}
-      - {yaml: Settings/03_3939c1d9.yaml, section: "<9b4fb082>/3939c1d9", values: 33}
-      - {yaml: Settings/04_47ca727b.yaml, section: "<9b4fb082>/47ca727b", values: 61}
-      - {yaml: Settings/05_3fcc8ac9.yaml, section: "<9b4fb082>/3fcc8ac9", values: 360}
-      - {yaml: Settings/06_root.yaml, section: "<9b4fb082>", values: 4}
-      - {yaml: Settings/07_TopSpinSchool.yaml, section: "<9b4fb082>/TopSpinSchool", values: 12352}
-      - {yaml: Settings/08_b042eab4.yaml, section: "<9b4fb082>/b042eab4", values: 13}
-      - {yaml: Settings/09_6ff19a2e.yaml, section: "<9b4fb082>/6ff19a2e", values: 47}
-      - {yaml: Settings/10_c1f0f632.yaml, section: "<9b4fb082>/c1f0f632", values: 2}
-      - {yaml: Settings/11_761fdece.yaml, section: "<9b4fb082>/761fdece", values: 2971}
-      - {yaml: Settings/12_3f7bd49d.yaml, section: "<9b4fb082>/3f7bd49d", values: 827}
-      - {yaml: Settings/13_11f82b5c.yaml, section: "<9b4fb082>/11f82b5c", values: 315}
-      - {yaml: Settings/14_b50def25.yaml, section: "<9b4fb082>/b50def25", values: 6950}
-      - {yaml: Settings/15_PaddleSettings.yaml, section: "<9b4fb082>/PaddleSettings", values: 3402}
-      - {yaml: Settings/16_a957f922.yaml, section: "<9b4fb082>/a957f922", values: 16}
-      - {yaml: Settings/17_ded1baa5.yaml, section: "<9b4fb082>/ded1baa5", values: 446}
-      - {yaml: Settings/18_948988c8.yaml, section: "<9b4fb082>/948988c8", values: 14}
+      - {yaml: Settings/00_AI.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/AI", values: 14560}
+      - {yaml: Settings/01_ShotResolutionSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/ShotResolutionSettings", values: 637}
+      - {yaml: Settings/02_PlayerSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/PlayerSettings", values: 2306}
+      - {yaml: Settings/03_ServeSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/ServeSettings", values: 33}
+      - {yaml: Settings/04_RepositioningSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/RepositioningSettings", values: 61}
+      - {yaml: Settings/05_MoveConstraintsSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/MoveConstraintsSettings", values: 360}
+      - {yaml: Settings/06_root.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>", values: 4}
+      - {yaml: Settings/07_TopSpinSchool.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/TopSpinSchool", values: 12352}
+      - {yaml: Settings/08_DoubleSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/DoubleSettings", values: 13}
+      - {yaml: Settings/09_6ff19a2e.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/6ff19a2e", values: 47}
+      - {yaml: Settings/10_SkillSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/SkillSettings", values: 2}
+      - {yaml: Settings/11_ShotPalette.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/ShotPalette", values: 2971}
+      - {yaml: Settings/12_BehaviorSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/BehaviorSettings", values: 827}
+      - {yaml: Settings/13_11f82b5c.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/11f82b5c", values: 315}
+      - {yaml: Settings/14_b50def25.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/b50def25", values: 6950}
+      - {yaml: Settings/15_PaddleSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/PaddleSettings", values: 3402}
+      - {yaml: Settings/16_a957f922.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/a957f922", values: 16}
+      - {yaml: Settings/17_AmplitudeConfigList.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/AmplitudeConfigList", values: 446}
+      - {yaml: Settings/18_OnlineSettings.yaml, section: "<Pam::SwingGamePlay::Data::SettingsData>/OnlineSettings", values: 14}
   - file: State.bin
     archive: Core.arc
     key: 0x623d0979
@@ -37,15 +37,15 @@ files:
     values: 10305
     objects: 2986
     parts:
-      - {yaml: State/00_57a6f54c.yaml, section: "<b77bbb90>/57a6f54c", values: 110}
-      - {yaml: State/01_MatchState.yaml, section: "<b77bbb90>/MatchState", values: 737}
-      - {yaml: State/02_MainBallState.yaml, section: "<b77bbb90>/MainBallState", values: 317}
-      - {yaml: State/03_659b335f.yaml, section: "<b77bbb90>/659b335f", values: 317}
-      - {yaml: State/04_PlayerInputConfigState.yaml, section: "<b77bbb90>/PlayerInputConfigState", values: 25}
-      - {yaml: State/05_b56a13cb.yaml, section: "<b77bbb90>/b56a13cb", values: 87}
-      - {yaml: State/06_PlayerStates.yaml, section: "<b77bbb90>/PlayerStates", values: 7240}
-      - {yaml: State/07_e25edae7.yaml, section: "<b77bbb90>/e25edae7", values: 1368}
-      - {yaml: State/08_340dd477.yaml, section: "<b77bbb90>/340dd477", values: 104}
+      - {yaml: State/00_DebugFlags.yaml, section: "<Pam::SwingGamePlay::Data::StateData>/DebugFlags", values: 110}
+      - {yaml: State/01_MatchState.yaml, section: "<Pam::SwingGamePlay::Data::StateData>/MatchState", values: 737}
+      - {yaml: State/02_MainBallState.yaml, section: "<Pam::SwingGamePlay::Data::StateData>/MainBallState", values: 317}
+      - {yaml: State/03_659b335f.yaml, section: "<Pam::SwingGamePlay::Data::StateData>/659b335f", values: 317}
+      - {yaml: State/04_PlayerInputConfigState.yaml, section: "<Pam::SwingGamePlay::Data::StateData>/PlayerInputConfigState", values: 25}
+      - {yaml: State/05_StateEditor.yaml, section: "<Pam::SwingGamePlay::Data::StateData>/StateEditor", values: 87}
+      - {yaml: State/06_PlayerStates.yaml, section: "<Pam::SwingGamePlay::Data::StateData>/PlayerStates", values: 7240}
+      - {yaml: State/07_UserAIStates.yaml, section: "<Pam::SwingGamePlay::Data::StateData>/UserAIStates", values: 1368}
+      - {yaml: State/08_TeamStates.yaml, section: "<Pam::SwingGamePlay::Data::StateData>/TeamStates", values: 104}
   - file: Module.bin
     archive: Core.arc
     key: 0x44dc9505
@@ -54,7 +54,7 @@ files:
     values: 28
     objects: 52
     parts:
-      - {yaml: Module/00_891987bd.yaml, section: "<8070b164>/891987bd", values: 28}
+      - {yaml: Module/00_ModuleDefEngine.yaml, section: "<Pam::SwingGamePlay::Data::ModuleData>/ModuleDefEngine", values: 28}
   - file: Expressions.bin
     archive: Core.arc
     key: 0xfa94f637
@@ -63,8 +63,8 @@ files:
     values: 79454
     objects: 30914
     parts:
-      - {yaml: Expressions/00_Expression.part1.yaml, section: "<d440c339>/Expression", values: 50135}
-      - {yaml: Expressions/00_Expression.part2.yaml, section: "<d440c339>/Expression", values: 29319}
+      - {yaml: Expressions/00_Expression.part1.yaml, section: "<Pam::SwingGamePlay::Data::Expressions>/Expression", values: 45037}
+      - {yaml: Expressions/00_Expression.part2.yaml, section: "<Pam::SwingGamePlay::Data::Expressions>/Expression", values: 34417}
   - file: GameplayInterface.bin
     archive: Core.arc
     key: 0xf26cdc20
@@ -116,9 +116,9 @@ files:
     values: 115965
     objects: 187
     parts:
-      - {yaml: PlayerAnimData/00_AnimDataList.part1.yaml, section: "AnimDataList", values: 50307}
-      - {yaml: PlayerAnimData/00_AnimDataList.part2.yaml, section: "AnimDataList", values: 49946}
-      - {yaml: PlayerAnimData/00_AnimDataList.part3.yaml, section: "AnimDataList", values: 15712}
+      - {yaml: PlayerAnimData/00_AnimDataList.part1.yaml, section: "AnimDataList", values: 50132}
+      - {yaml: PlayerAnimData/00_AnimDataList.part2.yaml, section: "AnimDataList", values: 49734}
+      - {yaml: PlayerAnimData/00_AnimDataList.part3.yaml, section: "AnimDataList", values: 16099}
   - file: InGameModule.bin
     archive: Amsterdam.arc
     key: 0x62c2690a

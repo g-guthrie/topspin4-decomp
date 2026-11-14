@@ -53,6 +53,13 @@ EXTRA_NAMES = [
     "SwingEffect", "SwingType", "Qualifier", "Flat", "TopSpin", "Slice", "Lob", "DropShot",
     "B_Head", "B_LeftHand", "B_RightHand", "B_Racket_Handle", "Serve", "Return", "Forehand", "Backhand",
     "Speed", "Stamina", "Reflex", "Mental", "Overall",
+    # G4c: Layoutall member names of the PlayerTuning block and the PlayStyle keys (crc32 verified)
+    "InPositioning", "TimeStep", "GiveUp", "Acting", "NormalStyle", "Fatigue", "Reachability", "MaxSpeed",
+    "Definition", "InsideOut", "Steps", "JogPrepared", "Angle", "Range", "Step", "QualifierValue", "FlatPower",
+    "FlatFinesse", "VolleyStandard", "VolleyPower", "Animation", "Service", "Rally", "AutoSwing", "AI",
+    "TopLeft", "BottomRight", "MainPosition", "Limit", "InputNotation", "BackhandStyle", "BackhandProStyle",
+    "ForehandProStyle", "ReturnServeProStyle", "ServeProStyle", "AttitudeProStyle", "BehaviourStyle",
+    "SignatureStyle", "TwoHanded", "Default", "None", "Flammable", "ProfileAI",
 ] + ts4_analyser.GRAPH_NAMES + ts4_analyser.PATH_NAMES
 
 # ------------------------------------------------------------------------------------------- PlayerTuning map
@@ -105,8 +112,10 @@ PT_FIELDS = [
     (0x32C, "speed_table_32c", "speed", "no direct reader found (I)"),
     (0x33C, "speed_table_33c", "speed", "fn_88676718 (I)"),
     (0x34C, "speed_table_approach_near", "speed", "state 6 enter fn_886AA420: override = fn_886887C0(+0x34C, busy + prep_ticks)"),
-    (0x35C, "speed_table_35c", "speed", "8 readers incl. fn_886A9BF0 (I)"),
-    (0x36C, "speed_table_36c", "speed", "16 readers incl. fn_88698638 (I)"),
+    (0x35C, "speed_table_35c", "speed", "fn_88699300 @0x88699884 (alt swing entry, S+0xBD2=1): fn_88698B28 -> "
+     "fn_886887C0(+0x35C, lead = prep_ticks_alt) -> S+0xDE8 override, jog ramp re-armed (G4c, V)"),
+    (0x36C, "speed_table_36c", "speed", "fn_88699300 @0x88699920 (alt swing entry with clip busy): fn_88698B28 -> "
+     "fn_886887C0(+0x36C, lead = busy + prep_ticks_alt) -> S+0xDE8 (G4c, V)"),
     (0x37C, "speed_table_37c", "speed", "fn_8867A5B4.. (I)"),
     (0x3B0, "jog_ramp_step_table", "table2d", "fn_88688678: step = table2d(distance, fn_8866BFE8 slack), recomputed every period"),
     (0x3BC, "reach_anim_height_min_cm", "f32", "fn_886A26E0 gate"),
@@ -117,11 +126,49 @@ PT_FIELDS = [
     (0x3D0, "contact_window_hi_ticks", "f32", "fn_886A26E0 AnimIface+0x3D4"),
     (0x3DC, "contact_position_tolerance_a_cm", "f32", "fn_886A26E0 AnimIface+0x3D8"),
     (0x3E0, "contact_position_tolerance_b_cm", "f32", "fn_886A26E0 AnimIface+0x3DC"),
+    (0x3D4, "miss_window_early_ticks", "f32", "fn_886A58F0 (Miss fit): AnimIface+0x3D4 = this + (sample tick - clock) = earliest contact (G4c, V)"),
+    (0x3D8, "miss_window_late_ticks", "f32", "fn_886A58F0 (Miss fit): AnimIface+0x3D0 = this + (sample tick - clock) = latest contact (G4c, V)"),
+    (0x3E4, "miss_position_tolerance_a_cm", "f32", "fn_886A58F0 AnimIface+0x3D8 (G4c, V)"),
+    (0x3E8, "miss_position_tolerance_b_cm", "f32", "fn_886A58F0 AnimIface+0x3DC (G4c, V)"),
     (0x3EC, "jog_ramp_period_ticks", "i32", "fn_88688678 period"),
     (0x3F4, "reach_anim_min_distance_cm", "f32", "fn_886A26E0 squared xz compare"),
-    (0x630, "rush_guard", "f32", "fn_88699FC0: Rush tried only if (ctx+0x6C)->+0x158 > this"),
+    (0x630, "rush_guard", "f32", "fn_88699FC0: Rush tried only if (ctx+0x6C)->+0x158 > this. Layout: Fatigue.a9957a1c (G4c)"),
+    (0x63C, "profile_graph_list", "arr", "fn_886B4700 (G4c, V): analyser names run once at match setup "
+     "(DefaultAttributes); Layout 8b92df82.4658271d"),
 ]
 PT_SIZE = 0x660
+
+# Match setup: player record -> PlayerState (G4c, V: fn_886B4B80 -> fn_886B4700; docs player-and-movement.md s10).
+# These are code constants and offsets, not disc data.
+MATCH_SETUP = {
+    "entry": "PlayerController vtable 0x880F4308 slot 21 (+0x54) = fn_886B4B80",
+    "match_settings_player": "(world+0x40)+0x44 list (GameDB MatchSettings.PlayerList, 0x20-byte rows): row with "
+                             "PlayerIndex (+0xC) == ctx+0x14 -> ctx+0x7C; PlayerId = row+0x10",
+    "record_lookup": "fn_8867AB78: GameDB.PlayerList mount (world+0x38)+0x13C0: each mounted file's 0x104-byte "
+                     "Player rows; match on Id (+0xE0)",
+    "raw_ratings": {   # record offset (int) -> PlayerState offset (float), copy by int->float conversion
+        "Serve": ["record+0x80", "S+0x620"], "Return": ["record+0x84", "S+0x624"],
+        "Forehand": ["record+0x8C", "S+0x628"], "Backhand": ["record+0x90", "S+0x62C"],
+        "Volley": ["record+0x94", "S+0x630"], "Power": ["record+0x98", "S+0x634"],
+        "Speed": ["record+0x9C", "S+0x638"], "Stamina": ["record+0xA0", "S+0x63C"],
+        "not_copied": ["Reflex record+0x88", "Mental record+0xA4", "Overall record+0xA8"],
+    },
+    "skills": "unless (world+0x28)+0xAB: every S+0x640 SkillList Value = 0.0, then 1.0 where Id is one of "
+              "record+0xAC..0xB8 (AttributeList.Skill1..4)",
+    "profile_graphs": "then each analyser named in PT+0x63C (DefaultAttributes) is loaded (fn_8866F028) and run once",
+    "handed": "Profile.PlayStyle.Handed (S+0x5FC) = Right if MainInfo.Plays (record+0x24) == 0xC4A6567B else Left",
+    "play_style": {    # PlayStyle list record+0xC8 {Type, Value}; None -> Default (fn_8866DC18)
+        "BackhandStyle": "S+0x600", "BackhandProStyle": "S+0x604", "ForehandProStyle": "S+0x608",
+        "ReturnServeProStyle": "S+0x60C and AnimationSelection.ReturnServe.ProStyle S+0x33C",
+        "ServeProStyle": "S+0x610 and AnimationSelection.Serve.ProStyle S+0x338",
+        "AttitudeProStyle": "S+0x614; S+0x618 = (value == 0x83324B2F)",
+        "BehaviourStyle": "S+0x61C", "SignatureStyle": "AnimationSelection.EndOfPoint.ProStyle S+0x314",
+        "BHType": "AnimationSelection.SwingSelection.BHType S+0x364 = 0xD4AD8F2C if BackhandStyle == TwoHanded "
+                  "else 0xFF82DCEF",
+    },
+    "flammable": "fn_886BDCC0 @0x886BE0BC: MatchAnalyser.Flammable S+0xF94 = 1.0 if team counter "
+                 "((world+0x50)+0x4C)[team].+0x30 >= 4 (code constant) else 0.0",
+}
 
 
 class Bin:
@@ -645,6 +692,8 @@ def main(argv=None):
     ap.add_argument("--out", default="data/gameplay/player.yaml")
     ap.add_argument("--curve-mode", choices=("ramp", "step"), default="ramp",
                     help="analyser curve slope: runtime ramp (default, fn_88179740) or the stored step")
+    ap.add_argument("--layout", default="work/disc/root/Layoutall.bin",
+                    help="optional Layoutall.bin: adds player_tuning.layout (member chain of the block) (G4c)")
     ap.add_argument("--clips-out", default="data/gameplay/animation_clips.yaml",
                     help="the clip catalogue is large; written to its own file")
     a = ap.parse_args(argv)
@@ -656,6 +705,7 @@ def main(argv=None):
     setup = load(a.core, PLAYERSETUP, False)
     names = build_names(a.core, a.dll)
     sb = Bin(settings)
+    layout = load_layout(a.layout)
 
     sources = {"Settings.bin (334e7e0d)": sha256(settings), "Expressions.bin (fa94f637)": sha256(expr),
                "AnimationsDB.bin (70155255)": sha256(db)}
@@ -665,6 +715,8 @@ def main(argv=None):
             sources[label] = sha256(d)
     if swing:
         sources["swinganimation.bin (85ff436e)"] = sha256(swing)
+    if layout is not None:
+        sources["Layoutall.bin"] = sha256(open(a.layout, "rb").read())
     if setup:
         sources["PlayerSetup.bin (798a36dd)"] = sha256(setup)
 
@@ -688,7 +740,8 @@ def main(argv=None):
             a.core, "" if a.curve_mode == "ramp" else " --curve-mode " + a.curve_mode),
         "sources_sha256": sources,
         "notes": "Field roles and code addresses: docs/gameplay/player-and-movement.md. Units: cm, 60 Hz ticks, m/s.",
-        "player_tuning": player_tuning(sb, names),
+        "player_tuning": player_tuning(sb, names, layout),
+        "match_setup": MATCH_SETUP,
         "ai_levels": levels,
         "settings_blocks": settings_blocks(sb, names),
         "profile_from_rating": profile_from_rating(graphs, a.curve_mode),

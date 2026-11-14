@@ -13,4 +13,4 @@ root_type: 0x9e65549b
 section: ""
 part: 1 of 1
 values:
-  - [0x30, key, 0x9d7fd6cb, "Name"]  # PlayerSetup
+  - [0x30, key, 0x9d7fd6cb, "Name"]
