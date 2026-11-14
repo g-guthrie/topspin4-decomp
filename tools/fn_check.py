@@ -173,6 +173,9 @@ def main() -> int:
                     continue
                 if t_sym == c_sym:
                     continue
+                # Aliases at one address, e.g. __savegprlr / __savegprlr_14.
+                if c_sym in text_address and text_address.get(t_sym) == text_address[c_sym]:
+                    continue
                 if c_sym.startswith("?") or c_sym.startswith("__real@") or c_sym.startswith("$"):
                     problems.append(f"reloc +{r.offset:#x}: candidate uses {c_sym}, target {t_sym}")
                 elif t_sym.startswith(PLACEHOLDER_PREFIXES) and (c_sym not in known_names):
