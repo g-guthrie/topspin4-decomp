@@ -1,0 +1,100 @@
+diff --git a/src/graphics/command_processor.cpp b/src/graphics/command_processor.cpp
+index a744375..d75c3e1 100644
+--- a/src/graphics/command_processor.cpp
++++ b/src/graphics/command_processor.cpp
+@@ -9,6 +9,7 @@
+  * @modified    Tom Clay, 2026 - Adapted for ReXGlue runtime
+  */
+ 
++#include <cstdlib>
+ #include <algorithm>
+ #include <cinttypes>
+ #include <cmath>
+@@ -101,6 +102,21 @@ ReadbackResolveMode ParseReadbackResolveMode(std::string_view value) {
+ 
+ }  // namespace
+ 
++namespace {
++// Local patch (Top Spin 4 bring-up): REX_DRAW_EVERY=N renders only every Nth frame.
++// Skipped frames still execute every packet (register writes, fences, interrupts), so the
++// title runs at simulation speed while the host GPU (lavapipe here) idles. Frames whose
++// swap index is a multiple of N are drawn and presented normally.
++uint32_t DrawEvery() {
++  static const uint32_t n = [] {
++    const char* v = std::getenv("REX_DRAW_EVERY");
++    long x = v ? std::strtol(v, nullptr, 0) : 1;
++    return uint32_t(x > 1 ? x : 1);
++  }();
++  return n;
++}
++}  // namespace
++
+ CommandProcessor::CommandProcessor(GraphicsSystem* graphics_system,
+                                    system::KernelState* kernel_state)
+     : memory_(graphics_system->memory()),
+@@ -312,9 +328,28 @@ bool CommandProcessor::SetupContext() {
+ void CommandProcessor::ShutdownContext() {}
+ 
+ void CommandProcessor::InitializeRingBuffer(uint32_t ptr, uint32_t size_log2) {
+-  read_ptr_index_ = 0;
+-  primary_buffer_ptr_ = ptr;
+-  primary_buffer_size_ = uint32_t(1) << (size_log2 + 3);
++  // A title that re-initialises the GPU (Top Spin 4: Loader_DLL shuts the engines down and
++  // Swing_DLL starts them again) restarts writing at offset 0. Reset both indices on the
++  // worker thread, between packets, so a stale write index from the previous ring is never
++  // executed against the new buffer.
++  auto reset = [this, ptr, size_log2]() {
++    read_ptr_index_ = 0;
++    write_ptr_index_ = 0;
++    primary_buffer_ptr_ = ptr;
++    primary_buffer_size_ = uint32_t(1) << (size_log2 + 3);
++  };
++  if (!worker_running_ || !worker_thread_ || system::XThread::IsInThread(worker_thread_.get()) ||
++      primary_buffer_ptr_ == 0) {
++    reset();
++    return;
++  }
++  thread::Fence fence;
++  CallInThread([&fence, reset]() {
++    reset();
++    fence.Signal();
++  });
++  write_ptr_index_event_->Set();
++  fence.Wait();
+ }
+ 
+ void CommandProcessor::EnableReadPointerWriteBack(uint32_t ptr, uint32_t block_size_log2) {
+@@ -958,7 +993,9 @@ bool CommandProcessor::ExecutePacketType3_XE_SWAP(memory::RingBuffer* reader, ui
+   uint32_t frontbuffer_height = reader->ReadAndSwap<uint32_t>();
+   reader->AdvanceRead((count - 4) * sizeof(uint32_t));
+ 
+-  IssueSwap(frontbuffer_ptr, frontbuffer_width, frontbuffer_height);
++  if (DrawEvery() <= 1 || (counter_ + 1) % DrawEvery() == 0) {
++    IssueSwap(frontbuffer_ptr, frontbuffer_width, frontbuffer_height);
++  }
+ 
+   ++counter_;
+   return true;
+@@ -1282,6 +1319,7 @@ bool CommandProcessor::ExecutePacketType3_EVENT_WRITE_ZPD(memory::RingBuffer* re
+   return true;
+ }
+ 
++
+ bool CommandProcessor::ExecutePacketType3Draw(memory::RingBuffer* reader, uint32_t packet,
+                                               const char* opcode_name, uint32_t viz_query_condition,
+                                               uint32_t count_remaining) {
+@@ -1378,8 +1416,12 @@ bool CommandProcessor::ExecutePacketType3Draw(memory::RingBuffer* reader, uint32
+ 
+       bool major_mode_explicit =
+           xenos::IsMajorModeExplicit(vgt_draw_initiator.major_mode, vgt_draw_initiator.prim_type);
+-      draw_succeeded = IssueDraw(vgt_draw_initiator.prim_type, vgt_draw_initiator.num_indices,
+-                                 is_indexed ? &index_buffer_info : nullptr, major_mode_explicit);
++      if (DrawEvery() > 1 && (counter_ + 1) % DrawEvery() != 0) {
++        draw_succeeded = true;
++      } else {
++        draw_succeeded = IssueDraw(vgt_draw_initiator.prim_type, vgt_draw_initiator.num_indices,
++                                   is_indexed ? &index_buffer_info : nullptr, major_mode_explicit);
++      }
+       if (!draw_succeeded) {
+         auto vgt_output_path_cntl = register_file_->Get<reg::VGT_OUTPUT_PATH_CNTL>();
+         auto vgt_hos_cntl = register_file_->Get<reg::VGT_HOS_CNTL>();

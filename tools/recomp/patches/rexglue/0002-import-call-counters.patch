@@ -48,10 +48,10 @@ index 4ce4f9b..b351c05 100644
    }
 diff --git a/include/rex/import_trace.h b/include/rex/import_trace.h
 new file mode 100644
-index 0000000..eda9e23
+index 0000000..ebb09d7
 --- /dev/null
 +++ b/include/rex/import_trace.h
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,37 @@
 +/**
 + * @file        import_trace.h
 + * @brief       Per-import call counters (local patch for the Top Spin 4 bring-up)
@@ -77,6 +77,8 @@ index 0000000..eda9e23
 +void OnFirstImportCall(ImportCounter* counter);
 +// Returns the number of distinct imports written; label is written as a header line.
 +size_t DumpImportCounts(const char* path, const char* label);
++// Current count for an import name such as "__imp__VdSwap" (0 if never called).
++uint64_t GetImportCount(const char* name);
 +
 +}  // namespace rex::trace
 +
@@ -101,10 +103,10 @@ index 05979a3..d971cc7 100644
      export_resolver.cpp
 diff --git a/src/system/import_trace.cpp b/src/system/import_trace.cpp
 new file mode 100644
-index 0000000..cd56a75
+index 0000000..4b332af
 --- /dev/null
 +++ b/src/system/import_trace.cpp
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,79 @@
 +/**
 + * @file        import_trace.cpp
 + * @brief       Per-import call counters (local patch for the Top Spin 4 bring-up)
@@ -155,6 +157,12 @@ index 0000000..cd56a75
 +      DumpImportCounts(path.c_str(), counter->name);
 +    }
 +  }
++}
++
++uint64_t GetImportCount(const char* name) {
++  for (auto* c = g_head.load(std::memory_order_acquire); c; c = c->next)
++    if (std::strcmp(c->name, name) == 0) return c->count.load(std::memory_order_relaxed);
++  return 0;
 +}
 +
 +size_t DumpImportCounts(const char* path, const char* label) {

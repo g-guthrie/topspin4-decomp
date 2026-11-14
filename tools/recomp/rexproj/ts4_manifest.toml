@@ -1,0 +1,23 @@
+[project]
+name = "ts4"
+sdk_version = "0.10.0"
+game_root = "game"
+
+[entrypoint]
+file_path = "game/default.xex"
+out_directory_path = "generated/default"
+includes = ["config/default.toml"]
+
+[[modules]]
+guest_path = 'game:\Loader_DLL.xex'
+file_path = "game/Loader_DLL.xex"
+out_directory_path = "generated/loader"
+is_dll = true
+includes = ["config/loader.toml"]
+
+[[modules]]
+guest_path = 'game:\Swing_DLL.xex'
+file_path = "game/Swing_DLL.xex"
+out_directory_path = "generated/swing"
+is_dll = true
+includes = ["config/swing.toml"]
