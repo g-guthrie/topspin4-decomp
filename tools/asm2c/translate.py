@@ -2985,14 +2985,16 @@ def post_volz(body):
     return '\n'.join(L)
 
 
-def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0, rbrk=False, cjoin=False, vret=False, volz=False):
+def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0, rbrk=False, cjoin=False, vret=False, volz=False,
+        xjoin=True):
     """`vret` (variant w): returns and tail calls are void (r3 is never a result).
-    `volz` (variant z): see post_volz."""
-    Gen.rbrk = rbrk; Gen.cjoin = cjoin; Gen.vret = vret
+    `volz` (variant z): see post_volz.  `xjoin` False (variant x) restores the pre-T1
+    structurizer, which duplicated the shared tails of arms that left a loop."""
+    Gen.rbrk = rbrk; Gen.cjoin = cjoin; Gen.vret = vret; Gen.xjoin = xjoin
     try:
         res = _gen(lines_all, env, mode, orient, infer_signed, vol)
     finally:
-        Gen.rbrk = False; Gen.cjoin = False; Gen.vret = False
+        Gen.rbrk = False; Gen.cjoin = False; Gen.vret = False; Gen.xjoin = True
     if volz:
         b = post_volz(res['body'])
         if b == res['body']:
