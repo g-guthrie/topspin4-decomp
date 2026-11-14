@@ -51,7 +51,10 @@ python3 tools/loader_matching.py --fresh-analysis --record \
   so the Swing helpers work unchanged:
   `TS4_MATCHING_DIR=work/loader python3 tools/fn_asm.py fn_830A02A8` and
   `TS4_MATCHING_DIR=work/loader python3 tools/fn_check.py src/loader/x.c name=0x...`.
-- To add a unit: write the source, check it with `fn_check.py`, add the
-  names to `symbols.seed.txt`, a block to `splits.txt` and an entry to
-  `units.json`, then run the command above with `--record`. It refuses to
-  record unless every listed symbol is a 100% match.
+- To add units: write the source, check it with `fn_check.py`, write a spec
+  (`{"source", "flags", "functions": {name: "0x83..."}}`, the same shape as
+  Swing specs), then run `python3 tools/loader_integrate.py <specs>` after a
+  fresh analysis. It appends seed names, split blocks (with `.pdata` entries)
+  and `units.json` entries, and refuses duplicates or overlapping ranges.
+  Finish with the command above with `--record`, which refuses to record
+  unless every listed symbol is a 100% match.
