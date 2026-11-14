@@ -157,6 +157,10 @@ def main():
             dis.save(); pickle.dump(state, open(state_f, 'wb'))
     if not a.no_final:
         sizes = {c[1]: c[2] for c in cands}
+        # functions renamed since they were matched (by other families) cannot be looked up any more
+        gone = [ad for ad in matched if ad not in sizes]
+        for ad in gone: del matched[ad]
+        if gone: print(f'dropped {len(gone)} matches that are no longer fn_ placeholders')
         spec_dir.mkdir(parents=True, exist_ok=True)
         tot = tbytes = 0
         for fs, cpp in sorted({(f, is_cpp(r)) for r, f in matched.values()}):
