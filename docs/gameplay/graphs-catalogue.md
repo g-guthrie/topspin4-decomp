@@ -11,7 +11,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 ## Player setup: stat curves (3 graphs)
 
 **21 `075a2137` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.Profile.#3b91d48c.Backhand` (S+0x62c), `S.Profile.#3b91d48c.Stamina` (S+0x63c), `S.Profile.#3b91d48c.Forehand` (S+0x628), `S.Profile.#3b91d48c.Speed` (S+0x638), `S.Profile.#3b91d48c.Power` (S+0x634), `S.Profile.#3b91d48c.Volley` (S+0x630), `S.Profile.#3b91d48c.Return` (S+0x624), `S.Profile.#3b91d48c.Serve` (S+0x620)
 - out: `S.Profile.Speed` (S+0x664), `S.Profile.Stamina` (S+0x668), `S.Profile.Forehand` (S+0x654), `S.Profile.Return` (S+0x650), `S.Profile.Serve` (S+0x64c), `S.Profile.Power` (S+0x660), `S.Profile.Volley` (S+0x65c), `S.Profile.Backhand` (S+0x658)
 - nodes: CURVE 8; 32 curve keys
@@ -19,7 +19,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **22 `dc1d59b1` -** (unnamed)
 - runs: Settings `PlayerSettings?.#8b92df82.Expr.[].Id`
 - in: `S.Profile.Serve` (S+0x64c), `S.Profile.Forehand` (S+0x654), `S.Profile.Power` (S+0x660)
-- out: `S.` (S+0x5ac4), `S.` (S+0x5acc)
+- out: `S.Profile.CustomAttribute?.[0].Value` (S+0x5ac4), `S.Profile.CustomAttribute?.[1].Value` (S+0x5acc)
 - nodes: CONST 2, LERP 2; 0 curve keys
 - formula: `r6 = 0.4; r2 = 0.4; r1 = lerp(S.Profile.Serve, S.Profile.Forehand, r2); r5 = lerp(S.Profile.Serve, S.Profile.Power, r6)`
 
@@ -71,7 +71,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CURVE 15, PRODUCT 3, SUM 3; 23 curve keys
 
 **15 `728e34d8` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Return` (S+0x650), `S.Fatigue.Input.Random` (S+0xf30), `S.Fatigue.Input.#7afa6edb` (S+0xf3c), `S.LocalPosition` (S+0x8e8), `S.Context.Emergency?` (S+0x5c8), `S.Fatigue.Input.#5fb12e2e` (S+0xf34)
 - out: `S.Fatigue.Output.Tired` (S+0xf68)
 - nodes: CURVE 13, LERP 3, PRODUCT 2, SUM 1; 20 curve keys
@@ -98,14 +98,14 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CURVE 3, SUM 1; 4 curve keys
 - formula: `r4 = curve1(S.Profile.Speed); r3 = curve2(S.Fatigue.Output.CurrentVigor); r0 = sum(r3, r4); r5 = curve3(r0)`
 
-**19 `c0150160` -** (unnamed)
+**19 `c0150160` EmergencyPositioning** (high)
 - runs: code fn_886BF598 @0x886BFAC0
 - in: `S.ReceiverState?.HitPositionSelection??.FirstFrameReachability??` (S+0xbc4)
 - out: `S.Context.Emergency?` (S+0x5c8)
 - nodes: CURVE 1; 2 curve keys
 - formula: `r0 = curve1(S.ReceiverState?.HitPositionSelection??.FirstFrameReachability??)`
 
-**20 `fc7f3d8a` -** (unnamed)
+**20 `fc7f3d8a` EmergencyRepositioning** (high)
 - runs: code fn_886BB6E0 @0x886BB774
 - in: `S.#ad1995d3.#a38f4fe7` (S+0xa14)
 - out: `S.Context.Emergency?` (S+0x5c8)
@@ -154,18 +154,18 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - formula: `r0 = curve1(S.Profile.Volley)`
 
 **166 `71198650` Volley** (high)
-- runs: code fn_886BDB58 @0x886BDBE8; Settings `AI.#99d2ac4e.#bcf5544e.#7198d44b.[].ConditionList?.#3192be92.[].#e47ae035` (+6 more paths)
+- runs: code fn_886BDB58 @0x886BDBE8; Settings `AI.AISettings?.#bcf5544e.PlanMatch??.[].ConditionList?.OpponentCondition??.[].AttributName??` (+6 more paths)
 - in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.Volley` (S+0x65c)
 - out: `S.ReceiverState?.ReceiverMoveState??.#73d3f452` (S+0xdf0)
 - nodes: CURVE 2, LERP 1; 8 curve keys
 - formula: `r4 = curve1(S.ReceiverState?.TimingState.#3fe3a099); r1 = curve2(S.ReceiverState?.TimingState.#3fe3a099); r0 = lerp(r4, r1, S.Profile.Volley)`
 
 **167 `f5d45ddf` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `TeamState.#d4df4664.NormSpeedInfo??.#7941839d` (Team+0x30), `S.Profile.Volley` (S+0x65c)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `TeamState.IncomingBall?.NormSpeedInfo??.#7941839d` (Team+0x30), `S.Profile.Volley` (S+0x65c)
 - out: `S.ReceiverState?.ReceiverMoveState??.#73d3f452` (S+0xdf0)
 - nodes: CURVE 3, LERP 1, SUM 1; 3 curve keys
-- formula: `r4 = curve1(TeamState.#d4df4664.NormSpeedInfo??.#7941839d); r6 = curve2(S.ReceiverState?.TimingState.#3fe3a099); r1 = curve3(TeamState.#d4df4664.NormSpeedInfo??.#7941839d); r0 = lerp(r4, r1, S.Profile.Volley); r7 = sum(r0, r6)`
+- formula: `r4 = curve1(TeamState.IncomingBall?.NormSpeedInfo??.#7941839d); r6 = curve2(S.ReceiverState?.TimingState.#3fe3a099); r1 = curve3(TeamState.IncomingBall?.NormSpeedInfo??.#7941839d); r0 = lerp(r4, r1, S.Profile.Volley); r7 = sum(r0, r6)`
 
 
 ## Shot difficulty and efficiency (2 graphs)
@@ -204,19 +204,19 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 ## Shot-error graphs at planner +0x104 (write S+0x7DC) (2 graphs)
 
 **7 `46c7bb5f` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.#7e28dbc0.#6fec51bf` (S+0x798), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.#7e28dbc0.#6fec51bf` (S+0x798), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
 - out: `S.#7e28dbc0.#e4f01642` (S+0x7dc)
 - nodes: CURVE 8, PRODUCT 3, LERP 1, SUM 1; 18 curve keys
 
 **8 `e4f01642` -** (unnamed)
 - runs: code fn_886BCDA8 @0x886BCE64
-- in: `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#6fec51bf` (S+0x798), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
+- in: `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#6fec51bf` (S+0x798), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
 - out: `S.#7e28dbc0.#e4f01642` (S+0x7dc)
 - nodes: CONST 1, CURVE 14, PRODUCT 3, SUM 2, LERP 1; 31 curve keys
 
 
-## Per-shot-class error, power and aiming graphs (Settings shot-class table) (161 graphs)
+## Per-shot-class error, power and aiming graphs (Settings shot-class table) (155 graphs)
 
 **106 `b20fea97` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].ExpressionComponents?`
@@ -268,20 +268,20 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **188 `08be6bc3` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.LocalOpponentPosition` (S+0x910), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#8dd0fb98` (S+0x7f0), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.IsGamePoint??` (S+0xf98), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.LocalOpponentPosition` (S+0x910), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.HeightNotation?` (S+0x7f0), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.IsGamePoint??` (S+0xf98), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 44, PRODUCT 14, LERP 12, SUM 5; 101 curve keys
 
 **189 `2809d743` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.MatchAnalyser.IsGamePoint??` (S+0xf98), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.InsideOut` (S+0x7c8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#7e28dbc0.#8dd0fb98` (S+0x7f0), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#1407106c` (S+0x770), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.MatchAnalyser.IsGamePoint??` (S+0xf98), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.InsideOut` (S+0x7c8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.HeightNotation?` (S+0x7f0), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#1407106c` (S+0x770), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 46, PRODUCT 16, LERP 11, SUM 6; 106 curve keys
 
 **190 `f92c6676` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#8dd0fb98` (S+0x7f0), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.IsGamePoint??` (S+0xf98), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.HeightNotation?` (S+0x7f0), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.IsGamePoint??` (S+0xf98), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 44, PRODUCT 15, LERP 11, SUM 5; 101 curve keys
 
 **191 `d8d29eab` -** (unnamed)
@@ -292,7 +292,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - formula: `r8 = curve1(S.ReceiverState?.AimingState?.Efficiency); r1 = curve2(S.ReceiverState?.AimingState?.Efficiency); r4 = sum(S.#7e28dbc0.#719dc5ee.SideLeft?, S.#7e28dbc0.#719dc5ee.SideRight?); r9 = lerp(r8, r1, S.#7e28dbc0.HandAttributeQuality??); r5 = curve3(r4); r6 = product(r5, r9)`
 
 **192 `4b92c1f6` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.ReceiverState?.AimingState?.Random` (S+0xda4), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
 - out: `S.ReceiverState?.AimingState?.FinalEfficiency?` (S+0xda8)
 - nodes: CURVE 15, LERP 5, PRODUCT 5, SUM 1; 59 curve keys
@@ -310,7 +310,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CURVE 15, LERP 5, PRODUCT 5, SUM 1; 61 curve keys
 
 **195 `13c08997` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.ReceiverState?.AimingState?.Random` (S+0xda4), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
 - out: `S.ReceiverState?.AimingState?.FinalEfficiency?` (S+0xda8)
 - nodes: CURVE 15, LERP 5, PRODUCT 5, SUM 1; 61 curve keys
@@ -341,7 +341,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CURVE 5, SUM 1, LERP 1, PRODUCT 1; 15 curve keys
 
 **200 `22341797` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.ReceiverState?.AimingState?.Random` (S+0xda4), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
 - out: `S.ReceiverState?.AimingState?.FinalEfficiency?` (S+0xda8)
 - nodes: CURVE 15, LERP 5, PRODUCT 5, SUM 1; 61 curve keys
@@ -354,38 +354,38 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **202 `74561701` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.InsideOut` (S+0x7c8), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.InsideOut` (S+0x7c8), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 44, PRODUCT 14, LERP 12, SUM 5; 105 curve keys
 
 **203 `ac6f2474` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.#08950daa` (S+0xf94), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.#08950daa` (S+0xf94), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, PRODUCT 15, CURVE 45, LERP 12, SUM 5; 106 curve keys
 
 **204 `32b9e0d0` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalOpponentPosition` (S+0x910), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.#d4df4664.IsB?` (Team+0x50), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.#08950daa` (S+0xf94), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalOpponentPosition` (S+0x910), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.#08950daa` (S+0xf94), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 6, CURVE 45, PRODUCT 15, LERP 12, SUM 5; 106 curve keys
 
 **205 `a28317d2` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.Profile.SkillList (link)` (link), `MatchAnalyser.#ace1253a` (S+0xf84), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#af13720a` (S+0x7ec), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.MatchAnalyser.#08950daa` (S+0xf94), `TeamState.#d4df4664.IsB?` (Team+0x50), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.LocalOpponentPosition` (S+0x910), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.Profile.SkillList (link)` (link), `MatchAnalyser.#ace1253a` (S+0xf84), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#af13720a` (S+0x7ec), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.MatchAnalyser.#08950daa` (S+0xf94), `TeamState.IncomingBall?.IsB?` (Team+0x50), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.LocalOpponentPosition` (S+0x910), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
+- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 49, PRODUCT 16, LERP 13, SUM 5; 112 curve keys
 
 **206 `969bb87a` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#af13720a` (S+0x7ec), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.MatchAnalyser.#08950daa` (S+0xf94), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#af13720a` (S+0x7ec), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.MatchAnalyser.#08950daa` (S+0xf94), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 48, PRODUCT 16, LERP 13, SUM 5; 112 curve keys
 
 **207 `24cabf7d` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#af13720a` (S+0x7ec), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.MatchAnalyser.#08950daa` (S+0xf94), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#af13720a` (S+0x7ec), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.MatchAnalyser.#08950daa` (S+0xf94), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 47, PRODUCT 16, LERP 13, SUM 5; 111 curve keys
 
 **208 `90b9befc` -** (unnamed)
@@ -396,157 +396,157 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **209 `853f0c5c` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#aee2d90b` (S+0x7d0)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#aee2d90b` (S+0x7d0)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 31, PRODUCT 7, LERP 7, SUM 3; 76 curve keys
 
 **210 `f3495835` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#be5d458f` (S+0x768)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 32, PRODUCT 8, LERP 7, SUM 3; 79 curve keys
 
 **211 `1f45778c` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#be5d458f` (S+0x768)
+- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 32, PRODUCT 8, LERP 7, SUM 3; 79 curve keys
 
 **212 `e1d08276` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Serve` (S+0x64c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `MatchAnalyser.#b6b22409` (S+0xf80), `MatchAnalyser.#689dc6f2` (S+0xf88)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Serve` (S+0x64c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `MatchAnalyser.#b6b22409` (S+0xf80), `MatchAnalyser.#689dc6f2` (S+0xf88)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 1, CURVE 12, PRODUCT 1, SUM 3, LERP 4; 23 curve keys
 
 **213 `791a9707` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.Profile.SkillList (link)` (link), `MatchAnalyser.#689dc6f2` (S+0xf88), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 1, CURVE 8, PRODUCT 1, LERP 3, SUM 1; 15 curve keys
 
 **214 `89a37ee0` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c), `MatchAnalyser.#b6b22409` (S+0xf80)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c), `MatchAnalyser.#b6b22409` (S+0xf80)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 1, CURVE 12, PRODUCT 1, SUM 3, LERP 4; 24 curve keys
 
 **215 `4044f237` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#e1fe010c.Timing` (S+0x66c), `S.Profile.SkillList (link)` (link), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `MatchAnalyser.#689dc6f2` (S+0xf88)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- in: `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#e1fe010c.Timing` (S+0x66c), `S.Profile.SkillList (link)` (link), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `MatchAnalyser.#689dc6f2` (S+0xf88)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 3, CURVE 12, PRODUCT 2, SUM 3, LERP 4; 27 curve keys
 
 **216 `af9be3a0` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Serve` (S+0x64c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `MatchAnalyser.#b6b22409` (S+0xf80), `MatchAnalyser.#689dc6f2` (S+0xf88)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- in: `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Serve` (S+0x64c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `MatchAnalyser.#b6b22409` (S+0xf80), `MatchAnalyser.#689dc6f2` (S+0xf88)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 1, CURVE 12, PRODUCT 1, SUM 3, LERP 4; 23 curve keys
 
 **217 `766d5177` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#689dc6f2` (S+0xf88), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.Profile.Serve` (S+0x64c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#689dc6f2` (S+0xf88), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.Profile.Serve` (S+0x64c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 2, CURVE 12, PRODUCT 2, SUM 3, LERP 4; 23 curve keys
 
 **218 `36f815e5` TiredInputsWalking** (low)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.Profile.SkillList (link)` (link), `MatchAnalyser.#689dc6f2` (S+0xf88), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 1, CURVE 8, PRODUCT 1, LERP 3, SUM 1; 15 curve keys
 
 **219 `16101e0c` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.Profile.SkillList (link)` (link), `MatchAnalyser.#b6b22409` (S+0xf80), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 2, CURVE 8, PRODUCT 2, LERP 3, SUM 1; 15 curve keys
 
 **220 `e65d4260` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c), `MatchAnalyser.#b6b22409` (S+0xf80)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- in: `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c), `MatchAnalyser.#b6b22409` (S+0xf80)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 1, CURVE 12, PRODUCT 1, SUM 3, LERP 4; 24 curve keys
 
 **221 `fe33f3a5` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `MatchAnalyser.#689dc6f2` (S+0xf88), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.SkillList (link)` (link), `S.Profile.Serve` (S+0x64c), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#b6b22409` (S+0xf80)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- in: `MatchAnalyser.#689dc6f2` (S+0xf88), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.SkillList (link)` (link), `S.Profile.Serve` (S+0x64c), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#b6b22409` (S+0xf80)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 2, CURVE 12, PRODUCT 2, SUM 3, LERP 4; 24 curve keys
 
 **222 `e9044451` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c), `S.#7e28dbc0.#e1fe010c.Timing` (S+0x66c), `MatchAnalyser.#689dc6f2` (S+0xf88)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.Profile.Serve` (S+0x64c), `S.#7e28dbc0.#e1fe010c.Timing` (S+0x66c), `MatchAnalyser.#689dc6f2` (S+0xf88)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 3, CURVE 12, PRODUCT 2, SUM 3, LERP 4; 27 curve keys
 
 **223 `f16af594` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#689dc6f2` (S+0xf88), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.Profile.Serve` (S+0x64c), `S.#7e28dbc0.#e1fe010c.Timing` (S+0x66c)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `MatchAnalyser.#689dc6f2` (S+0xf88), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.Profile.Serve` (S+0x64c), `S.#7e28dbc0.#e1fe010c.Timing` (S+0x66c)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 4, CURVE 12, PRODUCT 3, SUM 3, LERP 4; 27 curve keys
 
 **224 `03081678` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4)
+- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 18, PRODUCT 2, LERP 6, SUM 2; 63 curve keys
 
 **225 `5991d7bb` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4)
+- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 18, PRODUCT 2, LERP 6, SUM 2; 63 curve keys
 
 **226 `a594ba0f` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4)
+- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 18, PRODUCT 2, LERP 6, SUM 2; 63 curve keys
 
 **227 `ddfd33c7` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `ShotContext.ManualShotTiming??` (S+0x544)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `ShotContext.ManualShotTiming??` (S+0x544)
+- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 16, LERP 6, PRODUCT 1, SUM 2; 54 curve keys
 
 **228 `ca236403` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `ShotContext.ManualShotTiming??` (S+0x544)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `ShotContext.ManualShotTiming??` (S+0x544)
+- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 16, LERP 6, PRODUCT 1, SUM 2; 54 curve keys
 
 **229 `496825b2` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.Return` (S+0x650), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.Return` (S+0x650), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4)
+- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 16, LERP 6, PRODUCT 1, SUM 2; 54 curve keys
 
 **230 `ca4ac032` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Min` (S+0x6c4), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Max` (S+0x6c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Min` (S+0x6c4), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Max` (S+0x6c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344)
+- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 4, CURVE 20, PRODUCT 3, LERP 7, SUM 3; 54 curve keys
 
 **231 `f903fe93` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Max` (S+0x6c8), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Min` (S+0x6c4), `BallState.Commands.#7bb6a318.From` (Ball+0x344)
-- out: `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Max` (S+0x6c8), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Min` (S+0x6c4), `BallState.Commands.#7bb6a318.From` (Ball+0x344)
+- out: `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 4, PRODUCT 3, CURVE 20, LERP 7, SUM 3; 56 curve keys
 
 **232 `1bf67deb` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Min` (S+0x6c4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Max` (S+0x6c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Min` (S+0x6c4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Max` (S+0x6c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344)
+- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 4, CURVE 20, PRODUCT 3, LERP 7, SUM 3; 54 curve keys
 
 **233 `788a1775` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Max` (S+0x6c8), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Min` (S+0x6c4)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Max` (S+0x6c8), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Min` (S+0x6c4)
+- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 4, CURVE 19, PRODUCT 3, SUM 3, LERP 6; 50 curve keys
 
 **234 `9660ba92` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.#7e28dbc0.ShotSpecific.#032809f7.#b3a1d456.Min` (S+0x6cc), `S.#7e28dbc0.#4e56b470` (S+0x75c), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Max` (S+0x6c8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.#032809f7.#b3a1d456.Max` (S+0x6d0), `S.#7e28dbc0.ShotSpecific.#032809f7.#6ebe237b.Min` (S+0x6c4), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `ShotContext.#2cd48361` (S+0x548), `S.#7e28dbc0.BallDifficulty?` (S+0x764)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.#7e28dbc0.ShotSpecific.AimingResolution.#b3a1d456.Min` (S+0x6cc), `S.#7e28dbc0.PreparedMoveDistance?` (S+0x75c), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Max` (S+0x6c8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.AimingResolution.#b3a1d456.Max` (S+0x6d0), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Min` (S+0x6c4), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `ShotContext.RandSlot??` (S+0x548), `S.#7e28dbc0.BallDifficulty?` (S+0x764)
 - out: `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CURVE 13, LERP 8, SUM 1, PRODUCT 1; 38 curve keys
 
@@ -559,30 +559,30 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **236 `31637539` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 5, CURVE 25, PRODUCT 6, LERP 5, SUM 3; 60 curve keys
 
 **237 `837d492d` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
-- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.#03996229.DeepDeviation?` (S+0xd78)
+- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
+- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 33, PRODUCT 6, LERP 9, SUM 3; 77 curve keys
 
 **238 `491e53f5` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.InsideOut` (S+0x7c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.InsideOut` (S+0x7c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 6, CURVE 39, PRODUCT 13, LERP 10, SUM 5; 85 curve keys
 
 **239 `e30baab5` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.MatchAnalyser.#08950daa` (S+0xf94), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.Profile.Power` (S+0x660)
+- in: `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.MatchAnalyser.#08950daa` (S+0xf94), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 6, CURVE 36, PRODUCT 13, SUM 5, LERP 8; 76 curve keys
 
 **240 `8cd63574` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.Profile.Power` (S+0x660), `S.MatchAnalyser.#08950daa` (S+0xf94)
+- in: `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.Profile.Power` (S+0x660), `S.MatchAnalyser.#08950daa` (S+0xf94)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 6, CURVE 35, PRODUCT 13, LERP 8, SUM 4; 73 curve keys
 
@@ -601,19 +601,19 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **243 `e3e9d682` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#be5d458f` (S+0x768), `ShotContext.ManualShotTiming??` (S+0x544), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.Power` (S+0x660), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.MatchAnalyser.#08950daa` (S+0xf94), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
+- in: `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#be5d458f` (S+0x768), `ShotContext.ManualShotTiming??` (S+0x544), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.Power` (S+0x660), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.MatchAnalyser.#08950daa` (S+0xf94), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 40, PRODUCT 13, LERP 10, SUM 5; 90 curve keys
 
 **244 `fc5cc9ec` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Profile.SkillList (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.MatchAnalyser.#125400f0` (S+0xf90), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Profile.SkillList (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.MatchAnalyser.#125400f0` (S+0xf90), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 36, PRODUCT 13, LERP 8, SUM 5; 78 curve keys
 
 **245 `91b4e93a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `ShotContext.ManualShotTiming??` (S+0x544), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Profile.Power` (S+0x660), `S.LocalOpponentPosition` (S+0x910), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `TeamState.#d4df4664.IsB?` (Team+0x50)
+- in: `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `ShotContext.ManualShotTiming??` (S+0x544), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Profile.Power` (S+0x660), `S.LocalOpponentPosition` (S+0x910), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `TeamState.IncomingBall?.IsB?` (Team+0x50)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 38, PRODUCT 14, LERP 9, SUM 4; 86 curve keys
 
@@ -632,43 +632,43 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **248 `d4c08700` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.#1407106c` (S+0x770), `TeamState.#d4df4664.IsB?` (Team+0x50), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.LocalOpponentPosition` (S+0x910), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0)
+- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.#1407106c` (S+0x770), `TeamState.IncomingBall?.IsB?` (Team+0x50), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.LocalOpponentPosition` (S+0x910), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 33, PRODUCT 10, LERP 10, SUM 4; 70 curve keys
 
 **249 `bb5c87d3` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `TeamState.#d4df4664.IsB?` (Team+0x50), `ShotContext.ManualShotTiming??` (S+0x544), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc)
+- in: `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `TeamState.IncomingBall?.IsB?` (Team+0x50), `ShotContext.ManualShotTiming??` (S+0x544), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 31, PRODUCT 11, SUM 4, LERP 9; 66 curve keys
 
 **250 `8e98bac6` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `TeamState.#d4df4664.IsB?` (Team+0x50), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc)
+- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 27, PRODUCT 10, SUM 4, LERP 7; 53 curve keys
 
 **251 `a2202a7a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#be5d458f` (S+0x768), `ShotContext.ManualShotTiming??` (S+0x544), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8), `#8448b811.#1407106c` (S+0x88c), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.Profile.Power` (S+0x660)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#be5d458f` (S+0x768), `ShotContext.ManualShotTiming??` (S+0x544), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8), `#8448b811.#1407106c` (S+0x88c), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.Profile.Power` (S+0x660)
 - out: `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 2, CURVE 15, PRODUCT 6, SUM 2, LERP 3; 35 curve keys
 
 **252 `60cf8f84` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.LocalOpponentPosition` (S+0x910), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0)
+- in: `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.LocalOpponentPosition` (S+0x910), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 31, PRODUCT 10, LERP 7, SUM 5; 80 curve keys
 
 **253 `4cb8bd52` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.SlowDown?` (S+0x7cc), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.MatchAnalyser.#125400f0` (S+0xf90)
+- in: `S.#7e28dbc0.SlowDown?` (S+0x7cc), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.MatchAnalyser.#125400f0` (S+0xf90)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 29, PRODUCT 10, LERP 5, SUM 5; 67 curve keys
 
 **254 `3d2d527a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#be5d458f` (S+0x768), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc)
+- in: `S.#7e28dbc0.#be5d458f` (S+0x768), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 29, PRODUCT 10, LERP 6, SUM 4; 66 curve keys
 
@@ -692,295 +692,259 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **258 `61ec50e9` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Return` (S+0x650), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Return` (S+0x650), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 19, PRODUCT 5, LERP 7, SUM 3; 64 curve keys
 
 **259 `8ea9307a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **260 `98ff9b38` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **261 `60d1fb90` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
+- in: `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **262 `af75299f` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **263 `7e2338fe` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **264 `1485a4d6` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#6fec51bf` (S+0x798), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.Volley` (S+0x65c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
+- in: `S.#7e28dbc0.#6fec51bf` (S+0x798), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.Volley` (S+0x65c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
 - out: `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 1, CURVE 20, SUM 3, LERP 7, PRODUCT 1; 57 curve keys
 
 **265 `72f1c296` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.Volley` (S+0x65c), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.#6fec51bf` (S+0x798), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.Volley` (S+0x65c), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.#6fec51bf` (S+0x798), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
 - out: `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 1, CURVE 20, SUM 3, LERP 7, PRODUCT 1; 53 curve keys
 
 **266 `265f696f` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#6fec51bf` (S+0x798), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.Volley` (S+0x65c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
+- in: `S.#7e28dbc0.#6fec51bf` (S+0x798), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.Volley` (S+0x65c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.SkillList (link)` (link), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
 - out: `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 1, CURVE 20, SUM 3, LERP 7, PRODUCT 1; 57 curve keys
 
 **267 `25de9d82` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `S.Profile.Volley` (S+0x65c), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.#6fec51bf` (S+0x798), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `S.Profile.Volley` (S+0x65c), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.#6fec51bf` (S+0x798), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
 - out: `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 1, CURVE 15, LERP 6, SUM 1, PRODUCT 1; 48 curve keys
 
 **268 `afc12c0a` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
 - out: `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CURVE 11, LERP 5, SUM 1, PRODUCT 1; 28 curve keys
 
 **269 `0cf610b3` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.#2cd48361` (S+0x548), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `ShotContext.ManualShotTiming??` (S+0x544)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.RandSlot??` (S+0x548), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `ShotContext.ManualShotTiming??` (S+0x544)
 - out: `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CURVE 11, LERP 5, PRODUCT 2; 27 curve keys
 
 **270 `8a8ccb07` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.Profile.Volley` (S+0x65c), `S.Profile.Power` (S+0x660), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `ShotContext.#2cd48361` (S+0x548), `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.Profile.Volley` (S+0x65c), `S.Profile.Power` (S+0x660), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `ShotContext.RandSlot??` (S+0x548), `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
 - out: `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 2, CURVE 12, PRODUCT 4, SUM 2, LERP 5; 28 curve keys
 
 **271 `1a740604` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc)
+- in: `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 29, PRODUCT 9, LERP 6, SUM 5; 67 curve keys
 
 **272 `67089d52` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0)
+- in: `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 30, PRODUCT 9, LERP 6, SUM 5; 68 curve keys
 
 **273 `794440ef` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.#033f32d0.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.ShotSpecific.#033f32d0.Min` (S+0x6bc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc)
+- in: `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc)
 - out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 29, PRODUCT 9, LERP 6, SUM 5; 67 curve keys
 
 **274 `abe5c315` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#8ea88f9f (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
+- in: `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#8ea88f9f (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 24, PRODUCT 5, LERP 8, SUM 1; 54 curve keys
 
 **275 `e0e5bb73` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 11, PRODUCT 3, LERP 3, SUM 1; 22 curve keys
 
 **276 `dd93977c` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#8ea88f9f (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
+- in: `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#8ea88f9f (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 24, PRODUCT 5, LERP 8, SUM 1; 54 curve keys
 
 **277 `9693ef1a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
+- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 10, LERP 3, PRODUCT 1, SUM 1; 18 curve keys
 
 **278 `319fb8c5` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#03d2be3d` (S+0x7a0)
+- in: `S.Profile.SkillList (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#03d2be3d` (S+0x7a0)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, PRODUCT 5, CURVE 24, LERP 8, SUM 1; 54 curve keys
 
 **279 `7a9fc0a3` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
+- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 10, LERP 3, PRODUCT 1, SUM 1; 18 curve keys
 
-**280 `7979bb20` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.ShotSpecific.WoodUp?` (S+0x6e4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
-- out: `S.#7e28dbc0.#2f6da855` (S+0x784), `S.#7e28dbc0.#5b808224` (S+0x780), `S.#7e28dbc0.#fd4a76f0` (S+0x724)
-- nodes: CONST 4, CURVE 3, LERP 2, PRODUCT 1; 4 curve keys
-
-**281 `823bd977` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodSide?` (S+0x6ec)
-- out: `S.#7e28dbc0.#4d0165be` (S+0x790), `S.#7e28dbc0.#f5ec1133` (S+0x794), `S.#7e28dbc0.#e6d62656` (S+0x72c)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
-
-**282 `bd4552f9` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodDown?` (S+0x6e8)
-- out: `S.#7e28dbc0.#2b157b35` (S+0x78c), `S.#7e28dbc0.#34a3a858` (S+0x788), `S.#7e28dbc0.#d9a8add8` (S+0x728)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
-
 **283 `652ed00f` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 21, PRODUCT 5, LERP 7, SUM 1; 51 curve keys
 
 **284 `2e2ea869` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 11, PRODUCT 3, LERP 3, SUM 1; 22 curve keys
 
 **285 `cf3b294f` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 21, PRODUCT 5, LERP 7, SUM 1; 51 curve keys
 
 **286 `843b5129` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
+- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 10, LERP 3, PRODUCT 1, SUM 1; 18 curve keys
 
 **287 `a0e6b68e` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 21, PRODUCT 5, LERP 7, SUM 1; 51 curve keys
 
 **288 `ebe6cee8` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
+- in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 10, LERP 3, PRODUCT 1, SUM 1; 18 curve keys
 
-**289 `7979bb20` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodUp?` (S+0x6e4)
-- out: `S.#7e28dbc0.#2f6da855` (S+0x784), `S.#7e28dbc0.#5b808224` (S+0x780), `S.#7e28dbc0.#fd4a76f0` (S+0x724)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
-
-**290 `823bd977` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodSide?` (S+0x6ec)
-- out: `S.#7e28dbc0.#4d0165be` (S+0x790), `S.#7e28dbc0.#f5ec1133` (S+0x794), `S.#7e28dbc0.#e6d62656` (S+0x72c)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
-
-**291 `bd4552f9` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodDown?` (S+0x6e8)
-- out: `S.#7e28dbc0.#2b157b35` (S+0x78c), `S.#7e28dbc0.#34a3a858` (S+0x788), `S.#7e28dbc0.#d9a8add8` (S+0x728)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
-
 **292 `66af1b52` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.#be5d458f` (S+0x768)
+- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.#be5d458f` (S+0x768)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 27, PRODUCT 5, LERP 9, SUM 1; 66 curve keys
 
 **293 `2daf6334` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 3, PRODUCT 2, SUM 1, LERP 1; 3 curve keys
 
 **294 `791a043c` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `MatchState.#8beb922e` (Match+0x334)
+- in: `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `MatchState.#8beb922e` (Match+0x334)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 2, CURVE 28, PRODUCT 6, LERP 9, SUM 1; 70 curve keys
 
 **295 `321a7c5a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 2, PRODUCT 2, SUM 1, LERP 1; 2 curve keys
-- formula: `r10 = curve1(BallState.Commands.#7bb6a318.From); r7 = curve2(BallState.Commands.#7bb6a318.From); r11 = product(S.#7e28dbc0.#719dc5ee.Long, r10); r4 = product(S.#7e28dbc0.#719dc5ee.Short, r7); r2 = sum(r4, r11); r3 = lerp(S.#7e28dbc0.ShotSpecific.#528a0451.Min, S.#7e28dbc0.ShotSpecific.#528a0451.Max, r2)`
+- formula: `r10 = curve1(BallState.Commands.#7bb6a318.From); r7 = curve2(BallState.Commands.#7bb6a318.From); r11 = product(S.#7e28dbc0.#719dc5ee.Long, r10); r4 = product(S.#7e28dbc0.#719dc5ee.Short, r7); r2 = sum(r4, r11); r3 = lerp(S.#7e28dbc0.ShotSpecific.ErrorResolution.Min, S.#7e28dbc0.ShotSpecific.ErrorResolution.Max, r2)`
 
 **296 `14f224ea` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.#be5d458f` (S+0x768)
+- in: `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.#be5d458f` (S+0x768)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 2, CURVE 28, PRODUCT 6, LERP 9, SUM 1; 70 curve keys
 
 **297 `5ff25c8c` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 2, PRODUCT 2, SUM 1, LERP 1; 2 curve keys
-- formula: `r10 = curve1(BallState.Commands.#7bb6a318.From); r7 = curve2(BallState.Commands.#7bb6a318.From); r11 = product(S.#7e28dbc0.#719dc5ee.Long, r10); r4 = product(S.#7e28dbc0.#719dc5ee.Short, r7); r2 = sum(r4, r11); r3 = lerp(S.#7e28dbc0.ShotSpecific.#528a0451.Min, S.#7e28dbc0.ShotSpecific.#528a0451.Max, r2)`
+- formula: `r10 = curve1(BallState.Commands.#7bb6a318.From); r7 = curve2(BallState.Commands.#7bb6a318.From); r11 = product(S.#7e28dbc0.#719dc5ee.Long, r10); r4 = product(S.#7e28dbc0.#719dc5ee.Short, r7); r2 = sum(r4, r11); r3 = lerp(S.#7e28dbc0.ShotSpecific.ErrorResolution.Min, S.#7e28dbc0.ShotSpecific.ErrorResolution.Max, r2)`
 
 **298 `d60963dd` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544)
 - out: `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CURVE 11, PRODUCT 2, SUM 1, LERP 2; 25 curve keys
 
 **299 `9d091bbb` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544)
+- in: `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 10, PRODUCT 2, SUM 1, LERP 2; 23 curve keys
 
 **300 `8cce5363` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8)
+- in: `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 1, CURVE 21, LERP 8, PRODUCT 3, SUM 1; 55 curve keys
 
 **301 `c7ce2b05` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 3, PRODUCT 2, SUM 1, LERP 1; 3 curve keys
 
 **302 `e35253b0` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.#693eedbe` (S+0x7d8)
+- in: `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.#693eedbe` (S+0x7d8)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 1, CURVE 21, PRODUCT 4, LERP 7, SUM 1; 58 curve keys
 
 **303 `a8522bd6` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 2, PRODUCT 2, SUM 1, LERP 1; 2 curve keys
-- formula: `r10 = curve1(BallState.Commands.#7bb6a318.From); r7 = curve2(BallState.Commands.#7bb6a318.From); r11 = product(S.#7e28dbc0.#719dc5ee.Long, r10); r4 = product(S.#7e28dbc0.#719dc5ee.Short, r7); r2 = sum(r4, r11); r3 = lerp(S.#7e28dbc0.ShotSpecific.#528a0451.Min, S.#7e28dbc0.ShotSpecific.#528a0451.Max, r2)`
+- formula: `r10 = curve1(BallState.Commands.#7bb6a318.From); r7 = curve2(BallState.Commands.#7bb6a318.From); r11 = product(S.#7e28dbc0.#719dc5ee.Long, r10); r4 = product(S.#7e28dbc0.#719dc5ee.Short, r7); r2 = sum(r4, r11); r3 = lerp(S.#7e28dbc0.ShotSpecific.ErrorResolution.Min, S.#7e28dbc0.ShotSpecific.ErrorResolution.Max, r2)`
 
 **304 `d6966ea5` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.ReceiverState?.#82526c5c.Value` (S+0xe00)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.ReceiverState?.#82526c5c.Value` (S+0xe00)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 1, CURVE 20, LERP 6, PRODUCT 4, SUM 1; 56 curve keys
 
 **305 `9d9616c3` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 2, PRODUCT 2, SUM 1, LERP 1; 2 curve keys
-- formula: `r10 = curve1(BallState.Commands.#7bb6a318.From); r7 = curve2(BallState.Commands.#7bb6a318.From); r11 = product(S.#7e28dbc0.#719dc5ee.Long, r10); r4 = product(S.#7e28dbc0.#719dc5ee.Short, r7); r2 = sum(r4, r11); r3 = lerp(S.#7e28dbc0.ShotSpecific.#528a0451.Min, S.#7e28dbc0.ShotSpecific.#528a0451.Max, r2)`
+- formula: `r10 = curve1(BallState.Commands.#7bb6a318.From); r7 = curve2(BallState.Commands.#7bb6a318.From); r11 = product(S.#7e28dbc0.#719dc5ee.Long, r10); r4 = product(S.#7e28dbc0.#719dc5ee.Short, r7); r2 = sum(r4, r11); r3 = lerp(S.#7e28dbc0.ShotSpecific.ErrorResolution.Min, S.#7e28dbc0.ShotSpecific.ErrorResolution.Max, r2)`
 
 **306 `d45678b3` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
@@ -991,7 +955,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **307 `f529fc21` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Serve` (S+0x64c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.ReceiverState?.AimingState?.#03996229.Random` (S+0xd7c), `ShotContext.IsHuman?` (S+0x560), `S.#719dc5ee.Target` (S+0x840), `ShotContext.#f089f55c` (S+0x550)
+- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Serve` (S+0x64c), `S.ReceiverState?.AimingState?.#3c6beee9` (S+0xd84), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `ShotContext.IsHuman?` (S+0x560), `S.#719dc5ee.Target` (S+0x840), `ShotContext.#f089f55c` (S+0x550)
 - out: `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 5, CURVE 13, LERP 4, SUB 3, SUM 6, PRODUCT 2; 26 curve keys
 
@@ -1065,89 +1029,89 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - formula: `r4 = curve1(S.ReceiverState?.TimingState.#d2797eb6); r2 = curve2(S.ReceiverState?.TimingState.#3fe3a099); r3 = curve3(S.ReceiverState?.TimingState.#d2797eb6); r6 = curve4(S.#7e28dbc0.#1407106c); r7 = lerp(r4, r3, r2); r8 = sum(r6, r7)`
 
 **319 `c5ea5958` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.#7e28dbc0.BallDifficulty?` (S+0x764), `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.#7e28dbc0.BallDifficulty?` (S+0x764), `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 8, LERP 3, PRODUCT 1, SUM 2; 12 curve keys
 
 **320 `8eea213e` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CURVE 6, LERP 5; 19 curve keys
 
 **321 `3a207442` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.#7e28dbc0.BallDifficulty?` (S+0x764), `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.#7e28dbc0.BallDifficulty?` (S+0x764), `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 8, LERP 3, PRODUCT 1, SUM 2; 12 curve keys
 
 **322 `71200c24` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.BallDifficulty?` (S+0x764), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CURVE 6, LERP 5; 19 curve keys
 
 **323 `09df2990` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#8ea88f9f (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Volley` (S+0x65c), `TeamState.IsDouble` (Team+0xbc), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `S.#8ea88f9f (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Volley` (S+0x65c), `TeamState.IsDouble` (Team+0xbc), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 2, CURVE 17, PRODUCT 3, LERP 7, SUM 1, SUB 1; 40 curve keys
 
 **324 `42df51f6` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 4, SUM 1, PRODUCT 2, LERP 1; 10 curve keys
 
 **325 `7f651c66` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `TeamState.IsDouble` (Team+0xbc), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `S.Profile.Volley` (S+0x65c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `TeamState.IsDouble` (Team+0xbc), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `S.Profile.Volley` (S+0x65c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4)
 - out: `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 2, CURVE 16, PRODUCT 3, LERP 7, SUM 1, SUB 1; 36 curve keys
 
 **326 `34656400` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Short` (S+0x6f8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 5, SUM 2, PRODUCT 1, LERP 1; 11 curve keys
 
 **327 `bb50f875` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `TeamState.IsDouble` (Team+0xbc), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `S.Profile.Volley` (S+0x65c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `TeamState.IsDouble` (Team+0xbc), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `S.Profile.Volley` (S+0x65c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, PRODUCT 3, CURVE 15, LERP 7, SUM 1, SUB 1; 34 curve keys
 
 **328 `f0508013` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 5, SUM 2, PRODUCT 1, LERP 1; 11 curve keys
 
 **329 `65e8e744` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.Volley` (S+0x65c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8)
+- in: `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.Volley` (S+0x65c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8)
 - out: `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 13, PRODUCT 3, LERP 5, SUM 1, SUB 1; 33 curve keys
 
 **330 `2ee89f22` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 6, SUM 2, PRODUCT 1, LERP 1; 12 curve keys
 
 **331 `610c6bca` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 19, PRODUCT 4, LERP 6, SUM 1, SUB 1; 52 curve keys
 
 **332 `2a0c13ac` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4)
+- in: `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CURVE 2, SUM 2, PRODUCT 1, LERP 1; 2 curve keys
-- formula: `r6 = curve1(BallState.Commands.#7bb6a318.From); r9 = sum(S.#7e28dbc0.#719dc5ee.Side); r10 = curve2(r9); r7 = product(S.#7e28dbc0.#719dc5ee.Long, r6); r2 = sum(r7, r10); r3 = lerp(S.#7e28dbc0.ShotSpecific.#528a0451.Min, S.#7e28dbc0.ShotSpecific.#528a0451.Max, r2)`
+- formula: `r6 = curve1(BallState.Commands.#7bb6a318.From); r9 = sum(S.#7e28dbc0.#719dc5ee.Side); r10 = curve2(r9); r7 = product(S.#7e28dbc0.#719dc5ee.Long, r6); r2 = sum(r7, r10); r3 = lerp(S.#7e28dbc0.ShotSpecific.ErrorResolution.Min, S.#7e28dbc0.ShotSpecific.ErrorResolution.Max, r2)`
 
 **333 `a8799bf6` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
@@ -1158,30 +1122,30 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **334 `e379e390` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.#be5d458f` (S+0x768)
+- in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.#be5d458f` (S+0x768)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 26, PRODUCT 5, LERP 10, SUM 1; 62 curve keys
 
 **335 `6f550ea2` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8)
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 8, PRODUCT 1, LERP 3, SUM 1; 22 curve keys
 
 **336 `c4e94a85` -** (unnamed)
-- runs: no loader or data reference found
-- in: `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotDifficulty` (S+0x7a8)
 - out: `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CURVE 5, SUM 1, LERP 2; 16 curve keys
 
 **337 `5cddd76b` -** (unnamed)
-- runs: no loader or data reference found
-- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.ReceiverState?.#82526c5c.Value` (S+0xe00)
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
+- in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.ReceiverState?.#82526c5c.Value` (S+0xe00)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 1, CURVE 20, LERP 6, PRODUCT 4, SUM 1; 58 curve keys
 
 **338 `f761934c` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: -
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1; 0 curve keys
@@ -1189,13 +1153,13 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **339 `56b7607c` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `MatchState.#8beb922e` (Match+0x334), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `MatchState.#8beb922e` (Match+0x334), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 1, CURVE 12, SUM 1, LERP 5, PRODUCT 1; 42 curve keys
 
 **340 `1db7181a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.#528a0451.Min` (S+0x6d4), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.#528a0451.Max` (S+0x6d8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
+- in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
 - out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 11, SUM 1, LERP 5, PRODUCT 1; 39 curve keys
 
@@ -1485,7 +1449,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CURVE 8, SUM 2, LERP 2, PRODUCT 1; 13 curve keys
 
 **143 `f2803787` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#d30f0aca` (AI+0x1b4), `S.Context.#4718ce71.#136e2d7d` (S+0x4f8), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `S.Context.#21e13815` (S+0x5d0), `#e9ca839c.#a9a83d2d.#f4613660` (AI+0x1b0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.Volley` (AI+0x1e0)
 - out: `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: CURVE 8, SUM 2, LERP 2, PRODUCT 1; 13 curve keys
@@ -1503,14 +1467,14 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: SUM 2, CURVE 9, LERP 2, PRODUCT 1; 15 curve keys
 
 **147 `318a2527` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: -
 - out: `PositioningComponents.#79b99b60` (AI+0x1dc), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.BaseLine` (AI+0x1d4)
 - nodes: CONST 4; 0 curve keys
 - formula: `r3 = 5.0; r2 = 0.0; r1 = 1.0; r0 = 1.0`
 
 **148 `0161aecc` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - out: `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: CONST 1, CURVE 3, LERP 1; 7 curve keys
@@ -1545,28 +1509,28 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - formula: `r4 = curve1(#8448b811.AvgSpeed); r3 = curve2(#8448b811.AvgSpeed); r1 = curve3(#8448b811.Distance); r5 = lerp(r4, r3, r1)`
 
 **1 `3c58fc77` -** (unnamed)
-- runs: no loader or data reference found
+- runs: code fn_886B69F8 @0x886B6A14; code fn_8869DEF0 @0x8869E034
 - in: `#8448b811.#1407106c` (S+0x88c), `#8448b811.#dcf2e715` (S+0x89c), `#8448b811.#b22974cc` (S+0x890), `#8448b811.Height` (S+0x884)
 - out: `#8448b811.FinalScore?` (S+0x8cc)
 - nodes: CURVE 4, PRODUCT 1; 10 curve keys
 - formula: `r8 = curve1(#8448b811.#b22974cc); r6 = curve2(#8448b811.#dcf2e715); r1 = curve3(#8448b811.Height); r3 = curve4(#8448b811.#1407106c); r4 = product(r1, r3, r6, r8)`
 
 **2 `4b5fcce1` -** (unnamed)
-- runs: no loader or data reference found
+- runs: code fn_886B69F8 @0x886B6A1C; code fn_8869DEF0 @0x8869E03C
 - in: `#8448b811.#1407106c` (S+0x88c), `#8448b811.Height` (S+0x884), `#8448b811.#b22974cc` (S+0x890), `#8448b811.#dcf2e715` (S+0x89c), `#8448b811.#c561ff20` (S+0x8a0)
 - out: `#8448b811.FinalScore?` (S+0x8cc)
 - nodes: CURVE 5, PRODUCT 1; 11 curve keys
 - formula: `r1 = curve1(#8448b811.#c561ff20); r8 = curve2(#8448b811.#dcf2e715); r10 = curve3(#8448b811.#b22974cc); r3 = curve4(#8448b811.#1407106c); r6 = curve5(#8448b811.Height); r2 = product(r1, r3, r6, r8, r10)`
 
 **3 `d2569d5b` -** (unnamed)
-- runs: no loader or data reference found
+- runs: code fn_886B69F8 @0x886B6A18; code fn_8869DEF0 @0x8869E044
 - in: `#8448b811.#1407106c` (S+0x88c), `#8448b811.Height` (S+0x884), `#8448b811.#978588b3` (S+0x898), `#8448b811.#b22974cc` (S+0x890)
 - out: `#8448b811.FinalScore?` (S+0x8cc)
 - nodes: CURVE 4, PRODUCT 1; 12 curve keys
 - formula: `r5 = curve1(#8448b811.Height); r4 = curve2(#8448b811.#978588b3); r6 = curve3(#8448b811.#1407106c); r8 = curve4(#8448b811.#b22974cc); r0 = product(r4, r5, r6, r8)`
 
 **4 `a551adcd` -** (unnamed)
-- runs: no loader or data reference found
+- runs: code fn_886B69F8 @0x886B6A24; code fn_8869DEF0 @0x8869E054
 - in: `#8448b811.#1407106c` (S+0x88c), `#8448b811.Height` (S+0x884), `#8448b811.#b22974cc` (S+0x890), `#8448b811.#c561ff20` (S+0x8a0)
 - out: `#8448b811.FinalScore?` (S+0x8cc)
 - nodes: CURVE 4, PRODUCT 1; 10 curve keys
@@ -1690,7 +1654,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CURVE 14, LERP 2, SUM 2, PRODUCT 1; 22 curve keys
 
 **57 `de9da221` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: -
 - out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
@@ -1747,7 +1711,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - formula: `r0 = 0.0`
 
 **67 `1ceefd8b` ReturnServe** (high)
-- runs: Settings `#3f7bd49d.#c2ddc2e6.[].#1d9502ff.#c2ddc2e6.[].Id` (+6 more paths)
+- runs: Settings `#3fcc8ac9.AreaList??.#0c58aa02.[].Id` (+6 more paths)
 - in: `S.Context.#4718ce71.#20d5886c` (S+0x4f0)
 - out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 2, LERP 1; 0 curve keys
@@ -1787,7 +1751,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CURVE 14, LERP 2, SUM 2, PRODUCT 1; 22 curve keys
 
 **73 `ad039c14` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.ReceiverState?.#c7b7bdac.HitPosition` (S+0xbe0), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `#3ba3d582.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8)
 - out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 16, LERP 2, SUM 2, PRODUCT 1; 24 curve keys
@@ -1849,7 +1813,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - formula: `r0 = 0.1`
 
 **115 `96fe1e55` Repositioning** (high)
-- runs: Settings `#3f7bd49d.#c2ddc2e6.[].#1d9502ff.#c2ddc2e6.[].Id` (+5 more paths)
+- runs: Settings `#3fcc8ac9.ConfigList??.#25f3717a.[].Id` (+5 more paths)
 - in: -
 - out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
@@ -1902,7 +1866,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CONST 1, CURVE 4, LERP 1, PRODUCT 1; 8 curve keys
 
 **156 `2ce33943` Default** (high)
-- runs: Settings `#ded1baa5.#899c4c22.[].Id` (+5 more paths)
+- runs: Settings `#ded1baa5.AmplitudeConfig??.[].Id` (+5 more paths)
 - in: `#e9ca839c.TimingExpressionInputs??.Random2?` (AI+0xc8), `#e9ca839c.TimingExpressionInputs??.Random1?` (AI+0xc4), `S.ReceiverState?.TimingState.TimingAbility?` (S+0xd0c)
 - out: `S.Context.ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CURVE 2, LERP 1; 6 curve keys
@@ -1946,10 +1910,10 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - out: `S.Context.ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CONST 1, CURVE 9, LERP 3, SUM 1; 23 curve keys
 
-**187 `acb75b15` -** (unnamed)
+**187 `acb75b15` PSMove** (high)
 - runs: code fn_886BE1C8 @0x886BEA30
-- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.#acb75b15.#d755a588` (S+0x5c), `S.#acb75b15.Swing.MaxSpeed` (S+0x4c), `S.#acb75b15.Preparation.Length` (S+0x48)
-- out: `S.#acb75b15.Output.PressAndHold` (S+0x58), `ShotContext.ManualShotTiming??` (S+0x544)
+- in: `ShotContext.ManualShotTiming??` (S+0x544), `S.PSMove.#d755a588` (S+0x5c), `S.PSMove.Swing.MaxSpeed` (S+0x4c), `S.PSMove.Preparation.Length` (S+0x48)
+- out: `S.PSMove.Output.PressAndHold` (S+0x58), `ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CURVE 6, LERP 2; 13 curve keys
 
 
@@ -1957,7 +1921,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **5 `daf1c0d6` -** (unnamed)
 - runs: code fn_886BBC38 @0x886BBC68
-- in: `BallState.#1313ce9c.To` (Ball+0x110), `S.LocalPosition` (S+0x8e0)
+- in: `BallState.CurrentTrajectory?.To` (Ball+0x110), `S.LocalPosition` (S+0x8e0)
 - out: `ShotContext.BaseLineInterpolator?` (S+0x540), `Context.#93e05bd8` (S+0x5b4), `Context.PosVolleyQualifier??` (S+0x5b8)
 - nodes: CURVE 6, SUB 1, PRODUCT 1; 12 curve keys
 
@@ -1987,19 +1951,19 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CURVE 28, SUB 12, MIN 4, PRODUCT 8, SUM 4; 54 curve keys
 
 **34 `7120532b` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `TeamState.#6becfb33.Player2?.#70cb0930` (Team+0x98), `TeamState.#6becfb33.Player1?.#70cb0930` (Team+0x78), `TeamState.#6becfb33.Player1?.#91271071` (Team+0x7c), `TeamState.#6becfb33.Player2?.#91271071` (Team+0x9c), `TeamState.#6becfb33.Player2?.X` (Team+0x90), `TeamState.#6becfb33.Player1?.X` (Team+0x70), `TeamState.#6becfb33.Player2?.#9a8872a6` (Team+0xa0), `TeamState.#6becfb33.Player1?.#3046f508` (Team+0x84), `TeamState.#6becfb33.Player1?.#9a8872a6` (Team+0x80), `TeamState.#6becfb33.Player2?.#3046f508` (Team+0xa4)
 - out: `TeamState.#6becfb33.Player2?.Score` (Team+0xa8), `TeamState.#6becfb33.Player1?.Score` (Team+0x88)
 - nodes: MIN 6, SUB 12, CURVE 48, PRODUCT 14, SUM 4; 82 curve keys
 
 **35 `a8ae64d6` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `TeamState.#6becfb33.Player1?.#9a8872a6` (Team+0x80), `TeamState.#6becfb33.Player1?.#3046f508` (Team+0x84), `TeamState.#6becfb33.Player2?.#70cb0930` (Team+0x98), `TeamState.#6becfb33.Player2?.#3046f508` (Team+0xa4), `TeamState.#6becfb33.Player1?.#70cb0930` (Team+0x78), `TeamState.#6becfb33.Player1?.#91271071` (Team+0x7c), `TeamState.#6becfb33.Player1?.X` (Team+0x70), `TeamState.#6becfb33.Player2?.X` (Team+0x90), `TeamState.#6becfb33.Player2?.#91271071` (Team+0x9c), `TeamState.#6becfb33.Player2?.#9a8872a6` (Team+0xa0)
 - out: `TeamState.#6becfb33.Player1?.Score` (Team+0x88), `TeamState.#6becfb33.Player2?.Score` (Team+0xa8)
 - nodes: MIN 3, CURVE 23, SUB 7, PRODUCT 6, SUM 1; 40 curve keys
 
 **36 `fb2cc59f` -** (unnamed)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `TeamState.#6becfb33.Player1?.#9a8872a6` (Team+0x80), `TeamState.#6becfb33.Player1?.X` (Team+0x70), `TeamState.#6becfb33.Player2?.X` (Team+0x90), `TeamState.#6becfb33.Player2?.#70cb0930` (Team+0x98), `TeamState.#6becfb33.Player2?.#9a8872a6` (Team+0xa0), `TeamState.#6becfb33.Player1?.#70cb0930` (Team+0x78), `TeamState.#6becfb33.Player1?.#91271071` (Team+0x7c), `TeamState.#6becfb33.Player2?.#91271071` (Team+0x9c), `TeamState.#6becfb33.Player1?.#3046f508` (Team+0x84), `TeamState.#6becfb33.Player2?.#3046f508` (Team+0xa4)
 - out: `TeamState.#6becfb33.Player1?.Score` (Team+0x88), `TeamState.#6becfb33.Player2?.Score` (Team+0xa8)
 - nodes: CURVE 48, SUB 12, MIN 4, PRODUCT 14, SUM 4; 82 curve keys
@@ -2012,7 +1976,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - formula: `r1 = 300.0; r0 = 1300.0; r4 = curve1(#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal); r3 = curve2(#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal)`
 
 
-## Rule / reward evaluations (20 graphs)
+## Rule / reward evaluations (26 graphs)
 
 **163 `d0cb6659` Finesse** (high)
 - runs: code fn_886BF598 @0x886BF73C
@@ -2022,7 +1986,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - formula: `r1 = curve1(S.ReceiverState?.#82526c5c.Value)`
 
 **164 `c1df4081` Medium** (high)
-- runs: code fn_886BF598 @0x886BF778; Settings `PlayerSettings?.Fatigue.#20276499.Qualifier.[].Value`
+- runs: code fn_886BF598 @0x886BF778; Settings `PlayerSettings?.Fatigue.AnimationFeedback?.Qualifier.[].Value`
 - in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00)
 - out: `S.SwingSelection.EvaluationOutputs.RequireMedium?` (S+0x3d8)
 - nodes: CURVE 1; 3 curve keys
@@ -2119,8 +2083,8 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - formula: `r5 = curve1(S.ReceiverState?.TimingState.#3fe3a099); r3 = min(S.ReceiverState?.HitPositionSelection??.#4404037d.RightLine?.#12bbd23e.#887fab7d, S.ReceiverState?.HitPositionSelection??.#4404037d.LeftLine?.#12bbd23e.#887fab7d); r0 = curve2(r3); r6 = product(r0, r5); r7 = curve3(r6)`
 
 **180 `9cafb633` Wood** (high)
-- runs: code fn_886BF598 @0x886BF9D0; Settings `#761fdece.#5f0108a7.[].Id`
-- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.#2cd48361` (S+0x548), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
+- runs: code fn_886BF598 @0x886BF9D0; Settings `#761fdece.ShotDef?.[].Id`
+- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.RandSlot??` (S+0x548), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
 - out: `S.SwingSelection.EvaluationOutputs.Wood` (S+0x3ec)
 - nodes: CURVE 6, LERP 2, SUB 1, PRODUCT 1; 11 curve keys
 
@@ -2149,23 +2113,59 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - out: `S.AnimationSelection.EndOfPoint.ExpressionInputsOutputs??.Outputs.#5e773fda` (S+0x2b8)
 - nodes: CURVE 4, LERP 1, PRODUCT 1, SUM 1; 7 curve keys
 
+**280 `7979bb20` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.ShotSpecific.WoodUp?` (S+0x6e4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
+- out: `S.#7e28dbc0.WoodUpDistance` (S+0x784), `S.#7e28dbc0.WoodUpAngleDeviation` (S+0x780), `S.#7e28dbc0.OutcomeWoodUp` (S+0x724)
+- nodes: CONST 4, CURVE 3, LERP 2, PRODUCT 1; 4 curve keys
+
+**281 `823bd977` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodSide?` (S+0x6ec)
+- out: `S.#7e28dbc0.WoodSideAngleDeviation` (S+0x790), `S.#7e28dbc0.WoodSideDistance` (S+0x794), `S.#7e28dbc0.OutcomeWoodSide` (S+0x72c)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
+**282 `bd4552f9` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodDown?` (S+0x6e8)
+- out: `S.#7e28dbc0.WoodDownDistance` (S+0x78c), `S.#7e28dbc0.WoodDownAngleDeviation` (S+0x788), `S.#7e28dbc0.OutcomeWoodDown` (S+0x728)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
+**289 `7979bb20` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodUp?` (S+0x6e4)
+- out: `S.#7e28dbc0.WoodUpDistance` (S+0x784), `S.#7e28dbc0.WoodUpAngleDeviation` (S+0x780), `S.#7e28dbc0.OutcomeWoodUp` (S+0x724)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
+**290 `823bd977` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodSide?` (S+0x6ec)
+- out: `S.#7e28dbc0.WoodSideAngleDeviation` (S+0x790), `S.#7e28dbc0.WoodSideDistance` (S+0x794), `S.#7e28dbc0.OutcomeWoodSide` (S+0x72c)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
+**291 `bd4552f9` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodDown?` (S+0x6e8)
+- out: `S.#7e28dbc0.WoodDownDistance` (S+0x78c), `S.#7e28dbc0.WoodDownAngleDeviation` (S+0x788), `S.#7e28dbc0.OutcomeWoodDown` (S+0x728)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
 
 ## Empty or unused (3 graphs)
 
 **61 `04cda578` Inputs** (high)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: -
 - out: -
 - nodes: none; 0 curve keys
 
 **109 `e8ad3080` InputsServe** (medium)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: -
 - out: -
 - nodes: none; 0 curve keys
 
 **146 `04cda578` Inputs** (high)
-- runs: no loader or data reference found
+- runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: -
 - out: -
 - nodes: none; 0 curve keys

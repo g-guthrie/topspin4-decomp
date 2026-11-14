@@ -12,6 +12,11 @@ MODELS = {
     "rules": ["rules.c", "test_rules.c"],
     "movement": ["movement.c", "ai_driver.c", "test_movement.c"],
     "swing": ["stats.c", "swing_window.c", "clip_fit.c", "test_swing.c"],
+    "player": ["player.c", "test_player.c"],
+    "ball": ["ball.c", "test_ball.c"],
+    "shot_select": ["shot_select.c", "test_shot_select.c"],
+    "locomotion": ["locomotion.c", "test_locomotion.c"],
+    "anim_select": ["anim_select.c", "test_anim_select.c"],
 }
 
 
