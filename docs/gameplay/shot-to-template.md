@@ -21,7 +21,7 @@ cross-checked, **M** read but not validated, **L** guess, **U** unknown. No game
 ## 1. Where the table and root live (H)
 
 * **cfg** = `*(*(inst+0x1C)+0x6C)` = the `Settings.bin` root typed struct at **file offset 0x24** (not 0x14/0x20). Evidence: `fn_886715A0` reads `cfg+4` (type 0x48BFC8B8) and
-  `cfg+0xC` (count 37) = file `0x28` / `0x30`; cfg+0x134/+0x138 (the `S+0x750/0x754` Net/Let aim heights, gp8) = file `0x158/0x15C` = **80.0 / 90.0 cm** (sensible), and cfg+0xC70/0xC74 = **0.4 / 0.7**.
+  `cfg+0xC` (count 37) = file `0x28` / `0x30`; cfg+0x134/+0x138 (the `S+0x750/0x754` Net/Let aim heights, gp8) = file `0x158/0x15C` = **80.0 / 90.0 cm** (sensible), and cfg+0xC6C/0xC70/0xC74 = 0.3 / 0.4 / 0.7, which are `Objective8AllAround` fields (not tier thresholds; see controls-and-shot-selection.md s5.3).
 * Template array: `cfg+8 {rel 0x1350, count 37, cap 37}` -> file `0x137C`, row stride 0x8C. **`ball+0x360` = row file offset - 0x24** = `0x1358 + 0x8C*i` (launch: `tpl = cfg + off + 0x18`, `fn_889C19F0`). So the numbers the planner stores are 0x1358, 0x13E4, ... 0x2708.
 * Row ids (`row+0x88`, unique; name hash at `+4` repeats): rows 0..3 `8dc6b132 f74ecf4f b0043514 3bbfdfcc`; 4..7 `a413297b 4637fcf0 be02d81e bb50ea44`; 8..11 `4b121fa5 65dc9a5a 992258dc 11a1b9d0`;
   12..15 `4708429a dba7dd53 8c2d5a8e de481349`; 16..19 `14d5efaa f6f13a21 8ff66130 0ec41ecf`; serves 20..31 `b31b5ee0 17c6bfe3 ea0cf389 5f8e74c3 72d4edc1 488717d1 6bbc9a88 26eb8042 a9bdbd27 fa212c96 c1e2aa62 a010111f`;
@@ -66,9 +66,9 @@ Not reachable from the tree: rows 12..15 (Risky), row 34 (DefensiveShot). Flat h
 Per stroke the tier changes (km/h initial speed at 5..30 m, secondary offset, T): Flat 120 / 130 / 140, TopSpin 80 / 80 / 90, Slice 70 / 80 / 80, Lob (DropTime s) 1.40 / 1.45 / 1.25; the Powerful group also narrows the spin curve
 x range to 0.8..1.2 (launch height m) and has smaller Apogee offsets (Flat 1.0 m vs 1.5/1.55). The three serve rows of one kind differ only in `lo` spin and the junk-looking aux block: rows 20/21 are byte-identical in values, row 22 has `spin_a lo = -0.2` (vs -0.05).
 
-Who sets the request booleans: the input agent's note (`input-to-shot.md`) gives `fn_8868F178` (Flat/TopSpin/Slice/Lob/Smash/Risk bytes `S+0x400..0x40B`) and the tier bytes `S+0x405/0x406` copied from analyser bytes `S+0x3A8/0x3A9` (`fn_886783E8`). Tier thresholds: code
-tests `S+0xE00 > cfg+0xC74 (0.7)` for the "powerful" flag of the incoming-ball descriptor (`fn_886B5128 +0xC10`, bytes `info+0x3F` is also set from membership of the **Powerful ids** `992258dc 65dc9a5a 4b121fa5 11a1b9d0`, `info+0x3E` = Finesse ids, `info+0x3D` = Risky ids);
-`cfg+0xC70 = 0.4` is the adjacent value (M: Medium threshold). Whether the request flags `IsMedium/IsPowerful` use exactly these thresholds is **M/L**.
+Who sets the request booleans: the input agent's note (`input-to-shot.md`) gives `fn_8868F178` (Flat/TopSpin/Slice/Lob/Smash/Risk bytes `S+0x400..0x40B`) and the tier bytes `S+0x405/0x406` copied from analyser bytes `S+0x3A8/0x3A9` (`fn_886783E8`). The tier edges (Finesse < 0.15 <= Medium < 0.70 <= Powerful) come from the Finesse/Medium/Powerful analyser graphs plus the `> 0.5` test in `fn_886872A0`. Code
+reads `cfg+0xC74` (0.7, `Objective8AllAround`) as a Risky-row test `S+0xE00 > 0.7` for the "powerful" flag of the incoming-ball descriptor (`fn_886B5128 +0xC10`, bytes `info+0x3F` is also set from membership of the **Powerful ids** `992258dc 65dc9a5a 4b121fa5 11a1b9d0`, `info+0x3E` = Finesse ids, `info+0x3D` = Risky ids);
+`cfg+0xC6C/0xC70` are not read through that base. Full account: controls-and-shot-selection.md s5.3, s11, s13.
 
 ## 4. Why Normal/Lob/ServeNormal repeat (answer)
 
@@ -122,7 +122,7 @@ All stores are in `fn_886B0490 +0x3F8..+0x4A0` (`0x886B085C..0x886B08CC`), desti
 
 * Re-point or add tiers: edit leaf ids (and the rows) in `Settings.bin` `0xD44..0x137C`; add rows (the entry vector size is `cfg+0xC`, aim table 25 entries must have the name).
 * Speed per tier/stroke: row node0 (curve20 `y0`), secondary node1, T, spin hi/lo, bounce curves (shot-templates.md). Per-stat scaling would need the analyser graphs (spin blend, f4C) or new code.
-* Tier thresholds: `cfg+0xC70/0xC74` (0.4/0.7) and power curves `cfg+0x8FC..0x920`; the 0.5 test on `S+0x7BC/7C0/7C4` is code.
+* Tier edges: the Finesse/Medium/Powerful analyser graphs (0.15 / 0.70), not `cfg+0xC6C..0xC74` (see controls-and-shot-selection.md s5.3); power curves `cfg+0x8FC..0x920`; the 0.5 test on `S+0x7BC/7C0/7C4` is code.
 
 ## 9. Not found / next steps
 

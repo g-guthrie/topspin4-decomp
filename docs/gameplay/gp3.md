@@ -79,7 +79,7 @@ Steps (H unless noted), in order:
        `+0x54` (Slice fc6f57a1 or DropShot 990377a5), `+0x58` (Lob c718daaa), `+0x5C = 0`, byte `+0x3C = (state+0x7C8 > 0.5)`, bytes
        `+0x3D/+0x3E/+0x3F` = membership of the hitter's current animation-class hash (`state+0x70C`) in fixed hash sets
        (e.g. 4708429a dba7dd53 8c2d5a8e de481349 ef50cf09 5f04e79c 3b293e51 2a12fbe4 / 8dc6b132 f74ecf4f 3bbfdfcc b0043514 / 992258dc 65dc9a5a
-       4b121fa5 11a1b9d0; names unresolved) and a power test `state+0xE00 > cfg(+0x6C)+0xC74` (M).
+       4b121fa5 11a1b9d0; names unresolved) and a Risky-row power test `state+0xE00 > cfg(+0x6C)+0xC74` (0.7, an `Objective8AllAround` field, not a tier edge; see controls-and-shot-selection.md s5.3).
   3. after the loop: normalised-position cache for the planner: for every player Q (own team vs other team,
      doubles variants) `Q.state+0xE10 / 0xE20 / 0xE30 / 0xE40 / 0xE50` = Q's and the others' `state+0x8E0` position with
      **x and z negated when the team side tag == a2eda1e7** (so both sides plan in the same orientation) and the ball

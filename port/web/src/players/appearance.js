@@ -13,18 +13,23 @@ export class PlayerModel {
 
   async load(url) {
     const gltf = await loadGltfRobust(url);
+    this.attach(gltf.scene, url, gltf.parser?.json?.extras || null);
+    return gltf;
+  }
+
+  /** wrap an already loaded player scene (e.g. PlayerRig.skeletonScene); url is the glTF's URL (texture base) */
+  attach(scene, url, info = null) {
     this.base = url.slice(0, url.lastIndexOf("/") + 1);
-    this.scene = gltf.scene;
-    this.info = gltf.parser?.json?.extras || null;
+    this.scene = scene; this.info = info; this.lodNodes = []; this.materials = [];
     const mats = new Set();
-    this.scene.traverse((o) => {
+    scene.traverse((o) => {
       const ex = o.userData || {};
       if (o.isMesh || o.isSkinnedMesh) { o.castShadow = true; o.frustumCulled = false; mats.add(o.material); }
-      if (ex.lod != null && (o.isMesh || o.isSkinnedMesh || o.children.length)) this.lodNodes.push({ obj: o, lod: ex.lod, dists: ex.lod_distance_cm, part: ex.part });
+      if (ex.lod != null) this.lodNodes.push({ obj: o, lod: ex.lod, dists: ex.lod_distance_cm, part: ex.part });
     });
     for (const m of mats) { m.userData.baseMap = m.map; this.materials.push(m); }
     this.setLodDistance(0);
-    return gltf;
+    return this;
   }
 
   /** show only the LOD of each part that the game would draw at this camera distance (cm) */

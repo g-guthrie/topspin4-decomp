@@ -36,7 +36,7 @@ object (file offset 0x24, see section 3), so the file offset is `0x24 + X`.
 5. **Consumer code** (M): `tools/ts4data/xref_fields.py` finds 135 code reads of Settings root fields whose
    access width matches the member type. Each consistent read with a neighbouring read is printed as
    `# code? <addr>` in the YAML. These reads match every documented anchor: cfg+0x134/0x138 (net and let aim
-   heights, `fn_8867E3A0` region 0x8867E730/38, gp8), cfg+0xC74 (Powerful tier, 0x886B5D38, shot-to-template)
+   heights, `fn_8867E3A0` region 0x8867E730/38, gp8), cfg+0xC74 (`Objective8AllAround` field 0.7, read at 0x886B5D38 for descriptor byte +0x3F; not a tier edge, controls-and-shot-selection.md s5.3)
    and cfg+0x914 (the third power curve, 0x8869D798).
 
 ## 1. Files (inventory of the disc)
@@ -171,12 +171,12 @@ Top-level members in file order. The YAML is `data/gameplay/tunables/Settings/NN
 | 0xB00 | `AmplitudeConfigList` (`DED1BAA5`, `743633C1`): list `899C4C22[]` | 446 | 23 records (key, floats, flag) |
 | 0xB10 | `TopSpinSchool` (`68176BEB`, 0xF0) | 12,352 | tutorial and school lessons (Top Spin Academy): lesson trees, targets, scoring |
 | 0xC00 | `DoubleSettings` (`B042EAB4`, `E0DBD9B4`, 0x34) | 13 | **reach**: `BF03EAA1` (0.6, 300, 300 ...), `ReachBall` 8.0 / 300.0 |
-| 0xC34 | `6FF19A2E` (`F2A0BD48`, 0xCC) | 50 | **per-play-style objectives** (all 32 members are `Objective1..8` x `AllAround` / `BaselineAttacker` / `VolleyPlayer` / `BaselineController`, G5b) - earlier read as shot request thresholds: `4914978D` = 0.3 / **0.4 / 0.7** at cfg+0xC6C/0xC70/0xC74 (Finesse/Medium/Powerful power tiers; read 0x886B5D38), and about 20 {int, float} pairs (8.0, 0.2, 0.8/80, 0.15, 0.35, 0.5, 6.0, 140.0, 0.33 ...) of the timing and charge rules |
+| 0xC34 | `6FF19A2E` (`F2A0BD48`, 0xCC) | 50 | **per-play-style objectives** (all 32 members are `Objective1..8` x `AllAround` / `BaselineAttacker` / `VolleyPlayer` / `BaselineController`, G5b) - cfg+0xC6C/0xC70/0xC74 (0.3 / 0.4 / 0.7) are `Objective8AllAround` fields, not power tier thresholds; only cfg+0xC74 is read through this base (0x886B5D38, controls-and-shot-selection.md s5.3), and about 20 {int, float} pairs (8.0, 0.2, 0.8/80, 0.15, 0.35, 0.5, 6.0, 140.0, 0.33 ...) of the timing and charge rules |
 | 0xD00 | `SkillSettings` (`C1F0F632`, `136F0BFA`, 8) | 2 | 30.0 (read 0x886718FC), 2.5 (read 0x8867188C) |
 | 0xD08 | `OnlineSettings` (`948988C8`, `01E45DB7`, 0xC) | 14 | one 2-D table `7A330099` (rows {key, curve16}; values 0 / 400 cm), the df.md 4.4 table form |
 
 The first column is the root member offset as the layout gives it (V). These offsets agree with the code anchors
-from earlier notes (cfg+0x134/0x138, cfg+0x8FC..0x920, cfg+0xC70/0xC74).
+from earlier notes (cfg+0x134/0x138, cfg+0x8FC..0x920, cfg+0xC6C..0xC74; the last is not a tier threshold, see s5.3 of controls-and-shot-selection.md).
 
 ### 3.1 Planner MoveConfig = `PlayerSettings` (G5b, V for the layout match)
 

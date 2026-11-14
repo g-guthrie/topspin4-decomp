@@ -228,6 +228,15 @@ export class GameAnimator {
         this.info.rate = rate;
       }
     }
+    const core = !!(st.anim && st.anim.record != null);
+    if (core) {                       // the core's view carries the swing too (layer swing / serve): sample only
+      if (this.loco?.action) this.loco.action.weight = this.loco.w;
+      for (const f of this.fading) f.action.weight = Math.max(0, f.w);
+      this.fading = this.fading.filter((f) => { if (f.record !== st.anim.prevRecord) { f.action.stop(); return false; } return true; });
+      rig.mixer.update(0);
+      if (rig.refreshBones) rig.refreshBones();
+      return;
+    }
     // swing
     if (st.swingState === 1 && !this.swing) this.beginSwing(st);
     let swingTarget = 0;
