@@ -618,19 +618,23 @@ def return_quality(rng, ret, serve_mph, placement=0.5, opp_timing="Average", opp
     err += 0.30 * ret.floor["ret"]
     if rng.random() < err:
         return "unreturned", tf
-    return ({"Perfect": "good", "Good": "neutral", "Poor": "weak", "Mistimed": "weak"}[t]), tf
+    q = {"Perfect": "good", "Good": "neutral", "Poor": "weak", "Mistimed": "weak"}[t]
+    if q == "good" and not second and rng.random() > RETURN_GOOD_SHARE:
+        q = "neutral"           # a clean return of a first serve mostly neutralises (calibration, section 2d)
+    return q, tf
 
 
-RETURN_ERR = {"Perfect": 0.03, "Good": 0.10, "Poor": 0.40, "Mistimed": 0.80}
+RETURN_GOOD_SHARE = 0.4       # share of Perfect first-serve returns that come back as attacking returns
+RETURN_ERR = {"Perfect": 0.10, "Good": 0.25, "Poor": 0.60, "Mistimed": 0.90}   # model calibration (sections 2d, 9d)
 # The ball a return hands the server (rally model): pace mph before rating terms, depth 0..1, width 0..1.
-RETURN_BALL = {"pace": {"good": 74.0, "neutral": 68.0, "weak": 55.0}, "depth": {"good": 0.7, "neutral": 0.5, "weak": 0.15},
-               "width": {"good": 0.5, "neutral": 0.3, "weak": 0.3}}   # model calibration (section 2d)
+RETURN_BALL = {"pace": {"good": 66.0, "neutral": 58.0, "weak": 48.0}, "depth": {"good": 0.7, "neutral": 0.5, "weak": 0.15},
+               "width": {"good": 0.35, "neutral": 0.15, "weak": 0.10}}   # model calibration (section 2d)
 
 
 # =========================================================================== rally / match simulation
 
 RALLY = {
-    "base_err": 0.05,                  # situation fault chance of every groundstroke (control-sum penalties: running,
+    "base_err": 0.09,                  # situation fault chance of every groundstroke (control-sum penalties: running,
                                        # fast ball, fatigue) beyond the timing and grade terms; model calibration
     "pace_margin": {"Flat": 81.0, "TopSpin": 84.0, "Slice": 68.0, "Lob": 60.0},   # mph where the pace term starts
     "pace_err": 0.003,                 # error per mph above the margin speed
@@ -1017,6 +1021,7 @@ def play_match(rng, a, b, prm, sets_to_win=2, games_per_set=6):
                     if max(pts.values()) >= 7 and abs(pts[a] - pts[b]) >= 2:
                         break
                 games[a if pts[a] > pts[b] else b] += 1
+                stats["tiebreaks"] = stats.get("tiebreaks", 0) + 1
                 server, receiver = receiver, server
                 break
             pts = {server: 0, receiver: 0}

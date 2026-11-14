@@ -863,6 +863,57 @@ def sec_robust(a):
     return "\n".join(out)
 
 
+ALLROUNDER = (dict(serve=75, ret=75, fh=80, bh=75, volley=70, power=75, speed=75, stamina=75), {"flat": 0.35})
+
+
+def _holds(a_build, b_build, n, seed):
+    rng = random.Random(seed)
+    tot = collections.Counter()
+    wins = 0
+    for m in range(n):
+        p = M.MatchPlayer("A", a_build[0], a_build[1])
+        q = M.MatchPlayer("B", b_build[0], b_build[1])
+        w, st = M.play_match(rng, p, q, {}) if m % 2 == 0 else M.play_match(rng, q, p, {})
+        tot.update(st)
+        wins += w is p
+    return tot, wins / n
+
+
+def sec_holds(a):
+    n = 20 if a.quick else 100
+    out = ["### 9d. Hold and break against the systems note's targets (s2a) *(computed, %d best-of-3 matches per row)*" % n, "",
+           "Serve specialist = the big-server build; all-rounder = Serve 75, Return 75, FH 80, BH 75, Volley 70, Power 75, Speed 75, Stamina 75 "
+           "(600 points). Targets: the specialist holds about 90%, breaks 10-15%; the all-rounder holds 80-85%, breaks about 20%; "
+           "their matches close to even, decided in tie-breaks.", ""]
+    spec = M.BUILDS["big server"]
+    rows = []
+    for lab, A, B in (("specialist vs all-rounder", spec, ALLROUNDER), ("all-rounder mirror", ALLROUNDER, ALLROUNDER),
+                      ("specialist mirror", spec, spec)):
+        tot, wa = _holds(A, B, n, 71)
+        ha = tot["svc_held_A"] / max(1, tot["svc_games_A"])
+        hb = tot["svc_held_B"] / max(1, tot["svc_games_B"])
+        rows.append([lab, f3(ha), f3(1 - hb), f3(hb), f3(wa), f2(tot["tiebreaks"] / max(1, tot["sets"])), f2(tot["shots"] / tot["points"]),
+                     f3(tot["srv_won"] / tot["points"])])
+    out.append(md(["match", "first player holds", "first player breaks", "second player holds", "first player's match share",
+                   "tie-breaks per set", "shots per point", "server points won"], rows))
+    out += ["", "### 9e. What each shot type is used for when the ball is bad *(computed, elite mirror, %d matches, groundstrokes)*" % (n // 2), ""]
+    rng = random.Random(72)
+    cl = collections.Counter()
+    for _ in range(n // 2):
+        p = M.MatchPlayer("a", M.ARCH["elite all-rounder"], {"flat": 0.35})
+        q = M.MatchPlayer("b", M.ARCH["elite all-rounder"], {"flat": 0.35})
+        M.play_match(rng, p, q, {"classlog": cl})
+    rows = []
+    for g in M.GRADES:
+        tot = sum(cl[(g, c)] for c in ("Flat", "TopSpin", "Slice", "Lob"))
+        if not tot:
+            continue
+        rows.append([g] + ["%.2f / %.3f" % (cl[(g, c)] / tot, cl[(g, c, "err")] / cl[(g, c)]) if cl[(g, c)] else "-" for c in ("Flat", "TopSpin", "Slice", "Lob")])
+    out.append(md(["grade", "Flat: share / P(error)", "TopSpin", "Slice", "Lob"], rows))
+    out += ["", "Shot-type share of the grade's effect (s2a): " + ", ".join("%s %.0f%%" % (k, 100 * v) for k, v in M.GRADE_SHARE.items()) + "."]
+    return "\n".join(out)
+
+
 NET_CASES = [  # label, tail class, start x cm, drift cm over the retail tail, reply frames, ball-back frames
     ("approach from 6 m behind the net, passer at the baseline", "approach", -600, 76, 47, 34),
     ("approach with a FollowNet clip (RB), same exchange", "approach_follownet", -600, 149, 47, 34),
@@ -902,7 +953,7 @@ def sec_movement(a):
     return "\n".join(out)
 
 
-SECTIONS = {"speed": sec_speed, "serve": sec_serve, "flight": sec_flight, "grade": sec_grade, "teeoff": sec_teeoff, "window": sec_window,
+SECTIONS = {"holds": sec_holds, "speed": sec_speed, "serve": sec_serve, "flight": sec_flight, "grade": sec_grade, "teeoff": sec_teeoff, "window": sec_window,
             "oppterm": sec_oppterm, "power": sec_power, "placement": sec_placement, "net": sec_net, "stats": sec_stats,
             "abuse": sec_abuse, "robust": sec_robust, "movement": sec_movement}
 

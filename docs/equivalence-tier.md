@@ -9,7 +9,8 @@ Section 8 lists the inputs and the commands that reproduce every number.
 **Status.** All runs are complete. The matched ground truth (300 functions), mutation testing
 (155 mutants), the near-miss set (69 functions) and the gameplay survey (section 9) all use the final
 checker (sha256 `755e11c2...`). The asm2c sample (332 checked translations) mixes three checker
-versions; see section 4. Every batch ran under `nice -n 19` with one worker.
+versions; see section 4. The final runs ran under `nice -n 19` with one worker, so the native-build
+boots kept the machine.
 
 ## 1. Why a second tier
 
@@ -210,7 +211,10 @@ caller of `free` appeared to pass r8; (7) a pure out-parameter the candidate pre
 the original did not was reported; (8) stack-argument slots beyond the frame, or slots that the
 original never wrote, were compared, as were varargs registers (see 7.1). Items 4-8 gave false
 DIFFERENT verdicts in the near-miss and asm2c runs, found by reading every DIFFERENT report of
-the sample. With all eight fixed, the run above has no DIFFERENT. Its coverage figures
+the sample. Two more came from the final rounds. (9) A stack-argument slot whose second word was
+the LR save word of a small frame was skipped whole, so a changed 13th argument went unseen
+(a mutation miss). (10) Two runs that both returned a pointer into their own dead frame were
+compared by address; a translator had declared a void vtable method as returning a word. With all ten fixed, the run above has no DIFFERENT. Its coverage figures
 are honest. With the bug, the mutated jump tables had inflated coverage on switch functions, and
 that is why the fix also seeds jump-table case values.
 
@@ -308,7 +312,7 @@ be accepted without this check.
 
 ## 5. Hand-written near misses
 
-**Complete, final checker.** Sources: `work/army/GA3-nearmiss/`, `work/army/ga6_scratch/`,
+**Final checker.** Sources: `work/army/GA3-nearmiss/`, `work/army/ga6_scratch/`,
 `work/army/LB3.drafts/`, and the `src` files named by `work/army/*.failed.md` entries. Only functions
 that are not matched are included, which gives 72 jobs in 36 files. Fragments that do not compile
 alone were retried with the source they belong to prepended (`work/eq1/near_ctx/`, 12 functions
@@ -460,10 +464,10 @@ writes JSON lines, one result per function):
 ```sh
 python3 -m unittest tests.test_fn_equiv                  # 16 tests, synthetic code only
 # 3.1  matched ground truth (job list: 300 functions stratified by size, LTCG units excluded)
-NPROC=2 KW='{"trials":300,"time_budget":40}' python3 work/eq1/harness.py work/eq1/jobs_matched.json work/eq1/res_matched.jsonl
+NPROC=1 KW='{"trials":300,"time_budget":40}' nice -n 19 python3 work/eq1/harness.py work/eq1/jobs_matched.json work/eq1/res_matched.jsonl
 python3 work/eq1/summarize.py work/eq1/res_matched.jsonl
 # 3.2  mutation testing on the EQUIVALENT ones
-NPROC=2 python3 work/eq1/mutate.py work/eq1/res_matched.jsonl work/eq1/res_mut.jsonl 80
+NPROC=1 nice -n 19 python3 work/eq1/mutate.py work/eq1/res_matched.jsonl work/eq1/res_mut.jsonl 80
 # 4/5  asm2c sample + near misses
 python3 work/eq1/asm2c_sample.py work/eq1/a2c work/eq1/jobs_a2c.json      # decomp_survey sample --seed 1
 python3 work/eq1/nearmiss_collect.py                                       # -> jobs_near.json
@@ -472,6 +476,55 @@ python3 work/eq1/near_ctx.py                                              # -> j
 # jobs_step3.json = jobs_near.json + jobs_near_ctx.json + jobs_a2c.json
 NPROC=2 KW='{"trials":400,"time_budget":45}' python3 work/eq1/harness.py work/eq1/jobs_step3.json work/eq1/res_step3.jsonl
 python3 work/eq1/report3.py work/eq1/res_step3.jsonl
+# 9    gameplay survey (every whole-function C candidate of the retune targets)
+python3 work/eq1/find_defs.py 886629C8,886AFDF8,...        # definitions carrying the address
+NPROC=1 KW='{"trials":400,"time_budget":60}' nice -n 19 python3 work/eq1/harness.py work/eq1/jobs_gameplay.json work/eq1/res_gameplay.jsonl
 # one function
 python3 tools/fn_equiv.py src/xbox360/<file>.c <name>=0x<addr> --seed 1 --trials 400 --time 0 --json out.json
 ```
+
+## 9. Gameplay functions the retune will modify
+
+The retune (docs/gameplay/TUNING.md, symbols.md) changes behaviour that lives in code, not data. A
+modified function has to be rebuilt from C, so each one needs C that is first proven to behave like
+the original. The table ranks the functions the retune touches, from the most player-visible
+mechanics down, and gives each one's current status. Every whole-function C candidate that exists
+was found (`src/xbox360` matched files and drafts, `work/army` drafts, `ref/gameplay`, T1's
+translator output in `work/t1/gen`, manifest `work/t1/gen/manifest.json`) and run through the final
+checker. `ref/gameplay` and the `gp4`/`gp8` drafts are behavioural models: they take their own
+structs and arguments rather than the original's, so they are reference for the rewrite, not
+something the checker can compare.
+
+| # | function | role (symbols.md) | bytes | byte-matched | best C and checker verdict | other C |
+|---|---|---|---|---|---|---|
+| 1 | `fn_886629C8` | `ShotSpecific_Fill`: grade selection | 408 | no | **no C yet** (translator refused: two return registers) | callers only (`nm3_shot_flags.c`, `gp8` drafts) |
+| 2 | `fn_886AFDF8` | `SwingCategory_Walk` | 940 | no | **no C yet** (translator refused: register read before write) | model `ref/gameplay/swing_category.c` (`sc_*`) |
+| 3 | `fn_886B0250` | `SwingCategory_Select` | 300 | no | translator output `gen_024.c` **EQUIVALENT** (100% coverage, 251 valid trials) | |
+| 4 | `fn_886B01A8` | `SwingCategory_ClassList` | 168 | **yes** (`d1g_shotreq.cpp`) | matched; checker UNCHECKED (57% coverage: hash-keyed cases, see note) | |
+| 5 | `fn_8867DF68` | `TimingState_Update`: timing value | 800 | no | **no C yet**; original uses VMX, so **not checkable** | model `ref/gameplay/timing.c` |
+| 6 | `fn_886935A0` | `AimSelector_GetTarget`: aim selector | 140 | no | translator output `gen_023.c` **EQUIVALENT** (100%) | |
+| 7 | `fn_88695C48` | `AimingState_Evaluate`: efficiency | 244 | no | typed draft `work/army/GA3-nearmiss/ga3_f_attempt3.c` (`ga3_refresh_tuning`) **EQUIVALENT** (100%) | translator output `gen_023.c` EQUIVALENT (100%) |
+| 8 | `fn_886807C0` | outcome roll (let / error / net vs out) | 2304 | no | **no C yet** (translator refused: `mfcr`); original uses VMX, so **not checkable** | models `src/xbox360/drafts/gp8_shot_error_model.c`, `ref/gameplay/ball.c` |
+| 9 | `fn_8869B928` | `Repositioning_HumanMode`: net-rush rule | 676 | no | translator output `gen_023.c` compiles; UNCHECKED (original uses VMX) | |
+| 10 | `fn_8866F740` | `Mover_PreHitFreeze` | 688 | no | translator output `gen_022.c` **EQUIVALENT** (93%) | |
+| 11 | `fn_886CD3C8` | `AnimNode_BusyFrames`: busy-time check | 192 | no | **no checkable C** (translator refused: register read before write) | draft `gp7_engine_update.c` does not compile (opaque structs; a design note) |
+| 12 | `fn_8866A1C8` | serve fault path: `OnPointEnd` serve rules | 1048 | no | draft `work/army/d2g_scratch/8866A1C8_best.c` UNCHECKED (75% coverage) | translator refused (two return registers); model `ref/gameplay/rules.c` |
+| 13 | `fn_88669878` | serve fault path: serve-number bookkeeping | 540 | no | translator output `gen_022.c` UNCHECKED (82% coverage) | model `ref/gameplay/rules.c` |
+| 14 | `fn_889C1C80` | bounce response | 748 | no | **no C yet** (translator refused: vector register read); original uses VMX, so **not checkable** | models `gp4_ball_flight.c`, `gp4b_ball_model.c` |
+
+Summary. **4 are ready**, with C proven EQUIVALENT: 3, 6, 7, 10, and 7 also has a typed draft.
+**1 is byte-matched**: 4. **3 have C that is not yet proven**: 9 (VMX), 12 and 13 (coverage).
+**6 have no whole-function C**: 1, 2, 5, 8, 11, 14. Of those, 5, 8 and 14 contain VMX, so the
+checker cannot verify any C for them. Their rewrite needs another way to validate, such as a
+VMX-capable emulator or a runtime trace comparison on the native build.
+
+Notes for the next stage:
+- The translator output is untyped (`ts4_word`, byte offsets). It is a verified starting point to
+  rename and type, and the checker should be re-run after every edit. It is not the finished source.
+- 12 and 13 fall short on coverage because both depend on match-state combinations (serve phase,
+  winner, second serve). Writing a dedicated input generator for the scoring block would close
+  them.
+- The checker's constants come from immediate compares only. Functions that switch on 32-bit
+  hash keys built with `lis`/`ori` (4, and much of the swing code) would gain coverage if those
+  keys were seeded too. This is a small, isolated change to `code_consts`.
+- Evidence: `work/eq1/res_gameplay.jsonl` (one JSON result per candidate, uncovered blocks included).
