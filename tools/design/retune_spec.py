@@ -242,16 +242,13 @@ PROPOSED = {
 
 
 def pf_for_speed(row, frm, to, target_kmh, blend=0.5):
-    lo, hi = 0.0, 1.0
-    if F.game_fly(row, frm, to, pf=1.0, blend=blend)["launch_kmh"] < target_kmh:
-        return None
-    for _ in range(30):
-        mid = 0.5 * (lo + hi)
-        if F.game_fly(row, frm, to, pf=mid, blend=blend)["launch_kmh"] < target_kmh:
-            lo = mid
-        else:
-            hi = mid
-    return 0.5 * (lo + hi)
+    """Smallest PF (0.005 steps) whose launch reaches target_kmh; None if PF 1 does not.  A scan, not a bisection:
+    the net-clearance raise makes launch speed non-monotone in PF near the top."""
+    for i in range(201):
+        pf = i * 0.005
+        if F.game_fly(row, frm, to, pf=pf, blend=blend)["launch_kmh"] >= target_kmh:
+            return pf
+    return None
 
 
 def sec_flight(a):
@@ -538,7 +535,7 @@ def sec_net(a):
     out.append(md(["approach", "passer's frames", "passer's grade", "Q", "Perfect / Good half (rating 70)", "aim efficiency", "angle access"], rows))
     out += ["", "### 8b. The volleyer *(computed)*", ""]
     rows = []
-    for lab, pace_mph, h, dist_m, stat in (("sitter above the net, 2.5 m from the net", 45, 150, 9, 0.64),
+    for lab, pace_mph, h, dist_m, stat in (("floater above the net, 2.5 m from the net", 35, 150, 10, 0.64),
                                            ("neutral pass, 3.5 m", 70, 100, 12, 0.64), ("hard pass, 3.5 m", 85, 95, 12, 0.64),
                                            ("dipping pass at the feet in no-man's-land (6 m)", 75, 35, 15, 0.64),
                                            ("hard pass at the feet, volley rating 95", 85, 40, 13, 0.94)):

@@ -495,9 +495,9 @@ RALLY = {
     "kick_hand": 0.18,                  # topspin kick added per unit of hand stat (spin scales with FH/BH rating)
     "low": {"Slice": 1.0},              # slice stays low: the receiver's contact height drops
     "max_run_base": 5.7, "max_run_speed": 2.9,          # m/s reachable: base + per unit of Speed stat
-    "floor_err": 0.20,
-    "pass_err": 0.07,
-    "low_drive_err": 0.004,             # per mph above 70 when driving a ball below 60 cm (x depth below 60 / 30)                   # added error for a passing shot against a net player                  # error added per unit of floor penalty of the stroke's rating
+    "floor_err": 0.20,                  # error added per unit of floor penalty of the stroke's rating
+    "pass_err": 0.07,                   # added error for a passing shot against a net player
+    "low_drive_err": 0.004,             # per mph above 70 when driving a ball below 60 cm (x depth below 60 / 30)
     "vigor_cost": {"Finesse": 0.002, "Medium": 0.004, "Powerful": 0.008, "Rushed": 0.008, "Overcharge": 0.018},
     "run_cost": 0.0012,                 # vigor per m/s of required run speed
     "recover_point": 0.022, "recover_set": 0.12,
