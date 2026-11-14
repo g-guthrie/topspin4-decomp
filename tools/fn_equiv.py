@@ -127,6 +127,7 @@ STACK_TOP = 0x7F0F0000            # r1 at entry; above it: caller frame (seeded)
 RET_MAGIC = 0x7FFF0000
 MSR = 0x8000000000002000          # SF (64-bit) | FP
 UNRESOLVED_BASE = 0xEEE00000
+STACK_ARG_WINDOW = 16             # bytes of a frame object passed by pointer that are compared
 
 GPR_ARGS = tuple(range(3, 11))
 FPR_ARGS = tuple(32 + i for i in range(1, 14))
@@ -572,6 +573,28 @@ class World:
                     pass
         return self._callsites
 
+    def callers_reading(self, addr, regs):
+        """Subset of regs that some direct caller reads after `bl addr` without writing first
+        (an LTCG caller relying on the callee leaving a volatile register alone)."""
+        found = set()
+        for site in self.callsites().get(addr, [])[:200]:
+            pending = set(regs) - found
+            pc = site + 4
+            for _ in range(40):
+                if not pending:
+                    break
+                off = pc - self.base
+                if not (0 <= off < len(self.image) - 4):
+                    break
+                ins = decode(struct.unpack_from(">I", self.image, off)[0], pc)
+                hit = pending & ins.reads
+                found |= hit
+                pending -= hit | ins.writes
+                if ins.kind in ("bl", "b", "blr", "bctr", "bctrl", "unknown"):
+                    break
+                pc += 4
+        return found
+
     def return_usage(self, addr):
         """(#call sites, uses r3, uses f1): does any direct caller read r3 / f1 after the call?"""
         sites = self.callsites().get(addr, [])
@@ -1000,13 +1023,15 @@ class Machine:
 
     # -- memory helpers
     def _region(self, a):
-        for lo, hi, buf, pristine, obs in self.static:
-            if lo <= a < hi:
-                return buf, a - lo, pristine, obs
         pg = a & ~(PAGE - 1)
         ent = self.pages.get(pg)
         if ent is not None:
             return ent[0], a - pg, ent[1], True
+        if self._is_lazy(a):
+            return None
+        for lo, hi, buf, pristine, obs in self.static:
+            if lo <= a < hi:
+                return buf, a - lo, pristine, obs
         return None
 
     def _is_lazy(self, a):
@@ -1109,6 +1134,8 @@ class Machine:
         a = address & 0xFFFFFFFF
         if not (STACK_LO <= a < STACK_HI):
             self.touched.update(range(a, a + size))
+        else:
+            self.stack_touched.update(range(a, a + size))
 
     def _on_intr(self, uc, intno, ud):
         self.outcome = ("trap", intno)
@@ -1187,7 +1214,14 @@ class Machine:
         image_fn = a in self.w.func_size
         args = self.w.analysis.live_in(a) if image_fn else None
         vals = tuple(self._get(r) for r in GPR_ARGS + FPR_ARGS)
-        self.events.append((a, vals, args, self.delta()))
+        frame = {}
+        for j, reg in enumerate(GPR_ARGS):
+            v = vals[j] & 0xFFFFFFFF
+            if STACK_LO <= v < STACK_TOP:
+                # pointer into the function's own frame: compare the object, not its address
+                frame[reg] = tuple(self.stack_buf[x - STACK_LO] if x in self.stack_touched else None
+                                   for x in range(v, min(v + STACK_ARG_WINDOW, STACK_HI)))
+        self.events.append((a, vals, args, self.delta(), frame))
         if len(self.events) > 400:
             self.outcome = ("limit", "calls")
             uc.emu_stop()
@@ -1229,6 +1263,7 @@ class Machine:
             if reg is not None and reg[2] is not None:
                 reg[0][reg[1]] = reg[2][reg[1]]
         self.touched = set()
+        self.stack_touched = set()
         self.ov_bytes = {}
         self.mem_ov = state.get("mem_ov") or {}
         self.ret_ov = state.get("ret_ov") or {}
@@ -1356,14 +1391,20 @@ def compare(world, A, B, rkind, nonvol=True):
     ea, eb = A["events"], B["events"]
     allregs = GPR_ARGS + FPR_ARGS
     for i in range(min(len(ea), len(eb))):
-        ta, va, args, da = ea[i]
-        tb, vb, _, db = eb[i]
+        ta, va, args, da, fa = ea[i]
+        tb, vb, _, db, fb = eb[i]
         if ta != tb:
             return f"call #{i + 1}: original calls {world.label(ta)}, candidate calls {world.label(tb)}"
         for j, reg in enumerate(allregs):
             x, y = va[j], vb[j]
             if reg < 32:
                 x, y = x & 0xFFFFFFFF, y & 0xFFFFFFFF
+            if reg in fa and reg in fb:
+                if fa[reg] != fb[reg] and (args is None or reg in args):
+                    return (f"call #{i + 1} to {world.label(ta)}: the stack object passed in {regname(reg)} differs "
+                            f"(first {STACK_ARG_WINDOW} bytes written by the function: original "
+                            f"{fmt_frame(fa[reg])}, candidate {fmt_frame(fb[reg])})")
+                continue
             if x == y:
                 continue
             if args is not None:
@@ -1402,6 +1443,10 @@ def compare(world, A, B, rkind, nonvol=True):
             bad = [names[i] for i in range(len(names)) if A["nonvol"][i] != B["nonvol"][i]]
             return "callee-saved registers not preserved by the candidate: " + ", ".join(bad)
     return None
+
+
+def fmt_frame(t):
+    return "[" + " ".join("--" if b is None else f"{b:02x}" for b in t) + "]"
 
 
 def fmt_outcome(world, o):
@@ -1557,6 +1602,16 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
         report = reduce_report(machine, world, target_addr, o_local, c_addr, c_local, s, state, live, consts,
                                return_kind, diff)
         return Result(res, verdict="DIFFERENT", reason=diff, report=report, failing_seed=s)
+    # whole-program note: volatile registers the candidate writes but the original leaves alone,
+    # which an LTCG-compiled caller of the original reads after the call
+    cw = set()
+    for _, ins in cfunc.code_words():
+        cw |= ins.writes
+        if ins.kind in ("bl", "bctrl") or (ins.kind == "b" and not cfunc.inside(ins.target)):
+            cw |= VOLATILE
+    extra = (cw - world.analysis.defs_of(target_addr)) & VOLATILE - {3, 33}
+    relied = world.callers_reading(target_addr, extra) if extra else set()
+    res["abi_hazard"] = sorted(regname(r) for r in relied)
     if valid < min_valid:
         return Result(res, verdict="UNCHECKED",
                       reason=f"too few valid trials ({valid}; original faulted or did not finish in {discarded})")
