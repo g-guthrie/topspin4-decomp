@@ -21,8 +21,8 @@
  *   fn_888AAEA8 arc_constants        fn_888AAE00 arc_end_constants     fn_888AAB98 speed2_initial
  *   fn_888AAA70 speed2_bounce        fn_888AACB8 speed2_initial_derivative
  *   ts4_bm_ball_apex_height_888AA968 apex_height          fn_888AB308 net_crossing_height   fn_888AB6C8 node_eval
- *   fn_888AB0E0 velocity_arrival     fn_888AB220 velocity_launch       fn_888AB558 arc1_position
- *   fn_888AD1C8 arc2_position        fn_888AB8D0 solve_kind_time       fn_888AC748/ACA68/ACDA8 solve_kind_speed
+ *   fn_888AB0E0 velocity_arrival     ts4_bm_ball_launch_velocity_888AB220 velocity_launch       ts4_bm_ball_arc1_position_888AB558 arc1_position
+ *   ts4_bm_ball_arc2_position_888AD1C8 arc2_position        fn_888AB8D0 solve_kind_time       fn_888AC748/ACA68/ACDA8 solve_kind_speed
  *   fn_888AC688 secondary_dispatch   fn_888AB7B0/AC100/AC2B8/AC4A0/ABF10 secondary_*   fn_888AD0E8 solve_dispatch
  *   fn_889C2678 probe (solver entry) fn_889C1868 spin_blend            fn_889C0DC0 spin_accel
  *   fn_889C19F0 launch               fn_889C1AF8 launch_with_radius
@@ -510,7 +510,7 @@ void gp4b_velocity_arrival(const Gp4bBall *B, float out[4])
     out[3] = (t29);
 }
 
-/* fn_888AB220: velocity of arc 1 at t = 0 (m/s) */
+/* ts4_bm_ball_launch_velocity_888AB220: velocity of arc 1 at t = 0 (m/s) */
 void gp4b_velocity_launch(const Gp4bBall *B, float out[4])
 {
     float t0 = B->tau;
@@ -552,7 +552,7 @@ void gp4b_velocity_launch(const Gp4bBall *B, float out[4])
     out[3] = (t19);
 }
 
-/* fn_888AB558: arc-1 position at t = (tick - tick_prev) * dt (dt = generator +4 = 1/60) -> B->pos (xyz) */
+/* ts4_bm_ball_arc1_position_888AB558: arc-1 position at t = (tick - tick_prev) * dt (dt = generator +4 = 1/60) -> B->pos (xyz) */
 void gp4b_arc1_position(float dt, Gp4bBall *B)
 {
     float cnt = (float)(B->tick - B->tick_prev);
@@ -613,7 +613,7 @@ void gp4b_arc1_position(float dt, Gp4bBall *B)
     B->pos[0] = pos[0]; B->pos[1] = pos[1]; B->pos[2] = pos[2]; B->pos[3] = 0.0f;
 }
 
-/* fn_888AD1C8: arc-2 position (initial value form from arc2_pos / arc2_vel) -> B->pos (xyz) */
+/* ts4_bm_ball_arc2_position_888AD1C8: arc-2 position (initial value form from arc2_pos / arc2_vel) -> B->pos (xyz) */
 void gp4b_arc2_position(float dt, Gp4bBall *B)
 {
     float cnt = (float)(B->tick - B->tick_prev);

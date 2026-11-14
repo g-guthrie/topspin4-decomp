@@ -234,7 +234,7 @@ ts4_uptr fn_886197F0(ts4_uptr);
 ts4_uptr fn_886198E0(ts4_uptr);
 ts4_uptr fn_8861B128(ts4_uptr);
 ts4_uptr fn_8861E530(ts4_uptr);
-ts4_uptr fn_88626F70(ts4_uptr);
+ts4_uptr ts4_name_keys_register_88626F70(ts4_uptr);
 ts4_uptr fn_88627B30(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_88628E70(void);
 ts4_uptr fn_8862BE08(ts4_uptr, ts4_uptr);

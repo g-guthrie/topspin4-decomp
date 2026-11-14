@@ -135,7 +135,7 @@ ts4_word fn_88890CB0();
 ts4_word fn_88891030();
 ts4_word ts4_xmltok_normal_update_position_88892AD0();
 ts4_word ts4_xmltok_get_encoding_index_88894BA8();
-ts4_word fn_88899C70();
+ts4_word ts4_xmltok_init_unknown_encoding_88899C70();
 ts4_word fn_888A4B00();
 ts4_word fn_888A4BE0();
 ts4_word ts4_if_get_u32_off18_888A4D58();

@@ -9,11 +9,11 @@ void fn_88707908(struct TS4Triple value);
 void fn_88890140(void *object);
 void fn_889139A0(void *object);
 extern char lbl_880C8F25[];
-void fn_8869C9E8(char *name);
+void ts4_keyed_items_register_all_8869C9E8(char *name);
 extern char lbl_880C8F37[];
 void ts4_swing_anim_register_node_types_886D75B8(char *name);
 extern char lbl_880C963A[];
-void fn_887FB3B0(char *name);
+void ts4_name_keys_register_887FB3B0(char *name);
 extern char lbl_880CF0C7[];
 void fn_88918EA8(char *name);
 extern char lbl_880CFC4F[];
@@ -22,7 +22,7 @@ void fn_889298D8(char *name);
 void ts4_construct_registered_886AA698(void *self, struct TS4Triple value)
 {
     fn_88627EC0(self, value);
-    fn_8869C9E8(lbl_880C8F25);
+    ts4_keyed_items_register_all_8869C9E8(lbl_880C8F25);
 }
 
 void ts4_construct_registered_886DACF0(void *self, struct TS4Triple value)
@@ -34,7 +34,7 @@ void ts4_construct_registered_886DACF0(void *self, struct TS4Triple value)
 void ts4_construct_registered_887FC790(void *self, struct TS4Triple value)
 {
     fn_88627EC0(self, value);
-    fn_887FB3B0(lbl_880C963A);
+    ts4_name_keys_register_887FB3B0(lbl_880C963A);
 }
 
 void ts4_construct_registered_8891FFA0(void *self, struct TS4Triple value)

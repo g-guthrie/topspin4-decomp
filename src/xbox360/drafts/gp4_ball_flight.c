@@ -6,8 +6,8 @@
  *   fn_889C2818 step entry                fn_889C1F70 per-tick step (0x704)       fn_889C1C80 ground bounce
  *   fn_889C19F0 / fn_889C1AF8 / fn_889C2678 launch                                 fn_889C0C70 mode -> flags
  *   fn_889C1868 spin-curve blend          fn_889C0DC0 spin acceleration vector     fn_889C1160/fn_889C0FE8 frame change
- *   fn_888AAEA8 / fn_888AAE00 closed-form coefficients                             fn_888AB558 arc-1 position
- *   fn_888AD1C8 arc-2 position            fn_888AB220 / fn_888AB0E0 arc-1 velocity at start / end
+ *   fn_888AAEA8 / fn_888AAE00 closed-form coefficients                             ts4_bm_ball_arc1_position_888AB558 arc-1 position
+ *   ts4_bm_ball_arc2_position_888AD1C8 arc-2 position            ts4_bm_ball_launch_velocity_888AB220 / fn_888AB0E0 arc-1 velocity at start / end
  *   fn_888AAB98 arrival speed^2           fn_888AB8D0 .. shot "kind" solvers (flight time bisection)
  *
  * Status: DRAFT (not compiled into the matching build). Formulas for the position/velocity closed forms were
@@ -108,7 +108,7 @@ void gp4_arc_end_constants(void *B)
     BF(B, 0x194) = BF(B, 0x15C) * tau;
 }
 
-/* ---- fn_888AB558 [H]: arc-1 position at t = (tick - tick_prev) * dt, written to ball+0x40 ---- */
+/* ---- ts4_bm_ball_arc1_position_888AB558 [H]: arc-1 position at t = (tick - tick_prev) * dt, written to ball+0x40 ---- */
 void gp4_arc1_position(const struct Gp4Generator *G, void *B)
 {
     float t = (float)(BI(B, 0x18) - BI(B, 0x1C)) * G->seconds_per_tick;
@@ -125,7 +125,7 @@ void gp4_arc1_position(const struct Gp4Generator *G, void *B)
     pos[3] = 0.0f;
 }
 
-/* ---- fn_888AD1C8 [H]: arc-2 position (start state ball+0x130 pos, ball+0x140 vel), written to ball+0x40 ---- */
+/* ---- ts4_bm_ball_arc2_position_888AD1C8 [H]: arc-2 position (start state ball+0x130 pos, ball+0x140 vel), written to ball+0x40 ---- */
 void gp4_arc2_position(const struct Gp4Generator *G, void *B)
 {
     float t = (float)(BI(B, 0x18) - BI(B, 0x1C)) * G->seconds_per_tick;
@@ -141,7 +141,7 @@ void gp4_arc2_position(const struct Gp4Generator *G, void *B)
     pos[3] = 0.0f;
 }
 
-/* ---- fn_888AB220 [H]: arc-1 velocity at t = 0 (stored in ball+0x500 at launch) ---- */
+/* ---- ts4_bm_ball_launch_velocity_888AB220 [H]: arc-1 velocity at t = 0 (stored in ball+0x500 at launch) ---- */
 void gp4_arc1_velocity_start(const void *B, float out[4])
 {
     const float *A = BV((void *)B, 0x80), *P0 = BV((void *)B, 0x100), *P1 = BV((void *)B, 0x110);

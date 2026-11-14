@@ -152,7 +152,7 @@ ts4_word fn_88941B30();
 ts4_word fn_88943E70();
 ts4_word fn_88946348();
 ts4_word fn_88947768();
-ts4_word fn_88954210();
+ts4_word ts4_name_keys_register_88954210();
 ts4_word fn_88955818();
 ts4_word fn_88956170();
 ts4_word fn_88956B20();

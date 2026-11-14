@@ -11,7 +11,8 @@ Files: `src/xbox360/r3_xmlparse.c`, `r3_xmlparse.h`, `r3_xmlrole.c`,
 `r3_xmlrole.h`, `r3_xmltok.h`, `r3_xmltok_normal.c`, `r3_xmltok_utf16.c`,
 `r3_xmltok_unknown.c`, and the `swa_scan_*`, `swa_same_name*`,
 `swa_is_public_id_*` and `swa_dispatch_token_*` sources, `swb2_expat.h`, and the
-`swb2_*` tokenizer sources that carry an Expat header line, and the `ex3_xmltok_*` sources. Upstream: https://libexpat.github.io/ (1.95/2.0 era).
+`swb2_*` tokenizer sources that carry an Expat header line, and the `ex3_xmltok_*`, `ex4_xmltok_*`, `ex5_xmltok_*`, `ex6_xmltok_*` and
+`lg1_xmltok_*` sources. Upstream: https://libexpat.github.io/ (1.95/2.0 era).
 
 Copyright (c) 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper
 Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Expat maintainers.
@@ -36,7 +37,7 @@ SOFTWARE.
 
 ## Lua
 
-Files: `src/xbox360/swa_lua_match_class_88824F38.c`, `ex3_lua_lzio.c`, `ex3_lua_lvm_strcmp.c`. Upstream: https://www.lua.org/
+Files: `src/xbox360/swa_lua_match_class_88824F38.c`, `ex3_lua_lzio.c`, `ex3_lua_lvm_strcmp.c`, and the `lu1_*` sources. Upstream: https://www.lua.org/
 
 Copyright (C) 1994-2008 Lua.org, PUC-Rio.
 
@@ -61,7 +62,7 @@ SOFTWARE.
 ## zlib (compression and checksums)
 
 Files: `src/xbox360/r3_zlib_deflate.c`, `r3_zlib.h`, `ex3_zlib.h`, `ex3_zlib_trees.c`,
-`ex3_zlib_deflate.c`, `ex3_zlib_inflate.c`, `ex3_zlib_inftrees.c`. Upstream: https://zlib.net/
+`ex3_zlib_deflate.c`, `ex3_zlib_inflate.c`, `ex3_zlib_inftrees.c`, and the `ex4_zlib_*` sources. Upstream: https://zlib.net/
 
 Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler
 

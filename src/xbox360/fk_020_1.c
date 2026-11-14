@@ -82,7 +82,7 @@ ts4_word fn_88689068();
 ts4_word fn_8868F178();
 ts4_word fn_8868F9C8();
 ts4_word fn_88692468();
-ts4_word fn_8869C9E8();
+ts4_word ts4_keyed_items_register_all_8869C9E8();
 ts4_word fn_8869D870();
 ts4_word fn_886A0EC8();
 ts4_word fn_886A0FC0();

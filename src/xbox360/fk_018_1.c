@@ -99,7 +99,7 @@ ts4_word fn_8861C830();
 ts4_word fn_8861E938();
 ts4_word fn_88625478();
 ts4_word fn_88625798();
-ts4_word fn_88626F70();
+ts4_word ts4_name_keys_register_88626F70();
 ts4_word fn_88627B30();
 ts4_word fn_88628E70();
 ts4_word fn_8862BB50();

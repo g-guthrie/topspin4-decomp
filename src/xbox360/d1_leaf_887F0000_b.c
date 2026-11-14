@@ -5,7 +5,7 @@
 extern void fn_881B9148(void *);
 extern void fn_887F4698(void *);
 extern void fn_887F4E30(void *);
-extern void fn_887FB3B0(void *);
+extern void ts4_name_keys_register_887FB3B0(void *);
 extern char lbl_880C963A[];
 extern char lbl_880C963B[];
 extern char lbl_880E4528[];

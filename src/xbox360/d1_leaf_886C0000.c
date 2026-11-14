@@ -3,7 +3,7 @@
  * describe that behaviour and end in the function address. */
 
 extern void fn_886C71C8(void *);
-extern void fn_886C9F08(void *);
+extern void ts4_data_condition_eval_886C9F08(void *);
 extern void fn_886CB3A8(void *);
 extern void ts4_object_finalize(void *);
 

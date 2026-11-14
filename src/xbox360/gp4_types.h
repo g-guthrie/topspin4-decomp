@@ -69,8 +69,8 @@ struct Gp4Stepper {
     float seconds_per_tick;     /* +0x20 = 1/60 */
     float one;                  /* +0x24 = 1.0 */
     void **balls_begin, **balls_end, **balls_cap; /* +0x28 vector of Gp4BallState* */
-    struct Gp4Generator *g1;    /* +0x34 pre-bounce arc generator   (fn_888AB558) */
-    struct Gp4Generator *g2;    /* +0x38 post-bounce arc generator  (fn_888AD1C8) */
+    struct Gp4Generator *g1;    /* +0x34 pre-bounce arc generator   (ts4_bm_ball_arc1_position_888AB558) */
+    struct Gp4Generator *g2;    /* +0x38 post-bounce arc generator  (ts4_bm_ball_arc2_position_888AD1C8) */
     void *templates;            /* +0x3C shot-template table (data driven, loaded by the module's XData; row pointer = table + ball.template_index) */
     gp4_u8 local_frame;         /* +0x40 */
     gp4_u8 launch_local_frame;  /* +0x41 */

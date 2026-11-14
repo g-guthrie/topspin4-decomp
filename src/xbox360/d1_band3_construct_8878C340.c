@@ -16,7 +16,7 @@ void fn_88803A30(void *object);
 void ts4_call_seq_lbl_880E1614_88842FD0(void *object);
 void ts4_call_seq_lbl_880DFDB4_88867958(void *object);
 void fn_888B83E8(void *object);
-void fn_88954210(void *object);
+void ts4_name_keys_register_88954210(void *object);
 
 void ts4_construct_8878C340(struct TS4Base *self, struct TS4Triple value)
 {
@@ -71,5 +71,5 @@ void ts4_construct_8895B688(struct TS4Base *self, struct TS4Triple value)
 {
     void *base = fn_88627EC0(self, value);
     self->flag = 0;
-    fn_88954210(base);
+    ts4_name_keys_register_88954210(base);
 }

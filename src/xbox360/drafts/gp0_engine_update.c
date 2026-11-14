@@ -6,7 +6,7 @@
  *   fn_886C1ED8 (0x886C1ED8, 0x91C B)  one match INSTANCE step, called once per instance per frame
  *
  * The 0xD8-byte engine object (ctor fn_88690B48, registered by CSwingGamePlay's Init
- * fn_8869C9E8 as its first node type, hash 0xD18BEF51) is a singleton: its ctor stores `this`
+ * ts4_keyed_items_register_all_8869C9E8 as its first node type, hash 0xD18BEF51) is a singleton: its ctor stores `this`
  * in the global lbl_88D45B00. Its Init (vtable slot 4, fn_886BC678) looks up services by hash
  * (see work/gameplay-notes/gp0.md). The vector at +0x78/+0x7C holds the match instances.
  *

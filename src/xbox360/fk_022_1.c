@@ -187,7 +187,7 @@ ts4_word fn_887EB4A0();
 ts4_word fn_887F20D0();
 ts4_word fn_887F72B8();
 ts4_word fn_887F9168();
-ts4_word fn_887FB3B0();
+ts4_word ts4_name_keys_register_887FB3B0();
 ts4_word fn_887FFDB0();
 ts4_word fn_887FFFB8();
 ts4_word fn_88800080();

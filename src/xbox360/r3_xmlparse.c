@@ -722,7 +722,7 @@ typedef struct ts4_xml_unknown_encoding_info {
 
 /* Placeholders: XmlInitUnknownEncoding (plain and namespace-aware). */
 extern const struct ts4_xml_encoding *ts4_if_call_seq_fn_88899C70_8889B450(void *mem, int *table, int (*convert)(void *, const char *), void *user_data);
-extern const struct ts4_xml_encoding *fn_88899C70(void *mem, int *table, int (*convert)(void *, const char *), void *user_data);
+extern const struct ts4_xml_encoding *ts4_xmltok_init_unknown_encoding_88899C70(void *mem, int *table, int (*convert)(void *, const char *), void *user_data);
 
 /* Ask the application for an unknown encoding and install it (Expat handleUnknownEncoding);
  * returns an XML error code (0 ok, 1 no memory, 18 unknown encoding).
@@ -745,7 +745,7 @@ int ts4_xml_handle_unknown_encoding_888A81F8(ts4_xml_parser *parser, const char 
                     info.release(info.data);
                 return 1;
             }
-            enc = (parser->ns ? ts4_if_call_seq_fn_88899C70_8889B450 : fn_88899C70)(parser->unknown_encoding_mem, info.map, info.convert, info.data);
+            enc = (parser->ns ? ts4_if_call_seq_fn_88899C70_8889B450 : ts4_xmltok_init_unknown_encoding_88899C70)(parser->unknown_encoding_mem, info.map, info.convert, info.data);
             if (enc) {
                 parser->unknown_encoding_data = info.data;
                 parser->unknown_encoding_release = info.release;

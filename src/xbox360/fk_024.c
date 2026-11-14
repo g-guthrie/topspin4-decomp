@@ -133,7 +133,7 @@ ts4_word fn_88890CB0();
 ts4_word fn_88891030();
 ts4_word ts4_xmltok_normal_update_position_88892AD0();
 ts4_word ts4_xmltok_get_encoding_index_88894BA8();
-ts4_word fn_88899C70();
+ts4_word ts4_xmltok_init_unknown_encoding_88899C70();
 ts4_word fn_888A4B00();
 ts4_word fn_888A4BE0();
 ts4_word ts4_if_get_u32_off18_888A4D58();
@@ -1544,12 +1544,12 @@ ts4_word ts4_addr_lbl_880CF238_88895140(void)
     return ts4_xmltok_normal_update_position_88892AD0((ts4_word)(ts4_word)lbl_880CF238);
 }
 
-/* Swing_DLL.xex 0x8889B450: if_call_seq fn_88899C70, u8@0x86 */
+/* Swing_DLL.xex 0x8889B450: if_call_seq ts4_xmltok_init_unknown_encoding_88899C70, u8@0x86 */
 ts4_word ts4_if_call_seq_fn_88899C70_8889B450(void)
 {
     ts4_word t1;
 
-    t1 = fn_88899C70();
+    t1 = ts4_xmltok_init_unknown_encoding_88899C70();
     if ((ts4_word)t1 != 0) {
         *(unsigned char *)((char *)(ts4_word)(t1) + 134) = (unsigned char)23;
     }

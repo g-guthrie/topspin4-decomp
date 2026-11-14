@@ -35606,3 +35606,107 @@ src/xbox360/sw4_audio_sample_bytes.c:
 src/xbox360/nm1_ball_a.c:
 	.pdata      start:0x8812E410 end:0x8812E418
 	.text       start:0x888AA968 end:0x888AAA6C
+
+src/xbox360/ex4_xmltok_cdata_section_big2_888968B0.c:
+	.pdata      start:0x8812E058 end:0x8812E060
+	.text       start:0x888968B0 end:0x88896BE4
+
+src/xbox360/ex4_xmltok_comment_big2_88897060.c:
+	.pdata      start:0x8812E068 end:0x8812E070
+	.text       start:0x88897060 end:0x8889726C
+
+src/xbox360/ex4_xmltok_ignore_section_16.c:
+	.text       start:0x88895B30 end:0x88895D24
+	.text       start:0x88897C50 end:0x88897E44
+
+src/xbox360/ex4_xmltok_scan_lit_big2_88895D28.c:
+	.pdata      start:0x8812E030 end:0x8812E038
+	.text       start:0x88895D28 end:0x88895F30
+
+src/xbox360/ex4_zlib_deflate_slow_88877830.c:
+	.pdata      start:0x8812D688 end:0x8812D690
+	.pdata      start:0x8812D690 end:0x8812D698
+	.text       start:0x88877830 end:0x8887822C
+
+src/xbox360/ex4_zlib_inflate_fast_88875C60.c:
+	.pdata      start:0x8812D638 end:0x8812D640
+	.text       start:0x88875C60 end:0x888760B8
+
+src/xbox360/ex4_zlib_trees_align_88872360.c:
+	.pdata      start:0x8812D5C0 end:0x8812D5C8
+	.text       start:0x88872360 end:0x888725C0
+
+src/xbox360/lu1_ltm.c:
+	.pdata      start:0x8812ACF8 end:0x8812AD00
+	.text       start:0x8880C480 end:0x8880C534
+
+src/xbox360/rm2_index_hash_tables.c:
+	.text       start:0x887F7BC8 end:0x887F818C
+
+src/xbox360/rm2_name_hash_dispatch.c:
+	.pdata      start:0x8812A570 end:0x8812A578
+	.text       start:0x887FC940 end:0x887FCC80
+
+src/xbox360/lg1_condition_eval.c:
+	.pdata      start:0x88124B70 end:0x88124B78
+	.text       start:0x886C9F08 end:0x886CA258
+
+src/xbox360/lg1_entry_builder.cpp:
+	.pdata      start:0x88125078 end:0x88125080
+	.text       start:0x886DB058 end:0x886DB394
+
+src/xbox360/lg1_keyed_items_register.c:
+	.pdata      start:0x88124210 end:0x88124218
+	.text       start:0x8869C9E8 end:0x8869CD64
+
+src/xbox360/lg1_name_keys_register.c:
+	.pdata      start:0x88121F08 end:0x88121F10
+	.pdata      start:0x8812A478 end:0x8812A480
+	.pdata      start:0x8812F468 end:0x8812F470
+	.pdata      start:0x88131F58 end:0x88131F60
+	.text       start:0x88626F70 end:0x88627A90
+	.text       start:0x887FB3B0 end:0x887FB6FC
+	.text       start:0x888DB320 end:0x888DBFB0
+	.text       start:0x88954210 end:0x889546A4
+
+src/xbox360/lg1_name_table_build.c:
+	.pdata      start:0x88128D48 end:0x88128D50
+	.pdata      start:0x88129048 end:0x88129050
+	.text       start:0x887AA670 end:0x887AACA4
+	.text       start:0x887BAF90 end:0x887BBCD4
+
+src/xbox360/lg1_path_list.c:
+	.pdata      start:0x88132178 end:0x88132180
+	.text       start:0x88958F10 end:0x88959220
+
+src/xbox360/lg1_script_callbacks.c:
+	.pdata      start:0x88133E38 end:0x88133E40
+	.text       start:0x889C5018 end:0x889C539C
+
+src/xbox360/lg1_xmltok_init_unknown.c:
+	.pdata      start:0x8812E0F0 end:0x8812E0F8
+	.text       start:0x88891790 end:0x88891878
+	.text       start:0x88899C70 end:0x88899F70
+
+src/xbox360/lg1_xmltok_utf16_atts.c:
+	.pdata      start:0x8812E028 end:0x8812E030
+	.pdata      start:0x8812E080 end:0x8812E088
+	.text       start:0x88895638 end:0x8889599C
+	.text       start:0x88897758 end:0x88897ABC
+
+src/xbox360/nm2_ball_a.c:
+	.pdata      start:0x8812E448 end:0x8812E450
+	.pdata      start:0x8812E458 end:0x8812E460
+	.text       start:0x888AB220 end:0x888AB308
+	.text       start:0x888AB558 end:0x888AB6C8
+
+src/xbox360/nm2_ball_c.c:
+	.pdata      start:0x8812E4C8 end:0x8812E4D0
+	.text       start:0x888AD1C8 end:0x888AD36C
+
+src/xbox360/nm2_gp3_groups.c:
+	.text       start:0x8865F030 end:0x8865F0A8
+
+src/xbox360/ex3_zlib_inftrees.c:
+	.pdata      start:0x8812D610 end:0x8812D618
+	.text       start:0x88873AB0 end:0x88873FE0

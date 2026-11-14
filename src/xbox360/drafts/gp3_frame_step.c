@@ -3,7 +3,7 @@
  *
  *   fn_886B5128 (0x886B5128, 0xF08 B)  called once per instance per frame from fn_886C1ED8 (see gp0 draft)
  *   fn_8867B2D8 (0x278 B)              ball event schedule
- *   fn_8865F030 / fn_8866E250          active-group helpers (near misses at the end of gp3_small_near_misses.c)
+ *   ts4_gp3_flip_active_group_8865F030 / fn_8866E250          active-group helpers (near misses at the end of gp3_small_near_misses.c)
  *
  * Behaviour read instruction by instruction (work/gameplay-notes/gp3.md section 1). NOT byte-exact: the original
  * is a 960-instruction function with VMX128 vector copies and many inlined null-checked chains; this draft keeps
@@ -27,7 +27,7 @@ void fn_8866F090(void *world);
 void fn_8869F068(struct Gp3Instance *inst);
 void fn_8869EFC8(struct Gp3Instance *inst);
 void fn_8865EE90(struct Gp3Instance *inst);
-void fn_8865F030(struct Gp3Instance *inst);                 /* flip the active group (doubles) */
+void ts4_gp3_flip_active_group_8865F030(struct Gp3Instance *inst);                 /* flip the active group (doubles) */
 int  fn_8866E250(struct Gp3Instance *inst, int *frame);     /* another scheduled command in the group? */
 void fn_88675840(void *helper68, struct Gp3Player *p);
 void fn_886A5500(struct Gp3Player *p);
@@ -133,7 +133,7 @@ void gp3_gameplay_frame(struct Gp3Instance *inst_)
      *       fn_8869F068(inst); fn_8869EFC8(inst); fn_8865EE90(inst);
      *       team->flag_32A = 0 unless match state is POINT_END with rules flag;
      *       if (fn_8866E250(inst, &f)) { rec->flag14 = 0; C->valid = 0; rec_174 = 0; fn_8867B2D8(inst, 1); }   // cancelled
-     *       else { fn_8867B2D8(inst, 0); fn_8865F030(inst); ... }
+     *       else { fn_8867B2D8(inst, 0); ts4_gp3_flip_active_group_8865F030(inst); ... }
      *       if (match->state == GP3_HASH_STATE_POINT_END) match->frame_limit_60 = match->frame + 1;
      *       for (Q in players) publish_normalised_positions(Q);              // state+0xE10..+0xE50, x/z negated for side a2eda1e7
      *       flag_block->+0x19F = 0; flag_block->+0x19A = 1; flag_block->+0x220 = team_index; flag_block->+0x224 = p->+0x18;

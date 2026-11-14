@@ -15,8 +15,8 @@ struct Gp3Stepper {
     gp3_u8 pad0[0x1C];
     float  tick_scale_1c;      /* +0x1C used for (pos - prev) * scale and duration conversion */
     gp3_u8 pad20[0x14];
-    void  *traj_gen_34;        /* +0x34 trajectory generator A (fn_888AB558) */
-    void  *traj_gen_38;        /* +0x38 trajectory generator B (fn_888AD1C8) */
+    void  *traj_gen_34;        /* +0x34 trajectory generator A (ts4_bm_ball_arc1_position_888AB558) */
+    void  *traj_gen_38;        /* +0x38 trajectory generator B (ts4_bm_ball_arc2_position_888AD1C8) */
     gp3_u32 shot_table_3c;     /* +0x3C base of the shot template table */
     gp3_u8 in_local_frame;     /* +0x40 toggled by fn_889C1160 / fn_889C0FE8 */
     gp3_u8 pad41;

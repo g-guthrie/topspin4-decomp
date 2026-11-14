@@ -88,7 +88,7 @@ struct Gp3BallState {
     gp3_u8 flag_4e0, flag_4e1;   /* +0x4E0/+0x4E1 */
     gp3_u8 pad_4e2[0x0E];
     float  velocity_per_tick[4]; /* +0x4F0 (pos - pos_prev) * scale, written at the end of every step */
-    float  v500[4], v510[4];     /* +0x500/+0x510 launch-time derived vectors (fn_888AB220/fn_888AB0E0) */
+    float  v500[4], v510[4];     /* +0x500/+0x510 launch-time derived vectors (ts4_bm_ball_launch_velocity_888AB220/fn_888AB0E0) */
     float  speed;                /* +0x520 |velocity| * scale (written by fn_886C1ED8) */
     gp3_u8 pad_524[0x0C];
     gp3_u8 enabled;              /* +0x530 stepper does nothing while 0; set to 1 when a command is applied */
