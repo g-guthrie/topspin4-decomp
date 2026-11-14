@@ -521,7 +521,7 @@ RALLY = {
     "low": {"Slice": 1.0},              # slice stays low: the receiver's contact height drops
     "max_run_base": 5.7, "max_run_speed": 2.9,          # m/s reachable: base + per unit of Speed stat
     "floor_err": 0.20,                  # error added per unit of floor penalty of the stroke's rating
-    "pass_err": 0.07,                   # added error for a passing shot against a net player
+    "pass_err": 0.03,                   # added error for a passing shot against a net player
     "low_drive_err": 0.004,             # per mph above 70 when driving a ball below 60 cm (x depth below 60 / 30)
     "vigor_cost": {"Finesse": 0.002, "Medium": 0.004, "Powerful": 0.006, "Rushed": 0.006, "Overcharge": 0.018},
     "run_cost": 0.0012,                 # vigor per m/s of required run speed
@@ -531,16 +531,16 @@ RALLY = {
 
 
 SLICE_DROP_CM = 72.0      # a slice reaches the receiver this much lower than a neutral ball
-PUTAWAY = {"Tee-off": 0.75, "VeryGood": 0.50, "Good": 0.30, "Normal": 0.12}   # volley winner chance
 
 
 class Ball:
-    __slots__ = ("pace", "depth", "width", "kick", "low", "timing", "short", "hitter_net", "corner", "share")
+    __slots__ = ("pace", "depth", "width", "kick", "low", "timing", "short", "hitter_net", "corner", "share", "floating",
+                 "sv_first")
 
     def __init__(self, pace, depth, width, kick, low, timing, short=False, hitter_net=False):
         self.pace, self.depth, self.width, self.kick, self.low = pace, depth, width, kick, low
         self.timing, self.short, self.hitter_net = timing, short, hitter_net
-        self.corner, self.share = False, CORNER_SHARE
+        self.corner, self.share, self.floating, self.sv_first = False, CORNER_SHARE, False, False
 
 
 def situation_from_ball(rng, b, at_net=False):
@@ -560,18 +560,22 @@ def situation_from_ball(rng, b, at_net=False):
     s.v_req = s.run_cm / 100.0 / avail
     s.stretch = s.v_req > 5.2 or s.run_cm > 380
     s.kick = b.kick
-    if at_net:
+    if at_net and b.sv_first:
+        # model fix: the serve-and-volleyer's first volley is played from about 6.5 m out, still moving in (the serve
+        # tail outlasts the return, section 10), so the return often dips at his feet
+        h = rng.gauss(SV_FIRST_HEIGHT, 25.0) - (35.0 if b.low else 0.0)
+    elif at_net:
         h = rng.gauss(95.0, 30.0) - (35.0 if b.low else 0.0)
     elif b.short:
         h = rng.gauss(112.0, 18.0)
     else:
         h = rng.gauss(100.0 + 70.0 * max(0.0, b.kick - 0.2), 22.0) - (SLICE_DROP_CM if b.low else 0.0)
     s.height = clamp(h, 12.0, 230.0)
-    s.depth_x = (-1188.0 + 250.0 + rng.gauss(0, 80)) if at_net else (
+    s.depth_x = (-1188.0 + (SV_FIRST_DIST_CM if b.sv_first else 250.0) + rng.gauss(0, 80)) if at_net else (
         rng.gauss(-250.0, 100.0) if b.short else 30.0 + 260.0 * b.depth + rng.gauss(0.0, 60.0))
     slack = s.frames - 18 - s.run_cm / 100.0 / 6.0 * FPS
     s.set_f = int(max(0.0, slack - 12))
-    s.floating = b.short and pace < 55
+    s.floating = (b.short and pace < 55) or b.floating
     s.dist_net_cm = 1188.0 + s.depth_x
     return s
 
@@ -596,6 +600,7 @@ def hit(rng, p, b, at_net, prm):
     if at_net:          # at the net the racket reach and a lunge cover the first 130 cm
         sit.run_cm = max(0.0, sit.run_cm - 130.0)
         sit.v_req = sit.run_cm / 100.0 / max(0.15, sit.frames / FPS - 0.15)
+        sit.stretch = sit.v_req > 5.2 or sit.run_cm > 250.0   # model fix: re-test the stretch after the lunge
     vmax0 = (R["max_run_base"] + R["max_run_speed"] * p.s["speed"]) * (0.80 + 0.20 * p.vigor)
     vr = sit.v_req * TOP_SPEED_REF / vmax0          # required speed as felt by this player
     g, q, _ = grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f,
@@ -615,9 +620,9 @@ def hit(rng, p, b, at_net, prm):
     hp *= 0.75 + 0.25 * p.vigor
     hg *= 0.75 + 0.25 * p.vigor
     st = p.style
-    if at_net:
-        cls, hold = ("Flat", "Powerful") if g in ("Tee-off", "VeryGood") else ("Slice" if rng.random() < 0.5 else "Flat",
-                                                                             "Medium")
+    if at_net:          # VolleyPower on good balls; an overreach on others at the style's rate
+        power = g in ("Tee-off", "VeryGood") or rng.random() < st.get("net_power", 0.15)
+        cls, hold = ("Flat", "Powerful") if power else ("Slice" if rng.random() < 0.5 else "Flat", "Medium")
     else:
         cls, hold = policy_forehand(rng, p, sit, g)
         if rng.random() < st.get("topspin_more", 0.0) and cls == "Flat" and g not in ("Tee-off",):
@@ -631,12 +636,19 @@ def hit(rng, p, b, at_net, prm):
     t, tf = timing_outcome(rng, hp, hg, fine=True)
     power_stat = p.s["power"]
     v, _ = stack_speed(cls, g, hold, t, power_stat, stat, p.vigor, "pace" in p.skills, rng.gauss(0.0, NOISE_MPH))
+    vb = None
     if at_net:
-        v = min(v, 70.0 + 25.0 * p.s["volley"] + (12.0 if g in ("Tee-off", "VeryGood") else 0.0))
+        vb = volley_band(g, t, stat, rng)
+        bd = VOLLEY_BANDS[vb]
+        v = bd["mph"] + (VOLLEY_POWER_MPH if hold == "Powerful" and vb <= 2 else 0.0) + rng.gauss(0.0, 2.0)
+        if sit.height < NET_HEIGHT_CM:
+            v = min(v, LOW_VOLLEY_CAP_MPH)
     fx = GRADE_FX[g]
     margin = R["pace_margin"][cls] + R["margin_hand"] * stat
-    if at_net:          # a volley redirects pace: no pace-margin term, a forgiving timing table
-        err = fx["err"] * R["e_timing"][t] * 0.6 + fx["err_add"] * 0.6
+    if at_net:          # volley errors come mainly from overreach (owner direction)
+        err = VOLLEY_BANDS[vb]["err"]
+        if hold == "Powerful" and (sit.height < NET_HEIGHT_CM or sit.pace > 100.0):
+            err += OVERREACH_ERR
     else:
         err = fx["err"] * (R["e_timing"][t] * (2.0 if hold == "Overcharge" else 1.0)
                            + R["pace_err"] * max(0.0, v - margin)) + fx["err_add"]
@@ -645,20 +657,18 @@ def hit(rng, p, b, at_net, prm):
     if b.hitter_net and not at_net:     # passing: the lanes past a net player are narrow
         err += R["pass_err"]
     err += R["floor_err"] * flo + 0.12 * (1.0 - p.vigor) ** 1.5
-    if at_net and sit.height < 50:            # half-volley / ball at the feet
-        err += 0.08 * (1.2 - stat)
+
     key = aim_key(cls, hold, at_net)
     fe = final_efficiency(aim_efficiency(key, g, tf, stat), rng.random())
     corner = rng.random() < st.get("corner", CORNER_SHARE)
     if corner and not at_net:
         err += LINE_RISK * fe
     p.spend(R["vigor_cost"][hold] + R["run_cost"] * sit.v_req)
-    info = {"grade": g, "timing": t, "fine": tf, "cls": cls, "hold": hold, "mph": v}
+    info = {"grade": g, "timing": t, "fine": tf, "cls": cls, "hold": hold, "mph": v, "band": vb}
     if rng.random() < err:
         return "error", None, info
-    if at_net and t in ("Perfect", "Good"):
-        if rng.random() < PUTAWAY.get(g, 0.0) * (0.7 + 0.3 * stat) * (1.0 if t == "Perfect" else 0.8):
-            return "putaway", None, info
+    if at_net and rng.random() < VOLLEY_BANDS[vb]["putaway"] * (1.0 if hold == "Powerful" else 0.6):
+        return "putaway", None, info
     tb = {"Perfect": 0.12, "Good": 0.0, "Poor": -0.15, "Mistimed": -0.3}[t]
     depth = clamp(0.55 - fx["depth_cm"] / 405.0 + 0.5 * tb + rng.gauss(0.0, 0.12) + (0.08 if cls == "TopSpin" else 0.0),
                   0.0, 1.0)
@@ -671,11 +681,55 @@ def hit(rng, p, b, at_net, prm):
         depth = clamp(depth + 0.04, 0.0, 1.0)
     kick = R["kick"][cls] * fx["spin"] + (R["kick_hand"] * stat * fx["spin"] if cls == "TopSpin" else 0.0)
     short = depth < 0.12 and not at_net
+    floating = False
+    if at_net:          # the band decides the reply: reach of the aim box, depth, float
+        bd = VOLLEY_BANDS[vb]
+        fe = final_efficiency(bd["eff"], rng.random())
+        width = clamp(WIDTH_SCALE * NET_WIDTH * fe * (1.0 if corner else SAFE_LAT) + rng.gauss(0.0, 0.10), 0.0, 1.0)
+        depth = clamp(0.75 - bd["deep"] / 600.0 + rng.gauss(0.0, 0.08), 0.0, 1.0)
+        short = vb >= 4
+        floating = bd["apex"] >= 1.0
     nb = Ball(v, depth, width, kick, cls == "Slice", tf, short, at_net)
+    nb.floating = floating
     nb.corner, nb.share = corner, st.get("corner", CORNER_SHARE)
     return "in", nb, info
 
 
+# Volley quality bands (owner direction): the main cost of a difficult volley is a weak, attackable reply, not an
+# error.  Band from the volley grade (section 4, volley tables: height against the net, time, incoming pace) and the
+# timing; the Volley rating shifts every band up one at a Volley stat >= VOLLEY_SHIFT_STAT.  Outputs map onto what the
+# volley classes already have: pace (PF), Efficiency (aim box reach), DeepDeviation, apex (float).
+VOLLEY_BAND_OF_GRADE = {"Tee-off": 1, "VeryGood": 1, "Good": 2, "Normal": 2, "Bad": 3, "VeryBad": 4}
+VOLLEY_TIMING_DROP = {"Perfect": 0, "Good": 0, "Poor": 1, "Mistimed": 2}
+VOLLEY_SHIFT_STAT = 0.70      # Volley rating about 75+
+VOLLEY_BANDS = {
+    # pace mph (VolleyStandard), Efficiency, DeepDeviation cm, apex m over the net, error, put-away chance
+    1: dict(mph=70.0, eff=0.85, deep=40.0, apex=0.3, err=0.01, putaway=0.28),
+    2: dict(mph=62.0, eff=0.65, deep=120.0, apex=0.6, err=0.02, putaway=0.06),
+    3: dict(mph=57.0, eff=0.40, deep=320.0, apex=1.2, err=0.03, putaway=0.0),
+    4: dict(mph=34.0, eff=0.20, deep=480.0, apex=2.5, err=0.10, putaway=0.0),
+}
+VOLLEY_POWER_MPH = 10.0       # VolleyPower adds pace (band 1-2 only; on a band 3-4 ball it is the overreach)
+OVERREACH_ERR = 0.30          # power volley on a ball below net height (contact < 90 cm) or blistering (> 100 km/h)
+NET_HEIGHT_CM = 90.0
+LOW_VOLLEY_CAP_MPH = 50.0     # a ball contacted below the net must be lifted: pace capped
+
+
+VOLLEY_SHIFT_MODE = "linear"  # "linear": the one-band shift happens with probability (stat - 0.5) / 0.5; "step": at SHIFT_STAT
+
+
+def volley_band(grade, timing, volley_stat, rng=None):
+    b = VOLLEY_BAND_OF_GRADE[grade] + VOLLEY_TIMING_DROP[timing]
+    if VOLLEY_SHIFT_MODE == "step" or rng is None:
+        if volley_stat >= VOLLEY_SHIFT_STAT:
+            b -= 1
+    elif rng.random() < clamp((volley_stat - 0.5) / 0.5, 0.0, 1.0):
+        b -= 1
+    return int(clamp(b, 1, 4))
+
+
+SV_FIRST_HEIGHT = 55.0        # cm, return at the serve-and-volleyer's first volley: on the move, often at the feet (judgement)
+SV_FIRST_DIST_CM = 650.0      # first volley played about 6.5 m from the net (dist_net = 1188 - depth_x offset)
 CORNER_SHARE = 0.5           # default share of balls aimed at the deep corner (the rest: deep middle / mid-wide)
 SAFE_LAT = 0.45               # lateral reach of the safer directions relative to a corner aim
 WIDTH_SCALE = 1.10            # FinalEfficiency -> rally-model width (opponent's run); sized for rally length (spec 9)
@@ -699,6 +753,17 @@ def aim_key(cls, hold, at_net):
 
 
 def play_point(rng, server, receiver, prm):
+    """Wrapper: plays the point and, when prm has "netlog", logs (how the player came in, won?) per net player."""
+    if "netlog" not in prm:
+        return _play_point(rng, server, receiver, prm)
+    prm["_tag"] = {}
+    res = _play_point(rng, server, receiver, prm)
+    for pl, label in prm["_tag"].items():
+        prm["netlog"].append((label, res[0] is pl))
+    return res
+
+
+def _play_point(rng, server, receiver, prm):
     """Returns (winner, rally_shots, end, end_timing).  end in ace_unret | winner | error | unreached | df."""
     p_eff = prm.get("serve_effort", 0.4)
     big_eff = rng.random() < server.style.get("max_serve", 0.0)
@@ -724,10 +789,13 @@ def play_point(rng, server, receiver, prm):
     depth = {"good": 0.7, "neutral": 0.5, "weak": 0.15}[q] + 0.2 * attack
     width = (0.3 if q != "good" else 0.5) + 0.25 * attack
     ball = Ball(pace, clamp(depth, 0.0, 1.0), width, 0.15, False, rt, short=q == "weak")
+    ball.sv_first = rng.random() < server.style.get("serve_volley", 0.0)
     hitter, other = server, receiver
     at_net = {server: False, receiver: False}
-    if rng.random() < server.style.get("serve_volley", 0.0):
+    if ball.sv_first:
         at_net[server] = True
+        if "_tag" in prm:
+            prm["_tag"][server] = "serve-volley"
     shots = 2
     while shots < 80:
         out, nb, info = hit(rng, hitter, ball, at_net[hitter], prm)
@@ -745,6 +813,9 @@ def play_point(rng, server, receiver, prm):
         # net approach decision after a short ball or by style
         if not at_net[hitter] and (ball.short and rng.random() < RALLY["net_rush"]["approach_on_short"] + hitter.style.get("net", 0.0)):
             at_net[hitter] = True
+            if "_tag" in prm:
+                good = info["grade"] in ("Tee-off", "VeryGood") and nb.depth >= 0.45
+                prm["_tag"][hitter] = "approach, good (VeryGood+ and deep)" if good else "approach, other"
         nb.hitter_net = at_net[hitter]
         if at_net[hitter]:
             nb.pace *= 0.95

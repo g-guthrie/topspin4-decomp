@@ -657,21 +657,66 @@ def sec_net(a):
         hp, hg, e = M.window_halfwidths(pace, frames * 1000 / 60.0, height, 0.1, vr, 10, vr > 5.2, 1188 + depth_x, False, 0.64)
         rows.append([lab, frames, g, f2(q), "%.1f / %.1f" % (hp, hg), f2(M.aim_efficiency("FlatMedium", g, "Perfect", 0.64)), f2(M.angle_access(depth_x, g, 0.64))])
     out.append(md(["approach", "passer's frames", "passer's grade", "Q", "Perfect / Good half (rating 70)", "passer's Efficiency (FlatMedium, Perfect)", "angle access"], rows))
-    out += ["", "### 8b. The volleyer *(computed)*", ""]
+    out += ["", "### 8b. Volley quality bands: the cost of a hard volley is a weak reply *(proposal; judgement values)*", "",
+            "Band = volley grade (Tee-off / VeryGood 1, Good / Normal 2, Bad 3, VeryBad 4) + timing (Poor +1, Mistimed +2), then one band "
+            "better at a Volley stat >= %.2f (rating about 75+). Outputs are the volley classes' existing outputs." % M.VOLLEY_SHIFT_STAT, ""]
     rows = []
-    for lab, pace_mph, h, dist_m, stat in (("floater above the net, 2.5 m from the net", 35, 150, 10, 0.64),
-                                           ("neutral pass, 3.5 m", 70, 100, 12, 0.64), ("hard pass, 3.5 m", 85, 95, 12, 0.64),
-                                           ("dipping pass at the feet in no-man's-land (6 m)", 75, 35, 15, 0.64),
-                                           ("hard pass at the feet, volley rating 95", 85, 40, 13, 0.94)):
-        v_ms = M.kmh(pace_mph) / 3.6 * 0.85
-        frames = int(60 * dist_m / v_ms)
-        g, q, _ = M.grade_of(frames, 1.0, 100, h, M.kmh(pace_mph) * 0.8, 0, 0, False, 0.1, volley=True)
-        hp, hg, e = M.window_halfwidths(M.kmh(pace_mph) * 0.8, frames * 1000 / 60.0, h, 0.1, 1.0, 0, False, 1188 - dist_m * 100 + 1188, False, stat)
-        err = M.GRADE_FX[g]["err"] * (M.RALLY["e_timing"]["Good"] * 0.6) + M.GRADE_FX[g]["err_add"] * 0.6 + (0.08 * (1.2 - stat) if h < 50 else 0.0)
-        rows.append([lab, frames, "%.0f" % (frames * 1000 / 60.0), g, "%.1f / %.1f" % (hp, hg), f2(err),
-                     f2(M.PUTAWAY.get(g, 0.0) * (0.7 + 0.3 * stat))])
-    out.append(md(["ball", "frames", "ms", "grade", "Perfect / Good half", "P(error), Good timing", "put-away chance, Perfect"], rows))
-    out += ["", "Retail: the standard volley has P(error) 0 at every timing and contact height (retune-baseline 3c/7b)."]
+    desc = {1: "soft or high ball above the net with time: fast, low, to the corner or angled; drop volley dies",
+            2: "firm ball at a comfortable height: solid and deep, returnable",
+            3: "hard ball with little time, or dipping below the net: slower, mid-court, hangs",
+            4: "hard and low at the feet, or stretched: pop-up or short sitter, sometimes net or long"}
+    for b in (1, 2, 3, 4):
+        bd = M.VOLLEY_BANDS[b]
+        rows.append([b, desc[b], "%.0f (+%.0f VolleyPower)" % (bd["mph"], M.VOLLEY_POWER_MPH) if b <= 2 else "%.0f" % bd["mph"],
+                     f2(bd["eff"]), "%.0f" % bd["deep"], f1(bd["apex"]), f2(bd["err"]), f2(bd["putaway"])])
+    out.append(md(["band", "ball and result", "pace mph (PF)", "Efficiency (aim box reach)", "DeepDeviation cm", "apex over the net m",
+                   "error", "put-away (VolleyPower; x0.6 standard)"], rows))
+    out += ["", "Overreach: a VolleyPower on a ball contacted below %g cm or faster than 100 km/h adds %.2f error. Below net height the pace is "
+            "capped at %g mph (it must be lifted). Drop and slice volleys keep their classes' jobs." % (M.NET_HEIGHT_CM, M.OVERREACH_ERR, M.LOW_VOLLEY_CAP_MPH), ""]
+    out += ["What each band hands the passer (the reply's grade at the opponent, rating 80, from the rally model's ball-to-situation map):", ""]
+    rows = []
+    rng = random.Random(12)
+    for b in (1, 2, 3, 4):
+        G = collections.Counter()
+        bd = M.VOLLEY_BANDS[b]
+        for _ in range(3000 if not a.quick else 600):
+            fe = M.final_efficiency(bd["eff"], rng.random())
+            width = M.clamp(M.WIDTH_SCALE * M.NET_WIDTH * fe * (1.0 if rng.random() < 0.5 else M.SAFE_LAT) + rng.gauss(0.0, 0.10), 0.0, 1.0)
+            depth = M.clamp(0.75 - bd["deep"] / 600.0 + rng.gauss(0.0, 0.08), 0.0, 1.0)
+            ball = M.Ball(bd["mph"], depth, width, 0.05, False, "Average", b >= 4, True)
+            ball.floating = bd["apex"] >= 1.0
+            sit = M.situation_from_ball(rng, ball)
+            vr = sit.v_req * M.TOP_SPEED_REF / (M.RALLY["max_run_base"] + M.RALLY["max_run_speed"] * 0.82)
+            g, _, _ = M.grade_of(sit.frames, vr, sit.run_cm, sit.height, sit.pace, sit.depth_x, sit.set_f, sit.stretch or vr > 5.2, sit.kick)
+            G[g] += 1
+        tot = sum(G.values())
+        rows.append([b] + [f2(G[g] / tot) for g in M.GRADES])
+    out.append(md(["band"] + ["passer " + g for g in M.GRADES], rows))
+    n = 10 if a.quick else 60
+    out += ["", "### 8c. Rushing the net: every point against a set passer, and behind a good approach *(computed, elite mirror, %d matches each)*" % n, ""]
+    rows = []
+    A = M.ARCH["elite all-rounder"]
+    for lab, st in (("rushes every point (serve-volley and every short ball)", {"flat": 0.35, "serve_volley": 1.0, "net": 1.0}),
+                    ("comes in only on short balls (default)", {"flat": 0.35})):
+        rng = random.Random(4)
+        log = []
+        wins = 0
+        for m in range(n):
+            p = M.MatchPlayer("a", A, st)
+            q = M.MatchPlayer("b", A, {"flat": 0.35})
+            w, _ = M.play_match(rng, p, q, {"netlog": log}) if m % 2 == 0 else M.play_match(rng, q, p, {"netlog": log})
+            wins += w is p
+        c = collections.defaultdict(lambda: [0, 0])
+        for l, won in log:
+            c[l][0] += 1
+            c[l][1] += won
+        cells = [lab, f2(wins / n)]
+        for key in ("serve-volley", "approach, good (VeryGood+ and deep)", "approach, other"):
+            cells.append("%s (%d)" % (f3(c[key][1] / c[key][0]), c[key][0]) if c[key][0] else "-")
+        rows.append(cells)
+    out.append(md(["net player", "match win share vs a baseline mirror", "points won: serve-volley", "after a good approach (VeryGood+ and deep)",
+                   "after another approach"], rows))
+    out += ["", "Real approaches: about 65-70% won (section 1)."]
     return "\n".join(out)
 
 
