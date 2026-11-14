@@ -31,7 +31,7 @@ void ts4_gp3_flip_active_group_8865F030(struct Gp3Instance *inst);              
 int  fn_8866E250(struct Gp3Instance *inst, int *frame);     /* another scheduled command in the group? */
 void fn_88675840(void *helper68, struct Gp3Player *p);
 void fn_886A5500(struct Gp3Player *p);
-void fn_886A4AE0(struct Gp3Instance *inst);
+void ts4_rx_resolve_886A4AE0(struct Gp3Instance *inst);
 
 /* ------------------------------------------------------------------------------------------------ */
 struct Gp3World {
@@ -105,7 +105,7 @@ void gp3_gameplay_frame(struct Gp3Instance *inst_)
      *       fn_8867B2D8(inst, 0);  ball->event_frame[5][0] = limit;      // restored (the call resets it)
      *       fn_8866F090(world); ga4_update_members_8869F068(inst); ga4_update_members_with_result_8869EFC8(inst);
      *       for (p in players) if (p) { c = find_component(...); c->vtbl[0x30/4](c); }
-     *       if (groups[match->active_group]->mode == 2 && !groups[match->active_group]->player0_has_flag)  fn_886A4AE0(inst);
+     *       if (groups[match->active_group]->mode == 2 && !groups[match->active_group]->player0_has_flag)  ts4_rx_resolve_886A4AE0(inst);
      *   }
      *
      * B. per-player command loop (active group only)

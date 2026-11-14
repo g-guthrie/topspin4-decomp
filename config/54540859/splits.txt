@@ -45352,3 +45352,11 @@ src/xbox360/lt1_lua_auxsort.c:
 src/xbox360/lt1_msg_send_encrypted.c:
 	.pdata      start:0x88122C18 end:0x88122C20
 	.text       start:0x8864BE20 end:0x8864BF5C
+
+src/xbox360/d2g_receive.c:
+	.pdata      start:0x88124438 end:0x88124440
+	.text       start:0x886A4AE0 end:0x886A4F28
+
+src/xbox360/d2g_ai_conditions.c:
+	.text       start:0x8865B2D8 end:0x8865B2EC
+	.text       start:0x88665010 end:0x88665630

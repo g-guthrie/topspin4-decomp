@@ -564,6 +564,8 @@ class World:
                         out.setdefault(t, []).append(lo + 4 * i)
                 self._callsites = out
                 try:
+                    if len(self.image) <= 0x100000:
+                        raise OSError("synthetic image: no cache")
                     cache.parent.mkdir(parents=True, exist_ok=True)
                     cache.write_bytes(pickle.dumps(out))
                 except OSError:

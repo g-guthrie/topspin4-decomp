@@ -6024,6 +6024,14 @@
       "src/xbox360/lt1_msg_send_encrypted.c": {
         "status": "Matching",
         "source": "xbox360/lt1_msg_send_encrypted.c"
+      },
+      "src/xbox360/d2g_receive.c": {
+        "status": "Matching",
+        "source": "xbox360/d2g_receive.c"
+      },
+      "src/xbox360/d2g_ai_conditions.c": {
+        "status": "Matching",
+        "source": "xbox360/d2g_ai_conditions.c"
       }
     }
   }

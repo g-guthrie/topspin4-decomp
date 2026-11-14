@@ -38292,6 +38292,19 @@ MATCHING_UNITS = (
             "lb3_vorbis_mdct_butterfly_generic_883C3C28": 404,
         },
     },
+    {
+        "source": "src/xbox360/d2g_receive.c",
+        "object": "d2g_receive.obj",
+        "symbols": {"ts4_rx_resolve_886A4AE0": 1096},
+    },
+    {
+        "source": "src/xbox360/d2g_ai_conditions.c",
+        "object": "d2g_ai_conditions.obj",
+        "symbols": {
+            "ts4_cond_test_88665010": 1568,
+            "ts4_cond_obj_missing_8865B2D8": 20,
+        },
+    },
 )
 
 
