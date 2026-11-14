@@ -1,3 +1,7 @@
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Warray-bounds"
+#pragma GCC diagnostic ignored "-Wnull-pointer-subtraction"
+#endif
 /* trio 1.10 printf core, second copy built with a 16-bit wchar_t character type
  * (TRIO "wide" build) as linked into Swing_DLL.xex. See lib4_trio.h for license. */
 #include "lib4_trio.h"

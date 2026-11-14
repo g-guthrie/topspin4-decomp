@@ -1,3 +1,6 @@
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wmacro-redefined"
+#endif
 /* Small functions produced by the asm2c translator (FAM4/FAM5 fork) and verified
    byte-for-byte with tools/fn_check.py (Swing_DLL.xex, Xbox 360, MSVC 16.00.10224.00).
    FAM6: FAM5 near misses fixed by a per-function hill climb over source-level

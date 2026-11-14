@@ -1,3 +1,6 @@
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wreturn-type"
+#endif
 /* Derived from Lua 5.0.2 lstrlib.c (MIT); see THIRD_PARTY_NOTICES.md */
 /* Pattern-matching captures of the LuaPlus wide string library (16-bit characters). */
 #include "lua3.h"

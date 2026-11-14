@@ -1,3 +1,6 @@
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#endif
 /* HS1 matching batch strbuf: inline-buffer string constructors.
    MSVC 16.00.10224.00 /O2 /Oi, verified with tools/fn_check.py. */
 

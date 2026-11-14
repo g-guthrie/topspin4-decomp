@@ -1,3 +1,6 @@
+#ifndef _MSC_VER
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 /* Derived from Lua 5.0.2 (MIT license, Copyright (C) 1994-2004 Tecgraf, PUC-Rio); see THIRD_PARTY_NOTICES.md. */
 /* lparser.c: LuaPlus parser (continue, numbered break/continue, reference-counted protos). */
 #include "lua2_lparser.h"
