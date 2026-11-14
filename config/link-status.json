@@ -31,26 +31,26 @@
   "runtime_tested": false,
   "artifact_committed": false,
   "forced_all_units_probe": {
-    "input_source_objects": 523,
-    "input_matching_functions": 21844,
-    "input_matching_code_bytes": 1759656,
+    "input_source_objects": 540,
+    "input_matching_functions": 24792,
+    "input_matching_code_bytes": 1986084,
     "input_object_kind": "source-built base objects",
     "link_flags_added": [
       "/FORCE:UNRESOLVED",
       "/MAP"
     ],
-    "output_size_bytes": 2249728,
-    "output_sha256": "b7013ee2ca0b0d85ef4b69877c47c456e73112394201387e829135f0858e421b",
-    "output_text_bytes": 1825984,
-    "map_matching_public_functions": 21844,
+    "output_size_bytes": 2513920,
+    "output_sha256": "69f59fbb4cfe9a4a8cbbc893db3814c7503c0f05fdc0fbe21a4f55d8b5ed8b76",
+    "output_text_bytes": 2057176,
+    "map_matching_public_functions": 24792,
     "map_additional_static_helpers": 98,
-    "unresolved_external_symbols": 27335,
-    "unresolved_external_references": 38216,
+    "unresolved_external_symbols": 29272,
+    "unresolved_external_references": 41688,
     "is_xex": false,
     "is_runnable": false,
     "runtime_tested": false,
     "artifact_committed": false,
-    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 21,844 exact public functions plus source helper code (including inline C++ constructors and operator new wrappers) and alignment, so total text size is not a matching-progress counter. Output hashes include link timestamps and differ between runs."
+    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 24,792 exact public functions plus source helper code (including inline C++ constructors and operator new wrappers) and alignment, so total text size is not a matching-progress counter. Output hashes include link timestamps and differ between runs."
   },
   "wrapper_build": "wibo a91b26e built on Linux x86_64 with clang/lld and i686-w64-mingw32 for the fake mspdb DLL"
 }

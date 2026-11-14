@@ -2112,6 +2112,74 @@
       "src/xbox360/d1_wrap_88880000.c": {
         "status": "Matching",
         "source": "xbox360/d1_wrap_88880000.c"
+      },
+      "src/xbox360/fk2_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_000.c"
+      },
+      "src/xbox360/fk2_001.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_001.c"
+      },
+      "src/xbox360/fk2_002.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_002.c"
+      },
+      "src/xbox360/fk2_003.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_003.c"
+      },
+      "src/xbox360/fk2_004.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_004.c"
+      },
+      "src/xbox360/fk2_005.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_005.c"
+      },
+      "src/xbox360/fk2_006.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_006.c"
+      },
+      "src/xbox360/fk2_007.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_007.c"
+      },
+      "src/xbox360/fk2_007_1.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_007_1.c"
+      },
+      "src/xbox360/fk2_008.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_008.c"
+      },
+      "src/xbox360/fk2_009.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_009.c"
+      },
+      "src/xbox360/fk2_010.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_010.c"
+      },
+      "src/xbox360/fk2_011.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_011.c"
+      },
+      "src/xbox360/fk2_o1_000.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_o1_000.c"
+      },
+      "src/xbox360/fk2_o1_001.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_o1_001.c"
+      },
+      "src/xbox360/fk2_o1_002.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_o1_002.c"
+      },
+      "src/xbox360/fk2_o1_003.c": {
+        "status": "Matching",
+        "source": "xbox360/fk2_o1_003.c"
       }
     }
   }
