@@ -128,6 +128,11 @@ the most; the drop shot misses 30-40 % at `|t| = 0.3`. OutcomeNet sends low-cont
   JogJogPrepared, JogPrepared chosen from slack-time validity tables `PT+0x270/284/298` (minimum
   distances 400 / 2000 / 175 cm). The speed override `S+0xDE8` comes from `PT+0x34C` (walk when
   early). Candidate hit points are scored by reach cost and data graphs (gp2).
+* **RB** (C, OPEN 3.1): sprint sets `RequiredAmplitude = 1.0` while vigor >= 0.1; near the net
+  (x > -500 cm) the fast-reposition flag also scales the locomotion by `S+0x39C` = 1.15.
+* **Planner windows** (movement-and-ai A.4b): ReadyA when within 8.1 m of the net with more than
+  40 frames left; a late Rush re-plan when the stick points back with power > 0.2 under 10
+  frames before contact.
 * **Locomotion clips** (movement-and-animation s2): move-set sectors, transition matrix (314 x
   314) and 128 rules; RushSpeedCoef from Speed and vigor.
 * **Swing** (gp7, stats-swing-clipfit): the planner writes the contact target; the clip is chosen

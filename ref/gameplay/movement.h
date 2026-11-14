@@ -173,4 +173,19 @@ struct ai_polar ai_move_command(float heading_to_target);
 enum ai_aim_mode ai_choose_aim(int stick_aim_enabled, int out_of_range,
                                int in_reach);
 
+/* Planner window predicates (GE1, read from code; docs/gameplay/movement-and-ai.md A.4b).
+ * All assume the rally gate passed (match not in a let state, flags clear, opponent
+ * not in mode 2, ball prediction available). */
+/* fn_886877A8 -> state 17: forecourt (|x| < 810 cm) and time (> 40 frames to contact)
+ * or the ball path passing more than 400 cm away (fn_881896F8 output). */
+int mv_ball_window(float player_x, float frames_to_contact, float path_offset);
+/* fn_88678548 -> state 18: more than 800 cm behind the net (local x < -800) and either the
+ * side-tag condition or within 50 cm of the world zone (fn_8866E058). */
+int mv_shot_window(float player_x_local, int side_tag, float zone_distance);
+/* fn_886A2BE8 -> state 20: late (< 10 frames) switch to the Rush profile (+0x228) when not
+ * blocked and, for a human, the move stick points back (|angle| > 1.5 rad, angle +pi on the
+ * mirrored side) with power > 0.2. */
+int mv_alt_swing_ok(int human, float stick_angle, float stick_power, int frames_left,
+                    int blocked);
+
 #endif

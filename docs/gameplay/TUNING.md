@@ -107,6 +107,8 @@ Surfaces do not change ball physics; a per-surface bounce needs a code hook (sur
 | run speed limit (AI) | 4, 5, 6, 8, 9..10 m/s by level | `00_AI.yaml` `/AISettings/51b273d0/AIStyle[s]/Difficulty[d]/41d66350` |
 | walk vs run override | table PT+0x34C | `02_PlayerSettings.yaml` |
 | reach | `ReachBall` 8.0 / 300.0 | `08_DoubleSettings.yaml` |
+| RB fast reposition zone | x > -500 cm, events every 5 frames | `04_RepositioningSettings.yaml` `/RepositioningPointSettings/8154a27b` (0xA98), `/7440a9da` (0xA8C) |
+| RB near-net speed scale | 1.15 | State image `AnimationSelection.Movement.#98bb2ce3` (S+0x39C; `data/gameplay/tunables/State/`) |
 | serve position limits | `ServiceConstraint` MinZ 40 / MaxZ 375 cm | `05_MoveConstraintsSettings.yaml` |
 | animation speed with vigor | RushSpeedCoef, SwingSpeedCoef graphs | Expressions |
 

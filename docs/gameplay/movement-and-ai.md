@@ -97,6 +97,36 @@ true when the squared distance (fn_8866BC48) is below radius^2 (88687AC0 adds a 
 `0 <= now - P+0x2a0 <= bb+0xdf4`. fn_8866D930 (V): rally active = not in LetIn/LetOut, or the let deadline passed.
 fn_8866C150 (V): `bb+0x9d4 > const && !P+0x294`. fn_8866BFE8 (V): frames to the sample minus predicted run time.
 
+### A.4b Window predicates of states 1/2, 12 and 19 (GE1, C unless marked)
+Each starts with the rally gate (match state not a let, flags `match+0x328/0x32A` clear,
+opponent mode != 2, ball prediction non-empty; I for the exact let-state logic). Models:
+`ref/gameplay/movement.c` `mv_ball_window`, `mv_shot_window`, `mv_alt_swing_ok`.
+* **fn_886877A8 (ball window, -> 17):** `|S.LocalPosition.x| < 810 cm` (consts+0x618) **and**
+  (`TimingState frames to contact S+0xCF0 > 40` (consts+0x404) **or** `|d| > 400 cm`
+  (consts+0x3F8)), where `d` is an output of the 2-D line intersection `fn_881896F8` between
+  the ball path and the player (I for the geometry). So a player in the forecourt with time, or
+  far off the ball's line, waits in ReadyA.
+* **fn_88678548 (shot window, -> 18):** `S.LocalPosition.x + 800 < 0` (consts+0x4A4; more than
+  8 m behind the net in planner coordinates) **and** (the opponent side tag
+  `(team)+0x84 == 0x2C59FAEA` when `world+0x78 -> mode == 2`, **or** the distance
+  `fn_8866E058` from the player to the zone `fn_8866E318(world+0x44 +0x1B0)` is below 50 cm,
+  consts+0xF0). I: the zone is a court positioning box.
+* **fn_886A2BE8 (AltSwing, 12 -> 20):** `frames_left = sample[bb+0xBC8].tick - clock`.
+  If `(ctx+0x84)+0x14 == 0`, `frames_left < 10` and the stick test passes (humans:
+  `|wrap(Stick_MovePolar.Angle (+pi on the 0xA2EDA1E7 side))| > 1.5 rad` and `Power > 0.2`; AI
+  always), it re-runs the search with the **Rush** profile (`PT+0x228`, `fn_8869AEF8`), picks with
+  `fn_8865DBA8`, and on success commits the sample and side, clears IsSmash `S+0x5DA`, stores
+  the profile in `P+0x24` and returns 1. Otherwise it restores the flags and returns 0.
+* **fn_886A58F0 (Reach swing request, state 19):** when the input and match flags allow and a
+  sample is committed, writes the reach animation request `ctx+0x78 +0x3D0..0x3E0` from
+  `PT+0x3D4/0x3D8/0x3E4/0x3E8` shifted by the frames left, the side offset consts+0x20 or
+  +0x4F8 by `bb+0xBD1`, runs the clip fit `fn_886D3AD8` when the swing controller allows, and
+  stores its result in `Context.IsMiss` (`S+0x5E3`).
+* Not transcribed: `fn_886A9678` (0x3CC, replan latch `P+0x123`, calls `fn_886A0188`,
+  `fn_8866BDD8`, `fn_8868ED00`), `fn_8869A4D0` and `fn_886A33C0` (no symbol boundaries in
+  fn_asm), and the VMX bodies of `fn_88688948` / `fn_886887C0` (gp3 5.4 gives their validity
+  maths). `fn_8865DBA8` is the candidate arg-max already modelled as `ai_argmax`.
+
 ### A.5 Target positions
 * **Contact target:** sample `bb+0xbc8` of the plan buffer (positions at buffer `+4`, 16 B stride; type hash at `+0x24`; reach
   speed at `+0x10`), committed by fn_886A2E48 (gp3 5.4). Move command: fn_886884E8 sets `bb+0x9d0 = -atan2(dz,dx)` of the

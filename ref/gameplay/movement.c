@@ -3,6 +3,8 @@
  * docs/gameplay/movement-and-ai.md for evidence and confidence levels. */
 #include "movement.h"
 
+#include <math.h>
+
 const char *mv_state_name(int s)
 {
     static const char *const n[MV_STATE_COUNT] = {
@@ -257,4 +259,22 @@ int mv_update(struct mv_planner *p, const struct mv_cfg *cfg,
     }
     p->frames_in_state++;
     return p->state;
+}
+
+int mv_ball_window(float player_x, float frames_to_contact, float path_offset)
+{
+    return fabsf(player_x) < 810.0f &&
+           (frames_to_contact > 40.0f || fabsf(path_offset) > 400.0f);
+}
+
+int mv_shot_window(float player_x_local, int side_tag, float zone_distance)
+{
+    return player_x_local + 800.0f < 0.0f && (side_tag || zone_distance < 50.0f);
+}
+
+int mv_alt_swing_ok(int human, float stick_angle, float stick_power, int frames_left,
+                    int blocked)
+{
+    int stick_ok = !human || (fabsf(stick_angle) > 1.5f && 0.2f - stick_power < 0.0f);
+    return !blocked && frames_left < 10 && stick_ok;
 }

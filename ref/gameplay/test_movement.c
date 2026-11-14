@@ -82,6 +82,13 @@ int main(void)
         z = ai_effective_stick(1, raw);
         CHECK(z.x == 0.7f);
     }
+    CHECK(mv_ball_window(-600.0f, 45.0f, 0.0f) && !mv_ball_window(-900.0f, 45.0f, 0.0f));
+    CHECK(!mv_ball_window(600.0f, 30.0f, 100.0f) && mv_ball_window(600.0f, 30.0f, -450.0f));
+    CHECK(mv_shot_window(-1000.0f, 0, 20.0f) && !mv_shot_window(-1000.0f, 0, 80.0f));
+    CHECK(mv_shot_window(-1000.0f, 1, 80.0f) && !mv_shot_window(-700.0f, 1, 0.0f));
+    CHECK(mv_alt_swing_ok(1, 2.0f, 0.5f, 5, 0) && !mv_alt_swing_ok(1, 1.0f, 0.5f, 5, 0));
+    CHECK(!mv_alt_swing_ok(1, 2.0f, 0.1f, 5, 0) && !mv_alt_swing_ok(0, 0.0f, 0.0f, 10, 0));
+    CHECK(mv_alt_swing_ok(0, 0.0f, 0.0f, 9, 0) && !mv_alt_swing_ok(0, 0.0f, 0.0f, 9, 1));
     CHECK(strcmp(mv_state_name(MV_RUSH), "Rush") == 0);
     if (!fails)
         printf("movement tests passed\n");
