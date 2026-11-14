@@ -218,6 +218,9 @@ export class TracksideView {
       const g = await get(t.net);
       if (g) {
         const inst = SkeletonUtils.clone(g.scene);
+        // The net mesh is modelled along x (bounds x +-5.97 m, z +-0.025 m) while the court's net runs along z; the
+        // placement that turns it is not in the exported hierarchy (OPEN), so the port applies the 90 degree yaw.
+        inst.rotation.y = Math.PI / 2;
         inst.traverse((o) => { if (o.isMesh) o.frustumCulled = false; });
         this.group.add(inst);
         this.net = new RigDriver(inst, this.ts.net.clips);
