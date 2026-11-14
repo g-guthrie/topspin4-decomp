@@ -26,6 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from xcoff import ROOT, read_coff  # noqa: E402
+import ltcg_route  # noqa: E402
 
 CONFIG = ROOT / "config" / "54540859"
 SYMBOLS = CONFIG / "symbols.txt"
@@ -161,6 +162,9 @@ def main() -> int:
             "status": "Matching",
             "source": source.removeprefix("src/"),
         }
+        if spec.get("route") == "ltcg":
+            ltcg_route.register(spec, symbol_sizes)
+            continue
         entry = [
             "    {",
             f'        "source": "{source}",',
@@ -184,12 +188,13 @@ def main() -> int:
         SEED.write_text("\n".join(seed_lines + new_seed) + "\n")
     SPLITS.write_text(SPLITS.read_text().rstrip("\n") + "\n\n" + "\n\n".join(split_blocks) + "\n")
     OBJECTS.write_text(json.dumps(objects, indent=2) + "\n")
-    text = MATCHING.read_text()
-    marker = "\n)\n\n\ndef sha256"
-    if marker not in text:
-        raise SystemExit("cannot find the end of MATCHING_UNITS")
-    text = text.replace(marker, "\n" + "\n".join(matching_entries) + marker, 1)
-    MATCHING.write_text(text)
+    if matching_entries:
+        text = MATCHING.read_text()
+        marker = "\n)\n\n\ndef sha256"
+        if marker not in text:
+            raise SystemExit("cannot find the end of MATCHING_UNITS")
+        text = text.replace(marker, "\n" + "\n".join(matching_entries) + marker, 1)
+        MATCHING.write_text(text)
     print(f"Integrated {len(specs)} unit(s), {sum(len(s['functions']) for s in specs)} function(s)")
     return 0
 

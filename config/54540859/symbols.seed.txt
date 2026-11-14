@@ -30471,3 +30471,5 @@ ga6_apply_index_set_886DBE90 = .text:0x886DBE90; // type:function size:0xB0
 ga6_destroy_owner_chain_886D36D8 = .text:0x886D36D8; // type:function size:0xE4
 ga6_run_hold_set_886D7C28 = .text:0x886D7C28; // type:function size:0xDC
 ga6_apply_hold_886D9698 = .text:0x886D9698; // type:function size:0xEC
+ga6_release_hold_886D7B88 = .text:0x886D7B88; // type:function size:0x9C
+ga6_acquire_hold_886CE5B0 = .text:0x886CE5B0; // type:function size:0x98

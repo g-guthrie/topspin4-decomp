@@ -153,8 +153,8 @@ void ga6_destroy_owner_chain_886D36D8(struct Ga6OwnerChain *self)
     if (self->data) ts4_destroy_owned_object(self->data);
 }
 
-void fn_886CE5B0(void *self, void *item);
-void fn_886D7B88(void *self, void *item);
+void ga6_acquire_hold_886CE5B0(void *self, void *item);
+void ga6_release_hold_886D7B88(void *self, void *item);
 void fn_886D2E78(void *self);
 
 struct Ga6Rel { int rel; ts4_word count; };
@@ -178,7 +178,7 @@ void ga6_run_hold_set_886D7C28(void *self, struct Ga6HoldSet *set)
     if (set->acquire.rel != -1)
         p = (char *)set + set->acquire.rel;
     for (; p != end; p += 0x14)
-        fn_886CE5B0(self, p);
+        ga6_acquire_hold_886CE5B0(self, p);
     rel2 = &set->release;
     end = 0;
     if (rel2->rel != -1)
@@ -187,7 +187,7 @@ void ga6_run_hold_set_886D7C28(void *self, struct Ga6HoldSet *set)
     if (rel2->rel != -1)
         p = (char *)rel2 + rel2->rel;
     for (; p != end; p += 0x10)
-        fn_886D7B88(self, p);
+        ga6_release_hold_886D7B88(self, p);
     set->release.count = zero;
     set->acquire.count = zero;
     fn_886D2E78(self);

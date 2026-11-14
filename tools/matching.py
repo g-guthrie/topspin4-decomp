@@ -11,6 +11,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import ltcg_route  # LTCG route, see docs/ltcg-route.md
+
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSION = "54540859"
@@ -38290,6 +38292,7 @@ def verify_report(report: dict) -> None:
         for unit in MATCHING_UNITS
         for symbol, size in unit["symbols"].items()
     }
+    expected.update(ltcg_route.expected_symbols())
     found = {
         function["name"]: function
         for unit in report.get("units", [])
@@ -38320,6 +38323,7 @@ def main() -> int:
     parser.add_argument("--work-dir", type=Path, default=ROOT / "work" / "matching")
     parser.add_argument("--fresh-analysis", action="store_true")
     parser.add_argument("--publish-report", type=Path)
+    ltcg_route.add_arguments(parser)
     args = parser.parse_args()
 
     xex = checked_file(args.xex, MODULE)
@@ -38379,6 +38383,7 @@ def main() -> int:
             ]
         )
 
+    rebuilt_by_source.update(ltcg_route.build(args, rebuilt_dir, split_dir, symbols, xex))
     split_config = json.loads((split_dir / "config.json").read_text())
     project = objdiff_config(split_config, rebuilt_by_source)
     (project_dir / "objdiff.json").write_text(

@@ -25,7 +25,7 @@ behaviour.
 | 1.9 | `ShotSpecific` grade (`S+0x6BC`, copy of `ShotDef[i].9b182896`): copy code and grade selector | graphs-decoded s10 | find the copy | open |
 | 1.10 | Writers of `#1407106c` (S+0x770), `#be5d458f` (0x768), `#693eedbe` (0x7D8), `#aee2d90b` (0x7D0), `#3c6beee9` (S+0xD84) | graphs-decoded s10 | store scan by offset off `S` | open |
 | 1.11 | `HandAttributeQuality` (S+0x74C) exact rule | graphs-decoded s10 | read the stores in `fn_88699xxx`, `fn_886BA254`, `fn_886BD4F0` | open |
-| 1.12 | LetProbability input `#fea37f2e` | brief | find the bound field and its writer | open |
+| 1.12 | LetProbability input `#fea37f2e` | brief | find the bound field and its writer | **partly** (C, GE1): it is `BallState.Commands.LetCommands.Inputs.#fea37f2e` (ball+0x490), written once in the planner at `fn_886AE528 +0x9D4` (0x886AEEFC): `LetHeight (S+0x754) = y of fn_889C1340(ball, ShotResolutionSettings+4)`, the ball is stepped one tick (`fn_889C1F70`), then `ball+0x48C = ball.y (+0x44)` and `#fea37f2e = ball.y - LetHeight`. So the let chance (0.02, falling to 0 over 40..60 of this input) applies only when the ball is within about 40-60 cm of the computed let height. Open (I): which point `fn_889C1340` evaluates (tape crossing) and why the step comes first |
 | 1.13 | `b50/b51` meaning, gate `G` bytes `match+0x328/0x329`, `DebugConfig+0x784` | gp4b s10, ball-physics s8 | transcribed by G3b; names of the match bytes | partly (formula C, names U) |
 | 1.14 | Risk hold value `S+0xE08` reader (TU1 xexp?) | controls s12.7 | scan the TU1 code delta | open |
 | 1.15 | Risky rows reachable only by the debug override | controls s6.1 | closed by G2b | closed |
@@ -129,4 +129,4 @@ gameplay words (GE1, `crc32`) found none of them; the G5b/G4c searches are wider
   `tools/ts4data/ps_layout.py` prints any reflected type with absolute offsets and names.
 * GE1, 2026-11-14: closed 1.8 (TimingValue, read from code + data) and 5.1 (vigor, read from
   code); both in `timing-and-fatigue.md`, with `ref/gameplay/timing.c` and `ref/gameplay/fatigue.c`.
-* GE1: 3.1 partly (sprint flag and its vigor gate, read from code); `baaa713d` located (PT+0x740 = 12, auto-commit lead).
+* GE1: 3.1 and 1.12 partly (sprint flag and its vigor gate; the let input = ball height minus LetHeight; read from code); `baaa713d` located (PT+0x740 = 12, auto-commit lead).

@@ -1,0 +1,15 @@
+[
+ {
+  "source": "src/xbox360/ga6_ltcg_b.c",
+  "object": "ga6_ltcg_b.obj",
+  "context": [
+   "src/xbox360/ga5_a.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "symbols": {
+   "ga6_release_hold_886D7B88": 156,
+   "ga6_acquire_hold_886CE5B0": 152
+  }
+ }
+]

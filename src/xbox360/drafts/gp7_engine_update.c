@@ -55,7 +55,7 @@ void engine_update_886E5F50(struct Engine *e)
         int sim = e->frame->flag_1c && e->frame->flag_1d;  /* gameplay frame block: simulating */
         int run = !sim || e->frame->flag_354 || any_locked;
         if (!*e->paused && run) {
-            aod_process_queue_and_tick(e->aod, (char *)e->root + 0x1f4);  /* ga6_run_hold_set_886D7C28: load list (0x14 rows) -> fn_886CE5B0, release list (0x10 rows) -> fn_886D7B88, then fn_886D2E78 */
+            aod_process_queue_and_tick(e->aod, (char *)e->root + 0x1f4);  /* ga6_run_hold_set_886D7C28: load list (0x14 rows) -> ga6_acquire_hold_886CE5B0, release list (0x10 rows) -> ga6_release_hold_886D7B88, then fn_886D2E78 */
             if (!*e->anim_disabled) {                                    /* AnimData byte +0x22 */
                 engine_publish_timing_886C8158(e);                        /* writes flag block +0xE6/+0xE8/+0xEC */
                 for (i = 0; i < n; i++)

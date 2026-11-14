@@ -5964,6 +5964,10 @@
       "src/xbox360/ga6_q.c": {
         "status": "Matching",
         "source": "xbox360/ga6_q.c"
+      },
+      "src/xbox360/ga6_ltcg_b.c": {
+        "status": "Matching",
+        "source": "xbox360/ga6_ltcg_b.c"
       }
     }
   }

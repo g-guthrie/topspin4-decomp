@@ -25,6 +25,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from matching import MATCHING_UNITS  # noqa: E402
+from ltcg_route import all_units  # noqa: E402
 from sync_progress import words  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,7 +56,7 @@ def main() -> int:
     dll, mapfile = out_dir / "all.dll", out_dir / "all.map"
     for path in (dll, mapfile):
         path.unlink(missing_ok=True)
-    objects = [args.work_dir / "rebuilt" / unit["object"] for unit in MATCHING_UNITS]
+    objects = [args.work_dir / "rebuilt" / unit["object"] for unit in all_units(MATCHING_UNITS)]
     missing = [str(o) for o in objects if not o.is_file()]
     if missing:
         raise SystemExit(f"missing rebuilt objects (run tools/matching.py): {missing[:3]}")

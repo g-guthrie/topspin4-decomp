@@ -19,6 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from matching import MATCHING_UNITS  # noqa: E402
+from ltcg_route import all_units  # noqa: E402
 from xcoff import ROOT, load_symbols, read_coff  # noqa: E402
 
 MATCH = ROOT / "config" / "54540859" / "match.json"
@@ -78,7 +79,7 @@ def main() -> int:
     pdata_by_source = pdata_ranges()
     entries = []
     flag_exceptions = {}
-    for unit in MATCHING_UNITS:
+    for unit in all_units(MATCHING_UNITS):
         source = unit["source"]
         if unit.get("extra_flags"):
             flag_exceptions[source] = unit["extra_flags"]
@@ -199,7 +200,7 @@ def main() -> int:
 
     doc = ROOT / "docs" / "matching-build.md"
     text = doc.read_text()
-    units = len(MATCHING_UNITS)
+    units = len(all_units(MATCHING_UNITS))
     text = re.sub(
         r"^The first [a-z -]+ matching measurement units reproduce all [\d,]+ code bytes across [a-z -]+ functions exactly\.",
         f"The first {words(units)} matching measurement units reproduce all {code:,} code bytes across {words(functions)} functions exactly.",

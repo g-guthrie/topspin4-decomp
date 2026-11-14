@@ -45263,3 +45263,9 @@ src/xbox360/ga6_q.c:
 	.text       start:0x886D9698 end:0x886D9784
 	.text       start:0x886DBE90 end:0x886DBF40
 	.text       start:0x886E2BF8 end:0x886E2C7C
+
+src/xbox360/ga6_ltcg_b.c:
+	.pdata      start:0x88124CC0 end:0x88124CC8
+	.pdata      start:0x88124F80 end:0x88124F88
+	.text       start:0x886CE5B0 end:0x886CE648
+	.text       start:0x886D7B88 end:0x886D7C24
