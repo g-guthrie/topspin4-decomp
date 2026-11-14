@@ -18,7 +18,7 @@ void fn_8862BCB8(void *object, struct TS4TripleArg value, unsigned int word);
 void fn_8862BF38(void *object, struct TS4TripleArg value, unsigned int word);
 void ts4_call_seq_u32_lbl_88D45B20_886496F0(char *name);
 extern char lbl_880C88D9[];
-void fn_88638D10(void *object);
+void ts4_type_register_88638D10(void *object);
 void fn_8863C218(void *object, int arg, struct TS4TripleArg value);
 extern void *lbl_88D45914;
 void fn_888C3220(void *object);
@@ -26,7 +26,7 @@ void fn_886F7B38(void *object, struct TS4TripleArg value);
 void *fn_88923458(void *owner, struct TS4TripleArg value, unsigned int size);
 void fn_88633BD8(void *object, void *child);
 void fn_88652A90(void);
-void fn_886529C8(void);
+void ts4_type_register_886529C8(void);
 void ts4_call_seq_lbl_880F4FD0_886580B8(void);
 void fn_887DBFD0(void *object, struct TS4TripleArg value, int mask);
 void fn_88801428(int arg);
@@ -56,7 +56,7 @@ void ts4_triple_ctor_register_8864A1A8(void *self, struct TS4TripleArg value)
 /* Base-construct, then finish initialisation on the returned object. */
 void ts4_triple_ctor_then_init_88638E80(void *self, struct TS4TripleArg value)
 {
-    fn_88638D10(fn_88627EC0(self, value));
+    ts4_type_register_88638D10(fn_88627EC0(self, value));
 }
 
 /* Forward to the object at self+4 with (arg, value); the third parameter is unused. */
@@ -99,7 +99,7 @@ void ts4_triple_ctor_clear_flag_88654248(void *self, struct TS4TripleArg value)
     fn_88627EC0(self, value);
     *((unsigned char *)self + 8) = 0;
     fn_88652A90();
-    fn_886529C8();
+    ts4_type_register_886529C8();
 }
 
 /* Base-construct, clear the byte flag at +8 and run the module initialiser. */

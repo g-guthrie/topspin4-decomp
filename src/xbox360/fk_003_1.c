@@ -169,7 +169,7 @@ ts4_word fn_887823A8();
 ts4_word fn_887827A8();
 ts4_word fn_887855B8();
 ts4_word fn_88785A00();
-ts4_word fn_8878BE98();
+ts4_word ts4_singleton_service_ctor_8878BE98();
 ts4_word fn_8879C218();
 ts4_word fn_887A15A8();
 ts4_word fn_887B53E8();
@@ -179,7 +179,7 @@ ts4_word fn_887B6808();
 ts4_word fn_887C4558();
 ts4_word fn_887C8050();
 ts4_word fn_887CB7B0();
-ts4_word fn_887CBE90();
+ts4_word ts4_service_ctor_vec_887CBE90();
 ts4_word fn_887CC248();
 ts4_word fn_887EC668();
 #ifndef _MSC_VER

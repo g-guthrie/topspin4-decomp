@@ -166,7 +166,7 @@ ts4_word fn_887F4BA0();
 ts4_word ts4_call_seq_fn_887F4BA0_887F5400();
 ts4_word fn_887F9418();
 ts4_word fn_887FC8F0();
-ts4_word fn_888006F0();
+ts4_word ts4_singleton_service_ctor_888006F0();
 ts4_word fn_88800758();
 ts4_word fn_88800BF8();
 #ifndef _MSC_VER

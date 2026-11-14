@@ -11,7 +11,7 @@ struct TS4Base {
 void *fn_88627EC0(void *object, struct TS4Triple value);
 void fn_887849B0(void *object);
 void fn_887D8F28(void *object);
-void fn_887F48B8(void *object);
+void ts4_type_register_887F48B8(void *object);
 void fn_88803A30(void *object);
 void ts4_call_seq_lbl_880E1614_88842FD0(void *object);
 void ts4_call_seq_lbl_880DFDB4_88867958(void *object);
@@ -36,7 +36,7 @@ void ts4_construct_887F4F00(struct TS4Base *self, struct TS4Triple value)
 {
     void *base = fn_88627EC0(self, value);
     self->flag = 0;
-    fn_887F48B8(base);
+    ts4_type_register_887F48B8(base);
 }
 
 void ts4_construct_88804010(struct TS4Base *self, struct TS4Triple value)

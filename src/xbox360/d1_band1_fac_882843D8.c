@@ -4,7 +4,7 @@ typedef unsigned int u32;
 
 extern void *lbl_88D45B38;
 extern void *fn_88613268(void *heap, u32 size, u32 a, u32 b, u32 c);
-extern void *fn_88622D18(void *self);
+extern void *ts4_service_ctor_vec_88622D18(void *self);
 extern void *ts4_call_seq_fn_8861B128_88622BF0(void *self);
 extern void *fn_88617D88(void *self);
 extern void *lbl_880F8310[];
@@ -14,7 +14,7 @@ extern void *fn_8862A190(void *self);
 extern void *fn_88626840(void *self);
 extern void *fn_886214A0(void *self);
 extern void *fn_88626638(void *self);
-extern void *fn_88621250(void *self);
+extern void *ts4_singleton_service_ctor_88621250(void *self);
 extern void *ts4_call_seq_fn_886197F0_88621028(void *self);
 extern void *ts4_call_seq_fn_886197F0_88620C10(void *self);
 extern void *lbl_880F8950[];

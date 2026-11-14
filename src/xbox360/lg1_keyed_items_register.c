@@ -8,7 +8,7 @@ typedef struct lg1_service_key {
 } lg1_service_key;
 
 extern void *lbl_88D45B20; /* keyed-item list (placeholder name) */
-void fn_889C1788(void *list, lg1_service_key *key, unsigned char *mode);
+void ts4_keyed_item_add_or_remove_889C1788(void *list, lg1_service_key *key, unsigned char *mode);
 void ts4_keyed_item_list_add_unique_if_mode_8867E2C0(void *list, lg1_service_key *key, unsigned char *mode);
 void ts4_keyed_item_list_add_unique_if_mode_8867EC50(void *list, lg1_service_key *key, unsigned char *mode);
 void ts4_keyed_item_list_add_unique_if_mode_886810C0(void *list, lg1_service_key *key, unsigned char *mode);
@@ -58,7 +58,7 @@ void ts4_keyed_items_register_all_8869C9E8(unsigned char *mode)
     key.hash = 0x83B15071u;
     ts4_keyed_item_list_add_unique_if_mode_886927C0(lbl_88D45B20, &key, mode);
     key.hash = 0x36594CC8u;
-    fn_889C1788(lbl_88D45B20, &key, mode);
+    ts4_keyed_item_add_or_remove_889C1788(lbl_88D45B20, &key, mode);
     key.hash = 0x6034F29Cu;
     ts4_keyed_item_list_add_unique_if_mode_88693630(lbl_88D45B20, &key, mode);
     key.hash = 0x4AC3C6C8u;

@@ -8,7 +8,7 @@ extern void fn_88617D28(void *);
 extern void fn_889988E0(void *);
 extern void ts4_get_u32_off0_8899AD88(void *);
 extern void fn_8899FAE8(void *);
-extern void fn_8899FE40(void *);
+extern void ts4_session_event_post_8899FE40(void *);
 extern void ts4_get_u32_g_ts4_session_context_889A01E8(void *);
 extern void fn_889AC440(void *);
 extern void fn_889AC4B0(void *);

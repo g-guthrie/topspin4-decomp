@@ -149,7 +149,7 @@ ts4_word fn_884BF898();
 ts4_word fn_884C0670();
 ts4_word fn_884C26E0();
 ts4_word fn_884C4FA8();
-ts4_word fn_884C9150();
+ts4_word ts4_ref_holder_dtor_nullable_member_884C9150();
 ts4_word fn_884CAD68();
 ts4_word fn_884CB388();
 ts4_word fn_884CC7B8();

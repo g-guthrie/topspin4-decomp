@@ -58,7 +58,7 @@ TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_88938160, fn_8816E8E8)
 /* Swing_DLL.xex 0x889381C0 */
 TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_889381C0, fn_8816E830)
 /* Swing_DLL.xex 0x88938300 */
-TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_88938300, fn_8816E778)
+TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_88938300, ts4_flagged_object_create_extra_8816E778)
 /* Swing_DLL.xex 0x889384C0 */
 TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_889384C0, fn_8816E598)
 /* Swing_DLL.xex 0x88938600 */
@@ -66,7 +66,7 @@ TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_88938600, fn_8816E6C0)
 /* Swing_DLL.xex 0x88938CC8 */
 TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_88938CC8, fn_8816E430)
 /* Swing_DLL.xex 0x88938D28 */
-TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_88938D28, fn_8816E378)
+TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_88938D28, ts4_flagged_object_create_extra_8816E378)
 /* Swing_DLL.xex 0x8893A0B0 */
 TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_8893A0B0, fn_8816E2C8)
 /* Swing_DLL.xex 0x8893A1F8 */

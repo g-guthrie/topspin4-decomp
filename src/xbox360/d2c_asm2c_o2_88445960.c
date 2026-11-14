@@ -172,7 +172,7 @@ ts4_word fn_8858E2E8();
 ts4_word fn_8858FD68();
 ts4_word fn_88590818();
 ts4_word fn_88592800();
-ts4_word fn_88598D70();
+ts4_word ts4_member_vcall_88598D70();
 ts4_word ts4_if_call_seq_fn_88599808_88599C78();
 ts4_word fn_8859D5A8();
 ts4_word fn_885AC6C8();

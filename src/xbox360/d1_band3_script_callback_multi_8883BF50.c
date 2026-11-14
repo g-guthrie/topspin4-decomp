@@ -7,7 +7,7 @@ double fn_88822420(void *list, int index);
 unsigned int fn_88822398(void *list, int index);
 extern void *lbl_88D459E0;
 extern struct TS4Manager *lbl_88D459E8;
-void fn_8883B3F8(void *object, int a0, int a1, int a2, int a3);
+void ts4_member_state_set3_8883B3F8(void *object, int a0, int a1, int a2, int a3);
 void fn_88845780(void *object, unsigned int a0, int a1, int a2);
 void fn_8884CF80(void *object, unsigned int a0, unsigned int a1, int a2, int extra);
 void fn_88858208(void *object, int a0, int a1, int a2);
@@ -22,7 +22,7 @@ unsigned int ts4_script_callback_8883BF50(void *unused, struct TS4CallContext *c
     int a2 = (int)fn_88822420(list2, 3);
     void *list3 = args->list;
     int a3 = (int)fn_88822420(list3, 4);
-    fn_8883B3F8(lbl_88D459E0, a0, a1, a2, a3);
+    ts4_member_state_set3_8883B3F8(lbl_88D459E0, a0, a1, a2, a3);
     (void)unused;
     return 0;
 }

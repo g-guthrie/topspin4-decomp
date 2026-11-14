@@ -219,7 +219,7 @@ ts4_word fn_8858FD68();
 ts4_word fn_88590818();
 ts4_word fn_88592800();
 ts4_word ts4_forward_shifted_args_885933B0();
-ts4_word fn_88598D70();
+ts4_word ts4_member_vcall_88598D70();
 ts4_word ts4_if_call_seq_fn_88599808_88599C78();
 ts4_word fn_8859D5A8();
 ts4_word fn_885AC6C8();
@@ -3582,7 +3582,7 @@ ts4_word ts4_if_call_seq_u32_off25c_8859C120(ts4_word a0)
             *(volatile ts4_word *)((char *)(ts4_word)(p7) + 20) = (ts4_word)(t8 + -1);
         }
         t10 = *(ts4_word *)((char *)(ts4_word)(p7) + 0);
-        t12 = fn_88598D70((ts4_word)(a0 + 140), (ts4_word)(*(ts4_word *)((char *)(ts4_word)(p7) + 24)), (ts4_word)t10);
+        t12 = ts4_member_vcall_88598D70((ts4_word)(a0 + 140), (ts4_word)(*(ts4_word *)((char *)(ts4_word)(p7) + 24)), (ts4_word)t10);
         p13 = (ts4_word)t12;
         p14 = (ts4_word)0;
     } else {

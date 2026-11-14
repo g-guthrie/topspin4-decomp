@@ -87,10 +87,10 @@ ts4_word fn_881B1BF8();
 ts4_word fn_881B4740();
 ts4_word fn_881B47A8();
 ts4_word fn_881B9148();
-ts4_word fn_881BBE70();
-ts4_word fn_881BBED0();
-ts4_word fn_881BBF38();
-ts4_word fn_881BBF98();
+ts4_word ts4_null_handle_set_881BBE70();
+ts4_word ts4_null_handle_set_ex_881BBED0();
+ts4_word ts4_null_handle_set_881BBF38();
+ts4_word ts4_null_handle_set_881BBF98();
 ts4_word fn_881C38D0();
 ts4_word fn_881E68A0();
 ts4_word fn_881F1060();
@@ -1726,34 +1726,34 @@ ts4_word ts4_if_call_seq_fn_887DACE0_887DB6B0(ts4_word a0, ts4_word a1, ts4_word
     return t1;
 }
 
-/* Swing_DLL.xex 0x887DCD78: tailcall fn_881BBF98 */
+/* Swing_DLL.xex 0x887DCD78: tailcall ts4_null_handle_set_881BBF98 */
 ts4_word ts4_tailcall_fn_881BBF98_887DCD78(ts4_word a0)
 {
-    return fn_881BBF98((ts4_word)a0, (ts4_word)(a0 + 12));
+    return ts4_null_handle_set_881BBF98((ts4_word)a0, (ts4_word)(a0 + 12));
 }
 
-/* Swing_DLL.xex 0x887DCD80: tailcall fn_881BBED0 */
+/* Swing_DLL.xex 0x887DCD80: tailcall ts4_null_handle_set_ex_881BBED0 */
 ts4_word ts4_tailcall_fn_881BBED0_887DCD80(ts4_word a0)
 {
-    return fn_881BBED0((ts4_word)a0, (ts4_word)(a0 + 12));
+    return ts4_null_handle_set_ex_881BBED0((ts4_word)a0, (ts4_word)(a0 + 12));
 }
 
-/* Swing_DLL.xex 0x887DCD88: tailcall fn_881BBE70 */
+/* Swing_DLL.xex 0x887DCD88: tailcall ts4_null_handle_set_881BBE70 */
 ts4_word ts4_tailcall_fn_881BBE70_887DCD88(ts4_word a0)
 {
-    return fn_881BBE70((ts4_word)a0, (ts4_word)(a0 + 12));
+    return ts4_null_handle_set_881BBE70((ts4_word)a0, (ts4_word)(a0 + 12));
 }
 
-/* Swing_DLL.xex 0x887DED68: tailcall fn_881BBF38 */
+/* Swing_DLL.xex 0x887DED68: tailcall ts4_null_handle_set_881BBF38 */
 ts4_word ts4_tailcall_fn_881BBF38_887DED68(ts4_word a0)
 {
-    return fn_881BBF38((ts4_word)a0, (ts4_word)(a0 + 12));
+    return ts4_null_handle_set_881BBF38((ts4_word)a0, (ts4_word)(a0 + 12));
 }
 
-/* Swing_DLL.xex 0x887DED70: tailcall fn_881BBED0 */
+/* Swing_DLL.xex 0x887DED70: tailcall ts4_null_handle_set_ex_881BBED0 */
 ts4_word ts4_tailcall_fn_881BBED0_887DED70(ts4_word a0)
 {
-    return fn_881BBED0((ts4_word)a0, (ts4_word)(a0 + 12));
+    return ts4_null_handle_set_ex_881BBED0((ts4_word)a0, (ts4_word)(a0 + 12));
 }
 
 /* Swing_DLL.xex 0x887DED78: if_call_seq u32@0x0, u32@0xfc, fn_887D6528, fn_887D6528, fn_887DD098 */

@@ -161,18 +161,18 @@ ts4_word fn_888319E0();
 ts4_word ts4_call_seq_u32_off0_88832F70();
 ts4_word fn_888368B0();
 ts4_word fn_88838B00();
-ts4_word fn_8883B578();
+ts4_word ts4_member_field_addr_8883B578();
 ts4_word fn_8883DDA0();
 ts4_word fn_888429E8();
 ts4_word fn_88843650();
 ts4_word fn_8884C160();
-ts4_word fn_8884CB50();
+ts4_word ts4_hash_lookup_null_release_clear_8884CB50();
 ts4_word fn_88864E48();
 ts4_word fn_88865AB0();
 ts4_word fn_88866980();
 ts4_word fn_88866DA0();
 ts4_word fn_88867E68();
-ts4_word fn_888689A8();
+ts4_word ts4_hash_lookup_null_888689A8();
 ts4_word fn_88868B48();
 ts4_word fn_888690F0();
 ts4_word fn_88869530();
@@ -354,14 +354,14 @@ ts4_word ts4_if_get_u32_off14_8881C630(ts4_word a0)
 
 
 
-/* Swing_DLL.xex 0x8883DE38: if_call_seq fn_8883B578, u32@0x8, u32@0x8, u32@0x8, u32@0x8, u32@0x8 */
+/* Swing_DLL.xex 0x8883DE38: if_call_seq ts4_member_field_addr_8883B578, u32@0x8, u32@0x8, u32@0x8, u32@0x8, u32@0x8 */
 ts4_word ts4_if_call_seq_fn_8883B578_8883DE38(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3)
 {
     ts4_word t1;
     ts4_word t16;
     ts4_word t2;
 
-    t1 = fn_8883B578((ts4_word)a0, (ts4_word)a1);
+    t1 = ts4_member_field_addr_8883B578((ts4_word)a0, (ts4_word)a1);
     if ((ts4_word)a2 != (ts4_word)((3354329088) | 46281) && (ts4_word)a2 != (ts4_word)((3061645312) | 4295)) {
         if ((ts4_word)a2 == (ts4_word)((1038090240) | 35242) || (ts4_word)a2 == (ts4_word)((1282539520) | 11684)) {
             t16 = *(ts4_word *)((char *)(ts4_word)(t1) + 8);
@@ -485,7 +485,7 @@ ts4_word ts4_if_get_u32_off34_8884FEA8(ts4_word a0, ts4_word a1, ts4_word a2, ts
             ((ts4_word (*)(ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t24) + 0))) + 0))))((ts4_word)t24, (ts4_word)1);
         }
     }
-    t30 = fn_8884CB50((ts4_word)a0);
+    t30 = ts4_hash_lookup_null_release_clear_8884CB50((ts4_word)a0);
     *(ts4_word *)((char *)(ts4_word)(a0) + 36) = (ts4_word)0;
     *(ts4_word *)((char *)(ts4_word)(a0) + 40) = (ts4_word)0;
     *(ts4_word *)((char *)(ts4_word)(a0) + 52) = (ts4_word)0;

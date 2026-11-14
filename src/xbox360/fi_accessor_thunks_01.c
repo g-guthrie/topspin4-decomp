@@ -48,7 +48,7 @@ ts4_word fn_886198E0();
 ts4_word fn_8861AA88(ts4_word);
 ts4_word fn_886220F8(ts4_word, ts4_word);
 ts4_word fn_88636FA0(ts4_word, ts4_word, ts4_word, ts4_word);
-ts4_word fn_886529C8(ts4_word);
+ts4_word ts4_type_register_886529C8(ts4_word);
 ts4_word fn_88652A90();
 ts4_word fn_88655BC8(ts4_word);
 ts4_word fn_88655C90(ts4_word);
@@ -542,14 +542,14 @@ void ts4_addr_lbl_880F5918_8864F578(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x88654220: call_seq fn_88652A90, fn_886529C8 */
+/* Swing_DLL.xex 0x88654220: call_seq fn_88652A90, ts4_type_register_886529C8 */
 ts4_word ts4_call_seq_fn_88652A90_88654220(void)
 {
     ts4_word t1;
     ts4_word t2;
 
     t1 = fn_88652A90();
-    t2 = fn_886529C8((ts4_word)t1);
+    t2 = ts4_type_register_886529C8((ts4_word)t1);
     return t2;
 }
 

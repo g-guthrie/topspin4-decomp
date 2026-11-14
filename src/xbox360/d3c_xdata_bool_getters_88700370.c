@@ -11,7 +11,7 @@ typedef struct Ts4XdataRef {
     u32 offset;
 } Ts4XdataRef;
 
-extern void fn_88150770(Ts4XdataRef *out, Ts4Handle16 *handle, u32 *type_hash);
+extern void ts4_handle_forward_88150770(Ts4XdataRef *out, Ts4Handle16 *handle, u32 *type_hash);
 extern u32 ts4_gp0_xdata_get_bool_88163C60(Ts4XdataRef *ref);
 
 #ifdef _MSC_VER
@@ -30,7 +30,7 @@ TS4_FI u8 ts4_xdata_ref_invalid(Ts4XdataRef *r)
     { \
         u32 hash = HASH; \
         Ts4XdataRef r; \
-        fn_88150770(&r, &handle, &hash); \
+        ts4_handle_forward_88150770(&r, &handle, &hash); \
         if (!ts4_xdata_ref_invalid(&r)) return ts4_gp0_xdata_get_bool_88163C60(&r); \
         return 0; \
     }

@@ -6,7 +6,7 @@ struct TS4Triple {
 };
 void *fn_88627EC0(void *object, struct TS4Triple value);
 void fn_88707908(struct TS4Triple value);
-void fn_88890140(void *object);
+void ts4_type_register_88890140(void *object);
 void fn_889139A0(void *object);
 extern char lbl_880C8F25[];
 void ts4_keyed_items_register_all_8869C9E8(char *name);
@@ -51,7 +51,7 @@ void ts4_construct_registered_8892B650(void *self, struct TS4Triple value)
 
 void ts4_construct_then_88890210(void *self, struct TS4Triple value)
 {
-    fn_88890140(fn_88627EC0(self, value));
+    ts4_type_register_88890140(fn_88627EC0(self, value));
 }
 
 void ts4_construct_then_88913BA8(void *self, struct TS4Triple value)

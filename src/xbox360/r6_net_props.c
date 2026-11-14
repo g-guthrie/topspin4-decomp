@@ -37,7 +37,7 @@ typedef struct Ts4NetOwnerRef {
 extern Ts4NetGuid lbl_88C6B410;
 extern char *lbl_88D45AD4;
 void fn_8876BCA8(void *block);
-void fn_88610778(void *owner, void *guid, u32 *key);
+void ts4_handle_forward_88610778(void *owner, void *guid, u32 *key);
 Ts4NetPropRef *fn_88164450(Ts4NetPropRef *out, Ts4NetPropOwner *owner, u32 *key, int flag);
 
 /* Swing_DLL.xex 0x88944F58: register a keyed entry then clear two byte properties by key. */
@@ -50,7 +50,7 @@ Ts4NetPropOwner *ts4_net_reset_two_props_88944F58(Ts4NetPropOwner *owner)
     Ts4NetPropRef ref;
     Ts4NetPropRef *found;
 
-    fn_88610778(owner, &guid, &key_register);
+    ts4_handle_forward_88610778(owner, &guid, &key_register);
     key_a = 0xD91411DA;
     found = fn_88164450(&ref, owner, &key_a, 0);
     *found->store->vtbl->lookup(found->store, found, found->index, 1) = 0;
@@ -70,7 +70,7 @@ void ts4_net_set_prop_byte_8890A948(Ts4NetGuid16 guid, u8 notify, u8 value)
     Ts4NetPropRef ref;
     Ts4NetPropRef *found;
 
-    fn_88610778(&owner, &guid, &key_register);
+    ts4_handle_forward_88610778(&owner, &guid, &key_register);
     key_a = 0xD91411DA;
     found = fn_88164450(&ref, (Ts4NetPropOwner *)&owner, &key_a, 0);
     *found->store->vtbl->lookup(found->store, found, found->index, 1) = value;

@@ -161,7 +161,7 @@ ts4_word fn_884BF898();
 ts4_word fn_884C0670();
 ts4_word fn_884C26E0();
 ts4_word fn_884C4FA8();
-ts4_word fn_884C9150();
+ts4_word ts4_ref_holder_dtor_nullable_member_884C9150();
 ts4_word fn_884CAD68();
 ts4_word fn_884CB388();
 ts4_word fn_884CC7B8();
@@ -1520,12 +1520,12 @@ ts4_word ts4_addr_lbl_8808BFAC_884C5458(void)
     return (ts4_word)lbl_8808BFAC;
 }
 
-/* Swing_DLL.xex 0x884C9308: if_call_seq fn_884C9150, u32@lbl_88CACF08, KeTlsGetValue, u16@0x4, fn_8841A590 */
+/* Swing_DLL.xex 0x884C9308: if_call_seq ts4_ref_holder_dtor_nullable_member_884C9150, u32@lbl_88CACF08, KeTlsGetValue, u16@0x4, fn_8841A590 */
 ts4_word ts4_if_call_seq_fn_884C9150_884C9308(ts4_word a0, ts4_word a1)
 {
     ts4_word t3;
 
-    fn_884C9150((ts4_word)a0);
+    ts4_ref_holder_dtor_nullable_member_884C9150((ts4_word)a0);
     if ((ts4_word)(a1 & 0x1) != 0) {
         t3 = KeTlsGetValue((ts4_word)(*(ts4_word *)lbl_88CACF08));
         fn_8841A590((ts4_word)t3, (ts4_word)a0, (ts4_word)(*(unsigned short *)((char *)(ts4_word)(a0) + 4)), (ts4_word)21);

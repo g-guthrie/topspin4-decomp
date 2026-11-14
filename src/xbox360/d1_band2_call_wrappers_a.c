@@ -39,7 +39,7 @@ ts4_uptr fn_88423CE0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr,
 ts4_uptr fn_88425670(ts4_uptr, ts4_uptr);
 ts4_uptr fn_88426FA0(ts4_uptr, ts4_uptr);
 ts4_uptr ts4_stream_write_i32_a_88427418(ts4_uptr, ts4_uptr);
-ts4_uptr fn_88436F58(ts4_uptr);
+ts4_uptr ts4_ref_holder_dtor_88436F58(ts4_uptr);
 ts4_uptr fn_88438FC0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_8843AE88(ts4_uptr);
 ts4_uptr fn_88443038(ts4_uptr);
@@ -249,7 +249,7 @@ ts4_uptr ts4_if_get_u32_off0_88647668(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr ts4_call_seq_u32_lbl_88D45B20_886496F0(ts4_uptr);
 ts4_uptr fn_88649A90(ts4_uptr, ts4_uptr);
 ts4_uptr fn_8864CF98(void);
-ts4_uptr fn_886529C8(ts4_uptr);
+ts4_uptr ts4_type_register_886529C8(ts4_uptr);
 ts4_uptr fn_88652A90(void);
 ts4_uptr fn_88655718(ts4_uptr);
 ts4_uptr fn_88669C30(ts4_uptr);

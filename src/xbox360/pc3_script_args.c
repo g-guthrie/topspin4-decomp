@@ -14,7 +14,7 @@ extern char *g_ts4_online_context;
 extern char *g_ts4_online_state;
 extern char *g_ts4_session_context;
 
-void **fn_8883B578(void *, int);
+void **ts4_member_field_addr_8883B578(void *, int);
 void *fn_88614938(int, int);
 void ts4_tailcall_XamShowAchievementsUI_8857A6A8(int);
 int fn_8899CA48(void *, unsigned *);
@@ -54,7 +54,7 @@ int ts4_script_store_pending_entry_88786450(struct TS4ScriptContext *context)
     TS4_SCRIPT_ARG_NUMBER(context, 0, number);
     pending = *(void **)(lbl_88D459E0 + 0x4c);
     if (pending != 0) {
-        void **slot = fn_8883B578(lbl_88D459E0, (int)number);
+        void **slot = ts4_member_field_addr_8883B578(lbl_88D459E0, (int)number);
         *slot = pending;
     }
     return 0;

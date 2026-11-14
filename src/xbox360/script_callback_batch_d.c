@@ -6,8 +6,8 @@ extern struct TS4ScriptValue *g_ts4_default_script_value;
 extern double g_ts4_script_constants[];
 extern const char g_ts4_true_string[];
 
-void fn_888E3908(void);
-void fn_888E38A8(void);
+void ts4_hash_lookup_null_release_888E3908(void);
+void ts4_hash_lookup_null_release_888E38A8(void);
 void fn_881B4590(void *object);
 ts4_script_u32 fn_888E7498(int content_id);
 void fn_888E1380(void *object, ts4_script_u32 visible);
@@ -25,8 +25,8 @@ struct TS4LockerRoomState {
 ts4_script_u32 ts4_script_exit_locker_room(void)
 {
     struct TS4LockerRoomState *state = lbl_88D4594C;
-    fn_888E3908();
-    fn_888E38A8();
+    ts4_hash_lookup_null_release_888E3908();
+    ts4_hash_lookup_null_release_888E38A8();
     fn_881B4590(state->object_a);
     fn_881B4590(state->object_b);
     state->state = 0;

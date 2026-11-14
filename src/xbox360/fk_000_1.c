@@ -104,7 +104,7 @@ ts4_word fn_888860A0();
 ts4_word ts4_call_seq_fn_88617D88_888CB0F0();
 ts4_word ts4_call_seq_fn_88617D88_888CB978();
 ts4_word fn_888CBD50();
-ts4_word fn_888CCF98();
+ts4_word ts4_singleton_service_ctor_888CCF98();
 ts4_word ts4_call_seq_fn_88617D88_888CDDC0();
 ts4_word fn_888CED28();
 ts4_word ts4_call_seq_fn_88617D88_888CF0D8();

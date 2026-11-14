@@ -95,7 +95,7 @@ ts4_word fn_8862BE08();
 ts4_word fn_8862C0E8();
 ts4_word fn_886E0E60();
 ts4_word fn_886F1FC0();
-ts4_word fn_8883B578();
+ts4_word ts4_member_field_addr_8883B578();
 ts4_word ts4_if_call_seq_u32_lbl_88D459E4_8883F238();
 ts4_word fn_8886B8E0();
 ts4_word fn_8886FE50();
@@ -124,8 +124,8 @@ ts4_word fn_888DA698();
 ts4_word fn_888DA850();
 ts4_word fn_888DDA80();
 ts4_word fn_888DF008();
-ts4_word fn_888E38A8();
-ts4_word fn_888E3908();
+ts4_word ts4_hash_lookup_null_release_888E38A8();
+ts4_word ts4_hash_lookup_null_release_888E3908();
 ts4_word fn_888F14D8();
 ts4_word fn_888F4E70();
 ts4_word fn_888F70A0();
@@ -711,12 +711,12 @@ ts4_word ts4_call_seq_fn_88617D88_888CA4E0(ts4_word a0)
     return a0;
 }
 
-/* Swing_DLL.xex 0x888CA720: call_seq u32@lbl_88D459E0, fn_8883B578, u32@0x4 */
+/* Swing_DLL.xex 0x888CA720: call_seq u32@lbl_88D459E0, ts4_member_field_addr_8883B578, u32@0x4 */
 ts4_word ts4_call_seq_u32_lbl_88D459E0_888CA720(ts4_word a0, ts4_word a1)
 {
     ts4_word t2;
 
-    t2 = fn_8883B578((ts4_word)(*(ts4_word *)lbl_88D459E0), (ts4_word)a0);
+    t2 = ts4_member_field_addr_8883B578((ts4_word)(*(ts4_word *)lbl_88D459E0), (ts4_word)a0);
     *(ts4_word *)((char *)(ts4_word)(t2) + 4) = (ts4_word)a1;
     return t2;
 }
@@ -1187,14 +1187,14 @@ ts4_word ts4_call_seq_u32_off0_888E80A8(ts4_word a0, ts4_word a1)
     return a0;
 }
 
-/* Swing_DLL.xex 0x888EC410: call_seq fn_888E3908, fn_888E38A8, ts4_object_finalize, ts4_object_finalize, u32@0x1c */
+/* Swing_DLL.xex 0x888EC410: call_seq ts4_hash_lookup_null_release_888E3908, ts4_hash_lookup_null_release_888E38A8, ts4_object_finalize, ts4_object_finalize, u32@0x1c */
 ts4_word ts4_call_seq_fn_888E3908_888EC410(ts4_word a0)
 {
     ts4_word t1;
     ts4_word t4;
 
-    t1 = fn_888E3908();
-    fn_888E38A8((ts4_word)t1);
+    t1 = ts4_hash_lookup_null_release_888E3908();
+    ts4_hash_lookup_null_release_888E38A8((ts4_word)t1);
     ts4_object_finalize((ts4_word)(a0 + 32));
     t4 = ts4_object_finalize((ts4_word)(a0 + 44));
     *(ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)0;

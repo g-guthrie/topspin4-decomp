@@ -222,7 +222,7 @@ ts4_word fn_8857A798();
 ts4_word fn_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_8860DCF8();
-ts4_word fn_886107F8();
+ts4_word ts4_handle_forward0_886107F8();
 ts4_word fn_886131F0();
 ts4_word fn_88613268();
 ts4_word fn_88614938();
@@ -1125,7 +1125,7 @@ ts4_word ts4_if_call_seq_fn_8892F508_8892FC88(ts4_word a0, ts4_word a1, ts4_word
     t1 = fn_8892F508((ts4_word)a0, (ts4_word)a1);
     if ((ts4_word)(t1 & 0xff) != 0) {
         t3 = fn_88923380((ts4_word)(ts4_word)&loc50[0], (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 20)));
-        t4 = fn_886107F8((ts4_word)(ts4_word)&loc60[0], (ts4_word)t3);
+        t4 = ts4_handle_forward0_886107F8((ts4_word)(ts4_word)&loc60[0], (ts4_word)t3);
         *(ts4_word *)((char *)(ts4_word)(a2) + 0) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t4) + 0));
         *(ts4_word *)((char *)(ts4_word)(a2) + 4) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t4) + 4));
         *(ts4_word *)((char *)(ts4_word)(a2) + 8) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t4) + 8));

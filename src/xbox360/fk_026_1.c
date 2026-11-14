@@ -48,7 +48,7 @@ ts4_word ts4_tailcall_NetDll_listen_884F02D0();
 ts4_word ts4_get_u32__imp_KeTimeStampBundle_8857B830();
 ts4_word fn_8860AB58();
 ts4_word fn_8860DCF8();
-ts4_word fn_88610A48();
+ts4_word ts4_handle_forward_88610A48();
 ts4_word fn_88613268();
 ts4_word fn_88617D28();
 ts4_word fn_88617D88();

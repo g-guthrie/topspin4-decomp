@@ -18,7 +18,7 @@ extern void fn_88855170(void *, int, int, int, int, int);
 extern void fn_882107D0(void *, ts4_script_u32 *, int);
 extern void fn_888C7C28(void *, ts4_script_u32 *);
 extern ts4_script_u32 fn_8899CA48(void *, ts4_script_u32 *);
-extern void *fn_8883B578(void *, int);
+extern void *ts4_member_field_addr_8883B578(void *, int);
 extern void fn_88853540(void *, int, int);
 
 /* Evaluate the first script argument as a double (default constant 11 when not numeric). */

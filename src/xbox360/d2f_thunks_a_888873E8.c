@@ -169,7 +169,7 @@ ts4_word ts4_if_call_seq_NtSetEvent_8857C1F8();
 ts4_word fn_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_8860DCF8();
-ts4_word fn_886107F8();
+ts4_word ts4_handle_forward0_886107F8();
 ts4_word fn_886131F0();
 ts4_word fn_88613268();
 ts4_word fn_88614938();

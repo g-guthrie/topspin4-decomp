@@ -118,7 +118,7 @@ ts4_word fn_887690A8();
 ts4_word fn_8876BCA8();
 ts4_word fn_8876CF38();
 ts4_word fn_8876D180();
-ts4_word fn_88771378();
+ts4_word ts4_type_register_88771378();
 ts4_word fn_88771440();
 ts4_word fn_88778BE8();
 ts4_word fn_8877DC48();

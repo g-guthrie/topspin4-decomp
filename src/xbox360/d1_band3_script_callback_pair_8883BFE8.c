@@ -7,11 +7,11 @@ unsigned int fn_888348A0(void *list, int index);
 unsigned int fn_88822398(void *list, int index);
 extern void *lbl_88D459E0;
 extern void *lbl_88D459E8;
-void fn_8883B478(void *object, int first, int second);
-void fn_8883B4F8(void *object, int first, int second);
-void fn_8883DBA8(void *object, int first, unsigned int second);
-void fn_8883DC28(void *object, int first, unsigned int second);
-void fn_8883DCA8(void *object, int first, unsigned int second);
+void ts4_member_field_set_8883B478(void *object, int first, int second);
+void ts4_member_field_set_8883B4F8(void *object, int first, int second);
+void ts4_member_field_set_8883DBA8(void *object, int first, unsigned int second);
+void ts4_member_field_set_8883DC28(void *object, int first, unsigned int second);
+void ts4_member_field_set_8883DCA8(void *object, int first, unsigned int second);
 void fn_8884E738(void *object, int first, unsigned int second);
 void fn_88853058(void *object, int first, unsigned int second);
 void fn_88863460(void *object, int first, unsigned int second);
@@ -29,7 +29,7 @@ unsigned int ts4_script_callback_8883BFE8(void *unused, struct TS4CallContext *c
     int first = (int)fn_88822420(args->list, 1);
     void *list = args->list;
     int second = (int)fn_88822420(list, 2);
-    fn_8883B478(lbl_88D459E0, first, second);
+    ts4_member_field_set_8883B478(lbl_88D459E0, first, second);
     (void)unused;
     return 0;
 }
@@ -40,7 +40,7 @@ unsigned int ts4_script_callback_8883C058(void *unused, struct TS4CallContext *c
     int first = (int)fn_88822420(args->list, 1);
     void *list = args->list;
     int second = (int)fn_88822420(list, 2);
-    fn_8883B4F8(lbl_88D459E0, first, second);
+    ts4_member_field_set_8883B4F8(lbl_88D459E0, first, second);
     (void)unused;
     return 0;
 }
@@ -51,7 +51,7 @@ unsigned int ts4_script_callback_8883E5B8(void *unused, struct TS4CallContext *c
     int first = (int)fn_88822420(args->list, 1);
     void *list = args->list;
     unsigned int second = (unsigned int)fn_88822420(list, 2);
-    fn_8883DBA8(lbl_88D459E0, first, second);
+    ts4_member_field_set_8883DBA8(lbl_88D459E0, first, second);
     (void)unused;
     return 0;
 }
@@ -62,7 +62,7 @@ unsigned int ts4_script_callback_8883E628(void *unused, struct TS4CallContext *c
     int first = (int)fn_88822420(args->list, 1);
     void *list = args->list;
     unsigned int second = (unsigned int)fn_88822420(list, 2);
-    fn_8883DC28(lbl_88D459E0, first, second);
+    ts4_member_field_set_8883DC28(lbl_88D459E0, first, second);
     (void)unused;
     return 0;
 }
@@ -73,7 +73,7 @@ unsigned int ts4_script_callback_8883E698(void *unused, struct TS4CallContext *c
     int first = (int)fn_88822420(args->list, 1);
     void *list = args->list;
     unsigned int second = (unsigned int)fn_88822420(list, 2);
-    fn_8883DCA8(lbl_88D459E0, first, second);
+    ts4_member_field_set_8883DCA8(lbl_88D459E0, first, second);
     (void)unused;
     return 0;
 }

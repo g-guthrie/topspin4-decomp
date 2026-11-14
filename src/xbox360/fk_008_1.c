@@ -106,7 +106,7 @@ ts4_word fn_88425490();
 ts4_word fn_88426030();
 ts4_word ts4_get_u32_off4_88426130();
 ts4_word fn_88426FF8();
-ts4_word fn_88427338();
+ts4_word ts4_ref_holder_dtor_88427338();
 ts4_word fn_88427958();
 ts4_word fn_88427C08();
 ts4_word fn_88427C18();

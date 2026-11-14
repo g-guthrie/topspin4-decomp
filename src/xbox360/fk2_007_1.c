@@ -192,7 +192,7 @@ ts4_word fn_88865AB0();
 ts4_word fn_88866980();
 ts4_word fn_88866DA0();
 ts4_word fn_88867E68();
-ts4_word fn_888689A8();
+ts4_word ts4_hash_lookup_null_888689A8();
 ts4_word fn_88868B48();
 ts4_word fn_888690F0();
 ts4_word fn_88869530();

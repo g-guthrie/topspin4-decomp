@@ -48,7 +48,7 @@ ts4_word ts4_tailcall_NetDll_listen_884F02D0();
 ts4_word ts4_get_u32__imp_KeTimeStampBundle_8857B830();
 ts4_word fn_8860AB58();
 ts4_word fn_8860DCF8();
-ts4_word fn_88610A48();
+ts4_word ts4_handle_forward_88610A48();
 ts4_word fn_88613268();
 ts4_word fn_88617D28();
 ts4_word fn_88617D88();
@@ -2011,13 +2011,13 @@ ts4_word ts4_if_get_u8_off420_889337C0(ts4_word a0, ts4_word a1, ts4_word a2, ts
     return p5;
 }
 
-/* Swing_DLL.xex 0x88933810: call_seq fn_88610A48 */
+/* Swing_DLL.xex 0x88933810: call_seq ts4_handle_forward_88610A48 */
 ts4_word ts4_call_seq_fn_88610A48_88933810(ts4_word a0, ts4_word a1)
 {
     ts4_word loc50[1];
 
     loc50[0] = (ts4_word)((1412104192) | 21116);
-    fn_88610A48((ts4_word)a0, (ts4_word)(a1 + 48), (ts4_word)(ts4_word)&loc50[0]);
+    ts4_handle_forward_88610A48((ts4_word)a0, (ts4_word)(a1 + 48), (ts4_word)(ts4_word)&loc50[0]);
     return a0;
 }
 

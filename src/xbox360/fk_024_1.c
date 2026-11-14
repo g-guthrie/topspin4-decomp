@@ -98,7 +98,7 @@ ts4_word fn_886220F8();
 ts4_word fn_8862EA10();
 ts4_word fn_88638FC8();
 ts4_word fn_887EB4A0();
-ts4_word fn_8883B318();
+ts4_word ts4_member_field_addr_8883B318();
 ts4_word ts4_if_call_seq_u32_lbl_88D459E4_8883F238();
 ts4_word fn_88854258();
 ts4_word fn_8885B210();
