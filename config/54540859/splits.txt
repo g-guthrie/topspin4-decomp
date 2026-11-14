@@ -39167,3 +39167,140 @@ src/xbox360/jp2_jpeg_memsys.c:
 	.pdata      start:0x88111A80 end:0x88111A88
 	.text       start:0x882F51D8 end:0x882F5230
 	.text       start:0x882F5260 end:0x882F5390
+
+src/xbox360/lib2_flac_bitreader.c:
+	.pdata      start:0x88114500 end:0x88114508
+	.pdata      start:0x88114508 end:0x88114510
+	.pdata      start:0x88114518 end:0x88114520
+	.pdata      start:0x88114528 end:0x88114530
+	.pdata      start:0x88114530 end:0x88114538
+	.pdata      start:0x88114538 end:0x88114540
+	.pdata      start:0x88114540 end:0x88114548
+	.pdata      start:0x88114548 end:0x88114550
+	.pdata      start:0x88114550 end:0x88114558
+	.pdata      start:0x88114558 end:0x88114560
+	.pdata      start:0x88114560 end:0x88114568
+	.pdata      start:0x88114570 end:0x88114578
+	.text       start:0x883B6CD0 end:0x883B6EB0
+	.text       start:0x883B6EC0 end:0x883B6F68
+	.text       start:0x883B7000 end:0x883B7084
+	.text       start:0x883B70D8 end:0x883B7328
+	.text       start:0x883B7380 end:0x883B741C
+	.text       start:0x883B7420 end:0x883B74EC
+	.text       start:0x883B74F0 end:0x883B75DC
+	.text       start:0x883B75E0 end:0x883B7714
+	.text       start:0x883B7718 end:0x883B7CEC
+	.text       start:0x883B7CF0 end:0x883B8088
+	.text       start:0x883B80F0 end:0x883B81B4
+
+src/xbox360/lib2_flac_fixed.c:
+	.text       start:0x883BAA20 end:0x883BAB60
+
+src/xbox360/lib2_flac_lpc.c:
+	.pdata      start:0x881145A0 end:0x881145A8
+	.pdata      start:0x881145A8 end:0x881145B0
+	.text       start:0x883B91C8 end:0x883BA9CC
+
+src/xbox360/lib2_flac_md5.c:
+	.pdata      start:0x88114578 end:0x88114580
+	.pdata      start:0x88114580 end:0x88114588
+	.pdata      start:0x88114588 end:0x88114590
+	.pdata      start:0x88114590 end:0x88114598
+	.text       start:0x883B81B8 end:0x883B8B64
+	.text       start:0x883B8BB0 end:0x883B8C84
+	.text       start:0x883B8C88 end:0x883B8FCC
+	.text       start:0x883B8FD0 end:0x883B914C
+
+src/xbox360/lib2_flac_stream_decoder.c:
+	.pdata      start:0x88114150 end:0x88114158
+	.pdata      start:0x88114158 end:0x88114160
+	.pdata      start:0x88114160 end:0x88114168
+	.pdata      start:0x88114168 end:0x88114170
+	.pdata      start:0x88114170 end:0x88114178
+	.pdata      start:0x88114178 end:0x88114180
+	.pdata      start:0x88114180 end:0x88114188
+	.pdata      start:0x88114188 end:0x88114190
+	.pdata      start:0x88114198 end:0x881141A0
+	.pdata      start:0x881141A0 end:0x881141A8
+	.pdata      start:0x881141A8 end:0x881141B0
+	.pdata      start:0x881141B0 end:0x881141B8
+	.pdata      start:0x881141B8 end:0x881141C0
+	.pdata      start:0x881141C0 end:0x881141C8
+	.pdata      start:0x881141C8 end:0x881141D0
+	.pdata      start:0x881141D8 end:0x881141E0
+	.pdata      start:0x881141E0 end:0x881141E8
+	.pdata      start:0x881141F8 end:0x88114200
+	.pdata      start:0x88114200 end:0x88114208
+	.pdata      start:0x88114208 end:0x88114210
+	.pdata      start:0x88114210 end:0x88114218
+	.pdata      start:0x88114218 end:0x88114220
+	.pdata      start:0x88114220 end:0x88114228
+	.pdata      start:0x88114230 end:0x88114238
+	.text       start:0x883A3C70 end:0x883A3E64
+	.text       start:0x883A3E68 end:0x883A3FD4
+	.text       start:0x883A3FD8 end:0x883A421C
+	.text       start:0x883A4220 end:0x883A43EC
+	.text       start:0x883A43F0 end:0x883A4984
+	.text       start:0x883A4988 end:0x883A4C20
+	.text       start:0x883A4D58 end:0x883A52E4
+	.text       start:0x883A52E8 end:0x883A54BC
+	.text       start:0x883A54C0 end:0x883A5564
+	.text       start:0x883A5568 end:0x883A5780
+	.text       start:0x883A5D30 end:0x883A6744
+	.text       start:0x883A6A40 end:0x883A78E4
+	.text       start:0x883A78E8 end:0x883A79D8
+	.text       start:0x883A7EC8 end:0x883A8020
+
+src/xbox360/lib2_ogg_bitwise.c:
+	.text       start:0x883BD168 end:0x883BD264
+	.text       start:0x883BD268 end:0x883BD354
+
+src/xbox360/lib2_ogg_framing.c:
+	.pdata      start:0x881145C8 end:0x881145D0
+	.pdata      start:0x881145D0 end:0x881145D8
+	.text       start:0x883BABB8 end:0x883BAC18
+	.text       start:0x883BACD0 end:0x883BADB0
+	.text       start:0x883BAE48 end:0x883BAF1C
+	.text       start:0x883BAF50 end:0x883BB16C
+	.text       start:0x883BB620 end:0x883BB67C
+	.text       start:0x883BB680 end:0x883BB6E0
+	.text       start:0x883BB800 end:0x883BB824
+
+src/xbox360/lib2_vorbis_sharedbook.c:
+	.pdata      start:0x88114650 end:0x88114658
+	.pdata      start:0x88114658 end:0x88114660
+	.text       start:0x883BD3A0 end:0x883BD5CC
+	.text       start:0x883BD5D0 end:0x883BD69C
+	.text       start:0x883BDB48 end:0x883BDB78
+
+src/xbox360/lev1_triple_arg_ctors.c:
+	.pdata      start:0x88121480 end:0x88121488
+	.pdata      start:0x88122130 end:0x88122138
+	.pdata      start:0x88122150 end:0x88122158
+	.pdata      start:0x88122440 end:0x88122448
+	.pdata      start:0x88122590 end:0x88122598
+	.pdata      start:0x88122748 end:0x88122750
+	.pdata      start:0x881227A8 end:0x881227B0
+	.pdata      start:0x88122B10 end:0x88122B18
+	.pdata      start:0x88122EE8 end:0x88122EF0
+	.pdata      start:0x88123138 end:0x88123140
+	.pdata      start:0x88129970 end:0x88129978
+	.pdata      start:0x8812A7B8 end:0x8812A7C0
+	.pdata      start:0x8812F590 end:0x8812F598
+	.pdata      start:0x881319C8 end:0x881319D0
+	.pdata      start:0x881319D0 end:0x881319D8
+	.text       start:0x88613B28 end:0x88613B6C
+	.text       start:0x8862BDC8 end:0x8862BE08
+	.text       start:0x8862C0A8 end:0x8862C0E8
+	.text       start:0x88636210 end:0x88636258
+	.text       start:0x88638E80 end:0x88638EB0
+	.text       start:0x8863C6D0 end:0x8863C704
+	.text       start:0x8863EF00 end:0x8863EF4C
+	.text       start:0x8864A1A8 end:0x8864A1E0
+	.text       start:0x88654248 end:0x88654290
+	.text       start:0x88658878 end:0x886588BC
+	.text       start:0x887DC1A8 end:0x887DC1F0
+	.text       start:0x88801E60 end:0x88801EA8
+	.text       start:0x888DDC98 end:0x888DDCD8
+	.text       start:0x88945A78 end:0x88945AC4
+	.text       start:0x88945AC8 end:0x88945B04

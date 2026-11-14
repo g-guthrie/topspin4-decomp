@@ -103,7 +103,7 @@ ts4_word fn_88381F90();
 ts4_word fn_88396320();
 ts4_word fn_88397970();
 ts4_word fn_883A3000();
-ts4_word fn_883A5320();
+ts4_word lib2_FLAC__stream_decoder_finish_883A5320();
 ts4_word fn_883A69B0();
 ts4_word fn_883ACE00();
 ts4_word ts4_set_u32_off34_883ACE40();

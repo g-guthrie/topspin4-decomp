@@ -1,6 +1,6 @@
 # Matching build
 
-The first eight hundred ninety-two matching measurement units reproduce all 2,372,216 code bytes across twenty-seven thousand three hundred fifty-four functions exactly.
+The first nine hundred one matching measurement units reproduce all 2,404,544 code bytes across twenty-seven thousand four hundred twenty-seven functions exactly.
 
 ## Local prerequisites
 
@@ -29,7 +29,7 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 2,372,216 of 10,154,152 Swing code bytes (`23.36203000%`) and twenty-seven thousand three hundred fifty-four of 46,736 objdiff functions (`58.5287550%`). The decomp-framework report has eight hundred ninety-two complete-source units among 19559 total units.
+The match is 2,404,544 of 10,154,152 Swing code bytes (`23.68040300%`) and twenty-seven thousand four hundred twenty-seven of 46,736 objdiff functions (`58.6849500%`). The decomp-framework report has nine hundred one complete-source units among 19610 total units.
 
 Where a function has an accompanying eight-byte `.pdata` range, it is also a
 100% relocation-aware objdiff match. Leaf functions without an exception record
@@ -71,11 +71,11 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe passes all eight hundred ninety-two source-built objects to the linker. Its map
-contains all twenty-seven thousand three hundred fifty-four exact public functions. Because the remaining game code and
+A second probe passes all nine hundred one source-built objects to the linker. Its map
+contains all twenty-seven thousand four hundred twenty-seven exact public functions. Because the remaining game code and
 data are not reconstructed, this probe requires `/FORCE:UNRESOLVED` and reports
-30,653 unique unresolved external symbols across 44,926 references. The linker emits a 3,013,120-byte
-inspection PE with 2,459,600 bytes of `.text`; that section also includes two hundred one
+30,713 unique unresolved external symbols across 45,070 references. The linker emits a 3,048,960-byte
+inspection PE with 2,493,692 bytes of `.text`; that section also includes two hundred nineteen
 source helper functions (inline C++ constructors and allocation wrappers) and alignment, so it is not a new matching-progress
 denominator. Linker outputs embed timestamps, so their hashes change between runs. Reproduce with `tools/link_probe.py`. This is evidence that the current reconstructed subset can enter a
 single Xbox link, not evidence of a usable module.
