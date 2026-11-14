@@ -10,7 +10,8 @@ so the upstream licenses apply to those files.
 Files: `src/xbox360/r3_xmlparse.c`, `r3_xmlparse.h`, `r3_xmlrole.c`,
 `r3_xmlrole.h`, `r3_xmltok.h`, `r3_xmltok_normal.c`, `r3_xmltok_utf16.c`,
 `r3_xmltok_unknown.c`, and the `swa_scan_*`, `swa_same_name*`,
-`swa_is_public_id_*` and `swa_dispatch_token_*` sources. Upstream: https://libexpat.github.io/ (1.95/2.0 era).
+`swa_is_public_id_*` and `swa_dispatch_token_*` sources, `swb2_expat.h`, and the
+`swb2_*` tokenizer sources that carry an Expat header line. Upstream: https://libexpat.github.io/ (1.95/2.0 era).
 
 Copyright (c) 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper
 Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Expat maintainers.
