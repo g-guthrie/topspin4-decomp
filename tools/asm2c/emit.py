@@ -113,12 +113,29 @@ def build(res, group, path, cpp=False):
     for nw in sorted({n for a in kept for n in res[a].get('structs', [])}):
         # a struct parameter passed by value (registers spilled to their home slots)
         o.insert(len(o) - 1, f'typedef struct ts4_args{nw} {{ ts4_word w[{nw}]; }} ts4_args{nw};')
+    for nq in sorted({n for a in kept for n in res[a].get('qstructs', [])}):
+        # a struct of nq doublewords assigned as a whole (counted ldu/stdu loop)
+        o.insert(len(o) - 1, f'typedef struct ts4_q{nq} {{ ts4_u64 q[{nq}]; }} ts4_q{nq};')
+    if any(res[a].get('va') for a in kept):
+        for l in ('#ifdef _MSC_VER', 'typedef char *ts4_va_list;', '#define TS4_VA_START(ap, v) __va_start(&ap, v)', '#else',
+                  '#include <stdarg.h>', 'typedef va_list ts4_va_list;', '#define TS4_VA_START(ap, v) va_start(ap, v)', '#endif'):
+            o.insert(len(o) - 1, l)
     if any(res[a].get('vec') for a in kept):
         o.insert(len(o) - 1, '#include "ts4_vector.h"')
     ints = {{'xchg': '_InterlockedExchange', 'inc': '_InterlockedIncrement', 'dec': '_InterlockedDecrement',
-             'addi': '_InterlockedExchangeAdd', 'add': '_InterlockedExchangeAdd'}[k] for a in kept for k in res[a].get('intrinsics', [])}
+             'addi': '_InterlockedExchangeAdd', 'add': '_InterlockedExchangeAdd'}[k] for a in kept for k in res[a].get('intrinsics', []) if k not in ('mftb', 'sqrt', 'clz')}
+    if any('mftb' in res[a].get('intrinsics', []) for a in kept):
+        o.insert(len(o) - 1, 'extern ts4_u64 __mftb(void);')
+        ints.add('__mftb')
+    if any('sqrt' in res[a].get('intrinsics', []) for a in kept):
+        o.insert(len(o) - 1, 'double sqrt(double);')
+        ints.add('sqrt')
+    if any('clz' in res[a].get('intrinsics', []) for a in kept):
+        o.insert(len(o) - 1, 'int _CountLeadingZeros(unsigned int);')
+        ints.add('_CountLeadingZeros')
     for n in sorted(ints):
-        o.insert(len(o) - 1, f'extern long {n}(volatile long *value' + (', long v);' if n in ('_InterlockedExchange', '_InterlockedExchangeAdd') else ');'))
+        if n not in ('__mftb', 'sqrt', '_CountLeadingZeros'):
+            o.insert(len(o) - 1, f'extern long {n}(volatile long *value' + (', long v);' if n in ('_InterlockedExchange', '_InterlockedExchangeAdd') else ');'))
     if ints:
         o.insert(len(o) - 1, '#ifdef _MSC_VER'); o.insert(len(o) - 1, f'#pragma intrinsic({", ".join(sorted(ints))})'); o.insert(len(o) - 1, '#endif')
     if cpp:  # one class per vcall thunk; everything else is extern "C"

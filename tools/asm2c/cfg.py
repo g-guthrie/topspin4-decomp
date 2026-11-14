@@ -10,6 +10,7 @@ terminator `term` is one of
     ('ret',)                  blr / branch to __restgprlr
     ('tail', sym)             branch to another function
     ('ctr',)                  bctr
+    ('switch', reg, D, [T0..TN]) dense switch on reg (see translate.fuse_switches)
 
 Conditional returns (`beqlr`) become `cond` blocks whose taken target is a
 synthetic block holding a `ret` (negative id).  Block ids are start addresses.
@@ -61,7 +62,12 @@ def build_blocks(insns):
     leaders = {insns[0].addr}
     for k, i in enumerate(insns):
         mn = i.mn
-        ends = mn in COND_BR or mn in ('b', 'blr', 'bctr') or _is_condret(mn)
+        ends = mn in COND_BR or mn in ('b', 'blr', 'bctr', 'ts4switch') or _is_condret(mn)
+        if mn == 'ts4switch':
+            for t in i.ops[1:]:
+                if int(t) not in addrs:
+                    raise Skip('br out')
+                leaders.add(int(t))
         if mn.startswith('b') and not ends and mn not in ('bl', 'bctrl'):
             raise Skip(mn)
         if ends:
@@ -106,6 +112,10 @@ def build_blocks(insns):
                 term = ('tail', i.sym)
             else:
                 term = ('jmp', i.tgt)
+        elif mn == 'ts4switch':
+            if nxt is None:
+                raise Skip('noend')
+            term = ('switch', i.ops[0], int(i.ops[1]), [int(t) for t in i.ops[2:]])
         elif mn == 'blr':
             term = ('ret',)
         elif mn == 'bctr':
@@ -128,6 +138,8 @@ def succs(b):
         return [t[1]]
     if t[0] == 'cond':
         return [t[3], t[4]]
+    if t[0] == 'switch':
+        return list(dict.fromkeys([t[2]] + t[3]))
     return []
 
 

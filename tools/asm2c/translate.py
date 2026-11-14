@@ -39,8 +39,8 @@ def parse(ln):
     ms=re.search(r'(REFHI|REFLO|REL24|REL14)\s+(\S+)',com)
     return mn,ops,(ms.group(1) if ms else None),(ms.group(2) if ms else None)
 
-UPD={'lwzu': 'lwz', 'lbzu': 'lbz', 'lhzu': 'lhz', 'lhau': 'lha', 'stwu': 'stw', 'stbu': 'stb', 'sthu': 'sth', 'lfsu': 'lfs', 'lfdu': 'lfd', 'stfsu': 'stfs', 'stfdu': 'stfd'}
-LD_U={'lwzu', 'lbzu', 'lhzu', 'lhau'}
+UPD={'lwzu': 'lwz', 'lbzu': 'lbz', 'lhzu': 'lhz', 'lhau': 'lha', 'stwu': 'stw', 'stbu': 'stb', 'sthu': 'sth', 'lfsu': 'lfs', 'lfdu': 'lfd', 'stfsu': 'stfs', 'stfdu': 'stfd', 'ldu': 'ld', 'stdu': 'std'}
+LD_U={'lwzu', 'lbzu', 'lhzu', 'lhau', 'ldu'}
 STORES={'stw','stb','sth','std','stfs','stfd','stwu','sthu','stbu'}
 
 def arity(lines,lookup,written=None,depth=0):
@@ -52,6 +52,7 @@ def arity(lines,lookup,written=None,depth=0):
     mx=0
     for ln in lines:
         mn,ops,rk,sym=parse(ln)
+        if mn=='bl' and sym and sym.startswith(('__savegprlr', '__savefpr')): continue   # prologue helper: args stay live
         if mn in('bl','bctrl','blr','bctr'): break
         if mn=='b':
             if rk=='REL24' and depth<3:
@@ -97,7 +98,7 @@ def farity(lines, lookup=None, depth=0):
             if mn in ('bl', 'b') and rk == 'REL24' and lookup and depth < 3 and not sym.startswith('__'):
                 sub = farity(lookup(sym), lookup, depth + 1)
                 mx = max([mx] + [n for n in range(1, sub + 1) if f'f{n}' not in written])
-            if mn == 'bl' and sym and sym.startswith('__savegprlr'):
+            if mn == 'bl' and sym and sym.startswith(('__savegprlr', '__savefpr')):
                 continue
             break
         fr = [o for o in ops if re.fullmatch(r'f\d+', o)]
@@ -109,10 +110,78 @@ def farity(lines, lookup=None, depth=0):
             src, dst = fr[1:], fr[:1]
         for f in src:
             n = int(f[1:])
-            if 1 <= n <= 8 and f not in written:
+            if 1 <= n <= 13 and f not in written:
                 mx = max(mx, n)
         written |= set(dst)
     return mx
+
+
+def cnum(e):
+    """Value (32-bit) of a constant expression text, or None."""
+    if isinstance(e, str) and re.fullmatch(r'[0-9a-fx()|&^+\- ]+', e) and re.search(r'\d', e):
+        try:
+            return eval(e, {'__builtins__': {}}) & 0xFFFFFFFF
+        except Exception:
+            return None
+    return None
+
+
+def _split_top(e):
+    """'(A op B)' -> (A, op, B) at the top level of the parentheses, else None."""
+    if not (e.startswith('(') and e.endswith(')')):
+        return None
+    d = 0
+    for i in range(1, len(e) - 1):
+        c = e[i]
+        if c == '(':
+            d += 1
+        elif c == ')':
+            d -= 1
+            if d < 0:
+                return None
+        elif d == 0 and e[i:i + 3] in (' + ', ' * ') or (d == 0 and e[i:i + 4] == ' << '):
+            op = e[i + 1:i + 3].strip() if e[i:i + 4] != ' << ' else '<<'
+            return e[1:i], op, e[i + len(op) + 2:-1]
+    return None
+
+
+def qmultiple(e):
+    """(dividend, divisor, signed, factor) when expression text e is factor * (dividend / divisor)
+    built from `+`, `<<` and `*` (how MSVC recomputes x - x / d * d for x % d), else None."""
+    m = re.fullmatch(r'\(\((ts4_word|int)\)(.*) / (\d+)\)', e)
+    if m and _split_top(e) is None:
+        return m.group(2), int(m.group(3)), m.group(1) == 'int', 1
+    sp = _split_top(e)
+    if sp is None:
+        return None
+    a, op, b = sp
+    a = a[5:] if a.startswith('(int)') else a
+    qa = qmultiple(a)
+    if qa is None:
+        return None
+    if op == '<<' and b.isdigit():
+        return qa[:3] + (qa[3] << int(b),)
+    if op == '*' and b.isdigit():
+        return qa[:3] + (qa[3] * int(b),)
+    qb = qmultiple(b) if op == '+' else None
+    if qb is not None and qb[:3] == qa[:3]:
+        return qa[:3] + (qa[3] + qb[3],)
+    return None
+
+
+def magic_div(M, sh, signed=False):
+    """d when multiply-high by M, then shifting right by sh, is the division by d
+    (MSVC's magic numbers: M = ceil(2^(32+sh) / d)), else None."""
+    if not M:
+        return None
+    d = round(2 ** (32 + sh) / M)
+    if signed and M >= 1 << 32:     # (M - 2^32) * x / 2^32 + x: the multiplier is M - 2^32 + 2^32
+        M -= 1 << 32
+        d = round(2 ** (32 + sh) / M)
+        return d if d >= 2 and -(-2 ** (32 + sh) // d) == M else None
+    if d < 2 or -(-2 ** (32 + sh) // d) != M or (signed and M >= 1 << 31):
+        return None
+    return d
 
 
 class Env:
@@ -153,8 +222,10 @@ LD = {'ld': ('ts4_u64', 'u64'), 'lwz': ('ts4_word', 'u32'), 'lhz': ('unsigned sh
 ST = {'stw': ('ts4_word', 'u32'), 'sth': ('unsigned short', 'u16'), 'stb': ('unsigned char', 'u8'), 'std': ('ts4_u64', 'u64')}
 FLD = {'lfs': ('float', 'f32'), 'lfd': ('double', 'f64')}
 FST = {'stfs': ('float', 'f32'), 'stfd': ('double', 'f64')}
-IDX_LD = {'lwzx': 'ts4_word', 'lbzx': 'unsigned char', 'lhzx': 'unsigned short', 'lhax': 'short'}
-IDX_ST = {'stwx': 'ts4_word', 'stbx': 'unsigned char', 'sthx': 'unsigned short'}
+IDX_LD = {'lwzx': 'ts4_word', 'lbzx': 'unsigned char', 'lhzx': 'unsigned short', 'lhax': 'short', 'ldx': 'ts4_u64'}
+IDX_ST = {'stwx': 'ts4_word', 'stbx': 'unsigned char', 'sthx': 'unsigned short', 'stdx': 'ts4_u64'}
+IDX_FLD = {'lfsx': 'float', 'lfdx': 'double'}
+IDX_FST = {'stfsx': 'float', 'stfdx': 'double'}
 # taken-condition operator per conditional branch mnemonic
 BRT = {'beq': '==', 'bne': '!=', 'blt': '<', 'bge': '>=', 'bgt': '>', 'ble': '<='}
 # float compares: (operator, negated) so that e.g. `bge` after fcmpu is "!(x < y)"
@@ -165,7 +236,7 @@ PURE = {'lwz', 'lbz', 'lhz', 'lha', 'lwzx', 'lbzx', 'lhzx', 'li', 'lis', 'mr', '
         'ori', 'slwi', 'srwi', 'clrlwi', 'clrrwi', 'extsb', 'extsh', 'srawi', 'mullw', 'mulli', 'cmpwi', 'cmplwi',
         'cmpw', 'cmplw', 'rlwinm', 'extrwi', 'neg', 'and', 'or', 'xor', 'xori', 'oris', 'addis', 'rotlwi',
         'sraw', 'srw', 'slw', 'cntlzw', 'subfic', 'divw', 'divwu', 'andi.', 'mr.'}
-NO_DST = set(STORES) | set(IDX_ST) | {'cmpwi', 'cmplwi', 'cmpw', 'cmplw', 'mtctr', 'mtlr', 'fcmpu', 'fcmpo'}
+NO_DST = set(STORES) | set(IDX_ST) | {'cmpwi', 'cmplwi', 'cmpw', 'cmplw', 'cmpld', 'cmpd', 'cmpldi', 'cmpdi', 'mtctr', 'mtlr', 'fcmpu', 'fcmpo'}
 
 
 def unrelocated(lines):
@@ -188,7 +259,7 @@ VUN = {'vrsqrtefp': '__vrsqrtefp', 'vrefp': '__vrefp', 'vrfin': '__vrfin', 'vrfi
        'vrfip': '__vrfip', 'vexptefp': '__vexptefp', 'vlogefp': '__vlogefp'}
 VTRI = {'vmaddfp': '__vmaddfp', 'vnmsubfp': '__vnmsubfp', 'vsel': '__vsel', 'vperm': '__vperm'}
 VIMM = {'vspltw': '__vspltw', 'vcfsx': '__vcfsx', 'vcfux': '__vcfux', 'vctsxs': '__vctsxs', 'vctuxs': '__vctuxs',
-        'vpermwi': '__vpermwi'}
+        'vpermwi': '__vpermwi', 'vupkd3d': '__vupkd3d'}
 
 
 def is_vmx(mn):
@@ -230,13 +301,17 @@ def vec_block_local(blocks, L):
 class V:
     """A lazily materialised local (a load or call result); `used` is set when read."""
     def __init__(s, t, e, n, pure=True):
-        s.t = t; s.e = e; s.n = n; s.used = False; s.pure = pure; s.home = None; s.callsym = None
+        s.t = t; s.e = e; s.n = n; s.used = False; s.pure = pure; s.home = None; s.callsym = None; s.soff = None
 
 
 def dst_regs(insns):
     """General registers written by `insns` (calls clobber r3..r12 separately)."""
     out = set()
     for i in insns:
+        if i.mn == 'ts4copy':
+            out.update(i.ops[3:]); continue
+        if i.mn == 'ts4vastart':
+            out.update(i.ops[1:]); continue
         if i.mn in UPD and not i.ops[1].endswith('(r1)'):
             m = re.search(r'\((r\d+)\)', i.ops[1])
             out.add(m.group(1))
@@ -256,6 +331,9 @@ class Gen:
     """One translation: decode, build the CFG, structurize while symbolically
     executing, then render C.  See `gen()`."""
 
+    cjoin = False     # variant letter J: arms that return early still join at their shared tail
+    rbrk = False      # variant letter R: a break to a loop exit that only returns is written as the return
+
     def __init__(self, lines, env, mode=0, orient=0, word_ret=False, infer_signed=True, vol=0, strict=False):
         self.env, self.mode, self.orient, self.word_ret = env, mode, orient, word_ret
         self.strict = strict; self._live = None
@@ -264,10 +342,17 @@ class Gen:
         if unrelocated(lines):
             raise Skip('unrelocated original')
         self.lines = annotate(lines, env)
-        self.insns = self.fuse_atomics(cfg.decode(self.lines, parse))
+        self.insns = self.fuse_fpr_saves(self.fuse_varargs(self.fuse_switches(self.fuse_copies(self.fuse_atomics(cfg.decode(self.lines, parse))))))
         self.order, self.blocks = cfg.build_blocks(self.insns)
         self.preds = cfg.preds_of(self.blocks)
         self.has_ctr_loop = any(i.mn in ('bdnz', 'bdz') for i in self.insns)
+        # an mtctr is a loop count when the next CTR user in address order is a bdnz/bdz
+        self.count_mtctr = set()
+        for k, i in enumerate(self.insns):
+            if i.mn == 'mtctr':
+                nxt = next((j.mn for j in self.insns[k + 1:] if j.mn in ('bdnz', 'bdz', 'bctr', 'bctrl', 'bdnzf', 'bdzf', 'bdnzt', 'bdzt')), None)
+                if nxt is None or nxt.startswith('bd'):
+                    self.count_mtctr.add(i.addr)
         self.loops = cfg.natural_loops(self.order, self.blocks)
         self.pdom = cfg.post_dominators(self.blocks)
         self.active = []          # loop headers being emitted (innermost last)
@@ -275,11 +360,31 @@ class Gen:
         self.latch = None         # (continue condition, exit block) recorded by a do-while latch
         self.readp = set()
         self._home_structs()
+        self._home_floats()
+        # float parameters beyond f13 are passed on the stack, in the slot of their position
+        # (float at F+0x14+8*j): read with lfs, never stored
+        self.sfp = {}
+        Fr = next((int(m.group(1), 0) for ln in self.lines[:12] for m in [re.search(r'\bstwu\s+r1,\s*-(\w+)\(r1\)', ln)] if m), 0)
+        stored = {i.ops[1] for i in self.insns if i.mn.startswith('st') and len(i.ops) == 2}
+        for i in self.insns:
+            m = re.fullmatch(r'(\w+)\(r1\)', i.ops[1]) if i.mn == 'lfs' and len(i.ops) == 2 else None
+            if m and i.ops[1] not in stored:
+                o = int(m.group(1), 0) - Fr - 0x14
+                if o >= 8 * 14 and o % 8 == 0 and o < 8 * 32:
+                    self.sfp[int(m.group(1), 0)] = o // 8
+                    for x in range(4):
+                        self.home_off[int(m.group(1), 0) + x] = (f'f{o // 8}', x)
+        if self.va:   # the va_list and the variable arguments are not locals
+            n, L, F = self.va
+            for o in range(L, L + 4):
+                self.home_off[o] = ('ap', o - L)
+            self.home_off[F + 0x10 + 8 * n] = ('ap', 0)
         self._stack_layout()
         self.ntmp = 0
         self.externs = {}; self.protos = {}; self.detail = []; self.kinds = []
         self.ptype = {}; self.fparams = {}; self.phis = []; self.rtypes = {}
-        self.fret_func = False; self.fret_pref = False; self.fprotos = {}; self.structs_used = set()
+        self.fret_func = False; self.fret_pref = False; self.fprotos = {}; self.structs_used = set(); self.qstructs = set(); self.flvt = {}
+        self.brks = []        # per loop being emitted: (state, if-body) of each `break`
         self.masks = {}       # text of a `subfe r,x,x` mask -> condition under which it is all ones
         self.calls = 0; self.rets = []; self.localnames = []
         self.signed = set(); self.unsigned = set()   # value names compared with signed / unsigned compares
@@ -322,6 +427,133 @@ class Gen:
             out.append(i); k += 1
         return out
 
+    @staticmethod
+    def fuse_copies(insns):
+        """A struct assignment of N doublewords compiles to the counted loop
+        `li rC,N; subi rS,src,8; subi rD,dst,8; mtctr rC; ldu rT,8(rS); stdu rT,8(rD); bdnz`
+        (the setup may be interleaved with other instructions): one pseudo instruction
+        `ts4copy dst, src, N, rC, rS, rD, rT` in place of the mtctr."""
+        out, k = [], 0
+        while k < len(insns):
+            m = insns[k:k + 4]
+            if len(m) == 4 and m[0].mn == 'mtctr' and [x.mn for x in m[1:]] == ['ldu', 'stdu', 'bdnz'] and m[3].tgt == m[1].addr:
+                rc = m[0].ops[0]
+                ms = re.fullmatch(r'(?:0x)?8\((r\d+)\)', m[1].ops[1]); md = re.fullmatch(r'(?:0x)?8\((r\d+)\)', m[2].ops[1])
+                found, ok = {}, bool(ms and md and m[1].ops[0] == m[2].ops[0])
+                want = {rc: 'li', ms.group(1): 'subi', md.group(1): 'subi'} if ok else {}
+                if ok and len(want) != 3:
+                    ok = False
+                j = len(out) - 1
+                while ok and j >= 0 and len(out) - j <= 8 and len(found) < 3:
+                    x = out[j]
+                    d = dst_regs([x]) if not x.mn.startswith('b') else {'*'}
+                    if '*' in d:
+                        break
+                    for r in d & set(want):
+                        if r in found:
+                            continue
+                        if x.mn == want[r] and (x.mn == 'li' or x.ops[2] in ('0x8', '8')):
+                            found[r] = j
+                        else:
+                            ok = False
+                    j -= 1
+                if ok and len(found) == 3:
+                    srcb, dstb = out[found[ms.group(1)]].ops[1], out[found[md.group(1)]].ops[1]
+                    # the base registers must keep their values up to the copy
+                    if not any(srcb in dst_regs([x]) for x in out[found[ms.group(1)] + 1:]) \
+                            and not any(dstb in dst_regs([x]) for x in out[found[md.group(1)] + 1:]):
+                        n = int(out[found[rc]].ops[1], 0)
+                        for idx in sorted(found.values(), reverse=True):
+                            del out[idx]
+                        ops = [dstb, srcb, str(n), rc, ms.group(1), md.group(1), m[1].ops[0]]
+                        out.append(type(m[0])(m[0].addr, 'ts4copy', ops, None, None, None, m[0].ln))
+                        k += 4
+                        continue
+            out.append(insns[k]); k += 1
+        return out
+
+    @staticmethod
+    def fuse_fpr_saves(insns):
+        """`subi r12,r1,X; bl __savefpr_N` / `__restfpr_N` save and restore f(N)..f31 below the
+        general register save area: prologue / epilogue only, dropped."""
+        out = []
+        for i in insns:
+            if i.mn == 'bl' and (i.sym or '').startswith(('__savefpr', '__restfpr')) and out \
+                    and out[-1].mn == 'subi' and out[-1].ops[:2] == ['r12', 'r1']:
+                out.pop(); continue
+            out.append(i)
+        return out
+
+    def fuse_varargs(self, insns):
+        """`T f(a0, .., aN-1, ...)`: the prologue spills r(N+3)..r10 to their home slots
+        F+0x10+8*k (before the stwu) and `addi rP,r1,L; addi rQ,r1,F+0x10+8*N; stw rQ,0(rP)`
+        is `__va_start(&ap, aN-1)` with the va_list `ap` at L.  The spills are dropped and
+        the three instructions become the pseudo instruction `ts4vastart L, rP, rQ`.
+        Sets self.va = (N, L, F) or None."""
+        self.va = None
+        sp = {}
+        for k, i in enumerate(insns[:12]):
+            if i.mn == 'stwu':
+                break
+            m = re.fullmatch(r'r(\d+)', i.ops[0]) if i.mn == 'std' and i.ops else None
+            mo = re.fullmatch(r'(\w+)\(r1\)', i.ops[1]) if m else None
+            if m and mo and int(mo.group(1), 0) == 0x10 + 8 * (int(m.group(1)) - 3):
+                sp[int(m.group(1))] = k
+        if not sp or max(sp) != 10 or sorted(sp) != list(range(min(sp), 11)) or min(sp) < 4:
+            return insns
+        n = min(sp) - 3
+        F = next((int(i.ops[1].split('(')[0], 0) * -1 for i in insns[:12] if i.mn == 'stwu' and i.ops[0] == 'r1'), None)
+        if F is None:
+            return insns
+        rest = [i for k, i in enumerate(insns) if k not in sp.values()]
+        for k, c in enumerate(rest):
+            mc = re.fullmatch(r'(?:0x)?0\((r\d+)\)', c.ops[1]) if c.mn == 'stw' and len(c.ops) == 2 else None
+            if not mc:
+                continue
+            defs = {}
+            for j in range(max(0, k - 8), k):
+                x = rest[j]
+                if x.mn.startswith('b'):
+                    defs.clear(); continue
+                for r in dst_regs([x]):
+                    defs[r] = j
+            jp, jq = defs.get(mc.group(1)), defs.get(c.ops[0])
+            if jp is None or jq is None or jp == jq:
+                continue
+            p_, q_ = rest[jp], rest[jq]
+            if p_.mn == q_.mn == 'addi' and p_.ops[1] == q_.ops[1] == 'r1' and int(q_.ops[2], 0) == F + 0x10 + 8 * n:
+                L = int(p_.ops[2], 0)
+                self.va = (n, L, F)
+                pseudo = type(c)(c.addr, 'ts4vastart', [str(L), p_.ops[0], q_.ops[0]], None, None, None, c.ln)
+                return [x for j, x in enumerate(rest[:k]) if j not in (jp, jq)] + [pseudo] + rest[k + 1:]
+        raise Skip('varargs')
+
+    @staticmethod
+    def fuse_switches(insns):
+        """MSVC's dense small switch: `cmplwi crA,rX,N; bgt crA,D; mtctr rX; cmpwi crB,rX,0;
+        bdzf crBeq,T1; ...; bdzf crBeq,T(N-1); bne crB,TN` (case 0 falls through) becomes one
+        terminator `ts4switch rX, D, T0, ..., TN`."""
+        out, k = [], 0
+        while k < len(insns):
+            i = insns[k]
+            if i.mn == 'cmplwi' and k + 4 < len(insns):
+                ops = i.ops if len(i.ops) == 3 else ['cr0'] + i.ops
+                ca, rx, n = ops[0], ops[1], int(ops[2], 0)
+                m = insns[k + 1:k + 4 + n]
+                if 2 <= n <= 16 and len(m) == n + 3 and m[0].mn == 'bgt' and (m[0].ops[0] if m[0].ops[0].startswith('cr') else 'cr0') == ca:
+                    pair = {x.mn: x for x in m[1:3]}
+                    cb = pair['cmpwi'].ops[0] if 'cmpwi' in pair and len(pair['cmpwi'].ops) == 3 else None
+                    ok = set(pair) == {'mtctr', 'cmpwi'} and pair['mtctr'].ops == [rx] and cb \
+                        and pair['cmpwi'].ops[1:] == [rx, '0x0'] and m[-1].mn == 'bne' and m[-1].ops[0] == cb
+                    ok = ok and all(x.mn == 'bdzf' and x.ops[0] == cb + 'eq' and x.tgt for x in m[3:-1])
+                    if ok and m[0].tgt and m[-1].tgt and k + n + 4 < len(insns):
+                        t = [insns[k + n + 4].addr] + [x.tgt for x in m[3:]]
+                        out.append(type(i)(i.addr, 'ts4switch', [rx, str(m[0].tgt)] + [str(a) for a in t], None, None, None, i.ln))
+                        k += n + 4
+                        continue
+            out.append(i); k += 1
+        return out
+
     # ---- stack locals ------------------------------------------------------
     SZ = {'lwz': 4, 'stw': 4, 'lbz': 1, 'stb': 1, 'lhz': 2, 'lha': 2, 'sth': 2, 'lfs': 4, 'stfs': 4, 'lfd': 8, 'stfd': 8}
 
@@ -353,11 +585,14 @@ class Gen:
                 m = re.fullmatch(r'(\w+)\(r1\)', i.ops[1])
                 if m and base <= int(m.group(1), 0) < base + 0x90 and i.ops[0] not in stores:
                     stores[i.ops[0]] = (i.mn, int(m.group(1), 0))
-            if i.mn.startswith('b') and not (i.sym or '').startswith('__savegprlr'):
-                break
+            if i.mn.startswith('b'):
+                if not (i.sym or '').startswith(('__savegprlr', '__savefpr')):
+                    break
+                continue                     # the register save helper touches no argument
             written |= dst_regs([i])
-        if not any(mn == 'std' for mn, o in stores.values()):
-            return
+        if not any(mn == 'std' for mn, o in stores.values()) and not (
+                stores and all(mn == 'stw' and o == base + 8 * (int(r[1:]) - 3) + 4 for r, (mn, o) in stores.items())):
+            return       # (only address-taken word parameters: `stw rK` to the low half of its slot)
         partial = set()      # registers re-passed as a partial last register (lwz + rldicr 32,63)
         for k, i in enumerate(self.insns):
             if i.mn == 'rldicr' and i.ops[2:] == ['32', '63']:
@@ -498,11 +733,14 @@ class Gen:
             m = re.search(r'REL24\s+__savegprlr_(\d+)', ln)
             if m:
                 saved = 8 + 8 * (32 - int(m.group(1)))
-        if n is None or any('__savefpr' in ln or '__savevmx' in ln for ln in self.lines[:12]):
+        if n is None or any('__savevmx' in ln for ln in self.lines[:12]):
             return None
+        fpr = [int(m.group(1)) for ln in self.lines[:12] for m in [re.search(r'REL24\s+__savefpr_(\d+)', ln)] if m]
         if saved is None:
             saved = 8 + 8 * sum(1 for ln in self.lines[:12] if re.search(r'\bstd\s+r\d+,\s*-\w+\(r1\)', ln))
         saved += 8 * sum(1 for ln in self.lines[:12] if re.search(r'\bstfd\s+f\d+,\s*-\w+\(r1\)', ln))
+        if fpr:
+            saved += 8 * (32 - fpr[0])
         return n, saved
 
     def local_of(self, off):
@@ -543,6 +781,13 @@ class Gen:
                     raise Skip('fret mixed')
                 v.used = True
                 return v.n
+            if isinstance(v, tuple) and v[0] == 'sloc' and self.local_ref(v[1], 'ts4_u64') is not None:
+                return f'({self.local_ref(v[1], "ts4_u64")})'    # 8 bytes of a stack local used as a number
+            if isinstance(v, tuple) and v[0] == 'mulhu' and magic_div(v[2], v[3]) is not None:
+                return f'((ts4_word){v[1]} / {magic_div(v[2], v[3])})'   # unsigned division by a constant
+            if isinstance(v, tuple) and v[0] == 'clz':
+                self.intrinsics.add('clz')      # a count of leading zeros used as a number
+                return f'((ts4_word)_CountLeadingZeros({v[1]}))'
             return v
         n = int(r[1:])
         if n < 3 or n > 10 or r in st['clobbered']:
@@ -583,9 +828,21 @@ class Gen:
         first into pre_out).  Registers without a value in every path become
         unusable (clobbered)."""
         regs0 = st['regs']
-        for s, o in arms:
-            if s['vregs'] != st['vregs']:
-                raise Skip('vec phi')
+        for r in sorted(set().union(*(set(s['vregs']) for s, o in arms)) | set(st['vregs'])):
+            if all(s['vregs'].get(r) == st['vregs'].get(r) for s, o in arms):
+                continue
+            vals = [s['vregs'].get(r) for s, o in arms] + ([st['vregs'].get(r)] if pre_out is not None else [])
+            if any(v is None or v == '__vclob' for v in vals):
+                st['vregs'][r] = '__vclob'      # no value on some path: dead after the join
+                continue
+            self.ntmp += 1
+            pn = f'pv{self.ntmp}'
+            self.vdecls.append(pn)
+            if pre_out is not None:
+                pre_out.append(f'{pn} = {st["vregs"][r]};')
+            for s, o in arms:
+                o.append(f'{pn} = {s["vregs"][r]};')
+            st['vregs'][r] = pn; st['vwritten'].add(r)
         for f in sorted(set().union(*(set(s['fregs']) for s, o in arms)) | set(st['fregs'])):
             if all(s['fregs'].get(f) is st['fregs'].get(f) for s, o in arms):
                 continue
@@ -593,11 +850,12 @@ class Gen:
             if tys & {'ctiw', 'i64', 'fret'}:   # a pending conversion / call result: dead after the join
                 st['fregs'].pop(f, None); st['fwritten'].discard(f); st['clobbered'].add(f)
                 continue
-            if len(tys) != 1:
-                raise Skip('float phi')
+            if len(tys) != 1 or not tys <= {'float', 'double'}:
+                # mixed float/double (or other) values: only usable when dead after the join
+                # (a later read of the clobbered register is refused)
+                st['fregs'].pop(f, None); st['fwritten'].discard(f); st['clobbered'].add(f)
+                continue
             t = tys.pop()
-            if t not in ('float', 'double'):
-                raise Skip('float phi')
             if not all(self._fhas(s, f) for s, o in arms) or (pre_out is not None and not self._fhas(st, f)):
                 # no value on some path: the register is dead after the join
                 st['fregs'].pop(f, None); st['fwritten'].discard(f); st['clobbered'].add(f)
@@ -656,7 +914,7 @@ class Gen:
                 v.used = True
                 return v.n
             return v
-        if f not in ('f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8') or f in st['clobbered']:
+        if f not in tuple(f'f{j}' for j in range(1, 14)) or f in st['clobbered']:
             raise Skip('freg')
         self.fparams.setdefault(f, t)
         return f
@@ -664,7 +922,7 @@ class Gen:
     @staticmethod
     def _fhas(st, f):
         """True when float register f has a value in st (written, or an untouched parameter)."""
-        return f in st['fregs'] or (f in ('f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8') and f not in st['clobbered'])
+        return f in st['fregs'] or (f in tuple(f'f{j}' for j in range(1, 14)) and f not in st['clobbered'])
 
     def setf(self, st, f, e, t='float'):
         st['fregs'][f] = (e, t); st['fwritten'].add(f)
@@ -711,6 +969,23 @@ class Gen:
                 o = self.newv(out, 'ts4_word', f'_InterlockedExchangeAdd({ptr}, (long){x})', pure=False)
                 setr(ro, o); setr(rv, f'({o.n} + {x})'); o.used = True
             return
+        if mn == 'ts4vastart':
+            out.append(f'TS4_VA_START(ap, a{self.va[0] - 1});')
+            for r in ops[1:]:
+                regs.pop(r, None); written.discard(r); clobbered.add(r)
+            return
+        if mn == 'ts4copy':
+            d = rd(ops[0]); sv = rd(ops[1]); nohi(d, sv); n = int(ops[2])
+            self.qstructs.add(n); self.kinds.append('copy')
+            out.append(f'*(ts4_q{n} *)({d}) = *(ts4_q{n} *)({sv});')
+            for r in ops[3:]:
+                regs.pop(r, None); written.discard(r); clobbered.add(r)
+            return
+        if mn == 'mftb' and ops[1:] == ['268']:
+            # time base read: the __mftb() intrinsic (64-bit; stw keeps the low word)
+            self.intrinsics.add('mftb')
+            setr(ops[0], self.newv(out, 'ts4_u64', '__mftb()', pure=False))
+            return
         if mn == 'bl' and sym and sym.startswith('__savegprlr'):
             return
         if mn == 'stwu' and ops[0] == 'r1':
@@ -727,6 +1002,14 @@ class Gen:
             for x in ([a, b] if reg2 else [a]):
                 (self.unsigned if cast == 'ts4_word' else self.signed).add(x)
             st['cmps'][cr] = (f'({cast}){a}', f'({cast}){b}' if reg2 else b, False)
+            return
+        if mn in ('cmpld', 'cmpd', 'cmpldi', 'cmpdi'):
+            # 64-bit compares (doubleword values: ld, 64-bit params)
+            o = [x for x in ops if not x.startswith('cr')]
+            cr = ops[0] if ops[0].startswith('cr') else 'cr0'
+            a = rd(o[0]); b = rd(o[1]) if mn in ('cmpld', 'cmpd') else str(num(o[1])); nohi(a, b)
+            cast = 'ts4_u64' if mn.startswith('cmpld') else 'ts4_s64'
+            st['cmps'][cr] = (f'({cast}){a}', f'({cast}){b}', False)
             return
         if mn in ('fcmpu', 'fcmpo'):
             cr = ops[0]
@@ -762,30 +1045,67 @@ class Gen:
             if base == 'r1':
                 if off < 0 and (self.has_frame or (mn in ('std', 'ld') and int(ops[0][1:]) >= 14)):
                     return      # register save area (also callee-saved registers of frameless leaves)
+                if mn == 'stfd' and any(i_.mn == 'ld' and i_.ops[1] == ops[1] for i_ in self.insns) \
+                        and not any(i_.mn == 'lfd' and i_.ops[1] == ops[1] for i_ in self.insns):
+                    # a double moved to a GPR through the stack: a variable argument of a `...` callee
+                    st['slots'][('fd', off)] = self.fval(st, ops[0], 'double'); return
+                if mn == 'ld' and ('fd', off) in st['slots']:
+                    setr(ops[0], ('vdbl', st['slots'][('fd', off)])); return
+                if off in self.sfp:
+                    if mn != 'lfs':
+                        raise Skip('stack float param')
+                    self.setf(st, ops[0], f'f{self.sfp[off]}', 'float'); return
+                if self.va and off in self.home_off and self.home_off[off][0] == 'ap':
+                    if mn == 'lwz' and off == self.va[1]:
+                        setr(ops[0], '(ts4_word)ap'); return
+                    raise Skip('va slot')
                 if off in self.home_off:
                     self.home_step(ins, st, out, off); return
                 sl = st['slots']
                 if mn == 'stfd' and isinstance(st['fregs'].get(ops[0], (None, None))[1], str) and st['fregs'][ops[0]][1] == 'ctiw':
                     sl[off + 4] = st['fregs'][ops[0]][0]; return
-                if mn == 'lwz' and off in sl and sl[off].startswith('(int)('):
+                if mn == 'lwz' and off in sl and isinstance(sl[off], str) and sl[off].startswith(('(int)(', '(ts4_word)(')):
                     setr(ops[0], sl[off]); return
                 if mn == 'std' and isinstance(regs.get(ops[0]), str) and regs[ops[0]].startswith('((ts4_s64)'):
                     sl[off] = regs[ops[0]]; return
-                if mn == 'std' and isinstance(regs.get(ops[0]), V) and regs[ops[0]].t in ('unsigned short', 'unsigned char'):
+                lfd_ = off in {int(m_.group(1), 0) for i_ in self.insns if i_.mn == 'lfd' for m_ in [re.match(r'(-?\w+)\(r1\)', i_.ops[1])] if m_}
+                if mn == 'std' and isinstance(regs.get(ops[0]), V) and (regs[ops[0]].t in ('unsigned short', 'unsigned char') or (lfd_ and regs[ops[0]].t == 'ts4_word')):
                     # a zero-extended small value spilled for an integer -> float conversion (std/lfd/fcfid)
                     v = regs[ops[0]]; v.used = True; sl[off] = f'((ts4_s64){v.n})'; return
+                if mn == 'std' and lfd_ and isinstance(regs.get(ops[0]), str) and regs[ops[0]].startswith(('((short)', '((signed char)')):
+                    sl[off] = f'((ts4_s64){regs[ops[0]]})'; return     # a sign-extended small value converted to float
+                mm_ = re.fullmatch(r'\((.*) & (0x[0-9a-f]+)\)', regs[ops[0]]) if mn == 'std' and isinstance(regs.get(ops[0]), str) else None
+                if mm_ and int(mm_.group(2), 16) < 0x80000000:
+                    # a masked (non-negative) word spilled for an int -> float conversion: no extsw
+                    sl[off] = f'((ts4_s64)(int){regs[ops[0]]})'; return
+                lv0 = regs.get(ops[0])
+                if mn == 'std' and isinstance(lv0, V) and getattr(lv0, 'maddr', (0, 0, ''))[2] == 'ld':
+                    # an 8-byte struct copied through the stack (ld/std, then lwz of its words)
+                    self.structs_used.add(2)
+                    cv = self.newv(out, 'ts4_args2', f'*(ts4_args2 *)((char *)(ts4_word)({lv0.maddr[0]}) + {lv0.maddr[1]})', pure=False)
+                    sl[('cp', off)] = cv; return
+                if mn == 'lwz' and (('cp', off) in sl or ('cp', off - 4) in sl):
+                    cv = sl.get(('cp', off)) or sl[('cp', off - 4)]; cv.used = True
+                    setr(ops[0], f'{cv.n}.w[{0 if ("cp", off) in sl else 1}]'); return
                 if mn == 'lfd' and off in sl and sl[off].startswith('((ts4_s64)'):
                     self.setf(st, ops[0], sl[off], 'i64'); return
                 if mn == 'ld' and off % 4 == 0 and self.local_ref(off, 'ts4_word') is not None:
                     # 8 bytes of a stack struct loaded into an argument register (struct by value)
                     setr(ops[0], ('sloc', off)); return
+                if mn == 'std' and not lfd_ and self.local_ref(off, 'ts4_u64') is not None:
+                    # a 64-bit value (parameter register) stored into a stack local
+                    self.ptype[ops[0]] = 'ts4_u64'
+                    v = rd(ops[0]); nohi(v)
+                    out.append(f'{self.local_ref(off, "ts4_u64")} = (ts4_u64){v};'); return
                 if mn == 'ld' or mn == 'std':
                     raise Skip(mn)
                 ty_ = (LD.get(mn) or ST.get(mn) or FLD.get(mn) or FST.get(mn))[0]
                 el = self.local_ref(off, ty_)
                 if el is not None:
                     if mn in LD:
-                        setr(ops[0], self.newv(out, ty_, el))
+                        lv1 = self.newv(out, ty_, el); setr(ops[0], lv1)
+                        if mn == 'lwz':
+                            lv1.soff = off
                     elif mn in ST:
                         v = rd(ops[0]); nohi(v)
                         out.append(f'{el} = ({ty_}){v};')
@@ -799,6 +1119,10 @@ class Gen:
                     st['stackargs'][(off - 0x54) // 8] = v
                     return
                 raise Skip('stack')
+            hi_ = regs.get(base) if isinstance(regs.get(base), tuple) and regs[base][0] == 'hi' else None
+            m_ = re.search(r'_([0-9A-Fa-f]{8})$', hi_[1]) if hi_ and not rk and mn in ('ld', 'std') else None
+            if m_ and int(m_.group(1), 16) & 0xFFFF == off & 0xFFFF:
+                rk = 'REFLO'      # DS-form ld/std: the disassembly carries no REFLO annotation
             if rk == 'REFLO' and isinstance(regs.get(base), tuple):
                 s = regs[base][1]; self.externs[s] = 1; addr_e = f'{s}'
             else:
@@ -811,13 +1135,20 @@ class Gen:
                 lv_ = self.newv(out, t, f'*({self.q("l")}{t} *){addr_e}')
                 if not rk and mn in ('ld', 'lwz'):
                     lv_.maddr = (bv, off, mn)
+                elif rk == 'REFLO' and mn in ('ld', 'lwz'):
+                    lv_.maddr = (f'(ts4_word){addr_e}', 0, mn)    # a global: as addressed through `addi lo`
                 setr(ops[0], lv_)
                 self.detail.append(f'{ty}@{off:#x}' if not rk else f'{ty}@{addr_e}'); self.kinds.append('get')
             elif mn in ST:
                 t, ty = ST[mn]; r = ops[0]
-                if mn == 'std':
-                    self.ptype[r] = 'ts4_u64'
-                v = rd(r); nohi(v)
+                if mn == 'std' and r not in regs and r not in st['clobbered']:
+                    self.ptype[r] = 'ts4_u64'     # a 64-bit parameter
+                if mn == 'std' and isinstance(regs.get(r), tuple) and regs[r][0] == 'sloc':
+                    v = self.local_ref(regs[r][1], 'ts4_u64')     # 8-byte copy out of a stack local
+                    if v is None:
+                        raise Skip('hi value')
+                else:
+                    v = rd(r); nohi(v)
                 out.append(f'*({self.q("s")}{t} *){addr_e} = ({t}){v};')
                 self.detail.append(f'{ty}@{off:#x}' if not rk else f'{ty}@{addr_e}'); self.kinds.append('set')
             elif mn in FLD:
@@ -830,6 +1161,41 @@ class Gen:
         if mn in IDX_LD:
             t = IDX_LD[mn]; a = rd(ops[1]); b = rd(ops[2]); nohi(a, b)
             setr(ops[0], self.newv(out, t, f'*({self.q("l")}{t} *)((char *)(ts4_word)({a}) + {b})')); self.kinds.append('get')
+            return
+        if mn in IDX_FLD:
+            t = IDX_FLD[mn]; a = rd(ops[1]); b = rd(ops[2]); nohi(a, b)
+            v = self.newv(out, t, f'*({t} *)((char *)(ts4_word)({a}) + {b})'); self.setf(st, ops[0], v, t); self.kinds.append('get')
+            return
+        if mn == 'addc':
+            # signed `x <= K` without branches: (K - x) + (x ^ 0x80000000) carries exactly when x > K
+            a = rd(ops[1]); b = rd(ops[2]); nohi(a, b)
+            for p_, q_ in ((a, b), (b, a)):
+                m1 = re.fullmatch(r'\((.*) \^ 2147483648\)', q_)
+                m2 = re.fullmatch(r'\((-?\d+) - (.*)\)', p_) if m1 else None
+                if m2 and m2.group(2) == m1.group(1):
+                    x, K = m1.group(1), int(m2.group(1))
+                    setr(ops[0], f'({a} + {b})')
+                    regs['__ca'] = ('ca', f'((int){x} > {K})', x, ops[0], None, None, f'((int){x} <= {K})'); return
+            raise Skip('addc')
+        if mn == 'stfiwx':
+            # store the integer word of a float -> int conversion (fctiwz / fctidz)
+            fv, ft = st['fregs'].get(ops[0], (None, None))
+            if ft != 'ctiw':
+                raise Skip('stfiwx')
+            t = 'int' if fv.startswith('(int)') else 'ts4_word'
+            b = rd(ops[2]); nohi(b)
+            if ops[1] == 'r0':
+                out.append(f'*({self.q("s")}{t} *)(ts4_word)({b}) = {fv};')
+            else:
+                a = rd(ops[1]); nohi(a)
+                out.append(f'*({self.q("s")}{t} *)((char *)(ts4_word)({a}) + {b}) = {fv};')
+            self.kinds.append('set'); return
+        if mn == 'subfze' and isinstance(regs.get('__ca'), tuple) and regs['__ca'][0] == 'ca' \
+                and cnum(regs.get(ops[1]) if isinstance(regs.get(ops[1]), str) else None) == 0xFFFFFFFF:
+            setr(ops[0], regs['__ca'][1]); return       # ~(-1) + CA: the carry condition
+        if mn in IDX_FST:
+            t = IDX_FST[mn]; a = rd(ops[1]); b = rd(ops[2]); nohi(a, b)
+            out.append(f'*({self.q("s")}{t} *)((char *)(ts4_word)({a}) + {b}) = {self.fval(st, ops[0], t)};'); self.kinds.append('set')
             return
         if mn in IDX_ST:
             t = IDX_ST[mn]; v = rd(ops[0]); a = rd(ops[1]); b = rd(ops[2]); nohi(v, a, b)
@@ -866,8 +1232,44 @@ class Gen:
                 a = rd(ops[1]); nohi(a)
                 setr(ops[0], f'({a} + {v})')
             return
+        if mn == 'subis' and ops[1] != 'r0':
+            a = rd(ops[1]); nohi(a); setr(ops[0], f'({a} - {num(ops[2]) << 16})'); return
+        if mn == 'extlwi':
+            a = rd(ops[1]); nohi(a); n, b = num(ops[2]), num(ops[3])
+            setr(ops[0], f'(({a} << {b}) & {hex((0xFFFFFFFF << (32 - n)) & 0xFFFFFFFF)})'); return
         if mn == 'addis':
             a = rd(ops[1]); nohi(a); setr(ops[0], f'({a} + {num(ops[2]) << 16})'); return
+        if mn in ('mulhwu', 'mulhw'):
+            # division by a constant: multiply-high by the magic number (then a shift)
+            a = rd(ops[1]); b = rd(ops[2]); nohi(a, b)
+            ca, cb = cnum(a), cnum(b)
+            x, M = (a, cb) if cb is not None else (b, ca)
+            if M is None:
+                raise Skip(mn)
+            setr(ops[0], ('mulhu' if mn == 'mulhwu' else 'mulhs', x, M, 0)); return
+        if mn == 'add' and any(isinstance(regs.get(o), tuple) and regs[o][0] == 'mulhs' and regs[o][2] >= 1 << 31 and regs[o][3] == 0
+                               and not isinstance(regs.get(p_), tuple) and rd(p_) == regs[o][1]
+                               for o, p_ in ((ops[1], ops[2]), (ops[2], ops[1]))):
+            # magic numbers >= 2^31 for signed division: multiply-high, then add the dividend
+            o = ops[1] if isinstance(regs.get(ops[1]), tuple) else ops[2]
+            setr(ops[0], ('mulhs', regs[o][1], regs[o][2] | (1 << 32), 0)); return
+        if mn in ('srwi', 'srawi') and isinstance(regs.get(ops[1]), tuple) and regs[ops[1]][0] in ('mulhu', 'mulhs') \
+                and regs[ops[1]][3] == 0 and (mn == 'srwi') == (regs[ops[1]][0] == 'mulhu'):
+            k, x, M, _ = regs[ops[1]]
+            setr(ops[0], (k, x, M, num(ops[2]))); return
+        if mn == 'srwi' and ops[2] == '31' and isinstance(regs.get(ops[1]), tuple) and regs[ops[1]][0] == 'mulhs':
+            setr(ops[0], ('msign',) + regs[ops[1]][1:]); return
+        if mn == 'add' and all(isinstance(regs.get(o), tuple) for o in ops[1:]) \
+                and sorted(regs[o][0] for o in ops[1:]) == ['msign', 'mulhs'] and regs[ops[1]][1:] == regs[ops[2]][1:]:
+            _, x, M, sh = regs[ops[1]]
+            d = magic_div(M, sh, signed=True)
+            if d is None:
+                raise Skip('mulhw')
+            setr(ops[0], f'((int){x} / {d})'); return
+        if mn == 'subf' and not isinstance(regs.get(ops[1]), tuple) and not isinstance(regs.get(ops[2]), tuple):
+            qm = qmultiple(rd(ops[1]))
+            if qm and qm[1] == qm[3] and qm[0] == rd(ops[2]):
+                setr(ops[0], f'((int){qm[0]} % {qm[1]})' if qm[2] else f'((ts4_word){qm[0]} % {qm[1]})'); return
         if mn in ('add', 'subf', 'and', 'or', 'xor', 'andc', 'nor', 'mullw', 'divw', 'divwu', 'slw', 'srw', 'sraw'):
             a = rd(ops[1]); b = rd(ops[2]); nohi(a, b)
             if mn == 'and' and (a in self.masks or b in self.masks):
@@ -898,6 +1300,8 @@ class Gen:
             a = rd(ops[1]); nohi(a)
             v = num(ops[2]) << (16 if mn.endswith('is') else 0)
             setr(ops[0], f'({a} {"^" if mn.startswith("xor") else "|"} {v})'); return
+        if mn == 'srwi' and ops[2] == '5' and isinstance(regs.get(ops[1]), tuple) and regs[ops[1]][0] == 'clz':
+            setr(ops[0], f'({regs[ops[1]][1]} == 0)'); return     # cntlzw(x) >> 5 is (x == 0)
         if mn in ('slwi', 'srwi', 'srawi'):
             a = rd(ops[1]); nohi(a); n = num(ops[2])
             if mn == 'srawi':
@@ -917,6 +1321,11 @@ class Gen:
         if mn == 'rotlwi':
             a = rd(ops[1]); nohi(a); n = num(ops[2])
             setr(ops[0], f'(({a} << {n}) | ({a} >> {32 - n}))' if n else a); return
+        if mn == 'rlwinm' and isinstance(regs.get(ops[1]), tuple) and regs[ops[1]][0] == 'clz' \
+                and ops[3] == ops[4] and (26 - num(ops[2])) % 32 == num(ops[3]):
+            # bit 26 of cntlzw(x) is (x == 0); moved to bit mb
+            sh = 31 - num(ops[3]); a = regs[ops[1]][1]
+            setr(ops[0], f'(({a} == 0) << {sh})' if sh else f'({a} == 0)'); return
         if mn == 'rlwinm':
             a = rd(ops[1]); nohi(a); sh, mb, me = num(ops[2]), num(ops[3]), num(ops[4])
             if mb <= me:
@@ -945,6 +1354,8 @@ class Gen:
         if mn == 'rldicr' and ops[2:] == ['32', '63'] and isinstance(regs.get(ops[1]), V) and getattr(regs[ops[1]], 'home', None):
             v = regs[ops[1]]
             setr(ops[0], ('spart', v.home[0], v.home[1])); return
+        if mn == 'rldicr' and ops[2:] == ['32', '63'] and isinstance(regs.get(ops[1]), V) and getattr(regs[ops[1]], 'soff', None) is not None:
+            setr(ops[0], ('slochi', regs[ops[1]].soff)); return   # last word of a struct argument in a stack local
         if mn == 'rldicr' and ops[2:] == ['32', '63'] and isinstance(regs.get(ops[1]), V) \
                 and getattr(regs[ops[1]], 'maddr', (0, 0, ''))[2] == 'lwz':
             setr(ops[0], ('mhi', regs[ops[1]])); return   # last word of a struct passed from memory
@@ -974,6 +1385,9 @@ class Gen:
             a = rd(ops[1]); nohi(a); setr(ops[0], f'((ts4_s64)(ts4_word){a})'); return   # clrldi: zero-extend
         if mn == 'extsw':
             a = rd(ops[1]); nohi(a); setr(ops[0], f'((ts4_s64)(int){a})'); return
+        if mn == 'fctidz':
+            # double -> unsigned int goes through a 64-bit conversion; the low word is read back
+            a = self.fval(st, ops[1]); st['fregs'][ops[0]] = (f'(ts4_word)({a})', 'ctiw'); st['fwritten'].add(ops[0]); return
         if mn in ('fctiwz', 'fctiw'):
             a = self.fval(st, ops[1]); st['fregs'][ops[0]] = (f'(int)({a})', 'ctiw'); st['fwritten'].add(ops[0]); return
         if mn == 'fcfid':
@@ -1029,9 +1443,16 @@ class Gen:
             if isinstance(ca, tuple) and ca[0] == 'div' and ops[1] == ca[3]:
                 setr(ops[0], f'((int){ca[1]} / {1 << ca[2]})'); return   # signed division by 2^n
             raise Skip('addze')
+        if mn == 'addme':
+            # `subfic t,a,0; srwi s,a,31; addme s,s`: (a<0) + (a==0) - 1 is all ones exactly when a > 0
+            ca = regs.get('__ca')
+            if isinstance(ca, tuple) and ca[0] == 'ca' and ca[1] == f'({ca[2]} == 0)' and rd(ops[1]) == f'(({ca[2]}) >> 31)':
+                t = f'(-(int)((int){ca[2]} > 0))'
+                self.masks[t] = f'((int){ca[2]} > 0)'; setr(ops[0], t); return
+            raise Skip('addme')
         if mn == 'mtctr':
             v = rd(ops[0]); nohi(v)
-            if self.has_ctr_loop:
+            if self.has_ctr_loop and ins.addr in self.count_mtctr:
                 cn = self.newphi('c')
                 out.append(f'{cn} = (ts4_word){v};')
                 st['cnt'] = cn; return
@@ -1039,11 +1460,27 @@ class Gen:
         # float basics
         if mn == 'fmr':
             setf_t = st['fregs'].get(ops[1], (None, 'float'))[1]
-            self.setf(st, ops[0], self.fval(st, ops[1]), setf_t); return
+            if setf_t == 'fret':
+                setf_t = 'float'     # a copied call result (e.g. into f31 across a call): float
+            self.setf(st, ops[0], self.fval(st, ops[1], setf_t), setf_t); return
         if mn in ('fadds', 'fsubs', 'fmuls', 'fdivs', 'fadd', 'fsub', 'fmul', 'fdiv'):
             t = 'float' if mn.endswith('s') else 'double'
             a = self.fval(st, ops[1], t); b = self.fval(st, ops[2], t)
             self.setf(st, ops[0], f'({a} {"+-*/"[["add", "sub", "mul", "div"].index(mn.rstrip("s")[1:])]} {b})', t); return
+        if mn in ('fmadds', 'fmsubs', 'fnmadds', 'fnmsubs', 'fmadd', 'fmsub', 'fnmadd', 'fnmsub'):
+            # fused multiply-add: the compiler contracts `a * c + b`
+            t = 'float' if mn.endswith('s') else 'double'
+            a = self.fval(st, ops[1], t); c = self.fval(st, ops[2], t); b = self.fval(st, ops[3], t)
+            k = mn.rstrip('s') if t == 'float' else mn
+            e = {'fmadd': f'(({a} * {c}) + {b})', 'fmsub': f'(({a} * {c}) - {b})',
+                 'fnmadd': f'(-(({a} * {c}) + {b}))', 'fnmsub': f'({b} - ({a} * {c}))'}[k]
+            self.setf(st, ops[0], e, t); return
+        if mn in ('fsqrts', 'fsqrt'):
+            # the sqrt intrinsic (single precision when its result is rounded to float)
+            self.intrinsics.add('sqrt')
+            t = 'float' if mn == 'fsqrts' else 'double'
+            a = self.fval(st, ops[1], t)
+            self.setf(st, ops[0], f'((float)sqrt((double){a}))' if t == 'float' else f'sqrt({a})', t); return
         if mn in ('fneg', 'fabs'):
             a = self.fval(st, ops[1])
             t = st['fregs'].get(ops[1], (None, 'float'))[1]
@@ -1052,11 +1489,37 @@ class Gen:
             self.call(ins, st, out); return
         raise Skip(mn)
 
+    def _home_floats(self):
+        """Address-taken float parameters: MSVC spills fN with `stfs` to the low word of
+        the home slot of the GPR position it takes (F+0x14+8*j)."""
+        self.home_float = {}
+        F = 0
+        for ln in self.lines[:12]:
+            m = re.search(r'\bstwu\s+r1,\s*-(\w+)\(r1\)', ln)
+            if m:
+                F = int(m.group(1), 0)
+        fw = set()
+        for i in self.insns:
+            if i.mn.startswith('b') and not (i.sym or '').startswith(('__savegprlr', '__savefpr')):
+                break
+            m = re.fullmatch(r'(\w+)\(r1\)', i.ops[1]) if i.mn == 'stfs' and len(i.ops) == 2 else None
+            if m and i.ops[0] not in fw and re.fullmatch(r'f([1-9]|1[0-3])', i.ops[0]):
+                o = int(m.group(1), 0)
+                if o >= F + 0x14 and (o - F - 0x14) % 8 == 0 and o < F + 0x50 and o not in self.home_off:
+                    self.home_off[o] = (i.ops[0], 0); self.home_float[i.ops[0]] = o
+            fw |= set(self.f_defs_uses(i)[0])
+
     def home_step(self, ins, st, out, off):
         """Access to the home slot of a struct parameter (see _home_structs)."""
         mn, ops = ins.mn, ins.ops
         name, b = self.home_off[off]
         regs = st['regs']
+        if name in self.home_float:
+            if mn == 'stfs' and ops[0] == name and name not in st['fregs'] and name not in st['clobbered']:
+                self.fval(st, name); return  # spill of an address-taken float parameter
+            if mn == 'lfs':
+                self.setf(st, ops[0], name, 'float'); return
+            raise Skip('home float')
         if mn == 'stw' and name in self.home_scalar and b == 0 and ops[0] == f'r{int(name[1:]) + 3}' \
                 and ops[0] not in regs and ops[0] not in st['clobbered']:
             return                           # spill of an address-taken word parameter
@@ -1124,7 +1587,7 @@ class Gen:
             if isinstance(raw[j], tuple) and raw[j][0] == 'mhi':
                 raise Skip('struct arg')
             try:
-                res.append(self.rd(st, names[j]))
+                res.append(raw[j] if isinstance(raw[j], tuple) and raw[j][0] == 'sloc' else self.rd(st, names[j]))
             except Skip:
                 if stop_on_skip:
                     res.append('__gap')    # filled by a float argument or cut off later
@@ -1144,7 +1607,7 @@ class Gen:
         while j < len(args):
             a = args[j]
             if not (isinstance(a, tuple) and a[0] == 'sloc'):
-                if isinstance(a, tuple) and a[0] == 'shi':
+                if isinstance(a, tuple) and a[0] in ('shi', 'slochi'):
                     raise Skip('struct arg')
                 res.append(a); j += 1
                 continue
@@ -1159,6 +1622,8 @@ class Gen:
             if j + n < len(args) and isinstance(args[j + n], tuple) and args[j + n][0] == 'shi':
                 out.append(f'{name}[{idx + nw}] = (ts4_word){args[j + n][1]};')
                 nw += 1; n += 1
+            elif j + n < len(args) and args[j + n] == ('slochi', off + 8 * n):
+                nw += 1; n += 1     # the last word is already in the local
             b = self.locbase[name]
             self.local_ext[b] = max(self.local_ext[b], idx + nw)
             self.structs_used.add(nw)
@@ -1243,11 +1708,13 @@ class Gen:
         if b in VUN:
             self.vset(st, out, ops[0], f'{VUN[b]}({self.vrd(st, ops[1])})'); return
         if b in VTRI:
-            self.vset(st, out, ops[0], f'{VTRI[b]}({self.vrd(st, ops[1])}, {self.vrd(st, ops[2])}, {self.vrd(st, ops[3])})'); return
+            # VMX128 three-operand forms accumulate into vD: vmaddfp128 vD,vA,vB = vA*vB + vD
+            c3 = ops[3] if len(ops) > 3 else ops[0]
+            self.vset(st, out, ops[0], f'{VTRI[b]}({self.vrd(st, ops[1])}, {self.vrd(st, ops[2])}, {self.vrd(st, c3)})'); return
         if b in VIMM:
             self.vset(st, out, ops[0], f'{VIMM[b]}({self.vrd(st, ops[1])}, {num(ops[2])})'); return
         if b == 'vspltisw':
-            self.vset(st, out, ops[0], f'__vspltisw({num(ops[1])})'); return
+            self.vset(st, out, ops[0], f'__vspltisw({num(ops[-1])})'); return   # vspltisw128 vD, v0, imm
         if b == 'vrlimi':
             self.vset(st, out, ops[0], f'__vrlimi({self.vrd(st, ops[0])}, {self.vrd(st, ops[1])}, {num(ops[2])}, {num(ops[3])})'); return
         raise Skip(mn)
@@ -1255,8 +1722,8 @@ class Gen:
     def call(self, ins, st, out):
         mn, sym, rk = ins.mn, ins.sym, ins.rk
         if self.has_vmx:
-            if any(v != '__vclob' for v in st['vregs'].values()) or self.vparams:
-                raise Skip('vmx call')     # a vector value live across the call
+            # volatile vector registers do not survive the call (a later read raises
+            # 'vreg clobbered'); v14-v31 / v64-v127 keep their values
             for n in list(range(0, 14)) + list(range(32, 64)):
                 st['vregs'][f'v{n}'] = '__vclob'
         regs = st['regs']; written = st['written']; clobbered = st['clobbered']
@@ -1294,19 +1761,28 @@ class Gen:
                 raise Skip('stack args gap')
             n = 8
         args = self.rdargs(st, [f'r{j}' for j in range(3, 3 + n)], stop_on_skip=True)
+        vnfix = self.env.variadic(sym) if mn == 'bl' else None
+        vdbl = {}
+        if vnfix is not None:   # doubles passed as variable arguments (in GPRs)
+            for j, a in enumerate(args):
+                if isinstance(a, tuple) and a[0] == 'vdbl' and j >= vnfix:
+                    vdbl[j] = ('f', f'(double)({a[1]})', 'double'); args[j] = f'__vdbl{j}'
         if sa:
             if len(args) != 8:
                 raise Skip('stack args regs')
             args += [sa[k] for k in range(len(sa))]; st['stackargs'] = {}
         if self.home and any(isinstance(a, tuple) for a in args):
             args = self.collapse_structs(args, self.home) or args
-        if any(isinstance(a, tuple) and a[0] in ('sloc', 'shi') for a in args):
+        if any(isinstance(a, tuple) and a[0] in ('sloc', 'shi', 'slochi') for a in args):
             args = self.stack_structs(args, out)
         if any(isinstance(a, tuple) for a in args) and not sa:
             # a variadic callee homes r3..r10, so its arity overstates the arguments: cut the
             # list where only `lis` temporaries / registers not set up for this call remain
             i = next(k for k, a in enumerate(args) if isinstance(a, tuple))
-            if all(isinstance(args[k], tuple) or f'r{k + 3}' not in written or f'r{k + 3}' in clobbered
+            # (a `lis` temporary is never an argument: when the callee does not read that
+            # register, the arguments end before it)
+            nfx = self.env.variadic(sym) if mn == 'bl' else None
+            if (mn == 'bl' and i >= ar) or (nfx is not None and i >= nfx) or all(isinstance(args[k], tuple) or f'r{k + 3}' not in written or f'r{k + 3}' in clobbered
                    for k in range(i, len(args))):
                 args = args[:i]
         if any(isinstance(a, tuple) for a in args):
@@ -1314,12 +1790,16 @@ class Gen:
         # float arguments: f1, f2, ... in order; each also takes the GPR slot of its position,
         # so they fill the argument positions whose GPR was not set up here
         nf = 0
-        while f'f{nf + 1}' in st['fwritten'] and nf < 8:
+        while f'f{nf + 1}' in st['fwritten'] and nf < 13 and st['fregs'].get(f'f{nf + 1}', (None, 'float'))[1] in ('float', 'double', 'fret'):
             nf += 1
         if mn == 'bl' and self.mode != 3:
             nf = max(nf, self.env.farity(sym))
+        if vnfix is not None:
+            nf = 0
         fargs = []
         for j in range(nf):
+            if st['fregs'].get(f'f{j + 1}', (None, 'float'))[1] not in ('float', 'double', 'fret'):
+                raise Skip('float arg type')   # a pending conversion (i64 / ctiw) is no argument
             fx = self.fval(st, f'f{j + 1}')
             fargs.append(('f', fx, st['fregs'][f'f{j + 1}'][1] if f'f{j + 1}' in st['fregs'] else self.fparams[f'f{j + 1}']))
         if fargs:
@@ -1334,12 +1814,13 @@ class Gen:
                 args += fargs
         if '__gap' in args:
             args = args[:args.index('__gap')]
+        args = [vdbl[j] if a == f'__vdbl{j}' else a for j, a in enumerate(args)]
         cav = ', '.join(self.argcast(a) for a in args)
         if mn == 'bl':
             self.protos[sym] = len(args); call = f'{sym}({cav})'; self.detail.append(sym)
             nfix = self.env.variadic(sym)
             if nfix is not None:
-                if any(isinstance(a, tuple) for a in args) or len(args) < nfix:
+                if any(isinstance(a, tuple) for a in args[:nfix]) or any(isinstance(a, tuple) and a[2] != 'double' for a in args) or len(args) < nfix:
                     raise Skip('variadic args')
                 self.fprotos[sym] = [self.argtype(a) for a in args[:nfix]] + ['...']
             elif any(isinstance(a, tuple) for a in args):
@@ -1349,6 +1830,12 @@ class Gen:
             pt = ', '.join(a[2] if isinstance(a, tuple) else self.argtype(a) for a in args)
             call = f'((ts4_word (*)({pt}))({st["ctr"]}))({cav})'
             self.detail.append('vcall'); self.kinds.append('vcall')
+        for f in sorted(st['fregs']):
+            # a value computed into a callee-saved register before the call (it lives across
+            # the call): compute it here, not at its use after the call
+            fe, ft = st['fregs'][f]
+            if int(f[1:]) >= 14 and isinstance(fe, str) and ft in ('float', 'double') and not re.fullmatch(r'[a-z]+\d+', fe):
+                st['fregs'][f] = (self.newv(out, ft, fe, pure=False), ft)
         v = self.newv(out, 'ts4_word', call, pure=False)
         v.callsym = sym if mn == 'bl' else '__vcall'
         for r in list(regs):
@@ -1388,6 +1875,8 @@ class Gen:
             r3v = st['regs'].get('r3')
             if 'r3' in written and 'f1' in st['fwritten'] and isinstance(r3v, V) and r3v.callsym and (not r3v.used or r3v.t in ('float', 'double')):
                 written = written - {'r3'}      # r3 only holds the ignored result of a call
+            elif 'r3' in written and 'f1' in st['fwritten'] and self.fret_pref:
+                written = written - {'r3'}      # retry after 'both ret': the function returns f1
             if 'r3' in written and 'f1' not in st['fwritten']:
                 r3v = st['regs'].get('r3')
                 rv = rd('r3')
@@ -1427,7 +1916,17 @@ class Gen:
             nfix = self.env.variadic(tail[1])
             if nfix is not None:   # `...` callee: the registers set up here (not `lis` temporaries)
                 k = max([2 + nfix] + [j for j in cand if not isinstance(st['regs'].get(f'r{j}'), tuple)])
+            raw_ = [st['regs'].get(f'r{j}') for j in range(3, k + 1)]
+            tar = nfix if nfix is not None else self.env.arity(tail[1])
+            if tar is not None:   # a temporary beyond the callee's parameters is no argument
+                cut = next((j for j, c in enumerate(raw_) if j >= tar and isinstance(c, tuple)), None)
+                if cut is not None:
+                    k = 2 + cut
             callargs = self.rdargs(st, [f'r{j}' for j in range(3, k + 1)])
+            if nfix is not None:   # variable arguments end before a `lis` temporary
+                cut = next((j for j, c in enumerate(callargs) if j >= nfix and isinstance(c, tuple)), None)
+                if cut is not None:
+                    callargs = callargs[:cut]
             if self.home and any(isinstance(c, tuple) for c in callargs):
                 callargs = self.collapse_structs(callargs, self.home) or callargs
             if any(isinstance(c, tuple) for c in callargs):
@@ -1613,17 +2112,141 @@ class Gen:
                 self.finish(('call', t[1]), st, out); return None
             elif k == 'ctr':
                 self.finish(('ctr', st['ctr']), st, out); return None
+            elif k == 'switch':
+                r = self.switch_stmt(bid, blk, stop, st, out)
+                if r is None:
+                    return None
+                bid = r
             else:
                 r = self.cond(bid, blk, stop, st, out)
                 if r is None or isinstance(r, str):
                     return r
                 bid = r
 
+    def switch_stmt(self, bid, blk, stop, st, out):
+        """`switch (x) { case k: ... }` for a ('switch', ...) block: every case either
+        returns or ends in `break;` at the common join."""
+        _, reg, D, T = blk.term
+        x = self.rd(st, reg)
+        if isinstance(x, tuple):
+            raise Skip('hi value')
+        if self.active:
+            raise Skip('switch in loop')
+        J = cfg.ipdom(self.pdom, bid)
+        groups = {}
+        for k, t in enumerate(T):
+            groups.setdefault(t, []).append(f'case {k}:')
+        groups.setdefault(D, []).append('default:')
+        parts, arms, direct = [], [], D == J
+        for t, labels in groups.items():
+            if t == J:
+                if D != J:
+                    parts.append((labels, [], True)); direct = True
+                continue
+            s_, o_, r_ = self.arm(t, stop, st, J)
+            if r_ is not None and r_ != J:
+                raise Skip('irregular exit')
+            if r_ == J:
+                arms.append((s_, o_))
+            parts.append((labels, o_, r_ == J))
+        if arms:
+            self.merge_phi(st, arms, out if direct else None)
+        body = []
+        for labels, o_, brk in parts:
+            body += labels + o_ + (['break;'] if brk else [])
+        out.append(('switch', f'(ts4_word)({x})', body))
+        if not arms and not direct:
+            return None
+        if J == cfg.EXIT:
+            raise Skip('irregular exit')
+        if not arms:
+            return J
+        return J
+
     def arm(self, start, stop, st, J):
         """Emit one branch arm in a copy of `st`; returns (state, out, reached)."""
         s = self.cp(st); o = []
         r = self.region(start, stop | {J}, s, o)
         return s, o, r
+
+    def _leads_to_exit(self, J, L):
+        """J is outside loop L and every path from it reaches the loop exit (a break
+        that runs code first, e.g. the erase after a find) without re-entering L, and
+        J is reached from inside the loop only (both arms are part of the break path)."""
+        X = self.exits[-1] if self.exits else None
+        if X is None or J <= 0:
+            return False
+        stack, seen, hit = [J], set(), False
+        while stack:
+            b = stack.pop()
+            if b == X:
+                hit = True
+                continue
+            if b in seen:
+                continue
+            seen.add(b)
+            if b <= 0 or b in L:
+                return False
+            bb = self.blocks[b]
+            if bb.term[0] in ('ret', 'tail', 'ctr'):
+                return False
+            stack.extend(cfg.succs(bb))
+        return hit
+
+    def _common_join(self, A, B, stop):
+        """Variant letter J: the first block (in address order) that both arms reach while
+        every other path of theirs returns, so a shared tail is emitted once."""
+        def paths_ok(start, C):
+            stack, seen, hit = [start], set(), False
+            while stack:
+                b = stack.pop()
+                if b == C:
+                    hit = True
+                    continue
+                if b in seen:
+                    continue
+                seen.add(b)
+                if b in stop or b not in self.blocks or b == cfg.EXIT:
+                    return False
+                bb = self.blocks[b]
+                if bb.term[0] in ('ret', 'tail', 'ctr'):
+                    continue
+                stack.extend(cfg.succs(bb))
+            return hit
+        for C in sorted(b for b in self.blocks if b > 0):
+            if C in (A, B) and False:
+                continue
+            if C != A and C != B and paths_ok(A, C) and paths_ok(B, C):
+                return C
+            if C == A and paths_ok(B, C) or C == B and paths_ok(A, C):
+                return C
+        return cfg.EXIT
+
+    def _flows_to(self, start, target, L, h, brk=False):
+        """Every path from `start` either returns or reaches `target` (staying inside loop L
+        and not taking the back edge to h), and some path reaches it.  With `brk`, paths
+        may also leave through the loop's exit block (a `break`)."""
+        stack, seen, hit = [start], set(), False
+        while stack:
+            b = stack.pop()
+            if b == target:
+                hit = True
+                continue
+            if brk and self.exits and b == self.exits[-1]:
+                continue
+            if b in seen:
+                continue
+            seen.add(b)
+            if b < 0 and b in self.blocks and self.blocks[b].term[0] == 'ret':
+                continue                       # a conditional return (`beqlr`)
+            if b <= 0 or b == h or (b not in L and (b == (self.exits[-1] if self.exits else None)
+                                                    or self.blocks[b].term[0] not in ('ret', 'tail', 'ctr', 'fall', 'jmp'))):
+                return False
+            bb = self.blocks[b]
+            if bb.term[0] in ('ret', 'tail', 'ctr'):
+                continue
+            stack.extend(cfg.succs(bb))
+        return hit
 
     def cond(self, bid, blk, stop, st, out):
         tri, absorbed = self.folded_tri(blk, st)
@@ -1636,8 +2259,25 @@ class Gen:
                 return 'latch'
         J = cfg.ipdom(self.pdom, bid)
         if self.active and J != cfg.EXIT and J not in self.loops[self.active[-1]] \
-                and J != (self.exits[-1] if self.exits else None):
+                and J != (self.exits[-1] if self.exits else None) \
+                and not self._leads_to_exit(J, self.loops[self.active[-1]]):
             J = cfg.EXIT      # the arms leave the loop for good: no join to merge at
+        if self.cjoin and not self.active and J == cfg.EXIT:
+            J = self._common_join(A, B, stop)
+        if self.active and J == cfg.EXIT:
+            # an arm may return from inside the loop: join where the other paths meet
+            h = self.active[-1]; L = self.loops[h]
+            for X1, X2 in ((A, B), (B, A)):
+                if X1 in L and X1 != h and self._flows_to(X2, X1, L, h):
+                    J = X1
+                    break
+        if self.active and self.exits and J == self.exits[-1]:
+            # an arm may break out of the loop: join inside the loop where the other paths meet
+            h = self.active[-1]; L = self.loops[h]
+            for X1, X2 in ((A, B), (B, A)):
+                if X1 in L and X1 != h and self._flows_to(X2, X1, L, h, brk=True):
+                    J = X1
+                    break
         if J in absorbed:
             raise Skip('fold join')
         X = self.exits[-1] if self.exits else None
@@ -1646,9 +2286,14 @@ class Gen:
         if (rA == 'brk') != (rB == 'brk'):
             # one arm leaves the loop: `if (c) { ...; break; }` then carry on in the other arm
             (e1, o1, sk, ok2, rk) = (e, oA, sB, oB, rB) if rA == 'brk' else (cfg.neg(e), oB, sA, oA, rA)
+            sbrk = sA if rA == 'brk' else sB
+            tail_ = self._break_as_return(sbrk) if self.rbrk else None
+            body = o1 + (tail_ if tail_ is not None else ['break;'])
+            out.append(('if', cfg.cstr(e1), body)); out.extend(ok2)
+            if self.brks and tail_ is None:
+                self.brks[-1].append((sbrk, body))
             if rk is None:
-                raise Skip('break/return mix')
-            out.append(('if', cfg.cstr(e1), o1 + ['break;'])); out.extend(ok2)
+                return None         # the other arm returns: `if (c) { ...; break; } ...; return;`
             for k in sk:
                 st[k] = sk[k]
             return rk
@@ -1733,6 +2378,10 @@ class Gen:
         """General registers read by instruction i."""
         if i.mn in ('bl', 'bctrl', 'mflr', 'mtlr') or i.mn.startswith('b'):
             return set()
+        if i.mn == 'ts4copy':
+            return set(i.ops[:2])
+        if i.mn == 'ts4vastart':
+            return set()
         ops = i.ops if (i.mn in NO_DST or i.mn.startswith('st')) else i.ops[1:]
         return {r for o in ops for r in re.findall(r'\br\d+\b', o)}
 
@@ -1759,13 +2408,48 @@ class Gen:
                     live[b] = new; changed = True
         return live[h]
 
+    def live_all(self):
+        """{block: registers live on entry} over the whole function (returns read r3,
+        tail calls r3..r10); cached."""
+        if getattr(self, '_live_all', None) is not None:
+            return self._live_all
+        use, dfn = {}, {}
+        for b, blk in self.blocks.items():
+            u, d = set(), set()
+            for i in blk.insns:
+                u |= self.src_regs(i) - d
+                d |= dst_regs([i])
+            t = blk.term[0]
+            if t == 'ret':
+                u |= {'r3'} - d
+            elif t in ('tail', 'ctr'):
+                u |= {f'r{k}' for k in range(3, 11)} - d
+            use[b], dfn[b] = u, d
+        live = {b: set(use[b]) for b in self.blocks}
+        changed = True
+        while changed:
+            changed = False
+            for b, blk in self.blocks.items():
+                out = set()
+                for sx in cfg.succs(blk):
+                    out |= live[sx]
+                new = use[b] | (out - dfn[b])
+                if new != live[b]:
+                    live[b] = new; changed = True
+        self._live_all = live
+        return live
+
     def carried(self, L, st, h):
         """Registers that are written inside loop blocks `L` and live around the back
         edge (read before written in an iteration), with a value before the loop."""
         w = set()
         for b in L:
             w |= dst_regs(self.blocks[b].insns)
-        w &= self.live_in(L, h)
+        la = self.live_all()
+        # also registers whose last loop value is read after the loop
+        xl = set().union(*[la[sx] for b in L for sx in cfg.succs(self.blocks[b]) if sx not in L] or [set()])
+        li_ = self.live_in(L, h)
+        w &= li_ | xl
         res = []
         for r in sorted(w):
             if r == 'r1' or r.startswith('__') or int(r[1:]) in (0, 2, 13):
@@ -1773,6 +2457,8 @@ class Gen:
             v = st['regs'].get(r)
             if v is not None:
                 if isinstance(v, tuple):
+                    if r not in li_:
+                        continue     # a `lis` temporary only "live" into a tail call's argument registers
                     raise Skip('loop hi reg')
                 if isinstance(v, V):
                     v.used = True
@@ -1819,7 +2505,7 @@ class Gen:
                 new = use[b] | (o - dfn[b])
                 if new != live[b]:
                     live[b] = new; changed = True
-        return bool(live[h] & fw)
+        return live[h] & fw
 
     def emit_loop(self, h, stop, st, out):
         L = self.loops[h]
@@ -1828,14 +2514,15 @@ class Gen:
             raise Skip('vec loop')
         vw = {r for b in L for i in self.blocks[b].insns for r in vuse_def(i)[1]}
         fw = self.float_written(L)
-        if fw and self.float_carried(L, h, fw):
-            raise Skip('float loop')
+        fcar = self.float_carried(L, h, fw) if fw else set()
         # classify: while-form when the header tests and exactly one successor leaves the loop
         inside = [s for s in cfg.succs(hb) if s in L]
         whileform = hb.term[0] == 'cond' and len(inside) == 1 and inside[0] != h and all(i.mn in PURE for i in hb.insns)
         car = self.carried(L, st, h)
         sw = self.cp(st); sw['cmps'] = {}
         lv = {}
+        n_pre = len(out); st_pre = st
+        self.brks.append([])
         for r in car:
             val = self.regval(st, r)
             if val is None:
@@ -1843,6 +2530,17 @@ class Gen:
             n = self.newphi('lv'); lv[r] = n
             out.append(f'{n} = (ts4_word){val};')
             sw['regs'][r] = n; sw['written'].add(r); sw['clobbered'].discard(r)
+        for f in sorted(fcar):
+            # a float loop variable: `lfN = init;` before the loop, new value at the back edge
+            if not self._fhas(st, f):
+                raise Skip('float loop')
+            t = st['fregs'][f][1] if f in st['fregs'] else 'float'
+            if t not in ('float', 'double'):
+                raise Skip('float loop')
+            self.ntmp += 1; n = f'lf{self.ntmp}'
+            self.fphis.append((n, t)); self.flvt[n] = t
+            out.append(f'{n} = {self.fval(st, f, t)};')
+            lv[f] = n; sw['fregs'][f] = (n, t); sw['fwritten'].add(f); sw['clobbered'].discard(f)
         self.active.append(h)
         def latch_exit():
             for b in L:
@@ -1871,16 +2569,21 @@ class Gen:
                 except Skip as e:
                     if str(e) not in ('loop body exit', 'loop shape', 'irregular exit'):
                         raise
-                    del out[n0:]; self.latch = None
+                    del out[n0:]; self.latch = None; self.brks[-1] = []
                     self.exits[-1] = latch_exit()
                     res = self._dowhile(h, L, sw, lv, out)
             else:
                 res = self._dowhile(h, L, sw, lv, out)
         finally:
-            self.active.pop(); self.exits.pop()
+            self.active.pop(); self.exits.pop(); brks = self.brks.pop()
         # continue from the loop exit with the exit state
         exit_id, exit_st = res
+        if brks:
+            self._merge_breaks(exit_st, st_pre, brks, out, n_pre)
         for f in fw:
+            if f in lv:
+                exit_st['fregs'][f] = (lv[f], self.flvt[lv[f]]); exit_st['fwritten'].add(f); exit_st['clobbered'].discard(f)
+                continue
             exit_st['fregs'].pop(f, None); exit_st['fwritten'].discard(f); exit_st['clobbered'].add(f)
         for k in ('regs', 'written', 'clobbered', 'fregs', 'fwritten', 'ctr', 'ctr_reg', 'cmps', 'stackargs', 'cnt'):
             st[k] = exit_st[k]
@@ -1888,11 +2591,75 @@ class Gen:
             st['vregs'][r] = '__vclob'
         return exit_id
 
+    def _break_as_return(self, sb):
+        """When the loop exit only returns, a `break` can be written as that return
+        (variant letter R): the statements, or None."""
+        X = self.exits[-1] if self.exits else None
+        if X is None:
+            return None
+        nrets = len(self.rets); s2 = self.cp(sb); o2 = []
+        saved = list(self.exits); act = list(self.active)
+        self.exits[:] = [None] * len(self.exits); self.active[:] = []
+        try:
+            r = self.region(X, set(), s2, o2)
+        except Skip:
+            r = 'fail'
+        finally:
+            self.exits[:] = saved; self.active[:] = act
+        if r is not None or not o2 or not all(isinstance(x, str) and x.startswith('return') for x in o2):
+            del self.rets[nrets:]
+            return None
+        return o2
+
+    def _merge_breaks(self, exit_st, st_pre, brks, out, n_pre):
+        """Registers whose value at a `break` differs from the normal loop exit: a phi set
+        before the loop (when the exit value is the pre-loop one) and before each break;
+        otherwise the register is unusable after the loop."""
+        regs = exit_st['regs']
+        names = set(regs)
+        for bs, body in brks:
+            names |= set(bs['regs'])
+        for r in sorted(names):
+            if r.startswith('__') or r[0] != 'r':
+                continue
+            ve = regs.get(r)
+            same = all((bs['regs'].get(r) is ve) or (isinstance(ve, str) and bs['regs'].get(r) == ve) for bs, body in brks)
+            if same and not any(r in bs['clobbered'] for bs, body in brks):
+                continue
+            ok = r in st_pre['regs'] and ve is st_pre['regs'][r] and not isinstance(ve, tuple)
+            vals = []
+            if ok:
+                for bs, body in brks:
+                    v = None if r in bs['clobbered'] else self.regval(bs, r)
+                    if v is None:
+                        ok = False
+                        break
+                    vals.append(v)
+            if not ok:
+                regs.pop(r, None); exit_st['written'].discard(r); exit_st['clobbered'].add(r)
+                continue
+            pn = self.newphi()
+            out.insert(n_pre, f'{pn} = (ts4_word){self.regval(st_pre, r)};')
+            for (bs, body), v in zip(brks, vals):
+                body.insert(len(body) - 1, f'{pn} = (ts4_word){v};')
+            regs[r] = pn; exit_st['written'].add(r); exit_st['clobbered'].discard(r)
+
     def _backedge(self, sb, lv, out):
         """Assign the new values of loop-carried registers at the end of an
         iteration; returns {expression: temp} used to rewrite the latch test."""
         subs = []
         for r, n in lv.items():
+            if r[0] == 'f':
+                if not self._fhas(sb, r):
+                    raise Skip('float loop')
+                t = self.flvt[n]
+                v = self.fval(sb, r, t)
+                if v == n:
+                    continue
+                self.ntmp += 1; tn = f'pf{self.ntmp}'; self.fphis.append((tn, t))
+                out.append(f'{tn} = {v};')
+                subs.append((n, tn, v))
+                continue
             v = self.regval(sb, r)
             if v is None or v == n:
                 continue
@@ -1970,6 +2737,11 @@ class Gen:
         sb = self.cp(sw); body = []
         self.latch = None
         r = self.region(h, set(), sb, body, entering=True)
+        if r == 'cont' and self.latch is None and self.exits[-1] is None:
+            # unconditional back edge, every exit returns: `for (;;) { ... }`
+            self._backedge(sb, lv, body)
+            out.append(('do', '1', body))
+            return None, sb
         if r != 'latch' or self.latch is None:
             raise Skip('loop shape')
         econt, exitb = self.latch; self.latch = None
@@ -2011,7 +2783,15 @@ def vcall_thunk(lines):
     return None
 
 
-def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
+def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0, rbrk=False, cjoin=False):
+    Gen.rbrk = rbrk; Gen.cjoin = cjoin
+    try:
+        return _gen(lines_all, env, mode, orient, infer_signed, vol)
+    finally:
+        Gen.rbrk = False; Gen.cjoin = False
+
+
+def _gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
     """Translate one function (fn_asm lines) to C; see the module docstring.
     `vol` 1 makes stores volatile, 2 loads and stores, 3 loads only.  With `infer_signed`, params and loaded values that are only compared with
     signed compares (cmpwi/cmpw) are declared `int` (the compiler emits cmpwi
@@ -2144,7 +2924,22 @@ def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
                 o.append(' ' * ind + x)
         return decls, o
     decls, body_l = render(top, 4)
-    decls = [f'{t} {n};' for n, t in g.fphis] + [f'__vector4 {n};' for n in g.vdecls] + [f'ts4_word {n};' for n in phis] + [f'ts4_word {n}[{g.local_ext[g.locbase[n]]}];' for n in g.localnames] + decls
+    # a stack local whose slot is reused for an int -> float conversion (std/lfd) lived in an
+    # inner block that ends before the conversion: `{ ts4_word loc[..]; ...last use... }`
+    conv = {int(m.group(1), 0) for i in g.insns if i.mn == 'lfd' for m in [re.match(r'(-?\w+)\(r1\)', i.ops[1])] if m}
+    scoped = []
+    for n in list(g.localnames):
+        if g.locbase[n] not in conv:
+            continue
+        refs = [k for k, l in enumerate(body_l) if re.search(r'\b' + n + r'\b', l)]
+        end = refs[-1]
+        while end + 1 < len(body_l) and (body_l[end + 1].startswith('        ') or body_l[end + 1].startswith('    }')):
+            end += 1
+        if end + 1 >= len(body_l) or scoped:
+            continue
+        body_l = ['    {', f'        ts4_word {n}[{g.local_ext[g.locbase[n]]}];'] + ['    ' + l for l in body_l[:end + 1]] + ['    }'] + body_l[end + 1:]
+        scoped.append(n)
+    decls = [f'{t} {n};' for n, t in g.fphis] + [f'__vector4 {n};' for n in g.vdecls] + [f'ts4_word {n};' for n in phis] + [f'ts4_word {n}[{g.local_ext[g.locbase[n]]}];' for n in g.localnames if n not in scoped] + decls
     body = ''.join('    ' + d + '\n' for d in decls) + ('\n' if decls else '') + '\n'.join(body_l) + '\n'
     maxp = max(readp) if readp else 2
     def ptype(j):
@@ -2158,6 +2953,9 @@ def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
         maxp = max([maxp] + [k1 for k0, (k1, nm, nw) in g.home.items()])
     # float parameters take FPRs in order but also use up the GPR slot of their position:
     # put each in the next slot whose GPR is never read
+    if g.sfp:     # stack float parameters come after f1..f13 (all of them are parameters then)
+        for j in range(1, 14):
+            g.fparams.setdefault(f'f{j}', 'float')
     fl = [f for f in sorted(g.fparams, key=lambda x: int(x[1:]))]
     params = []
     for j in range(3, maxp + 1):
@@ -2171,7 +2969,17 @@ def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
             params.append(f'{ptype(j)} a{j - 3}')
     for f in fl:
         params.append(f'{g.fparams[f]} {f}')
+    for j in sorted(set(g.sfp.values())):
+        # a float parameter passed on the stack: position j, after all register parameters
+        if len(params) != j or g.vparams:
+            raise Skip('stack float param')
+        params.append(f'float f{j}')
     params += [f'__vector4 vp{n}' for n in sorted(g.vparams)]
+    if g.va:
+        if g.home or g.fparams or g.vparams or len(params) > g.va[0]:
+            raise Skip('varargs params')
+        params += [f'ts4_word a{j}' for j in range(len(params), g.va[0])] + ['...']
+        body = '    ts4_va_list ap;\n' + body
     def has(stmts, kinds):
         return any(isinstance(x, tuple) and (x[0] in kinds or any(has(s, kinds) for s in x[2:])) for x in stmts)
     kind = ('loop_' if has(top, ('while', 'do')) else 'if_' if has(top, ('if',)) else '')
@@ -2184,11 +2992,18 @@ def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
         k0 = 'tailcall'
     kind += k0
     sig = f'{rt} NAME({", ".join(params) if params else "void"})'
+    if any(not re.fullmatch(r'[A-Za-z_]\w*', n) for n in list(g.protos) + list(g.externs)):
+        # a C++ (mangled) symbol cannot be named from C; it would break the whole file
+        raise Skip('mangled sym')
     res = dict(kind=kind, detail=g.detail, sig=sig, body=body, externs=list(g.externs), protos=g.protos, vec=g.vec, intrinsics=sorted(g.intrinsics))
     if g.rtypes:
         res['rtypes'] = dict(g.rtypes)
     if g.fprotos:
         res['fprotos'] = dict(g.fprotos)
+    if g.qstructs:
+        res['qstructs'] = sorted(g.qstructs)
+    if g.va:
+        res['va'] = True
     if g.home or g.structs_used:
         res['structs'] = sorted({nw for k1, nm, nw in g.home.values()} | g.structs_used)
     return res

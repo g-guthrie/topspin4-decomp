@@ -2,11 +2,27 @@
 /* Altered to match Swing_DLL.xex: reference-counted objects, wide strings, per-type metatables. */
 #ifndef LUA2_H
 #define LUA2_H
+#ifdef _MSC_VER
+typedef char *va_list;
+void __cdecl __va_start(va_list *ap, ...);
+#define va_start(ap, v) (__va_start(&(ap), (v)))
+#define va_end(ap) ((ap) = (va_list)0)
+#else
+#include <stdarg.h>
+#endif
 
 typedef unsigned char lu_byte;
 typedef unsigned short u16;
 typedef unsigned int u32;
 typedef unsigned int Instruction;
+struct lua_State;
+/* ldo.c: previous, jmp_buf at +0x10, status at +0x550. */
+struct lua_longjmp {
+    struct lua_longjmp *previous;
+    char pad4[0x10 - 0x4];
+    char b[0x550 - 0x10];
+    volatile int status;
+};
 
 #ifdef _MSC_VER
 #define LUA2_NOINLINE __declspec(noinline)
@@ -178,8 +194,10 @@ typedef struct lua_State {
     TValue _gt;
     GCheader *openupval;
     GCheader *gclist;
-    void *errorJmp;
+    struct lua_longjmp *errorJmp;
     int errfunc;
+    int inrealloc; /* set to 1 around buffer reallocation */
+    void *stateUserData; /* LuaPlus per-state pointer (set by 0x888134C0) */
 } lua_State;
 
 typedef struct stringtable {
@@ -188,11 +206,34 @@ typedef struct stringtable {
     int size;
 } stringtable;
 
+typedef struct Mbuffer {
+    char *buffer;
+    u32 buffsize;
+} Mbuffer;
+
 struct global_State {
     stringtable strt;
-    char pad0c[0x88 - 0xC];
+    void *(*frealloc)(void *ud, void *block, u32 osize, u32 nsize, int flags, int inrealloc);
+    void *ud;
+    GCheader *rootgc;    /* list of collectable objects */
+    GCheader *rootudata; /* list of userdata */
+    GCheader *tmudata;   /* userdata to be finalized */
+    Mbuffer buff;
+    u32 GCthreshold;
+    u32 nblocks;
+    int (*panic)(struct lua_State *L);
+    char pad34[0x38 - 0x34];
+    TValue l_registry;
+    TValue defaultmeta; /* LuaPlus: metatable of the per-type metatables */
+    struct lua_State *mainthread;
+    char pad5c[0x60 - 0x5C];
+    Node dummynode;
     TString *tmname[0x10];
-    TValue mt[0x10];
+    TValue mt[11];
+    void (*callback178)(void); /* set to 0x888134E8 by f_luaopen */
+    int field17c;
+    int field180;
+    int field184;
 };
 
 #define G(L) ((L)->l_G)
@@ -267,5 +308,26 @@ extern void fn_8881D478(lua_State *L, int newsize); /* luaD_reallocstack */
 
 #define savestack(L, p) ((char *)(p) - (char *)(L)->stack)
 #define restorestack(L, n) ((TValue *)((char *)(L)->stack + (n)))
+
+/* luaG_runerror (0x8881FB60). A caller only gets the original frame layout when the variadic
+   callee's body is visible in its translation unit, so files that raise errors define this copy. */
+extern const char *fn_888188F8(lua_State *L, const char *fmt, va_list argp); /* luaO_pushvfstring */
+extern void fn_8881FAD0(lua_State *L, const char *msg);                      /* addinfo */
+extern void fn_8881F900(lua_State *L); /* luaG_errormsg */
+#define LUA2_DEFINE_RUNERROR LUA2_DEFINE_RUNERROR_(LUA2_NORETURN)
+/* Same copy for files whose callers still expect it to return. */
+#define LUA2_DEFINE_RUNERROR_RET LUA2_DEFINE_RUNERROR_(LUA2_EMPTY)
+#define LUA2_EMPTY
+#define LUA2_DEFINE_RUNERROR_(attr) \
+    LUA2_LOCAL attr void fn_8881FB60(lua_State *L, const char *fmt, ...) \
+    { \
+        const char *msg; \
+        va_list argp; \
+        va_start(argp, fmt); \
+        msg = fn_888188F8(L, fmt, argp); \
+        va_end(argp); \
+        fn_8881FAD0(L, msg); \
+        fn_8881F900(L); \
+    }
 
 #endif
