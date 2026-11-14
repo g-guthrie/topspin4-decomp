@@ -182,20 +182,20 @@ to relocations, so any DIFFERENT is a checker bug. 300 trials, 40 s budget, seed
 | 0-64 | 60 | 58 | 0 | 2 | 100% |
 | 64-256 | 90 | 87 | 0 | 3 | 100% |
 | 256-512 | 57 | 30 | 0 | 27 | 95% |
-| 512-1024 | 33 | 10 | 0 | 23 | 80% |
-| 1024-2048 | 47 | 5 | 0 | 42 | 52% |
-| 2048+ | 13 | 5 | 0 | 8 | 50% |
-| all | 300 | 195 (49,764 bytes) | **0** | 105 (100,148 bytes) | 100% |
+| 512-1024 | 33 | 11 | 0 | 22 | 80% |
+| 1024-2048 | 47 | 6 | 0 | 41 | 52% |
+| 2048+ | 13 | 5 | 0 | 8 | 49% |
+| all | 300 | 197 (51,468 bytes) | **0** | 103 (98,444 bytes) | 100% |
 
-Final checker (sha256 `082aff678b3695657221636b489a01057e114614483176ecf28dcd8c198157dd`), run at
-`nice -n 19` with one worker. UNCHECKED reasons: coverage below 90% (94), too few valid trials (10: the original faults or
+Final checker (sha256 `755e11c2bbd9fae18efc60fe742ad186de195b8140dd866fad01066bac25b840`), run at
+`nice -n 19` with one worker. UNCHECKED reasons: coverage below 90% (95), too few valid trials (7: the original faults or
 runs past the instruction limit on almost every generated input; e.g. `lua3_luaG_errormsg`
 longjmps, the Huffman/jpeg table builders loop over seeded counts), VMX (1). No result had a
-non-empty `abi_hazard`. Median 152 valid trials and 2.8 s per function; 34 CPU-minutes in all.
+non-empty `abi_hazard`. Median 152 valid trials and 2.1 s per function; 26 CPU-minutes in all.
 Trials are deterministic, but the per-function time budget (40 s here) cuts long functions short
 by wall-clock, so on a loaded machine a large function can end with fewer trials. Across the
 reruns this moved a few functions near the threshold between EQUIVALENT and UNCHECKED (190 to
-195 EQUIVALENT); it never produced a DIFFERENT. For a reproducible verdict use `--time 0`.
+197 EQUIVALENT); it never produced a DIFFERENT. For a reproducible verdict use `--time 0`.
 
 **Checker bugs this found and fixed** (each was a DIFFERENT on a matched function in an earlier
 run): (1) recursion executed the original's own body instead of intercepting the call, while the
