@@ -1,0 +1,122 @@
+# Codegen tips collected from agents (re-read when you pick new work)
+
+- Relative array begin/end (offset -1 = no array): `begin = 0; if (r->off != -1) begin = ...; end = 0; if (r->off != -1) end = ...;`
+  with `end = 0` AFTER the first `if`. Initialising both up front merges the branches wrongly. Many functions with
+  `cmpwi rX,-1` are this family.
+- Backward walk: `while (p != begin) { r = *(p-1); ...; p--; }` gives subi+lwz with beqlr; `do { r = *--p; }` gives lwzu.
+- Hoisted zero result (`li rX,0 ... mr r3,rX`, or `mr r10,r3; li r3,0`): result local initialised to 0, set in each
+  branch (`r = f(); break;`), returned once.
+- Compare operand order follows source order: `id == p->id` gives `cmplw r4,r7`; reversed gives `cmplw r7,r4`.
+- Bool from &&: `ok = a != 0 && b == 0;` gives li 1 / li 0 / clrlwi. Untruncated flag stored then tested with clrlwi:
+  `int fault = a && b && c; flow->fault = fault; if ((ts4_bool)fault)`.
+- Float args consume GPR slots: for fn(float, ptr) the pointer is in r4 and r3 is never set.
+- Static helper called with `&self->member` stops the member offset being folded (separate `r30 = this+0x38`).
+- Result-by-value struct: `*dst = fn(w)` with a 16-byte struct gives the `addi r3,r1,0x50` sret call plus four-word copy.
+- 12-byte handle by value plus unused int before a pointer parameter: call as `f(this, handle, int, ptr)`.
+- Vector args: `#include "ts4_vector.h"`, pass `__vector4` by value; `*(__vector4 *)p = pos` before a tail call gives stvx128 v1.
+- C++ class whose constructor zeros members, followed by a fill loop through `this`, keeps the dead zero stores.
+- Self-relative players array: `p = ts4_score_players(s)` plus a separate local `p1 = &p[1]`.
+- zlib: crc32() wrapper is inlined with a null check; deflate needs GZIP defined. Lua: lua_type must be inlined.
+- A volatile local buffer keeps out-of-frame stores.
+- Callee names: once a function is renamed in symbols.txt, fn_check fails the relocation check if you use the fn_ name.
+  Check with `grep -i "0xADDR;" config/54540859/symbols.txt`.
+- Leave alone (whole-program patterns, under investigation by agent LT1): callers relying on r4/r6/r7/r9/f10 surviving a
+  call, fsel/mfcr float selects, `clrrwi rX,rX,0`, divw with no trap, v0-v13 vector register use.
+
+## Added from GA3
+- Hash/id arguments: pass a 4-byte hash or id as a one-member struct by value (`struct Ga3Id` in src/xbox360/ga3_types.h).
+  That gives `lis/ori rX; mr r4,rX` and the late `lis r4` before calls; a plain unsigned folds straight into r4.
+- Virtual-call thunks (`??_9Class@@$B...`): call through a pointer-to-member constant, `(h->*(&Cls::slot_00e))()`, in a
+  .cpp with a class named exactly `TS4VcallClass88271E68` (see src/xbox360/ga3_c.cpp). MSVC emits a direct bl to the thunk.
+- Self-relative arrays, alternative form: two `__forceinline` helpers begin()/end(), each returning 0 when offset is -1;
+  end is `(char*)a + (count*N + offset)`; call end() before begin(). Gives the duplicated `cmpwi -1` + `mr`.
+- Float sign test: `*(unsigned short*)&d & 0x8000` on `d = 0.5f - x` gives stfs; lhz; clrrwi 15. `(x > 0)` assigned to
+  unsigned char gives neg; andc; srwi 31; declaring it int flips cmplwi to cmpwi.
+- A callee that returns its `this` in r3 lets the target skip `mr r3,r31` before the next call: declare it as returning
+  the pointer and pass the result on.
+- Counter wrap without a local: `p->count = (p->count + 1 > 6) ? 0 : p->count + 1`.
+- Some address-taken struct parameters are 4-byte structs passed in r4/r5.
+- Float model: where the target recomputes `a+b` after a call instead of reusing it, try `--flags /fp:strict` (unresolved,
+  under investigation by LT1).
+
+## Link-time code generation (LT1, confirmed)
+The original was built with /GL + /LTCG for 362 of its objects. The "callee leaves registers untouched / caller relies
+on r4,r6,r7,r9,f10 surviving a call / read r" patterns are cross-object register knowledge, and they reproduce when the
+callee's source is in the same link. Checker: `python3 tools/fn_check_ltcg.py --setup` once, then
+`python3 tools/fn_check_ltcg.py <src> name=0xADDR --context <file with the callees> ...` (see `--help`).
+The matching build does not accept LTCG-verified functions yet (in progress). Until it does: when a function fails only
+for that reason, try the LTCG checker; if it matches there, keep the source in a separate file `<id>_ltcg_*.c` with a
+spec `work/specs/<ID>/<stem>.ltcg.json` (same format plus "route": "ltcg" and "context": [files]) so it can be
+integrated later. Do not list it in a normal spec.
+
+## Added from GA6 and DG1
+- Bool result: `static unsigned char helper()` returning `a && b` gives li 1 / beq / li 0 / clrlwi. Reloading a field
+  three times needs a `volatile struct *`.
+- Signed compare of a pointer or handle: `(long)p != 0` gives cmpwi instead of cmplwi.
+- Dead `addi` of a sub-object address: a static inline function taking `struct Sub *`, called on `&self->sub`.
+  Vector clear / pop_back: `v->end = copy(v->end, v->end, v->begin)` with a copy helper.
+- Self-relative array element: `(char*)hdr + *hdr + idx*stride`. A callee reading 6+ register args needs the full prototype.
+- Switch of n in 0..7 returning `base + n*8`: a real switch with `case 0: return base;` gives the bdz chain.
+- `#pragma intrinsic(strcmp)` (under `#ifdef _MSC_VER`) makes /O2 inline strcmp as the original's byte loop.
+- Statement order of locals matters (`idx = h % count; bk = t->buckets; *hash_out = h; ...`); permute it.
+- In C++, `return voidfunc(args);` gives a real tail call (b) and a frameless function.
+- Families that differ only in field offsets: one macro per family (see src/xbox360/dg1_string_table_find.c).
+
+## Added from GA2 and GA4 (second pass)
+- Use real structs with padding (`PAD(n)`, see src/xbox360/ga2_types.h), not `*(T*)((char*)p+off)` casts: the casts change
+  register allocation.
+- `addi rX,rY,K` followed by field accesses off rX: keep a local pointer to the sub-struct or self-relative header
+  (`struct Hdr *h = &owner->hdr;`), element = `(char*)h + (idx*stride + h->rel)`. Folding K into the offsets diverges.
+- Plain `for` over begin/end on real structs matches list searches easily. `x->count++` gives addi/lwz/addi/stw.
+- Vcall thunk `??_9TS4VcallClass<addr>@@$B<d>AA`: single-digit suffix d means vtable offset d+1 (7 = offset 8 = slot 2).
+- A self-recursive function: recurse through the existing `fn_<addr>` placeholder to avoid a rename entry in the spec.
+- memset is not inlined by this compiler; a small constant-trip inner loop does unroll.
+
+## Added from GA1
+- One shared return after a loop: result variable set up front (`int r=-1; ... r=i-1; break;`, `u32 ok=0; ... ok=1;`).
+- Self-relative array inside a loop: declare the base pointer inside the loop body (`struct Rel *a = &t->recs;`).
+- Indexed loads: element address written as `(char*)t + (off + mid*8)` gives `lwzx rIndexSum, rBase`.
+- u32 pointer difference with u32 counter gives cmplw/beq; a signed counter gives cmpw/ble.
+- Zeroed 0x80-byte stack local: `for (i = 0; i < 16; i++) buf.q[i] = 0;` on `unsigned long long q[16]` gives the
+  stdu/bdnz loop; `= {0}` gives a memset call.
+- `fn(a, &param)` takes the address of the incoming register-home slot with no copy.
+- A constant float through `extern const float` is reloaded after every store; hoist it into a local first.
+- `switch` can match where an if/else-if chain puts case bodies in the wrong order.
+- Float locals can swap registers when declared in a different order; statement order matters too
+  (`x = (float)fn(); k = const; v = k - x; out = v + k`).
+- Use a private scratch directory (your own folder under the scratchpad); a shared /tmp path was clobbered by another agent.
+
+## Added from GA5 (second pass)
+- Copying a parameter to a local (`const unsigned *hash = hashes;`) swaps which nonvolatile register it lands in.
+- Float constant into a local first (`float zero = lbl_...; a = zero; b = zero;`) stops reloads after float stores.
+- Bool from a relative-array offset: `ok = (unsigned)(r->off + 1) != 0; if (ok == 1) ...` gives
+  addi; subic; subfe; clrlwi; cmplwi 1. Pointer as `r->off + (char *)r`.
+- In an accumulate loop the order of the if/else arms matters (`if (x != -1) sum += ...; else sum += 1;`).
+- `int result = 0; if (arg >= 0) { ...; result = ...; } return result;` gives `mr r11,r3; li r3,0`; extra statements
+  between the init and the guard change register allocation.
+- If the original always calls the trailing function, call it unconditionally and make only the increment conditional.
+
+## Divides: solved (LT1)
+The game project was compiled with /Oc (no divide-by-zero trap). For any game-code function with divw/divwu and no
+twllei, check with `--flags /Oc` (works on the plain route) and put "flags": ["/Oc"] in the spec. "Divides without
+twllei" is no longer a blocker. Libraries (FMOD, Havok, trio) mostly keep the trap.
+
+## Build flags of the game code (LT1 final)
+Game code = /GL + /LTCG, /Oc, and /fp:precise for float code. Read section 7 of docs/ltcg-route.md ("How to match with
+the LTCG route") before using it. docs/ltcg-ranges.json says which address ranges are LTCG (0x88150000-0x882A0000 and
+0x885F4E48-0x889D3410) and which are plain-route libraries.
+- Float `?:` lowered to a +-1 table + mfcr + fsel needs `/fp:precise` under LTCG (partial: still a few instructions off).
+- A larger stack frame than the plain compile gives: LTCG with the callee's definition in the link.
+- To stop LTCG inlining a context function: prefix the context file with `flags(/Ob1):`. A noinline declaration on the
+  caller's side is ignored. `--include NAME` keeps the standard calling convention for a callee.
+- Still open: dead `mr` copies, pure register swaps, unrolled loops, v0-v13 vector copies.
+
+## Added from D2 (large gameplay functions)
+- `0 == p` (constant on the left) keeps `lwz; addi rX,rX,0; cntlzw`; `p == 0` drops the addi. May relate to clrrwi cases.
+- Switch on a hash returning bool: `int result = 0; switch (...) { case ...: result = expr; break; } return result;`.
+- Shared float-compare tails: `{ int above = a * b > c; result = above; }`; a (ts4_bool) cast adds clrlwi instead.
+- Switch cases equal to the default still need their own `x = 0` statements; two cases needing separate copies of the
+  same machine code need different source forms. Case ORDER changes how MSVC associates adds across the whole function:
+  a hill climb over case order took one function from 65 to 8 instructions off.
+- Owner-field reloads kept below stores: route the stores through an inline helper taking `&self->sub`.
+- `srawi; subfc; srwi; adde` is signed `a >= b` with `a` the operand that gets the srawi.

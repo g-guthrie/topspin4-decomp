@@ -265,42 +265,47 @@ model (a `start < 1` flip in Lua's `str_sub` was missed because the length came 
 
 ## 4. What the tier could cover: asm2c translations
 
-**PARTIAL: stopped at the coordinator's request.** Of the 332 compiled translations, 261 have a
-checker result; the other 71, all in the later a2c groups, were not run.
-
 Sample: `python3 tools/decomp_survey.py sample --lo L --hi H -n N --seed 1` for the classes
 0-256 (260), 256-512 (200), 512-1024 (160) and 1024-2048 (120), keeping only `game:` buckets
 (Havok, FMOD core, Xbox SDK and Bink are other buckets), which gives 428 functions. Each was translated
 with `tools/asm2c` (used read-only, variant `10w`) and built in groups of 25 with base flags.
-Translations that do not compile were dropped one by one from their group.
+Translations that do not compile were dropped one by one from their group. All 332 that
+compiled have a checker result.
 
-| class (bytes) | sampled | translate fail | compile fail | EQUIVALENT | DIFFERENT | UNCHECKED | not run |
-|---|---|---|---|---|---|---|---|
-| 0-256 | 154 | 18 | 3 | 54 | 21 | 32 | 26 |
-| 256-512 | 119 | 11 | 5 | 34 | 14 | 35 | 20 |
-| 512-1024 | 90 | 27 | 2 | 10 | 9 | 28 | 14 |
-| 1024-2048 | 65 | 25 | 5 | 1 | 8 | 15 | 11 |
-| all | 428 | 81 | 15 | **99** (27,320 bytes) | **52** | 110 | 71 |
-
-Results mix three checker versions: 180 from the run with `58667366...`; 57 DIFFERENT results from
-it re-checked with fixes 6 and 7 plus the stack-slot part of 8 (7 of them flipped: 3 to
-EQUIVALENT, 4 to UNCHECKED); and 24 from the final checker. 8 of the 52 DIFFERENT involve a variadic
-callee (`ts4_format_text` and similar) and were not re-checked after the varargs rule. Some of
-those 8 may be false and should be treated as unconfirmed, so the confirmed DIFFERENT count is 44.
+| class (bytes) | sampled | translate fail | compile fail | EQUIVALENT | DIFFERENT | UNCHECKED |
+|---|---|---|---|---|---|---|
+| 0-256 | 154 | 18 | 3 | 74 | 22 | 37 |
+| 256-512 | 119 | 11 | 5 | 40 | 18 | 45 |
+| 512-1024 | 90 | 27 | 2 | 15 | 8 | 38 |
+| 1024-2048 | 65 | 25 | 5 | 2 | 11 | 22 |
+| all | 428 | 81 | 15 | **131** (37,456 bytes) | **59** | 142 |
 
 - Translator failures (81): `read r` (a register read before any write, 20), `mfcr` (9), VMX
   instructions (`vsldoi`, `read v`, `stvewx`, `vpk`, ...: about 20), struct arguments (5), irregular
   exits (5), and other shapes.
-- DIFFERENT (52), by first difference: return value 31 (typically the translation returns its
+- DIFFERENT (59), by first difference: return value 35 (typically the translation returns its
   input pointer, or 0, where callers read a computed value), call argument 12, stack object
-  passed to a callee 4, call sequence 3, callee-saved registers 1 (a copy loop that overruns its
-  frame buffer), outcome 1. The ones read by hand were real translator errors: dropped returns,
-  dropped pointer increments, swapped sign extension.
-- UNCHECKED (110): coverage below 90% (59), too few valid trials (33), VMX in the original (18).
+  passed to a callee 5, call sequence 4, memory at a call 1, callee-saved registers 1 (a copy loop
+  that overruns its frame buffer), outcome 1. The ones read by hand were real translator errors:
+  dropped returns, dropped pointer increments, swapped sign extension. **5 of the 59 are
+  unconfirmed**: each compares an argument of a variadic callee, where the original's register may
+  be a temporary (`0x880f0000`, a `lis` half-address) or an uninitialised value. So the confirmed
+  count is 54.
+- UNCHECKED (142): coverage below 90% (85), too few valid trials (39), VMX in the original (18).
 
-Reading: about one compiled translation in three is EQUIVALENT under this check (99 of the 261
-checked), and about one in five is demonstrably wrong (44 to 52). The rest cannot be judged
-automatically. asm2c output must never be accepted without this check.
+Checker versions: this sample is the one result set not from a single checker version. 180
+results come from `58667366...`, 49 DIFFERENT results from it were re-checked with fixes 6-8, and 103
+(the last 71 functions, plus the variadic re-checks) come from `082aff67...`. The two fixes made
+after that (stack-argument slots whose second word is a save slot; returns that point into the dead
+frame, see 3.1) cannot change the 59 DIFFERENT. The return fix touches none of them, and the slot fix only makes
+comparisons stricter. In principle the slot fix could turn one of the 131 EQUIVALENT into
+DIFFERENT, for a translation that passes a wrong ninth-or-later argument in a frame where that
+slot sits next to the LR save word. Rerunning the whole
+sample with the final checker takes about 1.5 CPU-hours.
+
+Reading: about two compiled translations in five are EQUIVALENT (131 of 332), and about one in six
+is demonstrably wrong (54 to 59). The rest cannot be judged automatically. asm2c output must never
+be accepted without this check.
 
 ## 5. Hand-written near misses
 
