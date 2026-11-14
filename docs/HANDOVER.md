@@ -31,7 +31,7 @@ Standing owner decisions:
 | Retune design | Structure fixed. Numbers tuned by simulation; a balance re-run was in progress at handover. Nothing is implemented in the game. | `docs/design/retune-systems.md` (authority for structure), `retune-spec.md` (numbers), `retune-baseline.md` (measured retail) |
 | Retune plan for the owner | Published page, revision 2 with later edits; the page source is committed. The design notes above are the record where they differ. | `docs/design/retune-plan.html` |
 | Data-only patch set | In progress at handover: `tuning/retune-v0/` and `tools/apply_retune.py`. Lets the owner try the data half of the retune on the original game in the emulator. | `tuning/retune-v0/README.md` when present; `docs/data-patching.md` |
-| Native build | All three modules translate and compile. Boots through the logos and title screen; after START the main module runs the practice ground. The picture from the main module is black or nearly so. No menus seen, no match. | `docs/recomp-feasibility.md`, `docs/recomp-build.md`, `tools/recomp/` |
+| Native build | All three modules translate and compile. A scripted, headless run boots through the logos and title screen, reaches the practice ground (court, net, ball machine and player drawn; the player renders as a black silhouette) and then the main menu (scene S4MainMenu). No match yet. The earlier black frames were a host render-target problem on the software renderer, fixed by running with `--render_target_path_vulkan=fsi`. | `docs/recomp-feasibility.md`, `docs/recomp-build.md`, `tools/recomp/` |
 | Renderer and front end | Mapped for the port. | `docs/renderer-map.md` (frame order, hand-over, ranked causes of black frames, checks C1-C9), `docs/frontend-map.md` (waits before the menu, how a match starts, pointer chains to ball and players) |
 | Byte-matching | 30,437 functions, 2,937,704 of 10,154,036 bytes (28.93%), build b46. The local agent owns it outside the gameplay and ball ranges. | `docs/decomp-remaining.md`, `docs/ltcg-route.md`, `docs/agents/matching-tips.md`, `docs/agents/near-misses/` |
 | Equivalence tier | Checker built and validated. | `docs/equivalence-tier.md` (section 9 = status of the gameplay functions the retune must modify) |
@@ -41,9 +41,12 @@ Standing owner decisions:
 1. **Build the native game with a real GPU** by following `docs/recomp-build.md`. The cloud container
    had no GPU and drew in software at about 1 frame a second; several workarounds there (offscreen
    swapchain, synchronous shader compile, drawing only every Nth frame) exist only for that reason.
-   The first question a real GPU answers is whether the black frames are a software-rendering
-   artefact or a real fault. `docs/renderer-map.md` section 6 lists what to log if they persist; its
-   top suspect is the resolve of the back buffer into the game's own front-buffer texture before Swap.
+   In the cloud container the black frames turned out to be the host's default render-target path:
+   the game reuses one EDRAM base for targets of different pitch and MSAA, and ownership transfers
+   between them zeroed the back-buffer copy. `--render_target_path_vulkan=fsi` fixed it there. On a
+   real GPU, check whether the default path works or the same flag is needed, and look at the player
+   rendering as a black silhouette on the practice ground (`docs/renderer-map.md` lists the draw
+   paths and formats to check).
 2. **Reach a match.** After START the game is on the practice ground (engine state 4 there is normal,
    not a hang). START again opens the main menu. `docs/frontend-map.md` gives the pad script to an
    exhibition match and an untested direct call. Gate each press on the scene-name watch.
