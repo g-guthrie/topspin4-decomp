@@ -258,9 +258,13 @@ SKILL_MPH = 2.0               # a pace skill (InstantRocket / HighlyFlammable cl
 FATIGUE_MPH = 6.0             # mph lost at vigor 0
 NOISE_MPH = 1.7               # execution spread (sd)
 CAP_SOFTNESS = 0.30           # above the grade cap only 30 % of the excess survives
+# Owner decision: the fastest forehand in the game is 110 mph, a hard ceiling reached almost never.  Above a knee the
+# stack is compressed, then clipped.  Backhand: ceiling 105 (judgement; tour backhand averages are 7 mph below
+# forehand averages, ATP/TDI 2024, and the gap at the top is taken a little smaller than at the mean).
+CEILING = {"FH": {"knee": 100.0, "slope": 0.5, "max": 110.0}, "BH": {"knee": 96.0, "slope": 0.5, "max": 105.0}}
 
 
-def stack_speed(cls, grade, hold, timing, power_stat, hand_stat, vigor=1.0, skill=False, noise=0.0):
+def stack_speed(cls, grade, hold, timing, power_stat, hand_stat, vigor=1.0, skill=False, noise=0.0, stroke="FH"):
     """Launch speed (mph) of a groundstroke and the stack terms (dict).  noise = the execution draw (mph)."""
     terms = {
         "base": BASE_MPH[cls],
@@ -281,6 +285,9 @@ def stack_speed(cls, grade, hold, timing, power_stat, hand_stat, vigor=1.0, skil
         cap_c = cap - (0.0 if cls == "Flat" else 4.0)
         if v > cap_c:
             v = cap_c + (v - cap_c) * CAP_SOFTNESS
+    c = CEILING[stroke]
+    if v > c["knee"]:
+        v = min(c["max"], c["knee"] + (v - c["knee"]) * c["slope"])
     return v, terms
 
 
@@ -831,13 +838,51 @@ def drop_quality(incoming_kmh, height, grade, timing, touch_stat):
     return land, bounce, clamp(err, 0.0, 0.95)
 
 
-RECOVERY = {"Finesse": 8, "Medium": 12, "Powerful": 18, "Rushed": 20, "Overcharge": 26}
-RECOVERY_GRADE = {"Tee-off": -2, "VeryGood": 0, "Good": 0, "Normal": 2, "Bad": 5, "VeryBad": 8}
+# =========================================================================== movement (owner decision 2026-11-14)
+# Retail movement is kept.  Agreed: quicker first step from rest (about 8 frames to 5 cm, unchanged after 1 m), net
+# rush buffered, pre-hit freeze lifted at the net only, put-away clips widened.  Open (owner to decide): shorter
+# swing tails for volleys and approach shots only; groundstroke, return and serve tails stay retail.
+
+# Swing tail = Out frame - contact frame, median (p10, p90), movement-and-animation s7.5 / s8.1 (data).
+TAIL_RETAIL = {"groundstroke": (36, 27, 44), "return": (26, 19, 37), "volley": (38, 29, 51), "serve": (34, 24, 39),
+               "approach": (36, 27, 44), "approach_follownet": (29, 19, 66), "put-away": (45, 37, 53)}
+# Option for the owner (judgement): volley and approach tails cut to these medians by moving TE[1].Position.
+TAIL_OPTION = {"volley": 26, "approach": 26, "approach_follownet": 24}
+PREHIT_FREEZE = 20            # cfg+0xA88, frames before the opponent's hit (data)
+# Rush_Front from rest, frames to 5 / 25 / 100 cm, then 9.6 cm/frame (movement-and-animation s7.3, +15 fade).
+RUSH_RETAIL = [(0, 0.0), (18, 5.0), (26, 25.0), (43, 100.0)]
+RUSH_FIRST_STEP = [(0, 0.0), (8, 5.0), (18, 25.0), (36, 100.0)]   # agreed target: about 8 frames to 5 cm
+RUSH_CM_PER_F = 9.6
 
 
-def recovery_frames(hold, grade, stretch=False, vigor=1.0):
-    """(frames until a recovery step may start, frames until full-speed movement) after contact.
-    Replaces the swing clip's Out window (median 36 frames after a groundstroke, retune-baseline 8a)."""
-    lock = RECOVERY[hold] + RECOVERY_GRADE[grade] + (6 if stretch else 0) + int(round(6 * (1.0 - vigor)))
-    lock = max(6, lock)
-    return lock, lock + 10
+def run_cm(frames, first_step=RUSH_RETAIL):
+    """Distance (cm) covered from rest after `frames` of free running toward the net."""
+    if frames <= 0:
+        return 0.0
+    t_end = first_step[-1][0]
+    if frames <= t_end:
+        return pwl(first_step, frames)
+    return first_step[-1][1] + (frames - t_end) * RUSH_CM_PER_F
+
+
+NET_ZONE_CM = -500.0          # "at the net" = the net-rush decider's x > -500 cm (movement-and-ai E.5)
+
+
+def net_timeline(tail, reply_frames, ball_back_frames, start_x_cm, drift_cm, first_step=RUSH_RETAIL,
+                 freeze_at_net=True, buffered=True):
+    """Where a player running in after his own shot is when the opponent hits (reply_frames after the contact) and when
+    the reply reaches him (ball_back_frames later).  x in cm from the net (negative = own side).
+    Retail: the rush cannot start inside the 20 frames before the opponent's hit (condition 7) and the freeze latches
+    the direction for those 20 frames (E.4).  `buffered` = the agreed change (the rush starts at the Out window even
+    inside those 20 frames); `freeze_at_net` False = the agreed change (no freeze when the player is inside 500 cm of
+    the net as the freeze would start)."""
+    start = tail
+    if not buffered and reply_frames - PREHIT_FREEZE <= start < reply_frames:
+        start = reply_frames                              # retail: wait until the hit has passed
+    x_hit = start_x_cm + drift_cm + run_cm(reply_frames - start, first_step)
+    x_arr = start_x_cm + drift_cm + run_cm(reply_frames + ball_back_frames - start, first_step)
+    free_frames = max(0, reply_frames + ball_back_frames - start)
+    x_freeze = start_x_cm + drift_cm + run_cm(reply_frames - PREHIT_FREEZE - start, first_step)
+    if freeze_at_net or x_freeze <= NET_ZONE_CM:
+        free_frames = max(0, min(reply_frames - PREHIT_FREEZE, reply_frames + ball_back_frames) - start)
+    return {"start": start, "x_at_reply": min(x_hit, -150.0), "x_at_ball": min(x_arr, -150.0), "free": free_frames}

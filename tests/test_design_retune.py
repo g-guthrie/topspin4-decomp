@@ -127,9 +127,33 @@ class Speed(unittest.TestCase):
         self.assertEqual(M.hold_reached(lead + c["full_at"] + c["overcharge_wait"] + 2, 40), "Overcharge")
         self.assertEqual(M.hold_reached(lead + c["full_at"] + c["overcharge_wait"] + 2, 10), "Powerful")
 
-    def test_recovery(self):
-        self.assertEqual(M.recovery_frames("Powerful", "Good"), (18, 28))
-        self.assertGreater(M.recovery_frames("Overcharge", "Good")[0], M.recovery_frames("Finesse", "Good")[0])
+    def test_forehand_ceiling(self):
+        v = M.stack_speed("Flat", "Tee-off", "Overcharge", "Perfect", 1.0, 1.0, skill=True, noise=30.0)[0]
+        self.assertEqual(v, 110.0)
+        vb = M.stack_speed("Flat", "Tee-off", "Overcharge", "Perfect", 1.0, 1.0, skill=True, noise=30.0, stroke="BH")[0]
+        self.assertEqual(vb, 105.0)
+        self.assertAlmostEqual(M.stack_speed("Flat", "Good", "Medium", "Good", 0.5, 0.5)[0], 74.0)
+
+
+class Movement(unittest.TestCase):
+    def test_run_curve(self):
+        self.assertEqual(M.run_cm(0), 0.0)
+        self.assertAlmostEqual(M.run_cm(8, M.RUSH_FIRST_STEP), 5.0)
+        self.assertLess(M.run_cm(8), 5.0)                       # retail first step is slower
+        # unchanged after the first metre: same speed beyond it
+        self.assertAlmostEqual(M.run_cm(80) - M.run_cm(70), M.run_cm(80, M.RUSH_FIRST_STEP) - M.run_cm(70, M.RUSH_FIRST_STEP))
+
+    def test_retail_rush_waits_for_hit(self):
+        d = M.net_timeline(36, 47, 34, -600, 76, buffered=False)
+        self.assertEqual(d["start"], 47)
+        d = M.net_timeline(36, 47, 34, -600, 76, buffered=True)
+        self.assertEqual(d["start"], 36)
+
+    def test_shorter_tail_gets_closer(self):
+        a = M.net_timeline(38, 42, 29, -400, 83, M.RUSH_FIRST_STEP, False, True)
+        b = M.net_timeline(26, 42, 29, -400, 83 * 26 / 38, M.RUSH_FIRST_STEP, False, True)
+        self.assertGreater(b["x_at_ball"], a["x_at_ball"])
+        self.assertGreater(b["free"], a["free"])
 
 
 class Flight(unittest.TestCase):

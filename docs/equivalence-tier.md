@@ -174,16 +174,20 @@ to relocations, so any DIFFERENT is a checker bug. 300 trials, 40 s budget, seed
 |---|---|---|---|---|---|
 | 0-64 | 60 | 58 | 0 | 2 | 100% |
 | 64-256 | 90 | 87 | 0 | 3 | 100% |
-| 256-512 | 57 | 30 | 0 | 27 | 94% |
+| 256-512 | 57 | 29 | 0 | 28 | 94% |
 | 512-1024 | 33 | 8 | 0 | 25 | 80% |
-| 1024-2048 | 47 | 4 | 0 | 43 | 50% |
+| 1024-2048 | 47 | 3 | 0 | 44 | 52% |
 | 2048+ | 13 | 5 | 0 | 8 | 49% |
-| all | 300 | 192 (47,052 bytes) | **0** | 108 (102,860 bytes) | 100% |
+| all | 300 | 190 (45,480 bytes) | **0** | 110 (104,432 bytes) | 100% |
 
-UNCHECKED reasons: coverage below 90% (92), too few valid trials (15: the original faults or runs
+UNCHECKED reasons: coverage below 90% (92), too few valid trials (17: the original faults or runs
 past the instruction limit on almost every generated input; e.g. `lua3_luaG_errormsg` longjmps,
 the Huffman/jpeg table builders loop over seeded counts), VMX (1). No result had a non-empty
-`abi_hazard`. Median 152 valid trials and 4.4 s per function; the whole run took 46 CPU-minutes.
+`abi_hazard`. Median 152 valid trials and 4.8 s per function; the whole run took 50 CPU-minutes.
+Trials are deterministic, but the per-function time budget (40 s here) cuts long functions short
+by wall-clock, so on a loaded machine a large function can end with fewer trials. Between runs
+this moved two functions near the threshold from EQUIVALENT to UNCHECKED. It never produced a
+DIFFERENT. For a reproducible verdict, use `--time 0`, which means trials only.
 
 **Checker bugs this found and fixed** (each was a DIFFERENT on a matched function in an earlier
 run): (1) recursion executed the original's own body instead of intercepting the call, while the
@@ -192,8 +196,9 @@ indirect call's target were compared as arguments (2); (3) the coverage-guided p
 pointer fixer replaced values read from *read-only* image data (jump tables, float literal pools),
 which the candidate keeps at its own address, so the two runs saw different inputs (8: jump-table
 switches, a float constant, a hash table); (4) callee liveness over-approximation through
-unanalysable error handlers made an original's never-computed register count as an argument
-(near-miss runs). After (3) was fixed, the run above has no DIFFERENT. Its coverage figures
+unanalysable CRT chains made stale temporaries count as call arguments; (5) a candidate file that
+defined a context copy of a callee called that copy instead of the image function (4 and 5 were
+false DIFFERENT verdicts in near-miss runs). After (3) was fixed, the run above has no DIFFERENT. Its coverage figures
 are honest. With the bug, the mutated jump tables had inflated coverage on switch functions, and
 that is why the fix also seeds jump-table case values.
 

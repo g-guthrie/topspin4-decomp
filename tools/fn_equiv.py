@@ -1756,7 +1756,7 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
         if diff:
             first_diff = (s, state, diff, A, B)
             break
-        if time.time() - t0 > time_budget:
+        if time_budget and time.time() - t0 > time_budget:
             break
         if t >= 60 and valid >= min_valid and t - last_new > max(150, trials // 4) and \
                 t >= rand_end + len(boundary or ()):
@@ -1971,7 +1971,7 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--min-coverage", type=float, default=0.9)
     ap.add_argument("--min-valid", type=int, default=30)
-    ap.add_argument("--time", type=float, default=60.0, help="time budget per function in seconds")
+    ap.add_argument("--time", type=float, default=60.0, help="time budget per function in seconds (0: no limit, fully reproducible)")
     ap.add_argument("--json", type=Path, help="write the evidence records to this file")
     ap.add_argument("--quiet", action="store_true")
     a = ap.parse_args()

@@ -117,7 +117,10 @@ def sec_speed(a):
                    "Tee-off instead (+%g)" % M.GRADE_FX["Tee-off"]["pace"], "+ Perfect timing (+%g)" % M.TIMING_MPH["Perfect"],
                    "Overcharge instead of Powerful (+%g)" % M.HOLD_MPH["Overcharge"], "+ pace skill (+%g) = full-stack mean" % M.SKILL_MPH],
                   rows))
-    out += ["", "Full-stack mean is the centre of the peak; the execution spread (sd %.1f mph) puts the far tail on it. "
+    out += ["", "Before the ceiling. Above %g mph the excess is halved and %g mph is a hard ceiling (backhand: knee %g, ceiling %g), "
+            "so the full stacks land at %s." % (M.CEILING["FH"]["knee"], M.CEILING["FH"]["max"], M.CEILING["BH"]["knee"], M.CEILING["BH"]["max"],
+                                               ", ".join("%.1f" % min(110.0, x if x <= 100 else 100 + (x - 100) * 0.5) for x in [float(r[-1]) for r in rows])),
+            "Full-stack mean is the centre of the peak; the execution spread (sd %.1f mph) puts the far tail on it. "
             "Grade caps (soft, %d %% of the excess survives): %s." % (M.NOISE_MPH, round(M.CAP_SOFTNESS * 100),
                                                                      ", ".join("%s %s" % (g, "none" if M.GRADE_FX[g]["cap"] is None else "%g" % M.GRADE_FX[g]["cap"]) for g in M.GRADES)), ""]
 
@@ -127,16 +130,16 @@ def sec_speed(a):
         v, vr, G, H, T = mc_forehands(name, n, 100 + i)
         mean = sum(v) / n
         rmean = sum(vr) / n
-        ex = [sum(1 for x in v if x > t) * 1000.0 / n for t in (100, 105, 110, 113, 115, 117)]
+        ex = [sum(1 for x in v if x > t) * 1000.0 / n for t in (100, 104, 106, 108, 109, 109.9)]
         rows.append([name, f1(mean), f1(pct(v, .5)), f1(pct(v, .9)), f1(pct(v, .99)), f1(pct(v, .999)), f1(v[-1]),
                      f1(rmean), f1(vr[-1])])
         rows2.append([name] + ["%.3g / %.2g" % (e, e * FH_PER_MATCH / 1000.0) for e in ex] +
-                     ["%.2g" % (ex[-1] * FH_PER_SEASON / 1000.0)])
+                     ["%.2g" % (ex[-2] * FH_PER_SEASON / 1000.0)])
         freq.append([name] + [f3(G[g] / n) for g in M.GRADES] + [f3(H[h] / n) for h in ("Finesse", "Medium", "Powerful", "Rushed", "Overcharge")]
                     + [f3(T[t] / n) for t in ("Perfect", "Good", "Poor", "Mistimed")])
     out.append(md(["build", "mean", "p50", "p90", "p99", "p99.9", "max", "retail mean (same shots)", "retail max"], rows))
     out += ["", "Exceedances: per 1,000 forehands / per match (%d forehands); last column per season (%d forehands):" % (FH_PER_MATCH, FH_PER_SEASON), ""]
-    out.append(md(["build", "> 100", "> 105", "> 110", "> 113", "> 115", "> 117", "> 117 per season"], rows2))
+    out.append(md(["build", "> 100", "> 104", "> 106", "> 108", "> 109", "at the 110 cap (> 109.9)", "> 109 per season"], rows2))
     out += ["", "Resulting frequencies (share of forehands) of grade, hold and timing:", ""]
     out.append(md(["build"] + M.GRADES + ["Finesse", "Medium", "Powerful", "Rushed", "Overcharge", "Perfect", "Good", "Poor", "Mistimed"], freq))
 
@@ -162,10 +165,10 @@ def sec_speed(a):
             M.HUMAN_SIGMA_F = sig0
         k = len(vs)
         rows.append([label, f1(sum(va) / len(va)), f1(sum(vs) / k), f3(G["Tee-off"] / k),
-                     f2(sum(1 for x in vs if x > 113) * 1000.0 / k), f2(sum(1 for x in vs if x > 115) * 1000.0 / k),
-                     f3(sum(1 for x in vs if x > 117) * 1000.0 / k)])
-    out.append(md(["variant", "average pro mean", "specialist mean", "specialist Tee-off share", "> 113 per 1,000",
-                   "> 115 per 1,000", "> 117 per 1,000"], rows))
+                     f2(sum(1 for x in vs if x > 106) * 1000.0 / k), f2(sum(1 for x in vs if x > 108) * 1000.0 / k),
+                     f3(sum(1 for x in vs if x > 109.9) * 1000.0 / k)])
+    out.append(md(["variant", "average pro mean", "specialist mean", "specialist Tee-off share", "> 106 per 1,000",
+                   "> 108 per 1,000", "at the 110 cap per 1,000"], rows))
     return "\n".join(out)
 
 
@@ -474,13 +477,13 @@ def sec_oppterm(a):
 def sec_power(a):
     c = M.CHARGE
     out = ["### 6a. Charge, rushed swing and overcharge *(proposal)*", ""]
-    rows = [["Finesse (tap)", "< %d" % c["medium_from"], "%+g mph" % M.HOLD_MPH["Finesse"], "normal", "%d / %d" % M.recovery_frames("Finesse", "Good"), "%g" % M.RALLY["vigor_cost"]["Finesse"]],
-            ["Medium", "%d-%d" % (c["medium_from"], c["powerful_from"] - 1), "0", "normal", "%d / %d" % M.recovery_frames("Medium", "Good"), "%g" % M.RALLY["vigor_cost"]["Medium"]],
-            ["Powerful", ">= %d (full at %d)" % (c["powerful_from"], c["full_at"]), "%+g mph" % M.HOLD_MPH["Powerful"], "normal", "%d / %d" % M.recovery_frames("Powerful", "Good"), "%g" % M.RALLY["vigor_cost"]["Powerful"]],
-            ["Rushed (released or auto-committed before the tier aimed for)", "-", "%+g mph" % M.HOLD_MPH["Rushed"], "Perfect x0.7, Good x0.8", "%d / %d" % M.recovery_frames("Rushed", "Good"), "%g" % M.RALLY["vigor_cost"]["Rushed"]],
-            ["Overcharge (meter full, planted and waiting >= %d frames)" % c["overcharge_wait"], ">= %d + %d" % (c["full_at"], c["overcharge_wait"]),
-             "%+g mph" % M.HOLD_MPH["Overcharge"], "Perfect x0.5, timing error x2", "%d / %d" % M.recovery_frames("Overcharge", "Good"), "%g" % M.RALLY["vigor_cost"]["Overcharge"]]]
-    out.append(md(["swing", "frames held (60/s)", "pace", "window / error", "recovery: step / full speed (frames, Good grade)", "vigor per swing (/capacity)"], rows))
+    rows = [["Finesse (tap)", "< %d (retail < 12)" % c["medium_from"], "%+g mph" % M.HOLD_MPH["Finesse"], "normal", "%g" % M.RALLY["vigor_cost"]["Finesse"]],
+            ["Medium", "%d-%d (retail 12-52)" % (c["medium_from"], c["powerful_from"] - 1), "0", "normal", "%g" % M.RALLY["vigor_cost"]["Medium"]],
+            ["Powerful", ">= %d, full at %d (retail >= 53, full at 75)" % (c["powerful_from"], c["full_at"]), "%+g mph" % M.HOLD_MPH["Powerful"], "normal", "%g" % M.RALLY["vigor_cost"]["Powerful"]],
+            ["Rushed (the 12-frame auto-commit froze the meter below the tier aimed for)", "-", "%+g mph" % M.HOLD_MPH["Rushed"], "Perfect x0.7, Good x0.8", "%g" % M.RALLY["vigor_cost"]["Rushed"]],
+            ["Overcharge (meter full, planted and waiting >= %d frames; new state, retail has none)" % c["overcharge_wait"], ">= %d + %d" % (c["full_at"], c["overcharge_wait"]),
+             "%+g mph" % M.HOLD_MPH["Overcharge"], "Perfect x0.5, timing error x2", "%g" % M.RALLY["vigor_cost"]["Overcharge"]]]
+    out.append(md(["swing", "frames held (60/s)", "pace", "window / error", "vigor per swing (simulation units)"], rows))
     out += ["", "Press-to-contact lead each needs (release %d frames before contact): Powerful %d, full %d, overcharge %d frames (%.2f s)." % (
         M.RELEASE_LEAD, c["powerful_from"] + M.RELEASE_LEAD, c["full_at"] + M.RELEASE_LEAD, c["full_at"] + c["overcharge_wait"] + M.RELEASE_LEAD,
         (c["full_at"] + c["overcharge_wait"] + M.RELEASE_LEAD) / 60.0)]
@@ -628,14 +631,44 @@ def sec_robust(a):
     return "\n".join(out)
 
 
+NET_CASES = [  # label, tail class, start x cm, drift cm over the retail tail, reply frames, ball-back frames
+    ("approach from 6 m behind the net, passer at the baseline", "approach", -600, 76, 47, 34),
+    ("approach with a FollowNet clip (RB), same exchange", "approach_follownet", -600, 149, 47, 34),
+    ("second volley: first volley from 4 m, passer replies", "volley", -400, 83, 42, 29),
+    ("second volley in a fast exchange", "volley", -350, 83, 32, 24),
+    ("serve-and-volley: 120 mph serve, run to the first volley", "serve", -1189, 64, 31, 40),
+]
+
+
 def sec_movement(a):
-    out = ["### 10a. Movement after a swing (frames after contact) *(proposal)*", ""]
+    out = ["### 10a. Kept as retail, agreed changes, and the open option *(sourced from the engine docs; judgement for the option)*", ""]
+    out.append(md(["item", "retail (engine docs)", "decision"], [
+        ["first step from rest", "5 cm after 2-21 frames by clip; Rush_Front 14-18 frames to 5 cm, 42-43 to 1 m", "agreed: about 8 frames to 5 cm for every start; unchanged after 1 m"],
+        ["net rush", "refused when the opponent's hit is < 20 frames away (condition 7); needs RB / box", "agreed: buffered (starts at once when the window allows), no sprint requirement"],
+        ["pre-hit freeze", "direction latched for the last 20 frames before the opponent's hit; release at -20..-11 stops dead", "agreed: lifted at the net only (inside 500 cm); kept elsewhere"],
+        ["put-away", "FH shoulder-height clips only; blocked by RB in the |z| < 300 cm corridor", "agreed: clips for low balls and the backhand; freed from the corridor block"],
+        ["groundstroke / return / serve tail", "Out window 36 / 26 / 34 frames after contact (median)", "kept"],
+        ["volley and approach-shot tails", "38 (volley), 36 (approach groundstroke), 29 (FollowNet)", "open, owner to decide: option below cuts them to %d / %d / %d" % (M.TAIL_OPTION["volley"], M.TAIL_OPTION["approach"], M.TAIL_OPTION["approach_follownet"])],
+        ["stops, reversals, sprint, sideways-push cancel, 12-frame commit", "stops 35-91 frames to still; reversals 39-96 frames back past the turn", "kept as retail"],
+    ]))
+    out += ["", "### 10b. The open option: what shorter volley and approach tails do against the passer's reply *(computed, judgement inputs)*", "",
+            "x = distance from the net (cm) when the opponent hits and when his ball reaches the player; free = frames of steering before "
+            "the ball arrives (the freeze latches the last 20 before the hit; with the agreed change it is lifted when the player is inside 500 cm of the net as it would start). Rush from rest per 10a; root drift in the "
+            "tail scales with its length. Reply and ball-back frames are judgement (ball speeds from sections 2-3).", ""]
     rows = []
-    for h in ("Finesse", "Medium", "Powerful", "Rushed", "Overcharge"):
-        rows.append([h] + ["%d / %d" % M.recovery_frames(h, g) for g in M.GRADES] + ["%d / %d" % M.recovery_frames(h, "Bad", True)])
-    out.append(md(["swing"] + M.GRADES + ["Bad + stretched"], rows))
-    out += ["", "First number: a recovery step (walk speed, any direction) may start; second: full-speed movement. Tired (vigor 0) adds 6. "
-            "Retail: no movement until the clip's Out window, median 36 frames after a groundstroke contact (23-48), 39 after a volley."]
+    for label, cls, x0, drift, reply, back in NET_CASES:
+        tail_r = M.TAIL_RETAIL[cls][0]
+        cells = [label, "%d / %d" % (reply, back)]
+        variants = [("retail", tail_r, M.RUSH_RETAIL, True, False),
+                    ("agreed changes", tail_r, M.RUSH_FIRST_STEP, False, True),
+                    ("agreed + option", M.TAIL_OPTION.get(cls, tail_r), M.RUSH_FIRST_STEP, False, True)]
+        for name, tail, fs, freeze, buf in variants:
+            d = M.net_timeline(tail, reply, back, x0, drift * tail / tail_r, fs, freeze, buf)
+            cells.append("tail %d: %.0f / %.0f cm, free %d" % (tail, d["x_at_reply"], d["x_at_ball"], d["free"]))
+        rows.append(cells)
+    out.append(md(["exchange", "reply / ball-back frames", "retail", "agreed changes (first step, buffer, freeze at net)", "agreed + shorter volley / approach tails"], rows))
+    out += ["", "Serve tails are not in the option, so serve-and-volley changes only through the quicker first step; the option helps the "
+            "second volley and the approach."]
     return "\n".join(out)
 
 
