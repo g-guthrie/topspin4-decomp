@@ -87,8 +87,12 @@ every r4-r10/f1-f13 whose last write in the straight-line code before the origin
 is not read again before the call, so vtable and address temporaries are not mistaken for
 arguments); arguments 9 and up, which live in the caller's frame at r1+0x54 (8-byte slots,
 compared when the callee takes 8 register arguments or is unknown); objects in the function's
-own frame passed by pointer (their first 16 bytes written by the function, not their addresses,
-which depend on frame layout); and the memory delta so far. A recursive call is recognised (a
+own frame passed by pointer (their first word as written by the function, not their address,
+which depends on frame layout; bytes holding a saved LR or callee-saved register are masked); and
+the memory delta so far. A callee given a pointer into the function's own frame then stores a
+seeded word there (out-parameter model: `n = f(L, &len)`), into the bytes of that word the
+function has not written itself, so the value read back is the same in both runs wherever the
+two frames put the local, and a neighbouring local is never overwritten. A recursive call is recognised (a
 `bl` from the function back to its own entry) and intercepted like any other call. The callee then "returns": r3 and f1 get seeded values (a
 function of seed, call index and callee address, so both runs get the same values while their
 call sequences agree), and exactly the volatile registers the callee transitively writes are
@@ -144,17 +148,52 @@ coverage below the threshold. Every result also carries `abi_hazard`: volatile r
 candidate writes, the original leaves alone, and an image caller reads after the call (see 7.3).
 
 The 90% threshold: in the ground-truth run over byte-matched functions (section 3.1) the median
-function reaches full coverage and ~80% reach 90%; the unreached blocks of the rest are error
-paths behind specific values (a magic number, a full table, a negative size). Below 90% too much
-code would be untested; raising it to 100% would reject correct functions for one unreachable
-`return -1`. The uncovered block addresses are stored with every result, so a reviewer can see
-what was not exercised.
+function reaches full coverage; by size, 145 of 150 functions under 256 bytes reach 90%, 32 of 56
+at 256-512 bytes, 10 of 33 at 512-1024 and 10 of 60 above 1 KB. The unreached blocks are mostly
+error paths behind specific values (a magic number, a full table, a negative size, a callee
+returning a particular status) and, in large parsers, states that need a long, structured input.
+Below 90% too much code would be untested; raising it to 100% would reject correct functions for
+one unreachable `return -1`. The uncovered block addresses are stored with every result, so a
+reviewer can see what was not exercised.
 
 ## 3. Validation against ground truth
 
 ### 3.1 Matched functions must come out EQUIVALENT
 
-RESULTS_MATCHED
+**Sample.** 300 byte-matched functions (215 source files), drawn from the matched list of
+`work/matching-b45` stratified by size: 60 of 0-64 bytes, 90 of 64-256, 57 of 256-512, 33 of
+512-1024, 47 of 1024-2048, 13 above 2 KB. Units built with /LTCG were excluded (their objects are
+not what `fn_check` compiles); per-file flags come from the compiler-flag exceptions. Each function
+was checked against itself compiled from its committed source: the candidate is byte-identical up
+to relocations, so any DIFFERENT is a checker bug. 300 trials, 40 s budget, seed 1.
+
+| size (bytes) | n | EQUIVALENT | DIFFERENT | UNCHECKED | median coverage |
+|---|---|---|---|---|---|
+| 0-64 | 60 | 58 | 0 | 2 | 100% |
+| 64-256 | 90 | 87 | 0 | 3 | 100% |
+| 256-512 | 57 | 30 | 0 | 27 | 94% |
+| 512-1024 | 33 | 8 | 0 | 25 | 80% |
+| 1024-2048 | 47 | 4 | 0 | 43 | 50% |
+| 2048+ | 13 | 5 | 0 | 8 | 49% |
+| all | 300 | 192 (47,052 bytes) | **0** | 108 (102,860 bytes) | 100% |
+
+UNCHECKED reasons: coverage below 90% (92), too few valid trials (15: the original faults or runs
+past the instruction limit on almost every generated input; e.g. `lua3_luaG_errormsg` longjmps,
+the Huffman/jpeg table builders loop over seeded counts), VMX (1). No result had a non-empty
+`abi_hazard`. Median 152 valid trials and 4.4 s per function; the whole run took 46 CPU-minutes.
+
+**Checker bugs this found and fixed** (each was a DIFFERENT on a matched function in an earlier
+run): (1) recursion executed the original's own body instead of intercepting the call, while the
+candidate's recursive `bl` went to the image (2 functions); (2) temporaries used to compute an
+indirect call's target were compared as arguments (2); (3) the coverage-guided phase and the
+pointer fixer replaced values read from *read-only* image data (jump tables, float literal pools),
+which the candidate keeps at its own address, so the two runs saw different inputs (8: jump-table
+switches, a float constant, a hash table); (4) callee liveness over-approximation through
+unanalysable error handlers made an original's never-computed register count as an argument
+(near-miss runs). After (3) was fixed, the run above has no DIFFERENT. Its coverage figures
+are honest. With the bug, the mutated jump tables had inflated coverage on switch functions, and
+that is why the fix also seeds jump-table case values.
+
 
 ### 3.2 Planted mutations must come out DIFFERENT
 
@@ -222,13 +261,18 @@ Values that matter only at one specific input (a magic constant compared once, a
 comparison constants to reduce this, and the uncovered-block list shows what was never run. What
 the checker does **not** observe at all:
 - **Callee behaviour.** Callees are stubs. Two functions that pass the same arguments are equal
-  even if one of them relied on the callee doing something the other did not need. Callees also
-  never write memory, so a value a real callee would have stored through an out-pointer is the
-  frame's fill pattern in both runs.
+  even if one of them relied on the callee doing something the other did not need. The only
+  memory a callee writes is one seeded word through a pointer into the caller's frame (out-
+  parameters); stores a real callee makes through heap pointers, or beyond the first word of a
+  frame object, are not modelled, so code that depends on them sees seeded heap bytes or the
+  frame's fill pattern.
+- **Frame objects beyond their first word.** Only the first word of a local passed by pointer is
+  compared: a wider window reached neighbouring locals and save slots whose placement differs
+  between two compilations, which gave false DIFFERENT verdicts on non-matched candidates.
 - **Reads.** An extra, missing or reordered load is invisible unless it changes a value,
   faults, or is volatile hardware state (none of which the model has).
-- **The function's own stack frame**, except objects passed by pointer to a callee (their first
-  16 bytes).
+- **The function's own stack frame**, except the first word of objects passed by pointer to a
+  callee.
 - **Faults on inputs the original cannot handle** (discarded trials) and code reached only
   after a call returns a specific value combination.
 - **Upper halves of 64-bit registers** for integer arguments and results (only the low 32 bits

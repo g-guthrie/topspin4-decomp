@@ -127,7 +127,9 @@ STACK_TOP = 0x7F0F0000            # r1 at entry; above it: caller frame (seeded)
 RET_MAGIC = 0x7FFF0000
 MSR = 0x8000000000002000          # SF (64-bit) | FP
 UNRESOLVED_BASE = 0xEEE00000
-STACK_ARG_WINDOW = 16             # bytes of a frame object passed by pointer that are compared
+STACK_ARG_WINDOW = 4              # bytes of a frame object passed by pointer that are compared
+# (one word: beyond it the window would reach neighbouring locals and register save slots, which
+# two different compilations place differently; see docs/equivalence-tier.md 7.1)
 
 GPR_ARGS = tuple(range(3, 11))
 FPR_ARGS = tuple(32 + i for i in range(1, 14))
@@ -1266,6 +1268,15 @@ class Machine:
             pc -= 4
         return frozenset(out)
 
+    def _save_slot(self, x):
+        """Does stack byte x belong to a saved LR / callee-saved register (canary values)?"""
+        d = x & ~7
+        if not (STACK_LO <= d <= STACK_HI - 8):
+            return False
+        dw = int.from_bytes(bytes(self.stack_buf[d - STACK_LO: d - STACK_LO + 8]), "big")
+        w = (dw >> 32) if x - d < 4 else dw & 0xFFFFFFFF
+        return (dw >> 8) == 0xC0DE00 or (dw >> 32) == 0x4300DE00 or w == RET_MAGIC
+
     def _intercept(self, uc, a):
         k = len(self.events)
         image_fn = a in self.w.func_size
@@ -1278,7 +1289,8 @@ class Machine:
             v = vals[j] & 0xFFFFFFFF
             if STACK_LO <= v < STACK_TOP:
                 # pointer into the function's own frame: compare the object, not its address
-                frame[reg] = tuple(self.stack_buf[x - STACK_LO] if x in self.stack_touched else None
+                frame[reg] = tuple(self.stack_buf[x - STACK_LO]
+                                   if x in self.stack_touched and not self._save_slot(x) else None
                                    for x in range(v, min(v + STACK_ARG_WINDOW, STACK_HI)))
         sargs = {}
         if args is None or 10 in args:
@@ -1294,6 +1306,27 @@ class Machine:
             self.outcome = ("limit", "calls")
             uc.emu_stop()
             return
+        # out-parameters: a callee given a pointer into the function's own frame "stores" a
+        # seeded word there (only into bytes the function has not written, so neighbouring
+        # locals, laid out differently by the two compilations, are never clobbered)
+        for j, reg in enumerate(GPR_ARGS):
+            v = vals[j] & 0xFFFFFFFF
+            if reg not in frame or v & 3 or not (STACK_LO <= v <= STACK_TOP - 4) or \
+                    (args is not None and reg not in args):
+                continue
+            free = [x for x in range(v, v + 4) if x not in self.stack_touched]
+            if not free:
+                continue
+            ov = self.ret_ov.get((k, a, reg))
+            if ov is None:
+                ov = int_value(random.Random((self.seed << 24) ^ (k << 44) ^ a ^ (reg << 8)), self.consts)
+            ov &= 0xFFFFFFFF
+            word = ov.to_bytes(4, "big")
+            for x in free:
+                self.stack_buf[x - STACK_LO] = word[x - v]
+                self.stack_touched.add(x)
+            if self.trace is not None:
+                self.trace.append(("ret", (k, a, reg), ov, 4))
         defs = self.w.analysis.defs_of(a) if image_fn else VOLATILE
         r = random.Random((self.seed << 20) ^ (k << 40) ^ a)
         for reg in VOLATILE & defs:

@@ -115,6 +115,16 @@ def make_world(funcs):
 CALLEE = BASE + 0x400
 
 
+def outparam_code(off, extra=0):
+    """callee(&local, r4); return local + extra   (local at r1+off)"""
+    def gen(at):
+        body = prologue() + [addi(3, 1, off)]
+        body.append(bl(at + 4 * len(body), CALLEE))
+        body += [lwz(3, 1, off), addi(3, 3, extra)] + epilogue()
+        return body
+    return gen
+
+
 def caller_code(adjust):
     """r3 = callee(r3 + adjust, r4); return r3 + 1"""
     def gen(at):
@@ -139,6 +149,7 @@ class EquivTests(unittest.TestCase):
             "orig_float": (BASE + 0x340, [FADDS_F1, BLR]),
             "orig_deref": (BASE + 0x380, [lwz(3, 3, 4), lwz(3, 3, 0), BLR]),
             "callee": (CALLEE, [lwz(5, 3, 0), add(3, 5, 4), BLR]),       # reads r3, r4
+            "orig_out": (BASE + 0x700, outparam_code(0x50)),
             "orig_rodata": (BASE + 0x600, [dform(15, 4, 0, 0x8800), lwz(3, 4, 0x3000), BLR]),
             "orig_rec": (BASE + 0x500, lambda at: prologue() + [addi(3, 3, -1), bl(at + 16, at)] + epilogue()),
         })
@@ -214,6 +225,13 @@ class EquivTests(unittest.TestCase):
         self.assertEqual(r["verdict"], "EQUIVALENT", r)
         fsubs = (59 << 26) | (1 << 21) | (1 << 16) | (2 << 11) | (20 << 1)
         r = self.check("orig_float", [fsubs, BLR], return_kind="float")
+        self.assertEqual(r["verdict"], "DIFFERENT", r)
+
+    def test_out_parameter(self):
+        # the callee's store through a pointer into the frame is modelled: the same value is read
+        # back wherever the candidate's frame puts the local, and a different use of it is seen
+        self.assertEqual(self.check("orig_out", outparam_code(0x54))["verdict"], "EQUIVALENT")
+        r = self.check("orig_out", outparam_code(0x54, extra=1))
         self.assertEqual(r["verdict"], "DIFFERENT", r)
 
     def test_read_only_data_is_not_mutated(self):
