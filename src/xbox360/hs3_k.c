@@ -60,7 +60,3 @@ extern HS3Handle lbl_88C6B410;
         return self;                                                                           \
     }
 
-HS3_SET_PROP(ts4_set_script_prop_6B367E71_8894D0E8, lbl_88C6B428, 0x6b367e71, 0xff3a7b97)
-HS3_SET_PROP(ts4_set_script_prop_BB095782_8894D1C0, lbl_88C6B428, 0xbb095782, 0xf59526d0)
-HS3_SET_PROP(ts4_set_script_prop_F0C4C804_8894EC98, lbl_88C6B41C, 0xf0c4c804, 0xfe11d138)
-HS3_SET_PROP(ts4_set_script_prop_59F367B6_8894F188, lbl_88C6B410, 0x59f367b6, 0xfe11d138)
