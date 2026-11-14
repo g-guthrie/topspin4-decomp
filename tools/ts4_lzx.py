@@ -192,8 +192,9 @@ class LZXDecoder:
                     wpos = (wpos + 1) & wmask
                 out += chunk
                 self.block_left -= todo
-                if self.block_left == 0 and (br.p & 1):
-                    br.p += 1
+                # No realignment pad after an odd-length uncompressed block:
+                # the game's encoder never writes one, and skipping a byte here
+                # broke the one Core.arc member that ends such a block mid-stream.
                 continue
             produced = 0
             main_h, len_h, aligned = self.main_h, self.len_h, self.aligned_h
