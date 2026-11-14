@@ -175,7 +175,9 @@ repositioning components Volley and RushRepositioning, and StopMoving makes it s
 * **Scoring** (rules-and-scoring): the Standard class implements points, games, deuce, sets and
   tie-breaks (in a tie-break the server changes after points 1, 3, 5, ... and ends change every
   6 points; a quirk makes the next set's first server depend on the tie-break length); other
-  formats are mini-game classes. Serve rules: two serves (one with the single-serve option), a
+  formats are mini-game classes. Doubles follows the standard order: the serving team's
+  partners alternate on its service games, the receivers alternate point by point and keep their
+  courts for the set (rules s4.6). Serve rules: two serves (one with the single-serve option), a
   let is replayed, double fault awards the point.
 * **Crowd and rewards** (gp1): each shot earns named rewards that fill an excitement gauge; point-
   end modifiers weight the point (rally length, winner type, importance); the level drives crowd
@@ -193,7 +195,7 @@ September 2011 changes are not in TU1 (title-update-balance).
 
 ## 13. Reference models
 
-Portable C in `ref/gameplay/`, built and tested by `tests/test_gameplay_ref.py`: `rules.c`,
-`movement.c` + `ai_driver.c`, `stats.c` + `swing_window.c` + `clip_fit.c`, `player.c`, `ball.c`,
+Portable C in `ref/gameplay/`, built and tested by `tests/test_gameplay_ref.py`: `rules.c` (with the doubles rotation),
+`movement.c` (with the planner window predicates) + `ai_driver.c`, `stats.c` + `swing_window.c` + `clip_fit.c`, `player.c`, `ball.c`,
 `shot_select.c`, `locomotion.c`, `anim_select.c`, `swing_category.c`, `aim.c`, `timing.c` +
 `fatigue.c`.
