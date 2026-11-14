@@ -315,8 +315,12 @@ endsChanged = ends != previous ends                              # B30+0x94
 - Tie-break: first point served by the player whose turn it is; then the server
   changes after point 1, 3, 5, ... (serve switch counter counts odd totals); ends
   change after every 6 points (`total % 6 == 0`) [V].
-- For doubles the entry index `((games+switches)/2) mod 2` rotates the serving
-  partner [I, low].
+- Doubles (GE1, C; `ref/gameplay/rules.c` `rules_doubles_rotation`): with `t = totalGames +
+  switches` and `d = 2` when `B30+0x327` (doubles) is set, else 1, `fn_88676AF0` stores
+  `server = t % 2`, the serving team's entry `rot = (t / 2) % d` (its partners alternate on each of
+  the team's service games) and the receiving team's entry `rot = (t + points) % d` (its partners
+  alternate point by point; since that team receives every other game, `t` changes by 2 and each
+  partner keeps the same court for the set). This is the standard doubles order.
 
 **Quirk [V formula, U whether intended]:** the last point of a game is never counted
 in the switch counter (points are already reset), so the first server of the next
@@ -457,7 +461,7 @@ Each also implements a forced-end `OnPointEnd` (`0x8865C920`, `0x8865CCD0`,
 - How the initial server is chosen: the formula above uses player slot 0 as the first
   server; a toss/choice step (if any) must happen outside these functions [U].
 - The rally judge `0x886A84C0` (out / net / double bounce reasons) was only skimmed.
-- The doubles rotation arithmetic, statistics updates (`0x88674ED0`, `0x88674D58`),
+- Statistics updates (`0x88674ED0`, `0x88674D58` = per-player reset of S+0xF80 and counters; doubles rotation now decoded in 4.6),
   `0x886764A0`, and the match-progress fraction `0x8865C3D8` are low confidence.
 - Whether the quirk in section 4.6 is a genuine game behaviour; no ITF correction was found.
 - No no-ad scoring, no final-set advantage, and no foot-fault logic exists in the

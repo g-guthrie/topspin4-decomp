@@ -329,3 +329,12 @@ bool rules_point_wins_match(const rules_state *rs, int player)
         return true;
     return 2 * (rs->p[player].sets_won + 1) > rs->cfg.num_sets;
 }
+
+void rules_doubles_rotation(int t, int points, bool doubles,
+                            int *serving_team, int *server_partner, int *receiver_partner)
+{
+    int d = doubles ? 2 : 1;
+    *serving_team = t % 2;
+    *server_partner = (t / 2) % d;
+    *receiver_partner = (t + points) % d;
+}

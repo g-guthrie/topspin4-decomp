@@ -49,6 +49,9 @@ use seen in the code, written as C; argument names are ours. Older symbol tables
 | `fn_8865AC08` | `Grade_Value` | `float (const uint32 *grade)` | VeryGood 1, Good 0.75, Normal 0.5, Bad 0.25, else 0 | C | OPEN 1.9 |
 | `fn_8865EB60` | `PlayerCtx_IsReturnOfServe` | `bool (PlayerCtx *)` | serve phase, other team serving, this is the receiving slot | C | OPEN 1.11 |
 | `fn_88699300` | `Planner_PrepareState` | `void (Planner *, int state)` | 23-way prepare; sets HandAttributeQuality, speed override, flags per state | C (partly) | OPEN 1.11 |
+| `fn_8868FCC0` | `HitPoint_Publish` | `void (PlayerCtx *)` | fills `ReceiverState.#c7b7bdac` (frames, distance, required speed, difficulties) | C | OPEN 3.8 |
+| `fn_8869A4D0` | `Planner_PublishSide` | `void (Planner *)` | side from `fn_88688D90` into S+0xA34 and S+0xBD1 (matched, ga4_a.c) | C | OPEN 3.2 |
+| `fn_88676AF0` | `Rules_UpdateServerAndEnds` | `void (Scoring *)` | server, serve side, ends, doubles rotation | C | rules s4.6 |
 | `fn_886902E8` | `Fatigue_Init` | `void (PlayerController *)` | vigor = recovery = VigorMax = 1, constant graphs | C | timing-and-fatigue s2 |
 | `fn_88690540` | `Fatigue_Update` | `void (PlayerController *)` | per-frame load and CurrentVigor | C | timing-and-fatigue s2 |
 | `fn_8866ECA8` | `Fatigue_AddAnimationCosts` | `void (PlayerController *)` | animation-event costs from `PT+0x618` into `S+0xF28` | C | timing-and-fatigue s2 |

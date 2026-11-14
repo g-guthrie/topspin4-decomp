@@ -158,3 +158,17 @@ Crowd gain step table, cap by shot count and crowd events: `Settings` cfg+0x824 
 +0x83C, inside `PlayerSettings` (`02_PlayerSettings.yaml`; readable in `data/gameplay/crowd.yaml`).
 Reward rules and points: gp1 s4 (offsets there use gp1's base; check against the YAML paths
 before editing). The excitement events reach the sound code through `fn_8888DD18` (OPEN 6.1).
+
+## 12. Built but not switched on (inferred)
+
+These mechanisms exist in the data or code, but the scans in OPEN.md found nothing that turns
+them on in retail. Each entry is **I** until a runtime check (OPEN.md s11) confirms it.
+
+| mechanism | what it would do | why it is off | what enabling it would take |
+|---|---|---|---|
+| Fast-ball penalty and wood ramp on `#7e28dbc0.#1407106c` (S+0x770) | fault graphs: `ramp(40..60 km/h: 0 -> -0.6)` on control, so fast incoming balls are harder; wood graphs 280-282: frame-shot chance up to 0.3 (0.2 down) from 60 to 100 | no code store and no graph output writes S+0x770 (OPEN 1.10); it keeps its State image 0 | a code hook that copies the incoming ball speed in km/h (as the hit-point scorer does into `TrajectoryEvaluationContext.#1407106c` S+0x88C, `fn_88692040`) into S+0x770 before the shot graphs run. Data alone cannot do it |
+| Unused ShotResolution grades | `VeryGood/Normal/Bad/VeryBad` rows of `PowerResolution`, `AimingResolution`, `ErrorResolution` per shot, and grade factors 1 / 0.5 / 0.25 / 0 in S+0x798/0x79C, would scale power, aim and error by shot quality | the selecting keys S+0x3B4/0x3B8 are only ever set to Good (OPEN 1.9) | write a quality-dependent grade into S+0x3B4/0x3B8 (code), or, as a data-only workaround, copy the wanted values into the Good rows |
+| Timing ability | `BestAbility` curves blended by the TimingAbility graphs | the worst and best curves are identical (timing-and-fatigue s1) | make `.../5ae85f27/BestAbility` differ from `848c2a13` (data only) |
+| Clip Tolerancy arrays | per-clip Up/Down/X/Z tolerances (cm) for the swing clip fit | copied into selector arrays but never read (OPEN 3.6) | a code change in the clip fit `fn_886D3AD8` to use them |
+| AimingConfig `#5ed23100` (+0x94) | a per-config flag, true on the serve configs | no reader (OPEN 1.16) | code that reads it; meaning unknown |
+| `#be5d458f`, `#aee2d90b`, `#693eedbe` (S+0x768/0x7D0/0x7D8) | inputs of control/aiming graphs | never written; State images 0 / 0 / 1000 (OPEN 1.10) | a code writer; or edit the State image (`data/gameplay/tunables/State/06_PlayerStates.yaml`) to a constant |

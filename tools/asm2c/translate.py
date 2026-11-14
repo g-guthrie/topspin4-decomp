@@ -2474,6 +2474,8 @@ class Gen:
                 self.brks[-1].append((sbrk, body))
             if rk is None:
                 return None         # the other arm returns: `if (c) { ...; break; } ...; return;`
+            if sk is None:          # the other arm is the join block itself
+                sk = self.cp(st)
             for k in sk:
                 st[k] = sk[k]
             return rk

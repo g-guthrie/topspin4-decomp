@@ -91,7 +91,8 @@ difficulty's `7bcf55ee` (`aiming.md` s4).
   `@ReqFastRepos (S+0x4E2) = U[0,1] < Final.RushRepositioning`; then it picks the next mode
   `P+0x40` (3/4 or 5/6 by the volley draw and a doubles-partner position test).
 * **fn_886A3DF0 (AI stop):** when `Final.#2b4b4baa >= 0.5` or `Final.StopMoving > 0.5`, and the
-  hit-point value `ReceiverState.#c7b7bdac.#2c63ee31` (S+0xC24) is below `Final.#2ac5965a`, it
+  frames left to the chosen hit point `ReceiverState.#c7b7bdac.#2c63ee31` (S+0xC24, OPEN 3.8)
+  are below `Final.#2ac5965a`, it
   zeroes the move command (aim mode `0x9E51242B` with a zero vector): the AI stands still.
 * **Reaction delay:** planner state 0 waits `((ctx+0x50)+0x28)+0x1DC` frames after the
   opponent's hit (`fn_886B8468 +0x4D0`). With the AI record layout that word is

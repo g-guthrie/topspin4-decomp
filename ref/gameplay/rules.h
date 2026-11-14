@@ -107,4 +107,11 @@ bool rules_match_point(const rules_state *rs, int player);
 /* fn_88669CF8: would a point won by `player` end the match. */
 bool rules_point_wins_match(const rules_state *rs, int player);
 
+/* fn_88676AF0 doubles rotation (GE1, read from code). t = games played in the match plus the
+ * tie-break serve switches; points = points played in the current game. d = 2 in doubles, 1 in
+ * singles. The serving team is t % 2; its server is partner (t / 2) % d; the receiving team's
+ * receiver is partner (t + points) % d. */
+void rules_doubles_rotation(int t, int points, bool doubles,
+                            int *serving_team, int *server_partner, int *receiver_partner);
+
 #endif

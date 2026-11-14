@@ -263,6 +263,18 @@ static void test_withdrawal_and_short_format(void)
 
 int main(void)
 {
+    {
+        int team, srv, rcv;
+        rules_doubles_rotation(0, 0, true, &team, &srv, &rcv);
+        CHECK(team == 0 && srv == 0 && rcv == 0);
+        rules_doubles_rotation(2, 0, true, &team, &srv, &rcv);   /* team 0 again, other partner */
+        CHECK(team == 0 && srv == 1 && rcv == 0);
+        rules_doubles_rotation(2, 1, true, &team, &srv, &rcv);   /* receivers alternate by point */
+        CHECK(rcv == 1);
+        rules_doubles_rotation(5, 3, false, &team, &srv, &rcv);
+        CHECK(team == 1 && srv == 0 && rcv == 0);
+    }
+
     test_game_scoring();
     test_deuce_advantage();
     test_set_and_tiebreak();
