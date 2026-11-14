@@ -6774,52 +6774,52 @@ ai_difficulty:
         member: f8bde3bf
         element: "0x10: {Expression key, graph key, f32 weight, bool Default, bool #ee04af9f}"
         graph_outputs:
-          - ShotComponents.AimingLengthCenter?
-          - ShotComponents.AimingLengthLong?
-          - ShotComponents.AimingLengthShort?
-          - ShotComponents.AimingSideCenter?
-          - ShotComponents.AimingSideLeft?
-          - ShotComponents.AimingSideRight?
+          - "ShotComponents.AimingLengthCenter?"
+          - "ShotComponents.AimingLengthLong?"
+          - "ShotComponents.AimingLengthShort?"
+          - "ShotComponents.AimingSideCenter?"
+          - "ShotComponents.AimingSideLeft?"
+          - "ShotComponents.AimingSideRight?"
           - ShotComponents.DropShot
           - ShotComponents.Flat
           - ShotComponents.FollowToNet
           - ShotComponents.Lob
           - ShotComponents.PressAndHold
-          - ShotComponents.RiskyShot?
+          - "ShotComponents.RiskyShot?"
           - ShotComponents.Slice
           - ShotComponents.TopSpin
       l0c:
         member: 0a7a82d5
         element: "0x10: {Expression key, graph key, f32 weight, bool Default, bool #ee04af9f}"
         graph_outputs:
-          - ShotComponents.AimingLengthCenter?
-          - ShotComponents.AimingLengthLong?
-          - ShotComponents.AimingLengthShort?
-          - ShotComponents.AimingSideCenter?
-          - ShotComponents.AimingSideLeft?
-          - ShotComponents.AimingSideRight?
+          - "ShotComponents.AimingLengthCenter?"
+          - "ShotComponents.AimingLengthLong?"
+          - "ShotComponents.AimingLengthShort?"
+          - "ShotComponents.AimingSideCenter?"
+          - "ShotComponents.AimingSideLeft?"
+          - "ShotComponents.AimingSideRight?"
           - ShotComponents.DropShot
           - ShotComponents.Flat
           - ShotComponents.Lob
           - ShotComponents.PressAndHold
-          - ShotComponents.RiskyShot?
+          - "ShotComponents.RiskyShot?"
           - ShotComponents.Slice
           - ShotComponents.TopSpin
       l18:
         member: 2693de78
         element: "0x10: {Expression key, graph key, f32 weight, bool Default, bool #ee04af9f}"
         graph_outputs:
-          - ServeComponents.AimingEfficiency?
-          - ServeComponents.AimingLengthCenter?
-          - ServeComponents.AimingLengthLong?
-          - ServeComponents.AimingLengthShort?
-          - ServeComponents.AimingSideCenter?
-          - ServeComponents.AimingSideLeft?
-          - ServeComponents.AimingSideRight?
-          - ServeComponents.FaultProbability?
+          - "ServeComponents.AimingEfficiency?"
+          - "ServeComponents.AimingLengthCenter?"
+          - "ServeComponents.AimingLengthLong?"
+          - "ServeComponents.AimingLengthShort?"
+          - "ServeComponents.AimingSideCenter?"
+          - "ServeComponents.AimingSideLeft?"
+          - "ServeComponents.AimingSideRight?"
+          - "ServeComponents.FaultProbability?"
           - ServeComponents.Flat
           - ServeComponents.FollowToNet
-          - ServeComponents.OutEfficiency?
+          - "ServeComponents.OutEfficiency?"
           - ServeComponents.PressAndHold
           - ServeComponents.ServeStick
           - ServeComponents.Slice

@@ -473,7 +473,7 @@ def _scalar(v):
     if isinstance(v, (int, float)):
         return repr(v) if isinstance(v, float) and v != int(v) or isinstance(v, int) else repr(float(v))
     s = str(v)
-    if s == "" or re.search(r"[:#\[\]{},&*!|>'\"%@`]|^[-?\s]|\s$", s) or s.lower() in ("null", "true", "false", "yes", "no"):
+    if s == "" or re.search(r"[:#\[\]{},&*!|>?'\"%@`]|^[-?\s]|\s$", s) or s.lower() in ("null", "true", "false", "yes", "no"):
         return json.dumps(s)
     return s
 
