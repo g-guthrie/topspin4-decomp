@@ -481,6 +481,45 @@ class K5Tests(unittest.TestCase):
         r = gen(t, mode=2)
         self.assertIn("ts4_word loc58[3];", r["body"])
 
+    def test_vmx_after_call(self):
+        # vector code after a call: no vector value is live across it
+        t = ["mflr r12", "stw r12,-0x8(r1)", "std r31,-0x10(r1)", "stwu r1,-0x60(r1)", "mr r31,r4",
+             "bl 0x0 -> 0x88001000   ; REL24 fn_88001000", "lwz r11,0x0(r3)",
+             "lvx128 v63,r0,r11", "stvx128 v63,r0,r31",
+             "addi r1,r1,0x60", "lwz r12,-0x8(r1)", "mtlr r12", "ld r31,-0x10(r1)", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("*(__vector4 *)((ts4_word)(a1)) = vv", r["body"])
+
+    def test_vmx_live_across_call_is_skipped(self):
+        t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x60(r1)", "lvx128 v63,r0,r4",
+             "bl 0x0 -> 0x88001000   ; REL24 fn_88001000", "stvx128 v63,r0,r3",
+             "addi r1,r1,0x60", "lwz r12,-0x8(r1)", "mtlr r12", "blr"]
+        with self.assertRaises(translate.Skip):
+            translate.Gen(prog(t), ENV, 2).run()
+
+    def test_lvlx_from_stack_float(self):
+        t = ["lfs f0,0x48(r3)", "addi r10,r1,-0x10", "stfs f0,-0x10(r1)", "lvlx128 v62,r0,r10",
+             "lvx128 v63,r0,r4", "vrlimi128 v63,v62,0x2,2", "stvx128 v63,r0,r4", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("__lvlx((void *)(", r["body"])
+        self.assertIn("__vrlimi(", r["body"])
+
+    def test_vector_loop_without_carried_vectors(self):
+        t = ["li r11,0x10", "mtctr r11", "lvx128 v63,r0,r3", "vspltw128 v63,v63,0x3", "stvx128 v63,r0,r3",
+             "addi r3,r3,0x10", f"bdnz -0x10 -> {tgt(2)}", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("__vspltw(", r["body"])
+        self.assertIn("while (--", r["body"])
+
+    def test_loop_exit_through_jump_block_is_a_break(self):
+        # for (p = a; p != e; p += 20) if (p->x == k) { p->y = 0; break; }
+        t = ["cmplw cr6,r3,r4", f"beq cr6, 0x24 -> {tgt(10)}",
+             "lwz r11,0x8(r3)", "cmplw cr6,r11,r5", f"beq cr6, 0x14 -> {tgt(9)}",
+             "addi r3,r3,0x14", "cmplw cr6,r3,r4", f"bne cr6, -0x14 -> {tgt(2)}",
+             f"b 0x8 -> {tgt(10)}", "stw r6,0x10(r3)", "blr"]
+        r = gen(t, mode=2)
+        self.assertIn("break;", r["body"])
+
     def test_address_taken_word_parameter(self):
         # struct in r3/r4 at F+0x10, then a word parameter in r5 whose address is taken
         t = ["mflr r12", "stw r12,-0x8(r1)", "stwu r1,-0x80(r1)", "std r3,0x90(r1)", "std r4,0x98(r1)",
