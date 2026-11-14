@@ -139,6 +139,8 @@ class EquivTests(unittest.TestCase):
             "orig_float": (BASE + 0x340, [FADDS_F1, BLR]),
             "orig_deref": (BASE + 0x380, [lwz(3, 3, 4), lwz(3, 3, 0), BLR]),
             "callee": (CALLEE, [lwz(5, 3, 0), add(3, 5, 4), BLR]),       # reads r3, r4
+            "orig_rodata": (BASE + 0x600, [dform(15, 4, 0, 0x8800), lwz(3, 4, 0x3000), BLR]),
+            "orig_rec": (BASE + 0x500, lambda at: prologue() + [addi(3, 3, -1), bl(at + 16, at)] + epilogue()),
         })
         cls.machine = F.Machine(cls.world)
 
@@ -195,6 +197,13 @@ class EquivTests(unittest.TestCase):
         self.assertEqual(r["verdict"], "DIFFERENT", r)
         self.assertIn("call", r["reason"])
 
+    def test_recursive_call_is_intercepted(self):
+        target = self.world.by_name["orig_rec"]
+        cand = lambda at: prologue() + [addi(3, 3, -1), bl(at + 16, target)] + epilogue()
+        self.assertEqual(self.check("orig_rec", cand)["verdict"], "EQUIVALENT")
+        cand2 = lambda at: prologue() + [addi(3, 3, -2), bl(at + 16, target)] + epilogue()
+        self.assertEqual(self.check("orig_rec", cand2)["verdict"], "DIFFERENT")
+
     def test_vector_code_unchecked(self):
         r = self.check("orig_vec", [VADDFP, BLR])
         self.assertEqual(r["verdict"], "UNCHECKED")
@@ -206,6 +215,12 @@ class EquivTests(unittest.TestCase):
         fsubs = (59 << 26) | (1 << 21) | (1 << 16) | (2 << 11) | (20 << 1)
         r = self.check("orig_float", [fsubs, BLR], return_kind="float")
         self.assertEqual(r["verdict"], "DIFFERENT", r)
+
+    def test_read_only_data_is_not_mutated(self):
+        # the original reads a constant from read-only image data; the candidate has the same
+        # constant elsewhere (here: an immediate). Trials must not change read-only data.
+        r = self.check("orig_rodata", [li(3, 0), BLR])
+        self.assertEqual(r["verdict"], "EQUIVALENT", r)
 
     def test_pointer_chains_resolve(self):
         r = self.check("orig_deref", [lwz(3, 3, 4), lwz(3, 3, 0), BLR])

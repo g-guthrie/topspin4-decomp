@@ -506,11 +506,18 @@ class Analysis:
 class World:
     """Original image (base, bytes, lazily materialised ranges) plus symbol tables."""
 
-    def __init__(self, base: int, image: bytes, symbols: list, lazy_ranges=(), text_range=None):
+    def __init__(self, base: int, image: bytes, symbols: list, lazy_ranges=(), text_range=None,
+                 writable=None):
         self.base, self.image = base, image
         self.size = (len(image) + PAGE - 1) & ~(PAGE - 1)
         self.lazy_ranges = list(lazy_ranges)        # (lo, hi) page-aligned, materialised per trial
         self.text_range = text_range or (base, base + len(image))
+        # image ranges the program may write (.data/.bss): only values read from these (or from
+        # lazy heap pages) are mutated or replaced by trials; read-only data (jump tables, constant
+        # pools) has a different address in the candidate and must stay pristine for both.
+        if writable is None:
+            writable = [r for r in ((base, self.text_range[0]), (self.text_range[1], base + self.size)) if r[1] > r[0]]
+        self.writable = list(writable)
         self.by_name = {}
         self.func_size = {}
         for name, sec, addr, size in symbols:
@@ -652,7 +659,7 @@ def load_world(dll: Path = DLL) -> World:
     base = struct.unpack_from("<I", d, opt + 28)[0]
     size_img = struct.unpack_from("<I", d, opt + 56)[0]
     img = bytearray(size_img)
-    lazy, text = [], None
+    lazy, text, writable = [], None, []
     for i in range(nsec):
         o = opt + optsz + i * 40
         name, vs, va, rs, rp = struct.unpack_from("<8sIIII", d, o)
@@ -662,12 +669,14 @@ def load_world(dll: Path = DLL) -> World:
         img[va: va + n] = d[rp: rp + n]
         if name == ".text":
             text = (base + va, base + va + vs)
+        if chars & 0x80000000 and name != ".reloc":
+            writable.append((base + va, base + va + max(vs, rs)))
         if chars & 0x80000000 and vs > rs and name != ".reloc":
             lo = (base + va + rs + PAGE - 1) & ~(PAGE - 1)
             hi = (base + va + vs) & ~(PAGE - 1)
             if hi > lo:
                 lazy.append((lo, hi))     # uninitialised data: seeded per trial
-    _WORLD = World(base, bytes(img), load_symbols_merged(), lazy, text)
+    _WORLD = World(base, bytes(img), load_symbols_merged(), lazy, text, writable)
     return _WORLD
 
 
@@ -885,6 +894,9 @@ def page_words(seed, page, consts):
     if mode < 0.22:                      # text: printable ASCII with some NULs and newlines
         alphabet = b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 _-.,:;/<>=&#%\"'\n\0"
         return bytes(r.choice(alphabet) for _ in range(PAGE))
+    if mode < 0.30:                      # bytes and halfwords near the code's comparison constants
+        pool = sorted({c & 0xFF for c in consts} | {0, 1, 0xFF}) if consts else [0, 1, 0xFF]
+        return bytes(r.choice(pool) if rnd() < 0.7 else r.getrandbits(8) for _ in range(PAGE))
     out = []
     for _ in range(PAGE // 4):
         x = rnd()
@@ -999,6 +1011,7 @@ class Machine:
         uc.hook_add(UC_HOOK_INTR, self._on_intr)
         self.lazy = list(world.lazy_ranges) + [(HEAP_LO, HEAP_HI)]
         self.ov_bytes, self.mem_ov, self.ret_ov, self.trace = {}, {}, {}, None
+        self.entry, self.last = None, None
 
     # -- candidate region
     def load_candidate(self, linked: Linked | None):
@@ -1043,8 +1056,8 @@ class Machine:
         if self.mem_ov:
             arr = bytearray(data)
             for a, v in self.mem_ov.items():
-                if pg <= a < pg + PAGE - 3:
-                    struct.pack_into(">I", arr, a - pg, v)
+                if pg <= a and a + len(v) <= pg + PAGE:
+                    arr[a - pg: a - pg + len(v)] = v
             data = bytes(arr)
         ctypes.memmove(buf, data, PAGE)
         self.uc.mem_map_ptr(pg, PAGE, UC_PROT_ALL, ctypes.addressof(buf))
@@ -1125,17 +1138,20 @@ class Machine:
 
     def _on_read(self, uc, access, address, size, value, ud):
         a = address & 0xFFFFFFFF
-        if size == 4 and not (STACK_LO <= a < STACK_HI):
+        if size in (1, 2, 4) and (a & (PAGE - 1)) + size <= PAGE and \
+                ((HEAP_LO <= a < HEAP_HI) or any(lo <= a < hi for lo, hi in self.w.writable)):
             h = self._host(a)
             if h is not None:
-                self.trace.append(("mem", a, struct.unpack(">I", ctypes.string_at(h, 4))[0]))
+                self.trace.append(("mem", a, int.from_bytes(ctypes.string_at(h, size), "big"), size))
 
     def _on_write(self, uc, access, address, size, value, ud):
         a = address & 0xFFFFFFFF
         if not (STACK_LO <= a < STACK_HI):
             self.touched.update(range(a, a + size))
         else:
-            self.stack_touched.update(range(a, a + size))
+            r = range(a, a + size)
+            self.stack_touched.update(r)
+            self.stack_since.update(r)
 
     def _on_intr(self, uc, intno, ud):
         self.outcome = ("trap", intno)
@@ -1165,8 +1181,20 @@ class Machine:
 
     def _on_block(self, uc, address, size, ud):
         a = address & 0xFFFFFFFF
+        if a == self.entry:
+            if self.last is not None:
+                la, ls = self.last
+                try:
+                    w = struct.unpack(">I", self.read(la + ls - 4, 4))[0]
+                except Fault:
+                    w = 0
+                if (w & 0xFC000001) == 0x48000001:    # reached by `bl` from the function: recursion
+                    self.last = None
+                    self._intercept(uc, a)
+                    return
         for lo, hi in self.local:
             if lo <= a < hi:
+                self.last = (a, size)
                 if self.cov is not None:
                     self.cov.add((a, size))
                 self.icount += size >> 2
@@ -1209,10 +1237,41 @@ class Machine:
         else:
             uc.reg_write(P.UC_PPC_REG_0 + reg, v)
 
+    def _site_args(self, uc):
+        """Argument registers of an indirect/unknown call, from the calling code itself: r3 plus
+        every r4-r10/f1-f13 whose last write in the straight-line code before the call site (up to
+        the previous call or control transfer) is not read again before the call (registers that
+        are read again are address temporaries such as the vtable pointer). None when the call
+        site is unknown (tail call)."""
+        site = (uc.reg_read(P.UC_PPC_REG_LR) & 0xFFFFFFFF) - 4
+        if not any(lo <= site < hi for lo, hi in self.local):
+            return None
+        out, decided, read_after = {3}, set(), set()
+        pc = site - 4
+        for _ in range(32):
+            if not any(lo <= pc < hi for lo, hi in self.local):
+                break
+            try:
+                ins = decode(struct.unpack(">I", self.read(pc, 4))[0], pc)
+            except Fault:
+                break
+            if ins.kind in ("bl", "bctrl", "b", "blr", "bctr", "bcctr", "bclr", "bc"):
+                break
+            for reg in ins.writes & ARGS:
+                if reg not in decided:
+                    decided.add(reg)
+                    if reg not in read_after:     # read again before the call: a temporary
+                        out.add(reg)
+            read_after |= ins.reads
+            pc -= 4
+        return frozenset(out)
+
     def _intercept(self, uc, a):
         k = len(self.events)
         image_fn = a in self.w.func_size
         args = self.w.analysis.live_in(a) if image_fn else None
+        if args is None:
+            args = self._site_args(uc)
         vals = tuple(self._get(r) for r in GPR_ARGS + FPR_ARGS)
         frame = {}
         for j, reg in enumerate(GPR_ARGS):
@@ -1221,7 +1280,16 @@ class Machine:
                 # pointer into the function's own frame: compare the object, not its address
                 frame[reg] = tuple(self.stack_buf[x - STACK_LO] if x in self.stack_touched else None
                                    for x in range(v, min(v + STACK_ARG_WINDOW, STACK_HI)))
-        self.events.append((a, vals, args, self.delta(), frame))
+        sargs = {}
+        if args is None or 10 in args:
+            # arguments 9+ are passed in the caller's frame at r1+0x54, 8 bytes per slot
+            sp = uc.reg_read(P.UC_PPC_REG_1) & 0xFFFFFFFF
+            for j in range(8):
+                lo = sp + 0x54 + 8 * j
+                if any(x in self.stack_since for x in range(lo, lo + 8)) and STACK_LO <= lo < STACK_HI - 8:
+                    sargs[j] = bytes(self.stack_buf[lo - STACK_LO: lo - STACK_LO + 8])
+        self.stack_since = set()
+        self.events.append((a, vals, args, self.delta(), frame, sargs))
         if len(self.events) > 400:
             self.outcome = ("limit", "calls")
             uc.emu_stop()
@@ -1235,7 +1303,7 @@ class Machine:
                     rv = int_value(r, self.consts)
                 self._set(3, rv)
                 if self.trace is not None:
-                    self.trace.append(("ret", (k, a), rv & 0xFFFFFFFF))
+                    self.trace.append(("ret", (k, a), rv & 0xFFFFFFFF, 4))
             elif reg == 33:
                 self._set(33, float_bits(r))
             else:
@@ -1247,6 +1315,7 @@ class Machine:
         uc = self.uc
         self.seed, self.consts, self.local, self.cov = seed, consts, local, coverage
         self.events, self.outcome, self.fault, self.icount, self.tb = [], None, None, 0, 0x1000
+        self.entry, self.last = entry, None
         # reset memory
         for pg, (buf, data) in self.pages.items():
             uc.mem_unmap(pg, PAGE)
@@ -1264,6 +1333,7 @@ class Machine:
                 reg[0][reg[1]] = reg[2][reg[1]]
         self.touched = set()
         self.stack_touched = set()
+        self.stack_since = set()
         self.ov_bytes = {}
         self.mem_ov = state.get("mem_ov") or {}
         self.ret_ov = state.get("ret_ov") or {}
@@ -1272,14 +1342,14 @@ class Machine:
                 reg = self._region(a)
                 if reg is None or reg[2] is None:
                     continue
-                for i, byte in enumerate(struct.pack(">I", v)):
+                for i, byte in enumerate(v):
                     reg2 = self._region(a + i)
                     reg2[0][reg2[1]] = byte
                     self.ov_bytes[a + i] = byte
         self.trace = [] if track else None
         if track:
             self._read_hook = uc.hook_add(UC_HOOK_MEM_READ, self._on_read)
-            self.trace += [("reg", r, state["regs"][r]) for r in GPR_ARGS + (13,)]
+            self.trace += [("reg", r, state["regs"][r], 4) for r in GPR_ARGS + (13,)]
         ctypes.memmove(self.stack_buf, state["stack"], STACK_HI - STACK_LO)
         uc.reg_write(P.UC_PPC_REG_MSR, MSR)
         for reg, v in state["regs"].items():
@@ -1391,10 +1461,15 @@ def compare(world, A, B, rkind, nonvol=True):
     ea, eb = A["events"], B["events"]
     allregs = GPR_ARGS + FPR_ARGS
     for i in range(min(len(ea), len(eb))):
-        ta, va, args, da, fa = ea[i]
-        tb, vb, _, db, fb = eb[i]
+        ta, va, args, da, fa, sa = ea[i]
+        tb, vb, _, db, fb, sb = eb[i]
         if ta != tb:
             return f"call #{i + 1}: original calls {world.label(ta)}, candidate calls {world.label(tb)}"
+        if sa != sb:
+            j = min(k for k in set(sa) | set(sb) if sa.get(k) != sb.get(k))
+            fmt = lambda b: "unset" if b is None else b.hex()
+            return (f"call #{i + 1} to {world.label(ta)}: stack argument {9 + j} differs: original "
+                    f"{fmt(sa.get(j))}, candidate {fmt(sb.get(j))}")
         for j, reg in enumerate(allregs):
             x, y = va[j], vb[j]
             if reg < 32:
@@ -1479,6 +1554,15 @@ def code_consts(func: Func):
             v = w & 0xFFFF
             v = sext(v, 16) if op == 11 else v
             out.update({v - 1, v, v + 1})
+    # switch case values: a jump table of n entries indexed by (x - bias) is reached by x in
+    # bias .. bias+n-1 (the bias is the `addi rX, rY, -bias` shortly before the bctr)
+    for i, tgts in func.tables.items():
+        bias = 0
+        for ins in reversed(func.insns[max(0, i - 12):i]):
+            if ins.word >> 26 == 14 and sext(ins.word & 0xFFFF, 16) < 0 and (ins.word >> 16) & 31:
+                bias = -sext(ins.word & 0xFFFF, 16)
+                break
+        out.update(bias + k for k in range(len(tgts)))
     return sorted(out)
 
 
@@ -1562,9 +1646,31 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
     last_new = 0
     blocks = func.block_addrs()
     covered = set()
+    corpus = []          # (run seed, state, trace) of trials that reached new blocks
     for t in range(trials):
         s = seed * 1_000_003 + t
-        state, _ = make_state(s, live, consts)
+        if t < max(40, trials * 2 // 5) or not corpus:
+            state, _ = make_state(s, live, consts)
+        else:
+            # coverage-guided phase: take a trial that reached new blocks and replace one value it
+            # read (an argument, a loaded byte/halfword/word or a call's return value)
+            mr = random.Random(s ^ 0x5EED)
+            ps, pstate, ptrace = corpus[min(len(corpus) - 1, int(len(corpus) * mr.random() ** 0.5))]
+            state = dict(pstate, regs=dict(pstate["regs"]), mem_ov=dict(pstate.get("mem_ov") or {}),
+                         ret_ov=dict(pstate.get("ret_ov") or {}))
+            for _ in range(1 + (mr.random() < 0.3)):
+                kind, key, old, size = mr.choice(ptrace)
+                x = mr.random()
+                v = (old + mr.choice((-1, 1))) if x < 0.2 else 0 if x < 0.3 else 1 if x < 0.4 else \
+                    (mr.choice(consts) if consts and x < 0.7 else int_value(mr, consts))
+                v &= (1 << (8 * size)) - 1
+                if kind == "reg":
+                    state["regs"][key] = v
+                elif kind == "mem":
+                    state["mem_ov"][key] = v.to_bytes(size, "big")
+                else:
+                    state["ret_ov"][key] = v
+            s = ps
         tb_before = len(cov)
         state, A = run_fixing(machine, world, target_addr, o_local, state, s, consts, cov)
         if A["outcome"][0] == "trap" and A["outcome"][1] == 96:
@@ -1581,6 +1687,10 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
         valid += 1
         if len(cov) != tb_before:
             last_new = t
+            if len(corpus) < 200:
+                T = machine.run(target_addr, o_local, state, s, consts, 200_000, None, track=True)
+                if T["trace"]:
+                    corpus.append((s, state, T["trace"]))
         diff = compare(world, A, B, return_kind)
         if diff:
             first_diff = (s, state, diff, A, B)
@@ -1625,25 +1735,28 @@ def valid_ptr(world, v):
     return HEAP_LO <= v < HEAP_HI or world.base <= v < world.base + world.size or STACK_LO <= v < STACK_HI
 
 
-def run_fixing(machine, world, entry, local, state, s, consts, cov, max_fix=8):
+def run_fixing(machine, world, entry, local, state, s, consts, cov, max_fix=24):
     """Run the original; when it faults on an address derived from an invalid pointer value
     (an argument, a loaded word or a call's return value), re-run with that value replaced by a
     fresh heap pointer (lazy resolution of pointer fields). Returns (final state, result)."""
     tmp = set()
     for it in range(max_fix + 1):
         tmp = set()
-        A = machine.run(entry, local, state, s, consts, 200_000, tmp)
+        A = machine.run(entry, local, state, s, consts, 200_000, tmp, track=it > 0)
         F = A["fault_addr"]
         if A["outcome"][0] != "fault" or F is None or it == max_fix:
             break
-        T = machine.run(entry, local, state, s, consts, 200_000, None, track=True)
+        T = A if it > 0 else machine.run(entry, local, state, s, consts, 200_000, None, track=True)
         F = T["fault_addr"]
         if F is None:
             break
         src = None
+        done = set((state.get("mem_ov") or {})) | set((state.get("ret_ov") or {}))
         for ent in reversed(T["trace"]):
             v = ent[2] & 0xFFFFFFFF
-            if -0x8000 <= F - v < 0x10000 and not valid_ptr(world, v):
+            if ent[3] == 4 and -0x8000 <= F - v < 0x10000 and not valid_ptr(world, v):
+                if ent[0] != "reg" and ent[1] in done:
+                    continue     # already replaced: the value was stored there by the function
                 src = ent
                 break
         if src is None:
@@ -1651,11 +1764,11 @@ def run_fixing(machine, world, entry, local, state, s, consts, cov, max_fix=8):
         ptr = RANDPTR_LO + ((((s * 2654435761) ^ (it * 40503) ^ F) % ((HEAP_HI - RANDPTR_LO - 0x40000) >> 4)) << 4)
         state = dict(state, regs=dict(state["regs"]), mem_ov=dict(state.get("mem_ov") or {}),
                      ret_ov=dict(state.get("ret_ov") or {}))
-        kind, key, _ = src
+        kind, key = src[0], src[1]
         if kind == "reg":
             state["regs"][key] = ptr
         elif kind == "mem":
-            state["mem_ov"][key] = ptr
+            state["mem_ov"][key] = struct.pack(">I", ptr)
         else:
             state["ret_ov"][key] = ptr
     if cov is not None and A["outcome"][0] not in ("fault", "limit"):

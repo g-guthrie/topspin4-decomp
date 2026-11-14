@@ -55,6 +55,14 @@ HELPER_PATTERNS = {
     'savevmx_64_address': [0x3960FC00, 0x100B61CB],
 }
 
+# Byte length of each helper block (all entry points), as XenonRecomp lays them out.
+HELPER_SIZES = {
+    'restgprlr_14_address': 18 * 4 + 12, 'savegprlr_14_address': 18 * 4 + 8,
+    'restfpr_14_address': 18 * 4 + 4, 'savefpr_14_address': 18 * 4 + 4,
+    'restvmx_14_address': 18 * 8 + 4, 'savevmx_14_address': 18 * 8 + 4,
+    'restvmx_64_address': 64 * 8 + 4, 'savevmx_64_address': 64 * 8 + 4,
+}
+
 
 # --------------------------------------------------------------------------- image + symbols
 
@@ -340,6 +348,11 @@ def detect_switch(img, fn_start, fn_end, bctr):
         a += 4
     count = _bound(img, fn_start, a_s, index)
     src = 'cmplwi'
+    if count is None:
+        # index masked by clrlwi rI,rS,n (rlwinm sh=0, me=31): 2**(32-n) entries
+        a_i, di = _find_def(img, fn_start, a_s, index)
+        if di and di[0] == 'rlwinm' and di[3] == 0 and di[5] == 31 and di[4] >= 24:
+            count, src = 1 << (32 - di[4]), 'mask'
     labels = []
     if kind == 'absolute':
         n = count if count is not None else 4096
@@ -362,7 +375,13 @@ def detect_switch(img, fn_start, fn_end, bctr):
             off = raw[0] if width == 1 else struct.unpack('>H', raw)[0]
             lab = (base + (off << shift)) & 0xFFFFFFFF
             if not (fn_start <= lab < fn_end):
-                return None, 'offset label outside function'
+                # A table bounded only by an index mask can be shared with another switch (Loader
+                # 0x830CF6F0 shares .rdata 0x830847F8 with 0x830CF868's); entries that point past
+                # the function are kept and become jumps into the neighbour (XenonRecomp RC2 turns
+                # them into alternate entries).
+                sec = img.section_of(lab)
+                if src != 'mask' or sec is None or not (sec[5] & 0x20):
+                    return None, 'offset label outside function'
             labels.append(lab)
     if not labels:
         return None, 'empty table'
@@ -554,6 +573,185 @@ def extend_for_neighbours(chosen, img, refs, max_span=0x400):
     return out, merges, dropped
 
 
+# --------------------------------------------------------------------------- .pdata + leaf discovery
+
+def read_pdata(img):
+    """{begin: size} from the image's .pdata (IMAGE_CE_RUNTIME_FUNCTION: BeginAddress, then a word
+    holding PrologLen:8, FuncLen:22 (instructions), ThirtyTwoBit:1, ExceptionFlag:1)."""
+    out = {}
+    for name, va, vs, ra, rs, ch in img.sections:
+        if name != '.pdata':
+            continue
+        blob = img.read(va, vs)
+        for i in range(0, len(blob) - 7, 8):
+            begin, data = struct.unpack_from('>II', blob, i)
+            size = ((data >> 8) & 0x3FFFFF) * 4
+            if begin and size:
+                out[begin] = size
+    return out
+
+
+def _branch(w, a):
+    """(kind, target) for b/bc/bclr/bcctr at `a`; kind in b, bl, bc, bcl, ret, ctr, cret, cctr."""
+    op = w >> 26
+    if op == 18:
+        li = w & 0x03FFFFFC
+        if li & 0x02000000:
+            li -= 0x04000000
+        return ('bl' if w & 1 else 'b'), ((li if w & 2 else a + li) & 0xFFFFFFFF)
+    if op == 16:
+        tgt = (s16(w & 0xFFFC) + (0 if w & 2 else a)) & 0xFFFFFFFF
+        always = ((w >> 21) & 0x14) == 0x14
+        if w & 1:
+            return 'bcl', tgt
+        return ('b' if always else 'bc'), tgt
+    if op == 19:
+        xo = (w >> 1) & 0x3FF
+        if xo in (16, 528) and not w & 1:
+            always = ((w >> 21) & 0x14) == 0x14
+            if xo == 16:
+                return ('ret' if always else 'cret'), None
+            return ('ctr' if always else 'cctr'), None
+    return None, None
+
+
+def function_extent(img, start, limit):
+    """End address of the leaf function at `start`: intra-procedural control flow is followed
+    (conditional branches, internal `b`, switch tables found by detect_switch) and stops at blr,
+    bctr, zero padding, or `limit` (the next known function). Returns (end, switches)."""
+    seen = set()
+    work = [start]
+    end = start + 4
+    switches = []
+    while work:
+        a = work.pop()
+        while start <= a < limit and a not in seen:
+            w = img.word(a)
+            if w is None or w == 0:
+                break
+            seen.add(a)
+            end = max(end, a + 4)
+            kind, tgt = _branch(w, a)
+            if kind == 'b':
+                if start <= tgt < limit:
+                    work.append(tgt)
+                break
+            if kind == 'bc':
+                if start <= tgt < limit:
+                    work.append(tgt)
+            elif kind in ('ret',):
+                break
+            elif kind == 'ctr':
+                sw, why = detect_switch(img, start, limit, a)
+                if sw:
+                    switches.append(sw)
+                    work.extend(l for l in sw.labels if start <= l < limit)
+                    if sw.kind == 'absolute' and sw.table == a + 4:
+                        end = max(end, a + 4 + 4 * len(sw.labels))
+                break
+            a += 4
+    return end, switches
+
+
+def discover_functions(img, known, data_ranges=()):
+    """Leaf functions (no .pdata, not in the symbol file) in the code not covered by `known`
+    ({start: size}). Entry candidates: direct bl/b targets, aligned code addresses stored as data
+    words or built by lis/addi pairs, and the first non-zero word after each covered range; a final
+    sweep then walks every remaining gap function by function. `data_ranges` ((start, size)
+    objects in .text, e.g. reviewed seed objects) are never treated as code. Returns {start: size}."""
+    code = img.code_sections()
+
+    def in_code(a):
+        return any(va <= a < va + vs for _, va, vs, _, _, _ in code)
+
+    ivs = []  # disjoint union of known functions and data objects (objects can sit inside functions)
+    for a, e in sorted([(a, a + n) for a, n in known.items() if n] + [(a, a + n) for a, n in data_ranges if n]):
+        if ivs and a <= ivs[-1][1]:
+            ivs[-1] = (ivs[-1][0], max(ivs[-1][1], e))
+        else:
+            ivs.append((a, e))
+    starts = [a for a, _ in ivs]
+
+    def covered(a):
+        i = bisect.bisect_right(starts, a) - 1
+        return i >= 0 and a < ivs[i][1]
+
+    cands = set()
+    for name, va, vs, ra, rs, ch in code:
+        blob = img.read(va, vs)
+        for off in range(0, len(blob), 4):
+            w = struct.unpack_from('>I', blob, off)[0]
+            kind, tgt = _branch(w, va + off)
+            if kind in ('bl', 'b') and tgt is not None and in_code(tgt) and not covered(tgt):
+                cands.add(tgt)
+            d = decode(w)
+            if d and d[0] == 'addis' and d[2] == 0:  # lis rX,hi ... addi rY,rX,lo
+                for k in range(1, 6):
+                    if off + 4 * k >= len(blob):
+                        break
+                    e = decode(struct.unpack_from('>I', blob, off + 4 * k)[0])
+                    if e and e[0] == 'addi' and e[2] == d[1]:
+                        t = ((d[3] << 16) + e[3]) & 0xFFFFFFFF
+                        if not t & 3 and in_code(t) and not covered(t):
+                            cands.add(t)
+                        break
+    for name, va, vs, ra, rs, ch in img.sections:
+        if ch & 0x20:
+            continue
+        blob = img.read(va, vs)
+        for off in range(0, len(blob) - 3, 4):
+            w = struct.unpack_from('>I', blob, off)[0]
+            if not w & 3 and in_code(w) and not covered(w):
+                cands.add(w)
+    for a, e in ivs:
+        b = e
+        while in_code(b) and img.word(b) == 0:
+            b += 4
+        if in_code(b) and not covered(b):
+            cands.add(b)
+    for name, va, vs, ra, rs, ch in code:
+        b = va
+        while b < va + vs and img.word(b) == 0:
+            b += 4
+        if b < va + vs and not covered(b):
+            cands.add(b)
+
+    found = {}
+    all_starts = sorted(set(starts) | cands)
+    taken = []  # discovered (start, end), kept sorted
+    for c in sorted(cands):
+        j = bisect.bisect_right(taken, (c, 1 << 33)) - 1
+        if j >= 0 and c < taken[j][1]:
+            continue  # inside a function discovered from an earlier entry
+        k = bisect.bisect_right(starts, c)
+        limit = starts[k] if k < len(starts) else max(va + vs for _, va, vs, _, _, _ in code)
+        sec = img.section_of(c)
+        limit = min(limit, sec[1] + sec[2])
+        end, _ = function_extent(img, c, limit)
+        found[c] = end - c
+        bisect.insort(taken, (c, end))
+
+    # sweep: whatever is still uncovered is walked function by function
+    allv = sorted(ivs + taken)
+    for name, va, vs, ra, rs, ch in code:
+        a, j = va, 0
+        while a < va + vs:
+            while j < len(allv) and allv[j][1] <= a:
+                j += 1
+            if j < len(allv) and allv[j][0] <= a:
+                a = allv[j][1]
+                continue
+            if img.word(a) == 0:
+                a += 4
+                continue
+            limit = allv[j][0] if j < len(allv) else va + vs
+            limit = min(limit, va + vs)
+            end, _ = function_extent(img, a, limit)
+            found[a] = end - a
+            a = end
+    return found
+
+
 def select_functions(fns, helpers, img):
     """Non-overlapping code functions, minus the save/restore helpers XenonRecomp emits itself."""
     skip = set()
@@ -580,8 +778,26 @@ def select_functions(fns, helpers, img):
 
 def cmd_config(args):
     img = Image(Path(args.image).read_bytes())
-    fns, objs = load_symbols(args.symbols)
+    fns, objs = load_symbols(args.symbols) if args.symbols else ({}, {})
+    sources = collections.Counter({'symbols': len(fns)})
+    if args.pdata:
+        for a, n in read_pdata(img).items():
+            if a not in fns:
+                fns[a] = ('pdata_%X' % a, n, '.text')
+                sources['pdata'] += 1
+            elif not fns[a][1]:
+                fns[a] = (fns[a][0], n, fns[a][2])
     helpers = find_helpers(img)
+    if args.discover:
+        text_objs = [(a, v[1]) for a, v in objs.items() if img.section_of(a) and img.section_of(a)[5] & 0x20]
+        # the register save/restore helpers have one entry per register; keep discovery out of them
+        text_objs += [(a, HELPER_SIZES[k]) for k, a in helpers.items()]
+        for a, n in discover_functions(img, {a: v[1] for a, v in fns.items()}, text_objs).items():
+            fns[a] = ('leaf_%X' % a, n, '.text')
+            sources['discovered'] += 1
+    for k, a in helpers.items():  # drop .pdata/symbol entries that start inside a helper
+        for b in [b for b in fns if a < b < a + HELPER_SIZES[k]]:
+            del fns[b]
     extra = {}
     for k in ('setjmp', 'longjmp'):
         v = getattr(args, k)
@@ -605,6 +821,7 @@ def cmd_config(args):
     (out / ('%s_switch_tables.toml' % args.name)).write_text(toml_switches(switches))
     kinds = collections.Counter(s.kind for s in switches)
     rep = {
+        'function_sources': dict(sources),
         'functions_in_symbols': len(fns),
         'functions_emitted': len(functions),
         'functions_extended_over_neighbour': extended,
@@ -808,7 +1025,10 @@ def main(argv=None):
     sub = ap.add_subparsers(dest='cmd', required=True)
     c = sub.add_parser('config')
     c.add_argument('--image', required=True)
-    c.add_argument('--symbols', required=True)
+    c.add_argument('--symbols', help='symbols.txt in our split format (optional with --pdata)')
+    c.add_argument('--pdata', action='store_true', help='add every .pdata function not in the symbol file')
+    c.add_argument('--discover', action='store_true',
+                   help='also find leaf functions (no .pdata) by control flow from bl targets and data words')
     c.add_argument('--xex', required=True, help='XEX path as XenonRecomp should see it (relative to out-dir)')
     c.add_argument('--name', default='Swing')
     c.add_argument('--out-dir', required=True)

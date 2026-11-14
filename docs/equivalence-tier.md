@@ -72,7 +72,7 @@ layout, names it gives to placeholders are mapped from the original's relocation
 - Lazy pointer resolution: when the original faults, the checker re-runs it with read tracking,
   finds the most recent argument, loaded word or call return value from which the faulting
   address was derived (fault address minus value in [-0x8000, 0x10000), value not a valid
-  pointer), replaces that value with a fresh heap pointer and retries (up to 8 times). The final
+  pointer), replaces that value with a fresh heap pointer and retries (up to 24 times). The final
   overrides become part of the trial input for both runs. This turns "global singleton is NULL in
   the file" and "field holds a small integer" into real paths instead of discarded trials.
 - Stack: 1 MB, r1 = 0x7F0F0000; the caller's area above r1 is seeded (stack-passed arguments),
@@ -81,11 +81,15 @@ layout, names it gives to placeholders are mapped from the original's relocation
 
 **Calls.** The callee is never executed. Every transfer out of the function (direct `bl`, a tail
 `b`, `bctrl` through a function pointer, including pointers into the heap) is intercepted in a
-basic-block hook and recorded as an event: callee address, the argument registers the callee
-reads (static liveness of the image function; for an unknown or indirect callee, every r3-r10/
-f1-f13 that is not poison in both runs), objects in the function's own frame passed by pointer
-(their first 16 bytes written by the function, not their addresses, which depend on frame
-layout), and the memory delta so far. The callee then "returns": r3 and f1 get seeded values (a
+basic-block hook and recorded as an event: callee address; the argument registers the callee
+reads (static liveness of the image function; for an indirect or unanalysable callee, r3 plus
+every r4-r10/f1-f13 whose last write in the straight-line code before the original's call site
+is not read again before the call, so vtable and address temporaries are not mistaken for
+arguments); arguments 9 and up, which live in the caller's frame at r1+0x54 (8-byte slots,
+compared when the callee takes 8 register arguments or is unknown); objects in the function's
+own frame passed by pointer (their first 16 bytes written by the function, not their addresses,
+which depend on frame layout); and the memory delta so far. A recursive call is recognised (a
+`bl` from the function back to its own entry) and intercepted like any other call. The callee then "returns": r3 and f1 get seeded values (a
 function of seed, call index and callee address, so both runs get the same values while their
 call sequences agree), and exactly the volatile registers the callee transitively writes are
 clobbered with poison. Registers the callee leaves alone keep their values, so an LTCG-compiled
@@ -103,7 +107,19 @@ image's direct callers use them (strong: a caller reads r3/f1; then the candidat
 return type; then a caller returning r3/f1 untouched; a function that never writes r3 and never
 calls returns nothing; otherwise r3); (5) callee-saved registers r1, r2, r13, r14-r31, f14-f31.
 
-**Trials.** Seeds `seed*1000003 + t`. A trial in which the original still faults after pointer
+**Trials.** Seeds `seed*1000003 + t`. The first 40% of the trials (at least 40) are drawn from
+the distributions above. The rest are coverage-guided: the checker keeps every trial that
+reached a new block of the original, takes one of them, replaces one or two of the values the
+original read in it (an argument, a loaded byte/halfword/word, a call's return value) by a
+neighbour, 0, 1, a comparison constant or a fresh random value, and runs that as a new trial;
+each choice is a function of the trial seed, so the sequence is reproducible. Only values read
+from memory both programs share and may write (heap pages, `.data`, BSS) are ever replaced, by
+this phase or by pointer resolution: read-only data (`.text`, `.rdata`: jump tables, float
+literal pools, string constants) sits at a different address in the candidate, so changing the
+original's copy would make the two runs see different inputs. (An earlier version did this and
+reported 8 byte-matched functions as DIFFERENT; see 3.1.) The comparison constants include each
+jump table's case values (the `addi rX, rY, -bias` before the `bctr` plus 0..n-1), so switches
+are entered on every case. A trial in which the original still faults after pointer
 resolution, or runs past 200,000 instructions, is discarded (the input breaks the original's
 precondition); a candidate that faults where the original did not, or needs more than four times
 the original's instruction count, is DIFFERENT. Default 400 trials and 60 s per function; it stops
