@@ -162,6 +162,30 @@
     ],
     "src/xbox360/rm3_zlib_deflate.c": [
       "/Os"
+    ],
+    "src/xbox360/ex7_png_chunk.c": [
+      "/O1"
+    ],
+    "src/xbox360/ex7_png_create.c": [
+      "/O1"
+    ],
+    "src/xbox360/ex7_png_destroy.c": [
+      "/O1"
+    ],
+    "src/xbox360/ex7_png_init.c": [
+      "/O1"
+    ],
+    "src/xbox360/ex7_png_read.c": [
+      "/O1"
+    ],
+    "src/xbox360/ex7_png_row.c": [
+      "/O1"
+    ],
+    "src/xbox360/ex7_png_write.c": [
+      "/O1"
+    ],
+    "src/xbox360/ex7_png_xform.c": [
+      "/O1"
     ]
   },
   "jeff_version": "0.3.5 with patches/jeff-v0.3.5-topspin4.patch",
@@ -26309,15 +26333,47 @@
     {"source":"src/xbox360/rm3_zlib_deflate.c","symbol":"ts4_zlib_deflate_882F1788","text_range":"0x882F1788-0x882F1B70","pdata_range":"0x88111988-0x88111990","matched_code_bytes":1000,"function_match_percent":100.0},
     {"source":"src/xbox360/rm3_zlib_deflate.c","symbol":"ts4_zlib_deflate_fast_882F2218","text_range":"0x882F2218-0x882F262C","pdata_range":"0x88111988-0x88111990","matched_code_bytes":1044,"function_match_percent":100.0},
     {"source":"src/xbox360/rm3_zlib_deflate.c","symbol":"ts4_zlib_deflate_slow_882F2630","text_range":"0x882F2630-0x882F2B58","pdata_range":"0x88111988-0x88111990","matched_code_bytes":1320,"function_match_percent":100.0},
-    {"source":"src/xbox360/nm3_shot_flags.c","symbol":"ts4_shot_eval_refresh_flags_88662B60","text_range":"0x88662B60-0x88662C08","pdata_range":"0x881233D0-0x881233D8","matched_code_bytes":168,"function_match_percent":100.0}
+    {"source":"src/xbox360/nm3_shot_flags.c","symbol":"ts4_shot_eval_refresh_flags_88662B60","text_range":"0x88662B60-0x88662C08","pdata_range":"0x881233D0-0x881233D8","matched_code_bytes":168,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_jpeg_capi.c","symbol":"ex7_jpeg_suppress_tables_882E57F0","text_range":"0x882E57F0-0x882E5868","pdata_range":null,"matched_code_bytes":120,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_jpeg_capi.c","symbol":"ex7_jpeg_start_compress_882E5A10","text_range":"0x882E5A10-0x882E5AF0","pdata_range":"0x88111628-0x88111630","matched_code_bytes":224,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_jpeg_capi.c","symbol":"ex7_jpeg_write_scanlines_882E5AF0","text_range":"0x882E5AF0-0x882E5C1C","pdata_range":"0x88111630-0x88111638","matched_code_bytes":300,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_jpeg_capi.c","symbol":"ex7_jpeg_add_huff_table_882E5E20","text_range":"0x882E5E20-0x882E5F14","pdata_range":"0x88111620-0x88111628","matched_code_bytes":244,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_jpeg_capi.c","symbol":"ex7_jpeg_add_quant_table_882E5C20","text_range":"0x882E5C20-0x882E5E1C","pdata_range":"0x88111620-0x88111628","matched_code_bytes":508,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_jpeg_capi.c","symbol":"ex7_jpeg_finish_compress_882E5868","text_range":"0x882E5868-0x882E5A10","pdata_range":"0x88111620-0x88111628","matched_code_bytes":424,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_jpeg_marker.c","symbol":"ex7_jpeg_read_restart_marker_882E50E0","text_range":"0x882E50E0-0x882E51C4","pdata_range":"0x881115E0-0x881115E8","matched_code_bytes":228,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_jpeg_marker.c","symbol":"ex7_jpeg_resync_to_restart_882E51C8","text_range":"0x882E51C8-0x882E531C","pdata_range":"0x881115E0-0x881115E8","matched_code_bytes":340,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_jpeg_marker.c","symbol":"ex7_jpeg_jinit_marker_reader_882E5348","text_range":"0x882E5348-0x882E541C","pdata_range":"0x881115E0-0x881115E8","matched_code_bytes":212,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_chunk.c","symbol":"ex7_png_handle_IHDR_882F43A0","text_range":"0x882F43A0-0x882F4664","pdata_range":"0x88111A28-0x88111A30","matched_code_bytes":708,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_chunk.c","symbol":"ex7_png_handle_PLTE_882F4668","text_range":"0x882F4668-0x882F4820","pdata_range":"0x88111A28-0x88111A30","matched_code_bytes":440,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_chunk.c","symbol":"ex7_png_handle_gAMA_882F48A0","text_range":"0x882F48A0-0x882F4A3C","pdata_range":"0x88111A28-0x88111A30","matched_code_bytes":412,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_chunk.c","symbol":"ex7_png_handle_sRGB_882F4A40","text_range":"0x882F4A40-0x882F4BAC","pdata_range":"0x88111A28-0x88111A30","matched_code_bytes":364,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_chunk.c","symbol":"ex7_png_handle_tRNS_882F4BB0","text_range":"0x882F4BB0-0x882F4DE4","pdata_range":"0x88111A28-0x88111A30","matched_code_bytes":564,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_chunk.c","symbol":"ex7_png_crc_finish_882F42A8","text_range":"0x882F42A8-0x882F439C","pdata_range":"0x88111A28-0x88111A30","matched_code_bytes":244,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_create.c","symbol":"ex7_png_create_write_struct_882E7000","text_range":"0x882E7000-0x882E70F8","pdata_range":"0x88111690-0x88111698","matched_code_bytes":248,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_create.c","symbol":"ex7_png_create_read_struct_882E7470","text_range":"0x882E7470-0x882E75D4","pdata_range":"0x88111690-0x88111698","matched_code_bytes":356,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_destroy.c","symbol":"ex7_png_destroy_read_struct_882E7F80","text_range":"0x882E7F80-0x882E8028","pdata_range":"0x881116E8-0x881116F0","matched_code_bytes":168,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_init.c","symbol":"ex7_png_init_read_transformations_882E9D60","text_range":"0x882E9D60-0x882E9EE0","pdata_range":"0x88111720-0x88111728","matched_code_bytes":384,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_read.c","symbol":"ex7_png_read_destroy_882E7E30","text_range":"0x882E7E30-0x882E7F80","pdata_range":"0x881116E0-0x881116E8","matched_code_bytes":336,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_read.c","symbol":"ex7_png_do_read_transformations_882E9EE0","text_range":"0x882E9EE0-0x882EA0A0","pdata_range":"0x881116E0-0x881116E8","matched_code_bytes":448,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_row.c","symbol":"ex7_png_read_filter_row_882F3E08","text_range":"0x882F3E08-0x882F4028","pdata_range":"0x88111A08-0x88111A10","matched_code_bytes":544,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_row.c","symbol":"ex7_png_do_read_interlace_882F3AC8","text_range":"0x882F3AC8-0x882F3E04","pdata_range":"0x88111A08-0x88111A10","matched_code_bytes":828,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_write.c","symbol":"ex7_png_write_info_882E6828","text_range":"0x882E6828-0x882E68C0","pdata_range":"0x88111660-0x88111668","matched_code_bytes":152,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_write.c","symbol":"ex7_png_write_flush_882E6B98","text_range":"0x882E6B98-0x882E6C64","pdata_range":"0x88111660-0x88111668","matched_code_bytes":204,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_write.c","symbol":"ex7_png_write_destroy_882E6C68","text_range":"0x882E6C68-0x882E6D60","pdata_range":"0x88111660-0x88111668","matched_code_bytes":248,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_write.c","symbol":"ex7_png_write_start_row_882F0020","text_range":"0x882F0020-0x882F01A8","pdata_range":"0x88111660-0x88111668","matched_code_bytes":392,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_write.c","symbol":"ex7_png_do_write_interlace_882F01A8","text_range":"0x882F01A8-0x882F03FC","pdata_range":"0x88111678-0x88111680","matched_code_bytes":596,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_xform.c","symbol":"ex7_png_do_unshift_882E87A0","text_range":"0x882E87A0-0x882E89D8","pdata_range":"0x881116F8-0x88111700","matched_code_bytes":568,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_xform.c","symbol":"ex7_png_do_gamma_882E8CF8","text_range":"0x882E8CF8-0x882E9158","pdata_range":"0x881116F8-0x88111700","matched_code_bytes":1120,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_xform.c","symbol":"ex7_png_do_expand_palette_882E9158","text_range":"0x882E9158-0x882E93F4","pdata_range":"0x88111700-0x88111708","matched_code_bytes":668,"function_match_percent":100.0},
+    {"source":"src/xbox360/ex7_png_xform.c","symbol":"ex7_png_do_expand_882E93F8","text_range":"0x882E93F8-0x882E98A0","pdata_range":"0x881116F8-0x88111700","matched_code_bytes":1192,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 2174808,
+  "matched_code_bytes": 2188592,
   "module_total_code_bytes": 10154172,
-  "module_matched_code_percent": 21.417875,
+  "module_matched_code_percent": 21.553623,
   "module_total_functions": 46736,
-  "module_matched_functions": 25679,
-  "module_matched_functions_percent": 54.944794,
-  "module_total_units": 18823,
-  "module_complete_units": 742,
-  "note": "The canonical whole-module report verifies all twenty-five thousand six hundred seventy-nine functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 25711,
+  "module_matched_functions_percent": 55.013264,
+  "module_total_units": 18849,
+  "module_complete_units": 752,
+  "note": "The canonical whole-module report verifies all twenty-five thousand seven hundred eleven functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

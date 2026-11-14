@@ -818,7 +818,7 @@ class Gen:
 
     def exec_insns(self, insns, st, out):
         self.nsteps += len(insns)
-        if self.nsteps > 4000:     # arms that never rejoin duplicate the code behind them
+        if self.nsteps > 2500:     # arms that never rejoin duplicate the code behind them
             raise Skip('too big')
         for ins in insns:
             self.step(ins, st, out)

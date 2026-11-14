@@ -88,7 +88,7 @@ void ex6_png_set_gamma_882E8458(ex6_png_struct *png_ptr, double screen_gamma, do
 }
 
 void fn_882E6918(ex6_png_struct *png_ptr, unsigned char *row);                       /* png_write_row */
-void fn_882E6C68(ex6_png_struct *png_ptr);                                          /* png_write_destroy */
+void ex7_png_write_destroy_882E6C68(ex6_png_struct *png_ptr);                                          /* png_write_destroy */
 void fn_882EC158(void *ptr);                                                        /* png_free */
 void fn_882E7940(ex6_png_struct *png_ptr, unsigned char *row, int arg);             /* png_write_row, 3-arg form */
 int ts4_if_get_u8_off613_882E8278(ex6_png_struct *png_ptr);                         /* png_set_interlace_handling */
@@ -114,7 +114,7 @@ void ex6_png_destroy_write_struct_882E7138(ex6_png_struct **png_ptr_ptr, void **
         *info_ptr_ptr = 0;
     }
     if (png_ptr != 0) {
-        fn_882E6C68(png_ptr);
+        ex7_png_write_destroy_882E6C68(png_ptr);
         fn_882EC158(png_ptr);
         *png_ptr_ptr = 0;
     }

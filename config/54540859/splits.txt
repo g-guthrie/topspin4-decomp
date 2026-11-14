@@ -36552,3 +36552,81 @@ src/xbox360/rm3_zlib_deflate.c:
 src/xbox360/nm3_shot_flags.c:
 	.pdata      start:0x881233D0 end:0x881233D8
 	.text       start:0x88662B60 end:0x88662C08
+
+src/xbox360/ex7_jpeg_capi.c:
+	.pdata      start:0x88111620 end:0x88111628
+	.pdata      start:0x88111628 end:0x88111630
+	.pdata      start:0x88111630 end:0x88111638
+	.pdata      start:0x88111638 end:0x88111640
+	.pdata      start:0x88111640 end:0x88111648
+	.text       start:0x882E57F0 end:0x882E5C1C
+	.text       start:0x882E5C20 end:0x882E5E1C
+	.text       start:0x882E5E20 end:0x882E5F14
+
+src/xbox360/ex7_jpeg_marker.c:
+	.pdata      start:0x881115E0 end:0x881115E8
+	.pdata      start:0x881115E8 end:0x881115F0
+	.pdata      start:0x881115F0 end:0x881115F8
+	.text       start:0x882E50E0 end:0x882E51C4
+	.text       start:0x882E51C8 end:0x882E531C
+	.text       start:0x882E5348 end:0x882E541C
+
+src/xbox360/ex7_png_chunk.c:
+	.pdata      start:0x88111A28 end:0x88111A30
+	.pdata      start:0x88111A30 end:0x88111A38
+	.pdata      start:0x88111A38 end:0x88111A40
+	.pdata      start:0x88111A48 end:0x88111A50
+	.pdata      start:0x88111A50 end:0x88111A58
+	.pdata      start:0x88111A58 end:0x88111A60
+	.text       start:0x882F42A8 end:0x882F439C
+	.text       start:0x882F43A0 end:0x882F4664
+	.text       start:0x882F4668 end:0x882F4820
+	.text       start:0x882F48A0 end:0x882F4A3C
+	.text       start:0x882F4A40 end:0x882F4BAC
+	.text       start:0x882F4BB0 end:0x882F4DE4
+
+src/xbox360/ex7_png_create.c:
+	.pdata      start:0x88111690 end:0x88111698
+	.pdata      start:0x881116B8 end:0x881116C0
+	.text       start:0x882E7000 end:0x882E70F8
+	.text       start:0x882E7470 end:0x882E75D4
+
+src/xbox360/ex7_png_destroy.c:
+	.pdata      start:0x881116E8 end:0x881116F0
+	.text       start:0x882E7F80 end:0x882E8028
+
+src/xbox360/ex7_png_init.c:
+	.pdata      start:0x88111720 end:0x88111728
+	.text       start:0x882E9D60 end:0x882E9EE0
+
+src/xbox360/ex7_png_read.c:
+	.pdata      start:0x881116E0 end:0x881116E8
+	.pdata      start:0x88111728 end:0x88111730
+	.text       start:0x882E7E30 end:0x882E7F80
+	.text       start:0x882E9EE0 end:0x882EA0A0
+
+src/xbox360/ex7_png_row.c:
+	.pdata      start:0x88111A08 end:0x88111A10
+	.pdata      start:0x88111A10 end:0x88111A18
+	.text       start:0x882F3AC8 end:0x882F3E04
+	.text       start:0x882F3E08 end:0x882F4028
+
+src/xbox360/ex7_png_write.c:
+	.pdata      start:0x88111660 end:0x88111668
+	.pdata      start:0x88111678 end:0x88111680
+	.pdata      start:0x88111680 end:0x88111688
+	.pdata      start:0x88111938 end:0x88111940
+	.pdata      start:0x88111940 end:0x88111948
+	.text       start:0x882E6828 end:0x882E68C0
+	.text       start:0x882E6B98 end:0x882E6C64
+	.text       start:0x882E6C68 end:0x882E6D60
+	.text       start:0x882F0020 end:0x882F03FC
+
+src/xbox360/ex7_png_xform.c:
+	.pdata      start:0x881116F8 end:0x88111700
+	.pdata      start:0x88111700 end:0x88111708
+	.pdata      start:0x88111708 end:0x88111710
+	.pdata      start:0x88111710 end:0x88111718
+	.text       start:0x882E87A0 end:0x882E89D8
+	.text       start:0x882E8CF8 end:0x882E93F4
+	.text       start:0x882E93F8 end:0x882E98A0
