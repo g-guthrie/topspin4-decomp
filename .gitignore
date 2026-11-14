@@ -1,4 +1,10 @@
 # User-supplied game data and extracted executables
+orig/**
+!orig/*/
+!orig/*/.gitkeep
+*.xexp
+*.arc
+*.stfs
 *.iso
 *.7z
 *.zip

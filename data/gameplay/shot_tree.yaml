@@ -1,0 +1,1556 @@
+# Top Spin 4 (Xbox 360) controller-to-shot values: shot-selection tree, rows, input map,
+# power curves and tier graphs.  Generated; do not edit by hand.
+# Generator: python3 tools/ts4data/shot_tree.py --settings work/disc/core/334e7e0d.bin --expressions work/disc/core/fa94f637.bin --layout work/disc/Layoutall.bin --interface work/disc/core_all/f26cdc20.bin --input-map data/gameplay/input_map.yaml --out data/gameplay/shot_tree.yaml
+# Python 3.13.18
+# Source Settings.bin: 286492 bytes, sha256 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
+# Source GameplayInterface.bin: 5748 bytes, sha256 8d4f3685bd5ca2246525e983bebfd9176a247d5dca1b0f8374786fefe2c5dd83
+# Source Expressions.bin: 581988 bytes, sha256 fd3bc49b44ca4b77deebc58acaefe67763a273538f4901266f949e9ec9dedee9
+# Source Layoutall.bin: 760816 bytes, sha256 67793f5b7dc771f8fde298ef07e8976d9362c864ac577a4c9db6b2bf874788c5
+# Docs: docs/gameplay/controls-and-shot-selection.md
+sources:
+  Settings.bin:
+    path: work/disc/core/334e7e0d.bin
+    size: 286492
+    sha256: 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
+  GameplayInterface.bin:
+    path: work/disc/core_all/f26cdc20.bin
+    size: 5748
+    sha256: 8d4f3685bd5ca2246525e983bebfd9176a247d5dca1b0f8374786fefe2c5dd83
+  Expressions.bin:
+    path: work/disc/core/fa94f637.bin
+    size: 581988
+    sha256: fd3bc49b44ca4b77deebc58acaefe67763a273538f4901266f949e9ec9dedee9
+  Layoutall.bin:
+    path: work/disc/Layoutall.bin
+    size: 760816
+    sha256: 67793f5b7dc771f8fde298ef07e8976d9362c864ac577a4c9db6b2bf874788c5
+tree_text:
+  - IsWoodDown ?
+  - "  T: WoodDown (row 36)"
+  - "  F:"
+  - "    IsWood ?"
+  - "      T: Wood (row 35)"
+  - "      F:"
+  - "        IsClassicServe ?"
+  - "          T:"
+  - "            IsTopSpin ?"
+  - "              T:"
+  - "                IsMedium ?"
+  - "                  T: Serve_TopSpinMedium (row 20)"
+  - "                  F:"
+  - "                    IsPowerful ?"
+  - "                      T: Serve_TopSpinPowerful (row 21)"
+  - "                      F: Serve_TopSpinFinesse (row 22)"
+  - "              F:"
+  - "                IsSlice ?"
+  - "                  T:"
+  - "                    IsMedium ?"
+  - "                      T: Serve_SliceMedium (row 23)"
+  - "                      F:"
+  - "                        IsPowerful ?"
+  - "                          T: Serve_SlicePowerful (row 24)"
+  - "                          F: Serve_SliceFinesse (row 25)"
+  - "                  F:"
+  - "                    IsMedium ?"
+  - "                      T: Serve_FlatMedium (row 26)"
+  - "                      F:"
+  - "                        IsPowerful ?"
+  - "                          T: Serve_FlatPowerful (row 27)"
+  - "                          F: Serve_FlatFinesse (row 28)"
+  - "          F:"
+  - "            IsAdvancedServe ?"
+  - "              T:"
+  - "                IsTopSpin ?"
+  - "                  T: Serve_AdvancedTopSpin (row 29)"
+  - "                  F:"
+  - "                    IsSlice ?"
+  - "                      T: Serve_AdvancedSlice (row 30)"
+  - "                      F: Serve_AdvancedFlat (row 31)"
+  - "              F:"
+  - "                IsSmash ?"
+  - "                  T: SmashNormal (row 33)"
+  - "                  F:"
+  - "                    IsBaseLine ?"
+  - "                      T:"
+  - "                        IsPowerful ?"
+  - "                          T:"
+  - "                            IsTopSpin ?"
+  - "                              T: TopSpinPowerful (row 8)"
+  - "                              F:"
+  - "                                IsSlice ?"
+  - "                                  T:"
+  - "                                    IsRisk ?"
+  - "                                      T: DropShotNormal (row 32)"
+  - "                                      F: SlicePowerful (row 9)"
+  - "                                  F:"
+  - "                                    IsLob ?"
+  - "                                      T: LobPowerful (row 11)"
+  - "                                      F: FlatPowerful (row 10)"
+  - "                          F:"
+  - "                            IsMedium ?"
+  - "                              T:"
+  - "                                IsTopSpin ?"
+  - "                                  T: TopSpinMedium (row 4)"
+  - "                                  F:"
+  - "                                    IsSlice ?"
+  - "                                      T:"
+  - "                                        IsRisk ?"
+  - "                                          T: DropShotNormal (row 32)"
+  - "                                          F: SliceMedium (row 5)"
+  - "                                      F:"
+  - "                                        IsLob ?"
+  - "                                          T: LobMedium (row 7)"
+  - "                                          F: FlatMedium (row 6)"
+  - "                              F:"
+  - "                                IsTopSpin ?"
+  - "                                  T: TopSpinFinesse (row 0)"
+  - "                                  F:"
+  - "                                    IsSlice ?"
+  - "                                      T:"
+  - "                                        IsRisk ?"
+  - "                                          T: DropShotNormal (row 32)"
+  - "                                          F: SliceFinesse (row 1)"
+  - "                                      F:"
+  - "                                        IsLob ?"
+  - "                                          T: LobFinesse (row 3)"
+  - "                                          F: FlatFinesse (row 2)"
+  - "                      F:"
+  - "                        IsTopSpin ?"
+  - "                          T: TopSpinVolley (row 16)"
+  - "                          F:"
+  - "                            IsSlice ?"
+  - "                              T:"
+  - "                                IsRisk ?"
+  - "                                  T: DropVolley (row 18)"
+  - "                                  F: SliceVolley (row 17)"
+  - "                              F: FlatVolley (row 19)"
+tree_nodes:
+  - index: 0
+    file_offset: 0xd44
+    condition: 0x628ff1c4
+    condition_name: IsWoodDown
+    path: "ShotSelection/Request/@IsWoodDown"
+    playerstate_offset: 0x40b
+    if_true:
+      leaf: 0
+      id: 0x4fa695a1
+      name: WoodDown
+      row: 36
+    if_false:
+      node: 1
+  - index: 1
+    file_offset: 0xd74
+    condition: 0x9a0c0937
+    condition_name: IsWood
+    path: "ShotSelection/Request/@IsWood"
+    playerstate_offset: 0x40a
+    if_true:
+      leaf: 1
+      id: 0x9cafb633
+      name: Wood
+      row: 35
+    if_false:
+      node: 2
+  - index: 2
+    file_offset: 0xda4
+    condition: 0x0140379f
+    condition_name: IsClassicServe
+    path: "ShotSelection/Request/@IsClassicServe"
+    playerstate_offset: 0x407
+    if_true:
+      node: 3
+    if_false:
+      node: 11
+  - index: 3
+    file_offset: 0xdcc
+    condition: 0xf271f3c8
+    condition_name: IsTopSpin
+    path: "ShotSelection/Request/@IsTopSpin"
+    playerstate_offset: 0x402
+    if_true:
+      node: 4
+    if_false:
+      node: 6
+  - index: 4
+    file_offset: 0xdf4
+    condition: 0xfe6d2d3b
+    condition_name: IsMedium
+    path: "ShotSelection/Request/@IsMedium"
+    playerstate_offset: 0x406
+    if_true:
+      leaf: 2
+      id: 0xb31b5ee0
+      name: Serve_TopSpinMedium
+      row: 20
+    if_false:
+      node: 5
+  - index: 5
+    file_offset: 0xe24
+    condition: 0xbc06cec7
+    condition_name: IsPowerful
+    path: "ShotSelection/Request/@IsPowerful"
+    playerstate_offset: 0x405
+    if_true:
+      leaf: 3
+      id: 0x17c6bfe3
+      name: Serve_TopSpinPowerful
+      row: 21
+    if_false:
+      leaf: 4
+      id: 0xea0cf389
+      name: Serve_TopSpinFinesse
+      row: 22
+  - index: 6
+    file_offset: 0xe5c
+    condition: 0xfb043007
+    condition_name: IsSlice
+    path: "ShotSelection/Request/@IsSlice"
+    playerstate_offset: 0x401
+    if_true:
+      node: 7
+    if_false:
+      node: 9
+  - index: 7
+    file_offset: 0xe84
+    condition: 0xfe6d2d3b
+    condition_name: IsMedium
+    path: "ShotSelection/Request/@IsMedium"
+    playerstate_offset: 0x406
+    if_true:
+      leaf: 5
+      id: 0x5f8e74c3
+      name: Serve_SliceMedium
+      row: 23
+    if_false:
+      node: 8
+  - index: 8
+    file_offset: 0xeb4
+    condition: 0xbc06cec7
+    condition_name: IsPowerful
+    path: "ShotSelection/Request/@IsPowerful"
+    playerstate_offset: 0x405
+    if_true:
+      leaf: 6
+      id: 0x72d4edc1
+      name: Serve_SlicePowerful
+      row: 24
+    if_false:
+      leaf: 7
+      id: 0x488717d1
+      name: Serve_SliceFinesse
+      row: 25
+  - index: 9
+    file_offset: 0xeec
+    condition: 0xfe6d2d3b
+    condition_name: IsMedium
+    path: "ShotSelection/Request/@IsMedium"
+    playerstate_offset: 0x406
+    if_true:
+      leaf: 8
+      id: 0x6bbc9a88
+      name: Serve_FlatMedium
+      row: 26
+    if_false:
+      node: 10
+  - index: 10
+    file_offset: 0xf1c
+    condition: 0xbc06cec7
+    condition_name: IsPowerful
+    path: "ShotSelection/Request/@IsPowerful"
+    playerstate_offset: 0x405
+    if_true:
+      leaf: 9
+      id: 0x26eb8042
+      name: Serve_FlatPowerful
+      row: 27
+    if_false:
+      leaf: 10
+      id: 0xa9bdbd27
+      name: Serve_FlatFinesse
+      row: 28
+  - index: 11
+    file_offset: 0xf54
+    condition: 0x7e04871f
+    condition_name: IsAdvancedServe
+    path: "ShotSelection/Request/@IsAdvancedServe"
+    playerstate_offset: 0x408
+    if_true:
+      node: 12
+    if_false:
+      node: 14
+  - index: 12
+    file_offset: 0xf7c
+    condition: 0xf271f3c8
+    condition_name: IsTopSpin
+    path: "ShotSelection/Request/@IsTopSpin"
+    playerstate_offset: 0x402
+    if_true:
+      leaf: 11
+      id: 0xfa212c96
+      name: Serve_AdvancedTopSpin
+      row: 29
+    if_false:
+      node: 13
+  - index: 13
+    file_offset: 0xfac
+    condition: 0xfb043007
+    condition_name: IsSlice
+    path: "ShotSelection/Request/@IsSlice"
+    playerstate_offset: 0x401
+    if_true:
+      leaf: 12
+      id: 0xc1e2aa62
+      name: Serve_AdvancedSlice
+      row: 30
+    if_false:
+      leaf: 13
+      id: 0xa010111f
+      name: Serve_AdvancedFlat
+      row: 31
+  - index: 14
+    file_offset: 0xfe4
+    condition: 0x79d86836
+    condition_name: IsSmash
+    path: "ShotSelection/Request/@IsSmash"
+    playerstate_offset: 0x409
+    if_true:
+      leaf: 14
+      id: 0xe8b7486e
+      name: SmashNormal
+      row: 33
+    if_false:
+      node: 15
+  - index: 15
+    file_offset: 0x1014
+    condition: 0x82747a4b
+    condition_name: IsBaseLine
+    path: "Context/ShotContext/@ModeBaseLine"
+    playerstate_offset: 0x574
+    if_true:
+      node: 16
+    if_false:
+      node: 30
+  - index: 16
+    file_offset: 0x103c
+    condition: 0xbc06cec7
+    condition_name: IsPowerful
+    path: "ShotSelection/Request/@IsPowerful"
+    playerstate_offset: 0x405
+    if_true:
+      node: 17
+    if_false:
+      node: 21
+  - index: 17
+    file_offset: 0x1064
+    condition: 0xf271f3c8
+    condition_name: IsTopSpin
+    path: "ShotSelection/Request/@IsTopSpin"
+    playerstate_offset: 0x402
+    if_true:
+      leaf: 15
+      id: 0x4b121fa5
+      name: TopSpinPowerful
+      row: 8
+    if_false:
+      node: 18
+  - index: 18
+    file_offset: 0x1094
+    condition: 0xfb043007
+    condition_name: IsSlice
+    path: "ShotSelection/Request/@IsSlice"
+    playerstate_offset: 0x401
+    if_true:
+      node: 19
+    if_false:
+      node: 20
+  - index: 19
+    file_offset: 0x10bc
+    condition: 0xdf97c57b
+    condition_name: IsRisk
+    path: "ShotSelection/Request/@IsRisk"
+    playerstate_offset: 0x404
+    if_true:
+      leaf: 16
+      id: 0xc47dfdc1
+      name: DropShotNormal
+      row: 32
+    if_false:
+      leaf: 17
+      id: 0x65dc9a5a
+      name: SlicePowerful
+      row: 9
+  - index: 20
+    file_offset: 0x10f4
+    condition: 0xd212c1ef
+    condition_name: IsLob
+    path: "ShotSelection/Request/@IsLob"
+    playerstate_offset: 0x403
+    if_true:
+      leaf: 18
+      id: 0x11a1b9d0
+      name: LobPowerful
+      row: 11
+    if_false:
+      leaf: 19
+      id: 0x992258dc
+      name: FlatPowerful
+      row: 10
+  - index: 21
+    file_offset: 0x112c
+    condition: 0xfe6d2d3b
+    condition_name: IsMedium
+    path: "ShotSelection/Request/@IsMedium"
+    playerstate_offset: 0x406
+    if_true:
+      node: 22
+    if_false:
+      node: 26
+  - index: 22
+    file_offset: 0x1154
+    condition: 0xf271f3c8
+    condition_name: IsTopSpin
+    path: "ShotSelection/Request/@IsTopSpin"
+    playerstate_offset: 0x402
+    if_true:
+      leaf: 20
+      id: 0xa413297b
+      name: TopSpinMedium
+      row: 4
+    if_false:
+      node: 23
+  - index: 23
+    file_offset: 0x1184
+    condition: 0xfb043007
+    condition_name: IsSlice
+    path: "ShotSelection/Request/@IsSlice"
+    playerstate_offset: 0x401
+    if_true:
+      node: 24
+    if_false:
+      node: 25
+  - index: 24
+    file_offset: 0x11ac
+    condition: 0xdf97c57b
+    condition_name: IsRisk
+    path: "ShotSelection/Request/@IsRisk"
+    playerstate_offset: 0x404
+    if_true:
+      leaf: 21
+      id: 0xc47dfdc1
+      name: DropShotNormal
+      row: 32
+    if_false:
+      leaf: 22
+      id: 0x4637fcf0
+      name: SliceMedium
+      row: 5
+  - index: 25
+    file_offset: 0x11e4
+    condition: 0xd212c1ef
+    condition_name: IsLob
+    path: "ShotSelection/Request/@IsLob"
+    playerstate_offset: 0x403
+    if_true:
+      leaf: 23
+      id: 0xbb50ea44
+      name: LobMedium
+      row: 7
+    if_false:
+      leaf: 24
+      id: 0xbe02d81e
+      name: FlatMedium
+      row: 6
+  - index: 26
+    file_offset: 0x121c
+    condition: 0xf271f3c8
+    condition_name: IsTopSpin
+    path: "ShotSelection/Request/@IsTopSpin"
+    playerstate_offset: 0x402
+    if_true:
+      leaf: 25
+      id: 0x8dc6b132
+      name: TopSpinFinesse
+      row: 0
+    if_false:
+      node: 27
+  - index: 27
+    file_offset: 0x124c
+    condition: 0xfb043007
+    condition_name: IsSlice
+    path: "ShotSelection/Request/@IsSlice"
+    playerstate_offset: 0x401
+    if_true:
+      node: 28
+    if_false:
+      node: 29
+  - index: 28
+    file_offset: 0x1274
+    condition: 0xdf97c57b
+    condition_name: IsRisk
+    path: "ShotSelection/Request/@IsRisk"
+    playerstate_offset: 0x404
+    if_true:
+      leaf: 26
+      id: 0xc47dfdc1
+      name: DropShotNormal
+      row: 32
+    if_false:
+      leaf: 27
+      id: 0xf74ecf4f
+      name: SliceFinesse
+      row: 1
+  - index: 29
+    file_offset: 0x12ac
+    condition: 0xd212c1ef
+    condition_name: IsLob
+    path: "ShotSelection/Request/@IsLob"
+    playerstate_offset: 0x403
+    if_true:
+      leaf: 28
+      id: 0x3bbfdfcc
+      name: LobFinesse
+      row: 3
+    if_false:
+      leaf: 29
+      id: 0xb0043514
+      name: FlatFinesse
+      row: 2
+  - index: 30
+    file_offset: 0x12e4
+    condition: 0xf271f3c8
+    condition_name: IsTopSpin
+    path: "ShotSelection/Request/@IsTopSpin"
+    playerstate_offset: 0x402
+    if_true:
+      leaf: 30
+      id: 0x14d5efaa
+      name: TopSpinVolley
+      row: 16
+    if_false:
+      node: 31
+  - index: 31
+    file_offset: 0x1314
+    condition: 0xfb043007
+    condition_name: IsSlice
+    path: "ShotSelection/Request/@IsSlice"
+    playerstate_offset: 0x401
+    if_true:
+      node: 32
+    if_false:
+      leaf: 33
+      id: 0x0ec41ecf
+      name: FlatVolley
+      row: 19
+  - index: 32
+    file_offset: 0x133c
+    condition: 0xdf97c57b
+    condition_name: IsRisk
+    path: "ShotSelection/Request/@IsRisk"
+    playerstate_offset: 0x404
+    if_true:
+      leaf: 31
+      id: 0x8ff66130
+      name: DropVolley
+      row: 18
+    if_false:
+      leaf: 32
+      id: 0xf6f13a21
+      name: SliceVolley
+      row: 17
+tree_leaves:
+  - leaf: 0
+    id: 0x4fa695a1
+    name: WoodDown
+    row: 36
+  - leaf: 1
+    id: 0x9cafb633
+    name: Wood
+    row: 35
+  - leaf: 2
+    id: 0xb31b5ee0
+    name: Serve_TopSpinMedium
+    row: 20
+  - leaf: 3
+    id: 0x17c6bfe3
+    name: Serve_TopSpinPowerful
+    row: 21
+  - leaf: 4
+    id: 0xea0cf389
+    name: Serve_TopSpinFinesse
+    row: 22
+  - leaf: 5
+    id: 0x5f8e74c3
+    name: Serve_SliceMedium
+    row: 23
+  - leaf: 6
+    id: 0x72d4edc1
+    name: Serve_SlicePowerful
+    row: 24
+  - leaf: 7
+    id: 0x488717d1
+    name: Serve_SliceFinesse
+    row: 25
+  - leaf: 8
+    id: 0x6bbc9a88
+    name: Serve_FlatMedium
+    row: 26
+  - leaf: 9
+    id: 0x26eb8042
+    name: Serve_FlatPowerful
+    row: 27
+  - leaf: 10
+    id: 0xa9bdbd27
+    name: Serve_FlatFinesse
+    row: 28
+  - leaf: 11
+    id: 0xfa212c96
+    name: Serve_AdvancedTopSpin
+    row: 29
+  - leaf: 12
+    id: 0xc1e2aa62
+    name: Serve_AdvancedSlice
+    row: 30
+  - leaf: 13
+    id: 0xa010111f
+    name: Serve_AdvancedFlat
+    row: 31
+  - leaf: 14
+    id: 0xe8b7486e
+    name: SmashNormal
+    row: 33
+  - leaf: 15
+    id: 0x4b121fa5
+    name: TopSpinPowerful
+    row: 8
+  - leaf: 16
+    id: 0xc47dfdc1
+    name: DropShotNormal
+    row: 32
+  - leaf: 17
+    id: 0x65dc9a5a
+    name: SlicePowerful
+    row: 9
+  - leaf: 18
+    id: 0x11a1b9d0
+    name: LobPowerful
+    row: 11
+  - leaf: 19
+    id: 0x992258dc
+    name: FlatPowerful
+    row: 10
+  - leaf: 20
+    id: 0xa413297b
+    name: TopSpinMedium
+    row: 4
+  - leaf: 21
+    id: 0xc47dfdc1
+    name: DropShotNormal
+    row: 32
+  - leaf: 22
+    id: 0x4637fcf0
+    name: SliceMedium
+    row: 5
+  - leaf: 23
+    id: 0xbb50ea44
+    name: LobMedium
+    row: 7
+  - leaf: 24
+    id: 0xbe02d81e
+    name: FlatMedium
+    row: 6
+  - leaf: 25
+    id: 0x8dc6b132
+    name: TopSpinFinesse
+    row: 0
+  - leaf: 26
+    id: 0xc47dfdc1
+    name: DropShotNormal
+    row: 32
+  - leaf: 27
+    id: 0xf74ecf4f
+    name: SliceFinesse
+    row: 1
+  - leaf: 28
+    id: 0x3bbfdfcc
+    name: LobFinesse
+    row: 3
+  - leaf: 29
+    id: 0xb0043514
+    name: FlatFinesse
+    row: 2
+  - leaf: 30
+    id: 0x14d5efaa
+    name: TopSpinVolley
+    row: 16
+  - leaf: 31
+    id: 0x8ff66130
+    name: DropVolley
+    row: 18
+  - leaf: 32
+    id: 0xf6f13a21
+    name: SliceVolley
+    row: 17
+  - leaf: 33
+    id: 0x0ec41ecf
+    name: FlatVolley
+    row: 19
+rows:
+  - index: 0
+    file_offset: 0x137c
+    id: 0x8dc6b132
+    template: 0x8dc6b132
+    ball_0x360: 0x1358
+    name: TopSpinFinesse
+    template_name: TopSpinFinesse
+    reachable_from_tree: true
+  - index: 1
+    file_offset: 0x1408
+    id: 0xf74ecf4f
+    template: 0xf74ecf4f
+    ball_0x360: 0x13e4
+    name: SliceFinesse
+    template_name: SliceFinesse
+    reachable_from_tree: true
+  - index: 2
+    file_offset: 0x1494
+    id: 0xb0043514
+    template: 0xb0043514
+    ball_0x360: 0x1470
+    name: FlatFinesse
+    template_name: FlatFinesse
+    reachable_from_tree: true
+  - index: 3
+    file_offset: 0x1520
+    id: 0x3bbfdfcc
+    template: 0x5ca6c717
+    ball_0x360: 0x14fc
+    name: LobFinesse
+    template_name: LobNormal
+    reachable_from_tree: true
+  - index: 4
+    file_offset: 0x15ac
+    id: 0xa413297b
+    template: 0x43e50428
+    ball_0x360: 0x1588
+    name: TopSpinMedium
+    template_name: TopSpinNormal
+    reachable_from_tree: true
+  - index: 5
+    file_offset: 0x1638
+    id: 0x4637fcf0
+    template: 0xa1c1d1a3
+    ball_0x360: 0x1614
+    name: SliceMedium
+    template_name: SliceNormal
+    reachable_from_tree: true
+  - index: 6
+    file_offset: 0x16c4
+    id: 0xbe02d81e
+    template: 0x59f4f54d
+    ball_0x360: 0x16a0
+    name: FlatMedium
+    template_name: FlatNormal
+    reachable_from_tree: true
+  - index: 7
+    file_offset: 0x1750
+    id: 0xbb50ea44
+    template: 0x5ca6c717
+    ball_0x360: 0x172c
+    name: LobMedium
+    template_name: LobNormal
+    reachable_from_tree: true
+  - index: 8
+    file_offset: 0x17dc
+    id: 0x4b121fa5
+    template: 0x43e50428
+    ball_0x360: 0x17b8
+    name: TopSpinPowerful
+    template_name: TopSpinNormal
+    reachable_from_tree: true
+  - index: 9
+    file_offset: 0x1868
+    id: 0x65dc9a5a
+    template: 0xa1c1d1a3
+    ball_0x360: 0x1844
+    name: SlicePowerful
+    template_name: SliceNormal
+    reachable_from_tree: true
+  - index: 10
+    file_offset: 0x18f4
+    id: 0x992258dc
+    template: 0x59f4f54d
+    ball_0x360: 0x18d0
+    name: FlatPowerful
+    template_name: FlatNormal
+    reachable_from_tree: true
+  - index: 11
+    file_offset: 0x1980
+    id: 0x11a1b9d0
+    template: 0x5ca6c717
+    ball_0x360: 0x195c
+    name: LobPowerful
+    template_name: LobNormal
+    reachable_from_tree: true
+  - index: 12
+    file_offset: 0x1a0c
+    id: 0x4708429a
+    template: 0x4708429a
+    ball_0x360: 0x19e8
+    name: TopSpinRisky
+    template_name: TopSpinRisky
+    reachable_from_tree: false
+  - index: 13
+    file_offset: 0x1a98
+    id: 0xdba7dd53
+    template: 0xdba7dd53
+    ball_0x360: 0x1a74
+    name: SliceRisky
+    template_name: SliceRisky
+    reachable_from_tree: false
+  - index: 14
+    file_offset: 0x1b24
+    id: 0x8c2d5a8e
+    template: 0x8c2d5a8e
+    ball_0x360: 0x1b00
+    name: FlatRisky
+    template_name: FlatRisky
+    reachable_from_tree: false
+  - index: 15
+    file_offset: 0x1bb0
+    id: 0xde481349
+    template: 0x5ca6c717
+    ball_0x360: 0x1b8c
+    name: LobRisky
+    template_name: LobNormal
+    reachable_from_tree: false
+  - index: 16
+    file_offset: 0x1c3c
+    id: 0x14d5efaa
+    template: 0x8430d507
+    ball_0x360: 0x1c18
+    name: TopSpinVolley
+    template_name: PowerVolley
+    reachable_from_tree: true
+  - index: 17
+    file_offset: 0x1cc8
+    id: 0xf6f13a21
+    template: 0xf6f13a21
+    ball_0x360: 0x1ca4
+    name: SliceVolley
+    template_name: SliceVolley
+    reachable_from_tree: true
+  - index: 18
+    file_offset: 0x1d54
+    id: 0x8ff66130
+    template: 0x8ff66130
+    ball_0x360: 0x1d30
+    name: DropVolley
+    template_name: DropVolley
+    reachable_from_tree: true
+  - index: 19
+    file_offset: 0x1de0
+    id: 0x0ec41ecf
+    template: 0x0ec41ecf
+    ball_0x360: 0x1dbc
+    name: FlatVolley
+    template_name: FlatVolley
+    reachable_from_tree: true
+  - index: 20
+    file_offset: 0x1e6c
+    id: 0xb31b5ee0
+    template: 0x471a198a
+    ball_0x360: 0x1e48
+    name: Serve_TopSpinMedium
+    template_name: ServeNormal
+    reachable_from_tree: true
+  - index: 21
+    file_offset: 0x1ef8
+    id: 0x17c6bfe3
+    template: 0x471a198a
+    ball_0x360: 0x1ed4
+    name: Serve_TopSpinPowerful
+    template_name: ServeNormal
+    reachable_from_tree: true
+  - index: 22
+    file_offset: 0x1f84
+    id: 0xea0cf389
+    template: 0x471a198a
+    ball_0x360: 0x1f60
+    name: Serve_TopSpinFinesse
+    template_name: ServeNormal
+    reachable_from_tree: true
+  - index: 23
+    file_offset: 0x2010
+    id: 0x5f8e74c3
+    template: 0xa4e4dc7f
+    ball_0x360: 0x1fec
+    name: Serve_SliceMedium
+    template_name: ServeSlice
+    reachable_from_tree: true
+  - index: 24
+    file_offset: 0x209c
+    id: 0x72d4edc1
+    template: 0xa4e4dc7f
+    ball_0x360: 0x2078
+    name: Serve_SlicePowerful
+    template_name: ServeSlice
+    reachable_from_tree: true
+  - index: 25
+    file_offset: 0x2128
+    id: 0x488717d1
+    template: 0xa4e4dc7f
+    ball_0x360: 0x2104
+    name: Serve_SliceFinesse
+    template_name: ServeSlice
+    reachable_from_tree: true
+  - index: 26
+    file_offset: 0x21b4
+    id: 0x6bbc9a88
+    template: 0x471a198a
+    ball_0x360: 0x2190
+    name: Serve_FlatMedium
+    template_name: ServeNormal
+    reachable_from_tree: true
+  - index: 27
+    file_offset: 0x2240
+    id: 0x26eb8042
+    template: 0x471a198a
+    ball_0x360: 0x221c
+    name: Serve_FlatPowerful
+    template_name: ServeNormal
+    reachable_from_tree: true
+  - index: 28
+    file_offset: 0x22cc
+    id: 0xa9bdbd27
+    template: 0x471a198a
+    ball_0x360: 0x22a8
+    name: Serve_FlatFinesse
+    template_name: ServeNormal
+    reachable_from_tree: true
+  - index: 29
+    file_offset: 0x2358
+    id: 0xfa212c96
+    template: 0x60f2096d
+    ball_0x360: 0x2334
+    name: Serve_AdvancedTopSpin
+    template_name: ServeAdvanced
+    reachable_from_tree: true
+  - index: 30
+    file_offset: 0x23e4
+    id: 0xc1e2aa62
+    template: 0x60f2096d
+    ball_0x360: 0x23c0
+    name: Serve_AdvancedSlice
+    template_name: ServeAdvanced
+    reachable_from_tree: true
+  - index: 31
+    file_offset: 0x2470
+    id: 0xa010111f
+    template: 0x60f2096d
+    ball_0x360: 0x244c
+    name: Serve_AdvancedFlat
+    template_name: ServeAdvanced
+    reachable_from_tree: true
+  - index: 32
+    file_offset: 0x24fc
+    id: 0xc47dfdc1
+    template: 0xc47dfdc1
+    ball_0x360: 0x24d8
+    name: DropShotNormal
+    template_name: DropShotNormal
+    reachable_from_tree: true
+  - index: 33
+    file_offset: 0x2588
+    id: 0xe8b7486e
+    template: 0xe8b7486e
+    ball_0x360: 0x2564
+    name: SmashNormal
+    template_name: SmashNormal
+    reachable_from_tree: true
+  - index: 34
+    file_offset: 0x2614
+    id: 0x43961ee3
+    template: 0x43961ee3
+    ball_0x360: 0x25f0
+    name: DefensiveShot
+    template_name: DefensiveShot
+    reachable_from_tree: false
+  - index: 35
+    file_offset: 0x26a0
+    id: 0x9cafb633
+    template: 0x5ca6c717
+    ball_0x360: 0x267c
+    name: Wood
+    template_name: LobNormal
+    reachable_from_tree: true
+  - index: 36
+    file_offset: 0x272c
+    id: 0x4fa695a1
+    template: 0x5ca6c717
+    ball_0x360: 0x2708
+    name: WoodDown
+    template_name: LobNormal
+    reachable_from_tree: true
+power:
+  power_curve_default_cfg_0x8fc: [[0.0, 1.25, 0.0, 1.0]]
+  power2_curve_default_cfg_0x908: [[0.0, 1.0, 0.0, 1.0]]
+  power_curve_alt_cfg_0x914: [[0.0, 1.25, 0.0, 1.0]]
+  power2_curve_alt_cfg_0x920: [[0.0, 0.9, 0.0, 1.0]]
+  cfg_0xc70: 0.4
+  cfg_0xc74: 0.7
+  swing_lead_frames_cfg_0x8c0: 12
+  serve_lead_frames_cfg_0x8c4: 12
+  release_countdown_frames_cfg_0x8cc: 40
+  serve_input_delay_frames_cfg_0x9a8: 30
+  serve_auto_frames_cfg_0x9ac: 480
+  frequency_D: 60
+input_mapper:
+  - file_offset: 0x2c110
+    root_floats: [0.55, 0.8]
+    root_words: [1, 0]
+    buttons:
+      - key: 0x31dfdd4f
+        control: A
+        outputs:
+          - kind: level
+            invert: 0
+            path: "ShotTriggers/Shot[@Id=\"Flat\"]/@Raise"
+            playerstate_offset: 0x418
+          - kind: release
+            path: "Shots/Shot[@Id=\"Flat\"]/@Raise"
+            playerstate_offset: 0x40c
+          - kind: level
+            invert: 0
+            path: "Serve/Classic/@ThrowFlat"
+            playerstate_offset: 0x482
+          - kind: release
+            path: "Serve/Classic/@Flat"
+            playerstate_offset: 0x485
+          - kind: level
+            invert: 0
+            path: "Buttons/@A"
+            playerstate_offset: 0x470
+          - kind: press
+            path: "Buttons/@PressA"
+            playerstate_offset: 0x474
+          - kind: release
+            path: "Buttons/@ReleaseA"
+            playerstate_offset: 0x478
+      - key: 0xa8d68cf5
+        control: B
+        outputs:
+          - kind: level
+            invert: 0
+            path: "ShotTriggers/Shot[@Id=\"TopSpin\"]/@Raise"
+            playerstate_offset: 0x418
+          - kind: release
+            path: "Shots/Shot[@Id=\"TopSpin\"]/@Raise"
+            playerstate_offset: 0x40c
+          - kind: level
+            invert: 0
+            path: "Serve/Classic/@ThrowTopSpin"
+            playerstate_offset: 0x484
+          - kind: release
+            path: "Serve/Classic/@TopSpin"
+            playerstate_offset: 0x487
+          - kind: level
+            invert: 0
+            path: "Buttons/@B"
+            playerstate_offset: 0x471
+          - kind: press
+            path: "Buttons/@PressB"
+            playerstate_offset: 0x475
+          - kind: release
+            path: "Buttons/@ReleaseB"
+            playerstate_offset: 0x479
+      - key: 0xdfd1bc63
+        control: X
+        outputs:
+          - kind: level
+            invert: 0
+            path: "ShotTriggers/Shot[@Id=\"Slice\"]/@Raise"
+            playerstate_offset: 0x418
+          - kind: release
+            path: "Shots/Shot[@Id=\"Slice\"]/@Raise"
+            playerstate_offset: 0x40c
+          - kind: level
+            invert: 0
+            path: "Serve/Classic/@ThrowSlice"
+            playerstate_offset: 0x483
+          - kind: release
+            path: "Serve/Classic/@Slice"
+            playerstate_offset: 0x486
+          - kind: level
+            invert: 0
+            path: "Buttons/@X"
+            playerstate_offset: 0x472
+          - kind: press
+            path: "Buttons/@PressX"
+            playerstate_offset: 0x476
+          - kind: release
+            path: "Buttons/@ReleaseX"
+            playerstate_offset: 0x47a
+      - key: 0x41b529c0
+        control: Y
+        outputs:
+          - kind: level
+            invert: 0
+            path: "ShotTriggers/Shot[@Id=\"Lob\"]/@Raise"
+            playerstate_offset: 0x418
+          - kind: release
+            path: "Shots/Shot[@Id=\"Lob\"]/@Raise"
+            playerstate_offset: 0x40c
+          - kind: level
+            invert: 0
+            path: "@SpecialShotDetected"
+            playerstate_offset: 0x4dc
+          - kind: release
+            path: "@SpecialShot"
+            playerstate_offset: 0x4db
+          - kind: level
+            invert: 0
+            path: "Buttons/@Y"
+            playerstate_offset: 0x473
+          - kind: press
+            path: "Buttons/@PressY"
+            playerstate_offset: 0x477
+          - kind: release
+            path: "Buttons/@ReleaseY"
+            playerstate_offset: 0x47b
+      - key: 0x60e09989
+        control: RightStickClick
+        outputs:
+          - kind: press
+            path: "@ShotEditor_Reset"
+            playerstate_offset: 0x4e8
+      - key: 0x5eb87a8b
+        control: Start
+        outputs:
+          - kind: press
+            path: "@ShotEditor_Launch"
+            playerstate_offset: 0x4e7
+      - key: 0xcdfc6e09
+        control: Back
+        outputs:
+          - kind: press
+            path: "@RequestChallenge"
+            playerstate_offset: 0x4e6
+      - key: 0x7335bdad
+        control: LT
+        outputs:
+          - kind: level
+            invert: 0
+            path: "Buttons/@LT"
+            playerstate_offset: 0x47e
+          - kind: level
+            invert: 0
+            path: "@Risk"
+            playerstate_offset: 0x4d8
+          - kind: press
+            path: "@AskNext"
+            playerstate_offset: 0x4e9
+      - key: 0x658d33d7
+        control: RT
+        outputs:
+          - kind: level
+            invert: 0
+            path: "Buttons/@RT"
+            playerstate_offset: 0x47f
+          - kind: level
+            invert: 0
+            path: "@Risk"
+            playerstate_offset: 0x4d8
+          - kind: press
+            path: "@AskPrevious"
+            playerstate_offset: 0x4ea
+      - key: 0xea3cec17
+        control: LB
+        outputs:
+          - kind: level
+            invert: 0
+            path: "Buttons/@LB"
+            playerstate_offset: 0x47c
+          - kind: level
+            invert: 0
+            path: "@ReqSpeedSwing"
+            playerstate_offset: 0x4e1
+          - kind: level
+            invert: 0
+            path: "@ReqBaselineRepos"
+            playerstate_offset: 0x4de
+          - kind: press
+            path: "@OnRaiseReqBaselineRepos"
+            playerstate_offset: 0x4e3
+      - key: 0xfc84626d
+        control: RB
+        outputs:
+          - kind: level
+            invert: 0
+            path: "Buttons/@RB"
+            playerstate_offset: 0x47d
+          - kind: level
+            invert: 0
+            path: "@ReqFastRepos"
+            playerstate_offset: 0x4e2
+          - kind: level
+            invert: 0
+            path: "@Rush"
+            playerstate_offset: 0x4dd
+          - kind: level
+            invert: 0
+            path: "@ReqVolleyRepos"
+            playerstate_offset: 0x4df
+          - kind: press
+            path: "@OnRaiseReqVolleyRepos"
+            playerstate_offset: 0x4e4
+    sticks:
+      - axis_x: LeftX
+        axis_y: LeftY
+        dead_zone: 0.4
+        outputs:
+          - kind: cartesian
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
+            first:
+              path: "Stick_Aiming/@X"
+              playerstate_offset: 0x430
+            second:
+              path: "Stick_Aiming/@Y"
+              playerstate_offset: 0x434
+            scale: [1.0, 1.0]
+            filter_0x20: 1
+            word_0x24: 30
+          - kind: cartesian
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
+            first:
+              path: "Stick_Move/@X"
+              playerstate_offset: 0x448
+            second:
+              path: "Stick_Move/@Y"
+              playerstate_offset: 0x44c
+            scale: [1.0, 1.0]
+            filter_0x20: 10
+            word_0x24: 30
+          - kind: polar
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
+            first:
+              path: "Stick_MovePolar/@Power"
+              playerstate_offset: 0x440
+            second:
+              path: "Stick_MovePolar/@Angle"
+              playerstate_offset: 0x444
+            angle_range: [-3.141592, 3.141592]
+            power_range: [0.0, 1.0]
+            word_0x20: 0
+            flags_0x24: 0x01010000
+      - axis_x: DPadX
+        axis_y: DPadY
+        dead_zone: 0.4
+        outputs:
+          - kind: cartesian
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
+            first:
+              path: "Stick_1/@X"
+              playerstate_offset: 0x450
+            second:
+              path: "Stick_1/@Y"
+              playerstate_offset: 0x454
+            scale: [25.0, 25.0]
+            filter_0x20: 1
+            word_0x24: 30
+          - kind: direction
+            direction: Up
+            threshold: 0.5
+            scale: 1.0
+            path: "DPad/@Up"
+            playerstate_offset: 0x429
+          - kind: direction
+            direction: Down
+            threshold: 0.5
+            scale: 1.0
+            path: "DPad/@Down"
+            playerstate_offset: 0x42a
+          - kind: direction
+            direction: Left
+            threshold: 0.5
+            scale: 1.0
+            path: "DPad/@Left"
+            playerstate_offset: 0x42c
+          - kind: direction
+            direction: Right
+            threshold: 0.5
+            scale: 1.0
+            path: "DPad/@Right"
+            playerstate_offset: 0x42b
+      - axis_x: RightX
+        axis_y: RightY
+        dead_zone: 0.4
+        outputs:
+          - kind: cartesian
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
+            first:
+              path: "Stick_3/@X"
+              playerstate_offset: 0x460
+            second:
+              path: "Stick_3/@Y"
+              playerstate_offset: 0x464
+            scale: [25.0, 25.0]
+            filter_0x20: 1
+            word_0x24: 30
+          - kind: cartesian
+            invert_x: null
+            invert_y: null
+            first:
+              path: "Serve/Advanced/CartesianStick/@X"
+              playerstate_offset: 0x490
+            second:
+              path: "Serve/Advanced/CartesianStick/@Y"
+              playerstate_offset: 0x494
+            scale: [10.0, 10.0]
+            filter_0x20: 1
+            word_0x24: 30
+          - kind: polar
+            invert_x: null
+            invert_y: null
+            first:
+              path: "Serve/Advanced/PolarStick/@Power"
+              playerstate_offset: 0x488
+            second:
+              path: "Serve/Advanced/PolarStick/@Angle"
+              playerstate_offset: 0x48c
+            angle_range: [-3.141592, 3.141592]
+            power_range: [0.0, 1.0]
+            word_0x20: 0
+            flags_0x24: 0x00010000
+          - kind: polar
+            invert_x: "@InvertPaddle"
+            invert_y: "@InvertPaddle"
+            first:
+              path: "PolarStick_3/@Power"
+              playerstate_offset: 0x468
+            second:
+              path: "PolarStick_3/@Angle"
+              playerstate_offset: 0x46c
+            angle_range: [-3.141592, 3.141592]
+            power_range: [0.0, 1.0]
+            word_0x20: 0
+            flags_0x24: 0x00010000
+tier_graphs:
+  Finesse:
+    inputs:
+      - domain: 1bf15200
+        path: [89408a2f, 82526c5c]
+        cell: 107
+        register: 0
+    outputs:
+      - domain: 1bf15200
+        path: [SwingSelection, EvaluationOutputs]
+        cell: 259
+        register: 1
+    nodes:
+      - kind: CURVE
+        in: 0
+        out: 1
+        keys: ["(0.0, 0.15000000596046448, 1.0, 0.0, 1.0)", "(0.15000000596046448, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0]
+  Medium:
+    inputs:
+      - domain: 1bf15200
+        path: [89408a2f, 82526c5c]
+        cell: 107
+        register: 0
+    outputs:
+      - domain: 1bf15200
+        path: [SwingSelection, EvaluationOutputs]
+        cell: 260
+        register: 1
+    nodes:
+      - kind: CURVE
+        in: 0
+        out: 1
+        keys: ["(0.0, 0.15000000596046448, 0.0, 0.0, 0.0)", "(0.15000000596046448, 0.699999988079071, 1.0, 0.0, 1.0)", "(0.699999988079071, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0, 0.0]
+  Powerful:
+    inputs:
+      - domain: 1bf15200
+        path: [89408a2f, 82526c5c]
+        cell: 107
+        register: 0
+    outputs:
+      - domain: 1bf15200
+        path: [SwingSelection, EvaluationOutputs]
+        cell: 261
+        register: 1
+    nodes:
+      - kind: CURVE
+        in: 0
+        out: 1
+        keys: ["(0.0, 0.699999988079071, 0.0, 0.0, 0.0)", "(0.699999988079071, 1.0, 1.0, 0.0, 1.0)"]
+        disc_slopes: [0.0, 0.0]
+  PowerfulBall:
+    inputs:
+      - domain: 1bf15200
+        path: [89408a2f, c7b7bdac]
+        cell: 72
+        register: 0
+    outputs:
+      - domain: 1bf15200
+        path: [SwingSelection, EvaluationOutputs]
+        cell: 264
+        register: 1
+    nodes:
+      - kind: CURVE
+        in: 0
+        out: 1
+        keys: ["(0.0, 15.0, 0.0, 0.0, 0.0)", "(15.0, 20.0, 1.0, 0.0, 1.0)"]
+        disc_slopes: [0.0, 0.0]
+  GoodTiming:
+    inputs:
+      - domain: 1bf15200
+        path: [Profile, SkillList]
+        cell: -1
+        register: 2
+      - domain: 1bf15200
+        path: [Context, ShotContext]
+        cell: 109
+        register: 1
+    outputs:
+      - domain: 1bf15200
+        path: [SwingSelection, EvaluationOutputs]
+        cell: 273
+        register: 4
+    nodes:
+      - kind: CURVE
+        in: 1
+        out: 3
+        keys: ["(-1.0, -0.800000011920929, 0.0, 0.0, 0.0)", "(-0.800000011920929, 0.800000011920929, 1.0, 0.0, 1.0)", "(0.800000011920929, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0, 0.0]
+      - kind: CURVE
+        in: 1
+        out: 0
+        keys: ["(-1.0, -0.30000001192092896, 0.0, 0.0, 0.0)", "(-0.30000001192092896, 0.30000001192092896, 1.0, 0.0, 1.0)", "(0.30000001192092896, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0, 0.0]
+      - kind: LERP
+        a: 0
+        b: 3
+        t: 2
+        out: 4
+  Wood:
+    inputs:
+      - domain: 1bf15200
+        path: [89408a2f, TimingState]
+        cell: 28
+        register: 2
+      - domain: 1bf15200
+        path: [89408a2f, TimingState]
+        cell: 28
+        register: 12
+      - domain: 1bf15200
+        path: [7e28dbc0]
+        cell: 17
+        register: 3
+      - domain: 53a7fcce
+        path: [2cd48361]
+        cell: 113
+        register: 7
+      - domain: 1bf15200
+        path: [Fatigue, Output]
+        cell: 16
+        register: 1
+    outputs:
+      - domain: 1bf15200
+        path: [SwingSelection, EvaluationOutputs]
+        cell: 275
+        register: 14
+    nodes:
+      - kind: CURVE
+        in: 2
+        out: 11
+        keys: ["(30.0, 60.0, 1.0, -0.01666666753590107, 0.5)", "(60.0, 70.0, 0.5, -0.05000000074505806, 0.0)"]
+        disc_slopes: [0.0, 0.0]
+      - kind: CURVE
+        in: 12
+        out: 13
+        keys: ["(-1.0, -0.15000000596046448, 1.0, 0.0, 1.0)", "(-0.15000000596046448, 0.15000000596046448, 0.0, 0.0, 0.0)", "(0.15000000596046448, 1.0, 1.0, 0.0, 1.0)"]
+        disc_slopes: [0.0, 0.0, 0.0]
+      - kind: CURVE
+        in: 2
+        out: 10
+        keys: ["(30.0, 60.0, 0.800000011920929, -0.013333333656191826, 0.4000000059604645)", "(60.0, 70.0, 0.4000000059604645, -0.03999999910593033, 0.0)"]
+        disc_slopes: [0.0, 0.0]
+      - kind: LERP
+        a: 11
+        b: 10
+        t: 1
+        out: 0
+      - kind: CURVE
+        in: 0
+        out: 6
+        keys: ["(0.0, 1.0, 0.0, 0.4000000059604645, 0.4000000059604645)"]
+        disc_slopes: [0.0]
+      - kind: CURVE
+        in: 0
+        out: 4
+        keys: ["(0.0, 1.0, 0.0, 0.20000000298023224, 0.20000000298023224)"]
+        disc_slopes: [0.0]
+      - kind: LERP
+        a: 6
+        b: 4
+        t: 3
+        out: 5
+      - kind: SUB
+        a: 7
+        b: 5
+        out: 8
+      - kind: CURVE
+        in: 8
+        out: 9
+        keys: ["(-1.0, 0.0, 1.0, 0.0, 1.0)", "(0.0, 1.0, 0.0, 0.0, 0.0)"]
+        disc_slopes: [0.0, 0.0]
+      - kind: PRODUCT
+        slots: [9, 13]
+        out: 14
+tier_intervals_on_power:
+  Finesse: [[0.0, 0.15]]
+  Medium: [[0.15, 0.7]]
+  Powerful: [[0.7, 1.0]]
+tier_edges_in_frames_over_D:
+  Finesse: [[0.0, 0.1875]]
+  Medium: [[0.1875, 0.875]]
+  Powerful: [[0.875, 1.25]]
+playerstate_paths:
+  ShotSelection/Request/@IsFlat: 0x400
+  ShotSelection/Request/@IsSlice: 0x401
+  ShotSelection/Request/@IsTopSpin: 0x402
+  ShotSelection/Request/@IsLob: 0x403
+  ShotSelection/Request/@IsRisk: 0x404
+  ShotSelection/Request/@IsPowerful: 0x405
+  ShotSelection/Request/@IsMedium: 0x406
+  ShotSelection/Request/@IsClassicServe: 0x407
+  ShotSelection/Request/@IsAdvancedServe: 0x408
+  ShotSelection/Request/@IsSmash: 0x409
+  ShotSelection/Request/@IsWood: 0x40a
+  ShotSelection/Request/@IsWoodDown: 0x40b
+  Context/ShotContext/@ModeBaseLine: 0x574
+  InputState/Risk: 0x4d8
+  InputState/Rush: 0x4dd
+  InputState/Buttons/A: 0x470
+  InputState/Buttons/PressA: 0x474
+  InputState/Buttons/ReleaseA: 0x478
+  InputState/Stick_Aiming/X: 0x430
+  InputState/Stick_Move/X: 0x448
+  InputState/Stick_MovePolar/Power: 0x440
+  InputState/Serve/Classic/Throw: 0x480
+  InputState/Serve/Advanced/Throw: 0x4b5
+  InputState/Serve/Advanced/PolarStick/Power: 0x488
+  InputState/Serve/Advanced/CartesianStick/X: 0x490
+  SwingSelection/Request/Power: 0x3a8
+  SwingSelection/EvaluationOutputs/GoodTiming: 0x3e8
+  SwingSelection/EvaluationOutputs/Wood: 0x3ec
+  Context/IsServing: 0x5d8
+  Context/IsVolley: 0x5d9
+  Context/IsSmash: 0x5da

@@ -1,6 +1,6 @@
 # Matching build
 
-The first ninety-one matching measurement units reproduce all 12,028 code bytes across one hundred twelve functions exactly.
+The first one thousand four hundred forty-six matching measurement units reproduce all 2,897,304 code bytes across thirty thousand one hundred ninety functions exactly.
 
 ## Local prerequisites
 
@@ -29,7 +29,7 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 12,028 of 10,153,700 Swing code bytes (`0.118459284%`) and one hundred twelve of 47,250 objdiff functions (`0.237037030%`). The decomp-framework report has ninety-one complete-source units among 210 total units.
+The match is 2,897,304 of 10,154,036 Swing code bytes (`28.53352200%`) and thirty thousand one hundred ninety of 46,736 objdiff functions (`64.5968860%`). The decomp-framework report has one thousand four hundred forty-six complete-source units among 22071 total units.
 
 Where a function has an accompanying eight-byte `.pdata` range, it is also a
 100% relocation-aware objdiff match. Leaf functions without an exception record
@@ -71,13 +71,13 @@ The path distinction is part of the proof: `build/54540859/src/` contains
 objects compiled from this repository's source, while `build/54540859/obj/`
 contains original split target objects used only for comparison.
 
-A second probe passes all one hundred thirty-one source-built objects to the linker. Its map
-contains all two hundred forty-five exact public functions. Because the remaining game code and
+A second probe passes all one thousand four hundred forty-six source-built objects to the linker. Its map
+contains all thirty thousand one hundred ninety exact public functions. Because the remaining game code and
 data are not reconstructed, this probe requires `/FORCE:UNRESOLVED` and reports
-218 unique unresolved external symbols across 373 references. The linker emits a 22,528-byte
-inspection PE with 17,176 bytes of `.text`; that section also includes eight
-source helper functions and alignment, so it is not a new matching-progress
-denominator. This is evidence that the current reconstructed subset can enter a
+31,744 unique unresolved external symbols across 48,467 references. The linker emits a 3,657,728-byte
+inspection PE with 3,034,276 bytes of `.text`; that section also includes five hundred twenty-nine
+source helper functions (inline C++ constructors and allocation wrappers) and alignment, so it is not a new matching-progress
+denominator. Linker outputs embed timestamps, so their hashes change between runs. Reproduce with `tools/link_probe.py`. This is evidence that the current reconstructed subset can enter a
 single Xbox link, not evidence of a usable module.
 
 This proves that reconstructed COFF objects can be combined by the original
@@ -90,3 +90,23 @@ resolved imports and linker directives, XEX image packaging/signing, and
 runtime verification. Until those gates exist, this repository reports exact
 object matches and the minimal PE link proof rather than claiming a runnable
 linked build.
+
+## Jump-table switches
+
+The Jeff patch rebuilds jump-table relocations and function extents for MSVC
+switch tables embedded in `.text` (534 sites in Swing). Measurements, with the
+patched Jeff 0.3.5 and objdiff-cli 3.7.1:
+
+- A fresh analysis finds 552 `jumptable_*` objects instead of 520. All 534
+  `mtctr`/`bctr` sites with an inline absolute table are covered except
+  `0x888B3C10`, whose case blocks are matched functions in
+  `symbols.seed.txt` (see below).
+- Five functions grow to include case blocks that used to be separate `fn_`
+  symbols: `fn_8849E168`, `fn_8865DA28`, `fn_8865DAC0`, `fn_886ED218`,
+  `fn_8889CD00`.
+- Table words get ADDR32 relocations against `$LN<address>` labels, are zeroed
+  in the split object, and `jumptable_*` symbols are written as labels.
+- `tools/fn_check.py` compares a candidate `$LN` relocation with the target by
+  offset inside the function. Set `TS4_MATCHING_DIR` to use the split and
+  symbols of an alternate `tools/matching.py --work-dir`.
+

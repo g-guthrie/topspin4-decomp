@@ -6,7 +6,7 @@ extern void *lbl_88D459D4;
 extern void *lbl_88D459E0;
 extern void *lbl_88D4594C;
 extern void *lbl_88D41FC4;
-void fn_887AE088(void *object);
+void ts4_if_call_seq_u32_lbl_88D45B1C_887AE088(void *object);
 void fn_8886FCC0(void *object);
 void fn_888647B0(void *object);
 void fn_88908258(void *object);
@@ -15,7 +15,7 @@ void fn_88202CD8(void *manager, void *value);
 /* Registered as DLL_InitMasterPad. */
 ts4_u32 ts4_script_dll_init_master_pad(void)
 {
-    fn_887AE088(lbl_88D45A60);
+    ts4_if_call_seq_u32_lbl_88D45B1C_887AE088(lbl_88D45A60);
     return 0;
 }
 

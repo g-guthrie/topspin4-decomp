@@ -1,0 +1,81 @@
+/*
+ * ts4core graph roles and variables (X-macro; parsed by src/graph_roles.c and port/core/tools/ts4d.py).
+ *
+ * The analyser graphs in Expressions.bin name their variables by (domain class, member path, cell index).
+ * The table that maps a cell index to a PlayerState offset is NOT decoded yet (docs/gameplay/analyser-graphs.md
+ * s5, s10 item 1). Until it is, the port cannot bind graph ports by itself. Instead the data blob carries a
+ * ROLE section: for each role below it lists which graph to run and which core variable feeds / receives
+ * each port (by port order). A role with no record is simply not run (module DEGRADED, fallback = the
+ * initial tunable value of the output variable). When the cell table is decoded, only the blob changes.
+ *
+ * Both lists are append-only: the numeric value is the position in the list, and it is what the blob stores.
+ *
+ * TS4_VAR(ID, "name", "meaning, PlayerState offset if known")
+ * TS4_ROLE(ID, "name", "graph name used by the game", "when the sim runs it and what it expects")
+ */
+
+/* ---- variables (one float each, per player unless noted) ---- */
+TS4_VAR(ZERO,            "zero",            "constant 0, bind unmapped input ports here (writes to it are discarded)")
+TS4_VAR(STAT_SERVE,      "stat.serve",      "S+0x64C")
+TS4_VAR(STAT_RETURN,     "stat.return",     "S+0x650")
+TS4_VAR(STAT_FOREHAND,   "stat.forehand",   "S+0x654")
+TS4_VAR(STAT_BACKHAND,   "stat.backhand",   "S+0x658")
+TS4_VAR(STAT_VOLLEY,     "stat.volley",     "S+0x65C")
+TS4_VAR(STAT_POWER,      "stat.power",      "S+0x660")
+TS4_VAR(STAT_SPEED,      "stat.speed",      "S+0x664")
+TS4_VAR(STAT_STAMINA,    "stat.stamina",    "S+0x668")
+TS4_VAR(PROFILE_0,       "profile.0",       "DefaultAttributes output (cell order of the graph's output ports)")
+TS4_VAR(PROFILE_1,       "profile.1",       "")
+TS4_VAR(PROFILE_2,       "profile.2",       "")
+TS4_VAR(PROFILE_3,       "profile.3",       "")
+TS4_VAR(PROFILE_4,       "profile.4",       "")
+TS4_VAR(PROFILE_5,       "profile.5",       "")
+TS4_VAR(PROFILE_6,       "profile.6",       "")
+TS4_VAR(PROFILE_7,       "profile.7",       "")
+TS4_VAR(FATIGUE_IN,      "fatigue.in",      "Fatigue.Input cells 19/21/22 (stamina state)")
+TS4_VAR(FATIGUE_OUT,     "fatigue.out",     "Fatigue.Output cell 16/188")
+TS4_VAR(BALL_DIST_M,     "ball.dist_m",     "S+0x7A0: distance player to contact sample, metres (gp8 s4.1)")
+TS4_VAR(REACH_SPEED,     "reach.speed",     "S+0x7A4 / Reachability, m/s")
+TS4_VAR(BALL_DIFFICULTY, "ball.difficulty", "S+0x7A8 output of ShotDifficulty")
+TS4_VAR(INPUT_NOTATION,  "input.notation",  "InputNotation (0 for AI)")
+TS4_VAR(SELECTION_SCORE, "selection.score", "Selection Score output")
+TS4_VAR(TICKS_SINCE_FIRST,"ticks.since_first","ticks since the first candidate sample, -1000 when negative")
+TS4_VAR(HIT_HEIGHT_CM,   "hit.height_cm",   "contact height")
+TS4_VAR(SHOT_CTX_0,      "shot.ctx.0",      "ShotContext members (ShotContext domain 0x53A7FCCE); meaning U")
+TS4_VAR(SHOT_CTX_1,      "shot.ctx.1",      "")
+TS4_VAR(SHOT_CTX_2,      "shot.ctx.2",      "")
+TS4_VAR(SHOT_CTX_3,      "shot.ctx.3",      "")
+TS4_VAR(TIMING_STATE,    "timing.state",    "TimingState cell 106 (timing ability output)")
+TS4_VAR(ERROR_PROB,      "error.prob",      "S+0x718")
+TS4_VAR(ERROR_ADDED,     "error.added",     "S+0x564")
+TS4_VAR(LET_PROB,        "let.prob",        "S+0x71C")
+TS4_VAR(NET_SHARE,       "net.share",       "S+0x720")
+TS4_VAR(SPIN_BLEND,      "spin.blend",      "S+0x774")
+TS4_VAR(F4C,             "shot.f4c",        "S+0x778")
+TS4_VAR(POWER,           "shot.power",      "S+0xE00 (0..1)")
+TS4_VAR(CURRENT_SKILL,   "skill.current",   "S+0x74C: stat of the current stroke (stats-swing-clipfit.md s1.3)")
+TS4_VAR(LET_CTX_0,       "let.ctx.0",       "Commands.LetCommands.Inputs cell 114 (BallState)")
+TS4_VAR(LET_CTX_1,       "let.ctx.1",       "cell 115")
+TS4_VAR(LET_OUT_0,       "let.out.0",       "Commands.LetCommands.Outputs cells 277..280 (LetSettings)")
+TS4_VAR(LET_OUT_1,       "let.out.1",       "")
+TS4_VAR(LET_OUT_2,       "let.out.2",       "")
+TS4_VAR(LET_OUT_3,       "let.out.3",       "")
+TS4_VAR(RUSH_SPEED_COEF, "coef.rush",       "RushSpeedCoef output (AnimationSelection.Movement cell 202)")
+TS4_VAR(SWING_SPEED_COEF,"coef.swing",      "SwingSpeedCoef output (cell 201)")
+TS4_VAR(GENERIC_0,       "generic.0",       "spare slots for experiments in the role file")
+TS4_VAR(GENERIC_1,       "generic.1",       "")
+TS4_VAR(GENERIC_2,       "generic.2",       "")
+TS4_VAR(GENERIC_3,       "generic.3",       "")
+
+/* ---- roles ---- */
+TS4_ROLE(DEFAULT_ATTRIBUTES, "default_attributes", "DefaultAttributes (0x8C9B26E0)", "match start, per player: stat.* -> profile.*")
+TS4_ROLE(FATIGUE_INGAME,     "fatigue_ingame",     "FatigueIngame (0xCBE44A9B)",     "reserved: stamina is not simulated yet")
+TS4_ROLE(TIMING_BASELINE,    "timing_baseline",    "BaselineTimingAbility (0x85F4C811)", "before a groundstroke: profile.* -> timing.state")
+TS4_ROLE(TIMING_VOLLEY,      "timing_volley",      "VolleyTimingAbility (0xA6DFABAA)",   "before a volley: profile.* -> timing.state")
+TS4_ROLE(SHOT_DIFFICULTY,    "shot_difficulty",    "ShotDifficulty (0xDDA048F3)",    "per candidate sample: ball.dist_m, reach.speed -> ball.difficulty")
+TS4_ROLE(SHOT_ERROR,         "shot_error",         "error graph (E4F01642 / 46C7BB5F)", "before the outcome roll: fatigue, timing, difficulty, stats -> error.prob")
+TS4_ROLE(LET_PROBABILITY,    "let_probability",    "LetProbability (0xBDD29CAD)",    "immediately before the let roll: let.ctx.0 -> let.prob")
+TS4_ROLE(SELECTION_GROUND,   "selection_ground",   "swing selection scorer (ground)", "per candidate: reach.speed, ball.difficulty, input.notation -> selection.score")
+TS4_ROLE(SELECTION_VOLLEY,   "selection_volley",   "swing selection scorer (volley)", "same for volley candidates")
+TS4_ROLE(RUSH_SPEED_COEF,    "rush_speed_coef",    "RushSpeedCoef (0x0340A26E)",     "each tick while moving: profile.*, fatigue.out -> coef.rush")
+TS4_ROLE(SWING_SPEED_COEF,   "swing_speed_coef",   "SwingSpeedCoef (0xB5CFF9B7)",    "at swing start: -> coef.swing (scales swing recovery)")

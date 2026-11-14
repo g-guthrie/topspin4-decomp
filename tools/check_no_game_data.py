@@ -11,7 +11,12 @@ BLOCKED_SUFFIXES = {
     ".7z", ".bin", ".dll", ".elf", ".iso", ".pkg", ".rap", ".rar", ".self", ".xex", ".zip"
 }
 MAX_TRACKED_FILE_SIZE = 5 * 1024 * 1024
-LARGE_TEXT_ALLOWLIST = {Path("config/54540859/symbols.txt")}
+# Generated text databases that legitimately exceed the size limit. They are
+# still required to be valid UTF-8 without NUL bytes (see is_allowed_large_text).
+LARGE_TEXT_ALLOWLIST = {
+    Path("config/54540859/symbols.txt"),
+    Path("config/54540859/match.json"),
+}
 
 
 def is_allowed_large_text(path: Path) -> bool:

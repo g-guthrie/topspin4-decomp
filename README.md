@@ -7,17 +7,19 @@ Clean-room reverse engineering and source reconstruction of *Top Spin 4*.
 
 ## Status
 
-Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Two hundred eighty functions have reviewed names. Two hundred forty-five reconstructed functions now compile to 100% code matches: 16,360 of 10,153,700 measured Swing code bytes (`0.16112353%`).
+Xbox 360 retail baseline locked and imported into Ghidra. The current analysis denominator is 41,795 discovered functions across three XEX modules. Thirty thousand two hundred twenty-five functions have reviewed names. Thirty thousand one hundred ninety reconstructed functions now compile to 100% code matches: 2,897,304 of 10,154,036 measured Swing code bytes (`28.53352200%`).
 
 The selected build is title ID `54540859` (`TT-2137`), media ID `60819732`, executable version `0.0.0.3`. See [docs/targets.md](docs/targets.md), [docs/analysis-status.md](docs/analysis-status.md), the [canonical decomp.dev-style build](docs/canonical-build.md), and [matching build instructions](docs/matching-build.md). The first active investigation maps the dormant server-delivered patch path in [docs/title-server-patch.md](docs/title-server-patch.md); the separate Loader split is documented in [docs/loader-analysis.md](docs/loader-analysis.md). Official updates and optional content are tracked separately in [docs/additional-content.md](docs/additional-content.md); they are not part of the baseline.
 
-The public progress artifact in `reports/54540859/report.json` contains measurements, unit sizes, and exact-match metadata only. GitHub Actions validates and uploads it for decomp.dev; it contains no original executable bytes.
+The public progress artifact in `reports/54540859/report.json.gz` (gzip-compressed objdiff report JSON) contains measurements, unit sizes, and exact-match metadata only. GitHub Actions validates it, decompresses it, and uploads `report.json` for decomp.dev; it contains no original executable bytes.
 
 ## Boundaries
 
 This repository contains only original source, analysis notes, symbols, hashes, and tooling. It must never contain game images, extracted executables, keys, firmware, proprietary SDK files, or copyrighted game assets. Contributors must supply their own lawfully obtained game copy locally.
 
 ## Start here
+
+Agents and new contributors: read [docs/START_HERE.md](docs/START_HERE.md) first.
 
 ```sh
 python3 tools/inventory.py /absolute/path/to/your/dump --output work/inventory.json

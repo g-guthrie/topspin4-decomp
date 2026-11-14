@@ -16,6 +16,33 @@ What does exist:
 
 The documented May 2011 Xbox patch enabled D-pad movement and fixed career ranking calculations, camera persistence, presentation bugs, crashes, and several online/world-tour problems. It did not add players, courts, or a new game mode.
 
+## Title Update #1 (supplied locally, 2026-11-13)
+
+The user supplied the title update package locally. It is kept under ignored
+`orig/54540859/tu1/` and is a separate target from the retail baseline.
+
+- Package: STFS `LIVE`, 2,510,848 bytes, SHA-256
+  `892738e0cdad221c8049ba5480ec3616e4f0cf94aca8ca44935f07c4745abce4`, SHA-1
+  `47dc3c29c21ea53064a9074f227395d894b0af25` (XboxUnity lists `95FB3510...`, which
+  does not hash the same bytes; it may be a content hash).
+- Header (`python3 tools/stfs.py info`): title `54540859`, media `60819732`,
+  content type `000B0000`, display name "Top Spin 4 Title Update #1".
+- Contents (`python3 tools/stfs.py list`), SHA-256 of each extracted file:
+
+| File | Bytes | SHA-256 | Notes |
+|---|---:|---|---|
+| Boot.bin | 64 | `220bad74...35a7f` | |
+| CoreTech_Xenon.bin | 66,352 | `db6471dc...0ec03` | XBin; holds the module scheduler config (see docs/gameplay/gp0.md) |
+| default.xexp | 124,928 | `1ba6119f...d3fc7` | XEX2 delta patch for default.xex |
+| Layoutall.bin | 761,068 | `d734143d...502a0` | XBin layouts |
+| Loader_DLL.xexp | 55,296 | `9666df4d...0f657` | XEX2 delta patch |
+| Swing_DLL.xexp | 862,208 | `d5837ef9...726ed` | XEX2 delta patch for the gameplay module |
+| TitleUpdate.arc | 555,570 | `729235a9...0ce26` | `.arc` archive, 56 members (`tools/ts4data/arc.py list`) |
+
+The patched Swing module is a different executable from the matching
+baseline and must get its own hashes and target directory before any
+analysis is counted.
+
 ## Compatibility rule
 
 Never apply a title update or optional-content package merely because it says *Top Spin 4*. It must identify title ID `54540859` and be compatible with media ID `60819732` or explicitly document a supported cross-media relationship.
