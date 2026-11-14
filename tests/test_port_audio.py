@@ -1,7 +1,9 @@
 """Synthetic-byte tests for the FMOD readers used by the browser port (tools/port/fmod_fev.py, fmod_fsb.py,
 audio_export.py).  No game data: every structure is built here from the documented layout."""
 import os
+import shutil
 import struct
+import subprocess
 import sys
 import unittest
 
@@ -204,6 +206,14 @@ class FsbTest(unittest.TestCase):
     def test_safe_name(self):
         self.assertEqual(audio_export.safe_name("HardLargeAngleMediumSpeed_01.w"), "HardLargeAngleMediumSpeed_01")
         self.assertEqual(audio_export.safe_name("02 Da Funk.wav"), "02_Da_Funk")
+
+
+@unittest.skipUnless(shutil.which("node"), "node not installed")
+class WebPresentationTest(unittest.TestCase):
+    def test_node(self):
+        r = subprocess.run([shutil.which("node"), "--test", os.path.join(ROOT, "port", "web", "test", "presentation.test.mjs")],
+                           capture_output=True, text=True, timeout=120)
+        self.assertEqual(r.returncode, 0, r.stdout[-3000:] + r.stderr[-2000:])
 
 
 if __name__ == "__main__":

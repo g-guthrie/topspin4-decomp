@@ -13,6 +13,7 @@ import {
 import { fetchJson, fmt } from "./config.js";
 import { loadGltfRobust } from "./gltfload.js";
 import { attachGameAnimation, gameDrive } from "./players/play_hook.js";
+import { attachPresentation, presentationStart, presentationTick, presentationFrame, presentationCamera } from "./presentation_hook.js";
 
 const NAMES = ["You", "CPU"];
 const BTN_SHOT = 1 | 2 | 4 | 8;
@@ -91,6 +92,7 @@ export class PlayMode {
       this.anims = this.rigs.map((r) => (r.mixer ? new RigAnimator(r, this.lib) : null));
     }
     if (cfg.anim === "game") await attachGameAnimation(this);
+    await attachPresentation(this);
     this.refreshTunables();
     return true;
   }
@@ -139,6 +141,7 @@ export class PlayMode {
     if (rc === 0) {
       this.camSide = Math.sign(this.session.cur.players[0].pos[0]) || -1;
       this.snapCamera();
+      presentationStart(this);
     }
     return rc;
   }
@@ -157,6 +160,7 @@ export class PlayMode {
 
   // ---------------------------------------------------------------------------------------------- per tick (animation triggers)
   onTick(prev, cur, evs) {
+    presentationTick(this, prev, cur, evs);
     const t = this.tun;
     for (let i = 0; i < 2; i++) {
       const p = cur.players[i], s = this.sw[i], an = this.anims[i];
@@ -213,6 +217,7 @@ export class PlayMode {
     if (shot) this.heldUnion |= inp.buttons & (BTN_SHOT | 16);
     else if (this.heldUnion) { this.released[0] = { buttons: this.heldUnion }; this.heldUnion = 0; }
     ses.frame(dt);
+    presentationFrame(this, dt);
     const view = ses.view();
     if (!view) return;
     this.draw(dt, view, inp);
@@ -279,6 +284,7 @@ export class PlayMode {
 
   updateCamera(dt, view) {
     if (!this.follow) return;
+    if (presentationCamera(this, dt, view)) return;
     const side = Math.sign(view.players[0].pos[0]) || this.camSide;
     if (side !== this.camSide) { this.camSide = side; this.snapCamera(); return; }
     const g = cameraGoal({ side, player: view.players[0].pos, ball: view.ball.pos });

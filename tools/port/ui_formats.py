@@ -153,13 +153,21 @@ def parse_abc_font(d: bytes):
 # ------------------------------------------------------------------------------------------- scenes
 
 def decode_positioning(raw: str):
-    """PositioningInfo: 48 bytes, 12 big-endian floats (translation xyz, scale xyz, rotation xyz,
-    pivot xyz; the meaning of the last two triples is unverified)."""
+    """PositioningInfo: big-endian floats in Maya transform order.
+
+    48 bytes (12 floats): translate xyz, scale xyz, rotate xyz (radians), pivot xyz.
+    96 bytes (24 floats): translate, scale, rotate, rotatePivot, scalePivot, shear,
+    rotatePivotTranslate, scalePivotTranslate.  Missing triples default to 0 (scale/shear excepted).
+    """
     b = raw.encode("latin-1") if isinstance(raw, str) else bytes(raw)
-    if len(b) < 48:
-        b = b + b"\0" * (48 - len(b))
-    v = struct.unpack_from(">12f", b, 0)
-    return {"t": list(v[0:3]), "s": list(v[3:6]), "r": list(v[6:9]), "p": list(v[9:12])}
+    n = 24 if len(b) >= 96 else 12
+    if len(b) < 4 * n:
+        b = b + b"\0" * (4 * n - len(b))
+    v = struct.unpack_from(">%df" % n, b, 0)
+    out = {"t": list(v[0:3]), "s": list(v[3:6]), "r": list(v[6:9]), "p": list(v[9:12])}
+    if n == 24:
+        out.update({"sp": list(v[12:15]), "sh": list(v[15:18]), "rpt": list(v[18:21]), "spt": list(v[21:24])})
+    return out
 
 
 def decode_control_data(raw: str):

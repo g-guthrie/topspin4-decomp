@@ -27,8 +27,10 @@ if (!(snap.tick === Number(ticks))) fail('snapshot tick');
 core.startMatch({ seed: 5, players: [{ human: true }, {}] });
 core.step(30);
 core.setInput(0, { buttons: BTN.FLAT }); core.step(20);
-core.setInput(0, { buttons: 0 }); core.step(1);
-const ev = core.pollEvents();
+core.setInput(0, { buttons: 0 });
+// the serve contact comes after the toss countdown and the swing lead (serve.countdown_ticks + serve.lead_ticks)
+const ev = [];
+for (let k = 0; k < 120 && !ev.some((e) => e.type === 'serve'); k++) { core.step(1); ev.push(...core.pollEvents()); }
 if (!ev.some((e) => e.type === 'serve')) fail('human serve did not happen');
 if (core.snapshot().phase !== 'rally') fail('not in rally after the serve');
 // shot trace through the binding: first bounce at the planned point

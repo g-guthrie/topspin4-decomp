@@ -46,7 +46,7 @@ export function buildLights(vj) {
   const sc = main.shadow.camera; sc.left = -30; sc.right = 30; sc.top = 30; sc.bottom = -30; sc.near = 1; sc.far = 200;
   main.shadow.bias = -0.0005;
   const amb = defs.get("LightEnv")?.ambient_to_shadow ?? 0.8;
-  const hemi = new THREE.HemisphereLight(SKY[weather] ?? SKY.Sunny, 0x404038, indoor ? 0.6 : 0.9 * amb);
+  const hemi = new THREE.HemisphereLight(SKY[weather] ?? SKY.Sunny, 0x404038, indoor ? 0.6 : 1.3 * amb);
   g.add(hemi);
   return { group: g, main, sky: new THREE.Color(SKY[weather] ?? SKY.Sunny), weather };
 }
@@ -57,7 +57,7 @@ export class VenueScene {
     this.assets = assets; this.name = name;
     this.base = assets + "venues/" + name + "/";
     this.group = new THREE.Group(); this.group.name = "venue:" + name;
-    this.vj = null; this.crowd = null; this.trackside = null; this.director = null;
+    this.netAnim = false; this.vj = null; this.crowd = null; this.trackside = null; this.director = null;
   }
 
   async load({ status = () => {}, crowd = true, trackside = true, tier = 2, staticScene = true, lights = true } = {}) {
@@ -111,7 +111,10 @@ export class VenueScene {
         if (/^TS_LJ/.test(p.setup)) this.bindings.push([this.director.judges.find((j) => j.name === p.setup).fsm, this.trackside.drivers[i].driver]);
       });
       offIdx.forEach((i, k) => this.bindings.push([this.director.officials[k].fsm, this.trackside.drivers[i].driver]));
-      if (this.trackside.net && this.director.net) this.bindings.push([this.director.net.fsm, this.trackside.net]);
+      // OPEN: the net clips (trackside_net.gltf) are keyed for a chained Filet_D01..09 / G01..09 hierarchy while the
+      // exported net skeleton is flat under B_Hips, so playing them tears the net; it stays in its (correct) bind pose.
+      // The net FSM still runs (director.net) so a fixed export only needs this binding back.
+      if (this.trackside.net && this.director.net && this.netAnim) this.bindings.push([this.director.net.fsm, this.trackside.net]);
     }
     // PORT: the 16 crowd sections reuse 8 clip sets (SE08..15 = SE00..07); start them out of phase
     this.director.update(0);
