@@ -144,3 +144,128 @@ ScResult sc_walk(const ScRow *rows, int nrows, const ScInputs *in, const ScTunin
     }
     return res;
 }
+
+
+/* ---------------------------------------------------------------------------------------------- G8 */
+
+int sc_request_autoswing_call(int is_ai, int released_before_clip)
+{
+    return (is_ai || released_before_clip) ? 0 : 1;
+}
+
+int sc_timing_state_d10(int is_volley, float auto_swing, float auto_volley_swing)
+{
+    return (is_volley ? auto_volley_swing : auto_swing) > 0.5f;
+}
+
+static float lerpf(float a, float b, float w)
+{
+    if (w < 0.0f)
+        w = 0.0f;
+    if (w > 1.0f)
+        w = 1.0f;
+    return a + (b - a) * w;
+}
+
+float sc_eval_auto_swing(float frames, float min_segment_speed)
+{
+    return (frames >= 60.0f && min_segment_speed < 5.0f) ? 1.0f : 0.0f;
+}
+
+float sc_eval_auto_volley_swing(float frames, float hand)
+{
+    /* curve(Hand): 60 up to 0.2, 40 at 0.8, 25 at 1.0 (piecewise linear) */
+    float need;
+    if (hand <= 0.2f)
+        need = 60.0f;
+    else if (hand <= 0.8f)
+        need = lerpf(60.0f, 40.0f, (hand - 0.2f) / 0.6f);
+    else
+        need = lerpf(40.0f, 25.0f, (hand - 0.8f) / 0.2f);
+    return frames >= need ? 1.0f : 0.0f;
+}
+
+float sc_eval_fast_net(float frames, float depth, float hand)
+{
+    return (frames < 40.0f && depth < lerpf(175.0f, 250.0f, hand)) ? 1.0f : 0.0f;
+}
+
+float sc_eval_fast_baseline(float depth, float hand)
+{
+    return depth < lerpf(150.0f, 400.0f, hand) ? 1.0f : 0.0f;
+}
+
+float sc_eval_fast_return(float depth, float ret)
+{
+    return depth < lerpf(200.0f, 400.0f, ret) ? 1.0f : 0.0f;
+}
+
+float sc_eval_perfect_shot(float manual_timing)
+{
+    return (manual_timing >= -0.1f && manual_timing < 0.1f) ? 1.0f : 0.0f;
+}
+
+int sc_fast_ball(int is_return_of_serve, int nearer_net, int frames, float abs_dz, float y)
+{
+    if (!(y < 240.0f))
+        return SC_FAST_NONE;
+    if (is_return_of_serve)       /* PT+0x110 = 65 frames, PT+0x124 = 300 cm */
+        return (frames < 65 && abs_dz < 300.0f) ? SC_FAST_RETURN : SC_FAST_NONE;
+    if (nearer_net)               /* PT+0x114 = 35, PT+0x128 = 200 */
+        return (frames < 35 && abs_dz < 200.0f) ? SC_FAST_NET : SC_FAST_NONE;
+    return (frames < 50 && abs_dz < 250.0f) ? SC_FAST_BASELINE : SC_FAST_NONE;   /* PT+0x118 / 0x12C */
+}
+
+int sc_synth_auto_swing(int fast_kind, int is_volley, int team_mode_2, float eval_return_7c4,
+                        float eval_baseline_7c0, float eval_net_7bc)
+{
+    if (fast_kind == SC_FAST_RETURN && eval_return_7c4 > 0.5f)
+        return 1;
+    if (fast_kind == SC_FAST_BASELINE && eval_baseline_7c0 > 0.5f)
+        return 1;
+    return is_volley && fast_kind == SC_FAST_NET && !team_mode_2 && eval_net_7bc > 0.5f;
+}
+
+int sc_autoswing_gate(float timing_value, int ball_past, int is_smash, int is_volley, int fast_kind)
+{
+    return timing_value > -1.0f || ball_past || is_smash || is_volley || fast_kind != SC_FAST_NONE;
+}
+
+int sc_auto_commit(int frames_to_contact)
+{
+    return frames_to_contact <= 12;
+}
+
+int sc_ai_fatality_first(int difficulty)
+{
+    return difficulty >= 3;
+}
+
+int sc_ai_release_limit(int fast_ball, int bd2)
+{
+    if (fast_ball)
+        return 20;
+    return 18 + (bd2 ? 10 : 0);
+}
+
+int sc_ai_release(int min_frames, int limit)
+{
+    return min_frames >= 0 && min_frames < limit;
+}
+
+float sc_charge_power(int hold_frames)
+{
+    float x = (float)hold_frames / 60.0f;
+    if (x > 1.25f)
+        x = 1.25f;
+    if (x < 0.0f)
+        x = 0.0f;
+    return x / 1.25f;
+}
+
+int sc_power_tier(float power)
+{
+    if (power < 0.15f)
+        return 0;
+    return power < 0.7f ? 1 : 2;
+}

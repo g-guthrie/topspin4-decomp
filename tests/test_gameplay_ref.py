@@ -20,6 +20,7 @@ MODELS = {
     "swing_category": ["swing_category.c", "test_swing_category.c"],
     "aim": ["aim.c", "test_aim.c"],
     "timing_fatigue": ["timing.c", "fatigue.c", "test_timing_fatigue.c"],
+    "responsiveness": ["responsiveness.c", "test_responsiveness.c"],
 }
 
 

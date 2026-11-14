@@ -80,6 +80,8 @@ def main(argv=None):
     ap.add_argument("--missing-from", metavar="REGISTER_CPP",
                     help="ReXGlue ts4_register.cpp from a previous codegen: add every function start "
                          "it lacks, without a size, so ReXGlue's analysis sizes it")
+    ap.add_argument("--exclude", help="comma-separated hex addresses never to emit (entries that would "
+                                      "split a function whose loop branches back across the split)")
     ap.add_argument("--setjmp", type=lambda x: int(x, 0))
     ap.add_argument("--longjmp", type=lambda x: int(x, 0))
     a = ap.parse_args(argv)
@@ -96,6 +98,9 @@ def main(argv=None):
             if addr not in have and addr not in keep:
                 keep[addr] = (addr, 0)
         funcs = sorted(keep.values())
+    if a.exclude:
+        drop = {int(x, 16) for x in a.exclude.split(",")}
+        funcs = [f for f in funcs if f[0] not in drop]
     sw = []
     if not a.no_switches:
         path = a.switches

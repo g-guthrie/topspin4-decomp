@@ -117,4 +117,56 @@ ScResult sc_walk(const ScRow *rows, int nrows, const ScInputs *in, const ScTunin
                  int autoswing_call, int latched, int autoswung, int window, int limit,
                  ScQuery q, void *user, const uint32_t *levels, int nlevels);
 
+/* ------------------------------------------------------------------------------------------------
+ * G8: request modes, automatic swings, fast-ball flags, AI release and the charge
+ * (docs/gameplay/controls-and-shot-selection.md s18).  C = read from code, D = data, I = inferred.
+ * ---------------------------------------------------------------------------------------------- */
+
+/* Which walk a request runs (fn_886B3CF8 states, C).  The AI always runs the Normal walk from its
+ * release; a human runs it after a release before any clip started (state 0xF6EB6636), and the
+ * autoswing walk (fn_886B0380 -> fn_886B0250(ctrl, 1)) while the button is held or for a
+ * synthesized auto swing.  Returns the autoswing_call argument of sc_mode / sc_walk. */
+int sc_request_autoswing_call(int is_ai, int released_before_clip);
+
+/* fn_886B0380: TimingState S+0xD10 = (volley ? AutoVolleySwing S+0x7B4 : AutoSwing S+0x7B0) > 0.5. */
+int sc_timing_state_d10(int is_volley, float auto_swing, float auto_volley_swing);
+
+/* Evaluation graphs (Expressions.bin, D).  frames = S+0xCF0 (frames from the opponent's launch to
+ * the ball reaching the player, filled by fn_88661B60), depth = S+0xCF4 (cm), hand/ret = ratings 0..1. */
+float sc_eval_auto_swing(float frames, float min_segment_speed);       /* graph 179 -> S+0x7B0 */
+float sc_eval_auto_volley_swing(float frames, float hand);              /* graph 174 -> S+0x7B4 */
+float sc_eval_fast_net(float frames, float depth, float hand);          /* graph 175 -> S+0x7BC */
+float sc_eval_fast_baseline(float depth, float hand);                   /* graph 176 -> S+0x7C0 */
+float sc_eval_fast_return(float depth, float ret);                      /* graph 177 -> S+0x7C4 */
+float sc_eval_perfect_shot(float manual_timing);                        /* graph 168 -> S+0x7D4 */
+
+/* Planner_Reset fn_886BA768 fast-ball flags (C).  frames = frames to the ball sample nearest the
+ * player, abs_dz = |dz| cm, y = that sample's height.  Returns 0 none, 1 IsFastBall S+0x5DD (return
+ * of serve), 2 S+0x5DE (player nearer the net), 3 IsBaselineFastBall S+0x5DF. */
+enum { SC_FAST_NONE = 0, SC_FAST_RETURN = 1, SC_FAST_NET = 2, SC_FAST_BASELINE = 3 };
+int sc_fast_ball(int is_return_of_serve, int nearer_net, int frames, float abs_dz, float y);
+
+/* Synthesized auto swing in state 0x93E5E96D (C): with no button, the request still enters the
+ * waiting state (Raise on the Flat ShotTriggers entries, charge stays 0) when ctrl+0x38 > 0 and */
+int sc_synth_auto_swing(int fast_kind, int is_volley, int team_mode_2, float eval_return_7c4,
+                        float eval_baseline_7c0, float eval_net_7bc);
+
+/* fn_8866B5B8: the human autoswing walk may run this frame (C).  timing_value = S+0xD08 (PT+0x5C0 = -1
+ * is 40 frames before the ball), ball_past = prediction snapshot pred+0x5E0 in front of the player (I). */
+int sc_autoswing_gate(float timing_value, int ball_past, int is_smash, int is_volley, int fast_kind);
+
+/* The 12-frame auto-commit (vtbl +0x34, PT+0x740, C): contact_frame - now <= 12. */
+int sc_auto_commit(int frames_to_contact);
+
+/* AI release fn_886AE0E8 (C).  Fatality first at difficulty levels 3-5 (aitrig+0xA8 = S+0x3F0 from
+ * graph 139/140, D); otherwise it releases when the best probed category is due in [0, limit). */
+int sc_ai_fatality_first(int difficulty);
+int sc_ai_release_limit(int fast_ball, int bd2);   /* 20 for fast balls, else PT+0x6F4 18 (+10 with S+0xBD2) */
+int sc_ai_release(int min_frames, int limit);
+
+/* Charge (fn_8869D720, C + D): power = curve cfg+0x8FC (frames / 60), keys [0..1.25 -> 0..1];
+ * the InstantRocket curve cfg+0x914 has the same keys.  Tier: 0 Finesse < 0.15 <= 1 Medium < 0.7 <= 2 Powerful. */
+float sc_charge_power(int hold_frames);
+int sc_power_tier(float power);
+
 #endif

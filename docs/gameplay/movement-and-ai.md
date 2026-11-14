@@ -254,3 +254,178 @@ See `docs/gameplay/movement-symbols.csv` (name, confidence, evidence). Not byte-
 
 ## D. Unknowns
 Names of hashed states in fn_886B3CF8 (several resolve by CRC: LetIn, LetOut, Net, Flat, Good, Idle, Rush, Jog, Left, Human, Volley, Baseline, Receiver); exit conditions of rows 10-18 (the predicates they call are now read, A.4b/A.4c); aim auto-target maths (fn_8869BEF0); fn_88699300 per-state prepare bodies; where the stick `bb+0x448/0x44c` is written for humans.
+
+## E. G9: movement responsiveness (stick to feet)
+
+Owner G9. Grades: **C** = read from code, **D** = read from data, **I** = inferred. Frames are 60 Hz game frames.
+The animation side (root tracks, cross-fade, start, stop and exit-window tables) is in movement-and-animation.md s7.
+Reference C: `ref/gameplay/responsiveness.c`.
+
+### E.1 Per-frame order and the stick path (C)
+
+* Call chain: `fn_886C27F8` → `fn_886C1ED8` (gameplay frame step) → `fn_886C1E80` → `fn_886C1628` (match state
+  machine) → `fn_886C15A0` (per-player loop).
+* For each player, `fn_886C15A0` runs `fn_8869C010` (Mover: RequiredMove), then `fn_8866CDC8` (Mover velocity, 3-frame
+  mean), then `fn_886C0050` (locomotion component). `fn_886C0050` calls `fn_8866F740` (pre-hit freeze, E.4) and then
+  the locomotion request `fn_886BEEE8`, which queues 2 steps per call into a ring of 20 × 0x30 through `fn_886E08E8` /
+  `fn_886E4B70`.
+* So the stick, RequiredMove and the locomotion request are all updated in the **same frame** (0 frames inside the
+  player update).
+* Not found: where the InputState update (pad → `Stick_Move`) runs relative to `fn_886C1ED8`, and when the queued
+  steps are consumed by the animation. These decide whether the end-to-end figure is 0 or 1 frame (OPEN s11 R18).
+* **`fn_8869C010` Mover_UpdateRequiredMove** (C). `Mover+0x14` → `S+0x9A0` (MoveState). For MoveMode 0x9E51242B
+  (stick):
+  * v = (Stick_Move.Y, 0, -Stick_Move.X)
+  * RequiredMove.Power `S+0x9D4` = min(|v|, 1)
+  * LocalDirection `S+0x9D0` = atan2(v.x, v.z), plus π for the far-side tag 0xA2EDA1E7, wrapped
+  * the pair is copied to `S+0x9D8/0x9DC`
+  * MoveMode 0x8999A0BF writes zero power; 0x487570E4 steers to MoveGoal `S+0x9A0`.
+  * C: `rs_stick_to_required_move`.
+  * Correction: the "aim+0x30" output in aiming s6 and controls-and-shot-selection is this RequiredMove block.
+* **No stick smoothing** (C + D). `Stick_Move` has an optional filter in `fn_88910F50` (at 0x889110BC). It runs only
+  when item byte +0x2A is set. The loader `fn_88910038` copies that byte from data +0x1E, which is 0 in Settings.bin
+  (record at file 0x2C514). If it were on, it would be an EMA with τ = 0.6 · lerp(10, 30, (1 - cos Δθ)/2) frames. As
+  shipped, the only shaping is the input mapper's 0.4 radial dead zone.
+
+### E.2 Who puts a player in stick mode (C)
+
+| writer | sets | when |
+|---|---|---|
+| planner enter `fn_886AA280`, state 1 (0x886AA330) | stick, and calls `fn_8869C010` at once; also runs the reaction graph `fn_886A3868` | window state 1 |
+| planner enter `fn_886AA280`, state 2 (0x886AA384) | stick, override 1.0, calls `fn_8869C010` | window state 2 |
+| repositioning action enter `fn_8868C660` (vtable 0x880F4708, +0x8 update `fn_886BB0A8`) | stick for a human, stand for the AI | after the player's own hit |
+| human swing-trigger slot `fn_886624C8`; `fn_8866D110` (vtable 0x880F4B10, also MoveVector); `fn_88670950`; `fn_886BDCC0` | stick | swing/trigger paths |
+
+* The planner `fn_886BD690` runs only while `match+0x7C` == own team, i.e. while this player's team is the next hitter
+  (`fn_886BF260`, C).
+* After a player's own hit, the planner (and with it the Turn, Stop, Replan and Hold states) stops driving him. His
+  stick then goes through the repositioning action (I: `match+0x7C` flips at contact).
+* Open: how the planner's own RequiredMove survives `fn_8869C010` in states 3 and up while MoveMode is still stick.
+  The answer needs the full frame order (R18).
+
+### E.3 Reaction delay `profile+0x1DC` (C; corrects A.7 item 1)
+
+* State 0 (`fn_886B8468` at 0x886B8918) reads `(ctx+0x50)+0x28 → +0x1DC` (float). It leaves when
+  `clock - (team+0x24)+0x68 >= value`. In **doubles** (`team+0x2C == 2`) it leaves at once; "opponent mode 2" in
+  A.7 was a misreading. C: `rs_reaction_done`.
+* Writers:
+  * the zeroing constructor `fn_886A7AC8` (pool of 0x2AC-byte records, `fn_8826AE38`)
+  * the copy `fn_886B81E0`, whose three callers are all guarded by `!ctx+0x10` (AI only).
+* **Humans: 0 frames.** This is I, strong: no human writer was found, but writers using vector stores were not
+  excluded. Runtime check R19.
+* AI: the 4th output of positioning graphs 141-145, 147-150 and 155 (D).
+  * Graph 141: curve(x, 1 beyond |x| > 1000-1200) × lerp(15 → 5 by Speed, 10 → 0 by vigor) × curve(#d30f0aca
+    250 → 300 maps to 0 → 1), capped at 10 by #21e13815. #d30f0aca = AI record +0x1B4, a distance written in
+    `fn_886B81E0`.
+  * Graph 147: constant 1.0.
+  * Graph 148: TimingState-based.
+  * So the AI waits 0-15 frames.
+  * Not done: which graph each difficulty uses (open, OPEN s4).
+
+### E.4 Pre-hit freeze `fn_8866F740` (C + D; new)
+
+* Applies in match mode (`world+0x78` mode 2) while the **opponent** is the next hitter (`match+0x7C` != own team).
+  `frames_to_hit` = the opponent's planned hit frame (`fn_8865EF98`) minus the clock. Flag `S+0x9F0`.
+* While `frames_to_hit < cfg+0xA88` (#98294782 = **20**, data):
+  * First frozen frame: `S+0x9D8` is latched into `S+0x9D0` and `S+0x9E8`.
+  * After that, every frame:
+    * if `frames_to_hit > cfg+0xA8C` (#5f4a986d = **10**, data) **and** the new power < 0.1 **and** the latched power
+      > 0.1: latch "stopped" (`L+0x15`) and zero all three powers for the rest of the window
+    * otherwise force the latched direction and power.
+  * One further case (`match+0x32A`, a designated player) stands still for the whole window.
+  * C: `rs_prehit_freeze`.
+* In plain terms:
+  * In the last 20 frames before the opponent's hit, a recovering player keeps the direction and speed he had at
+    frame -20. Steering is ignored.
+  * Letting go of the stick between frames -20 and -11 stops him dead until the hit.
+  * Letting go in the last 10 frames does nothing.
+* The same constant `cfg+0xA88` and the same `fn_8865EF98` gate the net-rush decider (E.5). The freeze affects
+  every recovering human, not only net rushers.
+
+### E.5 Net rush: conditions checked against `fn_8869B928` (C)
+
+The 13 conditions of retune-baseline s8e are confirmed, with these precise readings:
+
+| # | condition | code | reading |
+|---|---|---|---|
+| 0 (new) | decider gate | 0x8869B950: byte `(ctx+0x1C)+0x4C → +0x1A3` | 0 skips the decider; the mode is left as it is (name unknown) |
+| 1 | opponent's hit planned | `fn_8865EC70` at 0x8869BA2C | as documented |
+| 2 | already at the net | 0x8869B964: x > -cfg (`r31+0xC4`, 500) | mode 0 |
+| 3 | stick released | 0x8869B9B8: `S+0x9DC` < pool+0x2AC (0.1) | mode 0 |
+| 4 | angle | 0x8869BA78: \|angle\| < `r31+0xC0` × pool+0x184 (degrees to radians, 40°) | |
+| 5 | distance | 0x8869BAA0: squared distance > `r31+0xB0`² (175 cm) | |
+| 6 | box or RB | 0x8869B9D4-0x8869BA18 box (`r31+0x10/0x18/0x20/0x28`); 0x8869BAD4 RB `S+0x4E2`; play mode 1 at 0x8869BB18 | box counts only outside play mode 1 |
+| 7 | event timing | 0x8869BB34-0x8869BB88 | **only on a change to mode 2**: if `(planned - clock)` < cfg+0xA88 (20), unsigned, the previous mode is kept; re-tested every frame, so the rush starts on the first frame outside the window or once the hit has passed |
+| 8 | behaviour flag | `7440a9da`, 5 frames | as documented |
+| 9-13 | push cancel, Out window, sprint, VolleySpeedCoef, put-away | unchanged | |
+| 14 (new) | pre-hit freeze | `fn_8866F740` (E.4) | a running rush is frozen in its direction for the last 20 frames; releasing the stick at -20..-11 stops it |
+| 15 (new) | output | 0x8869BBB4: `S+0xA2D` = (mode != 0) | the "repositioning active" flag |
+
+C: `rs_rush_mode`.
+
+**Fastest legal approach from the baseline** (x = -1189 cm; the box starts at -1100, so RB is needed; I for the sum):
+
+* contact
+* +27 / +36 / +44 frames: groundstroke Out window, p10 / median / p90 (movement-and-animation s7.5)
+* +0..5 frames: behaviour flag rate limit
+* if the opponent's hit is fewer than 20 frames away at that moment, wait until it passes
+* Rush_Front from frame 0: 5 / 25 / 100 cm at 14-18 / 25-26 / 42-43 frames, then 9.6 cm/frame × the RushSpeedCoef
+  play rate
+* the remaining 589 cm to x = -500 take about 61 frames.
+
+Total: about 27 + 105 = **132 frames** (2.2 s) at best, about 141 at the median Out window. The decider stops at
+x > -500 (mode 0).
+
+### E.6 Timelines from contact to the first free step (D + C; I where marked)
+
+**Typical forehand** (groundstroke median; ball back from the opponent at about +N frames):
+
+| frame | what happens | stick |
+|---|---|---|
+| -12 | auto-commit: shot, power, aim frozen | aim changes ignored |
+| 0 | contact; the next hitter becomes the opponent (I), so the planner stops and the repositioning action owns the stick | moves the RequiredMove only |
+| 0..+40 after the stamp | sideways-push cancel (`fn_886795C8`; TU1: only a push held since the stamp) | outward sideways push zeroed |
+| 0..+36 (p10 27, p90 44) | swing tail; the root drifts 76 cm (median) by itself at about 1.2-1.4 cm/frame near the end | ignored by the animation |
+| +36 | Out window opens; a locomotion transition is legal | |
+| +38..+56 | first 5 cm of stick-driven travel: Tr_* bridging clips reach 5 cm in 1-3 frames; cycle starts in 2-20 (s7.3) | |
+| N-20..N | pre-hit freeze (E.4) | latched |
+
+The replan check (states 4/6/12/16, `fn_886A9678`) runs only while this player is the next hitter, i.e. on the
+approach before contact, not after it (C for the gate, I for the flip at contact).
+
+With a typical baseline exchange (N about 60-90 frames), the player has about N - 20 - 36 = **4-34 free frames** of
+steering before the freeze latches his move.
+
+**Typical volley** (volley median): Out at +38 (p10 29, p90 51), root drift 83 cm, first 5 cm at about +40..+58. In
+a fast net exchange (N about 30-50) the freeze window (N-20) starts **before** the Out window. The player never gets
+a free frame: he leaves the volley clip on whatever direction was latched at N-20. That latch is taken from
+`S+0x9D8`, which follows the stick even while the clip is busy (I).
+
+### E.7 Everything else that delays, smooths, quantises or ignores input
+
+| rule | value | kind | where | grade |
+|---|---|---|---|---|
+| radial dead zone | 0.4 | data | input mapper | D (controls s3) |
+| Stick_Move filter | off (would be an EMA, τ 6-18 frames) | data flag 0 | `fn_88910F50`, Settings.bin +0x1E | C + D |
+| stick → RequiredMove → request | 0 frames | code order | `fn_886C15A0` | C |
+| input sampling vs. gameplay step | 0 or 1 frame | code order | not found | open (R18) |
+| speed override hysteresis | 0.4 | hard-coded | pool+0x118, `lo_override_update` | C |
+| behaviour (Rush) flag | at most every 5 frames | data `7440a9da` | repositioning s3.1 | C + D |
+| Mover velocity | 3-frame mean (planner's view only) | hard-coded | `fn_8866CDC8` | C |
+| root track | one sample about every 4 frames, linear in between | clip data | `fn_88644CE8` | C + D |
+| pose cross-fade | linear, duration unknown | code + unknown | `fn_886D89E8` | C / open (R16) |
+| play-rate ramp | 10 or 15 frames on 4 rules | data | TransitionRule Parameters | C + D |
+| start clip entry | the first step is the clip's own acceleration: 2-21 frames to 5 cm | clip data | movement-and-animation s7.3 | D |
+| AI reaction wait | 0-15 frames (human 0) | graph output | `profile+0x1DC` | C + D |
+| pre-hit freeze | 20 / 10 frames | data | `fn_8866F740`, cfg+0xA88/0xA8C | C + D |
+| ServeWalk constraint | direction snapped to ±π/2 inside (π/4, 3π/4), else power 0 | hard-coded | `fn_8869C868` (ConstrainedMove, state 0xA6A1B2AE, I: serve walk) | C |
+
+**Best-case game-logic latency** from a stick deflection to root motion:
+
+* 0 frames in the player update, plus 0-1 frame of input order (open)
+* the first root displacement on the first frame of the new clip, weighted by the cross-fade
+* 5 cm after 2 frames (Jog_Left from its entry, no fade) to 7-8 frames (with a 15-frame fade) for a run start
+* 20 frames for a sidestep start
+* 14-22 frames for a sprint start.
+
+The pad-to-screen path (polling, render, vsync) is outside game logic and is not covered here.

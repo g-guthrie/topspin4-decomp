@@ -450,3 +450,132 @@ TS4_MATCHING_DIR=work/matching-b9 python3 tools/fn_asm.py fn_886C9F08 fn_886AFDF
 cc -std=c11 -Wall -Wextra -Werror -o /tmp/tas ref/gameplay/test_anim_select.c ref/gameplay/anim_select.c -lm && /tmp/tas
 python3 -m unittest tests.test_gameplay_ref
 ```
+
+## 7. G9: root motion, cross-fade, starts, stops and swing exit windows
+
+Owner G9 (movement responsiveness). Grades: **C** = read from code, **D** = read from data, **I** = inferred.
+Frames are 60 Hz game frames at play rate 1. Clip-local root axes: +x forward, +z left (Right = -z).
+
+### 7.1 Where the root motion lives (C + D)
+
+* Root motion is **not** in the Havok files. AnimationsDB (`70155255.bin`, sha256 `3a3a98cf71d1c82479bd5842ac596a599d5e90fa12c22e69e8c65f64aaf7a3dc`) holds it as a
+  2-D track per take. The root's reflected fields (real names, from the type dictionary) are:
+
+  | root offset | field | row |
+  |---|---|---|
+  | +0x50 | Animations | 0x8C |
+  | +0x60 | RTTakeList | 0x1C: MainHkxIndex, SplitHkxIndex, SplitPos +0x8, ExtractPosition_IndexBegin +0xC (u32), ExtractPosition_SampleCountMinusOne +0x10 (f32), XStart +0x14, ZStart +0x18 |
+  | +0x6C | HkxList | 0x10 |
+  | +0x78 | ExtractPositionList | {X, Z} f32 |
+
+  `docs/port/clip-map.md` calls the +0x60 table "HkxList" and the +0x6C table "ExtractPositionList"; the names above
+  are the reflected ones (D). That file is outside G9's area and is not edited here.
+* `fn_8864A770` sets `animset+0xAC = root+0x78` (C).
+* `fn_88644CE8` **RootTrack_SampleDelta** (C): for a take (`r4`) and two phases t1, t2 it returns
+  P(t2) - P(t1), where P(t) = lerp(E[i], E[i+1], u - i), u = t * SampleCountMinusOne, i = trunc(u), E = the take's
+  entries from IndexBegin. There is no clamp; at t = 1 the entry after the last is read with weight 0.
+  C: `rs_root_delta` (ref/gameplay/responsiveness.c).
+* About one sample every 4 frames (D: samples / frames over all clips), so the root velocity is piecewise constant over
+  about 4-frame segments.
+* `fn_886455A0` samples one clip; `fn_886457E0` sums a blend: Σ weight(+0x14) · scale(+0x24) · R(yaw +0x10) · Δ, with
+  sin/cos polynomials at 0x880D1B00 / 0x880D1B10 (C).
+* "blend" clips (Element<Blend> poly) carry two RTTake rows on one clock: a slow row and a fast row. Examples:
+  Sidesteps_Right rows 38/39 travel 410 / 848 cm in 178 frames; Jog_Front_IK rows 1067/1066 travel 762 / 1115 cm;
+  Backsteps_Back rows 48/49 travel 293 / 530 cm (D). The weight between them is not traced (I: a speed key).
+* Women's records have their own RTTake rows. Their travel is 0.970-1.019 of the men's over 276 clip pairs (D).
+
+Dump: `data/gameplay/root_motion.yaml` gives, for every Men locomotion clip, the cumulative xz per frame for row 0
+(and row 1 for blend clips), plus the entry frame, the 5 / 25 / 100 cm milestones and the cycle speed. For swing clips it
+gives contact, the Out frame, travel before and after, and speeds. Raw tracks are not committed.
+Generator: `python3 -I tools/ts4data/root_motion.py --core work/disc/core_all`; `--clip NAME` prints one clip frame
+by frame.
+
+### 7.2 Cross-fade and Allow parameters (C, corrects s2.2)
+
+* `fn_886D89E8` **AnimNode_UpdateBlend** walks the node chain (via +0x34). For each node the weight is
+  `w = (clock - node+0x24) / node+0x2C`, clamped to [0, 1]. It is **linear**, and the node before it gets 1 - w (C).
+  The writer of the duration `node+0x2C` was not found. The event-0 Durations of the locomotion clips are 10-19 frames
+  (I: the source).
+* The TransitionSpecialRule `Allow` Parameters `{HighViv, LowViv, BlendInFrameCount, BlendOutFrameCount}` are a
+  **play-rate ramp**, not the cross-fade. Over BlendIn frames the rate goes toward the Low/High vivacity coefficient,
+  chosen by anim iface +0x3F8 (= Vivacity S+0x9F4). Over BlendOut frames it goes back (C). Only 4 of the 128 rules
+  have Parameters (one 10, three 15). The idle-to-locomotion rule 101 has none (D).
+* So "a 15-frame TransitionRuleList blend" applies only to the four rules with Parameters, and it changes speed, not
+  the pose weight. The pose cross-fade duration is open (OPEN s11 R16).
+
+### 7.3 Standing starts (D; entry phase I)
+
+* Idle_Baseline (absolute sub-group 73) and Idle_Return (74) go to every Jog, Sidesteps, Backsteps and Rush sector
+  through rule 101 (Allow, SourceEvent 0 → DestEvent 0, no Parameters). There are no Idle_To_Jog_Front/Back clips. A
+  start enters the cycle clip at its TransitionEvent[0] window (I: start phase = TE[0].Position).
+* Milestones are counted from the entry frame. Each cell is frames to 5 / 25 / 100 cm. "no fade" is the raw clip.
+  "+15 fade" weights frame k's root delta by min(1, k/15), which is the linear cross-fade above with an assumed
+  15-frame duration (I).
+
+  | case | clip (row 0) | entry frame | no fade | +15 fade | cycle speed |
+  |---|---|---|---|---|---|
+  | side, slow | Sidesteps_Right / _Left | 17 / 12 | 20/28/56 · 13/31/61 | 20/28/56 · 20/32/62 | 1.78 m/s |
+  | side, run | Jog_Right / Jog_Left | 44 / 75 | 4/11/30 · 2/9/24 | 8/16/33 · 7/13/29 | 3.41-3.48 m/s |
+  | side, sprint | Rush_Right / Rush_Left | 0 | 21/29/46 · 20/29/43 | 22/29/46 · 21/29/43 | 5.73-5.85 m/s |
+  | forward, run | Jog_Front_IK | 51 | 12/21/41 | 14/22/41 | 3.46 m/s |
+  | forward, sprint | Rush_Front | 0 | 14/25/42 | 18/26/43 | 5.75 m/s |
+  | back, slow | Backsteps_Back | 23 | 7/21/50 | 11/24/52 | 1.82 m/s |
+  | back, sprint | Rush_Back | 0 | 8/29/45 | 14/30/45 | 5.76 m/s |
+
+  Diagonals, from entry: Jog_BackRight 9/23/46, Jog_FrontLeft 5/14/36.
+* There is no forward "walk" clip: the slow sets are Sidesteps (sideways) and Backsteps (back). Forward always uses
+  Jog. Which set a human's free stick gets (speed override S+0xDE8, move-set choice in `fn_886E08E8`) is not traced (I).
+* Sprint is no faster off the mark: Rush clips start at frame 0 with a slow first step, and reach 1 m in 42-46 frames.
+  That is about the same as Jog (24-41 frames). Rush only pulls ahead after about 1 m.
+
+### 7.4 Stops and reversals (D)
+
+Stop clips (Tr_*_To_Stand_Std, row 0). "90 %" is the frame at which 90 % of the total travel is done. "still" is the
+last frame with more than 0.3 cm/frame.
+
+| from | frames | travel | entry speed | 90 % | still |
+|---|---|---|---|---|---|
+| Jog_Front | 44 | 57 cm | 2.6 cm/f | 33 | 43 |
+| Sidesteps (6 directions) | 41-43 | 22-45 cm | 1.7-2.9 cm/f | 17-33 | 35-42 |
+| Backsteps_Back | 45 | 54 cm | 3.2 cm/f | 32 | 44 |
+| Jog_FrontRight / FrontLeft | 48 | 115-119 cm | 4.8-6.5 cm/f | 27 | 43 |
+| Jog_BackRight / BackLeft | 67-72 | 151-153 cm | 4.3-4.6 cm/f | 40 | 62-71 |
+| Jog_Right_FH / Jog_Left_BH To_Idle | 85-92 | 57-137 cm | 4.9-5.8 cm/f | 11-25 | 84-91 |
+
+Reversals (row 0, distance projected on the initial direction):
+
+| clip | frames | overshoot (peak) | at frame | back past the start at | end |
+|---|---|---|---|---|---|
+| Tr_Jog_Front → Jog_Back_TurnRight / TurnLeft | 88 / 106 | 125 / 142 cm | 25 / 29 | 55 / 59 | -275 / -371 cm |
+| Tr_Jog_Front → Backsteps_Back | 145 | 27 cm | 20 | 39 | -373 cm |
+| Tr_Sidesteps_Right → Jog_Left_Normal | 88 | 79 cm | 24 | 54 | -209 cm |
+| Tr_Jog_Right → Sidesteps_Left | 142 | 134 cm | 42 | 96 | -165 cm |
+
+So a full reversal from a jog takes 39-96 frames before the player is back where he turned. Most of that time is the
+clip's own overshoot. The planner's 10-frame Turn hold (P+0x128) only adds to it while the planner drives the player
+(only while this player's team is the next hitter, movement-and-ai E.2).
+
+### 7.5 Swing exit windows (D; busy test C)
+
+* Per clip, the exit window is the first TransitionEvent with Out set and In clear. It runs from Position to phase
+  1.0. The contact frame is the swing's hit AnimEvent. Tail = Out frame - contact frame, at rate 1.
+
+  | class | n | tail p10/50/90 (frames) | root travel contact→Out p50 | notes |
+  |---|---|---|---|---|
+  | groundstroke | 461 | 27/36/44 | 76 cm | min -57 (window opens before contact), max 66 |
+  | return | 46 | 19/26/37 | 37 cm | |
+  | reach | 89 | 26/45/60 | 154 cm | |
+  | volley | 151 | 29/38/51 | 83 cm | |
+  | smash | 19 | 33/42/58 | 94 cm | |
+  | put-away | 37 | 37/45/53 | 99 cm | 3 TransitionEvents |
+  | serve | 11 | 24/34/39 | 64 cm | |
+  | dive | 2 | 124 | 306 cm | |
+
+* The root keeps moving through the tail: about 1.2-1.4 cm/frame at the window (median). The stick does not steer it.
+* Who checks the window: the transition legality predicate `fn_886C5A08` (matrix root+0x44, rule type Allow
+  0x575896F4, event index checks; C). The busy time `fn_886CD3C8` (C) works only when the clip has exactly 2
+  TransitionEvents: `busy = max(0, (TE1.Position - node+0x14)(F-1) + node+0x24 - node+0x18)`. Put-away clips (3 TEs)
+  therefore read as "not busy". Callers: `fn_88688948` (lead = busy + 15), `fn_8868B4E8`, `fn_88691E90`,
+  `fn_88699300` (twice), `fn_886AA280`.
+* No input cuts the tail short. The only exit is a matrix transition at an Out event, and no rule reads the stick to
+  open one early (C, within the readers above; a runtime check is listed in OPEN s11 R17).

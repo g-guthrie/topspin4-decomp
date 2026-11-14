@@ -1910,6 +1910,34 @@ swing_category_rules:
           skill_id: null
           easy_autoswing: 1
           e0dcd0b9: 0
+  mode_selection:
+    Normal: "fn_886B0250(ctrl, 0): human after a button release before any clip started (state 0xF6EB6636); the AI always (its release fn_886AE0E8 also tries Fatality first at difficulty 3-5, S+0x3F0)"
+    AutoSwingGood: "fn_886B0250(ctrl, 1) from fn_886B0380 (human, button still held or synthesized auto swing, gate fn_8866B5B8) with S+0xD10 = AutoSwing/AutoVolleySwing evaluation > 0.5, or SlowDown S+0x7CC > 0.5"
+    AutoSwingBad: "fn_886B0250(ctrl, 1) otherwise"
+    no_walk: "returns 0 at end of point (match state 0x85E3E155), with S+0xFBC EOP set, or (pctx+0x48)+0x78->[0] == 2 with incoming record 0x280AE84D"
+  class_selection: "fn_886B01A8 by S+0x35C (written by fn_886872A0): Smash; volley TopSpin -> VolleyPower, other volley -> VolleyStandard; Slice/DropShot -> Slice; RequireFinesse (power < 0.15) -> FlatFinesse; else FlatPower (TopSpin and Lob groundstrokes use the Flat lists).  Unknown key -> no walk"
+  list_descriptor_pt_offset:
+    Normal:
+      FlatPower: 0x4d8
+      FlatFinesse: 0x4e4
+      Slice: 0x4f0
+      VolleyStandard: 0x4fc
+      VolleyPower: 0x508
+      Smash: 0x514
+    AutoSwingGood:
+      FlatPower: 0x520
+      FlatFinesse: 0x52c
+      Slice: 0x538
+      VolleyStandard: 0x544
+      VolleyPower: 0x550
+      Smash: 0x55c
+    AutoSwingBad:
+      FlatPower: 0x568
+      FlatFinesse: 0x574
+      Slice: 0x580
+      VolleyStandard: 0x58c
+      VolleyPower: 0x598
+      Smash: 0x5a4
   conditions:
     42864090: "min(MinSpeed) > PT+0x1B4 and not (PT+0x5C8 < ManualShotTiming < PT+0x5C4)"
     60d5b606: "min(LeftLine.MinSpeed, RightLine.MinSpeed) > PT+0x1B4"

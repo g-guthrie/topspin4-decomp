@@ -827,7 +827,8 @@ Shipped rows (Normal mode; the AutoSwing lists are similar, see the YAML):
 | SkillRequired c42ef3fe | `fn_8868F0D8(SkillId)` |
 
 So a **Fatality (put-away) swing** is played by a human when the shot is not a tap (power > 0.15),
-the player is not following to the net with RB inside 3 m of it, the class is FlatPower or FlatFinesse
+the player is not following to the net with RB inside the central corridor |world z| < 300 cm
+(lateral, not distance to the net; corrected by G8, s18.7), the class is FlatPower or FlatFinesse
 (not Slice, volley or smash), and a clip of category Fatality matches the other keys at some
 preference level. The four unnamed conditions are named in `shot_tree.py` by their tests only.
 
@@ -845,3 +846,243 @@ preference level. The four unnamed conditions are named in `shot_tree.py` by the
 Still open: the state hashes (s12.1), the inside-out geometry and its skill (s12.5-6), the consumer
 of `00236a48`, the InputMapper `+0x18/+0x24` blocks, and the names of the conditions 693616c3,
 60d5b606, de050fd0, 42864090, 4041760a.
+
+## 18. Swing modes, automatic swings, special swings and the charge (agent G8)
+
+Grades: **C** = read from code instruction by instruction (`Swing_DLL.dll`, capstone), **D** = read from
+disc data (dumps named below), **I** = inferred. Reference model: `ref/gameplay/swing_category.{h,c}`,
+G8 section (`sc_request_autoswing_call`, `sc_eval_*`, `sc_fast_ball`, `sc_autoswing_gate`,
+`sc_ai_*`, `sc_charge_power`), tests in `test_swing_category.c`. Dumps: `data/gameplay/shot_tree.yaml`
+`swing_category_rules` (now with `mode_selection`, `class_selection`, `list_descriptor_pt_offset`),
+`data/gameplay/special_swings.yaml`, `data/gameplay/charge_table.yaml`.
+
+### 18.1 The request state machine (`fn_886B3CF8`, C)
+
+| state hash | role | what happens each frame |
+|---|---|---|
+| `0x93E5E96D` | pre-wait | IsVolley = S+0x5B4 > 0.5 when S+0xBC8 == -1; analysers ctrl+0x328 (volley), +0x3B0 (when ctrl+0x3E) or +0x36C. Goes to AFAF when the button is held (trigger vtbl +0x28), or when a synthesized auto swing holds (18.3) and ctrl+0x38 > 0. Skipped when match mode 2 and the record is Net `0xCAA7531F` |
+| `0xAFAF1093` | waiting | on entry: AI or held-and-not-latched -> request `fn_8868F178`, press stamp, latched = 1; S+0xA04 = 5, PC+0x3C/0x3D = 0, IsPrepared = 1, S+0xA00 = 0; anim queries +0x424 (auto) and +0x420. Each frame: sticky bits `fn_88687528`, re-press check, charge, S+0xA00 += CurrentSpeed, miss checks (`fn_88698BA8` -> `0x35649982`, `fn_886A80F0` -> S+0xFB8 = 1). On **release** (vtbl +0x2C): commit (human S+0x544 = TimingValue S+0xD08, PlayerInfo +0xB4 = Good; AI S+0x3F4 = Good, S+0x3FC = 1), `fn_8890E988(ctrl+0x438)`, -> F6EB. Otherwise **human only**: if `fn_8866B5B8` and `fn_886B0380` (autoswing walk started a clip) -> 658B. The AI waits here for its release |
+| `0xF6EB6636` | committed early | re-press check; charge if not committed; when no clip plays ((pctx+0x84)+0x14 == 0): `fn_886872A0`, then `fn_886B0250(ctrl, 0)` (**Normal** walk); a started clip -> 658B |
+| `0x658B2E11` | swing clip running | no clip -> A190. At the 12-frame trigger (vtbl +0x34: contact frame S+0x98 - clock <= PT+0x740 = 12) a human who has not released is committed with the current TimingValue; then `fn_886783B0`, the planner `fn_886B0490`, -> A190. Before that, a human release commits. Charge counts until the commit |
+| `0xA1903341` | planner done | |
+| `0x35649982` | miss / abort | |
+
+### 18.2 Which mode a swing uses (C)
+
+`fn_886B0250(ctrl, autoswing)` returns without a walk at the end of the point (match state
+`0x85E3E155`), with S+0xFBC `BehaviorTransitionState.EOP` set, or when (pctx+0x48)+0x78->[0] == 2 and the
+incoming shot record is `0x280AE84D` (meaning I). Otherwise:
+
+| who / input | walk | mode |
+|---|---|---|
+| human, released before any clip started | F6EB, `fn_886B0250(ctrl, 0)` | **Normal** (PT+0x4D8) |
+| human, button still held (or synthesized auto swing), gate `fn_8866B5B8` open | AFAF, `fn_886B0380` -> `fn_886B0250(ctrl, 1)` | **AutoSwingGood** (PT+0x520) when S+0xD10 or SlowDown S+0x7CC > 0.5, else **AutoSwingBad** (PT+0x568) |
+| AI | its release `fn_886AE0E8` (18.5), then F6EB | always **Normal** |
+
+S+0xD10 = (volley ? AutoVolleySwing S+0x7B4 : AutoSwing S+0x7B0) > 0.5, written by `fn_886B0380`.
+SlowDown S+0x7CC = 1.0 is written only by `fn_88699300` at planner state 19 (Reach, with S+0xFB7 = 1) and
+reset by Planner_Reset `fn_886BA768`.
+
+The autoswing gate `fn_8866B5B8` is open when any holds: TimingValue S+0xD08 > PT+0x5C0 = -1 (under 40
+frames to the ball); the prediction snapshot pred+0x5E0 (I: the ball just after its second bounce) is in
+front of the player's local x; Context IsSmash, IsVolley, S+0x5DD, S+0x5DE or S+0x5DF.
+
+The class list (`fn_886B01A8`, by S+0x35C from `fn_886872A0`):
+
+| class | key | list offset | written when |
+|---|---|---|---|
+| FlatPower | `0xDDDE0AE8` | +0x00 | default (Flat, **TopSpin and Lob groundstrokes**) |
+| FlatFinesse | `0xB0043514` | +0x0C | RequireFinesse (power < 0.15) |
+| Slice | `0xFC6F57A1` | +0x18 | Slice or DropShot |
+| VolleyStandard | `0xB70A03F3` | +0x24 | volley, not TopSpin |
+| VolleyPower | `0xBFB9D8C0` | +0x30 | volley TopSpin |
+| Smash | `0x7EB30F90` | +0x3C | IsSmash |
+
+An unknown key returns 0 (no walk). Because FlatFinesse means power < 0.15 and the Fatality condition needs
+power > 0.15, **the Fatality row of FlatFinesse is dead** in every mode.
+
+### 18.3 The walk, the evaluations and the 12-frame commit (C + D)
+
+`fn_886AFDF8` first applies a reaction gate: AI frames since the opponent's launch must exceed the AI
+record +0x1C0 `SwingReactionTime` (difficulty graph g54) and be > 1; human: `fn_8866D930` (rally
+active). Failing it sets ctrl+0x40 = 0 and returns. Then for each row whose condition holds it writes
+S+0x360 = Value, S+0x368/0x36C (ProStyle/Surface) = None, and queries:
+
+* **immediate** `fn_886AC7E0(pctx, 0, 3)` when already autoswung (ctrl+0x59C), or latched (ctrl+0x58D)
+  and the row has EasyAutoSwing, or SlowDown > 0.5, or in any Normal walk: a fitting clip starts now;
+* **deferred** `fn_886AC7E0(pctx, 1, window)` otherwise in an autoswing walk: returns the frames until
+  the best clip's racket event and starts it only when <= window. Window/limit 5/8, 10/20 inside-out,
+  15/20 with S+0xBD2 (PT+0x6D0..0x6E4).
+
+A -1 with an AltValue tries the alt. The walk stops at the first started clip. After the loop: deferred
+result below the limit -> ctrl+0x59C = 1 (so the next frame queries immediately); any result >= 0 ->
+ctrl+0x40 = 0; else, when TimingBaseFrame S+0xD04 >= 30, ctrl+0x40++.
+
+Every shipped Fatality row is row 0 with EasyAutoSwing = 1, so a held button always queries Fatality
+immediately.
+
+**Evaluations** (Expressions.bin, D; S+0xCF0 = frames from the opponent's launch to the ball reaching the
+player, S+0xCF4 = depth cm, both filled at the opponent's launch by `fn_88661B60`, C):
+
+| graph | output | formula |
+|---|---|---|
+| 179 AutoSwing | S+0x7B0 | [CF0 >= 60] x [min(#887fab7d at S+0xB34/0xB68) < 5] (second input I: reachable-segment speed) |
+| 174 AutoVolleySwing | S+0x7B4 | [CF0 >= curve(Hand): 60 at <= 0.2, 40 at 0.8, 25 at 1] |
+| 173 GoodVolleySwing | S+0x7B8 | lerp([t < 0.2], 1, curve5(curve3(CF0: 30..60 -> 0..1) + 0.8 Hand)) (IsGoodVolleyRelease) |
+| 175 | S+0x7BC | [CF0 < 40] x [CF4 < lerp(175, 250, Hand)] |
+| 176 | S+0x7C0 | [CF4 < lerp(150, 400, Hand)] |
+| 177 | S+0x7C4 | [CF4 < lerp(200, 400, Return)] |
+| 168 PerfectShot | S+0x7D4 | 1 when -0.1 <= ManualShotTiming < 0.1 |
+
+So **AutoSwingGood** means a slow incoming ball (>= 1 s of flight for a groundstroke) that the player can
+reach slowly; anything faster or a stretch uses **AutoSwingBad**.
+
+**Fast-ball flags** (Planner_Reset `fn_886BA768`, C; cleared by `fn_8866C248` and `fn_886BDCC0`): from
+the sample nearest the player (`fn_886600E0`), with sample y < 240: return of serve -> S+0x5DD when
+frames < 65 (PT+0x110) and |dz| < 300 (PT+0x124); player nearer the net than |S+0xB00| -> S+0x5DE,
+< 35 (PT+0x114) and < 200 (PT+0x128); otherwise S+0x5DF, < 50 (PT+0x118) and < 250 (PT+0x12C). An extra
+exclusion involves the Volley candidate type.
+
+**Synthesized auto swing** (state 93E5, C): with no button, the request still enters AFAF when ctrl+0x38 > 0
+and (S+0x5DD and S+0x7C4 > 0.5) or (S+0x5DF and S+0x7C0 > 0.5) or (IsVolley and S+0x5DE and team mode != 2
+and S+0x7BC > 0.5). It raises the Flat (`0xF578057A`) ShotTriggers entries; latched stays 0, so the charge
+stays 0 and the shot is **Flat Finesse** or **FlatVolley**. Meaning of ctrl+0x38 is open (OPEN s3.5).
+
+**The 12-frame auto-commit** (C): when the button is **still held** at 12 frames before contact (PT+0x740;
+serve PT+0x744 = 12) the swing is committed with the current TimingValue, which is the "perfect" timing
+point; the charge stops there. When the button was **never pressed** there is no request unless the
+synthesized auto swing above fires; the AI's own trigger `fn_88662510` uses the same 12 frames.
+
+### 18.4 What each mode does to the shot (C + D)
+
+The mode only chooses the rule list. The lists differ in which categories they offer (see
+`swing_category_rules`), and the chosen category reaches the shot only through the **link ports** of the
+analyser graphs, which read the playing clip's qualifier tag (`charge_table.yaml category_effects`,
+median ratings, ground cross-court, PF / km/h / P(error) / aim efficiency / deep deviation):
+
+| link | effect at timing 0 | effect when late (+0.45) |
+|---|---|---|
+| Fatality (graphs 17, 205, 206, 238, 239, 243, 244, 248, 249, 292) | FlatMedium PF 0.822 -> 0.85 (125.1 -> 126.6 km/h); FlatPower 0.761 -> 0.80 (128.5 -> 131.7); TopSpinPower 0.82 -> 0.90 | PF fixed at 0.85 / 0.80 / 0.90 (FlatMedium 115.1 -> 126.6 km/h); FlatPower aim 0.6 -> 0.8, deep deviation 105 -> 15 cm: **removes the late penalty** |
+| FlatGoodReach #0698037d (44 graphs) | FlatPower PF 0.725, aim 0.8 | FlatPower PF 0.68, P(error) 0.359, aim 0.4, deviation 200 |
+| VolleyReflex #f2885ba2 | VolleyStandard aim 0.8 -> 0.6 | VolleyPower PF 0.574, P(error) 0.297, aim 0.2 |
+| SlowDown S+0x7CC | SlicePower PF 0.791 -> 0.822; Lob 0.188 -> 0.137 | aim +0.05 |
+| MoveToNet #4daa7349 | none measured | none measured |
+
+Timing value: Normal commits at the release; AutoSwing commits at the 12-frame point or release,
+whichever is first. Power: the charge stops at the commit (18.6). Error and aim: only through the links
+above and the timing value.
+
+### 18.5 The AI (C + D)
+
+The AI trigger vtbl +0x2C `fn_886AE0E8`: S+0x368/0x36C = None, reaction gate, then:
+
+1. if aitrig+0xA8 (= S+0x3F0 > 0.5, set in vtbl +0x18 `fn_8867E838` from difficulty graph g50
+   #6b696700: graph 139 const 1 at difficulty levels 3-5, graph 140 const 0 at levels 0-2, all 9 styles,
+   D): S+0x360 = Fatality and an immediate query; a started clip is the release;
+2. else probe with `fn_886AC928` and release when the minimum frames are in [0, PT+0x6F4 = 18)
+   (+10 with S+0xBD2; 20 for fast balls): fast ball FlatReturn, SliceReturn; S+0x5DE VolleyStandard,
+   VolleyReflex, VolleyPower; by the committed sample type: Smash -> Smash; Baseline `0x0F6FB110` ->
+   Slice, FlatPower, FlatTooLate, FlatGoodReach, FlatBadReach; Volley `0x71198650` -> the volley set.
+
+The held slot `ts4_mark_table_entries_88662648` raises Flat when S+0xBC8 != -1. When S+0x360 == Fatality,
+`fn_88694030` zeroes the behaviour-list entries flagged #ee04af9f (2836a60f, 4bb34bbb PlayLob, 83642a90,
+4b48ac3e and others), so an AI that is putting the ball away does not draw a lob.
+
+### 18.6 The charge, press to launch (C + D)
+
+* **Counting.** S+0xDFC += 1 per frame from the press while latched (AI always) in AFAF, F6EB and 658B,
+  until the commit (release or the 12-frame auto-commit). S+0xE04 counts only while Risk is held.
+* **Re-press.** Any face button while committed with ctrl+0x59D set and ctrl+0x59E clear calls
+  `fn_88698538`, which zeroes FrameCount and Value: the charge restarts.
+* **Power.** `fn_8869D720`: S+0xE00 = curve cfg+0x8FC (S+0xDFC / 60) = min(frames / 60, 1.25) / 1.25,
+  full at 75 frames. Past 75 frames nothing more happens: no overcharge penalty in code.
+* **InstantRocket** picks cfg+0x914 (same keys, no effect) and cfg+0x920 for the Risk value S+0xE08
+  (unused). Its only live effect is graph 248 (FlatPower), which lerps two charge curves by
+  skill[InstantRocket]: about +0.03..0.04 PF.
+* **Tier.** < 0.15 Finesse (frames 0-11), < 0.7 Medium (12-52), Powerful (53+). If the ball arrives before
+  the wanted tier, the 12-frame commit freezes the power where it is: a press later than about 65 frames
+  before contact cannot reach Powerful, and later than about 24 frames cannot leave Finesse.
+* **PowerfulFactor and speed.** The tier picks the template row; the class power graph (FlatFinesse 238,
+  FlatMedium 243, FlatPower 248; `retune_baseline.CLASSES`) gives PF, which drives the template launch
+  speed. Within Medium the PF does not depend on charge; within Powerful it rises with charge.
+* **HUD** (`fn_886865D8`, C): per-player block GameplayInterface +0x104 + slot x 0x140 + 0x90: +0xA4 = raw
+  charge S+0xE00 (shown continuously), +0xA8 = PF S+0x778, +0xAC IsRisk, +0xAD IsPowerful (set only at
+  the planner), +0xA0 stroke id, +0x9C S+0xE60, +0xC8 S+0x674. Timing grade: v = curve(stroke and tier
+  table at (ctx+0x6C)+0xB1C; serve +0xB10)(ManualShotTiming); |v| < 0.25 Excellent `0x20E63862`,
+  < 0.75 Good, v < 0 `0x7A6A58AF` (too early, I), else TooLate `0x466A207E`. The meter's flash thresholds
+  live in the UI screens (`Cpp_PS_PowerShot_FadeIn/Out`), not decoded.
+* **Cost.** Per shot whose row S+0x70C is Flat/Slice/TopSpin Powerful, a serve Powerful or Advanced
+  serve (not Lob Powerful), `fn_8865FA70` (from `fn_886B0490` at 0x886B09A0, controller mode 2) adds PF to
+  SumPowerfulFactor S+0xF24. FatigueIngame (graph 10) charges 25 per unit of it (20 for a 0.8-PF shot) on
+  top of 0.2 x SumAcceleration and animation costs; graph 12 capacity is lerp(40, 80, Stamina) at
+  CurrentRecovery 0 to lerp(100, 200, Stamina) at 1. The fault graph adds about +0.18 error late on Flat
+  Powerful between charge 0.85 and 1.0 (retune-baseline 4a).
+
+Flat forehand, ground cross-court, from `charge_table.yaml` (P(error) is 0 everywhere at timing 0;
+"late" = ManualShotTiming +0.5):
+
+| hold frames | power | tier (row) | min PF / km/h | median PF / km/h | max PF / km/h | median late PF / km/h / P(err) |
+|---|---|---|---|---|---|---|
+| 0-11 | 0-0.147 | Finesse (2) | 0.704 / 110.5 | 0.758 / 112.5 | 0.920 / 122.6 | 0.536 / 103.5 / 0 |
+| 12-52 | 0.16-0.693 | Medium (6) | 0.772 / 121.0 | 0.822 / 125.1 | 0.923 / 131.4 | 0.653 / 114.1 / 0 |
+| 53 | 0.707 | Powerful (10) | 0.703 / 124.3 | 0.744 / 127.1 | 0.900 / 138.9 | 0.689 / 124.3 / 0 |
+| 60 | 0.80 | Powerful (10) | 0.713 / 125.6 | 0.755 / 128.5 | 0.914 / 140.9 | 0.701 / 124.3 / 0 |
+| 75+ | 1.0 | Powerful (10) | 0.747 / 127.1 | 0.791 / 130.1 | 0.959 / 145.2 | 0.737 / 127.1 / 0.222 |
+
+### 18.7 The Fatality (put-away) and the other special swings (C + D)
+
+**Trigger** (C): row 0 of FlatPower in all three modes, condition `0xC78C8F06`: not (AI with S+0x4E0),
+not (sticky RB and `fn_8866B6E0` |world z| < PT+0x6F0 = 300: the central corridor, lateral, not the distance
+to the net), and power S+0xE00 > 0.15 (`lbl_880D0934`, a code constant, not cfg+0x934). Plus a
+Fatality clip must fit. AI: also first in its release at difficulty 3-5.
+
+**Clips** (D, `special_swings.yaml`, Men; Women mirror): 37 per setup (74 total), group
+`Swings_FH_Fatality` (subgroups Front, FrontRight, ...), all **FH, Shoulder height**, Power/Control
+VeryGood, preference 5, PositionOnCourt Baseline, allow_speed_coef 0. Compared with the plain classes:
+
+| category | clips | frames | contact frame | shortest entry -> contact | contact -> Out | root travel last 40 f before contact (cm) |
+|---|---|---|---|---|---|---|
+| Fatality | 37 | 178-254 (med 227) | 98-159 (137) | 8-11 | 30-58 (45) | 58-173 (128) |
+| FlatPower | 186 | 95-174 (132) | 35-88 (47) | 2-22 | 16-66 (36) | 16-313 (154) |
+| FlatFinesse | 76 | 105-174 | 40-74 (47) | 3-21 | 25-62 (37) | 16-297 (176) |
+| FlatGoodReach | 28 | 101-176 | 35-58 (45) | 1-10 | 15-53 (32) | 192-345 (260) |
+| FlatPerfect | 2 | 100-132 | 38-48 | 4-8 | 39-44 | 6-31 |
+| FlatReturn | 117 | 109-218 | 36-95 (59) | 7-50 | 14-67 (36) | 4-168 (59) |
+| VolleyReflex | 50 | 95-197 | 28-80 (38) | 2-47 | 17-82 (47) | 22-202 (55) |
+
+A Fatality clip is long (a run-in of about 4 m from frame 0, median 394 cm) but has a late In window
+(phase 0.14..0.55), so it can be entered 9 to 137 frames before contact. It ends with a short Out window
+(about 45 frames after contact, versus 36 for FlatPower).
+
+**Ball effect** (D): not only visual: the Fatality link pins PF (0.85 FlatMedium / 0.80 FlatPower / 0.90
+TopSpinPower) and removes the late-timing aim penalty (18.4). Graph 17 (SwingSpeedCoef S+0x378) reads it
+too (1.05-1.18 -> 1.2), but no swing group sets allow_speed_coef, so it does not change the clip's play rate
+(I). The other special categories: FlatGoodReach / FlatBadReach and VolleyReflex make the shot worse
+(18.4); FlatPerfect, FlatTooLate, FlatReturn, VolleySpectacular, VolleyForward and the FollowNet
+categories have no measured ball effect (I: visual and movement only).
+
+**How movement feeds it** (C + I): the query fits clips to the predicted ball within a horizon of now + 40
+frames (`fn_886C9228`; 10 in mode `0x2994504E`), with the clip's tolerance box and facing clamp [-90, 45].
+SlowDown (planner state 19, Reach) pushes the mode to AutoSwingGood and forces immediate queries, but does
+not affect the Fatality condition. FlatGoodReach / FlatBadReach come from the line MinSpeed values
+(S+0xA5C / 0xABC) of the planner.
+
+**What stops a player who ran down a short ball in good time** (C for the gates, I for their weight):
+
+1. **Power <= 0.15** at the walk: a press fewer than 12 frames before the first walk (a tap, or a
+   press-and-release before the clip fit) puts the shot in FlatFinesse, where the Fatality row is dead.
+2. **RB held** (sticky PC+0x3D) while in the central corridor |z| < 300 cm: GoToNet blocks it.
+3. **Stroke**: Slice, DropShot, volley and smash use other lists; TopSpin and Lob use FlatPower and can
+   put away.
+4. **Clip fit**: only forehand, shoulder-height Fatality clips exist. A short ball taken low (waist,
+   knee) or on the backhand has no Fatality clip, so the walk falls to the next rows.
+5. **First fit wins**: the walk runs every frame (autoswing) or once (Normal). If on that frame no
+   Fatality clip fits but a FlatFollowNet / FlatPerfect / reach / FlatPower clip does, that clip starts and
+   the request leaves the waiting state: the Fatality chance is gone for this shot. Arriving early and
+   holding is therefore not enough; the ball must be at shoulder height on the forehand within the clip's
+   tolerance on the first frame any clip fits.
+6. **The AI** only gets it first at difficulty 3-5; below that it reaches Fatality only through the
+   Normal list's row 0.
+
+Whether the qualifier sources (`SwingSelection/Output/Power`, ...) filter clips is open (R2): if they did,
+the Power VeryGood / Control VeryGood keys would be a further gate.

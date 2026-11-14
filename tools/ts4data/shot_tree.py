@@ -639,7 +639,25 @@ def swing_category_rules(settings: bytes):
     out = {"source": "PlayerTuning (cfg+0x180) SwingSelectionCategory, file 0x%x" % pt(0x4D8),
            "row_fields": "Value, AltValue (5d78dedc, used when no clip matches Value), Condition (2ce1ada4), "
                          "SkillId, EasyAutoSwing (5b9470b9), e0dcd0b9",
-           "modes": {}}
+           "modes": {},
+           # G8 (doc s18, grade C): which mode and class list the walk uses.
+           "mode_selection": {
+               "Normal": "fn_886B0250(ctrl, 0): human after a button release before any clip started (state "
+                         "0xF6EB6636); the AI always (its release fn_886AE0E8 also tries Fatality first at "
+                         "difficulty 3-5, S+0x3F0)",
+               "AutoSwingGood": "fn_886B0250(ctrl, 1) from fn_886B0380 (human, button still held or synthesized "
+                                "auto swing, gate fn_8866B5B8) with S+0xD10 = AutoSwing/AutoVolleySwing "
+                                "evaluation > 0.5, or SlowDown S+0x7CC > 0.5",
+               "AutoSwingBad": "fn_886B0250(ctrl, 1) otherwise",
+               "no_walk": "returns 0 at end of point (match state 0x85E3E155), with S+0xFBC EOP set, or "
+                          "(pctx+0x48)+0x78->[0] == 2 with incoming record 0x280AE84D"},
+           "class_selection": "fn_886B01A8 by S+0x35C (written by fn_886872A0): Smash; volley TopSpin -> "
+                              "VolleyPower, other volley -> VolleyStandard; Slice/DropShot -> Slice; "
+                              "RequireFinesse (power < 0.15) -> FlatFinesse; else FlatPower (TopSpin and Lob "
+                              "groundstrokes use the Flat lists).  Unknown key -> no walk",
+           "list_descriptor_pt_offset": {mode: {cls: "0x%x" % (0x4D8 + 0x48 * m + 0xC * c)
+                                                for c, cls in enumerate(SC_CLASSES)}
+                                         for m, mode in enumerate(SC_MODES)}}
     for m, mode in enumerate(SC_MODES):
         lists = {}
         for c, cls in enumerate(SC_CLASSES):

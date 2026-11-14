@@ -129,9 +129,67 @@ static void test_walk(void)
     CHECK(r.started && !r.autoswing_due);
 }
 
+static void test_g8(void)
+{
+    /* request modes */
+    CHECK(sc_request_autoswing_call(1, 0) == 0 && sc_request_autoswing_call(0, 1) == 0);
+    CHECK(sc_request_autoswing_call(0, 0) == 1);
+    CHECK(sc_mode(sc_request_autoswing_call(0, 0), sc_timing_state_d10(0, 1.0f, 0.0f), 0.0f) == 1);
+    CHECK(sc_mode(1, sc_timing_state_d10(1, 1.0f, 0.0f), 0.0f) == 2);   /* volley reads 7B4 */
+    CHECK(sc_mode(1, 0, 1.0f) == 1);                                     /* SlowDown -> Good */
+
+    /* evaluations */
+    CHECK(sc_eval_auto_swing(60.0f, 4.9f) == 1.0f && sc_eval_auto_swing(59.0f, 1.0f) == 0.0f);
+    CHECK(sc_eval_auto_swing(90.0f, 5.0f) == 0.0f);
+    CHECK(sc_eval_auto_volley_swing(59.0f, 0.1f) == 0.0f && sc_eval_auto_volley_swing(60.0f, 0.2f) == 1.0f);
+    CHECK(sc_eval_auto_volley_swing(40.0f, 0.8f) == 1.0f && sc_eval_auto_volley_swing(39.0f, 0.8f) == 0.0f);
+    CHECK(sc_eval_auto_volley_swing(25.0f, 1.0f) == 1.0f);
+    CHECK(sc_eval_fast_net(39.0f, 174.0f, 0.0f) == 1.0f && sc_eval_fast_net(40.0f, 10.0f, 1.0f) == 0.0f);
+    CHECK(sc_eval_fast_baseline(399.0f, 1.0f) == 1.0f && sc_eval_fast_baseline(151.0f, 0.0f) == 0.0f);
+    CHECK(sc_eval_fast_return(300.0f, 0.5f) == 0.0f && sc_eval_fast_return(299.0f, 0.5f) == 1.0f);
+    CHECK(sc_eval_perfect_shot(-0.1f) == 1.0f && sc_eval_perfect_shot(0.1f) == 0.0f);
+
+    /* fast-ball flags and the synthesized auto swing */
+    CHECK(sc_fast_ball(1, 0, 64, 299.0f, 100.0f) == SC_FAST_RETURN);
+    CHECK(sc_fast_ball(1, 0, 65, 10.0f, 100.0f) == SC_FAST_NONE);
+    CHECK(sc_fast_ball(0, 1, 34, 199.0f, 100.0f) == SC_FAST_NET);
+    CHECK(sc_fast_ball(0, 0, 49, 249.0f, 100.0f) == SC_FAST_BASELINE);
+    CHECK(sc_fast_ball(0, 0, 10, 10.0f, 240.0f) == SC_FAST_NONE);
+    CHECK(sc_synth_auto_swing(SC_FAST_RETURN, 0, 0, 1.0f, 0.0f, 0.0f));
+    CHECK(!sc_synth_auto_swing(SC_FAST_NET, 1, 1, 0.0f, 0.0f, 1.0f));    /* doubles excluded */
+    CHECK(sc_synth_auto_swing(SC_FAST_NET, 1, 0, 0.0f, 0.0f, 1.0f));
+    CHECK(!sc_synth_auto_swing(SC_FAST_BASELINE, 0, 0, 1.0f, 0.0f, 1.0f));
+
+    /* autoswing gate and the 12-frame commit */
+    CHECK(!sc_autoswing_gate(-1.0f, 0, 0, 0, SC_FAST_NONE));
+    CHECK(sc_autoswing_gate(-0.99f, 0, 0, 0, SC_FAST_NONE));
+    CHECK(sc_autoswing_gate(-3.0f, 0, 0, 1, SC_FAST_NONE));
+    CHECK(sc_auto_commit(12) && !sc_auto_commit(13));
+
+    /* AI */
+    CHECK(!sc_ai_fatality_first(2) && sc_ai_fatality_first(3) && sc_ai_fatality_first(5));
+    CHECK(sc_ai_release_limit(0, 0) == 18 && sc_ai_release_limit(0, 1) == 28 && sc_ai_release_limit(1, 1) == 20);
+    CHECK(sc_ai_release(0, 18) && sc_ai_release(17, 18) && !sc_ai_release(18, 18) && !sc_ai_release(-1, 18));
+
+    /* charge: tiers start at 12 and 53 frames, full at 75, Fatality needs power > 0.15 (12 frames) */
+    CHECK(sc_charge_power(0) == 0.0f && sc_charge_power(75) == 1.0f && sc_charge_power(200) == 1.0f);
+    CHECK(sc_power_tier(sc_charge_power(11)) == 0 && sc_power_tier(sc_charge_power(12)) == 1);
+    CHECK(sc_power_tier(sc_charge_power(52)) == 1 && sc_power_tier(sc_charge_power(53)) == 2);
+    ScTuning t;
+    sc_default_tuning(&t);
+    ScInputs in = base_inputs();
+    in.power = sc_charge_power(11);
+    CHECK(!sc_condition(SC_COND_FATALITY, &in, &t));
+    in.power = sc_charge_power(12);
+    CHECK(sc_condition(SC_COND_FATALITY, &in, &t));
+    /* the FlatFinesse class means power < 0.15, so its Fatality row can never pass */
+    CHECK(sc_class(0, 0, 0, sc_charge_power(11) < 0.15f) == 1);
+}
+
 int main(void)
 {
     test_conditions();
+    test_g8();
     test_mode_class();
     test_walk();
     if (fails)
