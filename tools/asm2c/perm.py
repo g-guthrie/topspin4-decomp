@@ -341,6 +341,7 @@ def main():
     ap.add_argument('--skip-addrs', default='')
     ap.add_argument('--merge', action='store_true', help='copy perm matches into state.pkl and exit')
     ap.add_argument('--asm', type=Path, help='pickle {name: fn_asm lines} of the targets (clrrwi sites for m_sv)')
+    ap.add_argument('--near-from', type=Path, action='append', default=[], help="also take near misses from another work dir's state.pkl")
     ap.add_argument('--seed-perm', type=Path, help="another work dir's perm.pkl: start from its best variants")
     a = ap.parse_args()
     pf = a.work / 'perm.pkl'
@@ -355,7 +356,12 @@ def main():
     skip = set()
     if a.skip_addrs:
         skip = {int(x, 16) for x in Path(a.skip_addrs).read_text().split()}
-    for ad, (nd, fs, r) in state.get('near', {}).items():
+    nears = dict(state.get('near', {}))
+    for nf in a.near_from:
+        for ad, x in pickle.load(open(nf, 'rb')).get('near', {}).items():
+            if ad not in nears or x[0] < nears[ad][0]:
+                nears[ad] = x
+    for ad, (nd, fs, r) in nears.items():
         if nd <= a.max_diff and ad not in state['matched'] and ad not in ps['perm_matched'] and ad not in skip:
             if ad not in ps['best'] or ps['best'][ad][1] > nd:
                 ps['best'][ad] = (r, nd, fs)
