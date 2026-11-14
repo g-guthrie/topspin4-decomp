@@ -39,6 +39,8 @@ def parse(ln):
     ms=re.search(r'(REFHI|REFLO|REL24|REL14)\s+(\S+)',com)
     return mn,ops,(ms.group(1) if ms else None),(ms.group(2) if ms else None)
 
+UPD={'lwzu': 'lwz', 'lbzu': 'lbz', 'lhzu': 'lhz', 'lhau': 'lha', 'stwu': 'stw', 'stbu': 'stb', 'sthu': 'sth', 'lfsu': 'lfs', 'lfdu': 'lfd', 'stfsu': 'stfs', 'stfdu': 'stfd'}
+LD_U={'lwzu', 'lbzu', 'lhzu', 'lhau'}
 STORES={'stw','stb','sth','std','stfs','stfd','stwu','sthu','stbu'}
 
 def arity(lines,lookup,written=None,depth=0):
@@ -135,6 +137,12 @@ def dst_regs(insns):
     """General registers written by `insns` (calls clobber r3..r12 separately)."""
     out = set()
     for i in insns:
+        if i.mn in UPD and not i.ops[1].endswith('(r1)'):
+            m = re.search(r'\((r\d+)\)', i.ops[1])
+            out.add(m.group(1))
+            if i.mn in LD_U:
+                out.add(i.ops[0])
+            continue
         if i.mn in NO_DST or i.mn.startswith('st') or i.mn.startswith('b') or i.mn.startswith('cmp') or i.mn.startswith('f'):
             if i.mn == 'bl' or i.mn == 'bctrl':
                 out.update(f'r{j}' for j in range(3, 13))
@@ -158,6 +166,7 @@ class Gen:
         self.insns = cfg.decode(self.lines, parse)
         self.order, self.blocks = cfg.build_blocks(self.insns)
         self.preds = cfg.preds_of(self.blocks)
+        self.has_ctr_loop = any(i.mn in ('bdnz', 'bdz') for i in self.insns)
         self.loops = cfg.natural_loops(self.order, self.blocks)
         self.pdom = cfg.post_dominators(self.blocks)
         self.active = []          # loop headers being emitted (innermost last)
@@ -171,22 +180,45 @@ class Gen:
         self.pending = {}
 
     # ---- stack locals ------------------------------------------------------
+    SZ = {'lwz': 4, 'stw': 4, 'lbz': 1, 'stb': 1, 'lhz': 2, 'lha': 2, 'sth': 2, 'lfs': 4, 'stfs': 4, 'lfd': 8, 'stfd': 8}
+
     def _stack_layout(self):
         """Every `addi rX,r1,off` takes the address of a word array starting at
-        off and extending to the next such base / last access."""
+        off and extending to the next such base / last access.  Accesses that are
+        not covered by such an array (spills, converted values, scalars) get an
+        array of their own, grouped by adjacency."""
         L = self.lines
         bases = sorted({int(m.group(1), 0) for l in L for m in [re.search(r'\baddi\s+r(?!1\b)\d+,\s*r1,\s*(-?\w+)', l)] if m})
-        acc = [int(m.group(1), 0) for l in L for m in [re.search(r'\b(?:lwz|stw)\s+\w+,\s*(-?\w+)\(r1\)', l)] if m]
+        accs = [(int(m.group(2), 0), self.SZ[m.group(1)], m.group(1)) for l in L
+                for m in [re.search(r'\b(lwz|stw|lbz|stb|lhz|lha|sth|lfs|lfd|stfs|stfd)\s+\w+,\s*(-?\w+)\(r1\)', l)] if m]
+        accs = [a for a in accs if a[0] >= 0]
+        argshape = lambda a: a[2] == 'stw' and a[0] >= 0x54 and (a[0] - 0x54) % 8 == 0
+        def covered(o):
+            return any(b <= o for b in bases)
+        extra = []
+        if any(not argshape(a) for a in accs if not covered(a[0])) or not bases:
+            unc = sorted(a for a in accs if not covered(a[0]) or (bases and a[0] < bases[0]))
+            if not any(not argshape(a) for a in unc):
+                unc = []
+            end = None
+            for o, sz, mn in unc:
+                if end is None or o >= end + 4:
+                    extra.append(o)
+                end = o + sz if end is None or o >= end + 4 else max(end, o + sz)
+        bases = sorted(set(bases) | set(extra))
+        acc = [(o, sz) for o, sz, mn in accs]
         self.bases = bases
         self.local_ext = {}
         for i, b in enumerate(bases):
             nxt = bases[i + 1] if i + 1 < len(bases) else 1 << 30
-            top = max([a for a in acc if b <= a < nxt] + [b])
+            top = max([o + sz - 1 for o, sz in acc if b <= o < nxt] + [b])
             self.local_ext[b] = (top - b) // 4 + 1
         # the frame size shows how big the locals are: fill each array up to the next
         # base and the last one up to the register save area at the top of the frame
         frame = self.frame_size()
         for i, b in enumerate(bases):
+            if b in extra:
+                continue
             end = bases[i + 1] if i + 1 < len(bases) else (frame[0] - frame[1] if frame else b)
             self.local_ext[b] = max(self.local_ext[b], (end - b) // 4)
 
@@ -209,16 +241,25 @@ class Gen:
     def local_of(self, off):
         for b in self.bases:
             if b <= off < b + 4 * self.local_ext[b]:
-                if (off - b) % 4:
-                    raise Skip('stack unaligned')
-                return f'loc{b:x}', (off - b) // 4
+                return f'loc{b:x}', (off - b) // 4, off - b
         return None
+
+    def local_ref(self, off, t):
+        """C lvalue for a `t`-typed access at stack offset off, or None."""
+        loc = self.local_of(off)
+        if loc is None:
+            return None
+        if loc[0] not in self.localnames:
+            self.localnames.append(loc[0])
+        if t == 'ts4_word' and loc[2] % 4 == 0:
+            return f'{loc[0]}[{loc[1]}]'
+        return f'*({t} *)((char *){loc[0]} + {loc[2]})'
 
     # ---- state -------------------------------------------------------------
     @staticmethod
     def newst():
         return dict(regs={}, written=set(), clobbered=set(), fregs={}, fwritten=set(), ctr=None,
-                    ctr_reg=None, cmps={}, stackargs={})
+                    ctr_reg=None, cmps={}, stackargs={}, cnt=None)
 
     @staticmethod
     def cp(st):
@@ -376,23 +417,33 @@ class Gen:
             setr(ops[0], v)
             st['cmps']['cr0'] = (f'(int){v}', '0', False)
             return
+        if mn in UPD and ops[1].endswith('(r1)') is False:
+            mo = re.match(r'(-?\w+)\((r\d+)\)', ops[1]); base = mo.group(2)
+            if base == ops[0] and mn in LD_U:
+                raise Skip('update base')
+            bv = rd(base); nohi(bv)
+            setr(base, f'({bv} + {num(mo.group(1))})')
+            self.step(type(ins)(ins.addr, UPD[mn], [ops[0], f'0({base})'], rk, sym, ins.tgt, ins.ln), st, out)
+            return
         if mn in LD or mn in ST or mn in FLD or mn in FST or mn in ('ld',):
             mo = re.match(r'(-?\w+)\((r\d+)\)', ops[1]); off = num(mo.group(1)); base = mo.group(2)
             if base == 'r1':
                 if off < 0:
                     return
-                loc = self.local_of(off)
-                if loc is not None:
-                    if mn not in ('lwz', 'stw'):
-                        raise Skip('stack local size')
-                    el = f'{loc[0]}[{loc[1]}]'
-                    if loc[0] not in self.localnames:
-                        self.localnames.append(loc[0])
-                    if mn == 'lwz':
-                        setr(ops[0], self.newv(out, 'ts4_word', el))
-                    else:
+                if mn == 'ld' or mn == 'std':
+                    raise Skip(mn)
+                ty_ = (LD.get(mn) or ST.get(mn) or FLD.get(mn) or FST.get(mn))[0]
+                el = self.local_ref(off, ty_)
+                if el is not None:
+                    if mn in LD:
+                        setr(ops[0], self.newv(out, ty_, el))
+                    elif mn in ST:
                         v = rd(ops[0]); nohi(v)
-                        out.append(f'{el} = (ts4_word){v};')
+                        out.append(f'{el} = ({ty_}){v};')
+                    elif mn in FLD:
+                        v = self.newv(out, ty_, el); self.setf(st, ops[0], v, ty_)
+                    else:
+                        out.append(f'{el} = {self.fval(st, ops[0], ty_)};')
                     return
                 if mn == 'stw' and off >= 0x54 and (off - 0x54) % 8 == 0:
                     v = rd(ops[0]); nohi(v)
@@ -451,7 +502,7 @@ class Gen:
                     raise Skip('stack addr')
                 if loc[0] not in self.localnames:
                     self.localnames.append(loc[0])
-                setr(ops[0], f'(ts4_word)&{loc[0]}[{loc[1]}]')
+                setr(ops[0], f'(ts4_word)&{loc[0]}[{loc[1]}]' if loc[2] % 4 == 0 else f'((ts4_word){loc[0]} + {loc[2]})')
             elif rk == 'REFLO':
                 s = regs[ops[1]][1]; self.externs[s] = 1
                 setr(ops[0], f'(ts4_word){s}'); self.kinds.append('addr'); self.detail.append(s)
@@ -522,7 +573,12 @@ class Gen:
                 raise Skip('subfe')
             setr(ops[0], f'({regs["__ca"]} != 0)'); return
         if mn == 'mtctr':
-            st['ctr'] = rd(ops[0]); st['ctr_reg'] = ops[0]; return
+            v = rd(ops[0]); nohi(v)
+            if self.has_ctr_loop:
+                cn = self.newphi('c')
+                out.append(f'{cn} = (ts4_word){v};')
+                st['cnt'] = cn; return
+            st['ctr'] = v; st['ctr_reg'] = ops[0]; return
         # float basics
         if mn == 'fmr':
             setf_t = st['fregs'].get(ops[1], (None, 'float'))[1]
@@ -668,6 +724,10 @@ class Gen:
     # ---- conditions ------------------------------------------------------------
     def leaf(self, st, mn, cr):
         """Condition tree "branch `mn` is taken" from the compare recorded for `cr`."""
+        if mn in ('bdnz', 'bdz'):
+            if st['cnt'] is None:
+                raise Skip('ctr lost')
+            return ('c', f'--{st["cnt"]}', '!=' if mn == 'bdnz' else '==', '0', False)
         c = st['cmps'].get(cr)
         if c is None:
             raise Skip('br nocmp')
@@ -949,7 +1009,7 @@ class Gen:
             self.active.pop()
         # continue from the loop exit with the exit state
         exit_id, exit_st = res
-        for k in ('regs', 'written', 'clobbered', 'fregs', 'fwritten', 'ctr', 'ctr_reg', 'cmps', 'stackargs'):
+        for k in ('regs', 'written', 'clobbered', 'fregs', 'fwritten', 'ctr', 'ctr_reg', 'cmps', 'stackargs', 'cnt'):
             st[k] = exit_st[k]
         return exit_id
 

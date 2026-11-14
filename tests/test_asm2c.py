@@ -157,7 +157,22 @@ class StructurizerTests(unittest.TestCase):
 
     def test_unsupported_branch_is_skipped(self):
         with self.assertRaises(translate.Skip):
-            gen(["mtctr r3", f"bdnz 0x0 -> {tgt(0)}", "blr"])
+            gen(["bc 12,2,0x8", "blr"])
+
+    def test_counted_loop_uses_counter_variable(self):
+        # mtctr / bdnz: a do-while on a pre-decremented counter, update-form load/store as pointer bumps
+        t = ["li r9,8", "subi r10,r3,4", "subi r11,r4,4", "mtctr r9", "lwzu r9,4(r11)", "stwu r9,4(r10)",
+             f"bdnz 0x0 -> {tgt(4)}", "blr"]
+        r = gen(t)
+        self.assertIn("do {", r["body"])
+        self.assertRegex(r["body"], r"while \(--c\d+ != 0\)")
+
+    def test_typed_stack_locals(self):
+        t = ["stfd f1,0x50(r1)", "lwz r3,0x54(r1)", "lbz r4,0x58(r1)", "stb r4,0x59(r1)", "blr"]
+        r = gen(t)
+        self.assertIn("loc50", r["body"])
+        self.assertIn("*(unsigned char *)((char *)loc50 + 9) =", r["body"])
+        self.assertIn("*(double *)((char *)loc50 + 0) =", r["body"])
 
     def test_float_phi_is_skipped(self):
         with self.assertRaises(translate.Skip):
@@ -232,7 +247,7 @@ class CfgTests(unittest.TestCase):
         self.assertEqual(cfg.ipdom(pdom, BASE), BASE + 16)
 
     def test_unmodelled_branches_skip(self):
-        insns = cfg.decode(prog(["bdnz 0x0 -> 0x88000000", "blr"]), translate.parse)
+        insns = cfg.decode(prog(["bc 12,2,0x88000000", "blr"]), translate.parse)
         with self.assertRaises(cfg.Skip):
             cfg.build_blocks(insns)
 

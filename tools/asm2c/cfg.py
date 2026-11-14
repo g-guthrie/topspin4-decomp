@@ -18,7 +18,7 @@ import re
 
 EXIT = -1  # virtual exit node used by the post-dominator computation
 
-COND_BR = {'beq', 'bne', 'blt', 'bge', 'bgt', 'ble'}
+COND_BR = {'beq', 'bne', 'blt', 'bge', 'bgt', 'ble', 'bdnz', 'bdz'}
 
 
 class Skip(Exception):
@@ -89,6 +89,8 @@ def build_blocks(insns):
             if nxt is None:
                 raise Skip('noend')
             cr = i.ops[0] if i.ops and i.ops[0].startswith('cr') else 'cr0'
+            if mn in ('bdnz', 'bdz'):
+                cr = 'ctr'
             term = ('cond', mn, cr, i.tgt, nxt)
         elif _is_condret(mn):
             if nxt is None:
