@@ -38202,6 +38202,96 @@ MATCHING_UNITS = (
             "ga6_apply_hold_886D9698": 236,
         },
     },
+    {
+        "source": "src/xbox360/lb3_celt_bands.c",
+        "object": "lb3_celt_bands.obj",
+        "symbols": {"lb3_celt_stereo_band_mix_883B3FA0": 256},
+    },
+    {
+        "source": "src/xbox360/lb3_celt_cwrs.c",
+        "object": "lb3_celt_cwrs.obj",
+        "symbols": {
+            "lb3_celt_log2_frac_883C20A0": 224,
+            "lb3_celt_fits_in32_883C2180": 108,
+            "lb3_celt_ncwrs_urow_883C21F0": 444,
+            "lb3_celt_cwrsi3_883C23B0": 332,
+            "lb3_celt_cwrsi4_883C2500": 248,
+            "lb3_celt_cwrsi5_883C25F8": 252,
+            "lb3_celt_get_required_split_bits_883C26F8": 292,
+            "lb3_celt_get_required_bits_pair_883C2820": 552,
+            "fn_883C2A48": 384,
+            "lb3_celt_decode_pulses_883C2BC8": 832,
+        },
+    },
+    {
+        "source": "src/xbox360/lb3_celt_entcode.c",
+        "object": "lb3_celt_entcode.obj",
+        "symbols": {"fn_883C2F08": 116},
+    },
+    {
+        "source": "src/xbox360/lb3_celt_entdec.c",
+        "object": "lb3_celt_entdec.obj",
+        "symbols": {
+            "fn_883B3A08": 160,
+            "lb3_celt_ec_dec_uint_883B3AA8": 212,
+        },
+    },
+    {
+        "source": "src/xbox360/lb3_celt_kiss_fft.c",
+        "object": "lb3_celt_kiss_fft.obj",
+        "symbols": {
+            "lb3_celt_kf_bfly5_883C0F50": 564,
+            "lb3_celt_ki_bfly5_883C1188": 564,
+            "lb3_celt_compute_bitrev_table_883C1960": 172,
+            "lb3_celt_kiss_fft_stride_883C1EB8": 272,
+            "lb3_celt_kiss_ifft_stride_883C1FD0": 196,
+        },
+    },
+    {
+        "source": "src/xbox360/lb3_celt_laplace.c",
+        "object": "lb3_celt_laplace.obj",
+        "symbols": {"lb3_celt_ec_laplace_decode_start_883C0310": 200},
+    },
+    {
+        "source": "src/xbox360/lb3_celt_quant_bands.c",
+        "object": "lb3_celt_quant_bands.obj",
+        "symbols": {"lb3_celt_unquant_fine_energy_883B2038": 320},
+    },
+    {
+        "source": "src/xbox360/lb3_celt_rangedec.c",
+        "object": "lb3_celt_rangedec.obj",
+        "symbols": {
+            "lb3_celt_ec_dec_init_883B5358": 188,
+            "fn_883B5418": 80,
+            "lb3_celt_ec_decode_bin_883B5468": 84,
+            "lb3_celt_ec_dec_update_883B54C0": 196,
+            "lb3_celt_ec_dec_tell_883B5588": 116,
+        },
+    },
+    {
+        "source": "src/xbox360/lb3_celt_vq.c",
+        "object": "lb3_celt_vq.obj",
+        "symbols": {"lb3_celt_alg_unquant_883C3098": 96},
+    },
+    {
+        "source": "src/xbox360/lb3_flac_decoder.c",
+        "object": "lb3_flac_decoder.obj",
+        "symbols": {"fn_883A4C20": 312},
+    },
+    {
+        "source": "src/xbox360/lb3_vorbis_block.c",
+        "object": "lb3_vorbis_block.obj",
+        "symbols": {"fn_883BBFB8": 1024},
+    },
+    {
+        "source": "src/xbox360/lb3_vorbis_mdct.c",
+        "object": "lb3_vorbis_mdct.obj",
+        "symbols": {
+            "lb3_vorbis_mdct_butterfly_16_883C3668": 508,
+            "lb3_vorbis_mdct_butterfly_first_883C3AA0": 388,
+            "lb3_vorbis_mdct_butterfly_generic_883C3C28": 404,
+        },
+    },
 )
 
 

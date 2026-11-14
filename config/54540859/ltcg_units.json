@@ -11,5 +11,34 @@
    "ga6_release_hold_886D7B88": 156,
    "ga6_acquire_hold_886CE5B0": 152
   }
+ },
+ {
+  "source": "src/xbox360/lt1_lua_auxsort.c",
+  "object": "lt1_lua_auxsort.obj",
+  "context": [
+   "src/xbox360/lib3_lua_auxlib.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "lt1_lua_auxsort_889CE9E0": 860
+  }
+ },
+ {
+  "source": "src/xbox360/lt1_msg_send_encrypted.c",
+  "object": "lt1_msg_send_encrypted.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/fam3_msg_dtor.cpp",
+   "src/xbox360/d3f_blowfish_ecb_88605010.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [
+   "ts4_blowfish_encrypt_ecb_88605220"
+  ],
+  "symbols": {
+   "lt1_msg_channel_send_encrypted_8864BE20": 316
+  }
  }
 ]

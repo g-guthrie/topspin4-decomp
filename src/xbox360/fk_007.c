@@ -56,8 +56,8 @@ ts4_word ts4_if_call_seq_fn_883BBE98_883BBF50();
 ts4_word fn_883BC3B8();
 ts4_word fn_883BFF30();
 ts4_word fn_883C03D8();
-ts4_word fn_883C1EB8();
-ts4_word fn_883C1FD0();
+ts4_word lb3_celt_kiss_fft_stride_883C1EB8();
+ts4_word lb3_celt_kiss_ifft_stride_883C1FD0();
 ts4_word fn_883C72E0();
 ts4_word fn_883C8F98();
 ts4_word fn_883CA4F0();
@@ -937,16 +937,16 @@ ts4_word ts4_addr_lbl_88037A38_883C02E0(void)
     return (ts4_word)lbl_88037A38;
 }
 
-/* Swing_DLL.xex 0x883C1FC8: tailcall fn_883C1EB8 */
+/* Swing_DLL.xex 0x883C1FC8: tailcall lb3_celt_kiss_fft_stride_883C1EB8 */
 ts4_word ts4_tailcall_fn_883C1EB8_883C1FC8(ts4_word a0, ts4_word a1, ts4_word a2)
 {
-    return fn_883C1EB8((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)1);
+    return lb3_celt_kiss_fft_stride_883C1EB8((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)1);
 }
 
-/* Swing_DLL.xex 0x883C2098: tailcall fn_883C1FD0 */
+/* Swing_DLL.xex 0x883C2098: tailcall lb3_celt_kiss_ifft_stride_883C1FD0 */
 ts4_word ts4_tailcall_fn_883C1FD0_883C2098(ts4_word a0, ts4_word a1, ts4_word a2)
 {
-    return fn_883C1FD0((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)1);
+    return lb3_celt_kiss_ifft_stride_883C1FD0((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)1);
 }
 
 /* Swing_DLL.xex 0x883C57A8: get u32@0x0, u32@0x0, u32@0x0, u32@0x0 */

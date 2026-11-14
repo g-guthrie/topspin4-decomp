@@ -116,7 +116,7 @@ ts4_word fn_883B0D50();
 ts4_word fn_883B1460();
 ts4_word fn_883B3A08();
 ts4_word fn_883B5418();
-ts4_word fn_883B54C0();
+ts4_word lb3_celt_ec_dec_update_883B54C0();
 ts4_word fn_883B5600();
 ts4_word fn_883B5C70();
 ts4_word lib2_FLAC__MD5Transform_883B81B8();

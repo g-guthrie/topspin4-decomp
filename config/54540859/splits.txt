@@ -45269,3 +45269,86 @@ src/xbox360/ga6_ltcg_b.c:
 	.pdata      start:0x88124F80 end:0x88124F88
 	.text       start:0x886CE5B0 end:0x886CE648
 	.text       start:0x886D7B88 end:0x886D7C24
+
+src/xbox360/lb3_celt_bands.c:
+	.text       start:0x883B3FA0 end:0x883B40A0
+
+src/xbox360/lb3_celt_cwrs.c:
+	.pdata      start:0x88114798 end:0x881147A0
+	.pdata      start:0x881147A0 end:0x881147A8
+	.pdata      start:0x881147A8 end:0x881147B0
+	.pdata      start:0x881147B0 end:0x881147B8
+	.pdata      start:0x881147B8 end:0x881147C0
+	.pdata      start:0x881147C0 end:0x881147C8
+	.pdata      start:0x881147C8 end:0x881147D0
+	.pdata      start:0x881147D0 end:0x881147D8
+	.pdata      start:0x881147D8 end:0x881147E0
+	.text       start:0x883C20A0 end:0x883C21EC
+	.text       start:0x883C21F0 end:0x883C23AC
+	.text       start:0x883C23B0 end:0x883C24FC
+	.text       start:0x883C2500 end:0x883C26F4
+	.text       start:0x883C26F8 end:0x883C281C
+	.text       start:0x883C2820 end:0x883C2F08
+
+src/xbox360/lb3_celt_entcode.c:
+	.text       start:0x883C2F08 end:0x883C2F7C
+
+src/xbox360/lb3_celt_entdec.c:
+	.pdata      start:0x88114480 end:0x88114488
+	.pdata      start:0x88114488 end:0x88114490
+	.text       start:0x883B3A08 end:0x883B3B7C
+
+src/xbox360/lb3_celt_kiss_fft.c:
+	.pdata      start:0x88114748 end:0x88114750
+	.pdata      start:0x88114750 end:0x88114758
+	.pdata      start:0x88114768 end:0x88114770
+	.pdata      start:0x88114788 end:0x88114790
+	.pdata      start:0x88114790 end:0x88114798
+	.text       start:0x883C0F50 end:0x883C1184
+	.text       start:0x883C1188 end:0x883C13BC
+	.text       start:0x883C1960 end:0x883C1A0C
+	.text       start:0x883C1EB8 end:0x883C1FC8
+	.text       start:0x883C1FD0 end:0x883C2094
+
+src/xbox360/lb3_celt_laplace.c:
+	.pdata      start:0x88114708 end:0x88114710
+	.text       start:0x883C0310 end:0x883C03D8
+
+src/xbox360/lb3_celt_quant_bands.c:
+	.pdata      start:0x88114430 end:0x88114438
+	.text       start:0x883B2038 end:0x883B2178
+
+src/xbox360/lb3_celt_rangedec.c:
+	.pdata      start:0x881144C8 end:0x881144D0
+	.pdata      start:0x881144D0 end:0x881144D8
+	.pdata      start:0x881144D8 end:0x881144E0
+	.text       start:0x883B5358 end:0x883B5414
+	.text       start:0x883B5418 end:0x883B54BC
+	.text       start:0x883B54C0 end:0x883B5584
+	.text       start:0x883B5588 end:0x883B55FC
+
+src/xbox360/lb3_celt_vq.c:
+	.pdata      start:0x881147E8 end:0x881147F0
+	.text       start:0x883C3098 end:0x883C30F8
+
+src/xbox360/lb3_flac_decoder.c:
+	.pdata      start:0x88114190 end:0x88114198
+	.text       start:0x883A4C20 end:0x883A4D58
+
+src/xbox360/lb3_vorbis_block.c:
+	.pdata      start:0x88114628 end:0x88114630
+	.text       start:0x883BBFB8 end:0x883BC3B8
+
+src/xbox360/lb3_vorbis_mdct.c:
+	.pdata      start:0x88114800 end:0x88114808
+	.text       start:0x883C3668 end:0x883C3864
+	.text       start:0x883C3AA0 end:0x883C3C24
+	.text       start:0x883C3C28 end:0x883C3DBC
+
+src/xbox360/lt1_lua_auxsort.c:
+	.pdata      start:0x881340E8 end:0x881340F0
+	.text       start:0x889CE9E0 end:0x889CED3C
+
+src/xbox360/lt1_msg_send_encrypted.c:
+	.pdata      start:0x88122C18 end:0x88122C20
+	.text       start:0x8864BE20 end:0x8864BF5C
