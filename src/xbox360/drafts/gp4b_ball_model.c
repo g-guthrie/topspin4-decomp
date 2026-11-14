@@ -20,7 +20,7 @@
  * Function name map (original -> here):
  *   fn_888AAEA8 arc_constants        fn_888AAE00 arc_end_constants     fn_888AAB98 speed2_initial
  *   fn_888AAA70 speed2_bounce        fn_888AACB8 speed2_initial_derivative
- *   fn_888AA968 apex_height          fn_888AB308 net_crossing_height   fn_888AB6C8 node_eval
+ *   ts4_bm_ball_apex_height_888AA968 apex_height          fn_888AB308 net_crossing_height   fn_888AB6C8 node_eval
  *   fn_888AB0E0 velocity_arrival     fn_888AB220 velocity_launch       fn_888AB558 arc1_position
  *   fn_888AD1C8 arc2_position        fn_888AB8D0 solve_kind_time       fn_888AC748/ACA68/ACDA8 solve_kind_speed
  *   fn_888AC688 secondary_dispatch   fn_888AB7B0/AC100/AC2B8/AC4A0/ABF10 secondary_*   fn_888AD0E8 solve_dispatch
@@ -406,7 +406,7 @@ float gp4b_speed2_initial_derivative(const Gp4bBall *B)
     return ret;
 }
 
-/* fn_888AA968: apex height (m) of arc 1 for flight time tt (uses the constants of gp4b_arc_constants only) */
+/* ts4_bm_ball_apex_height_888AA968: apex height (m) of arc 1 for flight time tt (uses the constants of gp4b_arc_constants only) */
 float gp4b_apex_height(const Gp4bBall *B, float tt)
 {
     float ret;

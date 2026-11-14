@@ -2380,6 +2380,62 @@
       "src/xbox360/d2h_init_vtbl_slots_88AF4CC8.c": {
         "status": "Matching",
         "source": "xbox360/d2h_init_vtbl_slots_88AF4CC8.c"
+      },
+      "src/xbox360/ex3_lua_lvm_strcmp.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_lua_lvm_strcmp.c"
+      },
+      "src/xbox360/ex3_lua_lzio.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_lua_lzio.c"
+      },
+      "src/xbox360/ex3_xmltok_conv.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_xmltok_conv.c"
+      },
+      "src/xbox360/ex3_xmltok_get_atts_888930C0.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_xmltok_get_atts_888930C0.c"
+      },
+      "src/xbox360/ex3_xmltok_misc.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_xmltok_misc.c"
+      },
+      "src/xbox360/ex3_xmltok_name.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_xmltok_name.c"
+      },
+      "src/xbox360/ex3_xmltok_pound_name_88893860.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_xmltok_pound_name_88893860.c"
+      },
+      "src/xbox360/ex3_xmltok_scan.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_xmltok_scan.c"
+      },
+      "src/xbox360/ex3_xmltok_utf8.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_xmltok_utf8.c"
+      },
+      "src/xbox360/ex3_zlib_deflate.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_zlib_deflate.c"
+      },
+      "src/xbox360/ex3_zlib_inflate.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_zlib_inflate.c"
+      },
+      "src/xbox360/ex3_zlib_trees.c": {
+        "status": "Matching",
+        "source": "xbox360/ex3_zlib_trees.c"
+      },
+      "src/xbox360/sw4_audio_sample_bytes.c": {
+        "status": "Matching",
+        "source": "xbox360/sw4_audio_sample_bytes.c"
+      },
+      "src/xbox360/nm1_ball_a.c": {
+        "status": "Matching",
+        "source": "xbox360/nm1_ball_a.c"
       }
     }
   }

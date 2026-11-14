@@ -2,9 +2,9 @@
 #include "r3_zlib.h"
 
 /* Placeholders for sibling zlib functions outside this file. */
-extern void fn_888776C8(ts4_deflate_state *s);                         /* fill_window */
+extern void ex3_fill_window_888776C8(ts4_deflate_state *s);                         /* fill_window */
 extern void fn_88873870(ts4_deflate_state *s, unsigned char *buf, unsigned long stored_len, int last); /* _tr_flush_block */
-extern void fn_88876570(ts4_z_stream *strm);                           /* flush_pending */
+extern void ex3_flush_pending_88876570(ts4_z_stream *strm);                           /* flush_pending */
 
 #define TS4_Z_NO_FLUSH 0
 #define TS4_Z_FINISH 4
@@ -22,7 +22,7 @@ extern void fn_88876570(ts4_z_stream *strm);                           /* flush_
         fn_88873870((s), ((s)->block_start >= 0L ? &(s)->window[(unsigned)(s)->block_start] : (unsigned char *)0), \
                     (unsigned long)((long)(s)->strstart - (s)->block_start), (last)); \
         (s)->block_start = (s)->strstart; \
-        fn_88876570((s)->strm); \
+        ex3_flush_pending_88876570((s)->strm); \
     }
 
 #define TS4_FLUSH_BLOCK(s, last) \
@@ -44,7 +44,7 @@ int ts4_deflate_stored_88878230(ts4_deflate_state *s, int flush)
 
     for (;;) {
         if (s->lookahead <= 1) {
-            fn_888776C8(s);
+            ex3_fill_window_888776C8(s);
             if (s->lookahead == 0 && flush == TS4_Z_NO_FLUSH)
                 return TS4_NEED_MORE;
             if (s->lookahead == 0)

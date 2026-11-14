@@ -92,18 +92,19 @@ def main() -> int:
         publics, _, statics = body.partition("Static symbols")
         rows = lambda block: [l.split() for l in block.splitlines()
                               if len(l.split()) > 3 and l.split()[0].split(":")[0] in code]
-        return {row[1] for row in rows(publics)}, len(rows(statics))
+        return ({row[1] for row in rows(publics)}, len(rows(statics)),
+                {row[1] for row in rows(statics)})
 
     map_text = mapfile.read_text(errors="replace") if mapfile.is_file() else ""
     if "Publics by Value" in map_text:
-        public_names, helper_count = map_symbols(map_text)
+        public_names, helper_count, static_names = map_symbols(map_text)
     else:
         # wibo can crash while writing a very large map (seen on macOS with
         # ~590 objects) even though the image links. The full link above still
         # supplies the image and unresolved counts; collect the map data from
         # links over disjoint object chunks, so every function is still seen
         # in the map of a link that contains its object.
-        public_names, helper_count = set(), 0
+        public_names, helper_count, static_names = set(), 0, set()
         chunk = 128
         for start in range(0, len(objects), chunk):
             part = out_dir / f"chunk{start // chunk}"
@@ -119,8 +120,9 @@ def main() -> int:
             part_text = part_map.read_text(errors="replace") if part_map.is_file() else ""
             if "Publics by Value" not in part_text:
                 raise SystemExit(f"chunked link map missing for objects {start}..{start + chunk}")
-            names, helpers = map_symbols(part_text)
+            names, helpers, statics = map_symbols(part_text)
             public_names |= names
+            static_names |= statics
             helper_count += helpers
     symbols = {s: z for u in MATCHING_UNITS for s, z in u["symbols"].items()}
     image = dll.read_bytes()
@@ -132,12 +134,16 @@ def main() -> int:
         "output_sha256": hashlib.sha256(image).hexdigest(),
         "output_text_bytes": text_size(image),
         "map_matching_public_functions": len(set(symbols) & public_names),
-        "map_additional_static_helpers": helper_count,
+        # Matched functions that are file-local (static) in their source, e.g.
+        # zlib trees.c helpers that must share one TU with their callers.
+        "map_matching_static_functions": len((set(symbols) - public_names) & static_names),
+        "map_additional_static_helpers": helper_count - len((set(symbols) - public_names) & static_names),
         "unresolved_external_symbols": len(unresolved),
         "unresolved_external_references": len(refs),
     }
     print(json.dumps(stats, indent=2))
-    if stats["map_matching_public_functions"] != stats["input_matching_functions"]:
+    if (stats["map_matching_public_functions"] + stats["map_matching_static_functions"]
+            != stats["input_matching_functions"]):
         raise SystemExit("not every matching function reached the link map")
     if not args.write:
         return 0
@@ -179,7 +185,7 @@ def main() -> int:
     test = ROOT / "tests" / "test_canonical_build.py"
     source = test.read_text()
     for key in ("input_source_objects", "input_matching_functions",
-                "map_matching_public_functions", "map_additional_static_helpers",
+                "map_matching_public_functions", "map_matching_static_functions", "map_additional_static_helpers",
                 "unresolved_external_symbols", "unresolved_external_references"):
         source = re.sub(rf'(forced\["{key}"\], )\d+', rf"\g<1>{stats[key]}", source)
     test.write_text(source)

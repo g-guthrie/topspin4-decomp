@@ -122,8 +122,8 @@ ts4_word fn_8886B150();
 ts4_word fn_88870AC0();
 ts4_word fn_88871368();
 ts4_word fn_88871810();
-ts4_word fn_88873058();
-ts4_word fn_88877400();
+ts4_word ex3_init_block_88873058();
+ts4_word ex3_deflateInit2__88877400();
 ts4_word fn_888860A0();
 ts4_word fn_88889F50();
 ts4_word fn_888905C0();
@@ -131,8 +131,8 @@ ts4_word fn_88890670();
 ts4_word fn_88890AE0();
 ts4_word fn_88890CB0();
 ts4_word fn_88891030();
-ts4_word fn_88892AD0();
-ts4_word fn_88894BA8();
+ts4_word ts4_xmltok_normal_update_position_88892AD0();
+ts4_word ts4_xmltok_get_encoding_index_88894BA8();
 ts4_word fn_88899C70();
 ts4_word fn_888A4B00();
 ts4_word fn_888A4BE0();
@@ -163,13 +163,13 @@ ts4_word ts4_memset();
 ts4_word ts4_object_finalize();
 ts4_word ts4_tsu_cleanup_end();
 
-/* Swing_DLL.xex 0x88899AA8: if_call_seq fn_88894BA8, u8@0x49, u32@0x4c, fn_88894B30, ts4_forward_with_global_and_one_88894B08, ts4_addr_lbl_880CF238_88895140 */
+/* Swing_DLL.xex 0x88899AA8: if_call_seq ts4_xmltok_get_encoding_index_88894BA8, u8@0x49, u32@0x4c, fn_88894B30, ts4_forward_with_global_and_one_88894B08, ts4_addr_lbl_880CF238_88895140 */
 ts4_word ts4_if_call_seq_fn_88894BA8_88899AA8(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word p2;
     ts4_word t1;
 
-    t1 = fn_88894BA8((ts4_word)a2);
+    t1 = ts4_xmltok_get_encoding_index_88894BA8((ts4_word)a2);
     if ((int)t1 == -1) {
         p2 = (ts4_word)0;
     } else {
@@ -184,13 +184,13 @@ ts4_word ts4_if_call_seq_fn_88894BA8_88899AA8(ts4_word a0, ts4_word a1, ts4_word
     return p2;
 }
 
-/* Swing_DLL.xex 0x88899BF0: if_call_seq fn_88894BA8, u8@0x49, u32@0x4c, fn_88894B80, ts4_forward_with_global_and_one_88894B58, ts4_addr_lbl_880CF238_88895140 */
+/* Swing_DLL.xex 0x88899BF0: if_call_seq ts4_xmltok_get_encoding_index_88894BA8, u8@0x49, u32@0x4c, fn_88894B80, ts4_forward_with_global_and_one_88894B58, ts4_addr_lbl_880CF238_88895140 */
 ts4_word ts4_if_call_seq_fn_88894BA8_88899BF0(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word p2;
     ts4_word t1;
 
-    t1 = fn_88894BA8((ts4_word)a2);
+    t1 = ts4_xmltok_get_encoding_index_88894BA8((ts4_word)a2);
     if ((int)t1 == -1) {
         p2 = (ts4_word)0;
     } else {

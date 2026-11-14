@@ -30,7 +30,7 @@
 #define GP4B_KIND_AVERAGE_SPEED 0x2DB3EB6Fu /* crc32("AverageSpeed"):  metric function is a stub that returns 0 in this build -> degenerate (tau -> ~0.1 s) */
 #define GP4B_KIND_BOUNCE_SPEED  0x50B89452u /* crc32("BounceSpeed"):   metric = speed at the first bounce, |v(tau)|^2 (fn_888AAA70) */
 #define GP4B_KIND_INITIAL_SPEED 0xC1965E5Cu /* crc32("InitialSpeed"):  metric = speed at launch, |v(0)|^2 (fn_888AAB98) */
-#define GP4B_KIND_APOGEE        0x879BA860u /* crc32("Apogee"):        secondary only: metric = apex height (fn_888AA968) */
+#define GP4B_KIND_APOGEE        0x879BA860u /* crc32("Apogee"):        secondary only: metric = apex height (ts4_bm_ball_apex_height_888AA968) */
 
 /* ------------------------------------------------------------------------------------------------------------- */
 /* ball state (only the part the model touches; offsets are the original ones, asserted below)                    */

@@ -4,7 +4,7 @@
 
 extern void fn_881B9148(void *);
 extern void fn_88617D28(void *);
-extern void fn_88892AD0(void *);
+extern void ts4_xmltok_normal_update_position_88892AD0(void *);
 extern char lbl_880CF238[];
 extern char lbl_880DCE14[];
 

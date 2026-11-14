@@ -234,9 +234,9 @@ ts4_word ts4_if_call_seq_u32_off0_8864BC08();
 ts4_word fn_886F1BA8();
 ts4_word fn_887EEC78();
 ts4_word fn_88837880();
-ts4_word fn_88873FE0();
+ts4_word ex3_inflateEnd_88873FE0();
 ts4_word fn_88874270();
-ts4_word fn_88875B18();
+ts4_word ex3_inflateInit2__88875B18();
 ts4_word fn_88885308();
 ts4_word fn_888860A0();
 ts4_word ts4_call_seq_fn_88617D88_888B1D08();
@@ -3549,7 +3549,7 @@ ts4_word ts4_get_u32_lbl_88D45AD4_889C6BA8(void)
     return fn_886F1BA8((ts4_word)(t1 + 116), (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t1) + ((65536) | 22076))));
 }
 
-/* Swing_DLL.xex 0x889C6EF0: if_call_seq u32@0x0, lbl_880DFA20, fn_88875B18, fn_88874270, u32@0x0, fn_88873FE0 */
+/* Swing_DLL.xex 0x889C6EF0: if_call_seq u32@0x0, lbl_880DFA20, ex3_inflateInit2__88875B18, fn_88874270, u32@0x0, ex3_inflateEnd_88873FE0 */
 ts4_word ts4_if_call_seq_u32_off0_889C6EF0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3)
 {
     ts4_word p8;
@@ -3570,12 +3570,12 @@ ts4_word ts4_if_call_seq_u32_off0_889C6EF0(ts4_word a0, ts4_word a1, ts4_word a2
     loc50[8] = (ts4_word)0;
     loc50[4] = (ts4_word)t1;
     loc50[9] = (ts4_word)0;
-    t2 = fn_88875B18((ts4_word)(ts4_word)&loc50[0], (ts4_word)15, (ts4_word)(ts4_word)lbl_880DFA20, (ts4_word)56);
+    t2 = ex3_inflateInit2__88875B18((ts4_word)(ts4_word)&loc50[0], (ts4_word)15, (ts4_word)(ts4_word)lbl_880DFA20, (ts4_word)56);
     p11 = (ts4_word)t2;
     if ((int)t2 == 0) {
         t3 = fn_88874270((ts4_word)(ts4_word)&loc50[0], (ts4_word)4);
         if ((int)t3 != 1) {
-            fn_88873FE0((ts4_word)(ts4_word)&loc50[0]);
+            ex3_inflateEnd_88873FE0((ts4_word)(ts4_word)&loc50[0]);
             if ((int)t3 != 2) {
                 if ((int)t3 != -5 || (ts4_word)(loc50[1]) != 0) {
                     p8 = (ts4_word)t3;
@@ -3590,7 +3590,7 @@ ts4_word ts4_if_call_seq_u32_off0_889C6EF0(ts4_word a0, ts4_word a1, ts4_word a2
         } else {
             t4 = loc50[5];
             *(ts4_word *)((char *)(ts4_word)(a1) + 0) = (ts4_word)t4;
-            t5 = fn_88873FE0((ts4_word)(ts4_word)&loc50[0]);
+            t5 = ex3_inflateEnd_88873FE0((ts4_word)(ts4_word)&loc50[0]);
             p10 = (ts4_word)t5;
         }
         p11 = (ts4_word)p10;
