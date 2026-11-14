@@ -37,9 +37,10 @@ Search space. `run.py` walks every compiler flag set (`--flagsets ,O1`: base
 different registers) and every variant (`--variants`), translating the still
 unmatched functions and checking only translations whose C text has not been
 tried before for that flag set. A variant is `<mode><orient>[letters]`:
-- mode 0/1/2: how many argument registers a call is given (callee prefix scan
+- mode 0/1/2/3: how many argument registers a call is given (callee prefix scan
   only / plus contiguously written registers / every register up to the highest
-  written one);
+  written one / only the contiguously written ones, for variadic callees whose
+  prefix saves r6..r10);
 - orient 0/1: which arm of an if/else becomes the `if` body;
 - `u`: do not infer `int` types from signed compares (cmpwi);
 - `v` / `V` / `L`: make stores / loads+stores / loads `volatile`, which freezes
@@ -53,6 +54,27 @@ State is cached in `--work` (translations' text digests, matches, disassembly)
 so reruns resume; use `--fresh` to discard it. Requires a completed
 `tools/matching.py` run (split objects) and `work/matching-tools`.
 Names are `ts4_<kind>_<detail>_<ADDR>`; do not commit game data.
+
+Round K3 additions (all behind unit tests in `tests/test_asm2c.py`)
+- counted loops: `mtctr`/`bdnz`/`bdz` become a counter variable `cN` and a
+  `do { ... } while (--cN != 0)` latch; update-form accesses (`lwzu`, `stbu`, ...) bump
+  the base register; `break` out of loops (`if (c) break;`), loops that end in a
+  conditional back edge although the header also tests (`while (c) { ...; if (!d) break; }`),
+  a fall-back from the while to the do-while form for loops with early returns, and loop
+  exits that jump to a return block shared with the normal exit;
+- registers loaded by an absorbed (short-circuit) condition block and still needed
+  afterwards: `gen()` retries with those blocks kept as nested ifs (`strict`);
+- typed stack locals: byte/half/float/double accesses and spills that are not covered by an
+  `addi rX,r1,..` array get their own word array accessed through casts; frameless leaf
+  functions use the red zone (`locm10` for -0x10(r1)); conversions through a stack slot
+  (`extsw/std/lfd/fcfid/frsp`, `fctiwz/stfd/lwz`) are folded into casts without a local;
+- `ld` getters return `ts4_u64`; VMX (lvx128/stvx128 and the ALU ops of `ts4_vector.h`) for
+  call-free, loop-free functions; interlocked `mfmsr/mtmsrd/lwarx/stwcx.` sequences become
+  `_InterlockedExchange/Increment/Decrement/ExchangeAdd`; float phi variables (`pfN`); floats in
+  loops when no float register is carried around the back edge; `clrlslwi`;
+- budget: `gen()` gives up (`too big`) after 2500 symbolically executed instructions, because
+  arms that never rejoin duplicate the code behind them; `--max-size 0x300` is practical;
+- `emit.cc_ok` also runs clang and passes `-Wno-deprecated-non-prototype`.
 
 Findings worth knowing
 - A function whose original builds an image address from a bare `lis 0x88xx`

@@ -261,6 +261,15 @@ class StructurizerTests(unittest.TestCase):
         r = gen(["clrlslwi r3,r3,17,4", "blr"])
         self.assertIn("& 0x7fff) << 4", r["body"])
 
+    def test_variadic_callee_mode_3_uses_only_written_registers(self):
+        callee = prog(["stw r9,0x28(r1)", "blr"])
+        env = translate.Env(lambda sym: callee if sym == "fn_vararg" else None)
+        t = ["mr r5,r4", "li r6,1", "bl 0x0 -> 0x88001000   ; REL24 fn_vararg", "blr"]
+        r1 = translate.gen(prog(t), env, 1)
+        r3 = translate.gen(prog(t), env, 3)
+        self.assertEqual(r1["protos"]["fn_vararg"], 7)
+        self.assertLess(r3["protos"]["fn_vararg"], r1["protos"]["fn_vararg"])
+
     def test_typed_stack_locals(self):
         t = ["stfd f1,0x50(r1)", "lwz r3,0x54(r1)", "lbz r4,0x58(r1)", "stb r4,0x59(r1)", "blr"]
         r = gen(t)
@@ -268,9 +277,11 @@ class StructurizerTests(unittest.TestCase):
         self.assertIn("*(unsigned char *)((char *)loc50 + 9) =", r["body"])
         self.assertIn("*(double *)((char *)loc50 + 0) =", r["body"])
 
-    def test_float_phi_is_skipped(self):
-        with self.assertRaises(translate.Skip):
-            gen(["lfs f0,0(r3)", "fcmpu cr6,f0,f1", f"bge cr6, 0x8 -> {tgt(4)}", "fmr f1,f0", "blr"])
+    def test_float_phi_merges_into_a_float_variable(self):
+        t = ["lfs f0,0(r3)", "fcmpu cr6,f0,f1", f"bge cr6, 0x8 -> {tgt(4)}", "fmr f1,f0", "blr"]
+        r = gen(t)
+        self.assertRegex(r["body"], r"float pf\d+;")
+        self.assertTrue(r["sig"].startswith("float "))
 
 
 class OpcodeTests(unittest.TestCase):

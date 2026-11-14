@@ -197,7 +197,7 @@ class Gen:
         self.calls = 0; self.rets = []; self.localnames = []
         self.signed = set(); self.unsigned = set()   # value names compared with signed / unsigned compares
         self.pending = {}
-        self.intrinsics = set(); self.nsteps = 0
+        self.intrinsics = set(); self.nsteps = 0; self.fphis = []
         self.vec = False; self.vparams = set(); self.vdecls = []
         self.has_vmx = any(is_vmx(i.mn) for i in self.insns)
 
@@ -378,9 +378,26 @@ class Gen:
         for s, o in arms:
             if s['vregs'] != st['vregs']:
                 raise Skip('vec phi')
-            for f in set(s['fregs']) | set(st['fregs']):
-                if s['fregs'].get(f) is not st['fregs'].get(f):
-                    raise Skip('float phi')
+        for f in sorted(set().union(*(set(s['fregs']) for s, o in arms)) | set(st['fregs'])):
+            if all(s['fregs'].get(f) is st['fregs'].get(f) for s, o in arms):
+                continue
+            tys = {(s['fregs'].get(f) or st['fregs'].get(f) or (None, 'float'))[1] for s, o in arms}
+            if tys <= {'ctiw', 'i64'}:       # a pending conversion that is dead after the join
+                st['fregs'].pop(f, None); st['fwritten'].discard(f); st['clobbered'].add(f)
+                continue
+            if len(tys) != 1:
+                raise Skip('float phi')
+            t = tys.pop()
+            if t not in ('float', 'double'):
+                raise Skip('float phi')
+            self.ntmp += 1
+            pn = f'pf{self.ntmp}'
+            self.fphis.append((pn, t))
+            if pre_out is not None:
+                pre_out.append(f'{pn} = {self.fval(st, f, t)};')
+            for s, o in arms:
+                o.append(f'{pn} = {self.fval(s, f, t)};')
+            st['fregs'][f] = (pn, t); st['fwritten'].add(f); st['clobbered'].discard(f)
         names = set()
         for s, o in arms:
             names |= set(s['written']) | set(s['regs']) | set(s['clobbered'])
@@ -770,10 +787,12 @@ class Gen:
                 if self.mode == 0:
                     raise Skip('noarity')
                 ar = 0
+            if self.mode == 3:   # variadic callee: only the registers set up here are arguments
+                ar = 0
         else:
             ar = 1
         n = ar
-        if self.mode == 1 or mn == 'bctrl':
+        if self.mode in (1, 3) or mn == 'bctrl':
             while f'r{3 + n}' in written and f'r{3 + n}' != ctr_reg and 3 + n <= 10:
                 n += 1
             if mn == 'bctrl':
@@ -854,7 +873,7 @@ class Gen:
         elif tail[0] == 'call':
             clobbered = st['clobbered']
             cand = [int(r[1:]) for r in written if r[0] == 'r' and not r.startswith('__') and 3 <= int(r[1:]) <= 10 and r not in clobbered]
-            if self.mode == 1:   # contiguous registers set up here, then pass-through up to the callee's arity
+            if self.mode in (1, 3):   # contiguous registers set up here, then pass-through up to the callee's arity
                 run = 3
                 while f'r{run + 1}' in written and f'r{run + 1}' not in clobbered and run < 10:
                     run += 1
@@ -875,7 +894,7 @@ class Gen:
                 raise Skip('ctr lost')
             wr = [int(r[1:]) for r in written if r[0] == 'r' and not r.startswith('__') and 3 <= int(r[1:]) <= 10
                   and r not in st['clobbered'] and r != st['ctr_reg']]
-            if self.mode == 1:
+            if self.mode in (1, 3):
                 k = max([3] + wr)                         # only registers the function set up itself
             elif self.mode == 2:
                 k = max([3] + wr + list(self.readp))      # plus pass-through parameters it reads
@@ -1537,7 +1556,7 @@ def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
                 o.append(' ' * ind + x)
         return decls, o
     decls, body_l = render(top, 4)
-    decls = [f'__vector4 {n};' for n in g.vdecls] + [f'ts4_word {n};' for n in phis] + [f'ts4_word {n}[{g.local_ext[g.locbase[n]]}];' for n in g.localnames] + decls
+    decls = [f'{t} {n};' for n, t in g.fphis] + [f'__vector4 {n};' for n in g.vdecls] + [f'ts4_word {n};' for n in phis] + [f'ts4_word {n}[{g.local_ext[g.locbase[n]]}];' for n in g.localnames] + decls
     body = ''.join('    ' + d + '\n' for d in decls) + ('\n' if decls else '') + '\n'.join(body_l) + '\n'
     maxp = max(readp) if readp else 2
     def ptype(j):
