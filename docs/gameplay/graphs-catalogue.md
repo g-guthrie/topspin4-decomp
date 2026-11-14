@@ -78,7 +78,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **16 `4fd4c7a4` IsTired** (high)
 - runs: code fn_886BDB58 @0x886BDC24
-- in: `S.Profile.Return` (S+0x650), `S.Context.#030e52e2` (S+0x5bc), `S.Context.Emergency?` (S+0x5c8), `S.Fatigue.Input.#7afa6edb` (S+0xf3c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Fatigue.Input.Random` (S+0xf30), `S.#ad1995d3.#9d2b062e` (S+0xa18)
+- in: `S.Profile.Return` (S+0x650), `S.Context.#030e52e2` (S+0x5bc), `S.Context.Emergency?` (S+0x5c8), `S.Fatigue.Input.#7afa6edb` (S+0xf3c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Fatigue.Input.Random` (S+0xf30), `S.RePositioningState?.#9d2b062e` (S+0xa18)
 - out: `S.Fatigue.Output.Tired` (S+0xf68)
 - nodes: CURVE 14, LERP 4, PRODUCT 2, SUM 1; 22 curve keys
 
@@ -107,10 +107,10 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **20 `fc7f3d8a` EmergencyRepositioning** (high)
 - runs: code fn_886BB6E0 @0x886BB774
-- in: `S.#ad1995d3.#a38f4fe7` (S+0xa14)
+- in: `S.RePositioningState?.#a38f4fe7` (S+0xa14)
 - out: `S.Context.Emergency?` (S+0x5c8)
 - nodes: CURVE 1; 2 curve keys
-- formula: `r0 = curve1(S.#ad1995d3.#a38f4fe7)`
+- formula: `r0 = curve1(S.RePositioningState?.#a38f4fe7)`
 
 **37 `4fcc3eb8` VolleySpeedCoef** (high)
 - runs: code fn_886BB6E0 @0x886BB804
@@ -216,72 +216,72 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - nodes: CONST 1, CURVE 14, PRODUCT 3, SUM 2, LERP 1; 31 curve keys
 
 
-## Per-shot-class error, power and aiming graphs (Settings shot-class table) (155 graphs)
+## Per-shot-class error, power and aiming graphs (Settings shot-class table) (161 graphs)
 
 **106 `b20fea97` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].ExpressionComponents?`
-- in: `S.Profile.Serve` (S+0x64c), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.#e03c5fbe` (S+0x5cc)
+- in: `S.Profile.Serve` (S+0x64c), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.#e03c5fbe` (S+0x5cc)
 - out: `ServeComponents.FollowToNet` (AI+0x20c), `ServeComponents.OutEfficiency?` (AI+0x214), `ServeComponents.AimingEfficiency?` (AI+0x210), `ServeComponents.Timing` (AI+0x208), `ServeComponents.AimingSideRight?` (AI+0x22c), `ServeComponents.Flat` (AI+0x204), `ServeComponents.Slice` (AI+0x1fc), `ServeComponents.TopSpin` (AI+0x200), `ServeComponents.AimingSideLeft?` (AI+0x224), `ServeComponents.AimingLengthCenter?` (AI+0x234), `ServeComponents.AimingLengthShort?` (AI+0x230), `ServeComponents.ServeStick` (AI+0x21c), `ServeComponents.AimingSideCenter?` (AI+0x228), `ServeComponents.AimingLengthLong?` (AI+0x238), `ServeComponents.PressAndHold` (AI+0x220), `ServeComponents.FaultProbability?` (AI+0x218)
 - nodes: CONST 16, CURVE 2, LERP 1, PRODUCT 1; 2 curve keys
 
 **107 `d606e686` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random2?` (AI+0x1c8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.#e03c5fbe` (S+0x5cc), `S.Profile.Serve` (S+0x64c)
+- in: `UserAIState?.#a9a83d2d.Random2?` (AI+0x1c8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.#e03c5fbe` (S+0x5cc), `S.Profile.Serve` (S+0x64c)
 - out: `ServeComponents.ServeStick` (AI+0x21c), `ServeComponents.Timing` (AI+0x208), `ServeComponents.FollowToNet` (AI+0x20c), `ServeComponents.Flat` (AI+0x204), `ServeComponents.AimingSideRight?` (AI+0x22c), `ServeComponents.TopSpin` (AI+0x200), `ServeComponents.Slice` (AI+0x1fc), `ServeComponents.AimingLengthCenter?` (AI+0x234), `ServeComponents.AimingLengthShort?` (AI+0x230), `ServeComponents.OutEfficiency?` (AI+0x214), `ServeComponents.AimingSideLeft?` (AI+0x224), `ServeComponents.AimingSideCenter?` (AI+0x228), `ServeComponents.AimingLengthLong?` (AI+0x238), `ServeComponents.PressAndHold` (AI+0x220), `ServeComponents.AimingEfficiency?` (AI+0x210), `ServeComponents.FaultProbability?` (AI+0x218)
 - nodes: CONST 15, CURVE 3, LERP 1, PRODUCT 1; 7 curve keys
 
 **108 `dc7fe125` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].ExpressionComponents?`
-- in: `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.#e03c5fbe` (S+0x5cc), `S.Profile.Serve` (S+0x64c)
+- in: `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.#e03c5fbe` (S+0x5cc), `S.Profile.Serve` (S+0x64c)
 - out: `ServeComponents.Timing` (AI+0x208), `ServeComponents.FollowToNet` (AI+0x20c), `ServeComponents.OutEfficiency?` (AI+0x214), `ServeComponents.AimingEfficiency?` (AI+0x210), `ServeComponents.AimingLengthCenter?` (AI+0x234), `ServeComponents.AimingLengthShort?` (AI+0x230), `ServeComponents.FaultProbability?` (AI+0x218), `ServeComponents.Slice` (AI+0x1fc), `ServeComponents.TopSpin` (AI+0x200), `ServeComponents.AimingSideLeft?` (AI+0x224), `ServeComponents.AimingLengthLong?` (AI+0x238), `ServeComponents.Flat` (AI+0x204), `ServeComponents.AimingSideRight?` (AI+0x22c), `ServeComponents.AimingSideCenter?` (AI+0x228)
 - nodes: CONST 23, CURVE 11, LERP 10, PRODUCT 1; 22 curve keys
 
 **110 `ed40b0a8` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `#e9ca839c.#a9a83d2d.Random2?` (AI+0x1c8), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `UserAIState?.#a9a83d2d.Random2?` (AI+0x1c8), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc)
 - out: `ServeComponents.FollowToNet` (AI+0x20c), `ServeComponents.TopSpin` (AI+0x200), `ServeComponents.Flat` (AI+0x204), `ServeComponents.OutEfficiency?` (AI+0x214), `ServeComponents.Slice` (AI+0x1fc), `ServeComponents.AimingLengthCenter?` (AI+0x234), `ServeComponents.AimingLengthShort?` (AI+0x230), `ServeComponents.AimingSideRight?` (AI+0x22c), `ServeComponents.AimingSideCenter?` (AI+0x228), `ServeComponents.AimingLengthLong?` (AI+0x238), `ServeComponents.AimingSideLeft?` (AI+0x224), `ServeComponents.ServeStick` (AI+0x21c), `ServeComponents.AimingEfficiency?` (AI+0x210), `ServeComponents.Timing` (AI+0x208), `ServeComponents.PressAndHold` (AI+0x220), `ServeComponents.FaultProbability?` (AI+0x218)
 - nodes: CONST 14, CURVE 4, LERP 1, PRODUCT 1; 10 curve keys
 
 **111 `5e6ff733` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `#e9ca839c.#a9a83d2d.Random2?` (AI+0x1c8), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `UserAIState?.#a9a83d2d.Random2?` (AI+0x1c8), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc)
 - out: `ServeComponents.TopSpin` (AI+0x200), `ServeComponents.FollowToNet` (AI+0x20c), `ServeComponents.Flat` (AI+0x204), `ServeComponents.OutEfficiency?` (AI+0x214), `ServeComponents.Slice` (AI+0x1fc), `ServeComponents.AimingLengthCenter?` (AI+0x234), `ServeComponents.AimingLengthShort?` (AI+0x230), `ServeComponents.AimingSideRight?` (AI+0x22c), `ServeComponents.AimingSideCenter?` (AI+0x228), `ServeComponents.AimingLengthLong?` (AI+0x238), `ServeComponents.AimingSideLeft?` (AI+0x224), `ServeComponents.ServeStick` (AI+0x21c), `ServeComponents.PressAndHold` (AI+0x220), `ServeComponents.Timing` (AI+0x208), `ServeComponents.AimingEfficiency?` (AI+0x210), `ServeComponents.FaultProbability?` (AI+0x218)
 - nodes: CONST 14, CURVE 4, LERP 1, PRODUCT 1; 8 curve keys
 
 **112 `26758e4a` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc), `#e9ca839c.#a9a83d2d.Random2?` (AI+0x1c8)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc), `UserAIState?.#a9a83d2d.Random2?` (AI+0x1c8)
 - out: `ServeComponents.TopSpin` (AI+0x200), `ServeComponents.FollowToNet` (AI+0x20c), `ServeComponents.Flat` (AI+0x204), `ServeComponents.Slice` (AI+0x1fc), `ServeComponents.AimingLengthCenter?` (AI+0x234), `ServeComponents.AimingSideCenter?` (AI+0x228), `ServeComponents.AimingLengthLong?` (AI+0x238), `ServeComponents.AimingSideRight?` (AI+0x22c), `ServeComponents.OutEfficiency?` (AI+0x214), `ServeComponents.ServeStick` (AI+0x21c), `ServeComponents.AimingLengthShort?` (AI+0x230), `ServeComponents.AimingSideLeft?` (AI+0x224), `ServeComponents.Timing` (AI+0x208), `ServeComponents.PressAndHold` (AI+0x220), `ServeComponents.AimingEfficiency?` (AI+0x210), `ServeComponents.FaultProbability?` (AI+0x218)
 - nodes: CONST 14, CURVE 4, LERP 1, PRODUCT 1; 10 curve keys
 
 **113 `6f50a6be` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].ExpressionComponents?`
-- in: `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random2?` (AI+0x1c8), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random2?` (AI+0x1c8), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `ServeComponents.OutEfficiency?` (AI+0x214), `ServeComponents.FollowToNet` (AI+0x20c), `ServeComponents.ServeStick` (AI+0x21c), `ServeComponents.PressAndHold` (AI+0x220), `ServeComponents.Timing` (AI+0x208), `ServeComponents.AimingEfficiency?` (AI+0x210), `ServeComponents.FaultProbability?` (AI+0x218), `ServeComponents.AimingSideRight?` (AI+0x22c), `ServeComponents.Flat` (AI+0x204), `ServeComponents.TopSpin` (AI+0x200), `ServeComponents.AimingSideLeft?` (AI+0x224), `ServeComponents.AimingLengthShort?` (AI+0x230), `ServeComponents.AimingLengthCenter?` (AI+0x234), `ServeComponents.Slice` (AI+0x1fc), `ServeComponents.AimingLengthLong?` (AI+0x238), `ServeComponents.AimingSideCenter?` (AI+0x228)
 - nodes: CONST 23, CURVE 13, LERP 10, PRODUCT 1; 28 curve keys
 
 **114 `a465985c` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].ExpressionComponents?`
-- in: `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random2?` (AI+0x1c8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc)
+- in: `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random2?` (AI+0x1c8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.Profile.Serve` (S+0x64c), `S.Context.#e03c5fbe` (S+0x5cc)
 - out: `ServeComponents.OutEfficiency?` (AI+0x214), `ServeComponents.FollowToNet` (AI+0x20c), `ServeComponents.ServeStick` (AI+0x21c), `ServeComponents.PressAndHold` (AI+0x220), `ServeComponents.AimingEfficiency?` (AI+0x210), `ServeComponents.FaultProbability?` (AI+0x218), `ServeComponents.TopSpin` (AI+0x200), `ServeComponents.Flat` (AI+0x204), `ServeComponents.AimingSideRight?` (AI+0x22c), `ServeComponents.AimingLengthShort?` (AI+0x230), `ServeComponents.AimingLengthCenter?` (AI+0x234), `ServeComponents.AimingLengthLong?` (AI+0x238), `ServeComponents.Slice` (AI+0x1fc), `ServeComponents.AimingSideCenter?` (AI+0x228), `ServeComponents.AimingSideLeft?` (AI+0x224)
 - nodes: CONST 23, CURVE 12, LERP 10, PRODUCT 1; 25 curve keys
 
 **188 `08be6bc3` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.LocalOpponentPosition` (S+0x910), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.HeightNotation?` (S+0x7f0), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.IsGamePoint??` (S+0xf98), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 44, PRODUCT 14, LERP 12, SUM 5; 101 curve keys
 
 **189 `2809d743` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.MatchAnalyser.IsGamePoint??` (S+0xf98), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.InsideOut` (S+0x7c8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.HeightNotation?` (S+0x7f0), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#1407106c` (S+0x770), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 46, PRODUCT 16, LERP 11, SUM 6; 106 curve keys
 
 **190 `f92c6676` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.HeightNotation?` (S+0x7f0), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.IsGamePoint??` (S+0xf98), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 44, PRODUCT 15, LERP 11, SUM 5; 101 curve keys
 
 **191 `d8d29eab` -** (unnamed)
@@ -355,37 +355,37 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **202 `74561701` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.InsideOut` (S+0x7c8), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 44, PRODUCT 14, LERP 12, SUM 5; 105 curve keys
 
 **203 `ac6f2474` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.#08950daa` (S+0xf94), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, PRODUCT 15, CURVE 45, LERP 12, SUM 5; 106 curve keys
 
 **204 `32b9e0d0` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalOpponentPosition` (S+0x910), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.MatchAnalyser.#08950daa` (S+0xf94), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 6, CURVE 45, PRODUCT 15, LERP 12, SUM 5; 106 curve keys
 
 **205 `a28317d2` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.Profile.SkillList (link)` (link), `MatchAnalyser.#ace1253a` (S+0xf84), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#af13720a` (S+0x7ec), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.MatchAnalyser.#08950daa` (S+0xf94), `TeamState.IncomingBall?.IsB?` (Team+0x50), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.LocalOpponentPosition` (S+0x910), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 49, PRODUCT 16, LERP 13, SUM 5; 112 curve keys
 
 **206 `969bb87a` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#af13720a` (S+0x7ec), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.LocalOpponentPosition` (S+0x918), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.MatchAnalyser.#08950daa` (S+0xf94), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 48, PRODUCT 16, LERP 13, SUM 5; 112 curve keys
 
 **207 `24cabf7d` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#af13720a` (S+0x7ec), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.SideRight?` (S+0x708), `S.LocalOpponentPosition` (S+0x918), `S.#7e28dbc0.#719dc5ee.SideLeft?` (S+0x704), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x348), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.MatchAnalyser.#08950daa` (S+0xf94), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 7, CURVE 47, PRODUCT 16, LERP 13, SUM 5; 111 curve keys
 
 **208 `90b9befc` -** (unnamed)
@@ -397,19 +397,19 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **209 `853f0c5c` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#aee2d90b` (S+0x7d0)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 31, PRODUCT 7, LERP 7, SUM 3; 76 curve keys
 
 **210 `f3495835` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 32, PRODUCT 8, LERP 7, SUM 3; 79 curve keys
 
 **211 `1f45778c` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.LocalOpponentPosition` (S+0x910), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#8f3a95d8` (S+0x1c), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#8f3a95d8` (S+0x1c), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 32, PRODUCT 8, LERP 7, SUM 3; 79 curve keys
 
 **212 `e1d08276` -** (unnamed)
@@ -487,43 +487,43 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **224 `03081678` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#f83da54e` (S+0x20), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 18, PRODUCT 2, LERP 6, SUM 2; 63 curve keys
 
 **225 `5991d7bb` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#f83da54e` (S+0x20), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 18, PRODUCT 2, LERP 6, SUM 2; 63 curve keys
 
 **226 `a594ba0f` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#f83da54e` (S+0x20), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 18, PRODUCT 2, LERP 6, SUM 2; 63 curve keys
 
 **227 `ddfd33c7` -** (unnamed)
 - runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `ShotContext.ManualShotTiming??` (S+0x544)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#f83da54e` (S+0x20), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 16, LERP 6, PRODUCT 1, SUM 2; 54 curve keys
 
 **228 `ca236403` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.Profile.SkillList (link)` (link), `S.Profile.Return` (S+0x650), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `ShotContext.ManualShotTiming??` (S+0x544)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#f83da54e` (S+0x20), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 16, LERP 6, PRODUCT 1, SUM 2; 54 curve keys
 
 **229 `496825b2` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.Return` (S+0x650), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.AnticipationScore?` (S+0x7e4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `ShotContext.ManualShotTiming??` (S+0x544), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4)
-- out: `S.#9c11fa39.ControlValues.#f83da54e` (S+0x20), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#f83da54e` (S+0x20), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 16, LERP 6, PRODUCT 1, SUM 2; 54 curve keys
 
 **230 `ca4ac032` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Min` (S+0x6c4), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Max` (S+0x6c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 4, CURVE 20, PRODUCT 3, LERP 7, SUM 3; 54 curve keys
 
 **231 `f903fe93` -** (unnamed)
@@ -535,13 +535,13 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **232 `1bf67deb` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Min` (S+0x6c4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Max` (S+0x6c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 4, CURVE 20, PRODUCT 3, LERP 7, SUM 3; 54 curve keys
 
 **233 `788a1775` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.Profile.Volley` (S+0x65c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#39b2f234` (S+0x7e8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Max` (S+0x6c8), `S.#7e28dbc0.ShotSpecific.AimingResolution.#6ebe237b.Min` (S+0x6c4)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 4, CURVE 19, PRODUCT 3, SUM 3, LERP 6; 50 curve keys
 
 **234 `9660ba92` -** (unnamed)
@@ -559,31 +559,31 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **236 `31637539` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
+- out: `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78), `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88)
 - nodes: CONST 5, CURVE 25, PRODUCT 6, LERP 5, SUM 3; 60 curve keys
 
 **237 `837d492d` -** (unnamed)
 - runs: Settings `ShotClassTable[].#3f9c096b`
 - in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.AimingState?.DeviationSystem?.Random` (S+0xd7c), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.#719dc5ee.Long` (S+0x6f4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
+- out: `S.DebugCustomValue?.ControlValues.#665930ed` (S+0x14), `S.ReceiverState?.AimingState?.Efficiency` (S+0xd88), `S.ReceiverState?.AimingState?.DeviationSystem?.DeepDeviation?` (S+0xd78)
 - nodes: CONST 3, CURVE 33, PRODUCT 6, LERP 9, SUM 3; 77 curve keys
 
 **238 `491e53f5` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.InsideOut` (S+0x7c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 6, CURVE 39, PRODUCT 13, LERP 10, SUM 5; 85 curve keys
 
 **239 `e30baab5` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.MatchAnalyser.#08950daa` (S+0xf94), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 6, CURVE 36, PRODUCT 13, SUM 5, LERP 8; 76 curve keys
 
 **240 `8cd63574` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.Profile.Power` (S+0x660), `S.MatchAnalyser.#08950daa` (S+0xf94)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 6, CURVE 35, PRODUCT 13, LERP 8, SUM 4; 73 curve keys
 
 **241 `a4273d35` -** (unnamed)
@@ -602,19 +602,19 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **243 `e3e9d682` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#be5d458f` (S+0x768), `ShotContext.ManualShotTiming??` (S+0x544), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.Power` (S+0x660), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.MatchAnalyser.#08950daa` (S+0xf94), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 40, PRODUCT 13, LERP 10, SUM 5; 90 curve keys
 
 **244 `fc5cc9ec` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Profile.SkillList (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.MatchAnalyser.#125400f0` (S+0xf90), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 36, PRODUCT 13, LERP 8, SUM 5; 78 curve keys
 
 **245 `91b4e93a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `ShotContext.ManualShotTiming??` (S+0x544), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Profile.Power` (S+0x660), `S.LocalOpponentPosition` (S+0x910), `S.MatchAnalyser.#08950daa` (S+0xf94), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `TeamState.IncomingBall?.IsB?` (Team+0x50)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 38, PRODUCT 14, LERP 9, SUM 4; 86 curve keys
 
 **246 `a4273d35` -** (unnamed)
@@ -633,19 +633,19 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **248 `d4c08700` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.#1407106c` (S+0x770), `TeamState.IncomingBall?.IsB?` (Team+0x50), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.LocalOpponentPosition` (S+0x910), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 33, PRODUCT 10, LERP 10, SUM 4; 70 curve keys
 
 **249 `bb5c87d3` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `TeamState.IncomingBall?.IsB?` (Team+0x50), `ShotContext.ManualShotTiming??` (S+0x544), `S.MatchAnalyser.#125400f0` (S+0xf90), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 31, PRODUCT 11, SUM 4, LERP 9; 66 curve keys
 
 **250 `8e98bac6` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `TeamState.IncomingBall?.IsB?` (Team+0x50), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 5, CURVE 27, PRODUCT 10, SUM 4, LERP 7; 53 curve keys
 
 **251 `a2202a7a` -** (unnamed)
@@ -657,19 +657,19 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **252 `60cf8f84` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.LocalOpponentPosition` (S+0x910), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 31, PRODUCT 10, LERP 7, SUM 5; 80 curve keys
 
 **253 `4cb8bd52` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#7e28dbc0.SlowDown?` (S+0x7cc), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.LocalOpponentPosition` (S+0x910), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.MatchAnalyser.#125400f0` (S+0xf90)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 29, PRODUCT 10, LERP 5, SUM 5; 67 curve keys
 
 **254 `3d2d527a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#7e28dbc0.#be5d458f` (S+0x768), `S.MatchAnalyser.#7595a0b3` (S+0xf8c), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#8ea88f9f (link)` (link), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 29, PRODUCT 10, LERP 6, SUM 4; 66 curve keys
 
 **255 `baf20a28` -** (unnamed)
@@ -693,37 +693,37 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **258 `61ec50e9` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Return` (S+0x650), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `MatchAnalyser.#b6b22409` (S+0xf80), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 19, PRODUCT 5, LERP 7, SUM 3; 64 curve keys
 
 **259 `8ea9307a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **260 `98ff9b38` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **261 `60d1fb90` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `MatchAnalyser.#b6b22409` (S+0xf80), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **262 `af75299f` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **263 `7e2338fe` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `ShotContext.ManualShotTiming??` (S+0x544), `S.Profile.Return` (S+0x650), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.#1407106c` (S+0x770), `S.ReceiverState?.TimingState.#d2797eb6` (S+0xcf4), `MatchAnalyser.#b6b22409` (S+0xf80), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 15, PRODUCT 5, SUM 3, LERP 5; 52 curve keys
 
 **264 `1485a4d6` -** (unnamed)
@@ -771,25 +771,25 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **271 `1a740604` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 29, PRODUCT 9, LERP 6, SUM 5; 67 curve keys
 
 **272 `67089d52` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.SlowDown?` (S+0x7cc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 30, PRODUCT 9, LERP 6, SUM 5; 68 curve keys
 
 **273 `794440ef` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.PowerResolution.Max` (S+0x6c0), `S.Profile.Power` (S+0x660), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.InsideOut` (S+0x7c8), `S.#7e28dbc0.ShotSpecific.PowerResolution.Min` (S+0x6bc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.SlowDown?` (S+0x7cc)
-- out: `S.#9c11fa39.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
+- out: `S.DebugCustomValue?.ControlValues.#ff506157` (S+0x10), `S.#7e28dbc0.PowerfulFactor?` (S+0x778)
 - nodes: CONST 3, CURVE 29, PRODUCT 9, LERP 6, SUM 5; 67 curve keys
 
 **274 `abe5c315` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#8ea88f9f (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 24, PRODUCT 5, LERP 8, SUM 1; 54 curve keys
 
 **275 `e0e5bb73` -** (unnamed)
@@ -801,7 +801,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **276 `dd93977c` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#8ea88f9f (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 24, PRODUCT 5, LERP 8, SUM 1; 54 curve keys
 
 **277 `9693ef1a` -** (unnamed)
@@ -813,7 +813,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **278 `319fb8c5` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#03d2be3d` (S+0x7a0)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, PRODUCT 5, CURVE 24, LERP 8, SUM 1; 54 curve keys
 
 **279 `7a9fc0a3` -** (unnamed)
@@ -822,10 +822,28 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 10, LERP 3, PRODUCT 1, SUM 1; 18 curve keys
 
+**280 `7979bb20` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.ShotSpecific.WoodUp?` (S+0x6e4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
+- out: `S.#7e28dbc0.WoodUpDistance` (S+0x784), `S.#7e28dbc0.WoodUpAngleDeviation` (S+0x780), `S.#7e28dbc0.OutcomeWoodUp` (S+0x724)
+- nodes: CONST 4, CURVE 3, LERP 2, PRODUCT 1; 4 curve keys
+
+**281 `823bd977` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodSide?` (S+0x6ec)
+- out: `S.#7e28dbc0.WoodSideAngleDeviation` (S+0x790), `S.#7e28dbc0.WoodSideDistance` (S+0x794), `S.#7e28dbc0.OutcomeWoodSide` (S+0x72c)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
+**282 `bd4552f9` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodDown?` (S+0x6e8)
+- out: `S.#7e28dbc0.WoodDownDistance` (S+0x78c), `S.#7e28dbc0.WoodDownAngleDeviation` (S+0x788), `S.#7e28dbc0.OutcomeWoodDown` (S+0x728)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
 **283 `652ed00f` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 21, PRODUCT 5, LERP 7, SUM 1; 51 curve keys
 
 **284 `2e2ea869` -** (unnamed)
@@ -837,7 +855,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **285 `cf3b294f` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 21, PRODUCT 5, LERP 7, SUM 1; 51 curve keys
 
 **286 `843b5129` -** (unnamed)
@@ -849,7 +867,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **287 `a0e6b68e` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.ManualShotTiming??` (S+0x544), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 21, PRODUCT 5, LERP 7, SUM 1; 51 curve keys
 
 **288 `ebe6cee8` -** (unnamed)
@@ -858,10 +876,28 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - out: `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 10, LERP 3, PRODUCT 1, SUM 1; 18 curve keys
 
+**289 `7979bb20` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodUp?` (S+0x6e4)
+- out: `S.#7e28dbc0.WoodUpDistance` (S+0x784), `S.#7e28dbc0.WoodUpAngleDeviation` (S+0x780), `S.#7e28dbc0.OutcomeWoodUp` (S+0x724)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
+**290 `823bd977` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodSide?` (S+0x6ec)
+- out: `S.#7e28dbc0.WoodSideAngleDeviation` (S+0x790), `S.#7e28dbc0.WoodSideDistance` (S+0x794), `S.#7e28dbc0.OutcomeWoodSide` (S+0x72c)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
+**291 `bd4552f9` -** (unnamed)
+- runs: Settings `ShotClassTable[].Element.[]`
+- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodDown?` (S+0x6e8)
+- out: `S.#7e28dbc0.WoodDownDistance` (S+0x78c), `S.#7e28dbc0.WoodDownAngleDeviation` (S+0x788), `S.#7e28dbc0.OutcomeWoodDown` (S+0x728)
+- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
+
 **292 `66af1b52` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `MatchAnalyser.#689dc6f2` (S+0xf88), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 27, PRODUCT 5, LERP 9, SUM 1; 66 curve keys
 
 **293 `2daf6334` -** (unnamed)
@@ -873,7 +909,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **294 `791a043c` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#8ea88f9f (link)` (link), `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#1407106c` (S+0x770), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#be5d458f` (S+0x768), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `MatchState.#8beb922e` (Match+0x334)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 2, CURVE 28, PRODUCT 6, LERP 9, SUM 1; 70 curve keys
 
 **295 `321a7c5a` -** (unnamed)
@@ -886,7 +922,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **296 `14f224ea` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `S.#7e28dbc0.#aee2d90b` (S+0x7d0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 2, CURVE 28, PRODUCT 6, LERP 9, SUM 1; 70 curve keys
 
 **297 `5ff25c8c` -** (unnamed)
@@ -911,7 +947,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **300 `8cce5363` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 1, CURVE 21, LERP 8, PRODUCT 3, SUM 1; 55 curve keys
 
 **301 `c7ce2b05` -** (unnamed)
@@ -923,7 +959,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **302 `e35253b0` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `S.#7e28dbc0.#1407106c` (S+0x770), `ShotContext.ManualShotTiming??` (S+0x544), `S.#8ea88f9f (link)` (link), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.#693eedbe` (S+0x7d8)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c), `S.#7e28dbc0.FaultProbability?` (S+0x718)
 - nodes: CONST 1, CURVE 21, PRODUCT 4, LERP 7, SUM 1; 58 curve keys
 
 **303 `a8522bd6` -** (unnamed)
@@ -936,7 +972,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **304 `d6966ea5` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.ReceiverState?.#82526c5c.Value` (S+0xe00)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 1, CURVE 20, LERP 6, PRODUCT 4, SUM 1; 56 curve keys
 
 **305 `9d9616c3` -** (unnamed)
@@ -1103,7 +1139,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **331 `610c6bca` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `ShotContext.ManualShotTiming??` (S+0x544)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 19, PRODUCT 4, LERP 6, SUM 1, SUB 1; 52 curve keys
 
 **332 `2a0c13ac` -** (unnamed)
@@ -1123,7 +1159,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **334 `e379e390` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.Profile.SkillList (link)` (link), `S.#8ea88f9f (link)` (link), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#7e28dbc0.#5cf9de02` (S+0x7a4), `S.#7e28dbc0.#03d2be3d` (S+0x7a0), `MatchAnalyser.#689dc6f2` (S+0xf88), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.#7e28dbc0.#be5d458f` (S+0x768)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 2, CURVE 26, PRODUCT 5, LERP 10, SUM 1; 62 curve keys
 
 **335 `6f550ea2` -** (unnamed)
@@ -1141,7 +1177,7 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **337 `5cddd76b` -** (unnamed)
 - runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `BallState.Commands.#7bb6a318.From` (Ball+0x340), `BallState.Commands.#7bb6a318.From` (Ball+0x344), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `S.#7e28dbc0.#be5d458f` (S+0x768), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.#719dc5ee.Side` (S+0x6fc), `S.#7e28dbc0.#693eedbe` (S+0x7d8), `S.#8ea88f9f (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.ReceiverState?.#82526c5c.Value` (S+0xe00)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 1, CURVE 20, LERP 6, PRODUCT 4, SUM 1; 58 curve keys
 
 **338 `f761934c` -** (unnamed)
@@ -1154,13 +1190,13 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **339 `56b7607c` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.Profile.SkillList (link)` (link), `ShotContext.ManualShotTiming??` (S+0x544), `MatchState.#8beb922e` (Match+0x334), `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.FaultProbability?` (S+0x718), `S.ReceiverState?.AimingState?.OutEfficiency?` (S+0xd8c)
 - nodes: CONST 1, CURVE 12, SUM 1, LERP 5, PRODUCT 1; 42 curve keys
 
 **340 `1db7181a` -** (unnamed)
 - runs: Settings `ShotClassTable[].Element.[]`
 - in: `S.ReceiverState?.#82526c5c.Value` (S+0xe00), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Min` (S+0x6d4), `S.#7e28dbc0.#1407106c` (S+0x770), `S.Profile.SkillList (link)` (link), `MatchState.#8beb922e` (Match+0x334), `ShotContext.ManualShotTiming??` (S+0x544), `S.#7e28dbc0.ShotSpecific.ErrorResolution.Max` (S+0x6d8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
-- out: `S.#9c11fa39.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.OutcomeNet` (S+0x720)
+- out: `S.DebugCustomValue?.ControlValues.#115e007b` (S+0x18), `S.#7e28dbc0.OutcomeNet` (S+0x720)
 - nodes: CONST 1, CURVE 11, SUM 1, LERP 5, PRODUCT 1; 39 curve keys
 
 
@@ -1168,301 +1204,301 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **74 `78507bc7` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0a7a82d5.#af3d703d.[].ExpressionComponents?` (+1 more paths)
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18)
 - out: `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.Flat` (AI+0x244), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Lob` (AI+0x248), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingSideRight?` (AI+0x264)
 - nodes: CONST 9, CURVE 4; 10 curve keys
 
 **75 `590881a7` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.Lob` (AI+0x248), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideRight?` (AI+0x264)
 - nodes: CONST 7, CURVE 6; 20 curve keys
 
 **76 `d4247cba` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e8), `S.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `#3ba3d582.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `#e9ca839c.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `#e9ca839c.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
+- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e8), `S.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `#3ba3d582.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `UserAIState?.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `UserAIState?.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
 - out: `ShotComponents.Lob` (AI+0x248), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.FollowToNet` (AI+0x250)
 - nodes: CONST 9, PRODUCT 8, SUM 4, CURVE 24, LERP 3; 56 curve keys
 
 **77 `ba88f00f` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#3ba3d582.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `#e9ca839c.#a9a83d2d.Style.#c3e11a56` (AI+0x194)
+- in: `#3ba3d582.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `UserAIState?.#a9a83d2d.Style.#c3e11a56` (AI+0x194)
 - out: `ShotComponents.Lob` (AI+0x248), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Flat` (AI+0x244), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.FollowToNet` (AI+0x250)
 - nodes: CONST 6, CURVE 15, SUM 2, PRODUCT 5; 36 curve keys
 
 **78 `420ba661` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `#e9ca839c.#a9a83d2d.Style.#ea55dbac` (AI+0x198)
+- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `UserAIState?.#a9a83d2d.Style.#ea55dbac` (AI+0x198)
 - out: `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.Flat` (AI+0x244), `ShotComponents.Lob` (AI+0x248), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.FollowToNet` (AI+0x250)
 - nodes: CONST 6, SUM 2, CURVE 17, PRODUCT 3, LERP 1; 36 curve keys
 
 **79 `7b539e54` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.LocalPosition` (S+0x8e8), `#3ba3d582.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `#e9ca839c.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `#e9ca839c.#a9a83d2d.Style.#c3e11a56` (AI+0x194)
+- in: `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.LocalPosition` (S+0x8e8), `#3ba3d582.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `UserAIState?.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `UserAIState?.#a9a83d2d.Style.#c3e11a56` (AI+0x194)
 - out: `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.Flat` (AI+0x244), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Lob` (AI+0x248), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.FollowToNet` (AI+0x250)
 - nodes: CONST 6, CURVE 17, PRODUCT 3, SUM 2, LERP 1; 36 curve keys
 
 **80 `15cd65f2` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `#e9ca839c.#a9a83d2d.Style.#ea55dbac` (AI+0x198)
+- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `UserAIState?.#a9a83d2d.Style.#ea55dbac` (AI+0x198)
 - out: `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.Flat` (AI+0x244), `ShotComponents.Lob` (AI+0x248), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.FollowToNet` (AI+0x250)
 - nodes: CONST 6, SUM 2, CURVE 17, PRODUCT 3, LERP 1; 36 curve keys
 
 **81 `4e5945dd` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf0)
+- in: `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf0)
 - out: `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Lob` (AI+0x248), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.PressAndHold` (AI+0x254)
 - nodes: CONST 7, CURVE 8, LERP 1; 21 curve keys
 
 **82 `0453f1bf` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf0)
+- in: `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf0)
 - out: `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Lob` (AI+0x248), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.PressAndHold` (AI+0x254)
 - nodes: CONST 7, CURVE 8, LERP 1; 21 curve keys
 
 **83 `6acd0a19` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf0)
+- in: `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf8), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf0)
 - out: `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Lob` (AI+0x248), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.PressAndHold` (AI+0x254)
 - nodes: CONST 7, CURVE 8, LERP 1; 21 curve keys
 
 **84 `b101c0bc` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8), `#3ba3d582.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `#e9ca839c.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8), `#3ba3d582.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `UserAIState?.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
 - out: `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.Flat` (AI+0x244), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Lob` (AI+0x248), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.FollowToNet` (AI+0x250)
 - nodes: CONST 6, CURVE 15, SUM 2, PRODUCT 2; 39 curve keys
 
 **85 `ce905771` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `#3ba3d582.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `#e9ca839c.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `#3ba3d582.LocalPosition` (S+0x8e8), `S.LocalPosition` (S+0x8e8), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc10)
+- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `#3ba3d582.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Style.#c3e11a56` (AI+0x194), `UserAIState?.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `#3ba3d582.LocalPosition` (S+0x8e8), `S.LocalPosition` (S+0x8e8), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc10)
 - out: `ShotComponents.Lob` (AI+0x248), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.Flat` (AI+0x244), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.FollowToNet` (AI+0x250)
 - nodes: CONST 9, CURVE 16, SUM 2, PRODUCT 3, LERP 3; 36 curve keys
 
 **86 `c31ad7a4` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc10), `#3ba3d582.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `#e9ca839c.#a9a83d2d.Style.#c3e11a56` (AI+0x194)
+- in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc10), `#3ba3d582.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `UserAIState?.#a9a83d2d.Style.#c3e11a56` (AI+0x194)
 - out: `ShotComponents.Lob` (AI+0x248), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Flat` (AI+0x244), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.FollowToNet` (AI+0x250)
 - nodes: CONST 6, CURVE 15, SUM 2, PRODUCT 2; 35 curve keys
 
 **87 `1953867a` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Lob` (AI+0x248), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.PressAndHold` (AI+0x254)
 - nodes: CONST 12, CURVE 1; 2 curve keys
 
 **88 `95b1ebfe` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Lob` (AI+0x248), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.PressAndHold` (AI+0x254)
 - nodes: CONST 12, CURVE 1; 3 curve keys
 
 **89 `9a3e28d7` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `#e9ca839c.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
+- in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `UserAIState?.#a9a83d2d.Style.#ea55dbac` (AI+0x198), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
 - out: `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Flat` (AI+0x244), `ShotComponents.Lob` (AI+0x248), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.FollowToNet` (AI+0x250)
 - nodes: CONST 12, CURVE 7, PRODUCT 2; 17 curve keys
 
 **90 `9246a93a` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#3ba3d582.LocalPosition` (S+0x8e0), `#a2aa8438.LocalPosition` (S+0x8e0), `S.Context.#072418a1.IsVolley?` (S+0x584), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.Volley` (S+0x65c), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `#3ba3d582.LocalPosition` (S+0x8e8), `#a2aa8438.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18)
+- in: `#3ba3d582.LocalPosition` (S+0x8e0), `#a2aa8438.LocalPosition` (S+0x8e0), `S.Context.#072418a1.IsVolley?` (S+0x584), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Profile.Volley` (S+0x65c), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `#3ba3d582.LocalPosition` (S+0x8e8), `#a2aa8438.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18)
 - out: `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Lob` (AI+0x248), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.FollowToNet` (AI+0x250), `ShotComponents.Flat` (AI+0x244), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideRight?` (AI+0x264)
 - nodes: CONST 18, CURVE 12, LERP 10, PRODUCT 1, SUB 1; 28 curve keys
 
 **91 `a4514959` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Lob` (AI+0x248), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.PressAndHold` (AI+0x254)
 - nodes: CONST 12, CURVE 1; 1 curve keys
 
 **92 `73df4dca` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `S.Profile.Volley` (S+0x65c), `S.Context.#072418a1.IsVolley?` (S+0x584), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf0), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf8)
+- in: `S.Profile.Volley` (S+0x65c), `S.Context.#072418a1.IsVolley?` (S+0x584), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf0), `S.ReceiverState?.#c7b7bdac.HitPoint` (S+0xbf8)
 - out: `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Lob` (AI+0x248), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.Flat` (AI+0x244), `ShotComponents.Slice` (AI+0x23c)
 - nodes: CONST 17, LERP 9, CURVE 6; 16 curve keys
 
 **93 `d7bcc408` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `S.Profile.Volley` (S+0x65c), `S.Context.#072418a1.IsVolley?` (S+0x584), `#a2aa8438.LocalPosition` (S+0x8e8), `#3ba3d582.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
+- in: `S.Profile.Volley` (S+0x65c), `S.Context.#072418a1.IsVolley?` (S+0x584), `#a2aa8438.LocalPosition` (S+0x8e8), `#3ba3d582.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Style.#8c1c3a3b` (AI+0x18c), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.HitPointLocal` (S+0xc18), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
 - out: `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.Lob` (AI+0x248), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.FollowToNet` (AI+0x250), `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingSideRight?` (AI+0x264)
 - nodes: CONST 18, CURVE 12, LERP 10, PRODUCT 1, SUB 1; 26 curve keys
 
 **94 `cc389faf` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Lob` (AI+0x248), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.PressAndHold` (AI+0x254)
 - nodes: CONST 12, CURVE 1; 1 curve keys
 
 **95 `ee6de1ff` ReturnServeComponents** (medium)
 - runs: Settings `AI.Style[].Difficulty[].#0a7a82d5.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Flat` (AI+0x244), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.Lob` (AI+0x248), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.PressAndHold` (AI+0x254)
 - nodes: CONST 12, CURVE 1; 3 curve keys
 
 **96 `45a68b93` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0a7a82d5.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.Flat` (AI+0x244), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.AimingSideRight?` (AI+0x264), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.Lob` (AI+0x248), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.PressAndHold` (AI+0x254)
 - nodes: CONST 12, CURVE 1; 1 curve keys
 
 **97 `69cbcd85` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `#3ba3d582.LocalPosition` (S+0x8e8)
+- in: `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `#3ba3d582.LocalPosition` (S+0x8e8)
 - out: `ShotComponents.Flat` (AI+0x244), `ShotComponents.AimingLengthLong?` (AI+0x270), `ShotComponents.AimingLengthShort?` (AI+0x268), `ShotComponents.Lob` (AI+0x248), `ShotComponents.RiskyShot?` (AI+0x258), `ShotComponents.AimingSideCenter?` (AI+0x260), `ShotComponents.DropShot` (AI+0x24c), `ShotComponents.TopSpin` (AI+0x240), `ShotComponents.AimingLengthCenter?` (AI+0x26c), `ShotComponents.Slice` (AI+0x23c), `ShotComponents.PressAndHold` (AI+0x254), `ShotComponents.AimingSideLeft?` (AI+0x25c), `ShotComponents.AimingSideRight?` (AI+0x264)
 - nodes: CONST 12, CURVE 3, PRODUCT 2; 7 curve keys
 
 **117 `dd2b6543` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 3, CURVE 11, SUB 1, PRODUCT 3, LERP 1, SUM 1; 22 curve keys
 
 **118 `e9d3133b` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 3, CURVE 11, SUB 1, PRODUCT 3, LERP 1, SUM 1; 22 curve keys
 
 **119 `555ce006` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 3, CURVE 11, SUB 1, PRODUCT 3, LERP 1, SUM 1; 22 curve keys
 
 **120 `e5afdc8a` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 3, CURVE 11, SUB 1, PRODUCT 3, LERP 1, SUM 1; 22 curve keys
 
 **121 `874de89d` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4)
 - out: `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 3, CURVE 11, SUB 1, PRODUCT 3, LERP 1, SUM 1; 22 curve keys
 
 **122 `59f564dc` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e8), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e8), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4)
 - out: `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 3, CURVE 12, SUB 1, LERP 1, PRODUCT 3, SUM 1; 23 curve keys
 
 **123 `d182e199` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8)
 - out: `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 3, CURVE 15, SUB 1, LERP 1, SUM 2, PRODUCT 3; 30 curve keys
 
 **124 `f420e8e7` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `#3ba3d582.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8)
+- in: `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `#3ba3d582.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8)
 - out: `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 3, CURVE 16, SUB 1, SUM 2, LERP 1, PRODUCT 3; 33 curve keys
 
 **125 `0693ca00` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `#3ba3d582.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8)
+- in: `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `#3ba3d582.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8)
 - out: `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 3, CURVE 16, SUB 1, SUM 2, LERP 1, PRODUCT 3; 33 curve keys
 
 **126 `fc4bb89b` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e8), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08)
+- in: `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e8), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08)
 - out: `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 4, CURVE 17, PRODUCT 5, SUB 1, LERP 2, SUM 2; 35 curve keys
 
 **127 `743c3dde` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e8), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08)
+- in: `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e8), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08)
 - out: `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 4, CURVE 17, PRODUCT 5, SUB 1, LERP 2, SUM 2; 36 curve keys
 
 **128 `aa8a9066` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Return` (S+0x650), `#3ba3d582.LocalPosition` (S+0x8e0), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588)
+- in: `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Return` (S+0x650), `#3ba3d582.LocalPosition` (S+0x8e0), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588)
 - out: `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 4, CURVE 17, PRODUCT 5, SUB 1, LERP 2, SUM 2; 36 curve keys
 
 **129 `36ce2883` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e8), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Return` (S+0x650), `#3ba3d582.LocalPosition` (S+0x8e0), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588)
+- in: `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e8), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Profile.Return` (S+0x650), `#3ba3d582.LocalPosition` (S+0x8e0), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588)
 - out: `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 4, CURVE 17, PRODUCT 5, SUB 1, LERP 2, SUM 2; 36 curve keys
 
 **130 `8d2b2ec1` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e8), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.LocalPosition` (S+0x8e8), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4)
 - out: `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 3, CURVE 12, SUB 1, LERP 1, PRODUCT 3, SUM 1; 23 curve keys
 
 **131 `055cab84` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8)
 - out: `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 3, CURVE 15, SUB 1, LERP 1, SUM 2, PRODUCT 3; 30 curve keys
 
 **132 `b55b91ef` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8)
 - out: `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 3, CURVE 15, SUB 1, LERP 1, SUM 2, PRODUCT 3; 30 curve keys
 
 **133 `6ff6da4c` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8)
+- in: `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `S.LocalPosition` (S+0x8e8), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8)
 - out: `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 3, CURVE 15, SUB 1, LERP 1, SUM 2, PRODUCT 3; 30 curve keys
 
 **134 `3456f451` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#a2aa8438.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#56b5b281.LocalPosition` (S+0x8e0), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
+- in: `#a2aa8438.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#56b5b281.LocalPosition` (S+0x8e0), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
 - out: `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 3, CURVE 17, LERP 1, PRODUCT 6, SUM 2; 36 curve keys
 
 **135 `162f2947` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#a2aa8438.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#56b5b281.LocalPosition` (S+0x8e0), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
+- in: `#a2aa8438.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#56b5b281.LocalPosition` (S+0x8e0), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
 - out: `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 3, CURVE 17, LERP 1, PRODUCT 6, SUM 2; 36 curve keys
 
 **136 `bc217114` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#a2aa8438.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#56b5b281.LocalPosition` (S+0x8e0), `S.Profile.Return` (S+0x650), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
+- in: `#a2aa8438.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#56b5b281.LocalPosition` (S+0x8e0), `S.Profile.Return` (S+0x650), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
 - out: `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.RushRepositioning` (AI+0x1e8)
 - nodes: CONST 3, CURVE 17, LERP 1, PRODUCT 6, SUM 2; 36 curve keys
 
 **137 `fd5d38b3` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#9be5b94e` (AI+0x1ac), `#e9ca839c.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e8), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08)
+- in: `UserAIState?.#a9a83d2d.#e0dd212e` (AI+0x1a8), `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#9be5b94e` (AI+0x1ac), `UserAIState?.#a9a83d2d.#98396fb5` (AI+0x1a4), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e8), `S.Context.ShotEfficiencyContext??.ShotEfficiency?` (S+0x588), `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08)
 - out: `RepositioningComponents.#2ac5965a` (AI+0x1f4), `RepositioningComponents.StopMoving` (AI+0x1f0), `RepositioningComponents.#2b4b4baa` (AI+0x1ec), `RepositioningComponents.#6e33662f` (AI+0x1f8), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.RushRepositioning` (AI+0x1e8), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - nodes: CONST 4, CURVE 17, PRODUCT 5, SUB 1, LERP 2, SUM 2; 36 curve keys
 
 **141 `daf09d7d` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0b4e23b3.#af3d703d.[].ExpressionComponents?`
-- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#f4613660` (AI+0x1b0), `S.LocalPosition` (S+0x8e0), `S.Profile.Speed` (S+0x664), `#e9ca839c.#a9a83d2d.#d30f0aca` (AI+0x1b4), `RepositioningComponents.Volley` (AI+0x1e0), `S.Context.#21e13815` (S+0x5d0), `RepositioningComponents.BaseLine` (AI+0x1e4)
+- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#f4613660` (AI+0x1b0), `S.LocalPosition` (S+0x8e0), `S.Profile.Speed` (S+0x664), `UserAIState?.#a9a83d2d.#d30f0aca` (AI+0x1b4), `RepositioningComponents.Volley` (AI+0x1e0), `S.Context.#21e13815` (S+0x5d0), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - out: `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: CURVE 7, LERP 2, PRODUCT 1; 12 curve keys
 
 **142 `340e06f0` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0b4e23b3.#af3d703d.[].ExpressionComponents?`
-- in: `S.Context.#4718ce71.#136e2d7d` (S+0x4f8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `S.Profile.Speed` (S+0x664), `S.Context.#21e13815` (S+0x5d0), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `#e9ca839c.#a9a83d2d.#d30f0aca` (AI+0x1b4), `#e9ca839c.#a9a83d2d.#f4613660` (AI+0x1b0), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4)
+- in: `S.Context.#4718ce71.#136e2d7d` (S+0x4f8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `S.Profile.Speed` (S+0x664), `S.Context.#21e13815` (S+0x5d0), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `UserAIState?.#a9a83d2d.#d30f0aca` (AI+0x1b4), `UserAIState?.#a9a83d2d.#f4613660` (AI+0x1b0), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - out: `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: CURVE 8, SUM 2, LERP 2, PRODUCT 1; 13 curve keys
 
 **143 `f2803787` -** (unnamed)
 - runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
-- in: `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.#d30f0aca` (AI+0x1b4), `S.Context.#4718ce71.#136e2d7d` (S+0x4f8), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `S.Context.#21e13815` (S+0x5d0), `#e9ca839c.#a9a83d2d.#f4613660` (AI+0x1b0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.Volley` (AI+0x1e0)
+- in: `S.Profile.Return` (S+0x650), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.#d30f0aca` (AI+0x1b4), `S.Context.#4718ce71.#136e2d7d` (S+0x4f8), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `S.Context.#21e13815` (S+0x5d0), `UserAIState?.#a9a83d2d.#f4613660` (AI+0x1b0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.Volley` (AI+0x1e0)
 - out: `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: CURVE 8, SUM 2, LERP 2, PRODUCT 1; 13 curve keys
 
 **144 `bc7983b5` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0b4e23b3.#af3d703d.[].ExpressionComponents?`
-- in: `S.Context.#4718ce71.#136e2d7d` (S+0x4f8), `S.LocalPosition` (S+0x8e0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#d30f0aca` (AI+0x1b4), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `S.Context.#21e13815` (S+0x5d0), `S.Profile.Return` (S+0x650), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `#e9ca839c.#a9a83d2d.#f4613660` (AI+0x1b0)
+- in: `S.Context.#4718ce71.#136e2d7d` (S+0x4f8), `S.LocalPosition` (S+0x8e0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#d30f0aca` (AI+0x1b4), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `S.Context.#21e13815` (S+0x5d0), `S.Profile.Return` (S+0x650), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `UserAIState?.#a9a83d2d.#f4613660` (AI+0x1b0)
 - out: `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: CURVE 9, SUM 2, LERP 2, PRODUCT 1; 15 curve keys
 
 **145 `91dcc2bc` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0b4e23b3.#af3d703d.[].ExpressionComponents?`
-- in: `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#d30f0aca` (AI+0x1b4), `S.Context.#4718ce71.#136e2d7d` (S+0x4f8), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `S.Context.#21e13815` (S+0x5d0), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `#e9ca839c.#a9a83d2d.#f4613660` (AI+0x1b0)
+- in: `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#d30f0aca` (AI+0x1b4), `S.Context.#4718ce71.#136e2d7d` (S+0x4f8), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `S.Context.#21e13815` (S+0x5d0), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4), `UserAIState?.#a9a83d2d.#f4613660` (AI+0x1b0)
 - out: `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: SUM 2, CURVE 9, LERP 2, PRODUCT 1; 15 curve keys
 
@@ -1482,19 +1518,19 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **149 `d571b2f7` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0b4e23b3.#af3d703d.[].ExpressionComponents?`
-- in: `#e9ca839c.#a9a83d2d.#f4613660` (AI+0x1b0), `#e9ca839c.#a9a83d2d.#d30f0aca` (AI+0x1b4), `S.Profile.Speed` (S+0x664), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `RepositioningComponents.Volley` (AI+0x1e0), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `RepositioningComponents.BaseLine` (AI+0x1e4)
+- in: `UserAIState?.#a9a83d2d.#f4613660` (AI+0x1b0), `UserAIState?.#a9a83d2d.#d30f0aca` (AI+0x1b4), `S.Profile.Speed` (S+0x664), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.LocalPosition` (S+0x8e0), `RepositioningComponents.Volley` (AI+0x1e0), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - out: `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: CURVE 6, LERP 1, PRODUCT 1, SUM 1; 10 curve keys
 
 **150 `0c3ad1c2` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0b4e23b3.#af3d703d.[].ExpressionComponents?`
-- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `#e9ca839c.#a9a83d2d.#f4613660` (AI+0x1b0), `S.Profile.Return` (S+0x650), `S.Context.#21e13815` (S+0x5d0), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4)
+- in: `S.Fatigue.Output.CurrentVigor` (S+0xf54), `UserAIState?.#a9a83d2d.#f4613660` (AI+0x1b0), `S.Profile.Return` (S+0x650), `S.Context.#21e13815` (S+0x5d0), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `RepositioningComponents.Volley` (AI+0x1e0), `RepositioningComponents.BaseLine` (AI+0x1e4)
 - out: `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: CURVE 6, LERP 2, SUM 1; 8 curve keys
 
 **155 `9c1ecc21` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0b4e23b3.#af3d703d.[].ExpressionComponents?`
-- in: `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Context.#21e13815` (S+0x5d0), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `#e9ca839c.#a9a83d2d.#d30f0aca` (AI+0x1b4), `#e9ca839c.#a9a83d2d.#f4613660` (AI+0x1b0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.Volley` (AI+0x1e0)
+- in: `S.Profile.Return` (S+0x650), `S.LocalPosition` (S+0x8e0), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Context.#21e13815` (S+0x5d0), `S.Context.#4718ce71.#0c4fee0b` (S+0x4f4), `UserAIState?.#a9a83d2d.#d30f0aca` (AI+0x1b4), `UserAIState?.#a9a83d2d.#f4613660` (AI+0x1b0), `RepositioningComponents.BaseLine` (AI+0x1e4), `RepositioningComponents.Volley` (AI+0x1e0)
 - out: `PositioningComponents.Volley` (AI+0x1d0), `PositioningComponents.BaseLine` (AI+0x1d4), `PositioningComponents.InsideOut` (AI+0x1d8), `PositioningComponents.#79b99b60` (AI+0x1dc)
 - nodes: CURVE 9, LERP 2, PRODUCT 1, SUM 1; 15 curve keys
 
@@ -1572,257 +1608,257 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **43 `2836a60f` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0a7a82d5.#af3d703d.[].Expression` (+1 more paths)
 - in: `S.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc00), `#3ba3d582.LocalPosition` (S+0x8e0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 15, LERP 2, PRODUCT 2, SUM 2; 25 curve keys
 
 **44 `abe92677` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc00), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 13, LERP 2, PRODUCT 2, SUM 2; 19 curve keys
 
 **45 `76b37c9b` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#3ba3d582.LocalPosition` (S+0x8e0), `S.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `#3ba3d582.LocalPosition` (S+0x8e8)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 18, LERP 2, SUM 4, PRODUCT 1; 30 curve keys
 
 **46 `054057eb` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#3ba3d582.LocalPosition` (S+0x8e8), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 16, LERP 4, SUM 2, PRODUCT 1; 28 curve keys
 
 **47 `5a26f243` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#3ba3d582.LocalPosition` (S+0x8e8), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 16, LERP 4, SUM 2, PRODUCT 1; 28 curve keys
 
 **48 `73aab3ce` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#3ba3d582.LocalPosition` (S+0x8e8), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 16, LERP 4, SUM 2, PRODUCT 1; 28 curve keys
 
 **49 `32a41e36` WrongFoot** (high)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
-- in: `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#e9ca839c.#a9a83d2d.#3a2000df` (AI+0x1bc), `#3ba3d582.LocalPosition` (S+0x8e8)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- in: `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `UserAIState?.#a9a83d2d.#3a2000df` (AI+0x1bc), `#3ba3d582.LocalPosition` (S+0x8e8)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 13, LERP 2, SUM 2, PRODUCT 1; 17 curve keys
 
 **50 `91a40cb0` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
-- in: `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#e9ca839c.#a9a83d2d.#3a2000df` (AI+0x1bc), `#3ba3d582.LocalPosition` (S+0x8e8)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- in: `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `UserAIState?.#a9a83d2d.#3a2000df` (AI+0x1bc), `#3ba3d582.LocalPosition` (S+0x8e8)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 13, LERP 2, SUM 2, PRODUCT 1; 17 curve keys
 
 **51 `e4aac35a` PlacingClosedBack** (low)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc00), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 14, LERP 2, SUM 2, PRODUCT 1; 18 curve keys
 
 **52 `c4a4b82b` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc00), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 14, LERP 2, SUM 2, PRODUCT 1; 18 curve keys
 
 **53 `be9a22cd` PlayPower** (medium)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc00), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `#3ba3d582.LocalPosition` (S+0x8e0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 15, LERP 2, SUM 2, PRODUCT 1; 21 curve keys
 
 **54 `ad7e3538` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc00), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `#3ba3d582.LocalPosition` (S+0x8e0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 15, LERP 2, SUM 2, PRODUCT 1; 21 curve keys
 
 **55 `9a007754` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#3ba3d582.LocalPosition` (S+0x8e8), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `#3ba3d582.LocalPosition` (S+0x8e0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 14, LERP 2, SUM 2, PRODUCT 1; 22 curve keys
 
 **56 `8cd75349` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#3ba3d582.LocalPosition` (S+0x8e8), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `#3ba3d582.LocalPosition` (S+0x8e0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 14, LERP 2, SUM 2, PRODUCT 1; 22 curve keys
 
 **57 `de9da221` -** (unnamed)
 - runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.0`
 
 **58 `bfc9cc2c` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc00), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 7, LERP 1, PRODUCT 1; 9 curve keys
 
 **59 `4bb34bbb` PlayLob** (medium)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 6, LERP 1, PRODUCT 1; 8 curve keys
 
 **60 `83642a90` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `#3ba3d582.LocalPosition` (S+0x8e0), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 6, LERP 1, PRODUCT 1; 8 curve keys
 
 **62 `8f8078a9` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `#a2aa8438.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e0), `#a2aa8438.LocalPosition` (S+0x8e8), `#3ba3d582.LocalPosition` (S+0x8e8)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 19, SUB 4, PRODUCT 2, SUM 1; 35 curve keys
 
 **63 `046a9b0b` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `#3ba3d582.LocalPosition` (S+0x8e0), `#a2aa8438.LocalPosition` (S+0x8e0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 7, PRODUCT 2, SUM 1; 23 curve keys
 
 **64 `5b96d171` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.0`
 
 **65 `0e154388` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `#3ba3d582.LocalPosition` (S+0x8e8), `#a2aa8438.LocalPosition` (S+0x8e8)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: MIN 4, MAX 4, CURVE 17, SUM 5, SUB 2; 21 curve keys
 
 **66 `45aa35e8` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.0`
 
 **67 `1ceefd8b` ReturnServe** (high)
-- runs: Settings `#3fcc8ac9.AreaList??.#0c58aa02.[].Id` (+6 more paths)
+- runs: Settings `AI.Style[].Difficulty[].#0a7a82d5.#af3d703d.[].Expression` (+6 more paths)
 - in: `S.Context.#4718ce71.#20d5886c` (S+0x4f0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 2, LERP 1; 0 curve keys
 - formula: `r2 = -1.0; r0 = 1.0; r3 = lerp(r0, r2, S.Context.#4718ce71.#20d5886c)`
 
 **68 `6a88c2d8` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `#3ba3d582.LocalPosition` (S+0x8e0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 2; 4 curve keys
 - formula: `r0 = curve1(#3ba3d582.LocalPosition); r1 = curve2(r0)`
 
 **69 `4b48ac3e` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.Context.#4718ce71.#20d5886c` (S+0x4f0), `#3ba3d582.LocalPosition` (S+0x8e8), `#3ba3d582.LocalPosition` (S+0x8e0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 3, PRODUCT 1, SUM 1; 7 curve keys
 - formula: `r6 = curve1(#3ba3d582.LocalPosition); r1 = curve2(#3ba3d582.LocalPosition); r7 = product(r1, r6); r4 = sum(S.Context.#4718ce71.#20d5886c, r7); r0 = curve3(r4)`
 
 **70 `f7e55c0c` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#0a7a82d5.#af3d703d.[].Expression` (+1 more paths)
 - in: `S.Context.#4718ce71.#20d5886c` (S+0x4f0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 2, LERP 1; 0 curve keys
 - formula: `r2 = 1.0; r0 = -1.0; r3 = lerp(r0, r2, S.Context.#4718ce71.#20d5886c)`
 
 **71 `c761cc58` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.HitPosition` (S+0xbe0), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `#3ba3d582.LocalPosition` (S+0x8e8)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 16, LERP 2, SUM 2, PRODUCT 1; 24 curve keys
 
 **72 `0b0ee3ed` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#f8bde3bf.#af3d703d.[].Expression`
 - in: `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#3ba3d582.LocalPosition` (S+0x8e8), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `#3ba3d582.LocalPosition` (S+0x8e0)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 14, LERP 2, SUM 2, PRODUCT 1; 22 curve keys
 
 **73 `ad039c14` -** (unnamed)
 - runs: never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)
 - in: `S.ReceiverState?.#c7b7bdac.HitPosition` (S+0xbe0), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `#3ba3d582.LocalPosition` (S+0x8e0), `#3ba3d582.LocalPosition` (S+0x8e8)
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CURVE 16, LERP 2, SUM 2, PRODUCT 1; 24 curve keys
 
 **98 `ba387c74` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 1.0`
 
 **99 `fd14edca` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 1.0`
 
 **100 `11376933` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.1`
 
 **101 `f315f098` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.1`
 
 **102 `28e2ab93` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.1`
 
 **103 `cac03238` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.1`
 
 **104 `a0952ed6` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.1`
 
 **105 `42b7b77d` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#2693de78.#af3d703d.[].Expression`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.1`
 
 **115 `96fe1e55` Repositioning** (high)
-- runs: Settings `#3fcc8ac9.ConfigList??.#25f3717a.[].Id` (+5 more paths)
+- runs: Settings `AI.Style[].Difficulty[].#ef9ce04a.#af3d703d.[].Expression` (+5 more paths)
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 1.0`
 
 **138 `adb6ffce` Positioning** (high)
 - runs: Settings `AI.Style[].Difficulty[].#0b4e23b3.#af3d703d.[].Expression` (+1 more paths)
 - in: -
-- out: `#e9ca839c.#a9a83d2d.#91329eea` (AI+0x1a0)
+- out: `UserAIState?.#a9a83d2d.#91329eea` (AI+0x1a0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 1.0`
 
@@ -1843,70 +1879,70 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **151 `5f096fa1` SwingReactionTime** (low)
 - runs: Settings `AI.Style[].Difficulty[].#98fff83e`
 - in: -
-- out: `#e9ca839c.#a9a83d2d.SwingReactionTime??` (AI+0x1c0)
+- out: `UserAIState?.#a9a83d2d.SwingReactionTime??` (AI+0x1c0)
 - nodes: CONST 1; 0 curve keys
 - formula: `r0 = 0.0`
 
 **152 `ef74c5ec` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#98fff83e`
-- in: `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Context.IsMateHuman??` (S+0x5d4)
-- out: `#e9ca839c.#a9a83d2d.SwingReactionTime??` (AI+0x1c0)
+- in: `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Context.IsMateHuman??` (S+0x5d4)
+- out: `UserAIState?.#a9a83d2d.SwingReactionTime??` (AI+0x1c0)
 - nodes: CONST 1, CURVE 4, LERP 1, PRODUCT 1; 8 curve keys
 
 **153 `ed4f75a9` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#98fff83e`
-- in: `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Context.IsMateHuman??` (S+0x5d4)
-- out: `#e9ca839c.#a9a83d2d.SwingReactionTime??` (AI+0x1c0)
+- in: `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Context.IsMateHuman??` (S+0x5d4)
+- out: `UserAIState?.#a9a83d2d.SwingReactionTime??` (AI+0x1c0)
 - nodes: CONST 1, CURVE 4, LERP 1, PRODUCT 1; 8 curve keys
 
 **154 `50f5285d` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].#98fff83e`
-- in: `S.LocalPosition` (S+0x8e0), `#e9ca839c.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Context.IsMateHuman??` (S+0x5d4)
-- out: `#e9ca839c.#a9a83d2d.SwingReactionTime??` (AI+0x1c0)
+- in: `S.LocalPosition` (S+0x8e0), `UserAIState?.#a9a83d2d.Random1?` (AI+0x1c4), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.Context.IsMateHuman??` (S+0x5d4)
+- out: `UserAIState?.#a9a83d2d.SwingReactionTime??` (AI+0x1c0)
 - nodes: CONST 1, CURVE 4, LERP 1, PRODUCT 1; 8 curve keys
 
 **156 `2ce33943` Default** (high)
-- runs: Settings `#ded1baa5.AmplitudeConfig??.[].Id` (+5 more paths)
-- in: `#e9ca839c.TimingExpressionInputs??.Random2?` (AI+0xc8), `#e9ca839c.TimingExpressionInputs??.Random1?` (AI+0xc4), `S.ReceiverState?.TimingState.TimingAbility?` (S+0xd0c)
+- runs: Settings `AI.AISettings?.#bf2c744c.ShootList??.Shoot?.[].Name` (+5 more paths)
+- in: `UserAIState?.TimingExpressionInputs??.Random2?` (AI+0xc8), `UserAIState?.TimingExpressionInputs??.Random1?` (AI+0xc4), `S.ReceiverState?.TimingState.TimingAbility?` (S+0xd0c)
 - out: `S.Context.ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CURVE 2, LERP 1; 6 curve keys
-- formula: `r0 = curve1(#e9ca839c.TimingExpressionInputs??.Random1?); r1 = curve2(#e9ca839c.TimingExpressionInputs??.Random2?); r3 = lerp(r0, r1, S.ReceiverState?.TimingState.TimingAbility?)`
+- formula: `r0 = curve1(UserAIState?.TimingExpressionInputs??.Random1?); r1 = curve2(UserAIState?.TimingExpressionInputs??.Random2?); r3 = lerp(r0, r1, S.ReceiverState?.TimingState.TimingAbility?)`
 
 **157 `83fe88cc` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].TimingExpression?`
-- in: `#e9ca839c.TimingExpressionInputs??.Random2?` (AI+0xc8), `#e9ca839c.TimingExpressionInputs??.Random1?` (AI+0xc4), `S.ReceiverState?.TimingState.TimingAbility?` (S+0xd0c)
+- in: `UserAIState?.TimingExpressionInputs??.Random2?` (AI+0xc8), `UserAIState?.TimingExpressionInputs??.Random1?` (AI+0xc4), `S.ReceiverState?.TimingState.TimingAbility?` (S+0xd0c)
 - out: `S.Context.ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CURVE 2, LERP 1; 2 curve keys
-- formula: `r0 = curve1(#e9ca839c.TimingExpressionInputs??.Random1?); r1 = curve2(#e9ca839c.TimingExpressionInputs??.Random2?); r3 = lerp(r0, r1, S.ReceiverState?.TimingState.TimingAbility?)`
+- formula: `r0 = curve1(UserAIState?.TimingExpressionInputs??.Random1?); r1 = curve2(UserAIState?.TimingExpressionInputs??.Random2?); r3 = lerp(r0, r1, S.ReceiverState?.TimingState.TimingAbility?)`
 
 **158 `251048b8` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].TimingExpression?`
-- in: `#e9ca839c.TimingExpressionInputs??.Random2?` (AI+0xc8), `#e9ca839c.TimingExpressionInputs??.Random1?` (AI+0xc4), `S.ReceiverState?.TimingState.TimingAbility?` (S+0xd0c)
+- in: `UserAIState?.TimingExpressionInputs??.Random2?` (AI+0xc8), `UserAIState?.TimingExpressionInputs??.Random1?` (AI+0xc4), `S.ReceiverState?.TimingState.TimingAbility?` (S+0xd0c)
 - out: `S.Context.ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CURVE 2, LERP 1; 14 curve keys
-- formula: `r0 = curve1(#e9ca839c.TimingExpressionInputs??.Random1?); r1 = curve2(#e9ca839c.TimingExpressionInputs??.Random2?); r3 = lerp(r0, r1, S.ReceiverState?.TimingState.TimingAbility?)`
+- formula: `r0 = curve1(UserAIState?.TimingExpressionInputs??.Random1?); r1 = curve2(UserAIState?.TimingExpressionInputs??.Random2?); r3 = lerp(r0, r1, S.ReceiverState?.TimingState.TimingAbility?)`
 
 **159 `5b448f03` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].TimingExpression?`
-- in: `#e9ca839c.TimingExpressionInputs??.Random2?` (AI+0xc8), `#e9ca839c.TimingExpressionInputs??.Random1?` (AI+0xc4), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
+- in: `UserAIState?.TimingExpressionInputs??.Random2?` (AI+0xc8), `UserAIState?.TimingExpressionInputs??.Random1?` (AI+0xc4), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
 - out: `S.Context.ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CONST 1, CURVE 8, LERP 2, SUM 1; 22 curve keys
 
 **160 `ad67cdfd` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].TimingExpression?`
-- in: `#e9ca839c.TimingExpressionInputs??.Random2?` (AI+0xc8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.Context.#21e13815` (S+0x5d0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
+- in: `UserAIState?.TimingExpressionInputs??.Random2?` (AI+0xc8), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `S.Context.#21e13815` (S+0x5d0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
 - out: `S.Context.ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CONST 1, CURVE 9, LERP 3, SUM 1; 23 curve keys
 
 **161 `0b890d89` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].TimingExpression?`
-- in: `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#e9ca839c.TimingExpressionInputs??.Random2?` (AI+0xc8), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Context.#21e13815` (S+0x5d0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
+- in: `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `UserAIState?.TimingExpressionInputs??.Random2?` (AI+0xc8), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Context.#21e13815` (S+0x5d0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
 - out: `S.Context.ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CONST 1, CURVE 9, LERP 3, SUM 1; 23 curve keys
 
 **162 `35da74a5` -** (unnamed)
 - runs: Settings `AI.Style[].Difficulty[].TimingExpression?`
-- in: `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `#e9ca839c.TimingExpressionInputs??.Random2?` (AI+0xc8), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Context.#21e13815` (S+0x5d0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
+- in: `S.ReceiverState?.#c7b7bdac.#420a6cfc` (S+0xc2c), `UserAIState?.TimingExpressionInputs??.Random2?` (AI+0xc8), `S.ReceiverState?.#c7b7bdac.#8760acf5` (S+0xc28), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.Context.#21e13815` (S+0x5d0), `S.ReceiverState?.#c7b7bdac.#2f6930a4` (S+0xc38)
 - out: `S.Context.ShotContext.ManualShotTiming??` (S+0x544)
 - nodes: CONST 1, CURVE 9, LERP 3, SUM 1; 23 curve keys
 
@@ -1971,12 +2007,12 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 **116 `e5cfa4b4` RepositioningPointSingle** (low)
 - runs: code fn_886BB6E0 @0x886BB72C
 - in: `#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal` (S+0xc08)
-- out: `S.#ad1995d3.#ed59542a` (S+0xa1c), `S.#ad1995d3.#00fb8872` (S+0xa24), `S.#ad1995d3.#eef5e95e` (S+0xa28), `S.#ad1995d3.#03573506` (S+0xa20)
+- out: `S.RePositioningState?.#ed59542a` (S+0xa1c), `S.RePositioningState?.#00fb8872` (S+0xa24), `S.RePositioningState?.#eef5e95e` (S+0xa28), `S.RePositioningState?.#03573506` (S+0xa20)
 - nodes: CONST 2, CURVE 2; 4 curve keys
 - formula: `r1 = 300.0; r0 = 1300.0; r4 = curve1(#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal); r3 = curve2(#3ba3d582.ReceiverState?.#c7b7bdac.HitPositionLocal)`
 
 
-## Rule / reward evaluations (26 graphs)
+## Rule / reward evaluations (20 graphs)
 
 **163 `d0cb6659` Finesse** (high)
 - runs: code fn_886BF598 @0x886BF73C
@@ -2077,13 +2113,13 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 
 **179 `cc20baea` AutoSwing** (high)
 - runs: code fn_886BF598 @0x886BF868
-- in: `S.ReceiverState?.HitPositionSelection??.#4404037d.RightLine?.#12bbd23e.#887fab7d` (S+0xb68), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.HitPositionSelection??.#4404037d.LeftLine?.#12bbd23e.#887fab7d` (S+0xb34)
+- in: `S.ReceiverState?.HitPositionSelection??.#4404037d.RightLine?.ReachableSegmentList?.#887fab7d` (S+0xb68), `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.ReceiverState?.HitPositionSelection??.#4404037d.LeftLine?.ReachableSegmentList?.#887fab7d` (S+0xb34)
 - out: `S.#7e28dbc0.AutoSwingEvaluation??` (S+0x7b0)
 - nodes: CURVE 3, MIN 1, PRODUCT 1; 5 curve keys
-- formula: `r5 = curve1(S.ReceiverState?.TimingState.#3fe3a099); r3 = min(S.ReceiverState?.HitPositionSelection??.#4404037d.RightLine?.#12bbd23e.#887fab7d, S.ReceiverState?.HitPositionSelection??.#4404037d.LeftLine?.#12bbd23e.#887fab7d); r0 = curve2(r3); r6 = product(r0, r5); r7 = curve3(r6)`
+- formula: `r5 = curve1(S.ReceiverState?.TimingState.#3fe3a099); r3 = min(S.ReceiverState?.HitPositionSelection??.#4404037d.RightLine?.ReachableSegmentList?.#887fab7d, S.ReceiverState?.HitPositionSelection??.#4404037d.LeftLine?.ReachableSegmentList?.#887fab7d); r0 = curve2(r3); r6 = product(r0, r5); r7 = curve3(r6)`
 
 **180 `9cafb633` Wood** (high)
-- runs: code fn_886BF598 @0x886BF9D0; Settings `#761fdece.ShotDef?.[].Id`
+- runs: code fn_886BF598 @0x886BF9D0; Settings `ShotPalette?.ShotDef?.[].Id`
 - in: `S.ReceiverState?.TimingState.#3fe3a099` (S+0xcf0), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `ShotContext.RandSlot??` (S+0x548), `S.Fatigue.Output.CurrentVigor` (S+0xf54)
 - out: `S.SwingSelection.EvaluationOutputs.Wood` (S+0x3ec)
 - nodes: CURVE 6, LERP 2, SUB 1, PRODUCT 1; 11 curve keys
@@ -2112,42 +2148,6 @@ Read with docs/gameplay/graphs-decoded.md. Names ending `?` are medium confidenc
 - in: `MatchState.#8beb922e` (Match+0x334), `S.AnimationSelection.EndOfPoint.ExpressionInputsOutputs??.#487a5bf2` (S+0x2cc), `S.AnimationSelection.EndOfPoint.ExpressionInputsOutputs??.PointQuality?` (S+0x2d8), `TeamState.IsDouble` (Team+0xbc)
 - out: `S.AnimationSelection.EndOfPoint.ExpressionInputsOutputs??.Outputs.#5e773fda` (S+0x2b8)
 - nodes: CURVE 4, LERP 1, PRODUCT 1, SUM 1; 7 curve keys
-
-**280 `7979bb20` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.Fatigue.Output.CurrentVigor` (S+0xf54), `S.#7e28dbc0.ShotSpecific.WoodUp?` (S+0x6e4), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c)
-- out: `S.#7e28dbc0.WoodUpDistance` (S+0x784), `S.#7e28dbc0.WoodUpAngleDeviation` (S+0x780), `S.#7e28dbc0.OutcomeWoodUp` (S+0x724)
-- nodes: CONST 4, CURVE 3, LERP 2, PRODUCT 1; 4 curve keys
-
-**281 `823bd977` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodSide?` (S+0x6ec)
-- out: `S.#7e28dbc0.WoodSideAngleDeviation` (S+0x790), `S.#7e28dbc0.WoodSideDistance` (S+0x794), `S.#7e28dbc0.OutcomeWoodSide` (S+0x72c)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
-
-**282 `bd4552f9` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodDown?` (S+0x6e8)
-- out: `S.#7e28dbc0.WoodDownDistance` (S+0x78c), `S.#7e28dbc0.WoodDownAngleDeviation` (S+0x788), `S.#7e28dbc0.OutcomeWoodDown` (S+0x728)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
-
-**289 `7979bb20` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodUp?` (S+0x6e4)
-- out: `S.#7e28dbc0.WoodUpDistance` (S+0x784), `S.#7e28dbc0.WoodUpAngleDeviation` (S+0x780), `S.#7e28dbc0.OutcomeWoodUp` (S+0x724)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
-
-**290 `823bd977` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodSide?` (S+0x6ec)
-- out: `S.#7e28dbc0.WoodSideAngleDeviation` (S+0x790), `S.#7e28dbc0.WoodSideDistance` (S+0x794), `S.#7e28dbc0.OutcomeWoodSide` (S+0x72c)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
-
-**291 `bd4552f9` -** (unnamed)
-- runs: Settings `ShotClassTable[].Element.[]`
-- in: `S.#7e28dbc0.#1407106c` (S+0x770), `S.#7e28dbc0.HandAttributeQuality??` (S+0x74c), `S.#7e28dbc0.ShotSpecific.WoodDown?` (S+0x6e8)
-- out: `S.#7e28dbc0.WoodDownDistance` (S+0x78c), `S.#7e28dbc0.WoodDownAngleDeviation` (S+0x788), `S.#7e28dbc0.OutcomeWoodDown` (S+0x728)
-- nodes: CONST 4, CURVE 2, LERP 2, PRODUCT 1; 2 curve keys
 
 
 ## Empty or unused (3 graphs)

@@ -131,9 +131,17 @@
 "ThrowSlice",
 "high"
 ],
+"0b337596": [
+"SwingTimingSelectionList",
+"medium"
+],
 "0b352785": [
 "Shot",
 "high"
+],
+"0c58aa02": [
+"MoveConstraintsArea",
+"medium"
 ],
 "0cad532f": [
 "MatchClock",
@@ -202,6 +210,10 @@
 "12b2b329": [
 "ModeBaseLine",
 "high"
+],
+"12bbd23e": [
+"ReachableSegmentList",
+"medium"
 ],
 "1313ce9c": [
 "CurrentTrajectory",
@@ -331,6 +343,10 @@
 "Exercice",
 "medium"
 ],
+"1d9502ff": [
+"OutputBehaviorList",
+"medium"
+],
 "1da0ffc0": [
 "LetHeight",
 "medium"
@@ -441,6 +457,10 @@
 ],
 "25eee9e5": [
 "ReturnSlicePower",
+"medium"
+],
+"25f3717a": [
+"MoveConstraintsConfig",
 "medium"
 ],
 "26296dd2": [
@@ -775,6 +795,10 @@
 "TimingExpressionInputs",
 "low"
 ],
+"3fcc8ac9": [
+"MoveConstraintsSettings",
+"medium"
+],
 "40030515": [
 "LeftLine",
 "medium"
@@ -790,6 +814,10 @@
 "40b26607": [
 "OutStop",
 "high"
+],
+"40dd9ee9": [
+"ShotResolutionSettings",
+"medium"
 ],
 "40ffdf15": [
 "OutRatio",
@@ -842,6 +870,10 @@
 "44a6d4ab": [
 "RotationDegree",
 "high"
+],
+"44b8753c": [
+"TrajectoryEvaluationContext",
+"medium"
 ],
 "45169d3c": [
 "PositionList",
@@ -1503,6 +1535,10 @@
 "PrepaPrecision",
 "high"
 ],
+"761fdece": [
+"ShotPalette",
+"medium"
+],
 "76b64248": [
 "SumAcceleration",
 "medium"
@@ -2023,6 +2059,10 @@
 "TopSpinSchool",
 "high"
 ],
+"9c11fa39": [
+"DebugCustomValue",
+"medium"
+],
 "9cab08b1": [
 "ReceiverNumberStage",
 "low"
@@ -2266,6 +2306,10 @@
 "ad09351e": [
 "IsDefenseShot",
 "low"
+],
+"ad1995d3": [
+"RePositioningState",
+"medium"
 ],
 "ad4ba1ab": [
 "SwingCategory",
@@ -2959,6 +3003,10 @@
 "Hips",
 "high"
 ],
+"ded1baa5": [
+"AmplitudeConfigList",
+"medium"
+],
 "df24cad5": [
 "Stick_Move",
 "high"
@@ -3078,6 +3126,10 @@
 "e95c1ab2": [
 "Amplitude",
 "high"
+],
+"e9ca839c": [
+"UserAIState",
+"medium"
 ],
 "e9f37a3a": [
 "Players",

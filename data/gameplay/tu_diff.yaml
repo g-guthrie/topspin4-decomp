@@ -384,7 +384,7 @@ titleupdate_arc_members:
     disc_sha256: fd3bc49b44ca4b77deebc58acaefe67763a273538f4901266f949e9ec9dedee9
     status: changed
 layout_changes:
-  - {type: 25fcd125, size: [4208, 4224], new_members: [], removed_members: [], members_shifted: 28}
+  - {type: "Pam::SwingGamePlay::Data::PlayerState", size: [4208, 4224], new_members: [], removed_members: [], members_shifted: 28}
   - type: 32286f35
     size: [36, 40]
     new_members:
@@ -398,7 +398,7 @@ layout_changes:
       - {member: 8a5e1318, type: "Pam::System::UInt8", offset: 84}
     removed_members: []
     members_shifted: 0
-  - type: 5c3da25e
+  - type: "Pam::Net::Data::TitleServerType"
     size: [12, 12]
     new_members:
       - {member: bd11b029, type: "Pam::System::UInt8", offset: 10}
@@ -406,7 +406,7 @@ layout_changes:
     removed_members: []
     members_shifted: 0
   - {type: 64efba3a, size: [256, 272], new_members: [], removed_members: [], members_shifted: 30}
-  - type: 6daa7feb
+  - type: "Pam::SwingGamePlay::Data::ShotContext"
     size: [128, 144]
     new_members:
       - {member: IsForehand, type: "Pam::System::Single", offset: 108}
@@ -425,16 +425,26 @@ layout_changes:
       - {member: e26ae391, type: "Pam::System::Boolean", offset: 8}
     removed_members: []
     members_shifted: 0
-  - {type: d23f4dbb, size: [256, 256], new_members: [], removed_members: [], members_shifted: 9}
+  - {type: "Pam::SwingGamePlay::Data::RepositioningSettings", size: [256, 256], new_members: [], removed_members: [], members_shifted: 9}
 value_changes:
   Settings.bin:
     disc_values: 45316
     tu_values: 45317
     changed:
-      - {path: "<9b4fb082>/PaddleSettings/1614457d[0]/898866c8/Axe[0]/b957fa50", type: key, disc_offset: 0x2c490, tu_offset: 0x2c490, disc: 0x681ab601, tu: 0xd47eb74d}
-      - {path: "<9b4fb082>/PaddleSettings/1614457d[0]/898866c8/Axe[0]/b8959067", type: key, disc_offset: 0x2c494, tu_offset: 0x2c494, disc: 0x69d8dc36, tu: 0x4971563b}
+      - path: "<Pam::SwingGamePlay::Data::SettingsData>/PaddleSettings/Paddle[0]/898866c8/Axe[0]/b957fa50"
+        type: key
+        disc_offset: 0x2c490
+        tu_offset: 0x2c490
+        disc: 0x681ab601
+        tu: 0xd47eb74d
+      - path: "<Pam::SwingGamePlay::Data::SettingsData>/PaddleSettings/Paddle[0]/898866c8/Axe[0]/b8959067"
+        type: key
+        disc_offset: 0x2c494
+        tu_offset: 0x2c494
+        disc: 0x69d8dc36
+        tu: 0x4971563b
     added:
-      - {path: "<9b4fb082>/47ca727b/29eac4a0/e26ae391", type: bool, tu_offset: 0xaac, tu: true}
+      - {path: "<Pam::SwingGamePlay::Data::SettingsData>/RepositioningSettings/29eac4a0/e26ae391", type: bool, tu_offset: 0xaac, tu: true}
     removed: []
     signature: {disc: 0x181aedee, tu: 0x1faab488}
   State.bin:
@@ -442,14 +452,14 @@ value_changes:
     tu_values: 10313
     changed: []
     added:
-      - {path: "<b77bbb90>/PlayerStates/PlayerState[0]/Context/ShotContext/IsForehand", type: float, tu_offset: 0x1dd0, tu: 0.0}
-      - {path: "<b77bbb90>/PlayerStates/PlayerState[0]/Context/ShotContext/IsSecondServe", type: float, tu_offset: 0x1dd4, tu: 0.0}
-      - {path: "<b77bbb90>/PlayerStates/PlayerState[1]/Context/ShotContext/IsForehand", type: float, tu_offset: 0x2e50, tu: 0.0}
-      - {path: "<b77bbb90>/PlayerStates/PlayerState[1]/Context/ShotContext/IsSecondServe", type: float, tu_offset: 0x2e54, tu: 0.0}
-      - {path: "<b77bbb90>/PlayerStates/PlayerState[2]/Context/ShotContext/IsForehand", type: float, tu_offset: 0x3ed0, tu: 0.0}
-      - {path: "<b77bbb90>/PlayerStates/PlayerState[2]/Context/ShotContext/IsSecondServe", type: float, tu_offset: 0x3ed4, tu: 0.0}
-      - {path: "<b77bbb90>/PlayerStates/PlayerState[3]/Context/ShotContext/IsForehand", type: float, tu_offset: 0x4f50, tu: 0.0}
-      - {path: "<b77bbb90>/PlayerStates/PlayerState[3]/Context/ShotContext/IsSecondServe", type: float, tu_offset: 0x4f54, tu: 0.0}
+      - {path: "<Pam::SwingGamePlay::Data::StateData>/PlayerStates/PlayerState[0]/Context/ShotContext/IsForehand", type: float, tu_offset: 0x1dd0, tu: 0.0}
+      - {path: "<Pam::SwingGamePlay::Data::StateData>/PlayerStates/PlayerState[0]/Context/ShotContext/IsSecondServe", type: float, tu_offset: 0x1dd4, tu: 0.0}
+      - {path: "<Pam::SwingGamePlay::Data::StateData>/PlayerStates/PlayerState[1]/Context/ShotContext/IsForehand", type: float, tu_offset: 0x2e50, tu: 0.0}
+      - {path: "<Pam::SwingGamePlay::Data::StateData>/PlayerStates/PlayerState[1]/Context/ShotContext/IsSecondServe", type: float, tu_offset: 0x2e54, tu: 0.0}
+      - {path: "<Pam::SwingGamePlay::Data::StateData>/PlayerStates/PlayerState[2]/Context/ShotContext/IsForehand", type: float, tu_offset: 0x3ed0, tu: 0.0}
+      - {path: "<Pam::SwingGamePlay::Data::StateData>/PlayerStates/PlayerState[2]/Context/ShotContext/IsSecondServe", type: float, tu_offset: 0x3ed4, tu: 0.0}
+      - {path: "<Pam::SwingGamePlay::Data::StateData>/PlayerStates/PlayerState[3]/Context/ShotContext/IsForehand", type: float, tu_offset: 0x4f50, tu: 0.0}
+      - {path: "<Pam::SwingGamePlay::Data::StateData>/PlayerStates/PlayerState[3]/Context/ShotContext/IsSecondServe", type: float, tu_offset: 0x4f54, tu: 0.0}
     removed: []
     signature: {disc: 0x181aedee, tu: 0x1faab488}
   Module.bin:
@@ -838,7 +848,7 @@ graph_changes:
       - "r14 = product(r15, r20)"
       - "r7 = lerp(PlayerState.#7e28dbc0.ShotSpecific.ErrorResolution.Min, PlayerState.#7e28dbc0.ShotSpecific.ErrorResolution.Max, r14)"
       - r8 = curve19(r7)
-      - "PlayerState.#9c11fa39.ControlValues.#115e007b = r3"
+      - "PlayerState.DebugCustomValue?.ControlValues.#115e007b = r3"
       - "PlayerState.#7e28dbc0.FaultProbability? = r7"
       - PlayerState.ReceiverState?.AimingState?.OutEfficiency? = r8
 swing_dll_code:

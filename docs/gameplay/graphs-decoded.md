@@ -44,7 +44,7 @@ G1b's results are sections 2.4, 4.3, 4.4, 5 (duplicates), 6.1 (graph 22), 6.9, 7
    `S+0x720` (OutcomeNet) and `S+0x71C` (LetProbability) are graph outputs. FaultProbability and OutcomeNet
    come from one pair of graphs per shot class.
 5. **Names.** 46 of 341 graph names are recovered by G1: 35 high, 5 medium and 6 low confidence. G1b adds
-   50 more member, key and graph names (837 entries in `data/gameplay/analyser_names.json`, section 7.1).
+   50 names of its own and merges 13 of G5b's (850 entries in `data/gameplay/analyser_names.json`, section 7.1).
 6. **The additive error term `S+0x564` is always 0 (G1b, V).** The PlayerCtx reset `fn_8869DEF0` stores 0.0
    there and clears the forcing flags; nothing else writes it (section 6.9). So
    `P(error) = clamp01(FaultProbability)`. Section 11 walks through the whole shot-error chain.
@@ -657,6 +657,16 @@ for `Coef*` siblings.
 | `3f7bd49d` `5f0108a7` `20276499` `8c5e64b4` `99d2ac4e` | BehaviorSettings, ShotDef, AnimationFeedback, EvaluateList, AISettings | medium | Settings sections | |
 | 14 more | BallToRacket, RandSlot, PlanMatch, ... | low | Settings and S fields | 2-3 word joins, unchecked by context |
 
+Merged from G5b's `data/gameplay/names.yaml` (medium, their `guess3`/`brute4` rules; kept only where the name
+fits the use seen here): `44b8753c` TrajectoryEvaluationContext (the per-sample scorer inputs `S+0x880`,
+section 4.3), `40dd9ee9` ShotResolutionSettings, `761fdece` ShotPalette, `ded1baa5` AmplitudeConfigList,
+`e9ca839c` UserAIState, `9c11fa39` DebugCustomValue, `ad1995d3` RePositioningState, `0b337596`
+SwingTimingSelectionList, `0c58aa02`/`25f3717a`/`3fcc8ac9` MoveConstraints{Area,Config,Settings},
+`12bbd23e` ReachableSegmentList, `1d9502ff` OutputBehaviorList. Rejected as false hits: `08950daa`
+"Flammable", `3b91d48c` "CompanySmoothYear" (the raw-rating block), `4718ce71` "NotOnlineCompliant" and
+`b3a1d456` "YiPavel". G5b's file names `2202fddf` "O7U0", which conflicts with FinalScore here; that file was
+not edited.
+
 `#7afa6edb` (S+0x8A4, also Fatigue.Input) is proven to be a **21-character** name: `crc("Coef" + w)` equals
 its sibling `#cbce3218` only for `len(w) = 21`. It is not yet recovered. Still unnamed are
 `#1407106c` (role: a speed in km/h, section 4.3), `#03d2be3d`/`#5cf9de02` (run distance in cm / required speed
@@ -886,4 +896,4 @@ python3 -m unittest tests.test_g1b_graphs tests.test_analyser tests.test_arc_wri
 ```
 
 Disassembly addresses were read with capstone 5.0.7 through the `work/disc/ppcd.py` helper and a skipdata
-variant of it. `graphs.yaml` (2,256,439 bytes) and the catalogue were regenerated with the section 9 commands.
+variant of it. `graphs.yaml` (2,261,897 bytes) and the catalogue were regenerated with the section 9 commands.

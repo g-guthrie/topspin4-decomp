@@ -1,5 +1,7 @@
 #ifndef _MSC_VER
 #pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
+#if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wnull-pointer-subtraction"
 #endif
 /* trio 1.10 printf core, second copy built with a 16-bit wchar_t character type

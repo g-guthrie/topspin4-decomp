@@ -1,4 +1,4 @@
-#ifndef _MSC_VER
+#if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wnull-pointer-subtraction"
 #endif
 /* trio 1.10 printf core (narrow char copy) as linked into Swing_DLL.xex. See lib4_trio.h for license. */

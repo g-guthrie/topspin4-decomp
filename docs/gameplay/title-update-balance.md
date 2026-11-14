@@ -192,7 +192,7 @@ TU1 data and code also have no reference).
 
 ### 3.3 D-pad movement ("Directional buttons player control added"; April and May notes)
 
-`Settings.bin` `PaddleSettings/1614457d[0]/898866c8/Axe[0]` is the movement stick:
+`Settings.bin` `PaddleSettings/Paddle[0]/898866c8/Axe[0]` is the movement stick:
 
 | field | disc | TU1 |
 |---|---|---|
@@ -209,14 +209,15 @@ TU1 data and code also have no reference).
 
 ### 3.4 Other TU1 data changes
 
-- **`Settings.bin` new flag.** `47ca727b/29eac4a0` gains a boolean `e26ae391` = `true`. Before it
-  are the int 40 and the float 1.0 read by `fn_886795C8`.
+- **`Settings.bin` new flag.** `RepositioningSettings` (`47ca727b`) record `29eac4a0` gains a
+  boolean `e26ae391` = `true`. Before it are the int 40 and the float 1.0 read by `fn_886795C8`.
   - The disc `fn_886795C8` zeroes three `MoveState` request fields when a timer exceeds 40 and a
     stick component passes a threshold.
   - Its TU1 replacement (`0x88679CD8`) takes a new latched path when the flag is set (new byte
     `this+0x16E`).
-  - This is a movement-input rule for the human player. The exact behavior is not decoded, but it
-    plausibly belongs with D-pad control. Confidence: low.
+  - This is a repositioning rule for the human player. The exact behavior is not decoded, but it
+    plausibly belongs with D-pad control or with fast reposition (RB). Confidence: low for the
+    behavior; high that the flag gates the new code path.
 - **`PlayerEvolution.bin`.** It gains two root booleans (`dcebbf79`, `218349a5`, both `true`). This
   is possibly the May "career ranking calculation" fix. Confidence: low.
 - **`State.bin`.** It gains `ShotContext.IsForehand` and `ShotContext.IsSecondServe` (0.0) for all
@@ -294,7 +295,8 @@ gameplay.
 
 1. Find the XBin loader's signature check and the archive first-match rule. That would turn the
    runtime-precedence conclusion from inference into a code fact.
-2. Decode the semantics of `fn_886795C8` and its TU1 form, together with the `29eac4a0` record.
+2. Decode the semantics of `fn_886795C8` and its TU1 form, together with the
+   `RepositioningSettings/29eac4a0` record.
 3. Name the axis-6/7 channel hashes `D47EB74D`/`4971563B` and the new booleans (`e26ae391`, the
    `PlayerEvolution` pair, the `5C3DA25E`/`88CD11F5`/`4F146280` members).
 4. Recover the September title-server data patch (`PatchData.arc`/`TempPatch.bin`) from a console

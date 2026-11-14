@@ -58,14 +58,15 @@ def family(i, outs, name):
     if "#e4f01642" in o:
         return "olderror"
     if any(k in o for k in ("FaultProbability", "OutcomeNet", "PowerfulFactor", "Efficiency", "DeepDeviation",
-                            "#07902e50", "AimingState", "#7e28dbc0.#fd4a76f0", "#d9a8add8", "#e6d62656")):
+                            "#07902e50", "AimingState", "#7e28dbc0.#fd4a76f0", "#d9a8add8", "#e6d62656",
+                            "OutcomeWood")):
         return "shotclass"
     if any(k in o for k in ("ShotComponents", "ServeComponents", "RepositioningComponents", "PositioningComponents")):
         return "aimix"
     if any(k in o for k in ("#91329eea", "ManualShotTiming", "SwingReactionTime", "#3237ffac", "FinalScore",
                             "#4abbb588")):
         return "aiscore"
-    if any(k in o for k in ("TeamState", "ShotContext", "Context.", "#ad1995d3")):
+    if any(k in o for k in ("TeamState", "ShotContext", "Context.", "#ad1995d3", "RePositioningState")):
         return "court"
     if any(k in o for k in ("EvaluationOutputs", "#7e28dbc0", "ReturnServeState", "EndOfPoint", "PressAndHold")):
         return "rules"
