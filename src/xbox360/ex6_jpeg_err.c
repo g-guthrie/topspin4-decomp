@@ -25,7 +25,8 @@ typedef struct ex6_jpeg_error_mgr {
 void ts4_get_u32_off0_882E5420(void *cinfo);
 void ts4_if_get_u32_off0_882E54A0(void *cinfo, int msg_level);
 void ts4_get_u32_off0_882E5470(void *cinfo);
-void ex6_jpeg_format_message_882E5530(void *cinfo, char *buffer);
+struct ex6_jpeg_common_struct;
+void ex6_jpeg_format_message_882E5530(struct ex6_jpeg_common_struct *cinfo, char *buffer);
 void ts4_get_u32_off0_882E5650(void *cinfo);
 extern const char *const lbl_88009088[]; /* jpeg_std_message_table */
 
@@ -37,7 +38,7 @@ ex6_jpeg_error_mgr *ex6_jpeg_std_error_882E5668(ex6_jpeg_error_mgr *err)
     err->error_exit = ts4_get_u32_off0_882E5420;
     err->emit_message = ts4_if_get_u32_off0_882E54A0;
     err->output_message = ts4_get_u32_off0_882E5470;
-    err->format_message = ex6_jpeg_format_message_882E5530;
+    err->format_message = (void (*)(void *, char *))ex6_jpeg_format_message_882E5530;
     err->reset_error_mgr = ts4_get_u32_off0_882E5650;
     err->trace_level = 0;
     err->num_warnings = 0;
