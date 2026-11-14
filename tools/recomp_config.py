@@ -490,34 +490,48 @@ def branch_targets(img, start, size):
     return out
 
 
-def extend_for_neighbours(chosen, img, max_span=0x400):
-    """Grow a function to cover a branch into the body (not the start) of an adjacent function.
+def referenced_starts(img, fns):
+    """Function starts reached by a direct bl/b from another function or stored as a data word."""
+    refs = set()
+    for caller, site, callee, tail in call_edges(img, fns):
+        refs.add(callee)
+    words = set()
+    for name, va, vs, ra, rs, ch in img.sections:
+        blob = img.data[ra:ra + min(vs, rs)]
+        words.update(struct.unpack('>%dI' % (len(blob) // 4), blob[:len(blob) // 4 * 4]))
+    refs.update(a for a in fns if a in words)
+    return refs
+
+
+def extend_for_neighbours(chosen, img, refs, max_span=0x400):
+    """Merge a function with an adjacent one when a branch lands inside the other's body.
 
     Jeff/pdata sometimes split hand-written CRT loops or shared tails into two symbols; XenonRecomp
-    then drops the branch (`// ERROR`) or emits a goto to an undeclared label. The neighbour keeps
-    its own entry (functions may overlap in XenonRecomp's list), so direct calls to it still work.
-    Returns (new list, number of extensions)."""
+    then drops the branch (`// ERROR`) or emits a goto to an undeclared label. The earlier function
+    grows to cover the later one. The later one keeps its own entry only if something references
+    it (direct call, tail call or data word); otherwise it is dropped.
+    Returns (new list, merges, dropped entries)."""
     starts = [a for a, _ in chosen]
     size = dict(chosen)
-    n = 0
-    for i, (a, sz) in enumerate(chosen):
-        end = a + size[a]
-        for site, tgt, cond in branch_targets(img, a, sz):
-            if a <= tgt < a + sz:
+    drop = set()
+    merges = 0
+    for i, a in enumerate(starts):
+        for site, tgt, cond in branch_targets(img, a, size[a]):
+            if a <= tgt < a + size[a]:
                 continue
             j = bisect.bisect_right(starts, tgt) - 1
-            if j < 0 or tgt == starts[j] or tgt >= starts[j] + size[starts[j]]:
-                continue  # tail call to a function start, or not inside a known function
-            b = starts[j]
-            if b > a and b + size[b] - end <= max_span and abs(j - i) <= 2:
-                end = max(end, b + size[b])
-            elif b < a and a + size[a] - (b + size[b]) <= max_span and abs(j - i) <= 2:
-                size[b] = max(size[b], a + size[a] - b)
-                n += 1
-        if end != a + size[a]:
-            size[a] = end - a
-            n += 1
-    return [(a, size[a]) for a in starts], n
+            if j < 0 or abs(j - i) > 2 or tgt == starts[j] or tgt >= starts[j] + size[starts[j]]:
+                continue
+            lo, hi = (a, starts[j]) if starts[j] > a else (starts[j], a)
+            new_end = max(lo + size[lo], hi + size[hi])
+            if new_end - lo > size[lo] + max_span:
+                continue
+            for k in starts[min(i, j) + 1:max(i, j) + 1]:
+                if k not in refs:
+                    drop.add(k)
+            size[lo] = new_end - lo
+            merges += 1
+    return [(a, size[a]) for a in starts if a not in drop], merges, len(drop)
 
 
 def select_functions(fns, helpers, img):
@@ -553,7 +567,9 @@ def cmd_config(args):
     functions = select_functions(fns, helpers, img)
     extended = 0
     if not args.no_extend:
-        functions, extended = extend_for_neighbours(functions, img)
+        functions, extended, dropped = extend_for_neighbours(functions, img, referenced_starts(img, fns))
+        print('merged %d split functions, dropped %d unreferenced inner entries' % (extended, dropped),
+              file=sys.stderr)
     switches, unresolved, sites, other, bctrl = scan_functions(img, fns)
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
