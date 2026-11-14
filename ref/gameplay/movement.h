@@ -101,6 +101,23 @@ struct mv_world {
     int   candidate_stable_window; /* |new - saved| <= 10 test input        */
     int   interrupt_to_turn;       /* prologue: near ball & heading test    */
     int   interrupt_dir_positive;  /* selects 8 (stop) over 7 (turn)        */
+    /* GE2: inputs of states 14-18 (fn_886B8468 0x886B9554..0x886BA148)     */
+    int   ctx_541e9e0a;            /* S+0x5DE Context.#541e9e0a             */
+    int   ctx_acfa7448;            /* S+0x5DF Context.#acfa7448             */
+    int   frames_to_commit;        /* sample[S+0xBC8].tick - clock          */
+    float heading_error;           /* |wrap(-atan2(d.z, d.x) - S+0x9D0)|, d = committed
+                                      sample - its stand point (local)      */
+    int   human_pick_found;        /* state 15 human: arg-max(0,0) after the volley/bounce
+                                      restriction, or after the Rush (+0x228) re-search */
+    int   ai_volley_pick;          /* S+0xBD0 ReceiverState.HitPositionSelection.#43f09208 */
+    int   select_result;           /* fn_88699FC0 after the commit          */
+    int   zone_near50;             /* fn_8866E058(...) < 50 cm (pool +0xF0) */
+    int   frames_to_current;       /* Mover list sample[+0x5BC].tick - clock */
+    int   samples_empty;           /* ball sample list empty                */
+    int   frames_to_nearest;       /* sample fn_886600E0(local x) tick - clock */
+    int   left_handed;             /* ctx+0x28 -> +0xC == "Left" 0xDA554856  */
+    int   is_left_line;            /* S+0xBD1 IsLeftLine                    */
+    int   sample_dz_negative;      /* sign bit of (sample z - player z)     */
 };
 
 struct mv_planner {
@@ -114,6 +131,8 @@ struct mv_planner {
     int rush_flag_121, flag_122, flag_294;
     int last_cmd_valid;
     float last_heading, last_intensity; /* +0x288/+0x28c                     */
+    int side_latched;    /* +0x284: states 17/18 have set the side flags; cleared by the
+                            planner reset fn_886BA768                              */
 };
 
 /* Output of one planner step (what gets written to the player blackboard). */
@@ -121,7 +140,20 @@ struct mv_out {
     int   speed_override_set;  /* bb+0xdec                                   */
     float speed_override;      /* bb+0xde8: 1.0 rush-like, 0.0 stop          */
     int   request_search_profile; /* 0 none, else cfg offset (0x208...)      */
+    int   stand_still;         /* state 14: S+0x9D4/0x9DC/0x9EC powers zeroed */
+    int   side_flags_set;      /* 17: VolleyRight/Left S+0xFAC/FAD; 18: BaselineRight/Left
+                                  S+0xFAE/FAF                                */
+    int   flag_right, flag_left;
 };
+
+/* State 15, human branch (fn_886B8468 0x886B9610..0x886B981C): volley (1) or let it bounce (0).
+ * nearest_* describe the ball sample nearest to the player's local x (fn_886600E0; found = not -1),
+ * corridor = S+0xC6C (ReceiverState.CorridorState.#5ec10cb0), stick = Stick_MovePolar
+ * (S+0x440 power, S+0x444 angle, +pi on the far court), window = Table2D PT+0x1EC
+ * (InputNotation e7c89177.Range) at (player x, sample x - player x). */
+int mv_s15_volley_choice(int nearest_found, int nearest_is_baseline, int nearest_is_volley,
+                         float nearest_x, float corridor, float stick_power, float stick_angle,
+                         float window);
 
 int mv_mode_valid(const struct mv_cfg *cfg, const struct mv_mode_cfg *mode,
                   float dist, float slack, mv_table_fn tab, void *user);

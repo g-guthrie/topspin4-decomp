@@ -605,7 +605,9 @@ def cmd_imports(args):
     thunks = {}
     for a in sorted(fns):
         name, size, sec = fns[a]
-        if size == 16 and img.word(a + 8) == 0x7D6903A6 and img.word(a + 12) == BCTR:
+        w0 = img.word(a)
+        if size == 16 and w0 is not None and w0 >> 24 == 0x01 and img.word(a + 8) == 0x7D6903A6 \
+                and img.word(a + 12) == BCTR:
             thunks[a] = name
     callers = collections.Counter()
     for caller, site, callee, tail in call_edges(img, fns):

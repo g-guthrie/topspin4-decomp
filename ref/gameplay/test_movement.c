@@ -148,6 +148,65 @@ int main(void)
             CHECK(rp_ai_post_swing_hold(20, 0, &stamp, 130) == 1 && rp_ai_post_swing_hold(20, 0, &stamp, 131) == 0);
         }
     }
+    /* GE2: planner states 14-18 (fn_886B8468) */
+    {
+        memset(&p, 0, sizeof p);
+        memset(&w, 0, sizeof w);
+        p.state = MV_BALL_WINDOW;
+        w.ctx_541e9e0a = 1; w.rally_active = 1; w.ball_window = 1; w.frames_to_commit = 9;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_READY_A && out.stand_still);
+        w.frames_to_commit = 10;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_BALL_WINDOW);
+        w.frames_to_commit = 3; w.prepared_or_rushjog = 1;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_HOLD);
+        memset(&w, 0, sizeof w);
+        w.ctx_acfa7448 = 1; w.heading_error = 1.0f;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_BALL_WINDOW);
+        w.heading_error = 1.6f;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_REPLAN && p.saved_state == MV_BALL_WINDOW);
+
+        /* state 15: AI picks by S+0xBD0, human waits 3 frames */
+        memset(&p, 0, sizeof p);
+        memset(&w, 0, sizeof w);
+        p.state = MV_CHOOSE;
+        w.ai_volley_pick = 1;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_VOLLEY && p.pending_interrupt);
+        p.pending_interrupt = 0;
+        w.ai_volley_pick = 0; w.select_result = MV_JOG;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_JOG);
+        w.human = 1; p.frames_in_state = 3; w.human_pick_found = 1;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_CHOOSE);
+        p.frames_in_state = 4;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_JOG);
+        w.human_pick_found = 0; w.rally_active = 1; w.ball_window = 1;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_READY_A);
+        w.shot_window_a = 1;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_READY_B);
+        CHECK(mv_s15_volley_choice(1, 0, 0, 500.0f, 300.0f, 0.0f, 0.0f, 1.0f) == 1);
+        CHECK(mv_s15_volley_choice(1, 1, 0, 500.0f, 0.0f, 0.0f, 0.0f, 1.0f) == 0);
+        CHECK(mv_s15_volley_choice(1, 0, 0, 800.0f, 0.0f, 0.5f, 0.3f, 1.0f) == 1);  /* stick */
+        CHECK(mv_s15_volley_choice(1, 0, 1, 900.0f, 300.0f, 0.5f, 2.0f, 1.0f) == 0);
+        CHECK(mv_s15_volley_choice(0, 0, 0, 0.0f, 0.0f, 0.1f, 0.0f, 1.0f) == 0);
+
+        /* states 17/18: side flags, then hold when the sample is close */
+        memset(&p, 0, sizeof p);
+        memset(&w, 0, sizeof w);
+        p.state = MV_READY_B; p.frames_in_state = 5; w.is_left_line = 1;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_READY_B && !out.side_flags_set);
+        p.frames_in_state = 6;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_READY_B && out.side_flags_set &&
+              out.flag_right == 1 && out.flag_left == 0 && p.side_latched);
+        w.frames_to_current = 19;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_HOLD);
+        w.zone_near50 = 1;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_READY_B);
+        memset(&p, 0, sizeof p);
+        p.state = MV_READY_A; w.frames_to_nearest = 30; w.left_handed = 1;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_READY_A && !p.side_latched);
+        w.frames_to_nearest = 29; w.sample_dz_negative = 1;
+        CHECK(mv_next_state(&p, &cfg, &w, &out) == MV_READY_A && out.flag_right == 0 &&
+              out.flag_left == 1);
+    }
     if (!fails)
         printf("movement tests passed\n");
     return fails != 0;

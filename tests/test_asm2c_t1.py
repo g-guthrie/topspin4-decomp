@@ -79,3 +79,26 @@ class UncseTests(unittest.TestCase):
         b = ("    t11 = *(ts4_word *)((char *)(ts4_word)(a0) + 40);\n"
              "    if (c) {\n        f(t11);\n    } else {\n        g(t11);\n    }\n    h(t11);\n")
         self.assertEqual(xforms.uncse_all(b), [])
+
+
+class LdswapTests(unittest.TestCase):
+    def test_adjacent_loads_swapped(self):
+        b = ("    t2 = *(ts4_word *)((char *)(ts4_word)(a0) + 128);\n"
+             "    t3 = *(ts4_word *)((char *)(ts4_word)(a0) + 132);\n"
+             "    t4 = *(ts4_word *)((char *)(ts4_word)(t3) + 0);\n")
+        out = xforms.ldswap_all(b)
+        self.assertEqual(len(out), 1)      # t4 depends on t3
+        self.assertTrue(out[0].startswith("    t3 = "))
+
+
+class ExprCseTests(unittest.TestCase):
+    def test_size_expression_hoisted_before_if(self):
+        b = ("    ts4_word t4;\n\n"
+             "    t4 = f();\n"
+             "    if (c) {\n"
+             "        if ((int)((int)(t4 - t5) / (int)104) == 0) {\n            return;\n        }\n"
+             "        return;\n"
+             "    }\n"
+             "    if ((int)((int)(t4 - t5) / (int)104) != 0) {\n        g();\n    }\n")
+        out = xforms.exprcse_all(b)
+        self.assertTrue(any("    h1 = (ts4_word)((int)(t4 - t5) / (int)104);\n    if (c) {" in x for x in out))

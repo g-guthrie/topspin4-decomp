@@ -99,6 +99,9 @@ int mv_next_state(struct mv_planner *p, const struct mv_cfg *cfg,
         out->speed_override_set = 0;
         out->speed_override = 0.0f;
         out->request_search_profile = 0;
+        out->stand_still = 0;
+        out->side_flags_set = 0;
+        out->flag_right = out->flag_left = 0;
     }
     /* prologue: pending interrupt turns into Turn (7) or Stop (8) */
     if (p->pending_interrupt) {
@@ -184,6 +187,8 @@ int mv_next_state(struct mv_planner *p, const struct mv_cfg *cfg,
         }
         return cur;
     case MV_ALT_SWING:
+        /* 0x886B9E60; on stay the game calls fn_8866BD00 and, when !P+0x120, fn_886A9DF0
+         * (re-search with the alternate profiles +0x238/+0x248) */
         if (w->alt_swing_ok)
             return MV_RUSH;
         r = w->replan;
@@ -199,11 +204,47 @@ int mv_next_state(struct mv_planner *p, const struct mv_cfg *cfg,
     case MV_HOLD:
         return cur; /* re-applies the stored command every frame */
     case MV_BALL_WINDOW:
-        if (w->replan == 0 || w->replan == 1)
-            return go_replan(p, w, cur);
+        /* 0x886B9F10: the player stands still while waiting */
+        if (out)
+            out->stand_still = 1;
+        if (w->ctx_541e9e0a) {
+            if (!w->rally_active || w->frames_to_commit >= 10 || !w->ball_window)
+                return cur;
+            if (w->prepared_or_rushjog)
+                return go_hold(p);
+            return MV_READY_A;
+        }
+        if (w->ctx_acfa7448) {
+            /* consts+0x830 = 1.5707951 */
+            if (w->replan != 0 || w->heading_error > 1.5707951f)
+                return go_replan(p, w, cur);
+        }
         return cur;
     case MV_CHOOSE:
+        if (!w->human) {
+            /* 0x886B9564: AI arg-max with (0,1) volley only when S+0xBD0, else (1,0) */
+            if (w->ai_volley_pick) {
+                p->pending_interrupt = 1;
+                return MV_VOLLEY;
+            }
+            return w->select_result;
+        }
+        if (p->frames_in_state <= 3)
+            return cur;
+        if (w->human_pick_found)
+            return w->select_result;
+        if (!w->rally_active)
+            return cur;
+        if (w->shot_window_a)
+            return MV_READY_B;
+        if (!w->ball_window)
+            return go_hold(p);
+        if (w->prepared_or_rushjog)
+            return go_hold(p);
+        return MV_READY_A;
     case MV_VOLLEY:
+        /* 0x886B997C; when !P+0x120 the game also commits PT+0x208 (fn_886A2E48) and
+         * calls fn_886787D8, then fn_8866BD00 every frame */
         r = w->replan;
         if (r == 1)
             return go_replan(p, w, cur);
@@ -212,8 +253,32 @@ int mv_next_state(struct mv_planner *p, const struct mv_cfg *cfg,
         return cur;
     case MV_READY_A:
     case MV_READY_B:
-        if (w->slack_distance < 20.0f && p->frames_in_state > 1)
-            return MV_HOLD;
+        /* 0x886B9B90 (17) and 0x886B9A14 (18) */
+        if (p->side_latched) {
+            int threshold = w->zone_near50 ? 1 : 20;
+            if (w->frames_to_current < threshold && p->frames_in_state > 1)
+                return go_hold(p);
+            return cur;
+        }
+        if (cur == MV_READY_B) {
+            if (p->frames_in_state <= 5)
+                return cur;
+            p->side_latched = 1;
+            if (out) {
+                out->side_flags_set = 1;
+                out->flag_right = w->left_handed ? !w->is_left_line : w->is_left_line;
+                out->flag_left = w->left_handed ? w->is_left_line : !w->is_left_line;
+            }
+            return cur;
+        }
+        if (w->samples_empty || w->frames_to_nearest >= 30)
+            return cur;
+        p->side_latched = 1;
+        if (out) {
+            out->side_flags_set = 1;
+            out->flag_right = w->left_handed ? !w->sample_dz_negative : w->sample_dz_negative;
+            out->flag_left = w->left_handed ? w->sample_dz_negative : !w->sample_dz_negative;
+        }
         return cur;
     case MV_REACH:
         if (p->frames_in_state > 10)
@@ -442,4 +507,24 @@ int rp_ai_post_swing_hold(int n, int swing_running, int *stamp, int now)
     if (*stamp <= 0)
         return 0;
     return now - *stamp <= n;
+}
+
+int mv_s15_volley_choice(int nearest_found, int nearest_is_baseline, int nearest_is_volley,
+                         float nearest_x, float corridor, float stick_power, float stick_angle,
+                         float window)
+{
+    int volley = 0;
+    if (nearest_found) {
+        if (nearest_is_baseline)
+            volley = 0;
+        else if (nearest_is_volley)
+            volley = 1;
+        else
+            volley = fabsf(nearest_x) < 700.0f;          /* pool +0x82C */
+    }
+    if (volley && fabsf(corridor) < 225.0f)              /* pool +0x4EC */
+        return 1;
+    if (stick_power > 0.4f)                              /* pool +0x118 */
+        return fabsf(stick_angle) < window;
+    return volley;
 }

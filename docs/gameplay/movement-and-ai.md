@@ -36,9 +36,8 @@ section 7 "Opponent AI") and only adds or corrects. Their function names are use
   jog speed ramp value/step, `+0x14c` ramp initialised, `+0x158/+0x19c/+0x1e0/+0x224` data graphs (analysers), `+0x280` frame
   stamp when the current plan was committed, `+0x285` command valid, `+0x288/+0x28c` stored command, `+0x294` suppress flag,
   `+0x295` rush allowed, `+0x29c` "grade rolled", `+0x2a0` frame the reaction started (-1 none).
-* `PlayerCtx` (see gp2 2): `+0x10` human, `+0x14` slot, `+0x2c` MoveConfig, `+0x44` input system, `+0x48` world, `+0x4c` opponent team,
-  `+0x50` profile (`+0x28` skill record: `+0x1dc` reaction frames, `+0x1b0` AI reach float written in state 1), `+0x5c` aim
-  controller, `+0x60` swing animation controller, `+0x74` PlayerState blackboard `bb`, `+0x78` anim state (`+0x468` current
+* `PlayerCtx` (see gp2 2): `+0x10` human, `+0x14` slot, `+0x2c` MoveConfig, `+0x44` input system, `+0x48` world, `+0x4c` own team (GE2: `fn_8866D368(team)` returns the other team's hitter),
+  `+0x50` profile (`+0x28` skill record: `+0x1dc` reaction frames, `+0x1b0` AI reach float written in state 1), `+0x5c` Mover (GE2: smoothed velocity +0x50 and speed +0x68 in m/s, MoveMode via `fn_8869C010`; repositioning.md s5), `+0x60` swing animation controller, `+0x74` PlayerState blackboard `bb`, `+0x78` anim state (`+0x468` current
   locomotion id: Idle / Rush / Jog hashes), `+0xb4` ball prediction owner.
 * Blackboard outputs of the planner (V): `bb+0xbc8` committed sample, `bb+0xbd1` side, `bb+0x9d0/0x9d4` **move command**
   (heading rad, intensity 1.0), mirrored to `+0x9d8/0x9dc`, `+0x9e8/0x9ec` previous command, `bb+0xde8/0xdec` **speed override**
@@ -70,13 +69,13 @@ Edges are from `li r21,N` assignments and the decompile of fn_886B8468 (V). Name
 | 7 | Turn | transient from an interrupt: heading hold counter P+0x128 = 10, prepare(saved), then back | saved state |
 | 8 | Stop | transient: override 0.0, waits >= 4 frames and locomotion stopped | saved state |
 | 9 | Replan | hold; re-run search with `P+0x24`; resume `P+0x12c` while the new sample stays within +-10 of `P+0x138`; 3 if swing available; 0x14 if alt-swing ok | saved, 3, 20 |
-| 10,11 | AltA/AltB | profile `+0x238`/`+0x248` move (override 1.0); zone `cfg+0x300` | 12 |
-| 12 | AltSwing | `fn_886A2BE8` -> 20; replan 1 -> 9 | 9, 13, 20 |
-| 13 | Hold | stored command `P+0x288/28c` re-applied | stay (leaves via other states' calls) |
-| 14 | BallWindow | replan checks while the swing flags `bb+0x5de/5df` decide | 9, 13, 17 |
-| 15 | Choose | AI only (human waits > 3 ticks): `fn_8865DBA8` with `bb+0xbd0` selecting volley-only (-> 16) or non-volley (then fn_88699FC0) | 16, 17, mode state |
-| 16 | Volley | volley candidate move | 9, 13 |
-| 17,18 | ReadyA/B | wait until ball arrival < 20 (or 1) frames; 18 also sets side flags `bb+0xfae/0xfaf` using handedness (Left) | 13 |
+| 10,11 | AltA/AltB | profile `+0x238`/`+0x248` move (override 1.0, swing target `fn_8866BDD8`); zone `cfg+0x300` -> 12 with interrupt (GE2, C) | 12 |
+| 12 | AltSwing | `fn_886A2BE8` -> 20; replan 1 -> 9 (saved 12); rally and replan -1 -> 13; else `fn_8866BD00`, `fn_886A9DF0` (re-search +0x238/+0x248) when `!P+0x120`, override 1.0 (GE2, C) | 9, 13, 20 |
+| 13 | Hold | on entry from 14-18 the game copies `P+0x288/0x28C` into `RequiredMove` (`S+0x9D0/0x9D4`) and `#b21d6f76` (`S+0x9D8/0x9DC`); stays (GE2, C) | stay (leaves via other states' calls) |
+| 14 | BallWindow | stands still (powers `S+0x9D4/0x9DC/0x9EC` = 0). With `S+0x5DE`: rally, `frames_to_commit < 10` and ball window `fn_886877A8` -> 13 when `fn_886A58F0` or locomotion `0x550171D1`/`0xB3FF5297`, else 17. With `S+0x5DF`: replan != 0, or the direction from the committed sample's stand point to the sample more than 90 deg (pool +0x830 = 1.5707951) from the held heading `S+0x9D0` -> 9 (saved 14) (GE2, C) | 9, 13, 17 |
+| 15 | Choose | AI: arg-max `fn_8865DBA8` (0,1) volley only when `S+0xBD0` -> 16 with interrupt, else (1,0) non-volley -> `fn_88699FC0`. Human after > 3 frames: volley-or-bounce choice (`mv_s15_volley_choice`, A.4c), `fn_886894A8` rescoring restricted to Volley or Baseline candidates, arg-max (0,0), else re-search with Rush `+0x228` -> `fn_88699FC0`; none found: rally gates as state 1 (18, 13, 17) (GE2, C) | 13, 16, 17, 18, mode state |
+| 16 | Volley | replan 1 -> 9 (saved 16); rally and -1 -> 13; when `!P+0x120` commit `+0x208` (`fn_886A2E48`) and `fn_886787D8`; `fn_8866BD00` (GE2, C) | 9, 13 |
+| 17,18 | ReadyA/B | first pass (`P+0x284` clear): 18 after > 5 frames sets BaselineRight/Left `S+0xFAE/FAF` from IsLeftLine `S+0xBD1`; 17 when the sample nearest the player is < 30 frames away sets VolleyRight/Left `S+0xFAC/FAD` from the sign of sample z - player z; both swap for handedness "Left" and set `P+0x284`. Then: current sample < 20 frames away (1 frame when within 50 cm of the zone point `fn_8866E058`) and > 1 frame in state -> 13 (GE2, C) | 13 |
 | 19 | Reach | stretch/lunge; after > 10 frames set side flags and swing target | 9 |
 | 20 | Rush | speed regime | 3, 19, 22, 6, 13 |
 | 21 | JogJogPrepared | speed regime (+0x284 record) | 3, 19, 22 |
@@ -122,17 +121,93 @@ opponent mode != 2, ball prediction non-empty; I for the exact let-state logic).
   `PT+0x3D4/0x3D8/0x3E4/0x3E8` shifted by the frames left, the side offset consts+0x20 or
   +0x4F8 by `bb+0xBD1`, runs the clip fit `fn_886D3AD8` when the swing controller allows, and
   stores its result in `Context.IsMiss` (`S+0x5E3`).
-* Not transcribed: `fn_886A9678` (0x3CC, replan latch `P+0x123`, calls `fn_886A0188`,
-  `fn_8866BDD8`, `fn_8868ED00`), `fn_8869A4D0` and `fn_886A33C0` (no symbol boundaries in
-  fn_asm), and the VMX bodies of `fn_88688948` / `fn_886887C0` (gp3 5.4 gives their validity
-  maths). `fn_8865DBA8` is the candidate arg-max already modelled as `ai_argmax`.
+* `fn_886A9678`, `fn_886A33C0` and the geometry of `fn_88688948` / `fn_886887C0`: section A.4c (GE2).
+
+### A.4c Replan check, volley-or-bounce choice and mode geometry (GE2, C unless marked)
+
+Models in `ref/gameplay/movement.c` (`mv_replan_check`, `mv_line_intersect`, `mv_run_angle`,
+`mv_mode_slack`, `mv_mover_step`, `mv_volley_or_bounce`, `mv_human_reach_input`); constants in
+`data/gameplay/repositioning.yaml`. `P+0x10` is the current planner state (the machine cell
+`P+0x14` points at it; `fn_886BD690`).
+
+* **fn_881896F8 (2-D line intersection)**: `(P1, D1)` at `r3`, `(P2, D2)` at `r4` (point +0, direction
+  +0x10), x-z only. `den = cross(D1, D2) = D1.x D2.z - D1.z D2.x`; if 0 it copies `P1` to the output and
+  returns whether the lines coincide. Else `t1 = cross(P2 - P1, D2) / den`, `t2 = cross(P2 - P1, D1) / den`,
+  output point `P1 + t1 D1`, `*r6 = t1`, `*r7 = t2`, returns 1.
+* **fn_886A9678 (replan check of states 4, 6, 12, 16)**. Latch `P+0x123`: from the second frame in the
+  state it is set once the swing clip has passed its marked event (`fn_886A0188` on the latest of the
+  10 animation-history entries at `ctx+0x64`; it finds the last queued clip with an event and
+  `fn_886D1C70` returns `clamp(event time) <= current time`; I for "event = contact"). Until then
+  it writes the swing target from `LocalPosition` and returns 0 (in state 16 it also sets
+  `(ctx+0x64)+6`). After the latch: `A` = the committed ball sample (y = 0, mirrored into the
+  local frame by `fn_8865E730`), `Q` = the side's stand point (plan buffer `P+0x2C` (+0x60 when
+  `S+0xBD1 == 0`), self-relative array at +4), `B` = `LocalPosition`, `C` = the player's position
+  predicted 20 frames ahead (`fn_8868ED00`). With `u = norm(A - Q)`, `along = (C - Q).u`,
+  `lateral = (C - Q).(-u.z, u.x)`:
+  `arrived = |lateral| < 40` **and** (`(Q - A).(C - B) > 0` ? `-30 < along < 0` : `-20 < along < 30`).
+  Returns **1 when arrived and at most 10 frames remain** to the sample (-> state 9), **-1 when
+  arrived earlier** (-> state 13, hold), else 0. Constants: pool +0x404 = 40, +0x79C = -30,
+  +0x42C = 30, +0x134 = -20. It reads no PlayerState grade: the "S+0x798/0x79C" reads that gp4b
+  s7 and gp8 attribute to this function are the pool offset +0x79C (correction).
+* **fn_886A33C0 / 32B8 / 3238 / 31B8 (state 15 tests in `fn_886A9E48`)**. Each re-runs the side
+  select, InputNotation and score (`fn_8869AB70`, `fn_8868AF88`, `fn_88689AF0`) for one profile with
+  `PT+0x1B8` cleared, then `fn_8865D8D8`: for the last valid side record, **true when the type of the
+  first window's start sample is not Baseline and the type of the last window's end sample is
+  Baseline**. That means the ball can be volleyed now or played after the bounce. On true the
+  profile is stored in `P+0x24`.
+  Profiles: `33C0` Steps (+0x208), `32B8` Steps with `Steps.Reachability.MaxSpeed` (PT+0x210)
+  temporarily 6.0 when the nearest Volley candidate (`fn_8866C8B8`) is more than 200 cm away on both
+  sides, **then written back as the constant 3.0** (pool +0x4C, not the data value), `3238` Jog
+  (+0x218), `31B8` Rush (+0x228).
+  Order in `fn_886A9E48` when `S+0x5DD/0x5DE/0x5DF` are clear: `33C0`, `32B8` -> 15; commit
+  `+0x218` (if `S+0xBD5`) or `+0x208`; `3238` -> 15 and commit `+0x218`; `31B8` -> 15 and, if still
+  undecided, commit `+0x228`; a commit with the state unchanged goes to `fn_88699FC0`. A human
+  whose result is 20 (Rush) without `P+0x295` keeps his state and loses the commit (`S+0xBC8 = -1`).
+* **PT+0x1B8 (`#3db13d71`, true on disc), human reach flattening** in `fn_88689068`: for human
+  players the Reachability input `S+0xB9C` of every candidate below `best + RangeCurve(PT+0x188)(best)`
+  becomes `best`, the others 100 (unreachable), where `best` = the smaller of the two side records'
+  `+0x28` (or `+0x2C`) values, also stored in `S+0xBA4` (I: the best reach speed, m/s; the curve maps
+  0..8 m/s to a 3.5..0.1 m/s margin). So among nearly equally reachable hit points the score is
+  decided by InputNotation (the stick), not by distance. The state-15 tests switch it off.
+* **fn_886887C0 (mode slack)**: `D = Q - LocalPosition` (3-D), `E = D - Mover.velocity` where the
+  Mover is `ctx+0x5C` (repositioning.md s5: `+0x50` velocity and `+0x68` speed, m/s, 3-frame mean;
+  subtracting m/s from cm is what the code does). `prep = Table2D(PT+0x17C)(Mover.speed,
+  |atan2(E.z, E.x)|)` (D: 10 frames standing still; at 2 m/s 0 -> 15 frames and at 5 m/s 0 -> 20
+  frames, from running straight at the net to running straight back). `slack = (sample.tick - clock)
+  - prep - lead`, `validity = Table2D(mode)(|D|, slack)`.
+* **fn_88688948**: invalid when `min_distance^2 >= |D|^2`; `lead = fn_886CD3C8(ctx+0x60) +
+  PT+0x1AC` (15); valid when `validity >= 0.5`. The rest is debug printing (DebugConfig +0x48/+0x69).
+  With the disc tables (D, `player.yaml`) a mode is valid when the slack is **short**: Rush at 400 cm
+  when slack < 35 frames (1000 cm: < 139), JogPrepared (+0x298) at 400 cm when < 110, JogJogPrepared
+  only from 2000 cm. So the planner sprints when time is tight, jogs with more time, and with even
+  more slack keeps the default state 5 (walk, speed override `PT+0x34C`).
+
+* **State 15, human volley-or-bounce choice** (`fn_886B8468` 0x886B9610..0x886B98D4, `mv_s15_volley_choice`).
+  After more than 3 frames in state 15: take the ball sample nearest the player's local x
+  (`fn_886600E0`). Its candidate type on either side (CandidateSet `+0x24` / `+0x84`) decides:
+  Baseline 0x0F6FB110 -> bounce; Volley 0x71198650 -> volley; otherwise volley when
+  `|sample x| < 700` (pool +0x82C). A volley stands when `|S+0xC6C| < 225` (pool +0x4EC,
+  `ReceiverState.CorridorState.#5ec10cb0`). Otherwise, when the move stick power `S+0x440 > 0.4`
+  (pool +0x118), volley = `|stick angle S+0x444| < Table2D PT+0x1EC (InputNotation e7c89177.Range)
+  (player x, sample x - player x)`; the angle gets +pi (wrapped) on the far court. The disc table
+  gives 1.0..0.4 rad at x = -1100 and 2.1..0.6 rad at x = -700 as the offset grows from -100 to
+  300 cm (D; key = player x, I from the argument order f1, f2). So pushing toward the ball from mid-court picks the volley (I).
+  `fn_886894A8(volley)` then rescores both sides with `fn_88689068`, giving every candidate of the
+  other type Reachability 100 (unreachable), and the arg-max `(0,0)` picks; with no pick it
+  re-searches with the Rush profile `+0x228`. With a pick the next state is `fn_88699FC0`;
+  without one the state-1 rally gates apply (18, 13, 17).
+* **Planner side flags.** States 17 and 18 write `BehaviorTransitionState` VolleyRight/Left
+  (`S+0xFAC/FAD`) and BaselineRight/Left (`S+0xFAE/FAF`) once per shot (`P+0x284`, cleared by the
+  planner reset `fn_886BA768`). For handedness "Left" (ctx+0x28 -> +0xC = 0xDA554856) right and
+  left swap. The state-17 rule uses the sign of sample z - player z; 18 uses IsLeftLine `S+0xBD1`.
 
 ### A.5 Target positions
 * **Contact target:** sample `bb+0xbc8` of the plan buffer (positions at buffer `+4`, 16 B stride; type hash at `+0x24`; reach
   speed at `+0x10`), committed by fn_886A2E48 (gp3 5.4). Move command: fn_886884E8 sets `bb+0x9d0 = -atan2(dz,dx)` of the
   predicted position (fn_8867A908, look-ahead) and `bb+0x9d4 = 1.0`; copies to `P+0x130/0x288`.
-* **Recovery:** there is no recovery-position state; "recovery" is states 7 (turn), 8 (stop) and 13 (hold the last command) plus the re-plan
-  loop 9. The wait positions after a shot come from the second (hashed) machine and the base profile `cfg+0x1f8`; not decoded (L).
+* **Recovery:** inside the planner "recovery" is states 7 (turn), 8 (stop) and 13 (hold the last command) plus the re-plan
+  loop 9. The wait positions after a shot are chosen by the repositioning controller `fn_886BB0A8` (GE2, [repositioning.md](repositioning.md)):
+  net point 300 cm / baseline point 1300 cm from the net in singles (graph 116), four fixed points in doubles.
 * Mirroring: when the court-side tag differs, x/z are negated before planning (gp3 1B.3).
 
 ### A.6 Speed selection (V)
@@ -178,5 +253,4 @@ and the polar move command (`ref/gameplay/ai_driver.c`).
 See `docs/gameplay/movement-symbols.csv` (name, confidence, evidence). Not byte-matched: no `src/` files produced (VMX128-heavy bodies).
 
 ## D. Unknowns
-Names of hashed states in fn_886B3CF8 (several resolve by CRC: LetIn, LetOut, Net, Flat, Good, Idle, Rush, Jog, Left, Human, Volley, Baseline, Receiver); exit conditions of rows 10-18; exact
-vector geometry in fn_88688948/fn_886887C0 (VMX128); aim auto-target maths (fn_8869BEF0); fn_88699300 per-state prepare bodies; where the stick `bb+0x448/0x44c` is written for humans.
+Names of hashed states in fn_886B3CF8 (several resolve by CRC: LetIn, LetOut, Net, Flat, Good, Idle, Rush, Jog, Left, Human, Volley, Baseline, Receiver); exit conditions of rows 10-18 (the predicates they call are now read, A.4b/A.4c); aim auto-target maths (fn_8869BEF0); fn_88699300 per-state prepare bodies; where the stick `bb+0x448/0x44c` is written for humans.

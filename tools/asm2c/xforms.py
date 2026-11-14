@@ -543,14 +543,78 @@ def uncse_all(b):
     return out
 
 
+_LDL = re.compile(r'^( *)(t\d+) = (\*\([\w ]+ \*\)\(.*\));$')
+
+
+def ldswap_all(b):
+    """(T1) two adjacent independent loads `tA = *..; tB = *..;` in the other order (the
+    original's expression order, e.g. `end - begin` loads end first)."""
+    L, out = b.split('\n'), []
+    for i in range(len(L) - 1):
+        m1, m2 = _LDL.match(L[i]), _LDL.match(L[i + 1])
+        if not (m1 and m2) or m1.group(1) != m2.group(1) or re.search(r'\b' + m1.group(2) + r'\b', m2.group(3)):
+            continue
+        L2 = list(L)
+        L2[i], L2[i + 1] = L[i + 1], L[i]
+        out.append('\n'.join(L2))
+    return out
+
+
 def t_uncse(b, rng=None):
     return _pick(uncse_all(b), rng)
+
+
+def exprcse_all(b, cap=4):
+    """(T1) an arithmetic subexpression that occurs in two or more statements (often both
+    arms of an if) becomes a temporary computed once before the top-level statement that
+    holds its first use, e.g. a vector size `(int)(t4 - t5) / (int)104` the original kept
+    in a variable."""
+    L = b.split('\n')
+    first = _first_stmt(L)
+    cands = {}
+    for i in range(first, len(L)):
+        l = L[i]
+        for j, ch in enumerate(l):
+            if ch != '(':
+                continue
+            k = _bal(l, j)
+            if k < 0:
+                continue
+            e = l[j:k + 1]
+            if len(e) < 12 or '(*)' in e or ' = ' in e or not re.search(r' [-+*/] | >> | << ', e) or re.search(r'\w\(', e):
+                continue
+            cands.setdefault(e, set()).add(i)
+    out = []
+    for e, lines in sorted(cands.items(), key=lambda x: -len(x[0])):
+        if len(lines) < 2 or len(out) >= cap:
+            continue
+        ops = set(re.findall(r'\b(?:[atp]|lv|pf|t)\d+\b', e))
+        i0 = min(lines)
+        top = i0
+        while top > first and L[top].startswith('     '):
+            top -= 1
+        if any(re.match(r'^\s*' + o + r' = ', L[q]) for q in range(top, max(lines) + 1) for o in ops):
+            continue
+        h = _newname(b, 'h')
+        L2 = L[:top] + [f'    {h} = (ts4_word){e};'] + [x.replace(e, h) for x in L[top:]]
+        nb = _add_decl('\n'.join(L2), f'    ts4_word {h};')
+        if nb.count(h) >= 3:
+            out.append(nb)
+    return out
+
+
+def t_exprcse(b, rng=None):
+    return _pick(exprcse_all(b), rng)
+
+
+def t_ldswap(b, rng=None):
+    return _pick(ldswap_all(b), rng)
 
 
 # (transform, weight) for perm.py; t_sv is added there because it needs the target's sites
 TRANSFORMS = [(t_bool, 2), (t_strlen, 2), (t_strl_cse, 1), (t_compound, 2), (t_nz, 1), (t_unvol, 2),
               (t_homecopy, 1), (t_locsize, 2), (t_locperm, 2), (t_earlyinv, 2), (t_cse, 2), (t_hoist, 2),
-              (t_ldfirst, 3), (t_idx, 3), (t_stswap, 2), (t_ptrtemp, 1), (t_blockcse, 2), (t_uncse, 2)]
+              (t_ldfirst, 3), (t_idx, 3), (t_stswap, 2), (t_ptrtemp, 1), (t_blockcse, 2), (t_uncse, 2), (t_ldswap, 2), (t_exprcse, 2)]
 
 
 def deterministic(b, sites=()):
@@ -571,5 +635,5 @@ def deterministic(b, sites=()):
         out += [x] if x else []
         out += hoist_all(s)[:3] + ldfirst_all(s, 3)
     out += sv_all(b, sites)
-    out += uncse_all(b)[:3] + blockcse_all(b)[:3] + ptrtemp_all(b)[:3] + hoist_all(b)[:4] + ldfirst_all(b, 4) + idx_all(b)[:4] + stswap_all(b)[:4]
+    out += exprcse_all(b) + uncse_all(b)[:3] + ldswap_all(b)[:4] + blockcse_all(b)[:3] + ptrtemp_all(b)[:3] + hoist_all(b)[:4] + ldfirst_all(b, 4) + idx_all(b)[:4] + stswap_all(b)[:4]
     return list(dict.fromkeys(x for x in out if x and x != b))

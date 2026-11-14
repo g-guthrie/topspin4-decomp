@@ -707,14 +707,23 @@ nothing but the tree's Slice branches, statistics and the HUD.
    (`g_ts4_script_constants+0`) and keeps the request; otherwise `InsideOut = 0` and the request is
    dropped. I read this as "the ball is on the other side of the body from the natural stroke", i.e.
    a real run-around (M).
-   *GE1 transcription (C for the steps, I for the meaning):* with `P` = the hitter's position
-   mirrored into his frame (`fn_8865EC70`) and `B0`, `B1` = the ball vectors at ball state
-   `+0x100` / `+0x110`: (a) intersect the ball's normalised travel line with a line through `P`
-   (`fn_881896F8`, offset `t`), take `Q1 = (P.x, 0, P.z + t)`, mirror it by the opponent's side
-   tag (`fn_8865E730`) and set `s1 = Q1.z < P.z`; (b) the same from `B0` gives `s2 = Q2.z < B0.z`.
-   `InsideOut = (s1 != s2) ? 1.0 : 0.0` and `InsideOutRequested = (s1 != s2)`. So LT counts only
-   when the ball's crossing point and the hitter's position lie on different sides in z: the
-   ball comes to the side the player is running around (I).
+   *GE2 transcription (C; replaces GE1's reading of the line set-up):* `P` = the hitter's world
+   position (`fn_8865EC70`: LocalPosition mirrored by the own court tag). `B0`, `B1` = the incoming
+   shot's hit point and landing target (ball state `(world+0x5C)+0x20`, `+0x100` / `+0x110`; gp4 field
+   map), flattened to y = 0. `fn_881896F8` (2-D line intersection, movement-and-ai A.4c) is called
+   twice with line 1 = `B0 + t norm(B1 - B0)` (the shot's ground track):
+   (a) line 2 = through `P` along `(0, 0, 1)` (constant `lbl_880FC6B0`), so `t2` is the z offset of
+   the point `X` where the track crosses `x = P.x`; `X` is mirrored by the **own** court tag and
+   `s1 = X'.z < P.z` (P in world coordinates);
+   (b) line 2 = through `B0` along `(0, 0, 1)`: both lines pass through `B0`, so `t2 = 0` and the
+   test reduces to `s2 = mirror(B0).z < B0.z`, i.e. always false on the near court and
+   `B0.z > 0` (world) on the far court.
+   `InsideOut = (s1 != s2) ? 1.0 : 0.0` and `InsideOutRequested = (s1 != s2)`. On the near court
+   (world = local) LT counts when the ball crosses the player's x at a lower z than the player
+   (I: his left side, the backhand side of a right-hander; handedness is not consulted). On the far
+   court the code compares a local z with a world z, and the second test depends on where the
+   opponent hit from (I: an oversight; R10 in OPEN s11 checks it). Model: `mv_inside_out` in
+   `ref/gameplay/movement.c`.
 3. **Forced side commit.** Movement planner `fn_886A3440` (called by `fn_886A9E48` and `fn_886B8468`):
    for a human pad player with `Buttons.LT` held, `Stick_MovePolar.Power > 0.2` and the stick angle
    (plus pi on the mirrored court side `0xA2EDA1E7`) within **0.8727 rad (50 deg) of pi/2** (of

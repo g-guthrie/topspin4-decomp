@@ -87,10 +87,12 @@ difficulty's `7bcf55ee` (`aiming.md` s4).
   `FinalRepositioningComponents` (+0x1E0..+0x1F8); `fn_886B81E0` copies `PositioningComponents`
   (+0xCC..+0xD8) to `FinalPositioningComponents` (+0x1D0..+0x1DC). `fn_886A4260` re-evaluates the
   repositioning list (`fn_88694030`, `fn_88693FA8`) and copies it the same way.
-* **fn_886A4260 (AI repositioning after a shot):** `volley = U[0,1] < Final.Volley`;
-  `@ReqFastRepos (S+0x4E2) = U[0,1] < Final.RushRepositioning`; then it picks the next mode
-  `P+0x40` (3/4 or 5/6 by the volley draw and a doubles-partner position test).
-* **fn_886A3DF0 (AI stop):** when `Final.#2b4b4baa >= 0.5` or `Final.StopMoving > 0.5`, and the
+* **fn_886A4260 is the doubles AI decider** (singles: `fn_886BADA0`; GE2, [repositioning.md](repositioning.md)):
+  `volley = U[0, Volley + BaseLine] < Volley` (BaseLine is the second weight, GE2 correction);
+  `@ReqFastRepos (S+0x4E2) = U[0,1] < Final.RushRepositioning` (only with a human partner); the
+  mode `R+0x40` is 3/4 or 5/6 by the volley draw and the half away from the partner.
+* **fn_886A3DF0 (AI stop):** (GE2: the first test is `Final.#2b4b4baa < 0.5`; every graph outputs
+  `#2b4b4baa = 1`, `StopMoving = 0`, `#2ac5965a = 0`, so the rule never fires; repositioning.md s3.2) when `Final.#2b4b4baa < 0.5` or `Final.StopMoving > 0.5`, and the
   frames left to the chosen hit point `ReceiverState.#c7b7bdac.#2c63ee31` (S+0xC24, OPEN 3.8)
   are below `Final.#2ac5965a`, it
   zeroes the move command (aim mode `0x9E51242B` with a zero vector): the AI stands still.
@@ -99,7 +101,9 @@ difficulty's `7bcf55ee` (`aiming.md` s4).
   **`FinalPositioningComponents.#79b99b60`**, so the reaction delay is a positioning component
   written by the difficulty's positioning mix graphs (this answers the "writer not located" of
   player-and-movement s1 item 4).
-* `Final.#6e33662f` (+0x1F8) is read by `fn_886BB0A8` (human/AI input update; use not traced).
+* `Final.#6e33662f` (+0x1F8) is read by `fn_886BB0A8`: **frames the AI stands still after its swing
+  ends** (about 16-24; GE2, repositioning.md s3.3). Positioning Volley/BaseLine/InsideOut are never
+  read (repositioning.md s3.4).
 
 ## 6. Consequences for tuning
 
