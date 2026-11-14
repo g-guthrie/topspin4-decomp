@@ -83,11 +83,45 @@ def main() -> int:
     lines = (result.stdout + result.stderr).splitlines()
     refs = [l for l in lines if "LNK2019" in l or "LNK2001" in l]
     unresolved = {re.search(r"unresolved external symbol (\S+)", l).group(1) for l in refs}
-    text = mapfile.read_text(errors="replace").split("Publics by Value", 1)[1]
-    publics, _, statics = text.partition("Static symbols")
-    code_rows = lambda block: [l.split() for l in block.splitlines()
-                               if len(l.split()) > 3 and l.split()[0].startswith("0003:")]
-    public_names = {row[1] for row in code_rows(publics)}
+    def map_symbols(map_text: str) -> tuple[set[str], int]:
+        """Public code symbols and the static code-helper count from one map."""
+        head, _, body = map_text.partition("Publics by Value")
+        code = {f.split()[0].split(":")[0] for f in head.splitlines()
+                if len(f.split()) >= 4 and f.split()[-1] == "CODE" and ":" in f.split()[0]}
+        code = code or {"0003"}
+        publics, _, statics = body.partition("Static symbols")
+        rows = lambda block: [l.split() for l in block.splitlines()
+                              if len(l.split()) > 3 and l.split()[0].split(":")[0] in code]
+        return {row[1] for row in rows(publics)}, len(rows(statics))
+
+    map_text = mapfile.read_text(errors="replace") if mapfile.is_file() else ""
+    if "Publics by Value" in map_text:
+        public_names, helper_count = map_symbols(map_text)
+    else:
+        # wibo can crash while writing a very large map (seen on macOS with
+        # ~590 objects) even though the image links. The full link above still
+        # supplies the image and unresolved counts; collect the map data from
+        # links over disjoint object chunks, so every function is still seen
+        # in the map of a link that contains its object.
+        public_names, helper_count = set(), 0
+        chunk = 128
+        for start in range(0, len(objects), chunk):
+            part = out_dir / f"chunk{start // chunk}"
+            rsp = part.with_suffix(".rsp")
+            rsp.write_text("\n".join(f'"{rel(o)}"' for o in objects[start:start + chunk]) + "\n")
+            part_map = part.with_suffix(".map")
+            part_map.unlink(missing_ok=True)
+            subprocess.run(
+                [str(args.wrapper), str(args.linker_dir / "link.exe"), *flags,
+                 f"/MAP:{rel(part_map)}", f"/out:{rel(part.with_suffix('.dll'))}", f"@{rel(rsp)}"],
+                capture_output=True, text=True, cwd=ROOT,
+            )
+            part_text = part_map.read_text(errors="replace") if part_map.is_file() else ""
+            if "Publics by Value" not in part_text:
+                raise SystemExit(f"chunked link map missing for objects {start}..{start + chunk}")
+            names, helpers = map_symbols(part_text)
+            public_names |= names
+            helper_count += helpers
     symbols = {s: z for u in MATCHING_UNITS for s, z in u["symbols"].items()}
     image = dll.read_bytes()
     stats = {
@@ -98,7 +132,7 @@ def main() -> int:
         "output_sha256": hashlib.sha256(image).hexdigest(),
         "output_text_bytes": text_size(image),
         "map_matching_public_functions": len(set(symbols) & public_names),
-        "map_additional_static_helpers": len(code_rows(statics)),
+        "map_additional_static_helpers": helper_count,
         "unresolved_external_symbols": len(unresolved),
         "unresolved_external_references": len(refs),
     }
