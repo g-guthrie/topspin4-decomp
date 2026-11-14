@@ -40052,3 +40052,33 @@ src/xbox360/aud1_vorbisfile.c:
 	.text       start:0x883A9440 end:0x883A958C
 	.text       start:0x883A9598 end:0x883A9634
 	.text       start:0x883AA9E0 end:0x883AAC28
+
+src/xbox360/fk4_000.c:
+	.pdata      start:0x881097E0 end:0x881097E8
+	.pdata      start:0x8810C398 end:0x8810C3A0
+	.pdata      start:0x8810C478 end:0x8810C480
+	.pdata      start:0x8811ED50 end:0x8811ED58
+	.pdata      start:0x8812C140 end:0x8812C148
+	.text       start:0x881918C8 end:0x881919E4
+	.text       start:0x881F58F0 end:0x881F5954
+	.text       start:0x881F8BE8 end:0x881F8C48
+	.text       start:0x88335BF8 end:0x88335C40
+	.text       start:0x885B9010 end:0x885B9088
+	.text       start:0x8883BDD0 end:0x8883BE60
+	.text       start:0x888D4E80 end:0x888D4EF4
+	.text       start:0x888D8730 end:0x888D87A4
+
+src/xbox360/fk4_o1_000.c:
+	.pdata      start:0x881102C8 end:0x881102D0
+	.pdata      start:0x88110D50 end:0x88110D58
+	.pdata      start:0x8811F478 end:0x8811F480
+	.pdata      start:0x8811F598 end:0x8811F5A0
+	.pdata      start:0x8811F968 end:0x8811F970
+	.text       start:0x8828CAD0 end:0x8828CAF4
+	.text       start:0x8828CC00 end:0x8828CC24
+	.text       start:0x88293440 end:0x88293488
+	.text       start:0x882C38F0 end:0x882C3950
+	.text       start:0x885DB690 end:0x885DB6FC
+	.text       start:0x885DD9C0 end:0x885DDAB4
+	.text       start:0x885E5DA0 end:0x885E5E0C
+	.text       start:0x888134F0 end:0x8881350C

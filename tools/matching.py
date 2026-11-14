@@ -32962,6 +32962,35 @@ MATCHING_UNITS = (
             "aud1__ov_open1_883AA9E0": 584,
         },
     },
+    {
+        "source": "src/xbox360/fk4_000.c",
+        "object": "fk4_000.obj",
+        "symbols": {
+            "ts4_if_set_u32_off48_881918C8": 284,
+            "ts4_loop_get_fn_881F5E78_881F58F0": 100,
+            "ts4_call_seq_u32_off0_881F8BE8": 96,
+            "ts4_if_get_u32_off44_88335BF8": 72,
+            "ts4_if_get_u32_off0_885B9010": 120,
+            "ts4_loop_get_u32_off24_8883BDD0": 144,
+            "ts4_loop_get_u32_off12c_888D4E80": 116,
+            "ts4_loop_get_u32_off28_888D8730": 116,
+        },
+    },
+    {
+        "source": "src/xbox360/fk4_o1_000.c",
+        "object": "fk4_o1_000.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {
+            "ts4_get_u32_off292c_8828CAD0": 36,
+            "ts4_get_u32_off2930_8828CC00": 36,
+            "ts4_if_call_seq_fn_88292F80_88293440": 72,
+            "ts4_if_call_seq_u32_lbl_88C6E210_882C38F0": 96,
+            "ts4_call_seq_u32_off8_885DB690": 108,
+            "ts4_if_addr_ts4_read_indexed_u32_property_885DCDA8_885DD9C0": 244,
+            "ts4_call_seq_fn_885E5BC8_885E5DA0": 108,
+            "ts4_get_u32_lbl_88C6A10C_888134F0": 28,
+        },
+    },
 )
 
 
