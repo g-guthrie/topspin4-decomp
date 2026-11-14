@@ -71,7 +71,7 @@ void fn_882C73D8(void);
 void fn_882D11D8(void);
 void fn_882D12D8(void);
 void fn_882DD5F0(void);
-void fn_882EC1E0(void);
+void png2_png_free_882EC1E0(void);
 void fn_882EDDF8(void);
 void fn_882EE920(void);
 void ts4_jpeg_h2v1_fancy_upsample_882F9460(void);
@@ -266,7 +266,7 @@ TS4_FORWARD(882C74C0, fn_882C73D8)
 TS4_FORWARD(882D1330, fn_882D11D8)
 TS4_FORWARD(882D1858, fn_882D12D8)
 TS4_FORWARD(882DD6C0, fn_882DD5F0)
-TS4_FORWARD(882E28B8, fn_882EC1E0)
+TS4_FORWARD(882E28B8, png2_png_free_882EC1E0)
 TS4_FORWARD(882E2AE0, fn_882EDDF8)
 TS4_FORWARD(882EF808, fn_882EE920)
 TS4_FORWARD(882F96B0, ts4_jpeg_h2v1_fancy_upsample_882F9460)

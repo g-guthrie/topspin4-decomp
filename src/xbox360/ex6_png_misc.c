@@ -90,7 +90,7 @@ void ex6_png_set_gamma_882E8458(ex6_png_struct *png_ptr, double screen_gamma, do
 void ex8_png_write_row_882E6918(ex6_png_struct *png_ptr, unsigned char *row);                       /* png_write_row */
 void ex7_png_write_destroy_882E6C68(ex6_png_struct *png_ptr);                                          /* png_write_destroy */
 void ts4_call_with_tag_if_nonnull_882EC158(void *ptr);                                                        /* png_free */
-void fn_882E7940(ex6_png_struct *png_ptr, unsigned char *row, int arg);             /* png_write_row, 3-arg form */
+void png2_png_read_row_882E7940(ex6_png_struct *png_ptr, unsigned char *row, int arg);             /* png_write_row, 3-arg form */
 int ts4_if_get_u8_off613_882E8278(ex6_png_struct *png_ptr);                         /* png_set_interlace_handling */
 
 /* Write num_rows rows from an array of row pointers (libpng png_write_rows). Swing_DLL.xex 0x882E70F8 */
@@ -132,11 +132,11 @@ void ex6_png_write_image_882E7DC8(ex6_png_struct *png_ptr, unsigned char **image
         unsigned char **rp = image;
         unsigned int i;
         for (i = 0; i < height; i++, rp++)
-            fn_882E7940(png_ptr, *rp, 0);
+            png2_png_read_row_882E7940(png_ptr, *rp, 0);
     }
 }
 
-void fn_882E26E8(ex6_png_struct *png_ptr, const char *message); /* png_error */
+void png2_png_error_882E26E8(ex6_png_struct *png_ptr, const char *message); /* png_error */
 void ts4_if_get_u32_off544_882E2720(ex6_png_struct *png_ptr, const char *message); /* png_warning */
 
 extern const char lbl_880098B4[]; /* "image size exceeds user limits in IHDR" */
@@ -157,7 +157,7 @@ void ex6_png_set_IHDR_882E7268(ex6_png_struct *png_ptr, ex6_png_info *info_ptr, 
         return;
 
     if (width > EX6_PNG_USER_WIDTH_MAX || height > EX6_PNG_USER_HEIGHT_MAX)
-        fn_882E26E8(png_ptr, lbl_880098B4);
+        png2_png_error_882E26E8(png_ptr, lbl_880098B4);
 
     info_ptr->width = width;
     info_ptr->height = height;

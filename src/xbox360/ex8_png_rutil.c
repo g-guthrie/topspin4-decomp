@@ -3,8 +3,8 @@
 
 #include "ex8_png.h"
 
-void fn_882E26E8(ex8_png_struct *png_ptr, const char *message);       /* png_error */
-void fn_882E2738(ex8_png_struct *png_ptr, const char *message);       /* png_chunk_error */
+void png2_png_error_882E26E8(ex8_png_struct *png_ptr, const char *message);       /* png_error */
+void png2_png_chunk_error_882E2738(ex8_png_struct *png_ptr, const char *message);       /* png_chunk_error */
 void ex7_png_init_read_transformations_882E9D60(ex8_png_struct *png_ptr);                             /* png_init_read_transformations */
 void *ts4_if_call_seq_fn_88888668_882EC170(ex8_png_struct *png_ptr, unsigned int size); /* png_malloc */
 void ts4_memset_forward_shifted_882EC218(ex8_png_struct *png_ptr, void *s, int value, unsigned int length);
@@ -19,7 +19,7 @@ unsigned int ex8_png_get_uint_31_882F4238(ex8_png_struct *png_ptr, const unsigne
                      ((unsigned int)(*(buf + 2)) << 8) + (unsigned int)(*(buf + 3));
 
     if (i > 0x7fffffffU)
-        fn_882E26E8(png_ptr, lbl_8802639C);
+        png2_png_error_882E26E8(png_ptr, lbl_8802639C);
     return i;
 }
 
@@ -30,7 +30,7 @@ void ex8_png_check_chunk_name_882F37C8(ex8_png_struct *png_ptr, const unsigned c
 {
     if (EX8_ISNONALPHA(chunk_name[0]) || EX8_ISNONALPHA(chunk_name[1]) || EX8_ISNONALPHA(chunk_name[2]) ||
         EX8_ISNONALPHA(chunk_name[3]))
-        fn_882E2738(png_ptr, lbl_88026364);
+        png2_png_chunk_error_882E2738(png_ptr, lbl_88026364);
 }
 
 /* Interlace pass tables (start column, column step, start row, row step), laid out as one block. */

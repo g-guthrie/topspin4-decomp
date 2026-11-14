@@ -10,11 +10,11 @@ extern void *memset(void *, int, unsigned int);
 #include <string.h>
 #endif
 
-void fn_882E26E8(ex7_png_struct *png_ptr, const char *message); /* png_error */
+void png2_png_error_882E26E8(ex7_png_struct *png_ptr, const char *message); /* png_error */
 void ts4_get_u8_off61c_882EFF30(ex7_png_struct *png_ptr);       /* png_write_sig */
-void fn_882F0460(ex7_png_struct *png_ptr, unsigned int width, unsigned int height, int bit_depth, int color_type,
+void png2_png_write_IHDR_882F0460(ex7_png_struct *png_ptr, unsigned int width, unsigned int height, int bit_depth, int color_type,
                  int compression_type, int filter_type, int interlace_type); /* png_write_IHDR */
-void fn_882EFF48(ex7_png_struct *png_ptr, const unsigned char *palette, unsigned int num_pal); /* png_write_PLTE */
+void png2_png_write_PLTE_882EFF48(ex7_png_struct *png_ptr, const unsigned char *palette, unsigned int num_pal); /* png_write_PLTE */
 void ts4_report_default_and_flag_882F07B8(ex7_png_struct *png_ptr, const unsigned char *data, unsigned int length); /* png_write_IDAT */
 int ts4_zlib_deflate_882F1788(ex7_z_stream *strm, int flush);                                            /* deflate */
 void ts4_if_get_u32_off620_882E71C0(ex7_png_struct *png_ptr);                              /* png_flush */
@@ -25,12 +25,12 @@ extern const char lbl_88009770[]; /* "zlib error" */
 void ex7_png_write_info_882E6828(ex7_png_struct *png_ptr, ex7_png_info *info_ptr)
 {
     ts4_get_u8_off61c_882EFF30(png_ptr);
-    fn_882F0460(png_ptr, info_ptr->width, info_ptr->height, info_ptr->bit_depth, info_ptr->color_type,
+    png2_png_write_IHDR_882F0460(png_ptr, info_ptr->width, info_ptr->height, info_ptr->bit_depth, info_ptr->color_type,
                 info_ptr->compression_type, info_ptr->filter_type, info_ptr->interlace_type);
     if (info_ptr->valid & 0x08)
-        fn_882EFF48(png_ptr, info_ptr->palette, info_ptr->num_palette);
+        png2_png_write_PLTE_882EFF48(png_ptr, info_ptr->palette, info_ptr->num_palette);
     else if (info_ptr->color_type == 3)
-        fn_882E26E8(png_ptr, lbl_88009650);
+        png2_png_error_882E26E8(png_ptr, lbl_88009650);
 }
 
 /* Flush pending deflate output into IDAT chunks (libpng png_write_flush). Swing_DLL.xex 0x882E6B98 */
@@ -46,9 +46,9 @@ void ex7_png_write_flush_882E6B98(ex7_png_struct *png_ptr)
         wrote_IDAT = 0;
         if (ret != 0) {
             if (png_ptr->zstream.msg != 0)
-                fn_882E26E8(png_ptr, png_ptr->zstream.msg);
+                png2_png_error_882E26E8(png_ptr, png_ptr->zstream.msg);
             else
-                fn_882E26E8(png_ptr, lbl_88009770);
+                png2_png_error_882E26E8(png_ptr, lbl_88009770);
         }
         if (!png_ptr->zstream.avail_out) {
             ts4_report_default_and_flag_882F07B8(png_ptr, png_ptr->zbuf, png_ptr->zbuf_size);
@@ -67,7 +67,7 @@ void ex7_png_write_flush_882E6B98(ex7_png_struct *png_ptr)
 }
 
 void ts4_zlib_deflateEnd_882F1B70(ex7_z_stream *strm);                                  /* deflateEnd */
-void fn_882EC1E0(ex7_png_struct *png_ptr, void *ptr);                  /* png_free */
+void png2_png_free_882EC1E0(ex7_png_struct *png_ptr, void *ptr);                  /* png_free */
 
 /* Free the write-side buffers and reset the png_struct while keeping the error handlers (libpng png_write_destroy). Swing_DLL.xex 0x882E6C68 */
 void ex7_png_write_destroy_882E6C68(ex7_png_struct *png_ptr)
@@ -78,18 +78,18 @@ void ex7_png_write_destroy_882E6C68(ex7_png_struct *png_ptr)
     void *error_ptr;
 
     ts4_zlib_deflateEnd_882F1B70(&png_ptr->zstream);
-    fn_882EC1E0(png_ptr, png_ptr->zbuf);
-    fn_882EC1E0(png_ptr, png_ptr->row_buf);
-    fn_882EC1E0(png_ptr, png_ptr->prev_row);
-    fn_882EC1E0(png_ptr, png_ptr->sub_row);
-    fn_882EC1E0(png_ptr, png_ptr->up_row);
-    fn_882EC1E0(png_ptr, png_ptr->avg_row);
-    fn_882EC1E0(png_ptr, png_ptr->paeth_row);
-    fn_882EC1E0(png_ptr, png_ptr->prev_filters);
-    fn_882EC1E0(png_ptr, png_ptr->filter_weights);
-    fn_882EC1E0(png_ptr, png_ptr->inv_filter_weights);
-    fn_882EC1E0(png_ptr, png_ptr->filter_costs);
-    fn_882EC1E0(png_ptr, png_ptr->inv_filter_costs);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->zbuf);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->row_buf);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->prev_row);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->sub_row);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->up_row);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->avg_row);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->paeth_row);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->prev_filters);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->filter_weights);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->inv_filter_weights);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->filter_costs);
+    png2_png_free_882EC1E0(png_ptr, png_ptr->inv_filter_costs);
 
     memcpy(tmp_jmp, png_ptr->jmpbuf, sizeof(tmp_jmp));
     error_fn = png_ptr->error_fn;

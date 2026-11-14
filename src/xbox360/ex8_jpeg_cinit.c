@@ -5,7 +5,7 @@
 enum { EX8_JERR_ARITH_NOTIMPL = 1 };
 
 void ex8_jinit_c_master_control_883021B0(ex8_jcomp *cinfo, int transcode_only); /* jinit_c_master_control */
-void fn_88300F78(ex8_jcomp *cinfo);
+void png2_jpeg_jinit_color_converter_88300F78(ex8_jcomp *cinfo);
 void ex8_jinit_downsampler_883006B0(ex8_jcomp *cinfo);
 void ex8_jinit_c_prep_controller_882FFCC8(ex8_jcomp *cinfo, int need_full_buffer);
 void ex8_jinit_forward_dct_882FF558(ex8_jcomp *cinfo);
@@ -21,7 +21,7 @@ void ex8_jinit_compress_master_882EFD50(ex8_jcomp *cinfo)
     ex8_jinit_c_master_control_883021B0(cinfo, 0);
 
     if (!cinfo->raw_data_in) {
-        fn_88300F78(cinfo);
+        png2_jpeg_jinit_color_converter_88300F78(cinfo);
         ex8_jinit_downsampler_883006B0(cinfo);
         ex8_jinit_c_prep_controller_882FFCC8(cinfo, 0);
     }

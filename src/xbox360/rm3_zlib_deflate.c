@@ -103,9 +103,9 @@ extern const unsigned char lbl_88027418[256]; /* _length_code */
 void ts4_zlib_flush_pending_882F16C8(rm3_z_stream *strm); /* flush_pending */
 void ts4_zlib_fill_window_882F1E40(rm3_deflate_state *s); /* fill_window */
 unsigned int ts4_zlib_longest_match_882F1C88(rm3_deflate_state *s, unsigned int cur_match); /* longest_match */
-void fn_88303CE0(rm3_deflate_state *s, char *buf, unsigned long stored_len, int eof); /* _tr_flush_block */
-void fn_883039B0(rm3_deflate_state *s); /* _tr_align */
-void fn_88303828(rm3_deflate_state *s, char *buf, unsigned long stored_len, int eof); /* _tr_stored_block */
+void png2_zlib_tr_flush_block_88303CE0(rm3_deflate_state *s, char *buf, unsigned long stored_len, int eof); /* _tr_flush_block */
+void png2_zlib_tr_align_883039B0(rm3_deflate_state *s); /* _tr_align */
+void png2_zlib_tr_stored_block_88303828(rm3_deflate_state *s, char *buf, unsigned long stored_len, int eof); /* _tr_stored_block */
 
 #define RM3_Z_NO_FLUSH 0
 #define RM3_Z_PARTIAL_FLUSH 1
@@ -207,9 +207,9 @@ int ts4_zlib_deflate_882F1788(rm3_z_stream *strm, int flush)
         }
         if (bstate == block_done) {
             if (flush == RM3_Z_PARTIAL_FLUSH) {
-                fn_883039B0(s);
+                png2_zlib_tr_align_883039B0(s);
             } else {
-                fn_88303828(s, (char *)0, 0L, 0);
+                png2_zlib_tr_stored_block_88303828(s, (char *)0, 0L, 0);
                 if (flush == RM3_Z_FULL_FLUSH) {
                     s->head[s->hash_size - 1] = 0;
                     memset((unsigned char *)s->head, 0, (unsigned)(s->hash_size - 1) * sizeof(*s->head));
@@ -269,7 +269,7 @@ int ts4_zlib_deflate_882F1788(rm3_z_stream *strm, int flush)
 
 #define FLUSH_BLOCK_ONLY(s, eof)                                                                \
     {                                                                                           \
-        fn_88303CE0((s), ((s)->block_start >= 0L ? (char *)&(s)->window[(unsigned)(s)->block_start] \
+        png2_zlib_tr_flush_block_88303CE0((s), ((s)->block_start >= 0L ? (char *)&(s)->window[(unsigned)(s)->block_start] \
                                                  : (char *)0),                                  \
                     (unsigned long)((long)(s)->strstart - (s)->block_start), (eof));            \
         (s)->block_start = (s)->strstart;                                                       \

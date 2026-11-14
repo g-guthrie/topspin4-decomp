@@ -8,8 +8,8 @@ void ts4_noop_881B3360(ex8_png_struct *png_ptr);                                
 void ts4_memcpy_forward_shifted_882EC208(ex8_png_struct *png_ptr, void *dst, const void *src, unsigned int length);
 void ex7_png_write_start_row_882F0020(ex8_png_struct *png_ptr);
 void ex7_png_do_write_interlace_882F01A8(ex8_png_row_info *row_info, unsigned char *row, int pass);
-void fn_882F0858(ex8_png_struct *png_ptr);                                           /* png_write_finish_row */
-void fn_882F0B48(ex8_png_struct *png_ptr, ex8_png_row_info *row_info);               /* png_write_find_filter */
+void png2_png_write_finish_row_882F0858(ex8_png_struct *png_ptr);                                           /* png_write_finish_row */
+void png2_png_write_find_filter_882F0B48(ex8_png_struct *png_ptr, ex8_png_row_info *row_info);               /* png_write_find_filter */
 
 extern const char lbl_88009698[]; /* "PNG_WRITE_SWAP_SUPPORTED is not defined." */
 extern const char lbl_880096C4[]; /* "PNG_WRITE_BGR_SUPPORTED is not defined." */
@@ -38,43 +38,43 @@ void ex8_png_write_row_882E6918(ex8_png_struct *png_ptr, unsigned char *row)
         switch (png_ptr->pass) {
         case 0:
             if (png_ptr->row_number & 0x07) {
-                fn_882F0858(png_ptr);
+                png2_png_write_finish_row_882F0858(png_ptr);
                 return;
             }
             break;
         case 1:
             if ((png_ptr->row_number & 0x07) || png_ptr->width < 5) {
-                fn_882F0858(png_ptr);
+                png2_png_write_finish_row_882F0858(png_ptr);
                 return;
             }
             break;
         case 2:
             if ((png_ptr->row_number & 0x07) != 4) {
-                fn_882F0858(png_ptr);
+                png2_png_write_finish_row_882F0858(png_ptr);
                 return;
             }
             break;
         case 3:
             if ((png_ptr->row_number & 0x03) || png_ptr->width < 3) {
-                fn_882F0858(png_ptr);
+                png2_png_write_finish_row_882F0858(png_ptr);
                 return;
             }
             break;
         case 4:
             if ((png_ptr->row_number & 0x03) != 2) {
-                fn_882F0858(png_ptr);
+                png2_png_write_finish_row_882F0858(png_ptr);
                 return;
             }
             break;
         case 5:
             if ((png_ptr->row_number & 0x01) || png_ptr->width < 2) {
-                fn_882F0858(png_ptr);
+                png2_png_write_finish_row_882F0858(png_ptr);
                 return;
             }
             break;
         case 6:
             if (!(png_ptr->row_number & 0x01)) {
-                fn_882F0858(png_ptr);
+                png2_png_write_finish_row_882F0858(png_ptr);
                 return;
             }
             break;
@@ -93,7 +93,7 @@ void ex8_png_write_row_882E6918(ex8_png_struct *png_ptr, unsigned char *row)
     if (png_ptr->interlaced && png_ptr->pass < 6 && (png_ptr->transformations & 0x2)) {
         ex7_png_do_write_interlace_882F01A8(&png_ptr->row_info, png_ptr->row_buf + 1, png_ptr->pass);
         if (!png_ptr->row_info.width) {
-            fn_882F0858(png_ptr);
+            png2_png_write_finish_row_882F0858(png_ptr);
             return;
         }
     }
@@ -101,7 +101,7 @@ void ex8_png_write_row_882E6918(ex8_png_struct *png_ptr, unsigned char *row)
     if (png_ptr->transformations)
         ts4_noop_881B3360(png_ptr);
 
-    fn_882F0B48(png_ptr, &png_ptr->row_info);
+    png2_png_write_find_filter_882F0B48(png_ptr, &png_ptr->row_info);
 
     if (png_ptr->write_row_fn != 0)
         ((void (*)(ex8_png_struct *, unsigned int, int))png_ptr->write_row_fn)(png_ptr, png_ptr->row_number,

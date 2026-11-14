@@ -31,27 +31,27 @@
   "runtime_tested": false,
   "artifact_committed": false,
   "forced_all_units_probe": {
-    "input_source_objects": 926,
-    "input_matching_functions": 27754,
-    "input_matching_code_bytes": 2440816,
+    "input_source_objects": 945,
+    "input_matching_functions": 27800,
+    "input_matching_code_bytes": 2468684,
     "input_object_kind": "source-built base objects",
     "link_flags_added": [
       "/FORCE:UNRESOLVED",
       "/MAP"
     ],
-    "output_size_bytes": 3092992,
-    "output_sha256": "46c24ce431812d1805c2d1a99cf5609b2633411715f69aaa4c49c5b0b6725830",
-    "output_text_bytes": 2533148,
-    "map_matching_public_functions": 27742,
-    "map_additional_static_helpers": 254,
-    "unresolved_external_symbols": 30711,
-    "unresolved_external_references": 45157,
+    "output_size_bytes": 3129344,
+    "output_sha256": "270bccc4cf431c319fa7e8e5807412d417c1ab9c02083ba22821ee43f869a94f",
+    "output_text_bytes": 2562252,
+    "map_matching_public_functions": 27780,
+    "map_additional_static_helpers": 264,
+    "unresolved_external_symbols": 30728,
+    "unresolved_external_references": 45229,
     "is_xex": false,
     "is_runnable": false,
     "runtime_tested": false,
     "artifact_committed": false,
-    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 27,754 exact public functions plus source helper code (including inline C++ constructors and operator new wrappers) and alignment, so total text size is not a matching-progress counter. Output hashes include link timestamps and differ between runs.",
-    "map_matching_static_functions": 12
+    "note": "The linker emitted a PE only because FORCE:UNRESOLVED was explicit. Its text includes all 27,800 exact public functions plus source helper code (including inline C++ constructors and operator new wrappers) and alignment, so total text size is not a matching-progress counter. Output hashes include link timestamps and differ between runs.",
+    "map_matching_static_functions": 20
   },
   "wrapper_build": "wibo a91b26e built on Linux x86_64 with clang/lld and i686-w64-mingw32 for the fake mspdb DLL"
 }

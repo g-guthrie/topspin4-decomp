@@ -39853,3 +39853,114 @@ src/xbox360/fam2_typed_factory.c:
 	.text       start:0x8892B728 end:0x8892B7B4
 	.text       start:0x8892B7B8 end:0x8892B844
 	.text       start:0x8892B848 end:0x8892B8D4
+
+src/xbox360/png2_jpeg_ccolor.c:
+	.pdata      start:0x88111E08 end:0x88111E10
+	.text       start:0x88300F78 end:0x88301354
+
+src/xbox360/png2_png_error.c:
+	.pdata      start:0x881114F8 end:0x88111500
+	.pdata      start:0x88111500 end:0x88111508
+	.pdata      start:0x88111508 end:0x88111510
+	.text       start:0x882E25D8 end:0x882E26D8
+	.text       start:0x882E26E8 end:0x882E271C
+	.text       start:0x882E2738 end:0x882E2780
+
+src/xbox360/png2_png_mem.c:
+	.pdata      start:0x88111798 end:0x881117A0
+	.text       start:0x882EC0E0 end:0x882EC158
+	.text       start:0x882EC1E0 end:0x882EC204
+
+src/xbox360/png2_png_misc.c:
+	.pdata      start:0x88111518 end:0x88111520
+	.pdata      start:0x88111528 end:0x88111530
+	.text       start:0x882E27D0 end:0x882E28B4
+	.text       start:0x882E2900 end:0x882E295C
+
+src/xbox360/png2_png_read.c:
+	.pdata      start:0x881116C0 end:0x881116C8
+	.pdata      start:0x881116D0 end:0x881116D8
+	.text       start:0x882E75D8 end:0x882E78F0
+	.text       start:0x882E7940 end:0x882E7DC4
+
+src/xbox360/png2_png_rutil.c:
+	.pdata      start:0x881119F8 end:0x88111A00
+	.pdata      start:0x88111A00 end:0x88111A08
+	.pdata      start:0x88111A68 end:0x88111A70
+	.text       start:0x882F3700 end:0x882F37C8
+	.text       start:0x882F3868 end:0x882F3AC4
+	.text       start:0x882F4E58 end:0x882F51D4
+
+src/xbox360/png2_png_set.c:
+	.text       start:0x882E73D8 end:0x882E7408
+
+src/xbox360/png2_png_wfilter.c:
+	.pdata      start:0x88111688 end:0x88111690
+	.text       start:0x882E6D60 end:0x882E6FFC
+
+src/xbox360/png2_png_wutil.c:
+	.pdata      start:0x88111920 end:0x88111928
+	.pdata      start:0x88111930 end:0x88111938
+	.pdata      start:0x88111950 end:0x88111958
+	.pdata      start:0x88111968 end:0x88111970
+	.pdata      start:0x88111970 end:0x88111978
+	.pdata      start:0x88111978 end:0x88111980
+	.text       start:0x882EFE60 end:0x882EFEE4
+	.text       start:0x882EFF48 end:0x882F0020
+	.text       start:0x882F0460 end:0x882F07B4
+	.text       start:0x882F0858 end:0x882F16C8
+
+src/xbox360/png2_zlib_adler32.c:
+	.pdata      start:0x88111E50 end:0x88111E58
+	.text       start:0x883022B0 end:0x88302430
+
+src/xbox360/png2_zlib_crc32.c:
+	.pdata      start:0x881117A8 end:0x881117B0
+	.text       start:0x882EC228 end:0x882EC35C
+
+src/xbox360/png2_zlib_infblock.c:
+	.pdata      start:0x88111EA0 end:0x88111EA8
+	.pdata      start:0x88111EA8 end:0x88111EB0
+	.pdata      start:0x88111EB0 end:0x88111EB8
+	.text       start:0x883040C8 end:0x88304AC8
+
+src/xbox360/png2_zlib_infcodes.c:
+	.pdata      start:0x88111F08 end:0x88111F10
+	.text       start:0x88307690 end:0x88307CC0
+
+src/xbox360/png2_zlib_inffast.c:
+	.pdata      start:0x88111F30 end:0x88111F38
+	.text       start:0x883085B0 end:0x883089E0
+
+src/xbox360/png2_zlib_inflate.c:
+	.pdata      start:0x881119E8 end:0x881119F0
+	.text       start:0x882F3178 end:0x882F36C8
+
+src/xbox360/png2_zlib_inftrees.c:
+	.pdata      start:0x88111F10 end:0x88111F18
+	.pdata      start:0x88111F18 end:0x88111F20
+	.pdata      start:0x88111F20 end:0x88111F28
+	.text       start:0x88307CD8 end:0x88308254
+	.text       start:0x88308258 end:0x88308418
+
+src/xbox360/png2_zlib_infutil.c:
+	.pdata      start:0x88111F28 end:0x88111F30
+	.text       start:0x88308448 end:0x883085B0
+
+src/xbox360/png2_zlib_trees.c:
+	.pdata      start:0x88111E58 end:0x88111E60
+	.pdata      start:0x88111E60 end:0x88111E68
+	.pdata      start:0x88111E68 end:0x88111E70
+	.pdata      start:0x88111E70 end:0x88111E78
+	.pdata      start:0x88111E78 end:0x88111E80
+	.pdata      start:0x88111E80 end:0x88111E88
+	.pdata      start:0x88111E88 end:0x88111E90
+	.pdata      start:0x88111E90 end:0x88111E98
+	.text       start:0x88302430 end:0x8830251C
+	.text       start:0x88302520 end:0x883034B4
+	.text       start:0x883034B8 end:0x88303CDC
+	.text       start:0x88303CE0 end:0x88304058
+
+src/xbox360/png2_zlib_zutil.c:
+	.pdata      start:0x88111E98 end:0x88111EA0
+	.text       start:0x88304058 end:0x883040B4

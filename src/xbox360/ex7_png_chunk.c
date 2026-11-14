@@ -4,18 +4,18 @@
 #include "ex7_png.h"
 
 void ts4_if_get_u32_off550_882EA0A0(ex7_png_struct *png_ptr, void *data, unsigned int length); /* png_read_data */
-void fn_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length); /* png_calculate_crc */
+void png2_png_calculate_crc_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length); /* png_calculate_crc */
 
 /* Reads chunk data and updates the running CRC (libpng png_crc_read). */
 static void ex7_png_crc_read(ex7_png_struct *png_ptr, unsigned char *buf, unsigned int length)
 {
     ts4_if_get_u32_off550_882EA0A0(png_ptr, buf, length);
-    fn_882E2900(png_ptr, buf, length);
+    png2_png_calculate_crc_882E2900(png_ptr, buf, length);
 }
 
-void fn_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
+void png2_png_error_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
 int ex7_png_crc_finish_882F42A8(ex7_png_struct *png_ptr, unsigned int skip);                  /* png_crc_finish */
-void fn_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_calculate_crc */
+void png2_png_calculate_crc_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_calculate_crc */
 void ts4_if_get_u32_off550_882EA0A0(ex7_png_struct *png_ptr, void *data, unsigned int length); /* png_read_data */
 void ex6_png_set_IHDR_882E7268(ex7_png_struct *png_ptr, ex7_png_info *info_ptr, unsigned int width, unsigned int height,
                                int bit_depth, int color_type, int interlace_type, int compression_type, int filter_type);
@@ -38,9 +38,9 @@ void ex7_png_handle_IHDR_882F43A0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
     int interlace_type;
 
     if (png_ptr->mode)
-        fn_882E26E8(png_ptr, lbl_880264D0);
+        png2_png_error_882E26E8(png_ptr, lbl_880264D0);
     if (length != 13)
-        fn_882E26E8(png_ptr, lbl_880264BC);
+        png2_png_error_882E26E8(png_ptr, lbl_880264BC);
     png_ptr->mode |= 0x01;
     ex7_png_crc_read(png_ptr, buf, 13);
     ex7_png_crc_finish_882F42A8(png_ptr, 0);
@@ -54,20 +54,20 @@ void ex7_png_handle_IHDR_882F43A0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
     filter_type = buf[11];
     interlace_type = buf[12];
     if (width == 0 || width > 0x7fffffffu || height == 0 || height > 0x7fffffffu)
-        fn_882E26E8(png_ptr, lbl_880264A0);
+        png2_png_error_882E26E8(png_ptr, lbl_880264A0);
     if (bit_depth != 1 && bit_depth != 2 && bit_depth != 4 && bit_depth != 8 && bit_depth != 16)
-        fn_882E26E8(png_ptr, lbl_88026484);
+        png2_png_error_882E26E8(png_ptr, lbl_88026484);
     if (color_type < 0 || color_type == 1 || color_type == 5 || color_type > 6)
-        fn_882E26E8(png_ptr, lbl_88026468);
+        png2_png_error_882E26E8(png_ptr, lbl_88026468);
     if ((color_type == 3 && bit_depth > 8) ||
         ((color_type == 2 || color_type == 4 || color_type == 6) && bit_depth < 8))
-        fn_882E26E8(png_ptr, lbl_88026434);
+        png2_png_error_882E26E8(png_ptr, lbl_88026434);
     if (interlace_type >= 2)
-        fn_882E26E8(png_ptr, lbl_88026410);
+        png2_png_error_882E26E8(png_ptr, lbl_88026410);
     if (compression_type != 0)
-        fn_882E26E8(png_ptr, lbl_880263EC);
+        png2_png_error_882E26E8(png_ptr, lbl_880263EC);
     if (filter_type != 0)
-        fn_882E26E8(png_ptr, lbl_880263CC);
+        png2_png_error_882E26E8(png_ptr, lbl_880263CC);
     png_ptr->width = width;
     png_ptr->height = height;
     png_ptr->color_type = (unsigned char)color_type;
@@ -94,12 +94,12 @@ void ex7_png_handle_IHDR_882F43A0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
                               filter_type);
 }
 
-void fn_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
+void png2_png_error_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
 void ts4_if_get_u32_off544_882E2720(ex7_png_struct *png_ptr, const char *message); /* png_warning */
 int ex7_png_crc_finish_882F42A8(ex7_png_struct *png_ptr, unsigned int skip);                  /* png_crc_finish */
-void fn_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_calculate_crc */
+void png2_png_calculate_crc_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_calculate_crc */
 void ts4_if_get_u32_off550_882EA0A0(ex7_png_struct *png_ptr, void *data, unsigned int length); /* png_read_data */
-void *fn_882E2848(ex7_png_struct *png_ptr, unsigned int items, unsigned int size); /* png_zalloc */
+void *png2_png_zalloc_882E2848(ex7_png_struct *png_ptr, unsigned int items, unsigned int size); /* png_zalloc */
 void ts4_if_get_u32_off8_882E7388(ex7_png_struct *png_ptr, ex7_png_info *info_ptr, ex7_png_color *palette, int num_palette); /* png_set_PLTE */
 extern const char lbl_88026554[]; /* "Missing IHDR before PLTE" */
 extern const char lbl_8802653C[]; /* "Invalid PLTE after IDAT" */
@@ -115,13 +115,13 @@ void ex7_png_handle_PLTE_882F4668(ex7_png_struct *png_ptr, ex7_png_info *info_pt
     ex7_png_color *pal_ptr;
 
     if (!(png_ptr->mode & 0x01)) {
-        fn_882E26E8(png_ptr, lbl_88026554);
+        png2_png_error_882E26E8(png_ptr, lbl_88026554);
     } else if (png_ptr->mode & 0x04) {
         ts4_if_get_u32_off544_882E2720(png_ptr, lbl_8802653C);
         ex7_png_crc_finish_882F42A8(png_ptr, length);
         return;
     } else if (png_ptr->mode & 0x02) {
-        fn_882E26E8(png_ptr, lbl_88026524);
+        png2_png_error_882E26E8(png_ptr, lbl_88026524);
     }
     png_ptr->mode |= 0x02;
     if (length % 3) {
@@ -130,13 +130,13 @@ void ex7_png_handle_PLTE_882F4668(ex7_png_struct *png_ptr, ex7_png_info *info_pt
             ex7_png_crc_finish_882F42A8(png_ptr, length);
             return;
         } else {
-            fn_882E26E8(png_ptr, lbl_8802650C);
+            png2_png_error_882E26E8(png_ptr, lbl_8802650C);
         }
     }
     num = (int)length / 3;
-    palette = (ex7_png_color *)fn_882E2848(png_ptr, num, 3);
+    palette = (ex7_png_color *)png2_png_zalloc_882E2848(png_ptr, num, 3);
     if (palette == 0)
-        fn_882E26E8(png_ptr, lbl_8802650C);
+        png2_png_error_882E26E8(png_ptr, lbl_8802650C);
     png_ptr->free_me |= 0x1000;
     for (i = 0, pal_ptr = palette; i < num; i++, pal_ptr++) {
         unsigned char buf[3];
@@ -164,10 +164,10 @@ extern double fabs(double);
 #include <math.h>
 #endif
 
-void fn_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
+void png2_png_error_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
 void ts4_if_get_u32_off544_882E2720(ex7_png_struct *png_ptr, const char *message); /* png_warning */
 int ex7_png_crc_finish_882F42A8(ex7_png_struct *png_ptr, unsigned int skip);                  /* png_crc_finish */
-void fn_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_crc_read */
+void png2_png_calculate_crc_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_crc_read */
 void ts4_if_get_u32_off550_882EA0A0(ex7_png_struct *png_ptr, void *data, unsigned int length); /* png_read_data */
 void ex6_png_set_gAMA_882E7240(ex7_png_struct *png_ptr, ex7_png_info *info_ptr, double file_gamma);
 extern const char lbl_8802664C[]; /* "Missing IHDR before gAMA" */
@@ -188,7 +188,7 @@ void ex7_png_handle_gAMA_882F48A0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
     unsigned char buf[4];
 
     if (!(png_ptr->mode & 0x01)) {
-        fn_882E26E8(png_ptr, lbl_8802664C);
+        png2_png_error_882E26E8(png_ptr, lbl_8802664C);
     } else if (png_ptr->mode & 0x04) {
         ts4_if_get_u32_off544_882E2720(png_ptr, lbl_88026618);
         ex7_png_crc_finish_882F42A8(png_ptr, length);
@@ -206,7 +206,7 @@ void ex7_png_handle_gAMA_882F48A0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
         return;
     }
     ts4_if_get_u32_off550_882EA0A0(png_ptr, buf, 4);
-    fn_882E2900(png_ptr, buf, 4);
+    png2_png_calculate_crc_882E2900(png_ptr, buf, 4);
     if (ex7_png_crc_finish_882F42A8(png_ptr, 0))
         return;
     igamma = (unsigned int)((((((unsigned int)buf[0] << 8) + buf[1]) << 8) + buf[2]) << 8) + buf[3];
@@ -230,12 +230,12 @@ extern double fabs(double);
 #include <math.h>
 #endif
 
-void fn_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
+void png2_png_error_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
 void ts4_if_get_u32_off544_882E2720(ex7_png_struct *png_ptr, const char *message); /* png_warning */
 int ex7_png_crc_finish_882F42A8(ex7_png_struct *png_ptr, unsigned int skip);                  /* png_crc_finish */
-void fn_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_crc_read */
+void png2_png_calculate_crc_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_crc_read */
 void ts4_if_get_u32_off550_882EA0A0(ex7_png_struct *png_ptr, void *data, unsigned int length); /* png_read_data */
-void fn_882E73D8(ex7_png_struct *png_ptr, ex7_png_info *info_ptr, int intent); /* png_set_sRGB_gAMA */
+void png2_png_set_sRGB_gAMA_and_cHRM_882E73D8(ex7_png_struct *png_ptr, ex7_png_info *info_ptr, int intent); /* png_set_sRGB_gAMA */
 extern const char lbl_880266E4[]; /* "Missing IHDR before sRGB" */
 extern const char lbl_880266C8[]; /* "Incorrect sRGB chunk length" */
 extern const char lbl_880266B0[]; /* "Invalid sRGB after IDAT" */
@@ -255,7 +255,7 @@ void ex7_png_handle_sRGB_882F4A40(ex7_png_struct *png_ptr, ex7_png_info *info_pt
     unsigned char buf[1];
 
     if (!(png_ptr->mode & 0x01)) {
-        fn_882E26E8(png_ptr, lbl_880266E4);
+        png2_png_error_882E26E8(png_ptr, lbl_880266E4);
     } else if (png_ptr->mode & 0x04) {
         ts4_if_get_u32_off544_882E2720(png_ptr, lbl_880266B0);
         ex7_png_crc_finish_882F42A8(png_ptr, length);
@@ -273,7 +273,7 @@ void ex7_png_handle_sRGB_882F4A40(ex7_png_struct *png_ptr, ex7_png_info *info_pt
         return;
     }
     ts4_if_get_u32_off550_882EA0A0(png_ptr, buf, 1);
-    fn_882E2900(png_ptr, buf, 1);
+    png2_png_calculate_crc_882E2900(png_ptr, buf, 1);
     if (ex7_png_crc_finish_882F42A8(png_ptr, 0))
         return;
     intent = buf[0];
@@ -285,13 +285,13 @@ void ex7_png_handle_sRGB_882F4A40(ex7_png_struct *png_ptr, ex7_png_info *info_pt
         if (fabs(png_ptr->gamma * lbl_88026668 + lbl_88007B20 - lbl_880265E0) > lbl_880265D8)
             ts4_if_get_u32_off544_882E2720(png_ptr, lbl_880265A0);
     }
-    fn_882E73D8(png_ptr, info_ptr, intent);
+    png2_png_set_sRGB_gAMA_and_cHRM_882E73D8(png_ptr, info_ptr, intent);
 }
 
-void fn_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
+void png2_png_error_882E26E8(ex7_png_struct *png_ptr, const char *message);               /* png_error */
 void ts4_if_get_u32_off544_882E2720(ex7_png_struct *png_ptr, const char *message); /* png_warning */
 int ex7_png_crc_finish_882F42A8(ex7_png_struct *png_ptr, unsigned int skip);                  /* png_crc_finish */
-void fn_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_crc_read */
+void png2_png_calculate_crc_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);    /* png_crc_read */
 void ts4_if_get_u32_off550_882EA0A0(ex7_png_struct *png_ptr, void *data, unsigned int length); /* png_read_data */
 void *ts4_if_call_seq_fn_88888668_882EC170(ex7_png_struct *png_ptr, unsigned int size); /* png_malloc */
 void ex6_png_set_tRNS_882E7408(ex7_png_struct *png_ptr, ex7_png_info *info_ptr, unsigned char *trans, int num_trans,
@@ -312,7 +312,7 @@ void ex7_png_handle_tRNS_882F4BB0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
     unsigned char gbuf[6];
 
     if (!(png_ptr->mode & 0x01)) {
-        fn_882E26E8(png_ptr, lbl_880267AC);
+        png2_png_error_882E26E8(png_ptr, lbl_880267AC);
     } else if (png_ptr->mode & 0x04) {
         ts4_if_get_u32_off544_882E2720(png_ptr, lbl_88026760);
         ex7_png_crc_finish_882F42A8(png_ptr, length);
@@ -339,7 +339,7 @@ void ex7_png_handle_tRNS_882F4BB0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
         png_ptr->trans = trans;
         png_ptr->free_me |= 0x2000;
         ts4_if_get_u32_off550_882EA0A0(png_ptr, trans, length);
-        fn_882E2900(png_ptr, trans, length);
+        png2_png_calculate_crc_882E2900(png_ptr, trans, length);
         png_ptr->num_trans = (unsigned short)length;
     } else if (png_ptr->color_type == 2) {
         if (length != 6) {
@@ -348,7 +348,7 @@ void ex7_png_handle_tRNS_882F4BB0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
             return;
         }
         ts4_if_get_u32_off550_882EA0A0(png_ptr, buf, 6);
-        fn_882E2900(png_ptr, buf, 6);
+        png2_png_calculate_crc_882E2900(png_ptr, buf, 6);
         png_ptr->num_trans = 1;
         png_ptr->trans_values.red = (unsigned short)(((unsigned short)buf[0] << 8) + buf[1]);
         png_ptr->trans_values.green = (unsigned short)(((unsigned short)buf[2] << 8) + buf[3]);
@@ -360,7 +360,7 @@ void ex7_png_handle_tRNS_882F4BB0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
             return;
         }
         ts4_if_get_u32_off550_882EA0A0(png_ptr, gbuf, 2);
-        fn_882E2900(png_ptr, gbuf, 2);
+        png2_png_calculate_crc_882E2900(png_ptr, gbuf, 2);
         png_ptr->num_trans = 1;
         png_ptr->trans_values.gray = (unsigned short)(((unsigned short)gbuf[0] << 8) + gbuf[1]);
     } else {
@@ -374,10 +374,10 @@ void ex7_png_handle_tRNS_882F4BB0(ex7_png_struct *png_ptr, ex7_png_info *info_pt
 }
 
 void ts4_if_get_u32_off550_882EA0A0(ex7_png_struct *png_ptr, void *data, unsigned int length); /* png_read_data */
-void fn_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);                      /* png_calculate_crc */
-int fn_882F3700(ex7_png_struct *png_ptr);                                                       /* png_crc_error */
+void png2_png_calculate_crc_882E2900(ex7_png_struct *png_ptr, void *buf, unsigned int length);                      /* png_calculate_crc */
+int png2_png_crc_error_882F3700(ex7_png_struct *png_ptr);                                                       /* png_crc_error */
 void ts4_if_get_fn_882E25D8_882E2780(ex7_png_struct *png_ptr, const char *message);             /* png_chunk_warning */
-void fn_882E2738(ex7_png_struct *png_ptr, const char *message);                                 /* png_chunk_error */
+void png2_png_chunk_error_882E2738(ex7_png_struct *png_ptr, const char *message);                                 /* png_chunk_error */
 extern const char lbl_880263C0[]; /* "CRC error" */
 
 /* Skip the remaining chunk data and verify the chunk CRC (libpng png_crc_finish). Swing_DLL.xex 0x882F42A8 */
@@ -392,12 +392,12 @@ int ex7_png_crc_finish_882F42A8(ex7_png_struct *png_ptr, unsigned int skip)
     if (i) {
         ex7_png_crc_read(png_ptr, png_ptr->zbuf, i);
     }
-    if (fn_882F3700(png_ptr)) {
+    if (png2_png_crc_error_882F3700(png_ptr)) {
         if (((png_ptr->chunk_name[0] & 0x20) && !(png_ptr->free_me & 0x200)) ||
             (!(png_ptr->chunk_name[0] & 0x20) && (png_ptr->free_me & 0x400)))
             ts4_if_get_fn_882E25D8_882E2780(png_ptr, lbl_880263C0);
         else
-            fn_882E2738(png_ptr, lbl_880263C0);
+            png2_png_chunk_error_882E2738(png_ptr, lbl_880263C0);
         return 1;
     }
     return 0;

@@ -35,13 +35,13 @@ enum { JP1_Z_OK = 0, JP1_Z_STREAM_ERROR = -2, JP1_Z_MEM_ERROR = -4, JP1_Z_VERSIO
 enum { JP1_METHOD = 0, JP1_BLOCKS = 7 };
 
 /* inflate_blocks_reset, inflate_blocks_free, inflate_blocks_new, zcalloc, zcfree, adler32. */
-void fn_883040C8(void *blocks, jp1_zstream *z, unsigned long *c);
+void png2_zlib_inflate_blocks_reset_883040C8(void *blocks, jp1_zstream *z, unsigned long *c);
 int ts4_get_fn_883040C8_88304AC8(void *blocks, jp1_zstream *z);
-void *fn_88304190(jp1_zstream *z, unsigned long (*check)(unsigned long, const unsigned char *, unsigned int),
+void *png2_zlib_inflate_blocks_new_88304190(jp1_zstream *z, unsigned long (*check)(unsigned long, const unsigned char *, unsigned int),
                   unsigned int w);
-void *fn_88304058(void *opaque, unsigned int items, unsigned int size);
+void *png2_zlib_zcalloc_88304058(void *opaque, unsigned int items, unsigned int size);
 void ts4_tailcall_fn_88884DE0_883040B8(void *opaque, void *address);
-unsigned long fn_883022B0(unsigned long adler, const unsigned char *buf, unsigned int len);
+unsigned long png2_zlib_adler32_883022B0(unsigned long adler, const unsigned char *buf, unsigned int len);
 
 int ts4_zlib_inflateEnd_882F2F88(jp1_zstream *z);
 
@@ -53,7 +53,7 @@ int ts4_zlib_inflateReset_882F2F10(jp1_zstream *z)
     z->total_in = z->total_out = 0;
     z->msg = 0;
     z->state->mode = z->state->nowrap ? JP1_BLOCKS : JP1_METHOD;
-    fn_883040C8(z->state->blocks, z, 0);
+    png2_zlib_inflate_blocks_reset_883040C8(z->state->blocks, z, 0);
     return JP1_Z_OK;
 }
 
@@ -79,7 +79,7 @@ int ts4_zlib_inflateInit2__882F3010(jp1_zstream *z, int w, const char *version, 
         return JP1_Z_STREAM_ERROR;
     z->msg = 0;
     if (z->zalloc == 0) {
-        z->zalloc = fn_88304058;
+        z->zalloc = png2_zlib_zcalloc_88304058;
         z->opaque = 0;
     }
     if (z->zfree == 0)
@@ -97,7 +97,7 @@ int ts4_zlib_inflateInit2__882F3010(jp1_zstream *z, int w, const char *version, 
         return JP1_Z_STREAM_ERROR;
     }
     z->state->wbits = (unsigned int)w;
-    if ((z->state->blocks = fn_88304190(z, z->state->nowrap ? 0 : fn_883022B0, (unsigned int)1 << w)) == 0) {
+    if ((z->state->blocks = png2_zlib_inflate_blocks_new_88304190(z, z->state->nowrap ? 0 : png2_zlib_adler32_883022B0, (unsigned int)1 << w)) == 0) {
         ts4_zlib_inflateEnd_882F2F88(z);
         return JP1_Z_MEM_ERROR;
     }

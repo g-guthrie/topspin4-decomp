@@ -62,7 +62,8 @@ SOFTWARE.
 ## zlib (compression and checksums)
 
 Files: `src/xbox360/r3_zlib_deflate.c`, `r3_zlib.h`, `ex3_zlib.h`, `ex3_zlib_trees.c`,
-`ex3_zlib_deflate.c`, `ex3_zlib_inflate.c`, `ex3_zlib_inftrees.c`, the `ex4_zlib_*` sources, and `rm3_zlib_deflate.c`. Upstream: https://zlib.net/
+`ex3_zlib_deflate.c`, `ex3_zlib_inflate.c`, `ex3_zlib_inftrees.c`, the `ex4_zlib_*` sources, `rm3_zlib_deflate.c`, and the `png2_zlib_*` sources
+(a zlib 1.1.4 copy) with `png2_zlib_inf.h`. Upstream: https://zlib.net/
 
 Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler
 
@@ -121,7 +122,8 @@ distributed under the BSD 3-Clause license:
 ## libpng
 
 Files: `src/xbox360/ex6_png.h`, `ex6_png_misc.c`, `ex6_png_xform.c`, and later
-`ex*_png*` sources that carry a libpng header line. Upstream: http://www.libpng.org/
+`ex*_png*` and `png2_png_*` sources that carry a libpng header line (the `png2_png_*` code is
+from the libpng 1.0.6 era). Upstream: http://www.libpng.org/
 (1.2.x). Distributed under the libpng license:
 
 > Copyright (c) 1998-2008 Glenn Randers-Pehrson
@@ -148,7 +150,7 @@ Files: `src/xbox360/ex6_png.h`, `ex6_png_misc.c`, `ex6_png_xform.c`, and later
 
 ## IJG JPEG library
 
-Files: `src/xbox360/ex6_jpeg_err.c`, the `rm3_jpeg*`, `jp1_*` and `jp2_*` sources, and later `ex*_jpeg*` sources that carry
+Files: `src/xbox360/ex6_jpeg_err.c`, the `rm3_jpeg*`, `jp1_*`, `jp2_*` and `png2_jpeg_*` sources, and later `ex*_jpeg*` sources that carry
 an IJG header line. Upstream: https://www.ijg.org/ (release 6b).
 
 > This software is based in part on the work of the Independent JPEG Group.

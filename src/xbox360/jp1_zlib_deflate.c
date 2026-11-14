@@ -112,10 +112,10 @@ extern const jp1_config lbl_88026258[10]; /* configuration_table */
 extern const char *const lbl_88027644[10]; /* z_errmsg */
 
 /* _tr_flush_block, _tr_init, adler32, zcalloc, zcfree of this zlib copy. */
-void fn_88303CE0(jp1_deflate_state *s, char *buf, unsigned long stored_len, int eof);
-void fn_883034B8(jp1_deflate_state *s);
-unsigned long fn_883022B0(unsigned long adler, const unsigned char *buf, unsigned int len);
-void *fn_88304058(void *opaque, unsigned int items, unsigned int size);
+void png2_zlib_tr_flush_block_88303CE0(jp1_deflate_state *s, char *buf, unsigned long stored_len, int eof);
+void png2_zlib_tr_init_883034B8(jp1_deflate_state *s);
+unsigned long png2_zlib_adler32_883022B0(unsigned long adler, const unsigned char *buf, unsigned int len);
+void *png2_zlib_zcalloc_88304058(void *opaque, unsigned int items, unsigned int size);
 void ts4_tailcall_fn_88884DE0_883040B8(void *opaque, void *address);
 
 enum { jp1_need_more, jp1_block_done, jp1_finish_started, jp1_finish_done };
@@ -124,7 +124,7 @@ enum { jp1_need_more, jp1_block_done, jp1_finish_started, jp1_finish_done };
 
 #define FLUSH_BLOCK_ONLY(s, eof)                                                                \
     {                                                                                           \
-        fn_88303CE0(s, ((s)->block_start >= 0L ? (char *)&(s)->window[(unsigned)(s)->block_start] \
+        png2_zlib_tr_flush_block_88303CE0(s, ((s)->block_start >= 0L ? (char *)&(s)->window[(unsigned)(s)->block_start] \
                                                  : (char *)0),                                  \
                     (unsigned long)((long)(s)->strstart - (s)->block_start), (eof));            \
         (s)->block_start = (s)->strstart;                                                       \
@@ -278,7 +278,7 @@ void ts4_zlib_fill_window_882F1E40(jp1_deflate_state *s)
             } else {
                 strm->avail_in -= len;
                 if (!strm->state->noheader) {
-                    strm->adler = fn_883022B0(strm->adler, strm->next_in, len);
+                    strm->adler = png2_zlib_adler32_883022B0(strm->adler, strm->next_in, len);
                 }
                 memcpy(buf, strm->next_in, len);
                 strm->next_in += len;
@@ -347,7 +347,7 @@ int ts4_zlib_deflateReset_882F2B58(jp1_z_stream *strm)
     s->status = s->noheader ? JP1_BUSY_STATE : JP1_INIT_STATE;
     strm->adler = 1;
     s->last_flush = JP1_Z_NO_FLUSH;
-    fn_883034B8(s);
+    png2_zlib_tr_init_883034B8(s);
     s->window_size = (unsigned long)2L * s->w_size;
     s->head[s->hash_size - 1] = 0;
     memset(s->head, 0, (unsigned int)(s->hash_size - 1) * sizeof(*s->head));
@@ -381,7 +381,7 @@ int ts4_zlib_deflateInit2__882F2C98(jp1_z_stream *strm, int level, int method, i
         return JP1_Z_STREAM_ERROR;
     strm->msg = 0;
     if (strm->zalloc == 0) {
-        strm->zalloc = fn_88304058;
+        strm->zalloc = png2_zlib_zcalloc_88304058;
         strm->opaque = 0;
     }
     if (strm->zfree == 0)
