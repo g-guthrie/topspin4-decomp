@@ -147,6 +147,21 @@ key if none; an unordered compare does not stop the scan), `d = min(max(x - x0, 
 is flat after its last `x1`; below the first key it holds the first segment's `y0`. The type-crc preimages of the 11
 nodes are not known (U); the names above are by function.
 
+**Open question: are the curves steps or ramps? (measured 2026-11-14)** In the retail data every curve key has
+`slope` (+0xC) = 0.0. That covers all 9,124 CURVE keys in `Expressions.bin` (sha256 `fd3bc49b…dee9`) and all 121
+curve20 keys in `Settings.bin`/`State.bin`. Word +0x10 holds a float that is the segment's end value `y1`: in 4,095 of
+5,174 adjacent key pairs it equals the next key's `y0`. A template example is `[500..3000: 80 → 135]`.
+`fn_8817A688` reads +0xC and never +0x10 (`fmadds f1, d, [+0xC], [+0x8]` at `0x8817A754`). The graph runner
+`fn_8890E8B0` passes the node record straight from the loaded file. No code that writes +0xC from `(y1-y0)/(x1-x0)`
+turned up in `Swing_DLL` or `Loader_DLL`. The search scanned every `fdivs`/`fres` near a `0x14`-stride loop with
+an +0x10 load and an +0xC store (capstone 5.0.7, `work/disc/scan2.py`–`scan4.py`, local). Two readings remain:
+(a) a load-time fixup that was not found fills `slope`, so the curves are piecewise-linear ramps `y0 → y1`;
+(b) the shipped game evaluates them as steps that hold `y0`. Under (b), single-key curves such as
+`[0..1: 0 → 1]` are constants, and template speed curves never use their upper value. Reading (b) would make
+many stat inputs inert. Settle it with a runtime memory read of a loaded curve key (Xenia) before trusting any
+number derived from these curves. `tools/ts4_analyser.py` and `tools/ts4data/templates.py` currently implement
+reading (b).
+
 ## 5. The variable model (V for fields, I for meaning)
 
 A port names a variable by three things:
