@@ -120,7 +120,8 @@ export class CrowdView {
         const uv = new Float32Array(n * 2), colors = new Float32Array(n * 3), mats = new Float32Array(n * 16);
         const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), sc = new THREE.Vector3();
         const yAxis = new THREE.Vector3(0, 1, 0);
-        const tierCount = [0, 0, 0];
+        const nt = Math.max(1, (c.groups || []).length);   // 1..4 groups per venue on disc
+        const tierCount = new Array(nt).fill(0);
         rows.forEach((r, i) => {
           p.set(r[col.x], r[col.y], r[col.z]);
           q.setFromAxisAngle(yAxis, r[col.yaw]);
@@ -128,7 +129,7 @@ export class CrowdView {
           m4.compose(p, q, sc).toArray(mats, i * 16);
           uv[i * 2] = r[col.du]; uv[i * 2 + 1] = r[col.dv];
           colors.set([r[col.rA], r[col.gA], r[col.bA]], i * 3);
-          for (let t = r[col.tier]; t < 3; t++) tierCount[t]++;
+          for (let t = r[col.tier]; t < nt; t++) tierCount[t]++;
         });
         geo.setAttribute("instUV", new THREE.InstancedBufferAttribute(uv, 2));
         const mesh = new THREE.SkinnedMesh(geo, atlasMaterial(src.material, true));
@@ -152,10 +153,17 @@ export class CrowdView {
     return this;
   }
 
-  /** crowd quality: 0 = LOW (group 0), 1 = MEDIUM (+ group 1), 2 = HIGH (all); groups from crowd.json */
+  /**
+   * crowd quality: 0 = LOW (group 0 only), 1 = MEDIUM (groups 0..1), 2 = HIGH (every group).  The crowd files hold
+   * 1..4 consecutive groups (Amsterdam 3, ArthurAshe 4, Athens 2); reading them as the CrowdLODList quality steps
+   * is an inference (docs/port/venues-and-crowd.md).
+   */
   setTier(t) {
     this.tier = t;
-    for (const m of this.meshes) m.count = m.tierCount[t];
+    for (const m of this.meshes) {
+      const tc = m.tierCount;
+      m.count = t >= 2 ? tc[tc.length - 1] : tc[Math.min(t, tc.length - 1)];
+    }
   }
 
   setTint(on) {
