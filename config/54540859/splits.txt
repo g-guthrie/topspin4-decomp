@@ -45360,3 +45360,12 @@ src/xbox360/d2g_receive.c:
 src/xbox360/d2g_ai_conditions.c:
 	.text       start:0x8865B2D8 end:0x8865B2EC
 	.text       start:0x88665010 end:0x88665630
+
+src/xbox360/t1_oc_000.c:
+	.pdata      start:0x88120E40 end:0x88120E48
+	.pdata      start:0x88120E48 end:0x88120E50
+	.pdata      start:0x8812A200 end:0x8812A208
+	.text       start:0x886091E0 end:0x88609270
+	.text       start:0x887F4D30 end:0x887F4E30
+	.text       start:0x88884CD0 end:0x88884D68
+	.text       start:0x8890DAE8 end:0x8890DB38

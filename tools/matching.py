@@ -38305,6 +38305,19 @@ MATCHING_UNITS = (
             "ts4_cond_obj_missing_8865B2D8": 20,
         },
     },
+    {
+        "source": "src/xbox360/t1_oc_000.c",
+        "object": "t1_oc_000.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_get_u32_off0_886091E0": 72,
+            "ts4_get_u32_off0_88609228": 72,
+            "ts4_loop_get_u32_off0_887F4D30": 256,
+            "ts4_get_u32_off8_88884CD0": 64,
+            "ts4_get_u32_offc_88884D10": 88,
+            "ts4_if_get_u32_off1c_8890DAE8": 80,
+        },
+    },
 )
 
 

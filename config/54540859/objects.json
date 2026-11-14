@@ -6032,6 +6032,10 @@
       "src/xbox360/d2g_ai_conditions.c": {
         "status": "Matching",
         "source": "xbox360/d2g_ai_conditions.c"
+      },
+      "src/xbox360/t1_oc_000.c": {
+        "status": "Matching",
+        "source": "xbox360/t1_oc_000.c"
       }
     }
   }
