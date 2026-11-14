@@ -96,7 +96,7 @@ class Env:
             s._cache[sym]=arity(L,lambda x:(annotate(s.lookup(x),s) if s.lookup(x) else None)) if L else None
         return s._cache[sym]
 
-LD = {'lwz': ('ts4_word', 'u32'), 'lhz': ('unsigned short', 'u16'), 'lha': ('short', 's16'), 'lbz': ('unsigned char', 'u8')}
+LD = {'ld': ('ts4_u64', 'u64'), 'lwz': ('ts4_word', 'u32'), 'lhz': ('unsigned short', 'u16'), 'lha': ('short', 's16'), 'lbz': ('unsigned char', 'u8')}
 ST = {'stw': ('ts4_word', 'u32'), 'sth': ('unsigned short', 'u16'), 'stb': ('unsigned char', 'u8'), 'std': ('ts4_u64', 'u64')}
 FLD = {'lfs': ('float', 'f32'), 'lfd': ('double', 'f64')}
 FST = {'stfs': ('float', 'f32'), 'stfd': ('double', 'f64')}
@@ -125,6 +125,23 @@ def unrelocated(lines):
         if m and 'REFHI' not in l:
             return True
     return False
+
+
+VBIN = {'vaddfp': '__vaddfp', 'vsubfp': '__vsubfp', 'vmulfp': '__vmulfp', 'vmaxfp': '__vmaxfp', 'vminfp': '__vminfp',
+        'vand': '__vand', 'vor': '__vor', 'vxor': '__vxor', 'vmsum3fp': '__vmsum3fp', 'vmsum4fp': '__vmsum4fp',
+        'vcmpeqfp': '__vcmpeqfp', 'vcmpgefp': '__vcmpgefp', 'vcmpgtfp': '__vcmpgtfp', 'vmrghw': '__vmrghw',
+        'vmrglw': '__vmrglw'}
+VUN = {'vrsqrtefp': '__vrsqrtefp', 'vrefp': '__vrefp', 'vrfin': '__vrfin', 'vrfiz': '__vrfiz', 'vrfim': '__vrfim',
+       'vrfip': '__vrfip', 'vexptefp': '__vexptefp', 'vlogefp': '__vlogefp'}
+VTRI = {'vmaddfp': '__vmaddfp', 'vnmsubfp': '__vnmsubfp', 'vsel': '__vsel', 'vperm': '__vperm'}
+VIMM = {'vspltw': '__vspltw', 'vcfsx': '__vcfsx', 'vcfux': '__vcfux', 'vctsxs': '__vctsxs', 'vctuxs': '__vctuxs',
+        'vpermwi': '__vpermwi'}
+
+
+def is_vmx(mn):
+    b = mn[:-3] if mn.endswith('128') else mn
+    return (b in VBIN or b in VUN or b in VTRI or b in VIMM or b in ('vmr', 'vspltisw', 'vrlimi', 'lvx', 'stvx')
+            or mn in ('lvx128', 'stvx128'))
 
 
 class V:
@@ -156,14 +173,15 @@ class Gen:
     """One translation: decode, build the CFG, structurize while symbolically
     executing, then render C.  See `gen()`."""
 
-    def __init__(self, lines, env, mode=0, orient=0, word_ret=False, infer_signed=True, vol=0):
+    def __init__(self, lines, env, mode=0, orient=0, word_ret=False, infer_signed=True, vol=0, strict=False):
         self.env, self.mode, self.orient, self.word_ret = env, mode, orient, word_ret
+        self.strict = strict; self._live = None
         self.infer_signed = infer_signed
         self.vol = vol
         if unrelocated(lines):
             raise Skip('unrelocated original')
         self.lines = annotate(lines, env)
-        self.insns = cfg.decode(self.lines, parse)
+        self.insns = self.fuse_atomics(cfg.decode(self.lines, parse))
         self.order, self.blocks = cfg.build_blocks(self.insns)
         self.preds = cfg.preds_of(self.blocks)
         self.has_ctr_loop = any(i.mn in ('bdnz', 'bdz') for i in self.insns)
@@ -179,6 +197,43 @@ class Gen:
         self.calls = 0; self.rets = []; self.localnames = []
         self.signed = set(); self.unsigned = set()   # value names compared with signed / unsigned compares
         self.pending = {}
+        self.intrinsics = set()
+        self.vec = False; self.vparams = set(); self.vdecls = []
+        self.has_vmx = any(is_vmx(i.mn) for i in self.insns)
+
+    @staticmethod
+    def fuse_atomics(insns):
+        """The Xbox 360 interlocked intrinsics
+        `mfmsr rA; mtmsrd r13,1; lwarx rO,r0,rP; [addi/subi/add rN,..]; stwcx. rV,r0,rP; mtmsrd rA,1; bne <mfmsr>`
+        become one pseudo instruction `ts4atomic kind, rO, rV, rP[, operand]`."""
+        out, k = [], 0
+        while k < len(insns):
+            i = insns[k]
+            m = insns[k:k + 8]
+            if i.mn == 'mfmsr' and len(m) >= 7 and m[1].mn == 'mtmsrd' and m[2].mn == 'lwarx':
+                n = 3 if m[3].mn == 'stwcx.' else 4 if m[4].mn == 'stwcx.' and m[3].mn in ('addi', 'subi', 'add') else 0
+                if n and len(m) > n + 2 and m[n + 1].mn == 'mtmsrd' and m[n + 2].mn == 'bne' and m[n + 2].tgt == i.addr:
+                    ro, rp = m[2].ops[0], m[2].ops[2]
+                    if m[2].ops[1] == 'r0' and m[n].ops[1] == 'r0' and m[n].ops[2] == rp and m[1].ops == ['r13', '1'] \
+                            and m[n + 1].ops == [i.ops[0], '1']:
+                        rv = m[n].ops[0]
+                        if n == 3:
+                            ops = ['xchg', ro, rv, rp]
+                        else:
+                            a = m[3]
+                            if a.ops[0] != rv or a.ops[1] != ro:
+                                ops = None
+                            elif a.mn == 'add':
+                                ops = ['add', ro, rv, rp, a.ops[2]]
+                            else:
+                                d = int(a.ops[2], 0) * (-1 if a.mn == 'subi' else 1)
+                                ops = ['inc' if d == 1 else 'dec' if d == -1 else 'addi', ro, rv, rp, str(d)]
+                        if ops:
+                            out.append(type(i)(i.addr, 'ts4atomic', ops, None, None, None, i.ln))
+                            k += n + 3
+                            continue
+            out.append(i); k += 1
+        return out
 
     # ---- stack locals ------------------------------------------------------
     SZ = {'lwz': 4, 'stw': 4, 'lbz': 1, 'stb': 1, 'lhz': 2, 'lha': 2, 'sth': 2, 'lfs': 4, 'stfs': 4, 'lfd': 8, 'stfd': 8}
@@ -189,13 +244,18 @@ class Gen:
         not covered by such an array (spills, converted values, scalars) get an
         array of their own, grouped by adjacency."""
         L = self.lines
-        bases = sorted({int(m.group(1), 0) for l in L for m in [re.search(r'\baddi\s+r(?!1\b)\d+,\s*r1,\s*(-?\w+)', l)] if m})
+        self.has_frame = any(re.search(r'\bstwu\s+r1,', l) for l in L[:12])
+        bases = sorted({int(m.group(2), 0) * (-1 if m.group(1) == 'subi' else 1) for l in L
+                        for m in [re.search(r'\b(addi|subi)\s+r(?!1\b)\d+,\s*r1,\s*(-?\w+)', l)] if m})
+        if self.has_frame:
+            bases = [b for b in bases if b >= 0]
         accs = [(int(m.group(2), 0), self.SZ[m.group(1)], m.group(1)) for l in L
                 for m in [re.search(r'\b(lwz|stw|lbz|stb|lhz|lha|sth|lfs|lfd|stfs|stfd)\s+\w+,\s*(-?\w+)\(r1\)', l)] if m]
-        accs = [a for a in accs if a[0] >= 0]
+        accs = [a for a in accs if a[0] >= 0 or not self.has_frame]
         argshape = lambda a: a[2] == 'stw' and a[0] >= 0x54 and (a[0] - 0x54) % 8 == 0
         def covered(o):
             return any(b <= o for b in bases)
+        self.locbase = {}
         extra = []
         if any(not argshape(a) for a in accs if not covered(a[0])) or not bases:
             unc = sorted(a for a in accs if not covered(a[0]) or (bases and a[0] < bases[0]))
@@ -218,7 +278,7 @@ class Gen:
         # base and the last one up to the register save area at the top of the frame
         frame = self.frame_size()
         for i, b in enumerate(bases):
-            if b in extra:
+            if b in extra or b < 0:
                 continue
             end = bases[i + 1] if i + 1 < len(bases) else (frame[0] - frame[1] if frame else b)
             self.local_ext[b] = max(self.local_ext[b], (end - b) // 4)
@@ -242,7 +302,9 @@ class Gen:
     def local_of(self, off):
         for b in self.bases:
             if b <= off < b + 4 * self.local_ext[b]:
-                return f'loc{b:x}', (off - b) // 4, off - b
+                n = f'loc{b:x}' if b >= 0 else f'locm{-b:x}'
+                self.locbase[n] = b
+                return n, (off - b) // 4, off - b
         return None
 
     def local_ref(self, off, t):
@@ -260,7 +322,7 @@ class Gen:
     @staticmethod
     def newst():
         return dict(regs={}, written=set(), clobbered=set(), fregs={}, fwritten=set(), ctr=None,
-                    ctr_reg=None, cmps={}, stackargs={}, cnt=None)
+                    ctr_reg=None, cmps={}, stackargs={}, cnt=None, slots={}, vregs={}, vwritten=set())
 
     @staticmethod
     def cp(st):
@@ -314,6 +376,8 @@ class Gen:
         unusable (clobbered)."""
         regs0 = st['regs']
         for s, o in arms:
+            if s['vregs'] != st['vregs']:
+                raise Skip('vec phi')
             for f in set(s['fregs']) | set(st['fregs']):
                 if s['fregs'].get(f) is not st['fregs'].get(f):
                     raise Skip('float phi')
@@ -380,6 +444,25 @@ class Gen:
             return vs
         if mn in ('mflr', 'mtlr'):
             return
+        if is_vmx(mn):
+            self.vmx_step(ins, st, out); return
+        if mn == 'ts4atomic':
+            kind, ro, rv, rp = ops[:4]
+            p = self.rd(st, rp); nohi(p)
+            ptr = f'(volatile long *)(ts4_word)({p})'
+            self.intrinsics.add(kind)
+            self.kinds.append('atomic'); self.detail.append('interlocked_' + kind)
+            if kind == 'xchg':
+                v = self.rd(st, rv); nohi(v)
+                setr(ro, self.newv(out, 'ts4_word', f'_InterlockedExchange({ptr}, (long){v})', pure=False))
+            elif kind in ('inc', 'dec'):
+                setr(rv, self.newv(out, 'ts4_word', f'_Interlocked{"Increment" if kind == "inc" else "Decrement"}({ptr})', pure=False))
+            else:
+                x = ops[4] if kind == 'addi' else self.rd(st, ops[4]); nohi(x)
+                self.intrinsics.add('addi')
+                o = self.newv(out, 'ts4_word', f'_InterlockedExchangeAdd({ptr}, (long){x})', pure=False)
+                setr(ro, o); setr(rv, f'({o.n} + {x})'); o.used = True
+            return
         if mn == 'bl' and sym and sym.startswith('__savegprlr'):
             return
         if mn == 'stwu' and ops[0] == 'r1':
@@ -429,8 +512,17 @@ class Gen:
         if mn in LD or mn in ST or mn in FLD or mn in FST or mn in ('ld',):
             mo = re.match(r'(-?\w+)\((r\d+)\)', ops[1]); off = num(mo.group(1)); base = mo.group(2)
             if base == 'r1':
-                if off < 0:
+                if off < 0 and self.has_frame:
                     return
+                sl = st['slots']
+                if mn == 'stfd' and isinstance(st['fregs'].get(ops[0], (None, None))[1], str) and st['fregs'][ops[0]][1] == 'ctiw':
+                    sl[off + 4] = st['fregs'][ops[0]][0]; return
+                if mn == 'lwz' and off in sl and sl[off].startswith('(int)('):
+                    setr(ops[0], sl[off]); return
+                if mn == 'std' and isinstance(regs.get(ops[0]), str) and regs[ops[0]].startswith('((ts4_s64)'):
+                    sl[off] = regs[ops[0]]; return
+                if mn == 'lfd' and off in sl and sl[off].startswith('((ts4_s64)'):
+                    self.setf(st, ops[0], sl[off], 'i64'); return
                 if mn == 'ld' or mn == 'std':
                     raise Skip(mn)
                 ty_ = (LD.get(mn) or ST.get(mn) or FLD.get(mn) or FST.get(mn))[0]
@@ -451,8 +543,6 @@ class Gen:
                     st['stackargs'][(off - 0x54) // 8] = v
                     return
                 raise Skip('stack')
-            if mn == 'ld':
-                raise Skip('ld')
             if rk == 'REFLO' and isinstance(regs.get(base), tuple):
                 s = regs[base][1]; self.externs[s] = 1; addr_e = f'{s}'
             else:
@@ -497,8 +587,8 @@ class Gen:
         if mn == 'mr':
             setr(ops[0], rd(ops[1])); return
         if mn in ('addi', 'subi'):
-            if ops[1] == 'r1' and mn == 'addi' and rk is None:
-                loc = self.local_of(num(ops[2]))
+            if ops[1] == 'r1' and rk is None:
+                loc = self.local_of(num(ops[2]) * (-1 if mn == 'subi' else 1))
                 if loc is None:
                     raise Skip('stack addr')
                 if loc[0] not in self.localnames:
@@ -563,6 +653,16 @@ class Gen:
         if mn == 'extrwi':
             a = rd(ops[1]); nohi(a); n, b = num(ops[2]), num(ops[3])
             setr(ops[0], f'(({a} >> {32 - n - b}) & {hex((1 << n) - 1)})'); return
+        if mn == 'extsw':
+            a = rd(ops[1]); nohi(a); setr(ops[0], f'((ts4_s64)(int){a})'); return
+        if mn in ('fctiwz', 'fctiw'):
+            a = self.fval(st, ops[1]); st['fregs'][ops[0]] = (f'(int)({a})', 'ctiw'); st['fwritten'].add(ops[0]); return
+        if mn == 'fcfid':
+            if st['fregs'].get(ops[1], (None, None))[1] != 'i64':
+                raise Skip('fcfid')
+            self.setf(st, ops[0], f'((double){st["fregs"][ops[1]][0]})', 'double'); return
+        if mn == 'frsp':
+            a = self.fval(st, ops[1], 'double'); self.setf(st, ops[0], f'((float){a})', 'float'); return
         if mn == 'extsb':
             a = rd(ops[1]); nohi(a); setr(ops[0], f'((signed char){a})'); return
         if mn == 'extsh':
@@ -596,8 +696,63 @@ class Gen:
             self.call(ins, st, out); return
         raise Skip(mn)
 
+    def vrd(self, st, r):
+        """Name of vector register r (a parameter `vp<N>` when never written, N in 1..13)."""
+        if r in st['vregs']:
+            return st['vregs'][r]
+        n = int(r[1:])
+        if 1 <= n <= 13:
+            self.vparams.add(n)
+            return f'vp{n}'
+        raise Skip('vreg')
+
+    def vset(self, st, out, r, e):
+        self.ntmp += 1
+        nm = f'vv{self.ntmp}'
+        self.vdecls.append(nm)
+        out.append(f'{nm} = {e};')
+        st['vregs'][r] = nm; st['vwritten'].add(r)
+
+    def vmx_step(self, ins, st, out):
+        mn, ops = ins.mn, ins.ops
+        b = mn[:-3] if mn.endswith('128') else mn
+        num = lambda x: int(x, 0)
+        self.vec = True
+        if b in ('lvx', 'stvx'):
+            ra, rb = ops[1], ops[2]
+            addr = self.rd(st, rb) if ra == 'r0' else f'{self.rd(st, ra)} + {self.rd(st, rb)}'
+            if isinstance(addr, tuple) or any(isinstance(x, tuple) for x in [st['regs'].get(ra), st['regs'].get(rb)]):
+                if ra == 'r0' and isinstance(st['regs'].get(rb), tuple):
+                    s_ = st['regs'][rb][1]; self.externs[s_] = 1; addr = f'(ts4_word){s_}'
+                else:
+                    raise Skip('hi value')
+            if b == 'lvx':
+                self.vset(st, out, ops[0], f'*(__vector4 *)((ts4_word)({addr}))')
+            else:
+                out.append(f'*(__vector4 *)((ts4_word)({addr})) = {self.vrd(st, ops[0])};')
+            return
+        if b == 'vmr':
+            st['vregs'][ops[0]] = self.vrd(st, ops[1]); st['vwritten'].add(ops[0]); return
+        if b == 'vor' and ops[1] == ops[2]:
+            st['vregs'][ops[0]] = self.vrd(st, ops[1]); st['vwritten'].add(ops[0]); return
+        if b in VBIN:
+            self.vset(st, out, ops[0], f'{VBIN[b]}({self.vrd(st, ops[1])}, {self.vrd(st, ops[2])})'); return
+        if b in VUN:
+            self.vset(st, out, ops[0], f'{VUN[b]}({self.vrd(st, ops[1])})'); return
+        if b in VTRI:
+            self.vset(st, out, ops[0], f'{VTRI[b]}({self.vrd(st, ops[1])}, {self.vrd(st, ops[2])}, {self.vrd(st, ops[3])})'); return
+        if b in VIMM:
+            self.vset(st, out, ops[0], f'{VIMM[b]}({self.vrd(st, ops[1])}, {num(ops[2])})'); return
+        if b == 'vspltisw':
+            self.vset(st, out, ops[0], f'__vspltisw({num(ops[1])})'); return
+        if b == 'vrlimi':
+            self.vset(st, out, ops[0], f'__vrlimi({self.vrd(st, ops[0])}, {self.vrd(st, ops[1])}, {num(ops[2])}, {num(ops[3])})'); return
+        raise Skip(mn)
+
     def call(self, ins, st, out):
         mn, sym, rk = ins.mn, ins.sym, ins.rk
+        if self.has_vmx:
+            raise Skip('vmx call')
         regs = st['regs']; written = st['written']; clobbered = st['clobbered']
         self.calls += 1
         if mn == 'bctrl' and st['ctr'] is None:
@@ -668,12 +823,17 @@ class Gen:
         if st['stackargs']:
             raise Skip('stack args unused')
         rd = lambda r: self.rd(st, r)
-        if tail == 'ret':
+        if tail != 'ret' and self.has_vmx:
+            raise Skip('vmx tail')
+        if tail == 'ret' and 'v1' in st['vwritten'] and 'r3' not in written and 'f1' not in st['fwritten']:
+            self.rets.append('__vector4'); out.append(f'return {self.vrd(st, "v1")};')
+        elif tail == 'ret':
             if 'r3' in written and 'f1' not in st['fwritten']:
+                r3v = st['regs'].get('r3')
                 rv = rd('r3')
                 if isinstance(rv, tuple):
                     raise Skip('ret hi')
-                self.rets.append('ts4_word'); out.append(f'return {rv};')
+                self.rets.append('ts4_u64' if isinstance(r3v, V) and r3v.t == 'ts4_u64' else 'ts4_word'); out.append(f'return {rv};')
             elif 'f1' in st['fwritten'] and 'r3' not in written:
                 fv, ft = st['fregs']['f1']
                 if isinstance(fv, V):
@@ -770,6 +930,8 @@ class Gen:
                 return None
             if any(i.mn not in PURE for i in blk.insns):
                 return None
+            if self.strict and dst_regs(blk.insns) & self.live_after(blk):
+                return None
             sc = self.cp(scratch[0]); so = []
             try:
                 self.exec_insns(blk.insns, sc, so)
@@ -781,6 +943,43 @@ class Gen:
             self.pending[nid] = sc
             return (self._inline(e, so), T, F)
         return get_next
+
+    def live_after(self, blk):
+        """Registers read (before being rewritten) on some path after block `blk`; calls,
+        tail calls and returns read r3..r10 / r3."""
+        if self._live is None:
+            ARGS = {f'r{j}' for j in range(3, 11)}
+            use, dfn = {}, {}
+            for b, bl in self.blocks.items():
+                u, d = set(), set()
+                for i in bl.insns:
+                    sr = self.src_regs(i)
+                    if i.mn in ('bl', 'bctrl'):
+                        sr = sr | ARGS
+                    u |= sr - d
+                    d |= dst_regs([i])
+                t = bl.term[0]
+                if t == 'ret':
+                    u |= {'r3'} - d
+                elif t in ('tail', 'ctr'):
+                    u |= ARGS - d
+                use[b], dfn[b] = u, d
+            live = {b: set(use[b]) for b in self.blocks}
+            changed = True
+            while changed:
+                changed = False
+                for b, bl in self.blocks.items():
+                    out = set()
+                    for sx in cfg.succs(bl):
+                        out |= live[sx]
+                    new = use[b] | (out - dfn[b])
+                    if new != live[b]:
+                        live[b] = new; changed = True
+            self._live = live
+        out = set()
+        for sx in cfg.succs(blk):
+            out |= self._live[sx]
+        return out
 
     def folded_tri(self, blk, st):
         """The head block's condition folded with absorbed single-use condition
@@ -852,6 +1051,9 @@ class Gen:
                 self.latch = (e if A == h else cfg.neg(e), B if A == h else A)
                 return 'latch'
         J = cfg.ipdom(self.pdom, bid)
+        if self.active and J != cfg.EXIT and J not in self.loops[self.active[-1]] \
+                and J != (self.exits[-1] if self.exits else None):
+            J = cfg.EXIT      # the arms leave the loop for good: no join to merge at
         if J in absorbed:
             raise Skip('fold join')
         X = self.exits[-1] if self.exits else None
@@ -995,12 +1197,54 @@ class Gen:
                 res.append(r)
         return res
 
+    @staticmethod
+    def f_defs_uses(i):
+        """(defined, used) float registers of instruction i."""
+        fr = [o for o in i.ops if re.fullmatch(r'f\d+', o)]
+        if not fr:
+            return set(), set()
+        if i.mn.startswith('stf') or i.mn.startswith('fcmp'):
+            return set(), set(fr)
+        return {fr[0]}, set(fr[1:])
+
+    def float_written(self, L):
+        w = set()
+        for b in L:
+            for i in self.blocks[b].insns:
+                w |= self.f_defs_uses(i)[0]
+        return w
+
+    def float_carried(self, L, h, fw):
+        """True when a float register written in the loop is read before being written in an iteration."""
+        use, dfn = {}, {}
+        for b in L:
+            u, d = set(), set()
+            for i in self.blocks[b].insns:
+                di, ui = self.f_defs_uses(i)
+                u |= ui - d; d |= di
+            use[b], dfn[b] = u, d
+        live = {b: set(use[b]) for b in L}
+        changed = True
+        while changed:
+            changed = False
+            for b in L:
+                o = set()
+                for sx in cfg.succs(self.blocks[b]):
+                    if sx in L:
+                        o |= live[sx]
+                new = use[b] | (o - dfn[b])
+                if new != live[b]:
+                    live[b] = new; changed = True
+        return bool(live[h] & fw)
+
     def emit_loop(self, h, stop, st, out):
         L = self.loops[h]
         hb = self.blocks[h]
-        for b in L:
-            if any(i.ops and re.fullmatch(r'f\d+', i.ops[0]) and not i.mn.startswith('fcmp') and not i.mn.startswith('stf') for i in self.blocks[b].insns):
-                raise Skip('float loop')
+        if self.has_vmx:
+            raise Skip('vec loop')
+        fw = self.float_written(L)
+        if fw and self.float_carried(L, h, fw):
+            raise Skip('float loop')
         # classify: while-form when the header tests and exactly one successor leaves the loop
         inside = [s for s in cfg.succs(hb) if s in L]
         whileform = hb.term[0] == 'cond' and len(inside) == 1 and inside[0] != h and all(i.mn in PURE for i in hb.insns)
@@ -1015,26 +1259,39 @@ class Gen:
             out.append(f'{n} = (ts4_word){val};')
             sw['regs'][r] = n; sw['written'].add(r); sw['clobbered'].discard(r)
         self.active.append(h)
+        def latch_exit():
+            for b in L:
+                bb = self.blocks[b]
+                if h in cfg.succs(bb) and bb.term[0] == 'cond':
+                    o = [x for x in cfg.succs(bb) if x not in L]
+                    return o[0] if len(o) == 1 and o[0] > 0 else None
+            return None
         X = None
         if whileform:
             X = [x for x in cfg.succs(hb) if x not in L]
             X = X[0] if len(X) == 1 and X[0] > 0 else None
         else:
-            for b in L:
-                bb = self.blocks[b]
-                if h in cfg.succs(bb) and bb.term[0] == 'cond':
-                    o = [x for x in cfg.succs(bb) if x not in L]
-                    X = o[0] if len(o) == 1 and o[0] > 0 else None
+            X = latch_exit()
         self.exits.append(X)
         try:
             if whileform:
-                res = self._while(h, hb, L, sw, lv, out)
+                n0 = len(out)
+                try:
+                    res = self._while(h, hb, L, sw, lv, out)
+                except Skip as e:
+                    if str(e) not in ('loop body exit', 'loop shape', 'irregular exit'):
+                        raise
+                    del out[n0:]; self.latch = None
+                    self.exits[-1] = latch_exit()
+                    res = self._dowhile(h, L, sw, lv, out)
             else:
                 res = self._dowhile(h, L, sw, lv, out)
         finally:
             self.active.pop(); self.exits.pop()
         # continue from the loop exit with the exit state
         exit_id, exit_st = res
+        for f in fw:
+            exit_st['fregs'].pop(f, None); exit_st['fwritten'].discard(f); exit_st['clobbered'].add(f)
         for k in ('regs', 'written', 'clobbered', 'fregs', 'fwritten', 'ctr', 'ctr_reg', 'cmps', 'stackargs', 'cnt'):
             st[k] = exit_st[k]
         return exit_id
@@ -1092,9 +1349,21 @@ class Gen:
             for r in dst_regs(self.blocks[nid].insns):
                 sb['regs'].pop(r, None); sb['written'].discard(r); sb['clobbered'].add(r)
         r = self.region(stay, set(), sb, body)
-        if r != 'cont':
+        if r == 'latch' and self.latch is not None:
+            # the body ends with a conditional back edge: `while (c) { ...; if (!cont) break; }`
+            econt, lexit = self.latch; self.latch = None
+            bare = lambda b: self.blocks[b].term == ('ret',) and not self.blocks[b].insns
+            if lexit != exitb and not (bare(lexit) and bare(exitb)):
+                raise Skip('loop body exit')
+            subs = self._backedge(sb, lv, body)
+            cs = cfg.cstr(cfg.neg(econt))
+            for ex in sorted(subs, key=len, reverse=True):
+                cs = cs.replace(ex, subs[ex])
+            body.append(('if', cs, ['break;']))
+        elif r != 'cont':
             raise Skip('loop body exit')
-        self._backedge(sb, lv, body)
+        else:
+            self._backedge(sb, lv, body)
         out.append(('while', cfg.cstr(stay_c), body))
         se = self.cp(sh)
         for v in so:
@@ -1157,12 +1426,22 @@ def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
     if off is not None:
         return dict(kind='vthunk', detail=[f'slot{off // 4}'], sig='', body='', externs=[], protos={},
                     vthunk=off)
-    g = Gen(lines_all, env, mode, orient, infer_signed=infer_signed, vol=vol)
-    top = g.run()
+    strict = False
+    try:
+        g = Gen(lines_all, env, mode, orient, infer_signed=infer_signed, vol=vol)
+        top = g.run()
+    except Skip as e:
+        if not str(e).startswith('read r'):
+            raise
+        # a register written by an absorbed condition block is still needed afterwards:
+        # keep such blocks as nested ifs
+        strict = True
+        g = Gen(lines_all, env, mode, orient, infer_signed=infer_signed, vol=vol, strict=True)
+        top = g.run()
     rets = set(g.rets)
     if rets == {'ts4_word', 'void'}:
         # some paths return a value, others leave r3 untouched: return the incoming r3 there
-        g = Gen(lines_all, env, mode, orient, word_ret=True, infer_signed=infer_signed, vol=vol)
+        g = Gen(lines_all, env, mode, orient, word_ret=True, infer_signed=infer_signed, vol=vol, strict=strict)
         top = g.run()
         rets = set(g.rets)
     if len(rets) != 1:
@@ -1252,7 +1531,7 @@ def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
                 o.append(' ' * ind + x)
         return decls, o
     decls, body_l = render(top, 4)
-    decls = [f'ts4_word {n};' for n in phis] + [f'ts4_word {n}[{g.local_ext[int(n[3:], 16)]}];' for n in g.localnames] + decls
+    decls = [f'__vector4 {n};' for n in g.vdecls] + [f'ts4_word {n};' for n in phis] + [f'ts4_word {n}[{g.local_ext[g.locbase[n]]}];' for n in g.localnames] + decls
     body = ''.join('    ' + d + '\n' for d in decls) + ('\n' if decls else '') + '\n'.join(body_l) + '\n'
     maxp = max(readp) if readp else 2
     def ptype(j):
@@ -1263,6 +1542,7 @@ def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
     params = [f'{ptype(j)} a{j - 3}' for j in range(3, maxp + 1)]
     for f in sorted(g.fparams):
         params.append(f'{g.fparams[f]} {f}')
+    params += [f'__vector4 vp{n}' for n in sorted(g.vparams)]
     def has(stmts, kinds):
         return any(isinstance(x, tuple) and (x[0] in kinds or any(has(s, kinds) for s in x[2:])) for x in stmts)
     kind = ('loop_' if has(top, ('while', 'do')) else 'if_' if has(top, ('if',)) else '')
@@ -1275,4 +1555,4 @@ def gen(lines_all, env, mode=0, orient=0, infer_signed=True, vol=0):
         k0 = 'tailcall'
     kind += k0
     sig = f'{rt} NAME({", ".join(params) if params else "void"})'
-    return dict(kind=kind, detail=g.detail, sig=sig, body=body, externs=list(g.externs), protos=g.protos)
+    return dict(kind=kind, detail=g.detail, sig=sig, body=body, externs=list(g.externs), protos=g.protos, vec=g.vec, intrinsics=sorted(g.intrinsics))

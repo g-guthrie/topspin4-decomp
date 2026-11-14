@@ -174,6 +174,89 @@ class StructurizerTests(unittest.TestCase):
         self.assertIn("while (", r["body"])
         self.assertIn("break;", r["body"])
 
+    def test_frameless_leaf_uses_red_zone_local(self):
+        t = ["lfs f0,0(r5)", "stfs f0,-0x10(r1)", "lwz r11,-0x10(r1)", "stw r11,0x28(r4)", "blr"]
+        r = gen(t)
+        self.assertIn("ts4_word locm10[1];", r["body"])
+        self.assertIn("*(float *)((char *)locm10 + 0) =", r["body"])
+
+    def test_loaded_register_used_after_folded_condition(self):
+        # lwz r10 / cmplwi / beq is a foldable condition block, but r10 is needed in the arm
+        t = ["lwz r11,0x44(r3)", "cmplwi cr6,r11,0", f"beq cr6,0x0 -> {tgt(10)}", "lwz r10,0xa4(r11)",
+             "cmplwi cr6,r10,0", f"beq cr6,0x0 -> {tgt(10)}", "mtctr r10", "addi r3,r11,0x1c", "bctr", "blr",
+             "li r3,25", "blr"]
+        r = gen(t)
+        self.assertIn("(t2))((ts4_word)(t1 + 28)", r["body"])
+
+    def test_int_to_float_conversion_through_stack_slot(self):
+        t = ["lwz r11,0x24(r3)", "extsw r10,r11", "std r10,-0x10(r1)", "lfd f0,-0x10(r1)", "fcfid f13,f0",
+             "frsp f1,f13", "blr"]
+        r = gen(t)
+        self.assertIn("(float)((double)((ts4_s64)(int)", r["body"])
+        self.assertTrue(r["sig"].startswith("float "))
+
+    def test_float_to_int_conversion_through_stack_slot(self):
+        t = ["lfs f0,0(r3)", "fctiwz f13,f0", "stfd f13,-0x10(r1)", "lwz r11,-0xc(r1)", "stw r11,4(r4)", "blr"]
+        r = gen(t)
+        self.assertIn("= (ts4_word)(int)(", r["body"])
+
+    def test_64bit_getter(self):
+        r = gen(["ld r3,0x38(r3)", "blr"])
+        self.assertTrue(r["sig"].startswith("ts4_u64 "))
+
+    def test_vmx_load_op_store(self):
+        t = ["lvx128 v0,r3,r4", "vmaddfp v13,v0,v1,v0", "stvx128 v13,r0,r5", "blr"]
+        r = gen(t)
+        self.assertTrue(r["vec"])
+        self.assertIn("__vmaddfp(vv1, vp1, vv1)", r["body"])
+        self.assertIn("__vector4 vp1", r["sig"])
+
+    def test_vmx_getter_returns_vector(self):
+        r = gen(["lvx128 v1,r3,r4", "blr"])
+        self.assertTrue(r["sig"].startswith("__vector4 "))
+
+    def test_strncpy_shape_while_with_latch_break(self):
+        t = ["subi r9,r3,1", "subi r10,r4,1", "cmpwi cr6,r5,0", "subi r5,r5,1", "beqlr cr6", "lbzu r11,1(r10)",
+             "cmplwi cr6,r11,0", "stbu r11,1(r9)", f"bne cr6,0x0 -> {tgt(2)}", "blr"]
+        r = gen(t)
+        self.assertIn("while (", r["body"])
+        self.assertIn("break;", r["body"])
+
+    def test_early_return_loop_falls_back_to_do_while(self):
+        t = ["lhz r11,0(r3)", "cmplwi cr6,r11,0", f"beq cr6,0x0 -> {tgt(10)}", "cmplwi cr6,r11,0x20", "beqlr cr6",
+             "lhzu r11,2(r3)", "cmplwi cr6,r11,0", f"bne cr6,0x0 -> {tgt(3)}", "li r3,0", "blr", "li r3,0", "blr"]
+        r = gen(t)
+        self.assertIn("do {", r["body"])
+        self.assertIn("return lv", r["body"])
+
+    def test_float_loop_without_carried_float(self):
+        t = ["mr r11,r3", "cmplwi cr6,r5,0", "beqlr cr6", "mtctr r5", "lfs f0,0(r11)", "fcmpu cr6,f0,f1",
+             f"ble cr6,0x0 -> {tgt(8)}", "stfs f1,0(r11)", "addi r11,r11,4", f"bdnz 0x0 -> {tgt(4)}", "blr"]
+        r = gen(t)
+        self.assertIn("} while (--c", r["body"])
+        self.assertIn("float f1", r["sig"])
+
+    def test_loop_exit_to_shared_return_block(self):
+        # the loop leaves by a conditional branch to a return path that the normal exit also reaches
+        t = ["li r10,0", "mr r11,r3", "lwz r9,0(r11)", "cmpwi cr6,r9,5", f"bne cr6,0x0 -> {tgt(11)}",
+             "addi r10,r10,1", "addi r11,r11,4", "cmpwi cr6,r10,4", f"blt cr6,0x0 -> {tgt(2)}", "li r3,0", "blr",
+             "mr r3,r9", f"b 0x0 -> {tgt(10)}"]
+        r = gen(t)
+        self.assertIn("do {", r["body"])
+        self.assertRegex(r["body"], r"return t\d+;")
+
+    def test_interlocked_sequences_become_intrinsics(self):
+        x = ["lwz r11,0(r4)", "mfmsr r9", "mtmsrd r13,1", "lwarx r10,r0,r3", "stwcx. r11,r0,r3", "mtmsrd r9,1",
+             f"bne -0x14 -> {tgt(1)}", "blr"]
+        r = gen(x)
+        self.assertIn("_InterlockedExchange(", r["body"])
+        self.assertEqual(r["intrinsics"], ["xchg"])
+        d = ["addi r11,r3,12", "mfmsr r9", "mtmsrd r13,1", "lwarx r10,r0,r11", "subi r10,r10,1", "stwcx. r10,r0,r11",
+             "mtmsrd r9,1", f"bne -0x18 -> {tgt(1)}", "mr r3,r10", "blr"]
+        r = gen(d)
+        self.assertIn("_InterlockedDecrement(", r["body"])
+        self.assertEqual(r["intrinsics"], ["dec"])
+
     def test_typed_stack_locals(self):
         t = ["stfd f1,0x50(r1)", "lwz r3,0x54(r1)", "lbz r4,0x58(r1)", "stb r4,0x59(r1)", "blr"]
         r = gen(t)

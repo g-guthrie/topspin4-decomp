@@ -13,8 +13,8 @@ HDR = ['/* Small accessor / thunk / call-sequence functions produced by tools/as
        '   MSVC 16.00.10224.00). The original address is in the comment above each',
        '   definition. Parameters are untyped words (a0 = this/first argument); field',
        '   accesses are by byte offset. */',
-       '#ifdef _MSC_VER', 'typedef unsigned __int64 ts4_u64;', '#else',
-       'typedef unsigned long long ts4_u64;', '#endif',
+       '#ifdef _MSC_VER', 'typedef unsigned __int64 ts4_u64;', 'typedef __int64 ts4_s64;', '#else',
+       'typedef unsigned long long ts4_u64;', 'typedef long long ts4_s64;', '#endif',
        'typedef unsigned long ts4_word;', '']
 
 
@@ -88,6 +88,14 @@ def build(res, group, path, cpp=False):
         protos.update(res[a]['protos'])
     ext = {e for a in kept for e in res[a]['externs']}
     o = list(HDR)
+    if any(res[a].get('vec') for a in kept):
+        o.insert(len(o) - 1, '#include "ts4_vector.h"')
+    ints = {{'xchg': '_InterlockedExchange', 'inc': '_InterlockedIncrement', 'dec': '_InterlockedDecrement',
+             'addi': '_InterlockedExchangeAdd', 'add': '_InterlockedExchangeAdd'}[k] for a in kept for k in res[a].get('intrinsics', [])}
+    for n in sorted(ints):
+        o.insert(len(o) - 1, f'extern long {n}(volatile long *value' + (', long v);' if n in ('_InterlockedExchange', '_InterlockedExchangeAdd') else ');'))
+    if ints:
+        o.insert(len(o) - 1, '#ifdef _MSC_VER'); o.insert(len(o) - 1, f'#pragma intrinsic({", ".join(sorted(ints))})'); o.insert(len(o) - 1, '#endif')
     if cpp:  # one class per vcall thunk; everything else is extern "C"
         vth = {}
         for a in kept:
@@ -146,11 +154,19 @@ def check(path, maps, flags=()):
 
 
 def cc_ok(path):
-    """Host syntax check required by AGENTS/brief (C++ files: c++ -fsyntax-only)."""
-    cmd = ['c++', '-std=c++11', '-fsyntax-only'] if str(path).endswith('.cpp') else ['cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-fsyntax-only']
-    p = subprocess.run(cmd + [str(path)],
-                       capture_output=True, text=True)
-    return p.returncode == 0, p.stderr
+    """Host syntax check required by AGENTS/brief (C++ files: c++ -fsyntax-only). C files are
+    also checked with clang when it is installed, both with -Wno-deprecated-non-prototype."""
+    import shutil
+    if str(path).endswith('.cpp'):
+        cmds = [['c++', '-std=c++11', '-fsyntax-only']]
+    else:
+        base = ['-std=c11', '-Wall', '-Wextra', '-Werror', '-Wno-deprecated-non-prototype', '-fsyntax-only']
+        cmds = [['cc'] + base] + ([['clang'] + base] if shutil.which('clang') else [])
+    for cmd in cmds:
+        p = subprocess.run(cmd + [str(path)], capture_output=True, text=True)
+        if p.returncode != 0:
+            return False, p.stderr
+    return True, ''
 
 
 def run_group(res, group, path, tries=8, flags=(), cpp=False):
