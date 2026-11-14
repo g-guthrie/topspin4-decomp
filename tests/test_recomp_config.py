@@ -217,5 +217,104 @@ class ConfigOutput(unittest.TestCase):
             self.assertIn(lab, seen)
 
 
+def rlwinm(ra, rs, sh, mb, me):
+    return (21 << 26) | (rs << 21) | (ra << 16) | (sh << 11) | (mb << 6) | (me << 1)
+
+
+def b_rel(disp):
+    return (18 << 26) | (disp & 0x03FFFFFC)
+
+
+def bl_rel(disp):
+    return (18 << 26) | (disp & 0x03FFFFFC) | 1
+
+
+class PdataAndImages(unittest.TestCase):
+    def test_read_pdata(self):
+        # FuncLen (instructions) sits in bits 8..29 of the second word
+        pdata = struct.pack('>IIII', TEXT, (5 << 8) | 0x40000003, TEXT + 0x20, (2 << 8))
+        img = rc.Image.from_sections([('.text', TEXT, pack([rc.NOP] * 16), True),
+                                      ('.pdata', RDATA, pdata, False)])
+        self.assertEqual(rc.read_pdata(img), {TEXT: 20, TEXT + 0x20: 8})
+
+    def _pe(self, mapped):
+        base, va, size = 0x82000000, 0x1000, 0x200
+        head = bytearray(0x400)
+        struct.pack_into('<I', head, 0x3C, 0x80)
+        head[0x80:0x84] = b'PE\0\0'
+        struct.pack_into('<H', head, 0x86, 1)          # one section
+        struct.pack_into('<H', head, 0x94, 0xE0)       # optional header size
+        struct.pack_into('<I', head, 0x98 + 28, base)  # ImageBase
+        sec = 0x98 + 0xE0
+        head[sec:sec + 5] = b'.text'
+        struct.pack_into('<IIII', head, sec + 8, size, va, size, 0x400)  # vsize, va, rawsize, rawoff
+        struct.pack_into('<I', head, sec + 36, 0x60000020)
+        code = pack([0x60000000 + i for i in range(size // 4)])
+        if mapped:  # sections at their RVA, file-layout headers kept
+            return bytes(head) + b'\0' * (va - len(head)) + code, base + va
+        return bytes(head) + code, base + va
+
+    def test_file_and_mapped_layouts_read_the_same(self):
+        for mapped in (False, True):
+            data, text = self._pe(mapped)
+            img = rc.Image(data)
+            self.assertEqual(img.word(text), 0x60000000, mapped)
+            self.assertEqual(img.word(text + 8), 0x60000002, mapped)
+
+
+class Discovery(unittest.TestCase):
+    def test_extent_follows_branches_and_stops_at_padding(self):
+        # 0: bc +12 -> 0xC ; 4: li ; 8: blr ; C: li ; 10: b -8 (back to 8) ; 14: padding
+        words = [bgt(0, 12), li(3, 0), BLR, li(3, 1), b_rel(-8), 0, li(3, 2), BLR]
+        img = rc.Image.from_sections([('.text', TEXT, pack(words), True)])
+        end, sw = rc.function_extent(img, TEXT, TEXT + 4 * len(words))
+        self.assertEqual(end, TEXT + 0x14)
+        self.assertEqual(sw, [])
+
+    def test_discover_finds_uncovered_callee_and_gap(self):
+        # known fn at 0 calls a leaf at 0x10 (not known); a second leaf after padding at 0x20
+        words = [bl_rel(0x10), BLR, 0, 0, li(3, 1), BLR, 0, 0, li(3, 2), BLR]
+        img = rc.Image.from_sections([('.text', TEXT, pack(words), True)])
+        found = rc.discover_functions(img, {TEXT: 8})
+        self.assertEqual(found, {TEXT + 0x10: 8, TEXT + 0x20: 8})
+
+    def test_mask_bounded_byte_switch_marks_padding_labels(self):
+        # clrlwi r11,r3,30 (4 entries) ; lis/addi table ; lbzx ; lis/addi base ; add ; mtctr ; bctr
+        tbl = RDATA
+        n = 13
+        base = TEXT + 4 * n
+        words = [rlwinm(11, 3, 0, 30, 31), lis(10, ha(tbl)), addi(10, 10, lo(tbl)), lbzx(0, 10, 11),
+                 lis(12, ha(base)), addi(12, 12, lo(base)), add(0, 12, 0), mtctr(0), rc.BCTR,
+                 rc.NOP, rc.NOP, rc.NOP, rc.NOP,
+                 li(3, 0), BLR, li(3, 1), BLR, 0, 0]
+        # entries 0,1 are cases; entry 2 lands on padding past the function; entry 3 on case 0
+        offs = bytes([0, 8, 16, 0])
+        img = rc.Image.from_sections([('.rdata', RDATA, offs + b'\0' * 12, False),
+                                      ('.text', TEXT, pack(words), True)])
+        bctr = TEXT + 4 * 8
+        sw, why = rc.detect_switch(img, TEXT, base + 16, bctr)
+        self.assertEqual(why, 'ok')
+        self.assertEqual(sw.count_src, 'mask')
+        self.assertEqual(sw.labels, [base, base + 8, 0, base])
+
+
+class ToReXGlue(unittest.TestCase):
+    def test_convert(self):
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'tools' / 'recomp'))
+        import to_rexglue as tr
+        main = rc.toml_main({'file_path': 'a.xex'}, [(0x82010000, 0x40), (0x82010040, 0x8)], {}, {})
+        sws = rc.toml_switches([rc.Switch(0x82010010, 'byte', 10, [0x82010020, 0, 0x82010028],
+                                          0x82000000, 'mask')])
+        funcs = tr.parse_functions(main)
+        self.assertEqual(funcs, [(0x82010000, 0x40), (0x82010040, 0x8)])
+        parsed = tr.parse_switches(sws)
+        self.assertEqual(parsed, [(0x82010010, 10, [0x82010020, 0, 0x82010028])])
+        out, impossible = tr.render(funcs, parsed, setjmp=0x82000100)
+        self.assertEqual(impossible, 1)
+        self.assertIn('setjmp_address = 0x82000100', out)
+        self.assertIn('"0x82010000" = { size = 0x40 }', out)
+        self.assertIn('labels = [0x82010020, 0x82010020, 0x82010028]', out)
+
+
 if __name__ == '__main__':
     unittest.main()

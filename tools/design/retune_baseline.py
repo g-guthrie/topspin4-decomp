@@ -1507,6 +1507,76 @@ def sec_net(c):
     return "\n".join(out)
 
 
+# --------------------------------------------------------------------------- section 8: responsiveness (clip data)
+
+def load_clips(path=None):
+    """Minimal reader of data/gameplay/animation_clips.yaml (name, frames, contact_phase, segments)."""
+    path = path or os.path.join(ROOT, "data", "gameplay", "animation_clips.yaml")
+    clips, cur = [], None
+    for line in open(path):
+        t = line.strip()
+        if t.startswith("- i:"):
+            cur = {}
+            clips.append(cur)
+        elif cur is not None and ":" in t:
+            k, v = t.split(":", 1)
+            v = v.strip()
+            if k in ("name",):
+                cur[k] = v
+            elif k in ("frames", "contact_phase"):
+                cur[k] = None if v == "null" else float(v)
+            elif k == "ignore_speed_coef":
+                cur[k] = int(v)
+            elif k == "segments":
+                cur[k] = [(a, float(b), float(c)) for a, b, c in
+                          re.findall(r"\[([0-9A-Za-z_#]+), ([-0-9.e]+), ([-0-9.e]+)\]", v)]
+    return clips
+
+
+SWING_FAMILIES = [("groundstroke FH/BH", lambda n: n.startswith(("Swing_FH", "Swing_BH"))),
+                  ("return", lambda n: n.startswith("Swing_Return")),
+                  ("volley", lambda n: n.startswith("Swing_Volley")),
+                  ("smash", lambda n: n.startswith(("Swing_Smash", "Smash_"))),
+                  ("serve", lambda n: n.startswith(("Swing_Serve", "Swing_ServeAndVolley")))]
+
+
+def pct(vals, q):
+    v = sorted(vals)
+    return v[min(len(v) - 1, int(q * len(v)))]
+
+
+def sec_resp(c):
+    clips = load_clips()
+    out = ["### 8a. Swing clips: frames from clip start to contact, and from contact to the Out window", "",
+           "Read from data/gameplay/animation_clips.yaml (committed dump of AnimationsDB.bin; command and sha256 "
+           "in its header). 'to Out' = (TransitionEvent[1].Position - EventRacket phase) x (FrameCount - 1): the "
+           "frames after contact until the clip's Out transition window opens, i.e. `fn_886CD3C8` anim busy "
+           "measured at contact (movement-and-animation s1.1). At play rate 1; the swing play rate multiplies by "
+           "SwingSpeedCoef S+0x378 (graph 17: 1.16-1.30, section 5b) unless the clip sets IgnoreSpeedCoef. "
+           "p10 / median / p90 over the clips of each family.", ""]
+    rows = []
+    for fam, test in SWING_FAMILIES:
+        pre, post, n, ign = [], [], 0, 0
+        for cl in clips:
+            nm = cl.get("name", "")
+            if not test(nm) or cl.get("contact_phase") is None or len(cl.get("segments", [])) < 2:
+                continue
+            fr = cl["frames"] - 1
+            pre.append(cl["contact_phase"] * fr)
+            post.append(max(0.0, (cl["segments"][1][1] - cl["contact_phase"]) * fr))
+            ign += cl.get("ignore_speed_coef", 0)
+            n += 1
+        if not n:
+            continue
+        rate = 1.19
+        rows.append((fam, n, ign, "%.0f / %.0f / %.0f" % (pct(pre, .1), pct(pre, .5), pct(pre, .9)),
+                     "%.0f / %.0f / %.0f" % (pct(post, .1), pct(post, .5), pct(post, .9)),
+                     "%.0f / %.0f / %.0f ms" % tuple(L.frames_to_ms(pct(post, q) / rate) for q in (.1, .5, .9))))
+    out.append(L.md_table(["family", "clips", "IgnoreSpeedCoef", "start -> contact (frames)",
+                           "contact -> Out window (frames, rate 1)", "same at rate 1.19"], rows))
+    return "\n".join(out)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--work", default=ROOT, help="repository root that holds work/ and orig/ (default: this repo)")
@@ -1524,7 +1594,7 @@ def main(argv=None):
         print()
 
 
-SECTIONS = ["inputs", "speeds", "shape", "timing", "situ", "stats", "skills", "serve", "net"]
+SECTIONS = ["inputs", "speeds", "shape", "timing", "situ", "stats", "skills", "serve", "net", "resp"]
 
 
 def sec_inputs(c):
