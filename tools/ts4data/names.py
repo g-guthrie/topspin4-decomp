@@ -95,16 +95,23 @@ def collect_targets(layout, xbins):
     return tgt
 
 
-WORDLIKE = re.compile(r"(?:[A-Z][a-z]{1,}|[A-Z]{1,4}(?![a-z])|[0-9]{1,3}|_)+|[a-z]{2,}(?:[A-Z][a-z]+|[0-9]{1,3})*")
+WORD_PART = re.compile(r"[A-Z][a-z]+|[A-Z]{1,4}(?![a-z])|[a-z]+|[0-9]{1,3}|_")
 
 
 def wordlike(t):
     """True for identifiers made of plausible words (camel case, short acronyms, digits)."""
-    if len(t) < 2 or len(t) > 48 or not WORDLIKE.fullmatch(t):
+    if len(t) < 2 or len(t) > 48 or not t.replace("_", "").isalnum() or not t.isascii():
         return False
+    parts = WORD_PART.findall(t)
+    if "".join(parts) != t:
+        return False
+    for p in parts:
+        if p.isalpha() and len(p) > 3:
+            low = p.lower()
+            if sum(c in "aeiouy" for c in low) * 5 < len(low):
+                return False
     letters = [c for c in t.lower() if c.isalpha()]
-    vowels = sum(c in "aeiouy" for c in letters)
-    return bool(letters) and vowels * 5 >= len(letters)
+    return bool(letters) and sum(c in "aeiouy" for c in letters) * 6 >= len(letters)
 
 
 def nested_pass(layout, found, word_by_crc):

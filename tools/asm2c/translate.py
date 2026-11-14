@@ -1115,6 +1115,14 @@ class Gen:
                     self.ptype[ops[0]] = 'ts4_u64'
                     v = rd(ops[0]); nohi(v)
                     out.append(f'{self.local_ref(off, "ts4_u64")} = (ts4_u64){v};'); return
+                if mn == 'std' and lfd_ and isinstance(lv0, (str, V)) and not (isinstance(lv0, str) and lv0.startswith('__')):
+                    # any other word spilled for an int -> float conversion (std/lfd/fcfid) with no
+                    # extension in between: its upper half is known zero (rlwinm, lhz, ...)
+                    if isinstance(lv0, V):
+                        lv0.used = True
+                    w = lv0.n if isinstance(lv0, V) else lv0
+                    sl[off] = f'((ts4_s64)(int){w})' if isinstance(lv0, V) and lv0.t == 'int' else f'((ts4_s64)(ts4_word){w})'
+                    return
                 if mn == 'ld' or mn == 'std':
                     raise Skip(mn)
                 ty_ = (LD.get(mn) or ST.get(mn) or FLD.get(mn) or FST.get(mn))[0]

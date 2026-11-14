@@ -19,6 +19,7 @@ the map, the note is newer and wins.
 | [surfaces.md](surfaces.md) | Court surface | Surface changes sound, visuals and the clay-only swing takes, not ball physics; one global template table; smallest per-surface bounce hook is a trampoline at the bounce tail (0x889C1F58) |
 | [df.md](df.md) | Data file formats | XBin `.bin` container, `.arc` archives (crc32 path hashes, XOR-masked FAT), 0x8C animation records with EventRacket annotations and AOD clip mapping, curve and 2-D table nodes, Havok 5.5 packfiles; readers in `tools/ts4data/` |
 | [gp5.md](gp5.md) | Ball, bounce and umpire sound events | Shot class and power buckets, bounce angle/speed buckets, net/let arrive from the physics event queue, umpire score calls |
+| [ball-physics.md](ball-physics.md) | Complete ball mechanics (G3) | Consolidated spec: template row fields, launch solve, flight, exact bounce and net/let-cord branches, court bounds and out grades, outcome dice, prediction, timing; portable C in `ref/gameplay/ball.c`, values in `data/gameplay/ball_templates.yaml` / `ball_trajectories.csv` |
 
 Readable C for understood but not yet byte-matching functions lives in
 `src/xbox360/drafts/`. Drafts are not part of the matching build and do not

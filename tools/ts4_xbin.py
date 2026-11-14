@@ -174,7 +174,7 @@ KIND_LIST = 0x33F5AD9F
 KIND_PTR = 0x6D866019
 KIND_REF = 0xAAB84325
 TYPE_REF = 0xAAB84325
-TYPE_ANY = 0x80E55C7B          # Pam::XBinData::CAny: also a {rel, type} reference (I)
+TYPE_ANY = 0x80E55C7B          # Pam::XBinData::CAny: 12 bytes {s32 rel, u32 type, u32 class key} (V)
 REF_TYPES = (TYPE_REF, TYPE_ANY)
 GENERIC_TREE_ROOT = 0xD2968089
 
@@ -260,7 +260,9 @@ class Layout:
             return 4 * VEC_TYPES[tc]
         if tc in PRIMS:
             return PRIMS[tc][2]
-        if tc in REF_TYPES:
+        if tc == TYPE_ANY:
+            return 12
+        if tc == TYPE_REF:
             return 8
         return None
 
@@ -366,9 +368,10 @@ class Walker:
             return
         base = o + rel
         if tc in REF_TYPES:
+            st = 12 if tc == TYPE_ANY else 8
             for i in range(count):
-                if self.ok(base + 8 * i, 8):
-                    self.walk_ref(base + 8 * i, "%s[%d]" % (path, i))
+                if self.ok(base + st * i, st):
+                    self.walk_ref(base + st * i, "%s[%d]" % (path, i))
             return
         stride = self.lay.size_of(tc)
         if not stride:
