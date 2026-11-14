@@ -13,13 +13,15 @@
 // Button edges are also delivered as XamInputGetKeystroke(Ex) events (VK_PAD_*).
 // Two kinds of line block the script until the game reaches a point, so menus can be driven
 // without knowing load times; a following "+N" counts from the swap at which the block cleared:
-//   wait <type> <expr> <op> <value> [max=N]   guest-memory condition (op == != < > <= >=)
+//   wait <type> <expr> <op> <value> [max=N]   guest-memory condition (op == != < > <= >=;
+//                                             type str compares a C string with == or !=)
 //   idle <import> <N> [max=N]                 import counter unchanged for N swaps, e.g.
 //                                             "idle NtReadFile 90" = file loading has stopped
 // max=N gives up after N swaps (logged) and carries on. The pad state is held while blocked.
 //
 // Watch list (TS4_WATCH), one value per line:  <name> <type> <expr>
-//   type  u8 u16 u32 s32 f32 f32x3 (three consecutive floats -> name.x/.y/.z)
+//   type  u8 u16 u32 s32 f32 f32x3 (three consecutive floats -> name.x/.y/.z) str (C string;
+//         commas are written as '?')
 //   expr  0xADDR | [expr]+0xOFF | [expr]-0xOFF   ([] dereferences a big-endian u32 pointer)
 // Unreadable values (null or out-of-range pointers) are written as empty fields.
 
@@ -133,6 +135,17 @@ inline bool ReadTyped(const std::string& type, const std::string& expr, rex::mem
   return true;
 }
 
+// Reads a NUL-terminated guest string (printable ASCII, at most 47 characters).
+inline bool ReadString(const std::string& expr, rex::memory::Memory* mem, std::string& out) {
+  size_t pos = 0;
+  uint32_t addr;
+  if (!EvalExpr(expr, pos, mem, addr) || !mem || !GuestReadable(addr)) return false;
+  const uint8_t* p = mem->TranslateVirtual<const uint8_t*>(addr);
+  out.clear();
+  for (int i = 0; i < 47 && p[i]; i++) out.push_back(p[i] >= 0x20 && p[i] < 0x7F && p[i] != 0x2C ? char(p[i]) : 0x3F);
+  return true;
+}
+
 class InputScript {
  public:
   bool Load(const std::string& path) {
@@ -221,7 +234,10 @@ class InputScript {
         if (e.kind == Event::kIdle) idle_value_ = counter(e.expr);
       }
       bool done = false;
-      if (e.kind == Event::kWait) {
+      if (e.kind == Event::kWait && e.type == "str") {
+        std::string v;
+        if (ReadString(e.expr, mem, v)) done = e.op == "==" ? v == e.value_s : e.op == "!=" ? v != e.value_s : false;
+      } else if (e.kind == Event::kWait) {
         double v;
         if (ReadTyped(e.type, e.expr, mem, v)) done = Compare(v, e.op, e.value);
       } else {
@@ -436,6 +452,12 @@ class WatchList {
       size_t pos = 0;
       uint32_t addr = 0;
       bool ok = Eval(it.expr, pos, mem, addr);
+      if (it.type == "str") {
+        std::string v;
+        std::fprintf(f, ",");
+        if (ok && ReadString(it.expr, mem, v)) std::fprintf(f, "%s", v.c_str());
+        continue;
+      }
       int n = it.type == "f32x3" ? 3 : 1;
       for (int k = 0; k < n; k++) {
         std::fprintf(f, ",");

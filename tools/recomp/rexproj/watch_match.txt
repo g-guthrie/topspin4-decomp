@@ -4,6 +4,7 @@
 # A blank cell means the chain hit an unmapped pointer (no instance yet).
 # name              type   expr
 engine_state        u32    [0x88D45B1C]+0x278
+scene_name          str    [[[[[0x88D45A60]+0x1B0]+0x6C]+0x50]+0x60]
 match_frame         u32    [[[[0x88D45B00]+0x78]]+0x30]+0x310
 ball_pos            f32x3  [[[[[0x88D45B00]+0x78]]+0x5C]+0x20]+0x40
 ball_vel            f32x3  [[[[[0x88D45B00]+0x78]]+0x5C]+0x20]+0x4F0

@@ -1,0 +1,738 @@
+<title>Top Spin 4 Retune Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout: one reading column (max 46rem) with full-width figures and tables inside it. */
+:root{
+  --bg:#f7f8f6; --surface:#ffffff; --fg:#14181a; --muted:#566068; --rule:#d9dedb;
+  --accent:#0f6b52; --accent-soft:#e3f0ea;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
+  --warn:#8a5a00; --warn-soft:#fbf1d9;
+  --display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --body:"Inter","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#121514; --surface:#1b1f1e; --fg:#eef0ee; --muted:#a9b2ae; --rule:#333a37;
+  --accent:#5fc7a6; --accent-soft:#1e2e29;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  --warn:#e6bf6a; --warn-soft:#2e2718; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#121514; --surface:#1b1f1e; --fg:#eef0ee; --muted:#a9b2ae; --rule:#333a37;
+  --accent:#5fc7a6; --accent-soft:#1e2e29;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  --warn:#e6bf6a; --warn-soft:#2e2718; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+main{max-width:46rem;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:2rem} h2{font-size:1.4rem;margin-top:28px;padding-top:20px;border-top:1px solid var(--rule)}
+h3{font-size:1.05rem;margin-top:8px}
+p,ul,ol{margin:0} ul,ol{padding-left:1.2rem;display:flex;flex-direction:column;gap:6px}
+.lede{font-size:1.1rem;color:var(--muted)}
+.note{background:var(--warn-soft);border-left:3px solid var(--warn);padding:12px 14px;border-radius:4px;font-size:.95rem}
+.key{background:var(--accent-soft);padding:12px 14px;border-radius:4px}
+.tw{overflow-x:auto} table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}
+figure{margin:0;background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:16px;min-width:0}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:8px}
+.ft{font-family:var(--display);font-weight:600;margin-bottom:4px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;color:var(--muted);margin:6px 0 8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{fill:var(--muted);font-family:var(--body);font-size:12px}
+svg .lab{fill:var(--fg)}
+.tip{position:fixed;pointer-events:none;background:var(--fg);color:var(--bg);padding:6px 9px;border-radius:4px;font-size:.8rem;max-width:240px;z-index:5}
+.pill{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid var(--rule);color:var(--muted);margin-left:6px;vertical-align:2px}
+.pill.code{border-color:var(--s2);color:var(--s2)} .pill.data{border-color:var(--accent);color:var(--accent)}
+a{color:var(--accent)} small{color:var(--muted)}
+nav{font-size:.9rem;color:var(--muted)} nav a{margin-right:12px;white-space:nowrap}
+</style>
+
+<main>
+<h1>Top Spin 4 Retune Plan</h1>
+<p class="lede">Revision 2. Keep the game people love. Make every situation on court pay or cost what it does in real tennis, with no single winning style.</p>
+
+<div class="note"><strong>What this is.</strong> A design to react to, built on what we have read from the game's code and data. Retail figures are measured from that data. Proposed figures are targets; those marked provisional come from a simulation that is still being re-run. Nothing has been tested on the running game yet.</div>
+
+<nav><a href="#decisions">Decisions</a><a href="#today">Today</a><a href="#grade">Grades</a><a href="#timing">Timing</a><a href="#power">Power</a><a href="#pace">Pace</a><a href="#flight">Flight</a><a href="#aim">Aim</a><a href="#net">Net</a><a href="#serve">Serve</a><a href="#stats">Stats</a><a href="#move">Movement</a><a href="#physics">Physics</a><a href="#styles">Styles</a><a href="#meta">Meta</a><a href="#audit">Coverage</a><a href="#balance">Balance</a><a href="#rollout">Rollout</a></nav>
+
+<h2 id="decisions">Decisions made so far</h2>
+<ul>
+<li><strong>Averages stay about where they are.</strong> The change is at the edges of the bell curve.</li>
+<li><strong>110 mph is the fastest forehand.</strong> A hard ceiling, reached almost never.</li>
+<li><strong>Serves have no ceiling near 120.</strong> A specialist reaches about 150, rarely and at a price.</li>
+<li><strong>Six set-up grades,</strong> with a new top grade, Tee-off, for a true sitter.</li>
+<li><strong>The easier the ball, the easier Perfect.</strong> The opponent's timing grade also changes your window directly.</li>
+<li><strong>Overcharge:</strong> a full meter held while set and waiting unlocks the biggest swing.</li>
+<li><strong>Movement stays as it is,</strong> except a short list of rules that refuse real decisions. The first step from rest is left alone for now and tried last, on its own.</li>
+<li><strong>Animations are not edited.</strong> Tuning changes values, rules and which existing clip is chosen. No clip is stretched, sped up or mirrored.</li>
+<li><strong>The lock on the feet is shortened after volleys and approach shots,</strong> so the net feels dynamic. Groundstroke recovery stays as retail.</li>
+</ul>
+
+<h2 id="today">How the game works today</h2>
+<ol>
+<li>Hold time sets power. Soft under 12 frames of hold, Medium from 12, Powerful from 53, full at 75.</li>
+<li>Timing is the gap between your release and the ball's arrival. Perfect is 20 frames before it arrives.</li>
+<li>Data graphs turn ratings, timing, position, fatigue and skills into an error chance and an aim score.</li>
+<li>The aim score picks one of four target boxes. The ball goes to the edge of that box in the stick direction.</li>
+<li>In, out, net or let is rolled <em>before</em> the ball leaves the racket.</li>
+<li>The flight is solved backwards to land on the chosen spot. Physics never decides whether a ball is in.</li>
+</ol>
+<p class="key">Spin and pace change how a ball looks and how it reaches the opponent. Safety and risk live in the graphs. Realism needs both halves changed together.</p>
+
+<figure>
+<div class="ft">Shot speed: retail, the tour, and the proposed ceiling</div>
+<div class="legend"><span><i style="background:var(--s1)"></i>Retail range, up to the fastest build</span><span><i style="background:var(--s2)"></i>Tour average</span><span><i style="background:var(--s3)"></i>Proposed ceiling</span></div>
+<svg id="c1" viewBox="0 0 640 210" role="img" aria-label="Range chart of shot speeds"></svg>
+<figcaption>Retail: computed from the shot templates. The fastest any build can reach is 122 mph on serve and 92 mph on a groundstroke; a median build's first serve is 84 mph. Tour: forehand average 76 mph, fastest first-serve season average 134 mph.</figcaption>
+</figure>
+
+<h3>Where retail departs from real tennis</h3>
+<div class="tw"><table>
+<tr><th>Thing</th><th>Retail</th><th>Real tennis</th></tr>
+<tr><td>Being set up</td><td>Five quality grades exist; the code always uses "Good"</td><td>A set player hits a different ball from a running one</td></tr>
+<tr><td>Incoming pace</td><td>Never fed in: no code and no graph writes the value the fast-ball error term reads. A 200 km/h ball is returned like a 120 km/h one. The plan switches it on</td><td>Decisive at the net and on return</td></tr>
+<tr><td>Timing forgiveness</td><td>Zero error across a 19-frame band on most groundstrokes; at perfect timing no situation adds error</td><td>Being stretched or rushed costs even a well-timed swing</td></tr>
+<tr><td>Timing rating</td><td>No effect; its best and worst curves are identical</td><td>Great timing is a skill</td></tr>
+<tr><td>Power hold</td><td>A full charge adds about 4% over a medium swing</td><td>A full swing on a good ball is a different shot</td></tr>
+<tr><td>Ratings</td><td>30 or below is worth nothing, so dumping a stat is free</td><td>A weakness gets attacked</td></tr>
+<tr><td>Volleys</td><td>The standard volley has zero error everywhere; reaction time affects the AI only</td><td>The hardest shot to control under pressure</td></tr>
+<tr><td>Returns</td><td>Always the softest shot rows; serve pace adds at most 0.03 error</td><td>Pace forces blocked, short returns</td></tr>
+<tr><td>Topspin dip</td><td>A fixed downward push, about 0.25 to 0.35 g</td><td>Grows with ball speed and spin <small>(my estimate: 0.5 to 0.7 g when heavy)</small></td></tr>
+<tr><td>The bounce</td><td>Ball keeps 0.90 to 1.15 of its speed; topspin leaves about 5% faster</td><td>Every ball slows; topspin kicks up, slice stays low</td></tr>
+<tr><td>Court surface</td><td>No effect on the ball</td><td>Changes speed and bounce height</td></tr>
+<tr><td>Does spin add safety?</td><td>No. The dice already decided</td><td>Yes. That is why most rally balls are topspin</td></tr>
+<tr><td>Depth</td><td>Stick push is ignored; a random roll pulls good balls up to 3.1 m short</td><td>Depth is controlled and earned</td></tr>
+</table></div>
+
+<h3>Complaints and metas, and what the code shows</h3>
+<div class="tw"><table>
+<tr><th>Complaint or meta</th><th>Source</th><th>What we found</th></tr>
+<tr><td>Unreturnable serves at launch</td><td>Forum thread; April 2011 patch</td><td>The patch made tired serves less accurate and halved two serve skills. Returns were left weak</td></tr>
+<tr><td>Topspin Invasion plus Monster Defense "still king"</td><td>One competitive forum post</td><td>Topspin Invasion is only +0.045 on the power factor. The cause is more likely topspin's free safety plus the forgiving timing band</td></tr>
+<tr><td>Top players leaning on drop shots</td><td>One player account; patched twice</td><td>Good balls get pulled short at random, and the put-away has no animation for a low ball or a backhand</td></tr>
+<tr><td>Returns underpowered</td><td>Community guide</td><td>Returns always use the softest rows. The Reflex rating never reaches the match</td></tr>
+<tr><td>Stat dumping</td><td>Your report</td><td>Confirmed: every rating at 30 or below maps to zero</td></tr>
+<tr><td>Net rush refused; sluggish after shots</td><td>Your report</td><td>Confirmed: see Movement</td></tr>
+</table></div>
+<p><small>Most community items rest on one post each; a wider search found no further build discussions. Largest measured skills: Reach Swings Expert (+0.19 power factor) and Passing Shot Sniper (+0.4 aim score). Semi-Volley King is inert because the input it reads never changes.</small></p>
+
+<h2 id="grade">1. Set-up grades <span class="pill code">code</span> <span class="pill data">data</span></h2>
+<p>The game has power and accuracy tables with five grade rows. Only Good is used. Drive the row from the situation, and add one row on top.</p>
+<div class="tw"><table>
+<tr><th>Situation</th><th>Grade</th><th>What you get</th></tr>
+<tr><td>A true sitter: slow, mid-height, watched all the way, no steps needed</td><td>Tee-off <small>(new)</small></td><td>A winner-calibre ball. The only grade where the pace ceiling is reachable; wide timing window</td></tr>
+<tr><td>Feet set, lots of time, ball between knee and shoulder</td><td>VeryGood</td><td>Full pace, full spin, tightest aim</td></tr>
+<tr><td>Normal rally ball, small adjustment steps</td><td>Good</td><td>Today's shot</td></tr>
+<tr><td>Hitting on the move, or ball a little high or low</td><td>Normal</td><td>Less pace, wider aim</td></tr>
+<tr><td>Full run, or ball at the feet or above the shoulder</td><td>Bad</td><td>A defensive ball</td></tr>
+<tr><td>Stretched, lunging, late</td><td>VeryBad</td><td>Just getting it back</td></tr>
+</table></div>
+<p><strong>Two questions, kept separate.</strong> The grade answers "how good was the situation?". Timing answers "how well did you execute?". The grade picks a row; timing picks where in that row you land. A Perfect on a Bad ball is the best Bad ball. A late swing on a Tee-off ball is the worst Tee-off ball.</p>
+<h3>How the grade is worked out</h3>
+<p>A penalty score from four things the engine already measures.</p>
+<div class="tw"><table>
+<tr><th>Input</th><th>Points</th></tr>
+<tr><td>How long you were set before contact</td><td>Half a second or more: 0. A quarter to a half: 1. Under a quarter: 2. Still moving: 3. Reaching or lunging: 4</td></tr>
+<tr><td>Contact height</td><td>Waist to shoulder: 0. Knee to waist, or shoulder to head: 1. Below the knee or above the head: 2</td></tr>
+<tr><td>Incoming pace</td><td>Slow: minus 1. Normal: 0. Heavy: 1. Near reflex limits: 2</td></tr>
+<tr><td>Self-inflicted</td><td>Rushed power swing: 1. Nearly exhausted: 1</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Score</th><th>Grade</th><th>Pace cap against Good</th><th>Aim score cap</th><th>Window</th></tr>
+<tr><td>Minus 1, and a true sitter</td><td>Tee-off</td><td>118%</td><td>1.00</td><td>30% wider</td></tr>
+<tr><td>Minus 1 or 0</td><td>VeryGood</td><td>108%</td><td>0.95</td><td>10% wider</td></tr>
+<tr><td>1 to 2</td><td>Good</td><td>100%</td><td>0.85</td><td>as today</td></tr>
+<tr><td>3</td><td>Normal</td><td>93%</td><td>0.70</td><td>5% narrower</td></tr>
+<tr><td>4 to 5</td><td>Bad</td><td>82%</td><td>0.50</td><td>10% narrower</td></tr>
+<tr><td>6 or more</td><td>VeryBad</td><td>70%</td><td>0.30</td><td>15% narrower</td></tr>
+</table></div>
+<p>An ordinary rally ball scores 1, which is Good, the only grade retail ever uses. So the middle of the game does not move; the change is at the edges. Starting values, to be tuned.</p>
+<h3>Each kind of shot is judged on its own terms</h3>
+<p>The table above is for rally groundstrokes only. An earlier draft applied it to everything, which put every return of a fast serve in a Bad row and made the big server dominant in simulation. A grade measures how good the situation is for that kind of shot, against what is normal for it.</p>
+<div class="tw"><table>
+<tr><th>Shot</th><th>How it is graded</th></tr>
+<tr><td>Rally groundstroke</td><td>The table above</td></tr>
+<tr><td>Return of serve</td><td>No points for pace or lack of time; those are normal on a return. Good by default. Bad only when stretched wide or jammed. VeryGood on a slow serve in the strike zone, which is how a weak second serve gets attacked. Never Tee-off. Serve pace reaches you through the timing window and the Return rating</td></tr>
+<tr><td>Serve</td><td>No grade. There is no incoming ball. It keeps its own inputs: motion timing, pace chosen, how near the lines, Serve rating, fatigue, and the fault chance</td></tr>
+<tr><td>Volley</td><td>Time since the opponent's hit on a volley scale; height against the net, not the body; stretch. The result is an outcome band, where a bad volley is a weak ball before it is a miss</td></tr>
+<tr><td>Smash</td><td>Time under the ball and whether you are backpedalling. No height points</td></tr>
+<tr><td>Half-volley</td><td>How low the ball is, and the Volley rating. Pace capped because the ball has to be lifted</td></tr>
+</table></div>
+<h3>Shot type decides how much a bad situation costs</h3>
+<div class="tw"><table>
+<tr><th>Shot type</th><th>Share of the grade's effect</th><th>Why</th></tr>
+<tr><td>Flat</td><td>100%</td><td>Needs timing, balance and a clean strike zone. Gains most from a great ball, loses most from a bad one</td></tr>
+<tr><td>Topspin</td><td>80%</td><td>More margin, still needs the legs under it</td></tr>
+<tr><td>Slice</td><td>50%</td><td>The defensive stroke: short swing, works stretched and low</td></tr>
+<tr><td>Lob</td><td>50%</td><td>A touch shot, hit from anywhere</td></tr>
+<tr><td>Drop shot</td><td>120% on pace</td><td>Touch off a fast ball is the hardest thing in the game</td></tr>
+</table></div>
+<p>So the reason to hit flat is the top of the grade table, and the reason to hit slice is the bottom of it.</p>
+<ul>
+<li><strong>Inputs already exist.</strong> The engine computes frames to the hit point, distance to it, the run speed needed, contact height, and whether the ball is slow and easy to reach. That last test, used today to pick the automatic swing, is a ready-made sitter detector.</li>
+</ul>
+<h3>What makes a Tee-off ball</h3>
+<p>All of these at once. Miss one and the grade is VeryGood at best.</p>
+<div class="tw"><table>
+<tr><th>Condition</th><th>Proposed test</th></tr>
+<tr><td>The ball is slow</td><td>Well under rally pace when it reaches you</td></tr>
+<tr><td>It is in the strike zone</td><td>Contact between waist and shoulder</td></tr>
+<tr><td>You have had time</td><td>About a second or more since the opponent hit it. The game's own "slow, easy ball" test uses 60 frames</td></tr>
+<tr><td>Your feet are set</td><td>Within about a metre of the hit point and arrived a third of a second before contact</td></tr>
+<tr><td>You are not stretched or backing up</td><td>No reach swing, not moving away from the net at contact</td></tr>
+<tr><td>You are not deep behind the baseline</td><td>Contact no more than about a metre behind it</td></tr>
+</table></div>
+<ul>
+<li><strong>What produces one:</strong> an opponent's badly mistimed or framed ball; a defensive shot hit from a Bad or VeryBad grade; a floated slice; a short lob; a poor drop shot you reached early; a soft ball at the net.</li>
+<li><strong>What does not:</strong> an ordinary rally ball you happen to be standing still for. That is VeryGood. Tee-off needs the ball itself to be weak.</li>
+<li><strong>The moonball.</strong> Height is measured where you strike the ball, not at the top of its bounce. A high, slow ball you have time and room to let drop is struck in the strike zone and costs nothing for height. If it lands short, it is a Tee-off ball. If it lands deep and you take it from well behind the baseline, it is VeryGood: you can load a full charge or an overcharge on it, but it is not a sitter. Height only costs you when you are forced, or choose, to take the ball high: pinned by a heavy kick, or stepping in to take it early.</li>
+<li><strong>How it can still be missed:</strong> a mistimed swing, since the window is wide but not endless; an overcharge released badly; or a power swing aimed early at the lines, where the out chance is real. Hit at medium power with decent timing, it is close to a certain winner or forced error.</li>
+<li><strong>How often:</strong> a few per set between equal players, more against someone who is being outplayed. If it shows up every other rally, the conditions are too loose.</li>
+<li><strong>What it means for ratings.</strong> Today the put-away fixes the power factor at one value for everyone, so it flattens players. In the plan, Tee-off lifts each player toward their own ceiling. Power sets how fast that is: about 95 mph for an ordinary pro, 110 for the pace build. Forehand or Backhand sets how close to the lines it goes, and Volley does the same at the net. A weak wing still gets a good ball, not a great one.</li>
+</ul>
+<ul>
+</ul>
+
+<h2 id="timing">2. Timing windows <span class="pill data">data</span> <span class="pill code">small code</span></h2>
+<figure>
+<div class="ft">Groundstroke timing today, in frames before the ball arrives</div>
+<svg id="c4" viewBox="0 0 640 110" role="img" aria-label="Strip showing the timing window"></svg>
+<figcaption>One window for every ball. Holding until the automatic commit at 12 frames counts as late.</figcaption>
+</figure>
+<p>The rule: <strong>the easier the ball, the easier Perfect.</strong> The window becomes a function of the ball in front of you.</p>
+<div class="tw"><table>
+<tr><th>Widens your window</th><th>Narrows it</th></tr>
+<tr><td>Slow incoming ball</td><td>Fast incoming ball near reflex limits</td></tr>
+<tr><td>Ball bouncing into the strike zone</td><td>Heavy kick above the shoulder, or a skidding low ball</td></tr>
+<tr><td>Plenty of time; feet set</td><td>On the run or stretched</td></tr>
+<tr><td>Inside the baseline with time; a floater at the net</td><td>Little reaction time at the net or on return</td></tr>
+<tr><td>Opponent's shot was poorly timed</td><td>Opponent's shot was Perfect</td></tr>
+<tr><td>A high timing rating</td><td>Fatigue</td></tr>
+</table></div>
+<ul>
+<li><strong>Your opponent's quality reaches you two ways.</strong> Through the ball, which is faster, deeper and heavier when they hit it well. And directly: their timing grade scales your window. It is its own input, separate from anything about the ball, and it scales both your Perfect and your Good window.</li>
+<li><strong>Starting sizes:</strong> opponent hit Perfect, 15% narrower. Good, 7% narrower. Average, no change. Poor, 15% wider. Badly mistimed, 30% wider. This applies even when their bad shot stayed in by luck.</li>
+<li><strong>One scale.</strong> Your window is today's window multiplied by four factors: your rating on that stroke, the opponent's grade, your own set-up grade, and reaction time. The result is kept between 60% and 175% of today's.</li>
+</ul>
+<div class="tw"><table>
+<tr><th>Case</th><th>Perfect window, frames either side</th><th>Good window, frames either side</th></tr>
+<tr><td>Retail, every ball</td><td>2.0</td><td>6.0</td></tr>
+<tr><td>Rally ball, opponent hit Good</td><td>1.9</td><td>5.6</td></tr>
+<tr><td>Opponent hit Perfect, heavy ball</td><td>1.6</td><td>4.8</td></tr>
+<tr><td>Volley against a clean, hard pass</td><td>1.2</td><td>3.6</td></tr>
+<tr><td>Opponent badly mistimed, but the ball came back deep</td><td>2.6</td><td>7.8</td></tr>
+<tr><td>Opponent poor, easy ball</td><td>2.5</td><td>7.6</td></tr>
+<tr><td>Opponent badly mistimed, sitter</td><td>3.4</td><td>10.1</td></tr>
+</table></div>
+<ul>
+<li><strong>It fits the engine.</strong> The game already blends a "worst" and a "best" timing curve; in retail the two are identical. The plan makes them a narrow and a wide curve and drives the blend with this scale.</li>
+<li><strong>What timing buys:</strong> Perfect lands at the top of your grade's pace and aim range with almost no short pull. Good lands in the middle. Outside the Good window you get the bottom of the range and the retail 2 to 3 m short pull.</li>
+<li><strong>The direct effect is capped,</strong> so a rally of Perfects is rising pressure and not a snowball. One good defensive shot resets it.</li>
+<li><strong>From the baseline against a good ball,</strong> Perfect is harder than today and pays more.</li>
+<li><strong>The timing rating gets real curves.</strong></li>
+</ul>
+<figure>
+<div class="ft">Proposed timing window against time to react</div>
+<svg id="c3" viewBox="0 0 640 240" role="img" aria-label="Line chart of proposed timing window against reaction time"></svg>
+<figcaption>Proposal. No effect with 600 ms or more to react, so normal rallies are untouched. The window falls to 70% at 250 ms and below. This is one of the four factors in the scale.</figcaption>
+</figure>
+<p>Reaction time is a threshold, not a slope. A 70 mph ball plays like a 60. It bites on volleys against a clean pass, returns of a 140 mph serve, and a ball driven at a player caught in no-man's-land.</p>
+
+<h2 id="power">3. The power swing and the overcharge <span class="pill code">code</span> <span class="pill data">data</span></h2>
+<p>What the charge does today, for a flat forehand at perfect timing:</p>
+<div class="tw"><table>
+<tr><th>Hold</th><th>Lowest ratings</th><th>Median</th><th>Top ratings</th></tr>
+<tr><td>Soft, 0 to 11 frames</td><td>110.5 km/h</td><td>112.5</td><td>122.6</td></tr>
+<tr><td>Medium, 12 to 52</td><td>121.0</td><td>125.1</td><td>131.4</td></tr>
+<tr><td>Powerful, 53</td><td>124.3</td><td>127.1</td><td>138.9</td></tr>
+<tr><td>Full, 75 and over</td><td>127.1</td><td>130.1</td><td>145.2</td></tr>
+</table></div>
+<ul>
+<li>To reach Powerful you must press at least 65 frames before contact. A re-press resets the count. Holding past 75 does nothing.</li>
+<li>A powerful shot costs up to about an eighth of the stamina bar. A late full charge carries a 22% error chance.</li>
+<li>So holding is expensive and barely rewarded, and ratings matter little: the weakest player's full charge beats the strongest player's soft shot by 4.5 km/h.</li>
+</ul>
+<p><strong>The change:</strong></p>
+<ul>
+<li><strong>The hold has a real payoff,</strong> scaled by grade. On a Bad grade a power swing gains little and risks a lot. On VeryGood it is a different shot.</li>
+<li><strong>A power swing is a commitment.</strong> If you are still holding when the game commits the swing and the charge never reached Powerful, you asked for more than the ball allowed. That is a rushed swing: one grade point worse, on top of being late. Releasing early for a smaller swing is never rushed.</li>
+<li><strong>Overcharge.</strong> Hold a moment past a full meter without moving (10 frames, about a sixth of a second) and it enters a second state and glows. Only a slow ball gives enough time. It can never happen on a return or in a fast rally. In simulation it comes up about once in 11 matches.</li>
+<li><strong>What overcharge gives and costs:</strong> about 4% more pace than the grade's cap; a timing window 20% narrower; a mistimed one goes long; one and a half times the stamina.</li>
+<li><strong>No new button.</strong> Risk is the shot you pick and how long you hold.</li>
+</ul>
+
+<h2 id="pace">4. The bell curve of pace <span class="pill data">data</span></h2>
+<div class="tw"><table>
+<tr><th>Forehand speed</th><th>How often</th><th>What it takes</th></tr>
+<tr><td>About 76 mph</td><td>The normal rally ball</td><td>Good grade, medium hold</td></tr>
+<tr><td>85 to 95</td><td>Several times a game</td><td>Powerful hold on a good ball</td></tr>
+<tr><td>96 to 100</td><td>A handful per set</td><td>VeryGood grade, powerful hold, good timing, strong Power rating</td></tr>
+<tr><td>101 to 105</td><td>A few per match</td><td>Tee-off or overcharge, Perfect timing, top Power and Forehand</td></tr>
+<tr><td>106 to 109</td><td>Once or twice a match, for one kind of build</td><td>All of the above together, a pace skill, fresh legs, flat swing</td></tr>
+<tr><td>110</td><td>The ceiling. Almost never</td><td>Everything stacked, and luck</td></tr>
+</table></div>
+<ul>
+<li>Each step is a multiplier that only stacks when the situation, the build and the execution line up. That makes the tail steep.</li>
+<li>A ball at the ceiling has to land deep and clear the net by 10 to 30 cm.</li>
+<li>The backhand ceiling sits a few mph lower.</li>
+</ul>
+<p><strong>Simulation, provisional</strong> (run before the ceiling was set to 110; being re-run). Forehand averages: 72.5 mph for an average pro, 80 for an elite player, 87 for a pace specialist. The average pro never passed 105. The tail is most sensitive to how often short balls come up.</p>
+
+<h2 id="flight">5. Ball flight, bounce and spin <span class="pill data">mostly data</span> <span class="pill code">some code</span></h2>
+<div class="tw"><table>
+<tr><th>Shot</th><th>Speed</th><th>Net clearance, flat</th><th>Net clearance, topspin</th></tr>
+<tr><td>Rally ball</td><td>72 mph</td><td>1.2 m</td><td>2.2 m</td></tr>
+<tr><td>Firm drive</td><td>80 mph</td><td>0.75 m</td><td>1.1 m</td></tr>
+<tr><td>Hard drive</td><td>95 mph</td><td>0.25 m</td><td>0.5 m</td></tr>
+</table></div>
+<p><small>Provisional targets from the flight model. Retail today: flat 0.5 to 0.75 m, topspin 0.6 to 1.4 m. The one sourced real figure is Nadal at about 0.78 m.</small></p>
+<ul>
+<li><strong>The bounce slows every ball.</strong> Speed kept: topspin 0.84, flat about 0.79, slice 0.72. Retail goes up to 1.15.</li>
+<li><strong>Topspin kicks.</strong> A heavy ball above the shoulder drops the receiver's grade unless they take it early, which needs tighter timing, or back up, which gives up court.</li>
+<li><strong>Slice stays low and slows.</strong> A low ball is hard to attack and hard to topspin.</li>
+<li><strong>Flat goes through the court.</strong> Fastest to arrive, smallest margin.</li>
+<li><strong>Spin buys margin</strong> in the error graphs, because the flight cannot.</li>
+<li><strong>Spin scales with the player.</strong> The Forehand and Backhand ratings set how much spin is available, and so how sharp an angle.</li>
+<li><strong>A better player has more pace and more spin.</strong> Only at the top of pace does the ball have to be flat and low.</li>
+<li><strong>Surfaces differ.</strong> Clay slowest and highest, grass fastest and lowest. This needs code at the bounce hook, which the retail data never uses.</li>
+</ul>
+
+<h3 id="physics">Ball physics in detail</h3>
+<p><strong>How the retail ball flies.</strong> The game does not simulate the ball step by step. It picks the landing spot first, then solves one smooth arc that ends there.</p>
+<div class="tw"><table>
+<tr><th>Piece</th><th>Retail model</th><th>What that means</th></tr>
+<tr><td>Drag</td><td>Proportional to speed, at 0.67 to 0.875 per second depending on the shot</td><td>The ball loses about half its speed over a baseline-to-baseline flight. A real ball's drag grows with the square of speed and takes off roughly a quarter <small>(my estimate)</small></td></tr>
+<tr><td>Gravity</td><td>Normal</td><td>—</td></tr>
+<tr><td>Topspin and slice</td><td>A constant vertical push set by the shot: down for topspin, up for slice. Typical topspin value is 2.5 m/s&sup2;, a quarter of gravity</td><td>The dip does not depend on how fast the ball is travelling or how much it is spinning. Real spin force grows with both</td></tr>
+<tr><td>Sidespin</td><td>A constant sideways push that flips direction at the bounce</td><td>A sliced serve curves one way in the air and kicks the other way off the court</td></tr>
+<tr><td>Launch</td><td>Flight time comes from the shot template; the launch is solved so the arc lands on the target</td><td>Pace and spin never cause a miss. The dice did that already</td></tr>
+<tr><td>Bounce</td><td>Speed multiplied by a curve of spin (0.90 to 1.15); angle out equals angle in for most shots; spin cut to 25 to 50%</td><td>No friction, no kick from topspin, no skid from slice, no surface</td></tr>
+<tr><td>Net and lines</td><td>Decided before launch; a ball rolled "out" is placed 3 cm past a line</td><td>Misses are never by a metre, and never caused by the flight</td></tr>
+</table></div>
+<p><strong>What changes, and how far we can go inside the existing model.</strong></p>
+<div class="tw"><table>
+<tr><th>Change</th><th>How</th><th>Effect on play</th></tr>
+<tr><td>Less speed lost in the air</td><td>Lower the drag value per shot template <span class="pill data">data</span></td><td>Balls arrive with more of their pace, so hard hitting takes time away as it should</td></tr>
+<tr><td>More speed lost at the bounce</td><td>Bounce curves: topspin keeps 0.84, flat 0.79, slice 0.72 <span class="pill data">data</span></td><td>Net effect on arrival time is small, but the arc looks right and slice dies</td></tr>
+<tr><td>Topspin dip grows with pace and spin</td><td>Scale the spin push by launch speed and the player's spin rating when the shot is built <span class="pill code">small code</span></td><td>Heavy hitters can aim higher over the net and still land it; angles open up for them and not for weak forehands</td></tr>
+<tr><td>Topspin kick, slice skid</td><td>Bounce angle curve by spin, which exists in the data but is flat today <span class="pill data">data</span></td><td>Kick takes the ball out of the strike zone; slice stays below the knee</td></tr>
+<tr><td>Surfaces</td><td>Per-surface multipliers at the bounce hook <span class="pill code">code</span></td><td>Clay rewards spin and patience, grass rewards flat pace, slice and the net</td></tr>
+<tr><td>Misses caused by the shot</td><td>Keep the dice, but let pace, low clearance and sharp angle raise the out and net chances <span class="pill data">data</span></td><td>A flat 105 mph ball is risky because of what it is, not by decree</td></tr>
+<tr><td>Bigger misses</td><td>Scatter the out position by how bad the shot was <span class="pill code">code</span></td><td>A shanked ball looks shanked</td></tr>
+</table></div>
+<p><strong>Why not replace the flight with a full physics simulation?</strong> Because the game's whole shot system depends on knowing where the ball will land before it is hit: the AI, the movement planner and the animation picker all read that prediction. The plan keeps that design and makes the arcs, the bounce and the risk behave like the real thing.</p>
+<p><strong>The consistency check for the pace ceiling.</strong> At 110 mph a flat forehand reaches the far baseline in about half a second and must clear the net by 10 to 30 cm to land in. That is a launch angle of only 2 to 4 degrees. The same ball with heavy topspin could clear higher, but a player cannot produce both maximum pace and maximum spin, so the ceiling is always a flat, low ball.</p>
+
+<h2 id="aim">6. Aim, margin, depth and touch <span class="pill code">code</span> <span class="pill data">data</span></h2>
+<ul>
+</ul>
+<h3>How aiming works today</h3>
+<ul>
+<li>The stick gives a direction only. Any push past the dead zone counts as full; no push aims at the middle of the court, 7.2 m past the net.</li>
+<li>Each shot type has nested target boxes: a small one in the middle, a mid one, one on the court lines, and one 3 m outside for misses.</li>
+<li>An aim score from 0 to 1 picks how far out the box is. The ball goes to the edge of that box in your stick direction.</li>
+</ul>
+<div class="tw"><table>
+<tr><th>Aim score</th><th>Stick straight up</th><th>Stick to the side</th><th>Stick to the corner</th></tr>
+<tr><td>1.0</td><td>On the baseline</td><td>On the sideline</td><td>In the corner</td></tr>
+<tr><td>0.8</td><td>1.1 m inside the baseline</td><td>0.8 m inside the sideline</td><td>1.1 m and 0.7 m inside</td></tr>
+<tr><td>0.5</td><td>2.9 m short of the baseline</td><td>2.0 m inside the sideline</td><td>2.9 m and 1.8 m inside</td></tr>
+<tr><td>0</td><td colspan="3">The middle of the court, whatever the stick says</td></tr>
+</table></div>
+<ul>
+<li><strong>Where the score comes from today:</strong> almost entirely timing and shot type. At perfect timing a topspin drive scores 0.80, a flat drive 0.76, a flat power shot 0.60 and a drop shot 0.40. Mistimed, they fall to 0.4 and then 0.2. A random roll then moves it up or down.</li>
+<li><strong>The player's rating barely counts:</strong> a weak stroke rating costs only 0.03 to 0.05.</li>
+<li><strong>Then a random pull short.</strong> Even at perfect timing an in-ball lands anywhere from 0 to 3.1 m shorter than aimed. Mistimed, the pull is a fixed 2 to 3 m.</li>
+</ul>
+<h3>What changes, and what does not</h3>
+<ul>
+<li><strong>The system stays.</strong> Direction-only stick, boxes, and a score that pulls poor shots to the middle. Pushing to the rim is never penalised. The earlier ideas of a stick-push risk dial and an aim that settles with hold time are both dropped; the retail score already does that job.</li>
+<li><strong>The score gets the new inputs.</strong> The set-up grade feeds it, so a Tee-off or VeryGood ball can reach the lines and a Bad one cannot. The grade tables already carry aim ranges per grade; switching the grades on connects them.</li>
+<li><strong>Timing still drives it,</strong> measured against the new, variable window. Perfect on a hard ball is worth as much as Perfect on an easy one; it is just harder to get.</li>
+<li><strong>Ratings matter.</strong> The Forehand and Backhand ratings move the score by a real amount, not 0.03.</li>
+<li><strong>Shot type keeps its character.</strong> Topspin has the best score and the lowest out chance. Flat power aims worse and misses more as pace rises. That is where the risk in a 105 mph ball comes from.</li>
+<li><strong>Depth is earned.</strong> The random short pull scales with quality: a few tens of centimetres on a well-timed, well-set shot, and the existing 2 to 3 m on a mistimed one.</li>
+</ul>
+<ul>
+<li><strong>Depth is earned.</strong> The random short pull shrinks to zero with good timing and a good grade. A badly timed ball lands short and sits up.</li>
+<li><strong>Sharp angles are gated.</strong> The aim tables already blend by where you stand. Short angles open from inside the court or out wide, and need a high aim score and enough spin. The miss goes wide, or short and attackable.</li>
+<li><strong>The chip.</strong> A slice tapped at the soft tier with the stick pulled back: a short, low ball into no-man's-land. It uses the existing slice templates.</li>
+<li><strong>The drop shot.</strong> Quality depends on the ball you receive. Off a slow ball with good timing it is deadly. Off pace or on the run it floats, and the opponent gets a wide window and a high grade.</li>
+</ul>
+
+<h2 id="net">7. Net play and the put-away <span class="pill code">code</span> <span class="pill data">data</span></h2>
+<ul>
+<li><strong>Always allowed.</strong> No sprint button needed. A rush asked for during a swing fires on the first legal frame.</li>
+<li><strong>A good approach</strong> is deep, low and takes time away. It drops the opponent's grade, so the pass comes back slower and higher.</li>
+<li><strong>A weak approach</strong> leaves them set. The pass is fast and dipping, and the reaction rule shrinks your volley window.</li>
+<li><strong>No-man's-land.</strong> A ball met low and close to the body near the service line is a half-volley: forced up, weak, floating.</li>
+<li><strong>Volleys are graded</strong> like groundstrokes instead of having zero error. A bad one is usually a weak ball, not a miss; see the table below.</li>
+</ul>
+
+<h3>What a volley produces</h3>
+<p>The main cost of a hard volley is not a miss. It is a weak ball the opponent can attack. The plan uses the outputs the volley shots already have: pace, how far out the aim box reaches, how far short the ball is pulled, and how high it floats.</p>
+<div class="tw"><table>
+<tr><th>The volley you face</th><th>What comes off your racket</th><th>What it does to the point</th></tr>
+<tr><td>Soft or high ball above the net, time to set</td><td>Fast, low, placed to the corner or sharply angled; or a drop volley that dies</td><td>Winner, or a ball they barely reach</td></tr>
+<tr><td>Firm ball at a comfortable height</td><td>Solid and deep, but returnable</td><td>You keep the net and the advantage</td></tr>
+<tr><td>Hard ball with little time, or a dipping ball below the net</td><td>Slower, lands mid-court, hangs in the air</td><td>They step in with a good grade and you are exposed</td></tr>
+<tr><td>Hard and low at the feet, or stretched</td><td>A pop-up or a short sitter; sometimes into the net or long</td><td>They get a Tee-off ball</td></tr>
+</table></div>
+<ul>
+<li><strong>What decides the row:</strong> height of the ball against the net, time to react, incoming pace, your timing, and the Volley rating. The volley graphs already read contact height, frames to contact and depth; pace and reaction time are the inputs being switched on.</li>
+<li><strong>The Volley rating shifts every row up.</strong> A great volleyer turns the third row into the second: the hard ball comes back deep instead of hanging.</li>
+<li><strong>Outright errors live where the player overreaches.</strong> A power volley on a low or blistering ball is where balls go long or into the net. A blocked volley on the same ball stays in but sits up.</li>
+<li><strong>A ball below net height cannot be hit hard.</strong> It has to be lifted, so its pace is capped and it lands shorter. That is the price of being caught at the service line.</li>
+<li><strong>Each volley button keeps its job.</strong> Standard: safe and deep when the ball allows. Power: the put-away on a high ball, a gamble on anything else. Drop: dies off a slow ball, pops up off a fast one.</li>
+</ul>
+<h3>Why not come in on every point</h3>
+<ul>
+<li>The approach decides what you face. A deep, low approach puts the opponent in a Bad grade, and their pass arrives slower and higher: rows one and two. A weak approach leaves them set, and you get rows three and four.</li>
+<li>Being at the net takes time from the opponent, which narrows their window. That is the reward for getting there behind a good ball.</li>
+<li>Closer to the net opens the angles and exposes the lob. Further back covers the lob and leaves balls at your feet.</li>
+</ul>
+<p><small>All of this runs through existing shot classes, graphs and aim boxes. The only code involved is feeding pace and reaction time to the graphs, and the grade.</small></p>
+
+<h3>The put-away swing today</h3>
+<ul>
+<li>37 clips per player, all forehands at shoulder height, each with a run-in of about 4 m. A clip can be joined 9 to 137 frames before contact.</li>
+<li>Tried first on flat power shots when power is above the soft tier. Blocked while you hold sprint within 3 m either side of the centre line.</li>
+<li>It fixes the power factor at 0.85 on a medium hold and 0.80 on a powerful one, and removes the aim penalty for late timing. So it is a consistency bonus, not a pace bonus.</li>
+<li>Topspin and lob groundstrokes use the flat lists and can never get it.</li>
+<li>If the button is held into the swing, the game uses an automatic swing list: the good one for a slow, easy ball, otherwise the one holding reach and reflex swings, which lower power and aim.</li>
+</ul>
+
+<h3>Tee-off, overcharge and the put-away are three different things</h3>
+<div class="tw"><table>
+<tr><th>Thing</th><th>What it is</th><th>Who decides</th></tr>
+<tr><td>Tee-off</td><td>A grade: the ball is a sitter</td><td>The situation, meaning the opponent's weak ball</td></tr>
+<tr><td>Overcharge</td><td>A commitment: the maximum swing</td><td>You</td></tr>
+<tr><td>Put-away</td><td>How the top grades look on screen</td><td>Follows from the grade</td></tr>
+</table></div>
+<p>They stack only at the very top. Tee-off, an overcharge, Perfect timing and a pace build together make the 110 mph forehand. Take any one away and it is an ordinary big shot.</p>
+
+<h3>Fixing the missing put-away</h3>
+<p>We cannot record new motion capture, so the fix has to work with what is on the disc. In order of preference:</p>
+<ol>
+<li><strong>Separate the reward from the clip.</strong> The put-away bonus becomes a property of the grade. A Tee-off ball gets the put-away power and accuracy whichever swing animation fits. This alone ends "I earned it but did not get it". <span class="pill code">code</span></li>
+<li><strong>Use the clips the game already has.</strong> The disc holds about 840 swing clips, including power backhands and low-ball swings. Mark the best of those as put-away animations for heights and sides the 37 special clips do not cover. <span class="pill data">data</span></li>
+<li><strong>Keep the 37 showpiece clips first in line</strong> whenever they fit, so the signature animation still appears on the shoulder-high forehand.</li>
+<li><strong>Fix the rule order.</strong> Today the walk stops at the first clip that fits, so an ordinary power swing can take the shot. On a Tee-off ball the put-away set is tried first on every stroke, topspin included. <span class="pill data">data</span></li>
+<li><strong>Remove the sprint corridor block.</strong> <span class="pill code">code</span></li>
+</ol>
+<p><strong>Rule: animations are not edited.</strong> No clip is stretched, sped up, mirrored or re-authored. The fix changes only which existing clip is chosen and what reward the shot gets.</p>
+<p><small>To check before committing to this: how many existing power clips cover each height and side well enough to read as a put-away.</small></p>
+
+<h2 id="serve">8. Serve and return <span class="pill data">data</span></h2>
+<ul>
+<li><strong>No hard ceiling near 120.</strong> A specialist going all out reaches about 150.</li>
+<li><strong>Pace costs</strong> first-serve percentage, placement and stamina.</li>
+<li><strong>Serves get dice.</strong> In retail a human's serve fault is a fixed step with no random roll, and soft and medium serves cannot fault on timing at all. So a server who has the rhythm never misses. The plan gives every serve a fault chance that rises with pace and with aiming close to the lines, and falls with the Serve rating, timing and fresh legs. Even a perfectly timed big serve from the best server goes in about two times in three.</li>
+<li><strong>A heavy kick serve</strong> becomes a real second weapon once the bounce kicks. Big servers with high stamina get second serves well above the tour's 96 mph average.</li>
+<li><strong>The returner</strong> gets the reaction rule: a tight but fair window, widened by the Return rating. A blocked return off a huge serve comes back short, which rewards the server who follows it in.</li>
+<li><strong>Returns stop being soft-only,</strong> so a read serve can be attacked.</li>
+<li><strong>The Reflex rating enters the match.</strong></li>
+<li><strong>Returns are not graded by pace.</strong> See the grade section: a return is Good by default.</li>
+</ul>
+<h3>Keeping the big server honest</h3>
+<p>In real tennis the big serve is very strong and still does not dominate, because holding serve is not winning. The server also has to break.</p>
+<div class="tw"><table>
+<tr><th>Target</th><th>Serve specialist</th><th>All-rounder</th></tr>
+<tr><td>Service games held</td><td>About 90%</td><td>80 to 85%</td></tr>
+<tr><td>Return games won</td><td>10 to 15%</td><td>About 20%</td></tr>
+<tr><td>Head to head</td><td colspan="2">Decided in tie-breaks; close to even</td></tr>
+</table></div>
+<ul>
+<li><strong>What holds the server back:</strong> the fault chance rises with pace; the second serve is slower and attackable; maximum effort costs stamina; the returner can stand back to buy time; the Return and Reflexes ratings widen the returner's window.</li>
+<li><strong>What is left on purpose:</strong> free points on a well-timed first serve. That is the style's reward.</li>
+<li>The first simulation had the big server too strong. It is being re-run with returns graded on their own terms.</li>
+</ul>
+<div class="tw"><table>
+<tr><th>Provisional simulation</th><th>Average pro</th><th>Elite</th><th>Specialist</th></tr>
+<tr><td>First-serve average</td><td>106 mph</td><td>122</td><td>128</td></tr>
+<tr><td>First serves in</td><td>57%</td><td>64%</td><td>62%</td></tr>
+<tr><td>Double faults</td><td>5%</td><td>4%</td><td>4%</td></tr>
+</table></div>
+<p><small>A specialist's all-out serve: about 152 mph, 35% in, four times the stamina cost. Tour reference: top-10 first serve 117 mph, second 96, about 62% in.</small></p>
+
+<h2 id="stats">9. Stats and skills <span class="pill data">data</span></h2>
+<figure>
+<div class="ft">What each rating point buys today</div>
+<div class="legend"><span><i style="background:var(--s1)"></i>Forehand, Backhand</span><span><i style="background:var(--s2)"></i>Power</span><span><i style="background:var(--s3)"></i>Serve, Volley, Speed, Stamina</span></div>
+<svg id="c2" viewBox="0 0 640 260" role="img" aria-label="Line chart of rating to effect curves"></svg>
+<figcaption>Read from the retail rating graphs. Every rating is worth nothing at 30 or below.</figcaption>
+</figure>
+<ul>
+<li><strong>No free floor.</strong> A rating under 40 adds unforced errors and slower preparation, not just less upside.</li>
+<li><strong>Smooth curves,</strong> so no rating has a cheap sweet spot.</li>
+<li><strong>Ratings lean on each other.</strong> Power without Forehand sprays. Speed without Stamina fades by the second set.</li>
+<li><strong>Each rating owns something visible.</strong> Forehand and Backhand: spin and angle. Power: pace. Volley and Return: reaction. Stamina: how long the rest lasts.</li>
+<li><strong>Skills get a cost or a counter.</strong> Topspin Invasion stops building when the rhythm changes. Monster Defense fades with stamina.</li>
+<li><strong>Abuse check.</strong> Before any value ships, simulated matches between archetype builds and min-max builds look for a dominant one. In progress.</li>
+</ul>
+
+<h2 id="move">10. Movement: keep it, with a short list of changes <span class="pill data">data</span> <span class="pill code">code</span></h2>
+<p>The game reads the stick and issues the move request in the same frame, with no smoothing. What feels slow is the animation clips, which accelerate gradually and carry the player by their own motion.</p>
+<div class="tw"><table>
+<tr><th>From a standing start</th><th>Frames to 5 cm</th><th>To 25 cm</th><th>To 1 m</th></tr>
+<tr><td>Run to the side</td><td>7 to 8</td><td>13 to 16</td><td>29 to 33</td></tr>
+<tr><td>Sidestep</td><td>20</td><td>28 to 32</td><td>56 to 62</td></tr>
+<tr><td>Sprint</td><td>14 to 22</td><td>26 to 30</td><td>43 to 46</td></tr>
+<tr><td>Run forward</td><td>14</td><td>22</td><td>41</td></tr>
+<tr><td>Backstep</td><td>11</td><td>24</td><td>52</td></tr>
+</table></div>
+<p><small>60 frames a second. Assumes a 15-frame blend into the start clip; the blend length is unconfirmed.</small></p>
+<div class="tw"><table>
+<tr><th>Rule today</th><th>Verdict</th><th>Reason</th></tr>
+<tr><td>Slow first step from rest</td><td><strong>Leave for now; try last, as an experiment</strong></td><td>The delay is in the animation, and the movement is too good to risk. Once the native build runs, one isolated trial: a shorter blend into the start and no edited clips, compared side by side with retail. It is kept only if it looks and feels right</td></tr>
+<tr><td>Net rush refused within 20 frames of the opponent's hit; needs sprint on or behind the baseline</td><td><strong>Change</strong></td><td>It refuses a real decision. Buffer the input; no sprint button</td></tr>
+<tr><td>Freeze in the last 20 frames before the opponent hits</td><td><strong>Change, at the net only</strong></td><td>In a fast volley exchange it leaves no frames to steer. At the baseline it leaves 4 to 34 and is part of the rhythm</td></tr>
+<tr><td>Put-away gaps and sprint block</td><td><strong>Change</strong></td><td>See part 7</td></tr>
+<tr><td>Feet locked after a shot (table below)</td><td><strong>Change, for going forward and at the net</strong></td><td>Movement is allowed earlier after volleys and approach shots, by moving the point in the existing clip where movement may begin. The clip itself is not edited, but its follow-through is cut short by the first step, which is the one visible change here. It applies after volleys, and after any groundstroke when you are heading to the net: that is the freeze you feel when you hit and try to run forward. Sideways recovery after a groundstroke stays as retail. The reaction-time rule is what keeps the net from being overpowered</td></tr>
+<tr><td>Stop takes 41 to 72 frames; a reversal overshoots 27 to 142 cm</td><td>Keep</td><td>The game's weight. Wrong-footing depends on it</td></tr>
+<tr><td>Sprint no quicker off the mark; refused when exhausted</td><td>Keep</td><td>Realistic, and it makes stamina matter</td></tr>
+<tr><td>Sideways-push cancel after a shot</td><td>Keep</td><td>Stops a held aim running you off court. Already softened by the title update</td></tr>
+<tr><td>Shot, power and aim freeze 12 frames before contact</td><td>Keep</td><td>The timing model is built on it</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Feet locked after contact</th><th>Shortest tenth</th><th>Median</th><th>Longest tenth</th></tr>
+<tr><td>Return</td><td>19</td><td>26</td><td>37</td></tr>
+<tr><td>Groundstroke</td><td>27</td><td>36</td><td>44</td></tr>
+<tr><td>Serve</td><td>24</td><td>34</td><td>39</td></tr>
+<tr><td>Volley</td><td>29</td><td>38</td><td>51</td></tr>
+<tr><td>Smash</td><td>33</td><td>42</td><td>58</td></tr>
+<tr><td>Reach</td><td>26</td><td>45</td><td>60</td></tr>
+</table></div>
+<p><small>Frames. During the tail the animation drifts the player 76 to 99 cm. The fastest legal net approach from the baseline takes about 132 frames today.</small></p>
+
+<h2 id="styles">Why no single style wins</h2>
+<div class="tw"><table>
+<tr><th>Style</th><th>What it buys</th><th>What it costs</th><th>What beats it</th></tr>
+<tr><td>Heavy topspin</td><td>Margin, angles, a kicking ball that pushes people back</td><td>Slower through the court; a short one sits up</td><td>Taking it early and flat; low slice</td></tr>
+<tr><td>Flat hitter</td><td>Takes time away; biggest pace when set; owns the Tee-off ball</td><td>Smallest margin; collapses on the run or off a low ball</td><td>Moving them; heavy kick out of the strike zone</td></tr>
+<tr><td>Slice and chip</td><td>Low ball, changes rhythm, strong approach</td><td>Little pace; a floated slice is a put-away</td><td>Stepping in; coming forward behind it</td></tr>
+<tr><td>Big server</td><td>Free points and short returns</td><td>Lower first-serve percentage, stamina, exposed second serve</td><td>A strong returner; long rallies</td></tr>
+<tr><td>Serve and volley</td><td>Short points, time pressure</td><td>Lives or dies on the approach and on reflexes</td><td>Clean dipping returns; lobs; balls at the feet</td></tr>
+<tr><td>Counterpuncher</td><td>Few errors; one more ball</td><td>No free points; fatigue</td><td>Net pressure; being pulled wide then wrong-footed</td></tr>
+<tr><td>Drop-shot user</td><td>Pulls a deep opponent forward</td><td>A poor one is a put-away</td><td>Court position; the fixed put-away</td></tr>
+<tr><td>Min-max build</td><td>One huge weapon</td><td>Dumped ratings now add errors and slow preparation</td><td>Anyone who plays to the weakness</td></tr>
+</table></div>
+
+<h2 id="meta">The competitive meta: today, and after</h2>
+<h3>How retail is played to win, and why</h3>
+<div class="tw"><table>
+<tr><th>Winning habit today</th><th>Why it works</th></tr>
+<tr><td>Hold the power button on every ball</td><td>It costs only stamina, and timing has a 19-frame zero-error band</td></tr>
+<tr><td>Topspin as the default stroke</td><td>It has no downside in the error graphs and its rally skill keeps building</td></tr>
+<tr><td>Defensive builds: Speed, Stamina, a reach skill, a comeback skill</td><td>Being stretched costs nothing at good timing, so retrieving is nearly free</td></tr>
+<tr><td>Dump one or two ratings to 30 or lower</td><td>Below 30 a rating is already worth zero</td></tr>
+<tr><td>Drop shots against deep defenders</td><td>The runner rarely gets a put-away, so the drop shot has little risk</td></tr>
+<tr><td>Big first serve, especially before the patch</td><td>Return quality ignores serve pace, and returns are forced soft</td></tr>
+<tr><td>Avoid the net unless Volley is high</td><td>Movement locks after volleys and the freeze before the opponent's hit leave a volleyer unable to adjust</td></tr>
+</table></div>
+<p><small>The first two rows and the last follow from the measured mechanics. The community sources for the meta are thin, mostly one post each.</small></p>
+<h3>What each habit meets after the retune</h3>
+<div class="tw"><table>
+<tr><th>Habit</th><th>What stops it being free</th></tr>
+<tr><td>Power on every ball</td><td>A rushed power swing drops a grade; a power swing on a Bad grade gains little and risks a lot</td></tr>
+<tr><td>Topspin only</td><td>Slower through the court; a flat hitter takes it early; low slice starves it of spin</td></tr>
+<tr><td>Pure retrieving</td><td>Stretched and running shots get Bad grades, so they come back short and get punished</td></tr>
+<tr><td>Stat dumping</td><td>Low ratings add errors and slow preparation</td></tr>
+<tr><td>Drop-shot spam</td><td>A drop shot off pace or on the run floats; the runner who arrives in time gets the put-away</td></tr>
+<tr><td>Serve bot</td><td>Pace costs percentage and stamina; a read serve can be attacked</td></tr>
+</table></div>
+<h3>New things players will try to abuse, and the answer built in</h3>
+<div class="tw"><table>
+<tr><th>Possible abuse</th><th>Built-in answer</th></tr>
+<tr><td>Fishing for Tee-off balls by pushing soft, deep shots and waiting</td><td>Tee-off needs the opponent's mistake; a competent opponent attacks a soft ball first</td></tr>
+<tr><td>Overcharging every ball</td><td>Overcharge only pays on VeryGood or Tee-off. On anything else it is a late, rushed swing</td></tr>
+<tr><td>Aiming at the corner on every ball</td><td>The corner is only reached with a top aim score. On an ordinary ball the same stick lands a metre or more inside, and flat pace raises the out chance</td></tr>
+<tr><td>Net rush every point</td><td>A weak approach meets a set opponent, a dipping pass and a shrunken volley window</td></tr>
+<tr><td>Chip and slice only</td><td>Little pace; a floated slice is a put-away; a player who steps in takes it on the rise</td></tr>
+<tr><td>High, heavy topspin moonballs</td><td>Slow to arrive, so they can be taken early or out of the air; short ones sit up</td></tr>
+<tr><td>Kick serve every time</td><td>Slower, so the returner has time to step in; it only bites with a high Serve rating</td></tr>
+<tr><td>Chaining Perfects to shrink the opponent's window</td><td>The direct effect is capped, and Perfect itself is harder against a good ball</td></tr>
+</table></div>
+
+<h2 id="audit">Coverage: what makes a shot easier or harder, and whether the game feels it</h2>
+<p>Each row is something that matters in real tennis. "Retail" is what the game does today, as far as it has been decoded. "Plan" is after the retune.</p>
+<p><strong>The ratings in the game:</strong> Forehand, Backhand, Serve, Volley, Power, Speed, Stamina and Reflexes. In a match only a Return value is used; Reflexes never arrives. A hidden Mental rating is 30 for every pro and unused.</p>
+<h3>Groundstrokes</h3>
+<div class="tw"><table>
+<tr><th>Factor</th><th>Retail</th><th>Plan</th></tr>
+<tr><td>Your timing</td><td>Felt strongly on placement; no error across a 19-frame band</td><td>Felt; window varies with the ball</td></tr>
+<tr><td>Time to prepare, feet set</td><td>Not felt</td><td>Felt: grade</td></tr>
+<tr><td>On the run, stretched</td><td>Weak: reach swings lose power and aim; no error at good timing</td><td>Felt: grade</td></tr>
+<tr><td>Contact height</td><td>Not felt, as far as decoded</td><td>Felt: grade</td></tr>
+<tr><td>Incoming pace</td><td>Not felt</td><td>Felt: grade and reaction time</td></tr>
+<tr><td>Incoming spin: kick, skid</td><td>Not modelled</td><td>Partly: through bounce height and contact height, not spin itself</td></tr>
+<tr><td>Opponent's shot quality</td><td>Not felt</td><td>Felt: its own window factor, plus the ball</td></tr>
+<tr><td>Court position</td><td>Felt: aim boxes blend by position</td><td>Felt; also gates sharp angles</td></tr>
+<tr><td>Power chosen</td><td>Weak: 4% for a full charge; stamina cost</td><td>Felt: payoff by grade, rushed swing, overcharge</td></tr>
+<tr><td>Shot type and its margin</td><td>Partly: aim score differs by type; spin buys no safety</td><td>Felt: margin, pace and bounce by type</td></tr>
+<tr><td>Fatigue</td><td>Felt</td><td>Felt</td></tr>
+<tr><td>Forehand and Backhand ratings</td><td>Weak: 0.03 to 0.05 on aim</td><td>Felt: aim, spin, window</td></tr>
+<tr><td>Power rating</td><td>Felt modestly: about 10% on pace</td><td>Felt: sets the pace ceiling</td></tr>
+<tr><td>Speed rating</td><td>Felt: you reach more balls</td><td>Felt more: arriving early improves the grade</td></tr>
+<tr><td>Surface</td><td>Not felt</td><td>Felt: bounce by surface</td></tr>
+<tr><td>Opponent's position: open court, wrong-footing</td><td>Skills only</td><td>Skills only</td></tr>
+<tr><td>Score pressure</td><td>Skills only; Mental unused</td><td>Skills only</td></tr>
+<tr><td>Rally length and rhythm</td><td>Skills only</td><td>Skills only</td></tr>
+<tr><td>Wind, sun, grip, stance</td><td>Not modelled</td><td>Not modelled</td></tr>
+</table></div>
+<h3>Serves and returns</h3>
+<div class="tw"><table>
+<tr><th>Factor</th><th>Retail</th><th>Plan</th></tr>
+<tr><td>Rhythm and timing of the motion</td><td>Felt, but with no dice; soft and medium serves cannot fault on timing</td><td>Felt, with a fault chance</td></tr>
+<tr><td>Pace chosen</td><td>Weak: little risk attached</td><td>Felt: costs percentage, placement and stamina</td></tr>
+<tr><td>Aiming near the lines</td><td>Unclear: the serve aim value has no known writer and defaults to the inner box</td><td>Felt: fault chance rises near the lines</td></tr>
+<tr><td>Serve type: flat, slice, kick</td><td>Partly: slice curves; kick does not kick</td><td>Felt: bounce fixed</td></tr>
+<tr><td>First against second serve</td><td>Not felt; a second-serve flag was added in the patch and never used</td><td>Partly: second-serve pace by rating and stamina; pressure not modelled</td></tr>
+<tr><td>Fatigue</td><td>Felt; strengthened by the patch</td><td>Felt</td></tr>
+<tr><td>Serve rating</td><td>Felt: accuracy</td><td>Felt: accuracy, percentage, pace ceiling</td></tr>
+<tr><td>Score pressure</td><td>One skill only</td><td>One skill only</td></tr>
+<tr><td>Surface</td><td>Not felt</td><td>Felt</td></tr>
+<tr><td>Player height and reach, toss, wind, sun</td><td>Not modelled</td><td>Not modelled</td></tr>
+<tr><td>Return: serve pace</td><td>Not felt; at most 0.03 error</td><td>Felt: reaction time</td></tr>
+<tr><td>Return: your timing</td><td>Felt</td><td>Felt</td></tr>
+<tr><td>Return: shot choice</td><td>Forced to the softest rows</td><td>Opened up</td></tr>
+<tr><td>Return: Reflexes rating</td><td>Never reaches the match</td><td>Felt</td></tr>
+</table></div>
+<h3>Volleys</h3>
+<div class="tw"><table>
+<tr><th>Factor</th><th>Retail</th><th>Plan</th></tr>
+<tr><td>Ball height against the net</td><td>Weak: read by the graphs, but a standard volley has zero error</td><td>Felt: decides the outcome band and caps pace when low</td></tr>
+<tr><td>Reaction time</td><td>AI only</td><td>Felt</td></tr>
+<tr><td>Incoming pace</td><td>Not felt</td><td>Felt</td></tr>
+<tr><td>Ball at the feet, half-volley</td><td>Skills only, one of them inert</td><td>Felt: weak pop-up; Volley rating helps</td></tr>
+<tr><td>Stretching</td><td>Weak: reflex volleys lose power and aim</td><td>Felt: grade</td></tr>
+<tr><td>Your timing</td><td>Felt on placement</td><td>Felt; window varies</td></tr>
+<tr><td>Quality of the approach shot</td><td>Not felt: the passer is never graded</td><td>Felt: through the passer's grade</td></tr>
+<tr><td>Distance from the net</td><td>Felt: aim boxes for centre and side</td><td>Felt: angles against lob exposure</td></tr>
+<tr><td>Touch on the drop volley</td><td>Not tied to the incoming ball</td><td>Felt: dies off a slow ball, pops up off a fast one</td></tr>
+<tr><td>Volley rating</td><td>Weak in the numbers, though players report it matters</td><td>Felt: shifts every outcome band; window</td></tr>
+<tr><td>Being able to move between volleys</td><td>Locked 38 frames, plus a freeze</td><td>Eased at the net</td></tr>
+<tr><td>Fatigue</td><td>Felt</td><td>Felt</td></tr>
+<tr><td>First volley, opponent's position</td><td>Skills only</td><td>Skills only</td></tr>
+</table></div>
+<h3>How much is covered</h3>
+<div class="tw"><table>
+<tr><th>Stroke</th><th>Factors listed</th><th>Properly felt in retail</th><th>Properly felt in the plan</th></tr>
+<tr><td>Groundstrokes</td><td>19</td><td>5</td><td>14</td></tr>
+<tr><td>Serves and returns</td><td>14</td><td>4</td><td>11</td></tr>
+<tr><td>Volleys</td><td>13</td><td>3</td><td>12</td></tr>
+</table></div>
+<p><strong>Still not covered after the plan,</strong> in rough order of how much they matter:</p>
+<ul>
+<li><strong>The opponent's position.</strong> Hitting into the open court or behind a moving player only pays through skills. It could become a base rule with the skills adding to it.</li>
+<li><strong>Score pressure.</strong> Only skills use it, and the Mental rating sits unused. It could narrow windows slightly on break points and set points.</li>
+<li><strong>Second-serve pressure.</strong> The unused flag from the patch could carry it.</li>
+<li><strong>Incoming spin as its own input.</strong> The plan feels it only through where the ball bounces to.</li>
+<li><strong>Player height and reach on serve; wind and sun; sliding on clay.</strong> Not modelled, and probably not worth adding.</li>
+</ul>
+
+<h2 id="balance">Balance: the numbers a match should produce</h2>
+<p>Tuning individual shots is not enough. The test is whether whole matches look like tennis. These are the match-level targets the simulation and later play-testing are held to.</p>
+<div class="tw"><table>
+<tr><th>Match statistic</th><th>Tour, roughly</th><th>Target</th></tr>
+<tr><td>First serves in</td><td>About 62%</td><td>57 to 65% by build</td></tr>
+<tr><td>Points won on first serve</td><td>About 73%</td><td>68 to 78%</td></tr>
+<tr><td>Points won on second serve</td><td>About 52%</td><td>48 to 56%</td></tr>
+<tr><td>Aces per match</td><td>Around 8% of serves; far more for big servers</td><td>4 to 15% by build</td></tr>
+<tr><td>Double faults</td><td>3 to 4%</td><td>3 to 6%</td></tr>
+<tr><td>Points ending within 4 shots</td><td>A clear majority</td><td>55 to 70%</td></tr>
+<tr><td>Net points won</td><td>About two in three</td><td>60 to 70% when the approach was good; under 45% when it was not</td></tr>
+<tr><td>Winners to unforced errors</td><td>Near even</td><td>0.8 to 1.3</td></tr>
+<tr><td>Any archetype against any other</td><td>—</td><td>No matchup worse than 40 to 60</td></tr>
+<tr><td>Min-max build against a balanced build</td><td>—</td><td>Loses more than it wins</td></tr>
+</table></div>
+<p><small>The tour column is from memory apart from the serve figures sourced below; the spec in progress is sourcing each one.</small></p>
+<ul>
+<li><strong>How it is checked.</strong> A point-by-point model plays thousands of matches between seven archetypes and three min-max builds, using the proposed curves. Any build whose results dominate sends its numbers back for adjustment.</li>
+<li><strong>The levers, in order of reach.</strong> Grades and timing windows shape every shot. Speed, clearance and bounce shape how balls arrive. Ratings and skills shape builds. Changes are made at the widest lever that fixes the problem, so a serve issue is not patched with a skill tweak.</li>
+<li><strong>What simulation cannot tell us.</strong> Whether it feels good. That needs hands on a controller, which is why every change can be switched on and off alone.</li>
+</ul>
+
+<h2 id="rollout">Rollout: one change at a time</h2>
+<p>Every item is a separate value or rule. Each is switched on alone, played, and kept or reverted.</p>
+<ol>
+<li><strong>Data only, low risk:</strong> rating curves without the dead zone; timing-rating curves; bounce speed loss; serve speed range and its costs.</li>
+<li><strong>Data, feel:</strong> shot speed ranges and the power payoff; net clearance by shot.</li>
+<li><strong>Small code:</strong> switch on the five grades; feed incoming pace and reaction time to the graphs; stick push as margin; net-rush buffering.</li>
+<li><strong>Larger code:</strong> Tee-off grade and overcharge; put-away reward and clip set; opponent timing grade on your window; per-surface bounce; depth earned by quality.</li>
+<li><strong>Last:</strong> skill costs and counters, tuned against the build simulation. Then, separately, the first-step experiment.</li>
+</ol>
+
+<h3>Open decisions and what is unverified</h3>
+<ul>
+<li><strong>To tune by play:</strong> how much earlier the feet are freed after volleys and approach shots. Starting point: about half of today's 38 frames.</li>
+<li><strong>Being finished now:</strong> exact grade thresholds, timing-window sizes, net-play numbers and the build abuse check. The speed simulation is being re-run with the 110 ceiling.</li>
+<li><strong>Needs the running game:</strong> how often a put-away clip fits in play; whether the fast-ball term really is inert; the pose blend length; whether input is read before or after the simulation step. 24 such checks are written up for when the native build boots.</li>
+<li><strong>Not sourced:</strong> tour net-clearance averages; real speed loss in the air.</li>
+<li><strong>Real forehand peaks:</strong> tracking data tops out near 105 mph; higher figures come from broadcast radar and news reports.</li>
+</ul>
+
+<h2>Sources</h2>
+<ul>
+<li><a href="https://www.atptour.com/en/news/fonseca-infosys-atp-beyond-the-numbers-march-2025">ATP, March 2025</a>: tour average forehand 76 mph and 2,844 rpm.</li>
+<li><a href="https://www.atptour.com/en/news/sinner-2024-insights">ATP, Sinner 2024 insights</a>: 2024 averages, forehand 73 mph and 2,708 rpm, backhand 66 mph and 1,977 rpm.</li>
+<li><a href="https://www.atptour.com/en/news/scorecards-mpetshi-perricard-first-serve-speed">ATP, first-serve speed leaders</a>: 134.4 mph top average.</li>
+<li><a href="https://www.atptour.com/en/news/shelton-serve-indian-wells-2025-saturday">ATP, Indian Wells 2025</a>: Shelton 150 mph.</li>
+<li>Tennis Abstract figures as relayed by search, primary page not opened: top-10 first serve 117.2 mph, second serve 95.8 mph.</li>
+<li><a href="https://intertopspintour.com/forum/viewtopic.php?f=1032&amp;t=14624">InterTopSpinTour forum</a>: skill matchups and the Topspin Invasion and Monster Defense meta.</li>
+<li>Retail figures: this project's decoded templates, graphs, animation data and code notes, with full tables in <code>docs/design/retune-baseline.md</code> and <code>docs/gameplay/</code>.</li>
+</ul>
+</main>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg", tip=document.getElementById("tip");
+function el(p,n,a,t){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;p.appendChild(e);return e}
+function hov(e,txt){e.addEventListener("mousemove",ev=>{tip.hidden=false;tip.textContent=txt;tip.style.left=Math.min(ev.clientX+12,innerWidth-250)+"px";tip.style.top=(ev.clientY+14)+"px"});e.addEventListener("mouseleave",()=>{tip.hidden=true});e.setAttribute("tabindex","0");e.addEventListener("focus",()=>{const r=e.getBoundingClientRect();tip.hidden=false;tip.textContent=txt;tip.style.left=Math.min(r.left,innerWidth-250)+"px";tip.style.top=(r.bottom+6)+"px"});e.addEventListener("blur",()=>{tip.hidden=true})}
+const V=n=>"var(--"+n+")";
+
+(function(){const s=document.getElementById("c1"),L=150,R=620,x=v=>L+(v-60)/(160-60)*(R-L);
+ for(let v=60;v<=160;v+=20){el(s,"line",{x1:x(v),x2:x(v),y1:20,y2:170,stroke:V("rule"),"stroke-width":1});el(s,"text",{x:x(v),y:188,"text-anchor":"middle"},v)}
+ el(s,"text",{x:(L+R)/2,y:206,"text-anchor":"middle"},"mph");
+ const rows=[["First serve",84,122,134,150],["Flat forehand",80,92,76,110],["Topspin forehand",68,80,76,null]];
+ rows.forEach((r,i)=>{const y=45+i*50;el(s,"text",{x:L-10,y:y+4,"text-anchor":"end",class:"lab"},r[0]);
+  const b=el(s,"rect",{x:x(r[1]),y:y-7,width:x(r[2])-x(r[1]),height:14,rx:4,fill:V("s1")});hov(b,r[0]+", retail: "+r[1]+" to "+r[2]+" mph");
+  const a=el(s,"circle",{cx:x(r[3]),cy:y,r:6,fill:V("s2"),stroke:V("surface"),"stroke-width":2});hov(a,r[0]+", tour average: "+r[3]+" mph");
+  if(r[4]){const p=el(s,"rect",{x:x(r[4])-6,y:y-6,width:12,height:12,fill:V("s3"),stroke:V("surface"),"stroke-width":2,transform:"rotate(45 "+x(r[4])+" "+y+")"});hov(p,r[0]+", proposed ceiling: "+r[4]+" mph")}
+ });})();
+
+(function(){const s=document.getElementById("c2"),L=50,R=620,T=15,B=215,xs=[30,40,50,60,70,80,90,100],x=v=>L+(v)/(100)*(R-L),y=v=>B-v*(B-T);
+ for(let v=0;v<=1.001;v+=.25){el(s,"line",{x1:L,x2:R,y1:y(v),y2:y(v),stroke:V("rule"),"stroke-width":1});el(s,"text",{x:L-8,y:y(v)+4,"text-anchor":"end"},v.toFixed(2))}
+ for(let v=0;v<=100;v+=20)el(s,"text",{x:x(v),y:B+18,"text-anchor":"middle"},v);
+ el(s,"text",{x:(L+R)/2,y:B+38,"text-anchor":"middle"},"Rating");
+ const ser=[["Forehand, Backhand","s1",[0,.10,.20,.30,.525,.75,.875,1]],["Power","s2",[0,.15,.30,.40,.50,.65,.833,1]],["Serve, Volley, Speed, Stamina","s3",[0,.10,.20,.40,.60,.80,.90,1]]];
+ ser.forEach(q=>{const pts=[[0,0]].concat(xs.map((v,i)=>[v,q[2][i]]));
+  el(s,"polyline",{points:pts.map(p=>x(p[0])+","+y(p[1])).join(" "),fill:"none",stroke:V(q[1]),"stroke-width":2,"stroke-linejoin":"round"});
+  pts.slice(1).forEach(p=>{const c=el(s,"circle",{cx:x(p[0]),cy:y(p[1]),r:5,fill:V(q[1]),stroke:V("surface"),"stroke-width":2});hov(c,q[0]+" at "+p[0]+": effect "+p[1])})});
+ el(s,"rect",{x:x(0),y:T,width:x(30)-x(0),height:B-T,fill:V("warn"),opacity:.12});
+ el(s,"text",{x:x(15),y:T+16,"text-anchor":"middle",class:"lab"},"no effect below 30");})();
+
+(function(){const s=document.getElementById("c3"),L=50,R=620,T=15,B=195,x=v=>L+(v-100)/(800-100)*(R-L),y=v=>B-v*(B-T);
+ for(let v=0;v<=1.001;v+=.25){el(s,"line",{x1:L,x2:R,y1:y(v),y2:y(v),stroke:V("rule"),"stroke-width":1});el(s,"text",{x:L-8,y:y(v)+4,"text-anchor":"end"},Math.round(v*100)+"%")}
+ for(let v=100;v<=800;v+=100)el(s,"text",{x:x(v),y:B+18,"text-anchor":"middle"},v);
+ el(s,"text",{x:(L+R)/2,y:B+38,"text-anchor":"middle"},"Time to react, ms");
+ const pts=[[100,.7],[250,.7],[400,.83],[600,1],[800,1]];
+ el(s,"polyline",{points:pts.map(p=>x(p[0])+","+y(p[1])).join(" "),fill:"none",stroke:V("s1"),"stroke-width":2,"stroke-linejoin":"round"});
+ pts.forEach(p=>{const c=el(s,"circle",{cx:x(p[0]),cy:y(p[1]),r:5,fill:V("s1"),stroke:V("surface"),"stroke-width":2});hov(c,p[0]+" ms to react: "+Math.round(p[1]*100)+"% of the normal timing window")});
+ el(s,"text",{x:x(700),y:y(1)-8,"text-anchor":"middle",class:"lab"},"rally balls: no penalty");
+ el(s,"text",{x:x(250)+10,y:y(.7)+18,class:"lab"},"volley against a clean pass");})();
+
+(function(){const s=document.getElementById("c4"),L=20,R=620,x=v=>L+(40-v)/40*(R-L),y=40;
+ el(s,"rect",{x:L,y:y-9,width:R-L,height:18,rx:4,fill:V("rule")});
+ const g=el(s,"rect",{x:x(26),y:y-9,width:x(14.4)-x(26),height:18,rx:4,fill:V("s1")});hov(g,"Good window: release between 26 and 14.4 frames before the ball arrives");
+ const p=el(s,"rect",{x:x(20)-3,y:y-14,width:6,height:28,rx:2,fill:V("fg")});hov(p,"Perfect: release 20 frames before the ball arrives");
+ const a=el(s,"rect",{x:x(12)-3,y:y-14,width:6,height:28,rx:2,fill:V("s2")});hov(a,"Auto-commit at 12 frames: holding this long counts as late");
+ [40,30,20,10,0].forEach(v=>el(s,"text",{x:x(v),y:y+34,"text-anchor":"middle"},v));
+ el(s,"text",{x:x(20),y:y-20,"text-anchor":"middle",class:"lab"},"Perfect");
+ el(s,"text",{x:x(12),y:y-20,"text-anchor":"middle",class:"lab"},"Auto");
+ el(s,"text",{x:(L+R)/2,y:y+54,"text-anchor":"middle"},"Frames before the ball arrives (60 per second)");})();
+})();
+</script>

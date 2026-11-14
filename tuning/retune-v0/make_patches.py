@@ -132,11 +132,12 @@ class Group:
         self.notes = []
 
     def set(self, section, rel, value, note=""):
-        self.settings.append((section, rel, float(value), note))
+        self.settings.append((section, rel, float(fmt(round(value, 6))), note))
 
     def curve(self, gi, ni, keys):
         """keys: list of (x0, x1, y0, y1) for the first len(keys) keys of the node."""
-        self.expr.setdefault(gi, {})[ni] = {"keys": {str(k): {"x0": a, "x1": b, "y0": c, "y1": d}
+        r = lambda v: float(fmt(round(v, 6)))
+        self.expr.setdefault(gi, {})[ni] = {"keys": {str(k): {"x0": r(a), "x1": r(b), "y0": r(c), "y1": r(d)}
                                                      for k, (a, b, c, d) in enumerate(keys)}}
 
     def const(self, gi, ni, value):
@@ -194,6 +195,7 @@ EFFICIENCY = ("player", 0xD88)
 DEEPDEV = ("player", 0xD78)
 CF0 = ("player", 0xCF0)          # frames from the opponent's contact to own contact (TimingState #3fe3a099)
 HIT_Y = ("ball", 0x344)          # contact height, cm
+TIMING = ("player", 0x544)       # ManualShotTiming t
 VOLLEY = ("player", 0x65C)
 PF_OUT = ("player", 0x778)
 
@@ -395,7 +397,7 @@ def find_deepdev(g, ins, outs):
         mix.add(prod[n.fields["t"]])
     assert len(mix) == 1
     m = mix.pop()
-    assert g.nodes[m].kind == "CURVE" and len(g.nodes[m].fields["keys"]) == 2
+    assert g.nodes[m].kind == "CURVE" and len(g.nodes[m].fields["keys"]) in (2, 3)
     return bad, good, m
 
 
@@ -424,9 +426,10 @@ def g_aim(d, ports):
             G.curve(gi, ni, [DEEP_GOOD])
             G.table.append(("%s depth pull, top quality" % cls, "Expressions graph %d node %d" % (gi, ni),
                             fkeys(keys_of(g, ni)), fkeys([DEEP_GOOD]), "spec 7b (Perfect: 0-40 cm)"))
-        G.curve(gi, mix, DEEP_MIX)
+        mk = (DEEP_MIX + [(0.85, 1.0, 1.0, 1.0)])[:len(g.nodes[mix].fields["keys"])]
+        G.curve(gi, mix, mk)
         G.table.append(("%s quality -> depth branch" % cls, "Expressions graph %d node %d" % (gi, mix),
-                        fkeys(keys_of(g, mix)), fkeys(DEEP_MIX), "judgement (fit to spec 7b bands)"))
+                        fkeys(keys_of(g, mix)), fkeys(mk), "judgement (fit to spec 7b bands)"))
     G.notes += ["Applied to the Medium and Powerful groundstroke classes (graphs 202-207), the strokes of almost "
                 "every rally. Finesse (188-190), returns (224-229) and the risk classes have other graph shapes "
                 "and are unchanged in v0.",
@@ -461,8 +464,92 @@ def g_volleys(d, ports):
     return G
 
 
+VOLLEY_CF0_KEYS = (25.0, 50.0)       # spec 4g volley arrival scale: 25 / 36 / 50 frames since the opponent's contact
+VOLLEY_RUSHED_EXTRA = -0.15          # judgement: extra penalty on the little-time branch
+VOLLEY_HEIGHT_GAIN = 1.6             # judgement: low-contact penalties x1.6 (below the net the ball must be lifted)
+VOLLEY_BAD_AIM_GAIN = 0.5           # judgement: aim quality of a volley from a bad situation x0.5 (spec 8b bands 3-4: 0.40 / 0.20)
+VOLLEY_DEEP_GOOD = (0.0, 1.0, 80.0, 0.0)                          # spec 8b band 1: 40 cm mean
+VOLLEY_DEEP_BAD = [(0.0, 0.5, 500.0, 400.0), (0.5, 1.0, 400.0, 300.0)]   # spec 8b bands 3-4: 320-480 cm
+VOLLEY_DEEP_MIX = [(0.0, 0.45, 0.0, 0.0), (0.45, 0.85, 0.0, 1.0)]    # judgement: band 2 (comfortable) about 120-130 cm
+
+
 def volley_edits(G, d, ports):
-    pass
+    """Spec 8 (volley quality bands) with the inputs the volley graphs already read: frames to contact (S+0xCF0),
+    contact height (Ball+0x344) and the Volley rating.  The good end stays retail (Good row); the hard end gets a
+    slower, higher, shorter, less placed ball.  Standard and power volleys (graphs 264/265 power, 230/231 aim)."""
+    for gi, cls in list(VOLLEY_PF.items()) + list(VOLLEY_AIM.items()):
+        g = d.graphs[gi]
+        ins, outs = ports.inputs(g), ports.outputs(g)
+        prod = producers(g)
+        kind = "power" if gi in VOLLEY_PF else "aim"
+        cf0 = [i for i, n in enumerate(g.nodes) if n.kind == "CURVE" and ins.get(n.fields["in"]) == CF0]
+        assert len(cf0) == 1, (gi, cf0)
+        ni = cf0[0]
+        (x0, x1, y0, y1), = keys_of(g, ni)
+        new = [(VOLLEY_CF0_KEYS[0], VOLLEY_CF0_KEYS[1], y0, y1)]
+        G.curve(gi, ni, new)
+        G.table.append(("%s %s: time to contact ramp" % (cls, kind), "Expressions graph %d node %d" % (gi, ni),
+                        fkeys(keys_of(g, ni)), fkeys(new), "spec 4g volley arrival edges"))
+        out_cf0 = g.nodes[ni].fields["out"]
+        lerps = [n for n in g.nodes if n.kind == "LERP" and n.fields["t"] == out_cf0]
+        assert len(lerps) == 1, gi
+        rushed = prod[lerps[0].fields["a"]]
+        assert g.nodes[rushed].kind == "CURVE" and len(g.nodes[rushed].fields["keys"]) == 1
+        (a0, a1, b0, b1), = keys_of(g, rushed)
+        new = [(a0, a1, b0 + VOLLEY_RUSHED_EXTRA, b1 + VOLLEY_RUSHED_EXTRA)]
+        G.curve(gi, rushed, new)
+        G.table.append(("%s %s: little-time penalty" % (cls, kind), "Expressions graph %d node %d" % (gi, rushed),
+                        fkeys(keys_of(g, rushed)), fkeys(new), "judgement (%.2f)" % VOLLEY_RUSHED_EXTRA))
+        for ni, n in enumerate(g.nodes):
+            if n.kind != "CURVE" or ins.get(n.fields["in"]) != HIT_Y:
+                continue
+            old = keys_of(g, ni)
+            if not any(k[2] < 0 or k[3] < 0 for k in old):
+                continue
+            new = [(k[0], k[1], k[2] * VOLLEY_HEIGHT_GAIN if k[2] < 0 else k[2],
+                    k[3] * VOLLEY_HEIGHT_GAIN if k[3] < 0 else k[3]) for k in old]
+            G.curve(gi, ni, new)
+            G.table.append(("%s %s: low-contact penalty" % (cls, kind), "Expressions graph %d node %d" % (gi, ni),
+                            fkeys(old), fkeys(new), "judgement (x%.1f)" % VOLLEY_HEIGHT_GAIN))
+        if kind == "aim":
+            for n in g.nodes:
+                if n.kind != "LERP" or n.fields["t"] not in prod or g.nodes[prod[n.fields["t"]]].kind != "CURVE":
+                    continue
+                a, b = prod.get(n.fields["a"]), prod.get(n.fields["b"])
+                if a is None or b is None or any(g.nodes[x].kind != "CURVE" or ins.get(g.nodes[x].fields["in"]) != TIMING
+                                                 for x in (a, b)):
+                    continue
+                old = keys_of(g, a)
+                new = [(k[0], k[1], k[2] * VOLLEY_BAD_AIM_GAIN, k[3] * VOLLEY_BAD_AIM_GAIN) for k in old]
+                G.curve(gi, a, new)
+                G.table.append(("%s aim quality from a bad situation (vs timing)" % cls, "Expressions graph %d node %d" % (gi, a),
+                                fkeys(old), fkeys(new), "judgement (x%.1f; spec 8b bands 3-4)" % VOLLEY_BAD_AIM_GAIN))
+            top = g.nodes[prod[outs[DEEPDEV]]]
+            assert top.kind == "PRODUCT" and len(top.fields["slots"]) == 2
+            lerp_r, const_r = top.fields["slots"]
+            cn = prod[const_r]
+            assert g.nodes[cn].kind == "CONST" and g.nodes[cn].fields["value"] == 0.0
+            G.const(gi, cn, 1.0)
+            G.table.append(("%s depth pull switched on" % cls, "Expressions graph %d node %d" % (gi, cn), "0", "1",
+                            "spec 8b (DeepDeviation per band; retail multiplies it by 0)"))
+            ln = g.nodes[prod[lerp_r]]
+            assert ln.kind == "LERP"
+            bad, good, mix = prod[ln.fields["a"]], prod[ln.fields["b"]], prod[ln.fields["t"]]
+            assert ins.get(g.nodes[bad].fields["in"]) == RANDOM and ins.get(g.nodes[good].fields["in"]) == RANDOM
+            for ni, new, src in ((bad, VOLLEY_DEEP_BAD, "spec 8b bands 3-4"), (good, [VOLLEY_DEEP_GOOD], "spec 8b band 1"),
+                                 (mix, VOLLEY_DEEP_MIX, "judgement (band 2 about 1.2 m)")):
+                assert len(g.nodes[ni].fields["keys"]) == len(new), (gi, ni)
+                G.curve(gi, ni, new)
+                G.table.append(("%s depth pull" % cls, "Expressions graph %d node %d" % (gi, ni), fkeys(keys_of(g, ni)),
+                                fkeys(new), src))
+    G.notes += ["Approximation: the spec's four bands are chosen by the volley grade (code). Here the existing "
+                "situation inputs of the volley graphs stand in for it, so only the weak end is reshaped: the "
+                "comfortable, high volley keeps its retail pace (bands 1-2 faster than retail need the grade rows).",
+                "No volley error is added (retail has none, and the spec's overreach error needs the incoming pace, "
+                "S+0x770, which is never written).",
+                "Slice and drop volleys (graphs 232/233, 266/267) are unchanged in v0.",
+                "The Volley rating already lerps between the weak and strong curves of these graphs; with the ratings "
+                "group the Volley stat spreads more, so the rating matters more without a separate edit."]
 
 
 BUILDERS = {"ratings": g_ratings, "timing": g_timing, "bounce_flight": g_bounce, "speeds_power": g_speeds,
@@ -482,6 +569,22 @@ def expr_patch_json(G, copy):
         key = "%08x" % g.name if counts[g.name] == 1 else "#%d" % gi
         out[key] = {str(ni): G.expr[gi][ni] for ni in sorted(G.expr[gi])}
     return out
+
+
+def dump_patch(p):
+    """One line per node, so the file reads as a list of edits."""
+    lines = ["{"]
+    gks = sorted(p)
+    for gi, gk in enumerate(gks):
+        lines.append('  "%s": {' % gk)
+        nks = sorted(p[gk], key=int)
+        for ni, nk in enumerate(nks):
+            lines.append('    "%s": %s%s' % (nk, json.dumps(p[gk][nk], sort_keys=True), "," if ni + 1 < len(nks) else ""))
+        lines.append("  }" + ("," if gi + 1 < len(gks) else ""))
+    lines.append("}")
+    text = "\n".join(lines) + "\n"
+    assert json.loads(text) == p
+    return text
 
 
 def same_graph(a, b):
@@ -604,7 +707,7 @@ def build(check=False):
                 if not same_graph(disc.graphs[gi], tu.graphs[gi]):
                     raise SystemExit("group %s touches graph %d, which differs in TU1: needs a TU1 patch" % (name, gi))
             rel = "%s/expressions.json" % name
-            files[rel] = json.dumps(expr_patch_json(G, disc), indent=1, sort_keys=True) + "\n"
+            files[rel] = dump_patch(expr_patch_json(G, disc))
             entry["expressions"] = {"disc": rel, "tu1": rel}
             written.append("expressions.json")
         files["%s/README.md" % name] = readme(G, written)
