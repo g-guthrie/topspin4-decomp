@@ -5588,3 +5588,103 @@ src/loader/l8_crt_fwrite_nolock_833E7AE0.c:
 src/loader/l8_png_combine_row_83454890.c:
 	.pdata      start:0x83099698 end:0x830996A0
 	.text       start:0x83454890 end:0x83454AF0
+
+src/loader/l1b_v_830A04B0.c:
+	.pdata      start:0x83089E30 end:0x83089E38
+	.pdata      start:0x83089FB8 end:0x83089FC0
+	.pdata      start:0x8308A5C0 end:0x8308A5C8
+	.pdata      start:0x8308AEB0 end:0x8308AEB8
+	.pdata      start:0x8308B050 end:0x8308B058
+	.pdata      start:0x8308B478 end:0x8308B480
+	.pdata      start:0x8308BB00 end:0x8308BB08
+	.pdata      start:0x8308C9D0 end:0x8308C9D8
+	.text       start:0x830A04B0 end:0x830A0520
+	.text       start:0x830A1FA8 end:0x830A2028
+	.text       start:0x830AF238 end:0x830AF2B0
+	.text       start:0x830CAB88 end:0x830CABE0
+	.text       start:0x830CF2B8 end:0x830CF340
+	.text       start:0x830DD8B0 end:0x830DD900
+	.text       start:0x830FD2F8 end:0x830FD350
+	.text       start:0x83111610 end:0x831116A8
+
+src/loader/l1b_v_o1_830AAC58.c:
+	.pdata      start:0x8308A450 end:0x8308A460
+	.pdata      start:0x8308AE58 end:0x8308AE90
+	.pdata      start:0x8308B5D0 end:0x8308B5D8
+	.pdata      start:0x8308B998 end:0x8308B9A0
+	.pdata      start:0x8308B9E0 end:0x8308B9F0
+	.text       start:0x830AAC58 end:0x830AAD78
+	.text       start:0x830C9E70 end:0x830CA260
+	.text       start:0x830E1020 end:0x830E10B0
+	.text       start:0x830FA330 end:0x830FA380
+	.text       start:0x830FAE30 end:0x830FAEE8
+
+src/loader/l5_flush_pending_830B6730.c:
+	.pdata      start:0x8308A750 end:0x8308A758
+	.pdata      start:0x8308A770 end:0x8308A778
+	.text       start:0x830B6730 end:0x830B6990
+	.text       start:0x830B7008 end:0x830B7268
+
+src/loader/l5_select_kth_831D7ED8.c:
+	.pdata      start:0x83091830 end:0x83091840
+	.text       start:0x831D7ED8 end:0x831D83C8
+
+src/loader/l5_zlib_deflatefast_83168390.c:
+	.pdata      start:0x8308F700 end:0x8308F708
+	.text       start:0x83168390 end:0x831687A8
+
+src/loader/l5_zlib_deflateinit2_83168F00.c:
+	.pdata      start:0x8308F720 end:0x8308F728
+	.text       start:0x83168F00 end:0x831691C8
+
+src/loader/l5_zlib_deflateslow_831687A8.c:
+	.pdata      start:0x8308F708 end:0x8308F710
+	.text       start:0x831687A8 end:0x83168CD0
+
+src/loader/l5_zlib_inflatefast_8316DC60.c:
+	.pdata      start:0x8308F818 end:0x8308F820
+	.text       start:0x8316DC60 end:0x8316E090
+
+src/loader/l6_pixel_format_8327EF18.c:
+	.pdata      start:0x83093E18 end:0x83093E20
+	.text       start:0x8327EF18 end:0x8327F178
+
+src/loader/l7_blit_planes_83318EA8.c:
+	.pdata      start:0x830951B0 end:0x830951B8
+	.text       start:0x83318EA8 end:0x83319118
+
+src/loader/l7_decode_blocks_8331BFD8.c:
+	.pdata      start:0x83095230 end:0x83095238
+	.text       start:0x8331BFD8 end:0x8331C258
+
+src/loader/l8_crt_fgetwc_nolock_833FB560.c:
+	.pdata      start:0x83097898 end:0x830978A0
+	.text       start:0x833FB560 end:0x833FB7D4
+
+src/loader/l8_crt_strtoxl_833F1488.c:
+	.pdata      start:0x830974E8 end:0x830974F0
+	.text       start:0x833F1488 end:0x833F1760
+
+src/loader/l8_crt_strtoxq_833F1780.c:
+	.pdata      start:0x830974F0 end:0x830974F8
+	.text       start:0x833F1780 end:0x833F1A40
+
+src/loader/l8_crt_wcstombs_833FBC80.c:
+	.pdata      start:0x830978C8 end:0x830978D0
+	.text       start:0x833FBC80 end:0x833FBF50
+
+src/loader/l8_jpeg_get_sof_83441048.c:
+	.pdata      start:0x830990F8 end:0x83099100
+	.text       start:0x83441048 end:0x83441498
+
+src/loader/l8_jpeg_get_sos_83441498.c:
+	.pdata      start:0x83099100 end:0x83099108
+	.text       start:0x83441498 end:0x83441850
+
+src/loader/l8_png_do_read_interlace_83454AF0.c:
+	.pdata      start:0x830996A0 end:0x830996A8
+	.text       start:0x83454AF0 end:0x83454E30
+
+src/loader/l8_png_handle_ihdr_834553C8.c:
+	.pdata      start:0x830996C8 end:0x830996D0
+	.text       start:0x834553C8 end:0x83455690

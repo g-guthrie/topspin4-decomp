@@ -8164,6 +8164,184 @@
       "symbols": {
         "ts4l_png_combine_row_83454890": 604
       }
+    },
+    {
+      "source": "src/loader/l1b_v_830A04B0.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_if_atomic_interlocked_dec_830A04B0": 108,
+        "ts4l_if_call_seq_u32_off8_830A1FA8": 128,
+        "ts4l_if_get_KeGetCurrentProcessType_830AF238": 120,
+        "ts4l_if_call_seq_u32_offc_830CAB88": 88,
+        "ts4l_if_call_seq_u32_off8_830CF2B8": 132,
+        "ts4l_if_call_seq_u32_off38_830DD8B0": 76,
+        "ts4l_loop_call_seq_u32_off0_830FD2F8": 88,
+        "ts4l_if_call_seq_fn_830FFB68_83111610": 148
+      }
+    },
+    {
+      "source": "src/loader/l1b_v_o1_830AAC58.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_if_get_u32__imp_KeCertMonitorData_830AAC58": 152,
+        "ts4l_if_get_u32__imp_KeCertMonitorData_830AACF0": 132,
+        "ts4l_if_call_seq_u32_off8_830C9E70": 140,
+        "ts4l_if_call_seq_u32_off8_830C9F00": 140,
+        "ts4l_if_call_seq_u32_off8_830C9F90": 140,
+        "ts4l_if_call_seq_u32_off8_830CA020": 140,
+        "ts4l_if_call_seq_u32_off8_830CA0B0": 140,
+        "ts4l_if_call_seq_u32_off8_830CA140": 140,
+        "ts4l_if_call_seq_u32_off8_830CA1D0": 140,
+        "ts4l_if_call_seq_u32_off8_830E1020": 140,
+        "ts4l_if_call_seq_fn_830FCCD0_830FA330": 80,
+        "ts4l_if_get_u32_offc_830FAE30": 96,
+        "ts4l_if_get_u32_offc_830FAE90": 88
+      }
+    },
+    {
+      "source": "src/loader/l5_flush_pending_830B6730.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_flush_pending_830B6730": 604,
+        "ts4l_flush_pending_830B7008": 604
+      }
+    },
+    {
+      "source": "src/loader/l5_select_kth_831D7ED8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_select_kth_831D7ED8": 628,
+        "ts4l_select_kth_831D8150": 628
+      }
+    },
+    {
+      "source": "src/loader/l5_zlib_deflatefast_83168390.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_deflate_fast_83168390": 1044
+      }
+    },
+    {
+      "source": "src/loader/l5_zlib_deflateinit2_83168F00.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_deflate_init2_83168F00": 708
+      }
+    },
+    {
+      "source": "src/loader/l5_zlib_deflateslow_831687A8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_deflate_slow_831687A8": 1320
+      }
+    },
+    {
+      "source": "src/loader/l5_zlib_inflatefast_8316DC60.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_inflate_fast_8316DC60": 1072
+      }
+    },
+    {
+      "source": "src/loader/l6_pixel_format_8327EF18.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_query_pixel_format_8327EF18": 604
+      }
+    },
+    {
+      "source": "src/loader/l7_blit_planes_83318EA8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_blit_planes_83318EA8": 624
+      }
+    },
+    {
+      "source": "src/loader/l7_decode_blocks_8331BFD8.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_decode_blocks_8331BFD8": 640
+      }
+    },
+    {
+      "source": "src/loader/l8_crt_fgetwc_nolock_833FB560.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_fgetwc_nolock_833FB560": 628
+      }
+    },
+    {
+      "source": "src/loader/l8_crt_strtoxl_833F1488.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_strtoxl_833F1488": 728
+      }
+    },
+    {
+      "source": "src/loader/l8_crt_strtoxq_833F1780.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_strtoxq_833F1780": 700
+      }
+    },
+    {
+      "source": "src/loader/l8_crt_wcstombs_833FBC80.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_wcstombs_833FBC80": 716
+      }
+    },
+    {
+      "source": "src/loader/l8_jpeg_get_sof_83441048.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_get_sof_83441048": 1104
+      }
+    },
+    {
+      "source": "src/loader/l8_jpeg_get_sos_83441498.c",
+      "flags": [],
+      "symbols": {
+        "ts4l_jpeg_get_sos_83441498": 948
+      }
+    },
+    {
+      "source": "src/loader/l8_png_do_read_interlace_83454AF0.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_png_do_read_interlace_83454AF0": 828
+      }
+    },
+    {
+      "source": "src/loader/l8_png_handle_ihdr_834553C8.c",
+      "flags": [
+        "/O1"
+      ],
+      "symbols": {
+        "ts4l_png_handle_ihdr_834553C8": 708
+      }
     }
   ]
 }
