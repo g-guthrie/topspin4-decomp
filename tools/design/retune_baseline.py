@@ -92,9 +92,10 @@ F = {
     "be5d458f": ("player", 0x768), "random_dev": ("player", 0xD7C), "aim3c6b": ("player", 0xD84),
     "trailing": ("player", 0xF88), "flammable": ("player", 0xF94), "ace1253a": ("player", 0xF84),
     "slices": ("player", 0xF8C), "topspins": ("player", 0xF90), "b6b22409": ("player", 0xF80),
-    "wrongfoot": ("player", 0x7EC), "first_volley": None,
+    "wrongfoot": ("player", 0x7EC),
     "frames_to_contact": ("player", 0xCF0), "depth_diff": ("player", 0xCF4),
-    "isB": ("team", 0x50), "f089f55c": ("player", 0x558),
+    "isB": ("team", 0x50), "f089f55c": ("player", 0x550), "ff9a119d": ("player", 0x558),
+    "serve_target": ("player", 0x840),
 }
 
 STATS = ["serve", "return", "forehand", "backhand", "volley", "power", "speed", "stamina"]
@@ -494,3 +495,519 @@ def pro_ratings():
         if m and code and code in out:
             out[code]["skills"] = [s.strip() for s in m.group(1).split(",") if s.strip()]
     return out
+
+
+# --------------------------------------------------------------------------- scenarios
+
+# rating levels (rating 30..100; DefaultAttributes maps them to 0..1): the floor, the median and the
+# 90th percentile of the 715 rated pros (coaches_career.yaml pro_players), and the cap
+LEVELS = ("min", "median", "p90", "max")
+
+# groundstroke rows of the decision tree (shot-to-template.md s3): (label, row, class, charge used)
+GROUND = [
+    ("Flat Finesse", 2, "FlatFinesse", 0.10), ("Flat Medium", 6, "FlatMedium", 0.50),
+    ("Flat Powerful", 10, "FlatPower", 0.85),
+    ("TopSpin Finesse", 0, "TopSpinFinesse", 0.10), ("TopSpin Medium", 4, "TopSpinMedium", 0.50),
+    ("TopSpin Powerful", 8, "TopSpinPower", 0.85),
+    ("Slice Finesse", 1, "SliceFinesse", 0.10), ("Slice Medium", 5, "SliceMedium", 0.50),
+    ("Slice Powerful", 9, "SlicePower", 0.85),
+]
+OTHER = [   # (label, row, class, charge, scenario, hand stat)
+    ("Lob Finesse", 3, "Lob", 0.10, "lob", "forehand"), ("Lob Medium", 7, "Lob", 0.50, "lob", "forehand"),
+    ("Lob Powerful", 11, "Lob", 0.85, "lob", "forehand"),
+    ("Drop shot (Slice+Risk)", 32, "DropShot", 0.50, "drop", "forehand"),
+    ("Smash", 33, "Smash", 0.50, "smash", "forehand"),
+    ("Volley TopSpin = PowerVolley", 16, "VolleyPower", 0.50, "volley", "volley"),
+    ("Volley Flat/Lob = FlatVolley", 19, "VolleyStandard", 0.50, "volley", "volley"),
+    ("Volley Slice = SliceVolley", 17, "VolleySlice", 0.50, "volley", "volley"),
+    ("Drop volley (Slice+Risk)", 18, "VolleyDrop", 0.50, "volley", "volley"),
+    ("Return Flat (any tier)", 10, "ReturnFlatFinesse", 0.85, "return", "return"),
+    ("Return TopSpin (any tier)", 8, "ReturnTopSpinFinesse", 0.85, "return", "return"),
+    ("Return Slice (any tier)", 9, "ReturnSliceFinesse", 0.85, "return", "return"),
+]
+SERVES = [  # (label, row, class, hold, timing)
+    ("Kick Finesse", 22, "ServeSpinFinesse"), ("Kick Medium", 20, "ServeSpinMedium"),
+    ("Kick Powerful", 21, "ServeSpinPowerful"),
+    ("Slice Finesse", 25, "ServeSpinFinesse"), ("Slice Medium", 23, "ServeSpinMedium"),
+    ("Slice Powerful", 24, "ServeSpinPowerful"),
+    ("Flat Finesse", 28, "ServeFlatFinesse"), ("Flat Medium", 26, "ServeFlatMedium"),
+    ("Flat Powerful", 27, "ServeFlatPowerful"),
+    ("Advanced kick", 29, "AdvancedServe"), ("Advanced slice", 30, "AdvancedServe"),
+    ("Advanced flat", 31, "AdvancedServe"),
+]
+SERVE_HOLD = {"Finesse": 0.05, "Medium": 0.5, "Powerful": 0.9, "Advanced": 0.9}
+
+
+def serve_tier(label):
+    return "Advanced" if label.startswith("Advanced") else label.split()[-1]
+
+
+class Ctx:
+    def __init__(self, inp):
+        self.inp = inp
+        self.env = GraphEnv(inp)
+        self.tpl = Templates(inp)
+        self.sd = shotdef_rows()
+        self.pros = pro_ratings()
+        self.level_rating = {}
+        for st in STATS:
+            v = sorted(p[st] for p in self.pros.values())
+            self.level_rating[st] = {"min": 30, "median": v[len(v) // 2], "p90": v[int(0.9 * len(v))], "max": 100}
+
+    def stats(self, level, override=None):
+        d = {st: rating_to_stat(self.env, st, self.level_rating[st][level]) for st in STATS}
+        d.update(override or {})
+        return d
+
+    def base(self, row, level="median", hand="forehand", charge=0.5, timing=0.0, scen="ground_cc", extra=None):
+        st = self.stats(level)
+        frm, to = SCEN[scen]
+        sd = self.sd.get(row, {})
+        b = dict(timing=timing, vigor=1.0, charge=charge, hit_x=float(frm[0]), hit_y=float(frm[1]),
+                 hit_z=float(frm[2]), opp_x=1200.0, opp_z=0.0, is_human=1.0,
+                 err_min=sd.get("err_min", 0.0), err_max=sd.get("err_max", 1.0),
+                 pow_min=sd.get("pow_min", 0.0), pow_max=sd.get("pow_max", 1.0))
+        b.update(st)
+        b["hand"] = st[hand]
+        b.update(extra or {})
+        return b
+
+    def pf(self, cls, scen_dict):
+        """PowerfulFactor after the class power graph (and graph 198, a clamp to 0..1) and the spin blend."""
+        pg = CLASSES[cls][3]
+        r = self.env.evaluate(pg, scen_dict)
+        pf = r.get(F["charge"] if False else ("player", 0x778), 0.0)
+        pf = self.env.evaluate(198, {("player", 0x778): pf}).get(("player", 0x778), pf) if cls in (
+            "SliceFinesse", "TopSpinFinesse", "FlatFinesse", "SliceMedium", "TopSpinMedium", "FlatMedium",
+            "SlicePower", "TopSpinPower", "FlatPower") else min(max(pf, 0.0), 1.0)
+        if ("player", 0x774) in r:      # serve power graphs also write the spin blend
+            blend = r[("player", 0x774)]
+        else:
+            sg = SPIN_GRAPH_TOPSPIN if cls.startswith(("TopSpin", "ReturnTopSpin")) else SPIN_GRAPH_OTHER
+            blend = self.env.evaluate(sg, {("player", 0x778): pf}).get(("player", 0x774), 0.0)
+        return pf, blend
+
+    def p_error(self, cls, scen_dict):
+        _, net, fault, _ = CLASSES[cls]
+        p = self.env.evaluate(fault, scen_dict).get(("player", 0x718), 0.0) or 0.0
+        n = self.env.evaluate(net, scen_dict).get(("player", 0x720), 0.0) or 0.0
+        return min(max(p, 0.0), 1.0), n
+
+    def aim(self, cls, scen_dict):
+        ag = CLASSES[cls][0]
+        r = self.env.evaluate(ag, scen_dict)
+        return r.get(("player", 0xD88)), r.get(("player", 0xD78))
+
+    def aim_mean(self, cls, scen_dict, n=20):
+        """Efficiency and DeepDeviation averaged over the uniform Random input (DeviationSystem.Random)."""
+        effs, devs = [], []
+        for i in range(n):
+            s = dict(scen_dict)
+            s["random_dev"] = (i + 0.5) / n
+            e, d = self.aim(cls, s)
+            effs.append(e or 0.0)
+            devs.append(d or 0.0)
+        return sum(effs) / n, sum(devs) / n, max(devs)
+
+
+def kmh(x):
+    return "-" if x is None else "%.0f (%.0f)" % (x, L.kmh_to_mph(x))
+
+
+# --------------------------------------------------------------------------- section 1: speeds
+
+def sec_speeds(c):
+    out = ["### 1a. Template targets at PowerfulFactor = 1 (the fastest each row can go)", "",
+           "Launch, first-bounce (in and out) and receiver-baseline speeds, km/h (mph), spin blend 0.5. "
+           "Computed from the model (ball_model.py, ramp curves, a4 = 0.06, net 91.4 cm).", ""]
+    rows = []
+    for label, idx, cls, ch in GROUND:
+        for sc in ("ground_short", "ground_cc", "ground_dtl", "ground_max"):
+            d = c.tpl.fly(idx, *SCEN[sc], pf=1.0, blend=0.5)
+            rows.append((label, idx, sc, "%.1f" % d["dist_m"], kmh(d["launch_kmh"]), kmh(d["bounce_in_kmh"]),
+                         kmh(d["bounce_out_kmh"]), kmh(d["baseline_kmh"]), "%.2f" % d["tau"]))
+    for label, idx, cls, ch, sc, hand in OTHER:
+        d = c.tpl.fly(idx, *SCEN[sc], pf=1.0, blend=0.5)
+        rows.append((label, idx, sc, "%.1f" % d["dist_m"], kmh(d["launch_kmh"]), kmh(d["bounce_in_kmh"]),
+                     kmh(d["bounce_out_kmh"]), kmh(d["baseline_kmh"]), "%.2f" % d["tau"]))
+    for label, idx, cls in SERVES:
+        for sc in ("serve_T", "serve_wide"):
+            d = c.tpl.fly(idx, *SCEN[sc], pf=1.0, blend=0.5)
+            rows.append(("Serve " + label, idx, sc, "%.1f" % d["dist_m"], kmh(d["launch_kmh"]),
+                         kmh(d["bounce_in_kmh"]), kmh(d["bounce_out_kmh"]), kmh(d["baseline_kmh"]),
+                         "%.2f" % d["tau"]))
+    out.append(L.md_table(["shot", "row", "scenario", "dist m", "launch", "bounce in", "bounce out",
+                           "at baseline", "flight s"], rows))
+
+    out += ["", "### 1b. Groundstrokes by stats (perfect timing, fresh, baseline contact at 1.0 m, opponent on the baseline)", "",
+            "PowerfulFactor (PF) from the class power graph, spin blend from graph 241/242, flight on scenario "
+            "ground_cc. Charge: Finesse 0.10, Medium 0.50, Powerful 0.85 (64 frames held). Forehand stat used as "
+            "HandAttributeQuality; a backhand with the same Backhand rating gives the same numbers (same rows and "
+            "graphs). Rating levels: " + ", ".join("%s %s" % (lv, "/".join(str(c.level_rating[s][lv]) for s in
+                                                                     ("forehand", "power"))) for lv in LEVELS)
+            + " (Forehand/Power ratings).", ""]
+    rows = []
+    for label, idx, cls, ch in GROUND:
+        cells = [label]
+        for lv in LEVELS:
+            b = c.base(idx, lv, charge=ch)
+            pf, bl = c.pf(cls, b)
+            d = c.tpl.fly(idx, *SCEN["ground_cc"], pf=pf, blend=bl)
+            cells.append("PF %.2f: %s / %s" % (pf, kmh(d["launch_kmh"]), kmh(d["baseline_kmh"])))
+        rows.append(cells)
+    out.append(L.md_table(["shot (launch / at baseline km/h (mph))"] + list(LEVELS), rows))
+
+    out += ["", "### 1c. Other shots by stats (perfect timing)", ""]
+    rows = []
+    for label, idx, cls, ch, sc, hand in OTHER:
+        cells = [label + " [" + sc + "]"]
+        for lv in LEVELS:
+            b = c.base(idx, lv, hand=hand, charge=ch, scen=sc)
+            pf, bl = c.pf(cls, b)
+            d = c.tpl.fly(idx, *SCEN[sc], pf=pf, blend=bl)
+            cells.append("PF %.2f: %s / %s" % (pf, kmh(d["launch_kmh"]), kmh(d["baseline_kmh"])))
+        rows.append(cells)
+    out.append(L.md_table(["shot (launch / at baseline)"] + list(LEVELS), rows))
+
+    out += ["", "### 1d. Serves by stats (perfect gauge timing 0, fresh, hold by tier)", "",
+            "Serve power graphs 255 (Finesse, Medium), 256 (Powerful), 257 (Advanced) read Serve, Power, the "
+            "toss hold fraction (255) or the gauge timing (256/257). Hold fraction: Finesse 0.05, Medium 0.5, "
+            "Powerful/Advanced 0.9. Scenario serve_T.", ""]
+    rows = []
+    for label, idx, cls in SERVES:
+        tier = serve_tier(label)
+        cells = [label]
+        for lv in LEVELS:
+            b = c.base(idx, lv, hand="serve", scen="serve_T",
+                       extra={"serve_hold": SERVE_HOLD[tier], "serve_timing": 0.0})
+            pf, bl = c.pf(cls, b)
+            d = c.tpl.fly(idx, *SCEN["serve_T"], pf=pf, blend=bl)
+            cells.append("PF %.2f: %s / %s" % (pf, kmh(d["launch_kmh"]), kmh(d["baseline_kmh"])))
+        rows.append(cells)
+    out.append(L.md_table(["serve (launch / at baseline)"] + list(LEVELS), rows))
+
+    # timing effect on speed
+    out += ["", "### 1e. Timing and charge against speed (Flat Powerful / TopSpin Medium, median stats)", ""]
+    rows = []
+    for t in (-0.6, -0.3, -0.1, 0.0, 0.1, 0.3, 0.6):
+        cells = ["%+.1f" % t]
+        for label, idx, cls, ch in (GROUND[2], GROUND[4], GROUND[0]):
+            b = c.base(idx, "median", charge=ch, timing=t)
+            pf, bl = c.pf(cls, b)
+            d = c.tpl.fly(idx, *SCEN["ground_cc"], pf=pf, blend=bl)
+            cells.append("PF %.2f %s" % (pf, kmh(d["launch_kmh"])))
+        rows.append(cells)
+    out.append(L.md_table(["timing t", "Flat Powerful", "TopSpin Medium", "Flat Finesse"], rows))
+    rows = []
+    for ch in (0.7, 0.8, 0.9, 0.99, 1.0):
+        b = c.base(10, "median", charge=ch)
+        pf, bl = c.pf("FlatPower", b)
+        d = c.tpl.fly(10, *SCEN["ground_cc"], pf=pf, blend=bl)
+        rows.append(("%.2f (%d frames)" % (ch, round(ch * 75)), "%.3f" % pf, kmh(d["launch_kmh"])))
+    out += ["", L.md_table(["Flat Powerful charge", "PF", "launch"], rows)]
+
+    # fastest build search
+    out += ["", "### 1f. Fastest shots the retail game can produce", ""]
+    out.append(fastest(c))
+    return "\n".join(out)
+
+
+def fastest(c):
+    """Search PF over stats = 100, every skill owned, and a grid of the situational inputs the power
+    graphs read, for the forehand rows and the serves; then fly the best PF on the longest legal line."""
+    import itertools
+    skills = ["skill:" + s for s in ("PowerfulShotCounter", "InsideOutMaster", "CrushingPassingShot",
+                                     "ApproachShotsExpert", "InstantRocket", "ReachSwingsExpert",
+                                     "SemiVolleyKing", "FocusService")]
+    rows = []
+    best_any = {}
+    for label, idx, cls, ch in GROUND[2::3] + [GROUND[1], GROUND[5]]:
+        best = (-1, None)
+        for t, io, ox, fat, chg, hy in itertools.product((-0.1, 0.0, 0.1), (0.0, 1.0), (300.0, 1200.0),
+                                                      (0.0, 1.0), (ch, 1.0), (80.0, 100.0, 120.0)):
+            b = c.base(idx, "max", charge=chg, timing=t, extra={"inside_out": io, "opp_x": ox, "hit_y": hy,
+                                                                 "link:SwingCategory/Fatality": fat})
+            for sk in skills:
+                b[sk] = 1.0
+            pf, bl = c.pf(cls, b)
+            if pf > best[0]:
+                best = (pf, (t, io, ox, fat, chg, hy), bl)
+        b0 = c.base(idx, "max", charge=ch)
+        pf0, bl0 = c.pf(cls, b0)
+        d0 = c.tpl.fly(idx, *SCEN["ground_max"], pf=pf0, blend=bl0)
+        d = c.tpl.fly(idx, *SCEN["ground_max"], pf=best[0], blend=best[2])
+        rows.append((label, "%.3f" % pf0, kmh(d0["launch_kmh"]), "%.3f" % best[0],
+                     "t=%+.1f io=%g opp_x=%g fatality=%g charge=%g hit_y=%g" % best[1], kmh(d["launch_kmh"]),
+                     kmh(d["bounce_in_kmh"]), kmh(d["baseline_kmh"])))
+    for label, idx, cls in SERVES[8::3] + [SERVES[2], SERVES[5]]:
+        best = (-1, None)
+        for t, hold, tr in itertools.product((-0.2, -0.1, 0.0, 0.1, 0.2), (0.8, 0.9, 1.0), (0.0, 1.0)):
+            b = c.base(idx, "max", hand="serve", scen="serve_T",
+                       extra={"serve_timing": t, "serve_hold": hold, "trailing": tr})
+            for sk in skills:
+                b[sk] = 1.0
+            pf, bl = c.pf(cls, b)
+            if pf > best[0]:
+                best = (pf, (t, hold, tr), bl)
+        b0 = c.base(idx, "max", hand="serve", scen="serve_T", extra={"serve_timing": 0.0, "serve_hold": 0.9})
+        pf0, bl0 = c.pf(cls, b0)
+        d0 = c.tpl.fly(idx, *SCEN["serve_T"], pf=pf0, blend=bl0)
+        d = c.tpl.fly(idx, *SCEN["serve_T"], pf=best[0], blend=best[2])
+        rows.append(("Serve " + label, "%.3f" % pf0, kmh(d0["launch_kmh"]), "%.3f" % best[0],
+                     "gauge t=%+.1f hold=%g trailing=%g" % best[1], kmh(d["launch_kmh"]),
+                     kmh(d["bounce_in_kmh"]), kmh(d["baseline_kmh"])))
+    return L.md_table(["shot", "PF all stats 100", "launch", "best PF (all skills)", "conditions",
+                       "launch", "bounce in", "at baseline"], rows)
+
+
+# --------------------------------------------------------------------------- section 2: trajectory shape
+
+# FlatNormal aiming config, stick straight up (deep), hitter at (-1188, -50): efficiency -> aimed depth (cm)
+# (aiming.md s4 worked example, computed with tools/ts4data/aim_tables.py; data/gameplay/aim_tables.yaml)
+AIM_DEPTH = [(0.0, 737.0), (0.5, 903.0), (0.8, 1074.0), (1.0, 1188.0)]
+
+
+def aim_depth(eff):
+    pts = AIM_DEPTH
+    eff = min(max(eff, 0.0), 1.0)
+    for (e0, d0), (e1, d1) in zip(pts, pts[1:]):
+        if eff <= e1:
+            return d0 + (d1 - d0) * (eff - e0) / (e1 - e0)
+    return pts[-1][1]
+
+
+def landing_depths(c, cls, b, n=12):
+    """Deep-aimed In shot: Efficiency and DeepDeviation from the class aiming graph (DeviationSystem.Random
+    uniform), FinalEfficiency from graph 196 (AimingState.Random uniform), aimed depth from AIM_DEPTH,
+    landing depth = aimed depth - DeepDeviation (clamped to x >= 75).  Returns the sorted depths (cm)."""
+    out = []
+    for i in range(n):
+        s = dict(b)
+        s["random_dev"] = (i + 0.5) / n
+        eff, dev = c.aim(cls, s)
+        for j in range(n):
+            s2 = dict(s)
+            s2[("player", 0xD88)] = eff or 0.0
+            s2[("player", 0xDA4)] = (j + 0.5) / n
+            fe = c.env.evaluate(196, s2).get(("player", 0xDA8), 0.0)
+            out.append(max(aim_depth(fe) - (dev or 0.0), 75.0))
+    out.sort()
+    return out
+
+
+def pct(v, q):
+    return v[min(len(v) - 1, int(q * len(v)))]
+
+
+def sec_shape(c):
+    out = ["### 2a. Flight shape by row and landing depth (median stats, perfect timing)", "",
+           "Hitter at the baseline (x = -1188, contact 1.0 m), target on the cross-court line at depth x (cm past "
+           "the net). PF and spin blend from the class graphs. Net clearance = ball centre above the 91.4 cm tape "
+           "(centre height - 0.914 m); bounce height = top of the arc after the first bounce. Computed from the model.", ""]
+    rows = []
+    for label, idx, cls, ch in GROUND:
+        b = c.base(idx, "median", charge=ch)
+        pf, bl = c.pf(cls, b)
+        for depth in (700, 900, 1100):
+            d = c.tpl.fly(idx, (-1188, 100, 150), (depth, 0, -250), pf=pf, blend=bl)
+            rows.append((label, "%.2f/%.2f" % (pf, bl), depth, "%.2f" % d["net_clear_m"], "%.2f" % d["apex_m"],
+                         "%.1f" % d["in_deg"], "%.1f" % d["out_deg"], "%.2f" % d["bounce_apex_m"],
+                         kmh(d["bounce_in_kmh"]), kmh(d["bounce_out_kmh"]),
+                         "%.2f" % (d["bounce_out_kmh"] / d["bounce_in_kmh"])))
+    out.append(L.md_table(["shot", "PF/blend", "depth cm", "net clear m", "apex m", "in deg", "out deg",
+                           "bounce height m", "bounce in", "bounce out", "out/in"], rows))
+    out += ["", "Other shots (median stats):", ""]
+    rows = []
+    for label, idx, cls, ch, sc, hand in OTHER:
+        b = c.base(idx, "median", hand=hand, charge=ch, scen=sc)
+        pf, bl = c.pf(cls, b)
+        d = c.tpl.fly(idx, *SCEN[sc], pf=pf, blend=bl)
+        rows.append((label, sc, "%.2f/%.2f" % (pf, bl), "%.2f" % d["net_clear_m"], "%.2f" % d["apex_m"],
+                     "%.2f" % d["bounce_apex_m"], kmh(d["bounce_in_kmh"]), kmh(d["bounce_out_kmh"])))
+    for label, idx, cls in SERVES[1::3] + SERVES[2::3]:
+        b = c.base(idx, "median", hand="serve", scen="serve_T", extra={"serve_hold": SERVE_HOLD[serve_tier(label)]})
+        pf, bl = c.pf(cls, b)
+        d = c.tpl.fly(idx, *SCEN["serve_T"], pf=pf, blend=bl)
+        rows.append(("Serve " + label, "serve_T", "%.2f/%.2f" % (pf, bl), "%.2f" % d["net_clear_m"],
+                     "%.2f" % d["apex_m"], "%.2f" % d["bounce_apex_m"], kmh(d["bounce_in_kmh"]),
+                     kmh(d["bounce_out_kmh"])))
+    out.append(L.md_table(["shot", "scenario", "PF/blend", "net clear m", "apex m", "bounce height m",
+                           "bounce in", "bounce out"], rows))
+
+    out += ["", "### 2b. Landing depth of a deep-aimed In groundstroke (cm past the net; baseline = 1188)", "",
+            "Distribution over the two uniform random inputs (aiming graph DeviationSystem.Random and graph 196 "
+            "AimingState.Random), 144 samples each; aim depth from the FlatNormal config (stick up). Computed from the model.", ""]
+    rows = []
+    for label, idx, cls, ch in GROUND:
+        for lv in ("min", "median", "max"):
+            for t in (0.0, 0.3):
+                b = c.base(idx, lv, charge=ch, timing=t)
+                v = landing_depths(c, cls, b)
+                within = sum(1 for x in v if x >= 1188 - 300) / len(v)
+                rows.append((label, lv, "%+.1f" % t, "%.0f" % pct(v, 0.1), "%.0f" % pct(v, 0.5),
+                             "%.0f" % pct(v, 0.9), "%.0f%%" % (100 * within)))
+    out.append(L.md_table(["shot", "stats", "timing", "p10", "median", "p90", "share within 3 m of baseline"], rows))
+
+    out += ["", "### 2c. What the spin parameters do (TopSpin Powerful, Slice Powerful, Flat Powerful; ground_cc, PF 1)", "",
+            "spin_a is a constant vertical acceleration (negative = dips); its extra downward pull is "
+            "-spin_a / a4 m/s^2 (a4 = 0.06). Same landing point for every blend, so spin changes the launch angle, "
+            "apex, net clearance and bounce, not where the ball lands. Computed from the model.", ""]
+    rows = []
+    for label, idx in (("TopSpin Powerful", 8), ("Flat Powerful", 10), ("Slice Powerful", 9), ("Serve kick", 21),
+                       ("Serve slice", 24), ("Serve flat", 27)):
+        sc = "serve_T" if label.startswith("Serve") else "ground_cc"
+        for bl in (0.0, 0.5, 1.0):
+            d = c.tpl.fly(idx, *SCEN[sc], pf=1.0, blend=bl)
+            rows.append((label, "%.1f" % bl, "%.3f" % d["spin_a"], "%.2f" % (-d["spin_a"] / 0.06),
+                         "%.3f" % d["spin_b"], "%.2f" % d["net_clear_m"], "%.2f" % d["apex_m"],
+                         "%.1f" % d["launch_deg"], "%.1f" % d["in_deg"], "%.1f" % d["out_deg"],
+                         "%.2f" % (d["bounce_out_kmh"] / d["bounce_in_kmh"]), "%.2f" % d["bounce_apex_m"],
+                         "%.2f" % (1 - d["decay"])))
+    out.append(L.md_table(["shot", "blend", "spin_a", "extra down m/s2", "spin_b (side)", "net clear m",
+                           "apex m", "launch deg", "in deg", "out deg", "speed out/in", "bounce height m",
+                           "spin kept"], rows))
+    rows = []
+    for cls in ("FlatPower", "TopSpinMedium", "SlicePower", "FlatFinesse"):
+        sg = SPIN_GRAPH_TOPSPIN if cls.startswith("TopSpin") else SPIN_GRAPH_OTHER
+        rows.append([cls] + ["%.2f" % c.env.evaluate(sg, {("player", 0x778): pf}).get(("player", 0x774), 0.0)
+                             for pf in (0.0, 0.3, 0.5, 0.7, 0.8, 0.9, 1.0)])
+    out += ["", "Spin blend as a function of PowerfulFactor (graphs 241 / 242):", "",
+            L.md_table(["class", "PF 0", "0.3", "0.5", "0.7", "0.8", "0.9", "1.0"], rows)]
+    return "\n".join(out)
+
+
+# --------------------------------------------------------------------------- section 3: timing
+
+# inputs that the gameplay notes found constant or never written in retail (OPEN 1.10, graphs-decoded s6.9,
+# timing-and-fatigue s1, OPEN 1.10 for S+0xD84)
+INERT = {
+    ("player", 0x770): "never written (OPEN 1.10): stays 0 -> fast-ball and wood ramps inert",
+    ("player", 0x768): "never written (OPEN 1.10): stays 0",
+    ("player", 0x7D8): "never written (OPEN 1.10): stays 1000 -> every half-volley term sits at its x=1000 end",
+    ("player", 0xD84): "set to 0.0 by fn_886612E0 and nothing else (OPEN 1.10)",
+    ("player", 0x558): "ShotContext.#ff9a119d: no writer documented (State image 0)",
+    ("player", 0x550): "ShotContext.#f089f55c: AI serve fault value; a human reads the (IsHuman) branch",
+    ("team", 0x50): "TeamState.IncomingBall.IsB: writer not documented",
+    ("player", 0x7CC): "SlowDown: writer not documented in the notes",
+}
+
+
+def invert_timing(curve, t):
+    """Frames-to-ball f at which the timing curve gives t (curves fall monotonically from +1 at 10 f)."""
+    lo, hi = 0.0, 60.0
+    for _ in range(60):
+        mid = 0.5 * (lo + hi)
+        if L.ramp_eval(curve, mid) > t:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
+def sec_timing(c):
+    tc = timing_curves()
+    base_c = tc["/SwingTimingSelectionList/Baseline/5ae85f27/848c2a13"]
+    vol_c = tc["/SwingTimingSelectionList/Volley/5ae85f27/848c2a13"]
+    srv_c = tc["/SwingTimingSelectionList/Serve/Animation[0]/Timing"]
+    same = (tc["/SwingTimingSelectionList/Baseline/5ae85f27/848c2a13"] ==
+            tc["/SwingTimingSelectionList/Baseline/5ae85f27/BestAbility"] and
+            tc["/SwingTimingSelectionList/Volley/5ae85f27/848c2a13"] ==
+            tc["/SwingTimingSelectionList/Volley/5ae85f27/BestAbility"])
+    out = ["### 3a. Timing value against frames from commit (release) to ball arrival", "",
+           "Read from data (02_PlayerSettings.yaml SwingTimingSelectionList; serve: Animation[0] = default serve "
+           "animation 2ce33943, the other 14 serve animations are shifted by 0..12 frames). Worst-ability and "
+           "best-ability curves identical: %s (so stats do not change the window)." % same, ""]
+    rows = []
+    for t in (1.0, 0.6, 0.45, 0.3, 0.1, 0.0, -0.1, -0.3, -0.45, -0.6, -1.0):
+        fb, fv, fs = (invert_timing(cv, t) for cv in (base_c, vol_c, srv_c))
+        rows.append(("%+.2f" % t, "%.1f f = %.0f ms" % (fb, L.frames_to_ms(fb)),
+                     "%.1f f = %.0f ms" % (fv, L.frames_to_ms(fv)), "%.1f f = %.0f ms" % (fs, L.frames_to_ms(fs))))
+    out.append(L.md_table(["t (+ late)", "groundstroke / return", "volley", "serve (release before contact)"], rows))
+    out += ["", "Window widths (frames between the two t values, both sides):", ""]
+    rows = []
+    for w in (0.1, 0.3, 0.6):
+        rows.append(("|t| < %.1f" % w,) + tuple(
+            "%.1f f = %.0f ms" % (invert_timing(cv, -w) - invert_timing(cv, w),
+                                  L.frames_to_ms(invert_timing(cv, -w) - invert_timing(cv, w)))
+            for cv in (base_c, vol_c, srv_c)))
+    out.append(L.md_table(["window", "groundstroke", "volley", "serve"], rows))
+
+    out += ["", "### 3b. What timing gives and costs (median stats, fresh, baseline contact 1.0 m, no skills)", "",
+            "P(error) = clamp01(FaultProbability) of the class fault graph; PF -> launch speed on ground_cc; "
+            "aim efficiency = class aiming graph Efficiency averaged over its Random input, DeepDeviation mean. "
+            "Computed from the model.", ""]
+    rows = []
+    for t in (-1.0, -0.6, -0.45, -0.3, -0.1, 0.0, 0.1, 0.3, 0.45, 0.6, 1.0):
+        cells = ["%+.2f" % t, "%.0f" % invert_timing(base_c, t)]
+        for label, idx, cls, ch in (GROUND[2], GROUND[4], GROUND[6]):
+            b = c.base(idx, "median", charge=ch, timing=t)
+            p, n = c.p_error(cls, b)
+            pf, bl = c.pf(cls, b)
+            d = c.tpl.fly(idx, *SCEN["ground_cc"], pf=pf, blend=bl)
+            e, dev, _ = c.aim_mean(cls, b)
+            cells.append("err %.2f, %.0f km/h, eff %.2f, dev %.0f" % (p, d["launch_kmh"], e, dev))
+        for cls, idx, sc, hand in (("VolleyStandard", 19, "volley", "volley"), ("DropShot", 32, "drop", "forehand")):
+            b = c.base(idx, "median", hand=hand, charge=0.5, timing=t, scen=sc)
+            p, n = c.p_error(cls, b)
+            cells.append("err %.2f" % p)
+        rows.append(cells)
+    out.append(L.md_table(["t", "frames", "Flat Powerful", "TopSpin Medium", "Slice Finesse", "Volley std",
+                           "Drop shot"], rows))
+
+    out += ["", "### 3c. Error against timing for every reachable class (median stats; P(error) at t)", ""]
+    rows = []
+    allc = [(g[2], g[1], g[3], "ground_cc", "forehand") for g in GROUND] + \
+           [(o[2], o[1], o[3], o[4], o[5]) for o in OTHER]
+    ts = (-1.0, -0.6, -0.45, -0.3, 0.0, 0.3, 0.45, 0.6, 1.0)
+    for cls, idx, ch, sc, hand in allc:
+        cells = [cls]
+        for t in ts:
+            b = c.base(idx, "median", hand=hand, charge=ch, timing=t, scen=sc)
+            cells.append("%.2f" % c.p_error(cls, b)[0])
+        rows.append(cells)
+    out.append(L.md_table(["class"] + ["%+.2f" % t for t in ts], rows))
+
+    out += ["", "### 3d. Every input of the timing, fault and net graphs, and its retail status", ""]
+    keys = {}
+    for cls, (ag, ng, fg, pg) in CLASSES.items():
+        for gi in (ng, fg):
+            for key, dflt, name in c.env.input_names(gi):
+                keys.setdefault(key, [name, set()])[1].add(gi)
+    for gi in (41, 42, 40, 178):
+        for key, dflt, name in c.env.input_names(gi):
+            keys.setdefault(key, [name, set()])[1].add(gi)
+    rows = []
+    for key, (name, gs) in sorted(keys.items(), key=lambda kv: str(kv[0])):
+        status = INERT.get(key, "live" if not (isinstance(key, str) and key.startswith("skill:")) else "skill (0/1)")
+        rows.append((name if isinstance(name, str) else str(name), len(gs), status))
+    out.append(L.md_table(["input", "graphs reading it", "status in retail"], rows))
+    out.append("\nTimingAbility (graphs 40-42) is computed but has no effect: the worst/best timing curves "
+               "are identical (read from data above). S+0x564, the additive error term, is always 0 "
+               "(graphs-decoded s6.9).")
+    return "\n".join(out)
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--work", default=ROOT, help="repository root that holds work/ and orig/ (default: this repo)")
+    ap.add_argument("--tu", action="store_true", help="use the Title Update #1 data files")
+    ap.add_argument("sections", nargs="+")
+    a = ap.parse_args(argv)
+    inp = Inputs(a.work, a.tu)
+    c = Ctx(inp)
+    secs = SECTIONS if a.sections == ["all"] else a.sections
+    for s in secs:
+        print(globals()["sec_" + s](c))
+        print()
+
+
+SECTIONS = ["inputs", "speeds", "shape", "timing"]
+
+
+def sec_inputs(c):
+    return "### Inputs (%s)\n\n%s\n\nPython %s; analyser kernels tools/ts4_analyser.py; ball model tools/ts4data/ball_model.py." % (
+        "Title Update #1" if c.inp.tu else "retail disc", c.inp.provenance(), sys.version.split()[0])
+
+
+if __name__ == "__main__":
+    main()

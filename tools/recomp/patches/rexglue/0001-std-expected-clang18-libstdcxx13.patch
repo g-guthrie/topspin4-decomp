@@ -1,0 +1,47 @@
+diff --git a/include/rex/result.h b/include/rex/result.h
+index 8e9f2ed..ee15f16 100644
+--- a/include/rex/result.h
++++ b/include/rex/result.h
+@@ -11,7 +11,7 @@
+ 
+ #pragma once
+ 
+-#include <expected>
++#include <rex/std_expected.h>
+ #include <string>
+ #include <utility>
+ 
+diff --git a/include/rex/std_expected.h b/include/rex/std_expected.h
+new file mode 100644
+index 0000000..2623d9d
+--- /dev/null
++++ b/include/rex/std_expected.h
+@@ -0,0 +1,15 @@
++// RC2 local patch: libstdc++ 13 hides std::expected unless __cpp_concepts >= 202002L, which
++// clang 18 does not define (clang 19 does). clang 18 compiles the implementation fine.
++#pragma once
++#if defined(__clang__) && defined(__GLIBCXX__) && __cpp_concepts < 202002L
++#pragma clang diagnostic push
++#pragma clang diagnostic ignored "-Wbuiltin-macro-redefined"
++#pragma push_macro("__cpp_concepts")
++#undef __cpp_concepts
++#define __cpp_concepts 202002L
++#include <expected>
++#pragma pop_macro("__cpp_concepts")
++#pragma clang diagnostic pop
++#else
++#include <expected>
++#endif
+diff --git a/include/rex/system/map_parser.h b/include/rex/system/map_parser.h
+index 732b2f1..da48c5b 100644
+--- a/include/rex/system/map_parser.h
++++ b/include/rex/system/map_parser.h
+@@ -12,7 +12,7 @@
+ #pragma once
+ 
+ #include <cstdint>
+-#include <expected>
++#include <rex/std_expected.h>
+ #include <filesystem>
+ #include <string>
+ #include <string_view>
