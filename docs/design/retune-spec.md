@@ -1,6 +1,6 @@
 # Retune specification (Q1)
 
-Status: proposal, checked by simulation. It changes no game data. Builds on [retune-baseline.md](retune-baseline.md), which measured retail; the section numbers there are cited as "baseline 1b" and so on. The structure of the grade, the timing window, the charge and the put-away follows [retune-systems.md](retune-systems.md), the design authority. This spec tunes that note's numbers and lists every change in 4f and 6.
+Status: proposal, checked by simulation. It changes no game data. Builds on [retune-baseline.md](retune-baseline.md), which measured retail; the section numbers there are cited as "baseline 1b" and so on. The structure of the grade, the timing window, the charge and the put-away follows [retune-systems.md](retune-systems.md), the design authority. This spec tunes that note's numbers and lists every change in 4g and 6.
 
 Every number carries one tag:
 - *(computed)*: produced by the scripts below, reproducible.
@@ -221,7 +221,7 @@ P(in) = 0.70 + 0.12 (Serve - 0.5) - 0.012 (v - comfort) + gauge term - 0.50 floo
 stamina = 1 + 3 effort^2
 ```
 
-- **The fault chance is new** (game proposal, labelled code change). Retail human serve fault graphs 307-311 are deterministic: a step function of the gauge window and an aim value. The proposal adds a random roll, as the AI branch already has, with P(in) from the formula above. At comfort effort with a Good gauge, P(in) is 73% at Serve 80 and 76% at Serve 100 (up to 80% with a Perfect gauge). Over a match's mix of efforts the averages are 58-64% (section 2d), so the best first-serve percentages land near the owner's 70-75% only for players who serve at comfort. The Serve-rating floor term is a data edit on the graphs' Serve input.
+- **The fault chance is new** (game proposal, labelled code change). Retail human serve fault graphs 307-311 are deterministic: a step function of the gauge window and an aim value. The proposal adds a random roll, as the AI branch already has, with P(in) from the formula above. At comfort effort with a Good gauge, P(in) is 73% at Serve 80 and 76% at Serve 100 (up to 80% with a Perfect gauge). Over a match's mix of efforts the averages are 57-63% (section 2d), so the best first-serve percentages land near the owner's 70-75% only for players who serve at comfort. The Serve-rating floor term is a data edit on the graphs' Serve input.
 - **Second serve.** comfort - 24 mph, P(in) 0.93. Players with high Serve and Stamina get a "big second serve" of up to +10 mph, at -0.6 pp of P(in) per mph.
 - **Return time.** 500 ms × (200 km/h / v)^0.9, anchored on O'Donoghue & Liddle *(sourced anchor)*.
 - **Effort.** Each first serve's effort is drawn from Beta(2, 3) (mean 0.4). The specialist also chooses maximum effort on 4% of first serves.
@@ -247,11 +247,11 @@ Effort against speed, first-serve-in probability and stamina cost (pace speciali
 | 1.0 | 151.9 | 0.347 | 4.00 | 417.4 |
 
 Reading:
-- There is no ceiling near 120 mph. The specialist averages 128 mph (the fastest real server averages 134 *(sourced)*) and passes 148 mph about 3.6 times per match, all from maximum-effort serves.
+- There is no ceiling near 120 mph. The specialist averages 128 mph (the fastest real server averages 134 *(sourced)*) and passes 148 mph about 3.4 times per match, all from maximum-effort serves.
 - At maximum effort the specialist pays: P(in) falls to 35%, and each serve costs 4 times the stamina of a comfort serve.
-- First serve in is 58-64% (tour about 62%). Unreturned first serves are 25-32% (tour: aces 16% + unreturned 22% of first serves).
+- First serve in is 57-63% (tour about 62%). Unreturned first serves are 27-29% against an average-pro returner (tour: aces 16% + unreturned 22% of first serves).
 - Second serves average 74-100 mph, 26-32 mph below first serves (tour 17-19 mph *(sourced)*). The average pro's gap is too large; this is a calibration point.
-- Double faults: elite 3.9% *(computed)* against the top-50's 3.4% *(sourced)*; average pro 5.0%.
+- Double faults: elite 3.9% *(computed)* against the top-50's 3.4% *(sourced)*; average pro 5.1%.
 
 ---
 
@@ -371,7 +371,7 @@ Speeds km/h (launch also mph). `*` = proposed copy of that retail row (fields in
 
 ## 4. Set-up grade
 
-Structure: docs/design/retune-systems.md section 2, which is the design authority for this section. This spec tunes its thresholds and table values with the shot and rally models; each changed number is listed in 4f.
+Structure: docs/design/retune-systems.md section 2, which is the design authority for this section. This spec tunes its thresholds and table values with the shot and rally models; each changed number is listed in 4g.
 
 Every shot answers two questions, kept apart:
 - How good was the situation? The **grade**, one of six rows, decided at the swing's commit.
@@ -380,7 +380,7 @@ Every shot answers two questions, kept apart:
 The grade is a penalty score summed from four inputs the engine already computes, then mapped to a row:
 - **arrival margin**: frames planted at the hit point before contact. For volleys it is frames since the opponent's contact, on a volley scale;
 - **contact height** at the hit point the planner chose;
-- **incoming pace** at contact: S+0x770, which needs its writer (code, with the re-keying in 4e);
+- **incoming pace** at contact: S+0x770, which needs its writer (code, with the re-keying in 4f);
 - **self-inflicted**: a rushed power swing, and vigor under 0.3.
 
 Retail selects only Good (S+0x3B4 / 0x3B8, OPEN 1.9). The score is computed in `fn_886629C8`, where the row is chosen today (code). Tee-off is the VeryGood row times a code multiplier, because ShotResolution has five rows at fixed offsets.
@@ -481,7 +481,7 @@ Reading *(computed)*:
   - The depth limit and the let-drop rule move this by only a few points (16-25% at 30%, within sampling noise of about ±0.04).
   - Model limit: the model has no court geometry in which a deep moonball drives the receiver 3-4 m back. Letting it drop costs only 1.2 cm per cm of drop (about 35 cm for a 175 cm bounce). On clay, a real moonball works partly through that geometry, so play has to judge it.
 
-### 4e. Writing the incoming pace (S+0x770): re-key the dormant curves
+### 4f. Writing the incoming pace (S+0x770): re-key the dormant curves
 
 Writing S+0x770 wakes two retail terms that are dormant today (TUNING s12, OPEN 1.10):
 - the fault graphs' fast-ball penalty: a ramp from 40 to 60 km/h, reaching -0.6 on control;
@@ -496,7 +496,7 @@ Nearly every rally ball is over 60 km/h at contact, so both must be re-keyed in 
 
 At these keys no groundstroke in the section 2 situation mix is touched: under 0.1% arrive above 100 km/h. A first serve of 120 mph arrives at about 120 km/h.
 
-### 4f. Numbers this spec set or changed in the systems note's tables
+### 4g. Numbers this spec set or changed in the systems note's tables
 
 | item | systems note | this spec | why |
 |---|---|---|---|
@@ -574,7 +574,7 @@ The opponent's last release multiplies W for that one shot. It is its own input,
 | 1.5 | 0.80 / 0.90 / 1.00 / 1.22 / 1.40 | 7.39 | 0.110 | 0.639 | 0.068 | 0.437 | 0.473 | 0.546 | 0.109 | 0.086 |
 | 2.0 | 0.80 / 0.86 / 1.00 / 1.30 / 1.40 | 7.34 | 0.109 | 0.635 | 0.069 | 0.437 | 0.465 | 0.575 | 0.109 | 0.084 |
 
-Scale 1.0 is the owner's starting sizes (Perfect x0.85, Good x0.93, Average x1.00, Poor x1.15, Mistimed x1.30); ball ease x this term floored at 0.60 of the normal window; 'after opp. Good' pools the opponent's Good and Average releases.
+Scale 1.0 is the owner's starting sizes (Perfect x0.85, Good x0.93, Average x1.00, Poor x1.15, Mistimed x1.30); W clamped to 0.60-1.75; 'after opp. Good' pools the opponent's Good and Average releases.
 
 Recommendation *(computed, then judgement)*: keep the owner's sizes (Perfect 0.85, Good 0.93, Average 1.00, Poor 1.15, Mistimed 1.30) inside the W clamp of 0.60-1.75.
 - **Rally length:** against no term, it shortens rallies by 1.6% (7.64 to 7.52 shots per point, elite mirror).
@@ -978,9 +978,35 @@ Reading:
   - pace error 0.006 -> 0.003 per mph, because the retail Good rows already carry the pace;
   - situation base error 0.05 on every groundstroke (new), to keep rally length near the earlier model once the retail zero-error band removed most timing errors.
 
-PENDING
+### 9c. Robustness: field share of the six styles when one rule moves by +-20 % *(computed, 80 matches per pair)*
 
-PENDING
+| rule | change | best style (field share) | worst style | beats every other |
+|---|---|---|---|---|
+| pace error per mph | x0.8 | big server 0.61 | flat hitter 0.38 | none |
+| pace error per mph | x1.2 | big server 0.64 | flat hitter 0.37 | none |
+| slice drop | x0.8 | big server 0.64 | slicer 0.43 | big server |
+| slice drop | x1.2 | big server 0.61 | flat hitter 0.35 | big server |
+| Speed stat run value | x0.8 | big server 0.63 | slicer 0.45 | none |
+| Speed stat run value | x1.2 | big server 0.67 | flat hitter 0.30 | big server |
+| power-swing vigor cost | x0.8 | big server 0.62 | flat hitter 0.42 | big server |
+| power-swing vigor cost | x1.2 | big server 0.62 | flat hitter 0.31 | big server |
+| pass error vs net player | x0.8 | big server 0.70 | flat hitter 0.35 | big server |
+| pass error vs net player | x1.2 | big server 0.65 | flat hitter 0.40 | big server |
+| topspin kick per hand | x0.8 | big server 0.67 | flat hitter 0.38 | big server |
+| topspin kick per hand | x1.2 | big server 0.60 | flat hitter 0.36 | big server |
+| floor error | x0.8 | big server 0.61 | flat hitter 0.38 | big server |
+| floor error | x1.2 | big server 0.63 | flat hitter 0.35 | big server |
+| base situation error | x0.8 | big server 0.65 | flat hitter 0.29 | none |
+| base situation error | x1.2 | big server 0.62 | flat hitter 0.39 | big server |
+
+Reading *(computed)*:
+- **The balance is fragile, and the big server is the style to watch.** In 12 of 16 single-rule variants the big server beats every other style (field share 0.60-0.70). The flat hitter is the weakest in 14 of 16 (0.29-0.42).
+- **The nominal abuse check (9b, 160 matches, another seed) has no dominant build,** but the big server loses only to the counterpuncher, and only narrowly (0.49). That makes "no build beats every other" a borderline pass, not a margin.
+- **Cause, as far as the model shows it:** under the systems note's score, a fast first serve leaves the returner a Bad or VeryBad row (pace 2 points, plus 2-4 for the arrival). That costs him W_grade 0.85-0.90 and adds 0.08-0.15 error.
+  - Removing that added error from returns moves the lead to the counterpuncher (0.65) and drops the flat hitter to 0.29.
+  - Gentler return arrival points made the big server stronger, not weaker (0.63-0.66).
+  - So no single return knob fixes it in the model.
+- **Proposal:** do not tune further in the simulator. Its server points won (48-58%) are already below the tour's 62-64%, so the absolute serve strength is not trustworthy here. Settle the return rows (return arrival points, error added on returns, W_grade on returns) in play, and re-run 9b and 9c after each step.
 
 The design property to keep, and to re-measure after every change, is "no build beats every other build". The robustness table's last column checks it.
 
@@ -1083,7 +1109,7 @@ Serve tails are kept, so serve-and-volley changes only through the buffered rush
 | 4 | Movement, agreed: buffered rush without sprint requirement, freeze lifted at the net, volley / approach tails 38 / 36 / 29 -> 19 / 18 / 15 | 10 | `fn_8869B928` cond. 7 and sprint check, `fn_8866F740` (code); earlier locomotion exit (code) or TE[1].Position (data) | both | G9 |
 | 4b | Put-away selection: existing low and backhand clips admitted, corridor block removed | 8, 10 | Fatality condition `0xC78C8F06` (code); clip selection rule (data or code) | both | G8 |
 | 5 | DeepDeviation by timing | 7b | aiming graphs' DeepDeviation branch (or the `b3a1d456` pair if it is that range) | data | 9 |
-| 6 | Incoming pace writer S+0x770, with the fast-ball and frame-shot curves re-keyed (100-130 and 110-150 km/h); frames since bounce S+0x7D8 | 4, 4e | shot / receiver update (code); fault graphs and graphs 280-282 (data) | both, in one change | none |
+| 6 | Incoming pace writer S+0x770, with the fast-ball and frame-shot curves re-keyed (100-130 and 110-150 km/h); frames since bounce S+0x7D8 | 4, 4f | shot / receiver update (code); fault graphs and graphs 280-282 (data) | both, in one change | none |
 | 7 | Grade score and row selection; Tee-off = VeryGood row x code multiplier | 4 | `fn_886629C8`, keys S+0x3B4 / 0x3B8 | code | 6 |
 | 8 | Row values: pace caps, aim caps, error added (Good row unchanged) | 4b | PowerResolution, AimingResolution, ErrorResolution rows of each ShotDef; the graphs already pick the position from t | data once 7 exists | 7 |
 | 9 | Window scale W, applied by dividing t | 5 | `fn_8867DF68` (code); grade must be known before the commit (to confirm) | code | 7, 10 |
