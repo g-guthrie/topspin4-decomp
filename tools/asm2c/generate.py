@@ -7,7 +7,7 @@
 For consumers that do not need byte-identical code (the "equivalent" tier, static
 recompilation): every fn_* placeholder in .text that is not in match.json, inside the
 survey groups asked for (tools/decomp_survey.py RANGES; default game + open-source libs),
-is translated with one variant (see run.py translate_all), written in files of --chunk
+is translated with one variant (default 10: r3 is returned wherever it was written; see run.py translate_all), written in files of --chunk
 functions and compiled with the real compiler (/O2 /Oi plus --flags).  Functions that
 fail to compile are dropped from their file and recorded.  Nothing is written outside
 --out.
@@ -41,7 +41,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--max-size', type=lambda x: int(x, 0), default=0x4000)
-    ap.add_argument('--variant', default='10w')
+    ap.add_argument('--variant', default='10', help='run.py variant; the default keeps r3 return values (w would make every function void)')
     ap.add_argument('--groups', default='game,lib', help='survey groups: game, lib, sdk')
     ap.add_argument('--flags', default='', help="'' or a run.py flag set name (O1, Oc, O1Oc)")
     ap.add_argument('--chunk', type=int, default=150)

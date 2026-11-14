@@ -147,4 +147,45 @@ same file, not a translator change.
 
 ## 5. Next limiting factors
 
-NEXT
+1. **Statement and register shape, not frames or codegen mode.** With the frame fixed, the
+   structure fixed (loop-exit join) and LTCG ruled out, the near misses that remain differ in
+   statement order (a load scheduled before the compare instead of after), CSE'd addresses
+   that MSVC keeps in one callee-saved register, and loop induction (index vs pointer). Each
+   needs a source shape that the symbolic executor does not produce: it reads every value at
+   its first use, while the original wrote expressions at their natural place. The perm.py
+   transforms address single instances. A systematic fix would generate statement order from the
+   original's instruction order (a scheduling-aware emitter), not from the executor's
+   order.
+2. **Inlined helpers.** Many mid-size functions are C++ with small inline helpers (iterators,
+   `vector::size`, save/restore of a flag around a loop, 8-byte handle structs copied with
+   `ld`/`std`). asm2c flattens these into word arithmetic, which changes register lifetimes and
+   adds stack temporaries. 44 of the 119 frame mismatches in the sample copy 8-byte structs
+   through the stack.
+3. **Tie order of same-size locals** (21 of 119 frame mismatches): it follows use counts and first
+   reference, so it only comes right when the code shape is right (factor 1).
+4. **Refusals** are a minor share at this size: 266 of 342 sample functions translate. The
+   largest classes are `read r` (11, needs the callee in the same file), `mfcr`, `vsldoi`,
+   `struct arg` and `loop shape`.
+
+For the equivalence route (EQ1) none of this matters. What matters is that the C compiles and
+behaves the same, and section 6 gives that output for every unmatched function.
+
+## 6. asm2c as a C generator (for the equivalent tier)
+
+```sh
+TS4_MATCHING_DIR=$PWD/work/matching-b39 python3 tools/asm2c/generate.py --out work/t1/gen \
+    --max-size 0x4000 --jobs 2          # all unmatched game + lib fn_ placeholders up to 16 KB
+```
+
+It translates with variant `10` (arguments from the callee's register use, r3 returned
+wherever it was written; variant `w` would make every function void), compiles the output with the real compiler in files of 150 functions
+and drops what does not compile. It writes `gen_NNN.c`, `manifest.json` (address -> status,
+file or refusal reason) and `summary.txt`. `--groups game,lib,sdk` includes the SDK ranges and
+`--flags O1|Oc|O1Oc` picks the compiler flags. No byte check is done, and nothing is written
+outside `--out`. The output is a machine translation: parameters are untyped words, fields are
+byte offsets, and callees are unprototyped. A function may still be semantically wrong where the
+translator guessed an argument count (`mode` in run.py) or a return type (a word return may be a
+leftover r3, which is harmless to a caller that ignores it). The equivalence check has to catch those cases.
+
+GEN_SUMMARY
+
