@@ -179,6 +179,36 @@ def is_vmx(mn):
             or mn in ('lvx128', 'stvx128'))
 
 
+def vuse_def(ins):
+    """(vector registers read, vector registers written) by one instruction."""
+    if not is_vmx(ins.mn):
+        return [], []
+    b = ins.mn[:-3] if ins.mn.endswith('128') else ins.mn
+    vs = [o for o in ins.ops if re.fullmatch(r'v\d+', o)]
+    if b.startswith('st'):
+        return vs, []
+    if b == 'vrlimi':
+        return vs, vs[:1]
+    return vs[1:], vs[:1]
+
+
+def vec_block_local(blocks, L):
+    """True when every vector register written in loop L is, in each block,
+    written before it is read: no vector value is carried between iterations."""
+    wr = set()
+    for b in L:
+        for i in blocks[b].insns:
+            wr.update(vuse_def(i)[1])
+    for b in L:
+        seen = set()
+        for i in blocks[b].insns:
+            u, d = vuse_def(i)
+            if any(r in wr and r not in seen for r in u):
+                return False
+            seen.update(d)
+    return True
+
+
 class V:
     """A lazily materialised local (a load or call result); `used` is set when read."""
     def __init__(s, t, e, n, pure=True):
@@ -1652,8 +1682,9 @@ class Gen:
     def emit_loop(self, h, stop, st, out):
         L = self.loops[h]
         hb = self.blocks[h]
-        if self.has_vmx:
+        if self.has_vmx and not vec_block_local(self.blocks, L):
             raise Skip('vec loop')
+        vw = {r for b in L for i in self.blocks[b].insns for r in vuse_def(i)[1]}
         fw = self.float_written(L)
         if fw and self.float_carried(L, h, fw):
             raise Skip('float loop')
@@ -1711,6 +1742,8 @@ class Gen:
             exit_st['fregs'].pop(f, None); exit_st['fwritten'].discard(f); exit_st['clobbered'].add(f)
         for k in ('regs', 'written', 'clobbered', 'fregs', 'fwritten', 'ctr', 'ctr_reg', 'cmps', 'stackargs', 'cnt'):
             st[k] = exit_st[k]
+        for r in vw:
+            st['vregs'][r] = '__vclob'
         return exit_id
 
     def _backedge(self, sb, lv, out):
