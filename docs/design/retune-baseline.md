@@ -1225,7 +1225,7 @@ no input says "the ball is slow or high".
 
 **Put-away swing (Fatality)** [code, controls s17.2]: a Fatality clip is played when the class is
 FlatPower or FlatFinesse, the shot is not a tap (power S+0xE00 > 0.15), not (AI and S+0x4E0), and
-**not** (sticky RB `PC+0x3D` and inside 300 cm of the net), and a clip of category Fatality
+**not** (sticky RB `PC+0x3D` and inside the central corridor, |world z| < 300 cm (lateral, not distance to the net; corrected by G8)), and a clip of category Fatality
 matches the other keys. So following the shot to the net with RB **blocks** the put-away clip.
 **Drop volley** = Slice + Risk (LT or RT) in volley mode (row 18); the drop shot is the same at the
 baseline (row 32). LT + X is also a drop shot, an input quirk of the shipped map.
@@ -1344,7 +1344,7 @@ disc cancel covers contact to +40 frames, overlapping the clip's Out tail.
 | swing Out window | (8a) median 36 frames after a groundstroke | the run cannot start before the clip's Out window opens |
 | sprint | RB sprint only during repositioning, vigor ≥ 0.1 | an exhausted player rushes at normal speed |
 | at the net with RB | locomotion scale = VolleySpeedCoef 1.15 | speed-up, not a refusal |
-| put-away | sticky RB within 300 cm of the net blocks the Fatality clip | a side effect on the next shot |
+| put-away | sticky RB inside the central corridor (|z| < 300 cm, lateral) blocks the Fatality clip | a side effect on the next shot |
 
 #### 8f. Console and emulator effects (not game logic)
 
