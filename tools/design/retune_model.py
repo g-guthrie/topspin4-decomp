@@ -517,7 +517,7 @@ RALLY = {
     "pace_err": 0.006,                 # error per mph above the margin speed
     "margin_hand": 10.0,                # margin speed added per unit of hand stat
     "kick": {"Flat": 0.08, "TopSpin": 0.20, "Slice": 0.0, "Lob": 0.2},
-    "kick_hand": 0.18,                  # topspin kick added per unit of hand stat (spin scales with FH/BH rating)
+    "kick_hand": 0.14,                  # topspin kick added per unit of hand stat (spin scales with FH/BH rating)
     "low": {"Slice": 1.0},              # slice stays low: the receiver's contact height drops
     "max_run_base": 5.7, "max_run_speed": 2.9,          # m/s reachable: base + per unit of Speed stat
     "floor_err": 0.20,                  # error added per unit of floor penalty of the stroke's rating
@@ -927,19 +927,20 @@ def drop_quality(incoming_kmh, height, grade, timing, touch_stat):
 
 
 # =========================================================================== movement (owner decision 2026-11-14)
-# Retail movement is kept.  Agreed: quicker first step from rest (about 8 frames to 5 cm, unchanged after 1 m), net
-# rush buffered, pre-hit freeze lifted at the net only, put-away clips widened.  Open (owner to decide): shorter
-# swing tails for volleys and approach shots only; groundstroke, return and serve tails stay retail.
+# Retail movement is kept, including the first step from rest.  Agreed rule changes: net rush buffered with no sprint
+# requirement, pre-hit freeze lifted at the net only, feet freed earlier after volleys and approach shots only (about
+# half of today's tails); groundstroke, return and serve tails stay retail.
 
 # Swing tail = Out frame - contact frame, median (p10, p90), movement-and-animation s7.5 / s8.1 (data).
 TAIL_RETAIL = {"groundstroke": (36, 27, 44), "return": (26, 19, 37), "volley": (38, 29, 51), "serve": (34, 24, 39),
                "approach": (36, 27, 44), "approach_follownet": (29, 19, 66), "put-away": (45, 37, 53)}
-# Option for the owner (judgement): volley and approach tails cut to these medians by moving TE[1].Position.
-TAIL_OPTION = {"volley": 26, "approach": 26, "approach_follownet": 24}
+# Agreed: volley and approach tails cut to about half (median frames), by an earlier locomotion exit (code) or an
+# earlier TE[1].Position (data); the clips themselves are not edited.
+TAIL_AGREED = {"volley": 19, "approach": 18, "approach_follownet": 15}
 PREHIT_FREEZE = 20            # cfg+0xA88, frames before the opponent's hit (data)
 # Rush_Front from rest, frames to 5 / 25 / 100 cm, then 9.6 cm/frame (movement-and-animation s7.3, +15 fade).
 RUSH_RETAIL = [(0, 0.0), (18, 5.0), (26, 25.0), (43, 100.0)]
-RUSH_FIRST_STEP = [(0, 0.0), (8, 5.0), (18, 25.0), (36, 100.0)]   # agreed target: about 8 frames to 5 cm
+RUSH_FIRST_STEP = RUSH_RETAIL   # the first step from rest is left as retail (owner decision)
 RUSH_CM_PER_F = 9.6
 
 

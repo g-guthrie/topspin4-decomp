@@ -144,10 +144,10 @@ class Speed(unittest.TestCase):
 class Movement(unittest.TestCase):
     def test_run_curve(self):
         self.assertEqual(M.run_cm(0), 0.0)
-        self.assertAlmostEqual(M.run_cm(8, M.RUSH_FIRST_STEP), 5.0)
-        self.assertLess(M.run_cm(8), 5.0)                       # retail first step is slower
-        # unchanged after the first metre: same speed beyond it
-        self.assertAlmostEqual(M.run_cm(80) - M.run_cm(70), M.run_cm(80, M.RUSH_FIRST_STEP) - M.run_cm(70, M.RUSH_FIRST_STEP))
+        self.assertAlmostEqual(M.run_cm(18), 5.0)
+        self.assertAlmostEqual(M.run_cm(43), 100.0)
+        self.assertAlmostEqual(M.run_cm(53) - M.run_cm(43), 96.0)
+        self.assertIs(M.RUSH_FIRST_STEP, M.RUSH_RETAIL)        # first step from rest kept as retail
 
     def test_retail_rush_waits_for_hit(self):
         d = M.net_timeline(36, 47, 34, -600, 76, buffered=False)
@@ -156,8 +156,8 @@ class Movement(unittest.TestCase):
         self.assertEqual(d["start"], 36)
 
     def test_shorter_tail_gets_closer(self):
-        a = M.net_timeline(38, 42, 29, -400, 83, M.RUSH_FIRST_STEP, False, True)
-        b = M.net_timeline(26, 42, 29, -400, 83 * 26 / 38, M.RUSH_FIRST_STEP, False, True)
+        a = M.net_timeline(38, 42, 29, -400, 83, M.RUSH_RETAIL, False, True)
+        b = M.net_timeline(19, 42, 29, -400, 83 * 19 / 38, M.RUSH_RETAIL, False, True)
         self.assertGreater(b["x_at_ball"], a["x_at_ball"])
         self.assertGreater(b["free"], a["free"])
 

@@ -762,34 +762,32 @@ NET_CASES = [  # label, tail class, start x cm, drift cm over the retail tail, r
 
 
 def sec_movement(a):
-    out = ["### 10a. Kept as retail, agreed changes, and the open option *(sourced from the engine docs; judgement for the option)*", ""]
+    out = ["### 10a. Kept as retail and agreed rule changes *(engine facts sourced from the movement docs)*", ""]
     out.append(md(["item", "retail (engine docs)", "decision"], [
-        ["first step from rest", "5 cm after 2-21 frames by clip; Rush_Front 14-18 frames to 5 cm, 42-43 to 1 m", "agreed: about 8 frames to 5 cm for every start; unchanged after 1 m"],
-        ["net rush", "refused when the opponent's hit is < 20 frames away (condition 7); needs RB / box", "agreed: buffered (starts at once when the window allows), no sprint requirement"],
-        ["pre-hit freeze", "direction latched for the last 20 frames before the opponent's hit; release at -20..-11 stops dead", "agreed: lifted at the net only (inside 500 cm); kept elsewhere"],
-        ["put-away", "FH shoulder-height clips only; blocked by RB in the |z| < 300 cm corridor", "agreed: clips for low balls and the backhand; freed from the corridor block"],
+        ["first step from rest", "5 cm after 2-21 frames by clip; Rush_Front 14-18 frames to 5 cm, 42-43 to 1 m", "kept as retail"],
+        ["net rush", "refused when the opponent's hit is < 20 frames away (condition 7); needs RB / box and sprint", "agreed: buffered (starts as soon as allowed), no sprint requirement (code, fn_8869B928)"],
+        ["pre-hit freeze", "direction latched for the last 20 frames before the opponent's hit; release at -20..-11 stops dead", "agreed: lifted at the net only, x > -500 cm (code, fn_8866F740); kept elsewhere"],
+        ["volley and approach-shot tails", "38 (volley), 36 (approach groundstroke), 29 (FollowNet) frames to the Out window", "agreed: about half, %d / %d / %d" % (M.TAIL_AGREED["volley"], M.TAIL_AGREED["approach"], M.TAIL_AGREED["approach_follownet"])],
         ["groundstroke / return / serve tail", "Out window 36 / 26 / 34 frames after contact (median)", "kept"],
-        ["volley and approach-shot tails", "38 (volley), 36 (approach groundstroke), 29 (FollowNet)", "open, owner to decide: option below cuts them to %d / %d / %d" % (M.TAIL_OPTION["volley"], M.TAIL_OPTION["approach"], M.TAIL_OPTION["approach_follownet"])],
+        ["put-away", "FH shoulder-height Fatality clips only; blocked by RB in the |z| < 300 cm corridor", "existing low and backhand clips made selectable (selection rule, no clip edits); corridor block removed (code)"],
         ["stops, reversals, sprint, sideways-push cancel, 12-frame commit", "stops 35-91 frames to still; reversals 39-96 frames back past the turn", "kept as retail"],
     ]))
-    out += ["", "### 10b. The open option: what shorter volley and approach tails do against the passer's reply *(computed, judgement inputs)*", "",
+    out += ["", "### 10b. What the agreed changes do against the passer's reply *(computed, judgement inputs)*", "",
             "x = distance from the net (cm) when the opponent hits and when his ball reaches the player; free = frames of steering before "
-            "the ball arrives (the freeze latches the last 20 before the hit; with the agreed change it is lifted when the player is inside 500 cm of the net as it would start). Rush from rest per 10a; root drift in the "
-            "tail scales with its length. Reply and ball-back frames are judgement (ball speeds from sections 2-3).", ""]
+            "the ball arrives (the freeze latches the last 20 before the hit; with the agreed change it is lifted when the player is inside 500 cm "
+            "of the net as it would start). Rush from rest as retail; root drift in the tail scales with its length. Reply and ball-back frames "
+            "are judgement (ball speeds from sections 2-3).", ""]
     rows = []
     for label, cls, x0, drift, reply, back in NET_CASES:
         tail_r = M.TAIL_RETAIL[cls][0]
         cells = [label, "%d / %d" % (reply, back)]
-        variants = [("retail", tail_r, M.RUSH_RETAIL, True, False),
-                    ("agreed changes", tail_r, M.RUSH_FIRST_STEP, False, True),
-                    ("agreed + option", M.TAIL_OPTION.get(cls, tail_r), M.RUSH_FIRST_STEP, False, True)]
-        for name, tail, fs, freeze, buf in variants:
-            d = M.net_timeline(tail, reply, back, x0, drift * tail / tail_r, fs, freeze, buf)
+        for tail, freeze, buf in ((tail_r, True, False), (tail_r, False, True), (M.TAIL_AGREED.get(cls, tail_r), False, True)):
+            d = M.net_timeline(tail, reply, back, x0, drift * tail / tail_r, M.RUSH_RETAIL, freeze, buf)
             cells.append("tail %d: %.0f / %.0f cm, free %d" % (tail, d["x_at_reply"], d["x_at_ball"], d["free"]))
         rows.append(cells)
-    out.append(md(["exchange", "reply / ball-back frames", "retail", "agreed changes (first step, buffer, freeze at net)", "agreed + shorter volley / approach tails"], rows))
-    out += ["", "Serve tails are not in the option, so serve-and-volley changes only through the quicker first step; the option helps the "
-            "second volley and the approach."]
+    out.append(md(["exchange", "reply / ball-back frames", "retail", "buffered rush + freeze lifted at the net", "all agreed changes (with the shorter tails)"], rows))
+    out += ["", "Serve tails are kept, so serve-and-volley changes only through the buffered rush; the shorter tails help the second volley "
+            "and the approach."]
     return "\n".join(out)
 
 
