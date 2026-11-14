@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """XBin (Pam::XBinData) container reader prototype for Top Spin 4 (Xbox 360), standard library only.
 
+NOTE (G5): the disc-verified reader is tools/ts4_xbin.py.  Its Layout/Walker classes decode the
+complete Layoutall.bin type table and walk every typed member of any XBin file (see
+docs/gameplay/tunables-catalog.md s2).  The 5-word header model below predates the retail data
+and does not match the shipped files; keep it only for the Animations.bin record helpers.
+
 Spec: work/gameplay-notes/df.md section 1.  UNVALIDATED against real data (none was available when
 written): header/section table are H (loader fn_8892A968 read directly), body/typed-struct access is M,
 field meanings of Animations.bin records are M (offsets measured in code, names are roles).

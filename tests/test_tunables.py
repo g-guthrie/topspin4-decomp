@@ -108,6 +108,15 @@ class WalkerTests(unittest.TestCase):
         self.assertEqual(lv["<Test::Root>/Items[0]/Weight"].offset, 0x48)
 
 
+def parse(text):
+    rows = []
+    head = None
+    for part in text.split("\n=====\n"):
+        head, r = P.parse_yaml(part)
+        rows.extend(r)
+    return head, rows
+
+
 class DumpPatchTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -118,7 +127,15 @@ class DumpPatchTests(unittest.TestCase):
         self.names.update({crc(n): n for n in ("Gain", "Count", "Items", "Weight")})
         D.dump_one("Test.bin", "Core.arc", 0x1234ABCD, "synthetic", self.data, self.lay, self.names, {},
                    "test", "0" * 64, self.dir)
-        self.yaml = Path(self.dir, "Test.yaml").read_text()
+        self.yaml = self.read_dump(self.dir)
+
+    @staticmethod
+    def read_dump(d):
+        """All parts of the dump joined (headers repeat; parse_yaml_parts splits them again)."""
+        parts = sorted(Path(d, "Test").glob("*.yaml"))
+        # root scalars + Pos in one section, Items in another
+        assert [p.name[:3] for p in parts] == ["00_", "01_"], parts
+        return "\n=====\n".join(p.read_text() for p in parts)
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -128,7 +145,7 @@ class DumpPatchTests(unittest.TestCase):
         return self.yaml.replace(old, new)
 
     def test_identity(self):
-        head, rows = P.parse_yaml(self.yaml)
+        head, rows = parse(self.yaml)
         self.assertEqual(head["key"], "0x1234abcd")
         self.assertEqual(len(rows), 11)          # 4 root attrs + 2x2 item attrs + 3 vector floats
         out, changes = P.apply(self.data, self.lay, rows)
@@ -136,12 +153,12 @@ class DumpPatchTests(unittest.TestCase):
         self.assertEqual(changes, [])
 
     def test_round_trip_edit(self):
-        y = self.edit("value: 1.5,", "value: 2.25,")
-        y = y.replace('type: int, value: -7,', 'type: int, value: 12,')
-        y = y.replace('type: bool, value: true,', 'type: bool, value: false,')
-        y = y.replace("type: float, value: 0.75,", "type: float, value: 0.1,")
-        y = y.replace("type: u16, value: 9,", "type: u16, value: 65535,")
-        _h, rows = P.parse_yaml(y)
+        y = self.edit("float, 1.5,", "float, 2.25,")
+        y = y.replace('int, -7,', 'int, 12,')
+        y = y.replace('bool, true,', 'bool, false,')
+        y = y.replace("float, 0.75,", "float, 0.1,")
+        y = y.replace("u16, 9,", "u16, 65535,")
+        _h, rows = parse(y)
         out, changes = P.apply(self.data, self.lay, rows)
         self.assertEqual(len(changes), 5)
         P.verify(self.data, out, self.lay, changes)
@@ -154,32 +171,32 @@ class DumpPatchTests(unittest.TestCase):
         # dump the patched file again and patch it back to the original
         D.dump_one("Test.bin", "Core.arc", 0x1234ABCD, "synthetic", out, self.lay, self.names, {},
                    "test", "0" * 64, os.path.join(self.dir))
-        _h, rows0 = P.parse_yaml(self.yaml)
+        _h, rows0 = parse(self.yaml)
         back, _c = P.apply(out, self.lay, rows0)
         self.assertEqual(back, self.data)
 
     def test_rejects_bad_edits(self):
-        for old, new in [("type: int, value: -7,", "type: int, value: 99999999999,"),
-                         ("type: u16, value: 9,", "type: u16, value: -1,"),
-                         ("type: int, value: -7,", "type: float, value: -7,"),
-                         ("type: float, value: 1.5,", "type: float, value: 1e60,"),
-                         ("type: float, value: 1.5,", "type: float, value: fast,")]:
-            _h, rows = P.parse_yaml(self.edit(old, new))
+        for old, new in [("int, -7,", "int, 99999999999,"),
+                         ("u16, 9,", "u16, -1,"),
+                         ("int, -7,", "float, -7,"),
+                         ("float, 1.5,", "float, 1e60,"),
+                         ("float, 1.5,", "float, fast,")]:
+            _h, rows = parse(self.edit(old, new))
             with self.assertRaises(P.PatchError):
                 P.apply(self.data, self.lay, rows)
-        y = self.yaml.replace("/Gain\"", "/Gainz\"")
-        _h, rows = P.parse_yaml(y)
+        y = self.yaml.replace('/Gain"', '/Gainz"')
+        _h, rows = parse(y)
         with self.assertRaises(P.PatchError):
             P.apply(self.data, self.lay, rows)
-        y = self.yaml.replace("off: 0x00000020,", "off: 0x00000021,")
-        _h, rows = P.parse_yaml(y)
+        y = self.yaml.replace("[0x20, ", "[0x21, ")
+        _h, rows = parse(y)
         with self.assertRaises(P.PatchError):
             P.apply(self.data, self.lay, rows)
 
     def test_names_survive_renaming(self):
         # a dump made without names must still patch a file dumped with names (paths compared by crc)
-        y = self.yaml.replace("/Gain\"", "/%08x\"" % crc("Gain"))
-        _h, rows = P.parse_yaml(y)
+        y = self.yaml.replace('/Gain"', '/%08x"' % crc("Gain"))
+        _h, rows = parse(y)
         P.apply(self.data, self.lay, rows)
 
 

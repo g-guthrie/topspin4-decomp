@@ -46,6 +46,13 @@ size, no offsets move), then re-parses, checks that only the intended 4-byte wor
 structure is identical and that the values read back, and evaluates each touched graph before and after
 (inputs 0, 0.5, 1 by default; `--probe` to change). Only CONST and CURVE nodes are patchable.
 
+### Any scalar in the gameplay data (agent G5)
+
+`tools/ts4data/dump_tunables.py` and `tools/ts4data/patch_tunables.py` cover every scalar of Settings, State,
+Expressions, Module and the other gameplay XBin files. Each scalar is addressed by file offset, type and
+member path, and the walker in `tools/ts4_xbin.py` checks them before writing. `--rebuild` calls the archive
+writer below. See `docs/gameplay/tunables-catalog.md` section 6.
+
 ## 2. Archive format as written (V unless noted)
 
 Layout, as read by `tools/ts4_arc.py` and confirmed by the byte-identical rebuild below:

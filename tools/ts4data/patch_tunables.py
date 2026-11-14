@@ -19,7 +19,7 @@ folder afterwards with ``tools/ts4_iso_patch.py IMAGE.iso work/patched/game --ar
 Core.arc=OUT/Core.arc``.  Lines you did not edit can stay in the YAML or be deleted.
 
 Usage:
-  python3 tools/ts4data/patch_tunables.py data/gameplay/tunables/Settings.yaml [more.yaml ...]
+  python3 tools/ts4data/patch_tunables.py data/gameplay/tunables/Settings/*.yaml [more.yaml ...]
          (--iso IMAGE.iso | --cache work/disc/cache) --out work/patched [--rebuild] [--dry-run]
 """
 from __future__ import annotations
@@ -37,9 +37,9 @@ sys.path.insert(0, os.path.dirname(HERE))
 import ts4_xbin as X  # noqa: E402
 from dump_tunables import EDITABLE, Source  # noqa: E402
 
-LINE = re.compile(r'^\s*-\s*\{off:\s*(0x[0-9A-Fa-f]+|\d+),\s*type:\s*(\w+),\s*value:\s*([^,}]+?),\s*'
-                  r'path:\s*"((?:[^"\\]|\\.)*)"\s*\}\s*(?:#.*)?$')
-HEAD = re.compile(r"^(file|archive|key|size|sha256|root_type):\s*(\S+)\s*$")
+LINE = re.compile(r'^\s*-\s*\[\s*(0x[0-9A-Fa-f]+|\d+)\s*,\s*(\w+)\s*,\s*([^,\]]+?)\s*,\s*'
+                  r'"((?:[^"\\]|\\.)*)"\s*\]\s*(?:#.*)?$')
+HEAD = re.compile(r'^(file|archive|key|size|sha256|root_type|section|part):\s*("(?:[^"\\]|\\.)*"|[^#]*?)\s*(?:#.*)?$')
 RANGES = {"int": (">i", -2 ** 31, 2 ** 31 - 1), "uint": (">I", 0, 2 ** 32 - 1), "u8": (">B", 0, 255),
           "s8": (">b", -128, 127), "u16": (">H", 0, 65535), "s16": (">h", -32768, 32767),
           "u64": (">Q", 0, 2 ** 64 - 1), "key": (">I", 0, 2 ** 32 - 1), "word": (">I", 0, 2 ** 32 - 1),
@@ -62,16 +62,19 @@ def parse_yaml(text):
             continue
         m = LINE.match(line)
         if m:
-            rows.append((no, int(m.group(1), 0), m.group(2), m.group(3).strip(), unesc(m.group(4))))
+            rows.append((no, int(m.group(1), 0), m.group(2), m.group(3).strip(), m.group(4)))
             continue
         h = HEAD.match(line)
         if h:
-            head[h.group(1)] = h.group(2)
+            v = h.group(2)
+            head[h.group(1)] = unesc(v[1:-1]) if v.startswith('"') else v
         elif line.strip() != "values:":
             raise PatchError("line %d: cannot parse: %s" % (no, line[:120]))
     for k in ("file", "archive", "key"):
         if k not in head:
             raise PatchError("YAML header lacks '%s'" % k)
+    prefix = head.get("section", "")
+    rows = [(no, off, typ, val, prefix + unesc(rel)) for no, off, typ, val, rel in rows]
     return head, rows
 
 
@@ -201,8 +204,17 @@ def main(argv=None):
     src = Source(a.iso, a.cache)
     per_arc = {}
     total = 0
+    groups = {}
     for y in a.yaml:
-        head, rows = parse_yaml(open(y).read())
+        with open(y) as f:
+            head, rows = parse_yaml(f.read())
+        g = groups.setdefault((head["archive"], head["key"].lower()), [dict(head), [], []])
+        if g[0].get("sha256") != head.get("sha256"):
+            raise SystemExit("%s: sha256 differs from another part of %s" % (y, head["file"]))
+        g[1].extend(rows)
+        g[2].append(y)
+    for (_arc, _k), (head, rows, files) in groups.items():
+        y = ",".join(files)
         key = int(head["key"], 16)
         data = src.get(head["archive"], key)
         sha = hashlib.sha256(data).hexdigest()
