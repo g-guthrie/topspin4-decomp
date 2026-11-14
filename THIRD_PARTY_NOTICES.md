@@ -62,7 +62,7 @@ SOFTWARE.
 ## zlib (compression and checksums)
 
 Files: `src/xbox360/r3_zlib_deflate.c`, `r3_zlib.h`, `ex3_zlib.h`, `ex3_zlib_trees.c`,
-`ex3_zlib_deflate.c`, `ex3_zlib_inflate.c`, `ex3_zlib_inftrees.c`, and the `ex4_zlib_*` sources. Upstream: https://zlib.net/
+`ex3_zlib_deflate.c`, `ex3_zlib_inflate.c`, `ex3_zlib_inftrees.c`, the `ex4_zlib_*` sources, and `rm3_zlib_deflate.c`. Upstream: https://zlib.net/
 
 Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler
 
@@ -148,7 +148,7 @@ Files: `src/xbox360/ex6_png.h`, `ex6_png_misc.c`, `ex6_png_xform.c`, and later
 
 ## IJG JPEG library
 
-Files: `src/xbox360/ex6_jpeg_err.c`, and later `ex*_jpeg*` sources that carry
+Files: `src/xbox360/ex6_jpeg_err.c`, the `rm3_jpeg*` and `jp1_*` sources, and later `ex*_jpeg*` sources that carry
 an IJG header line. Upstream: https://www.ijg.org/ (release 6b).
 
 > This software is based in part on the work of the Independent JPEG Group.

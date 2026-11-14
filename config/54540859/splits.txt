@@ -36490,3 +36490,65 @@ src/xbox360/d3d_lua_vm_8880C2B0.c:
 	.pdata      start:0x8812AD28 end:0x8812AD30
 	.text       start:0x8880C660 end:0x8880C7DC
 	.text       start:0x8880C9F8 end:0x8880CBC4
+
+src/xbox360/rm3_heap_push.cpp:
+	.pdata      start:0x8810E4E0 end:0x8810E4E8
+	.text       start:0x8825AB38 end:0x8825AE3C
+
+src/xbox360/rm3_jpeg_chuff.c:
+	.pdata      start:0x88111CB8 end:0x88111CC0
+	.pdata      start:0x88111CC0 end:0x88111CC8
+	.text       start:0x882FC688 end:0x882FCE00
+
+src/xbox360/rm3_jpeg_cmarker.c:
+	.pdata      start:0x881118B0 end:0x881118B8
+	.pdata      start:0x881118B8 end:0x881118C0
+	.text       start:0x882EE9A8 end:0x882EED4C
+	.text       start:0x882EED50 end:0x882EF050
+
+src/xbox360/rm3_jpeg_cphuff.c:
+	.pdata      start:0x88111D18 end:0x88111D20
+	.text       start:0x882FDB30 end:0x882FDE30
+
+src/xbox360/rm3_jpeg_dctmgr.c:
+	.pdata      start:0x88111B70 end:0x88111B78
+	.text       start:0x882F8A78 end:0x882F8E68
+
+src/xbox360/rm3_jpeg_huff.c:
+	.pdata      start:0x88111B08 end:0x88111B10
+	.text       start:0x882F6F20 end:0x882F7288
+
+src/xbox360/rm3_jpeg_marker.c:
+	.pdata      start:0x88111580 end:0x88111588
+	.pdata      start:0x88111588 end:0x88111590
+	.pdata      start:0x88111590 end:0x88111598
+	.pdata      start:0x88111598 end:0x881115A0
+	.pdata      start:0x881115A8 end:0x881115B0
+	.text       start:0x882E3488 end:0x882E3C8C
+	.text       start:0x882E3C90 end:0x882E402C
+	.text       start:0x882E4030 end:0x882E433C
+	.text       start:0x882E44A8 end:0x882E47B8
+
+src/xbox360/rm3_jpeg_master.c:
+	.pdata      start:0x88111880 end:0x88111888
+	.text       start:0x882EE220 end:0x882EE568
+
+src/xbox360/rm3_jpeg_param.c:
+	.pdata      start:0x88111648 end:0x88111650
+	.text       start:0x882E5F18 end:0x882E6298
+
+src/xbox360/rm3_jpeg_read_markers.c:
+	.pdata      start:0x881115D8 end:0x881115E0
+	.text       start:0x882E4DD0 end:0x882E50DC
+
+src/xbox360/rm3_zlib_deflate.c:
+	.pdata      start:0x88111988 end:0x88111990
+	.pdata      start:0x881119B0 end:0x881119B8
+	.pdata      start:0x881119B8 end:0x881119C0
+	.text       start:0x882F1788 end:0x882F1B70
+	.text       start:0x882F2218 end:0x882F262C
+	.text       start:0x882F2630 end:0x882F2B58
+
+src/xbox360/nm3_shot_flags.c:
+	.pdata      start:0x881233D0 end:0x881233D8
+	.text       start:0x88662B60 end:0x88662C08
