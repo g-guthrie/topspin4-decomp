@@ -458,9 +458,9 @@ def sec_oppterm(a):
     out.append(md(["scale", "factor after Perfect / Good / Average / Poor / Mistimed", "shots per point", "points ended by a timing error",
                    "points ended by any error", "winners", "P(Perfect) after opp. Perfect", "after opp. Good", "after opp. Poor",
                    "P(error) after opp. Perfect", "after opp. Poor"], rows))
-    out += ["", "Scale 1.0 is the owner's starting sizes (%s); ball ease x this term floored at %.2f of the normal window; "
+    out += ["", "Scale 1.0 is the owner's starting sizes (%s); W clamped to %.2f-%.2f; "
             "'after opp. Good' pools the opponent's Good and Average releases." % (
-        ", ".join("%s x%.2f" % kv for kv in M.OPP_TIMING_FX.items()), M.TOTAL_FLOOR)]
+        ", ".join("%s x%.2f" % kv for kv in M.OPP_TIMING_FX.items()), M.W_CLAMP[0], M.W_CLAMP[1])]
     return "\n".join(out)
 
 
@@ -558,6 +558,34 @@ def sec_power(a):
         M.RELEASE_LEAD, c["medium_from"] + M.RELEASE_LEAD, c["powerful_from"] + M.RELEASE_LEAD, c["full_at"] + M.RELEASE_LEAD,
         c["full_at"] + c["overcharge_past_full"] + M.RELEASE_LEAD, (c["full_at"] + c["overcharge_past_full"] + M.RELEASE_LEAD) / 60.0,
         M.RELEASE_LEAD - M.AUTO_COMMIT, M.REACT_PRESS_F, round(100 * M.RUSHED_SHARE))]
+    n = 20000 if a.quick else 200000
+    out += ["", "### 6b. How often the overcharge and the top speeds happen, by the wait past full *(computed, pace specialist, %d forehands each, section 2 situation mix)*" % n, ""]
+    rows = []
+    name = "pace specialist"
+    skills, style = SPEC_STYLE[name]
+    saved = c["overcharge_past_full"]
+    for wait in (25, 10, 0):
+        c["overcharge_past_full"] = wait
+        try:
+            p = M.Player(name, M.ARCH[name], skills, style)
+            rng = random.Random(61)
+            oc, v, tee_f = 0, [], []
+            for _ in range(n):
+                s_ = M.sample_situation(rng)
+                o = M.forehand_shot(rng, p, s_)
+                oc += o["hold"] == "Overcharge"
+                v.append(o["mph"])
+                if o["grade"] == "Tee-off":
+                    tee_f.append(s_.frames)
+        finally:
+            c["overcharge_past_full"] = saved
+        tee_f.sort()
+        rows.append(["%d%s" % (wait, " (systems note)" if wait == 25 else ""), "%.2f / %.3f" % (oc * 1000.0 / n, oc * FH_PER_MATCH / n),
+                     "%.2f / %.3f" % (sum(1 for x in v if x > 109) * 1000.0 / n, sum(1 for x in v if x > 109) * FH_PER_MATCH / n),
+                     "%.2f / %.3f" % (sum(1 for x in v if x > 109.9) * 1000.0 / n, sum(1 for x in v if x > 109.9) * FH_PER_MATCH / n),
+                     "%d / %d" % (pct(tee_f, .5), pct(tee_f, .9))])
+    out.append(md(["frames past full", "overcharges per 1,000 / per match", "> 109 mph per 1,000 / per match", "at the 110 cap per 1,000 / per match",
+                   "frames from the opponent's contact on Tee-off balls (median / p90)"], rows))
     return "\n".join(out)
 
 
@@ -601,7 +629,7 @@ def sec_placement(a):
                M.AIM_HAND[0], M.AIM_HAND[1], M.EFF_MAX), ""]
     out.append(md(["grade", "AimingResolution Min", "Max", "retail row values (Good used for every shot)"],
                   [[g, f2(M.AIM_GRADE_ROW[g][0]), f2(M.AIM_GRADE_ROW[g][1]),
-                    {"Tee-off": "none (VeryGood row + code offset)", "VeryGood": "0-0.2 / 0.6-1", "Good": "0-0.2 / 0.6-1",
+                    {"Tee-off": "none (VeryGood row x code multiplier)", "VeryGood": "0-0.2 / 0.6-1", "Good": "0-0.2 / 0.6-1",
                      "Normal": "0 / 0.4-1", "Bad": "0 / 0.1-1", "VeryBad": "0 / 0.1-1"}[g]] for g in M.GRADES]))
     out += ["", "Timing term (retail shape against t, t divided by W): |t| " + ", ".join("%g: %.2f" % kv for kv in M.T_SHAPE) +
             "; representative values " + ", ".join("%s %.2f" % (t, M.AIM_TIMING_Q[t]) for t in T5) +

@@ -166,12 +166,33 @@ class Ts4App : public rex::ReXApp {
     });
   }
 
+  // An all-black capture is retried (TS4_SHOT_RETRY_MS, default 1500 ms) because the captured
+  // guest output image is often black between refreshes when frames are skipped (REX_DRAW_EVERY).
+  static bool AllBlack(const rex::ui::RawImage& img) {
+    for (uint32_t y = 0; y < img.height; y += 8) {
+      const uint8_t* row = img.data.data() + y * img.stride;
+      for (uint32_t x = 0; x < img.width; x += 4)
+        if (row[4 * x] | row[4 * x + 1] | row[4 * x + 2]) return false;
+    }
+    return true;
+  }
+
   void Capture(const std::string& dir, uint64_t swap) {
     auto* gs = runtime()->graphics_system();
     auto* presenter = gs ? gs->presenter() : nullptr;
     if (!presenter) return;
     rex::ui::RawImage img;
-    if (!presenter->CaptureGuestOutput(img) || !img.width || !img.height) return;
+    static const long retry_ms = EnvLong("TS4_SHOT_RETRY_MS", 1500);
+    auto t0 = std::chrono::steady_clock::now();
+    for (;;) {
+      bool ok = presenter->CaptureGuestOutput(img) && img.width && img.height;
+      if (ok && !AllBlack(img)) break;
+      if (std::chrono::steady_clock::now() - t0 >= std::chrono::milliseconds(retry_ms)) {
+        if (!ok) return;
+        break;
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    }
     char name[64];
     std::snprintf(name, sizeof(name), "/frame_%06llu.ppm", (unsigned long long)swap);
     FILE* f = std::fopen((dir + name).c_str(), "wb");
