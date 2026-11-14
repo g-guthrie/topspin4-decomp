@@ -659,7 +659,7 @@ def sec_net(a):
     out.append(md(["approach", "passer's frames", "passer's grade", "Q", "Perfect / Good half (rating 70)", "passer's Efficiency (FlatMedium, Perfect)", "angle access"], rows))
     out += ["", "### 8b. Volley quality bands: the cost of a hard volley is a weak reply *(proposal; judgement values)*", "",
             "Band = volley grade (Tee-off / VeryGood 1, Good / Normal 2, Bad 3, VeryBad 4) + timing (Poor +1, Mistimed +2), then one band "
-            "better at a Volley stat >= %.2f (rating about 75+). Outputs are the volley classes' existing outputs." % M.VOLLEY_SHIFT_STAT, ""]
+            "better with probability (Volley stat - 0.5) / 0.5. Outputs are the volley classes' existing outputs.", ""]
     rows = []
     desc = {1: "soft or high ball above the net with time: fast, low, to the corner or angled; drop volley dies",
             2: "firm ball at a comfortable height: solid and deep, returnable",
