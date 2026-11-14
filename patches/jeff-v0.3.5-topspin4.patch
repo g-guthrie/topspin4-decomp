@@ -432,6 +432,20 @@ index d0b71d6..eb81ca9 100644
          for (&addr, reloc) in &self.relocations {
              let Some((reloc_kind, target)) = reloc.kind_and_address() else {
                  // Skip external relocations, they already exist
+diff --git a/src/util/split.rs b/src/util/split.rs
+index 3be7b33..ee7dd0f 100644
+--- a/src/util/split.rs
++++ b/src/util/split.rs
+@@ -524,6 +524,9 @@ fn split_pdata(obj: &mut ObjInfo) -> Result<()> {
+                         });
+                     }
+                 }
++                // The split lies after every .pdata target (leaf functions at
++                // the end of .text): it has no exception records.
++                (None, None) => {}
+                 _ => unreachable!(),
+             }
+         }
 diff --git a/src/util/xex.rs b/src/util/xex.rs
 index 1df2279..16cf1d5 100644
 --- a/src/util/xex.rs
