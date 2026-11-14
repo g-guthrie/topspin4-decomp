@@ -605,6 +605,26 @@ CODE_LOADERS = {
     0x9DEB41B3: [("fn_886BF598", 0x886BFA0C)], 0x53613CAD: [("fn_886BF598", 0x886BFA48)],
     0x926EEF1B: [("fn_886BF598", 0x886BFA84)], 0xC0150160: [("fn_886BF598", 0x886BFAC0)],
     0xCFDBD245: [("fn_886BF598", 0x886BFAFC)],
+    # graphs 1-4: a 4-hash array built with lis/ori and passed to the hit-point scorer's load method
+    # fn_886B6348 (vtable 0x880F4428 slot 3), which calls fn_8866F028 at 0x886B637C for each hash.
+    # Built in the AI brain init fn_886B69F8 (brain+0xD4) and in the PlayerCtx reset fn_8869DEF0
+    # (PlayerCtx+0xC0 and +0xC4, one scorer per candidate side).  G1b.
+    0x3C58FC77: [("fn_886B69F8", 0x886B6A14), ("fn_8869DEF0", 0x8869E034)],
+    0x4B5FCCE1: [("fn_886B69F8", 0x886B6A1C), ("fn_8869DEF0", 0x8869E03C)],
+    0xD2569D5B: [("fn_886B69F8", 0x886B6A18), ("fn_8869DEF0", 0x8869E044)],
+    0xA551ADCD: [("fn_886B69F8", 0x886B6A24), ("fn_8869DEF0", 0x8869E054)],
+}
+
+# Graphs whose hash occurs nowhere but in Expressions.bin itself: not in any decompressed Core.arc
+# or Title Update #1 member (raw big- and little-endian scan and the Layoutall walk), not in either
+# DLL as a literal or as a lis/ori or lis/addi constant.  Treated as dead data (G1b, graphs-decoded.md
+# section 4.3).  Graphs 61/146 "Inputs" and 109 have no nodes and no ports.
+UNREFERENCED_GRAPHS = {
+    0x075A2137, 0x728E34D8, 0xF5D45DDF, 0x46C7BB5F, 0x4B92C1F6, 0x13C08997, 0x22341797, 0xE1D08276,
+    0x791A9707, 0x89A37EE0, 0xE9044451, 0xF16AF594, 0xDDFD33C7, 0x9660BA92, 0xAFC12C0A, 0x0CF610B3,
+    0x8A8CCB07, 0xC5EA5958, 0x8EEA213E, 0x3A207442, 0x71200C24, 0x6F550EA2, 0xC4E94A85, 0x5CDDD76B,
+    0xF761934C, 0xF2803787, 0x318A2527, 0x0161AECC, 0xDE9DA221, 0xAD039C14, 0x7120532B, 0xA8AE64D6,
+    0xFB2CC59F, 0x04CDA578, 0xE8AD3080,
 }
 
 
@@ -640,6 +660,22 @@ class Bindings:
         rel, _ = struct.unpack_from(">iI", self.state, r + off)
         return r + off + rel
 
+    def _payload_member(self, root, off):
+        """Member path (names and ``"[i]"`` list indices) of the primitive at ``instance 0 + off``
+        in State.bin, following list payloads; None when nothing is there."""
+        if not hasattr(self, "_amap"):
+            self._amap = {}
+        if root not in self._amap:
+            amap = {}
+            start = self._root_object(root)
+
+            def visit(path, addr, field):
+                amap.setdefault(addr, list(path))
+            self.L.walk(self.types, self.state, ROOT_TYPES[root], start, visit)
+            self._amap[root] = (start, amap)
+        start, amap = self._amap[root]
+        return amap.get(start + off)
+
     def bind(self, port):
         """dict describing what the port reads or writes, or None for link-bound ports."""
         if port.index < 0 or port.domain not in self.domains or port.index >= len(self.cells):
@@ -652,6 +688,14 @@ class Bindings:
              "root_offset": base + off, "member": [f.name for f, _ in chain],
              "member_offset": (off - chain[-1][1]) if chain else None,
              "leaf_type": leaf.type if leaf else None}
+        if not chain and t in self.types and off >= self.types[t].size:
+            # An offset past the struct: it lands in a list payload that follows instance 0 in the
+            # file (graph 22 -> S.Profile.CustomAttribute[i].Value).  Name it from the file layout.
+            path = self._payload_member(root, base + off)
+            if path:
+                d["member"] = path
+                d["member_offset"] = 0
+                d["in_list_payload"] = True
         a = self._root_object(root) + base + off
         if a + 4 <= len(self.state):
             d["state_default"] = struct.unpack_from(">f", self.state, a)[0]
@@ -736,7 +780,7 @@ def port_label(port, bindings, nm):
     if bindings is not None:
         b = bindings.bind(port)
         if b:
-            return "%s.%s" % (b["domain"] if b["domain"][0] != "#" else nm(port.domain), ".".join(nm(x) for x in b["member"]))
+            return "%s.%s" % (b["domain"] if b["domain"][0] != "#" else nm(port.domain), ".".join(nm(x) if isinstance(x, int) else x for x in b["member"]))
     path = ".".join(nm(h) for h in port.path)
     if port.index < 0:
         return "%s.%s<link>" % (nm(port.domain), path)
@@ -790,6 +834,8 @@ def dump_readable(graphs, out, names=None, bindings=None, refs=None, header=()):
         w("  name_confidence: %s\n" % (nm.conf(g.name) or "unknown"))
         if g.name in CODE_LOADERS:
             w("  loaded_by_code: [%s]\n" % ", ".join("%s @0x%08X" % x for x in CODE_LOADERS[g.name]))
+        if g.name in UNREFERENCED_GRAPHS:
+            w("  unreferenced: true  # hash in no other data file and no code: dead data\n")
         if refs and g.name in refs:
             paths = sorted({".".join(nm(x) if isinstance(x, int) else "[]" for x in p) for p in refs[g.name]})
             w("  referenced_by_settings: %d\n" % len(refs[g.name]))
@@ -809,7 +855,7 @@ def dump_readable(graphs, out, names=None, bindings=None, refs=None, header=()):
                 b = bindings.bind(p) if bindings is not None else None
                 if b:
                     w("    offset: 0x%x\n    object: %s\n    member: %s\n" % (
-                        b["offset"], _q(b["domain_note"]), _q(".".join(nm(x) for x in b["member"]))))
+                        b["offset"], _q(b["domain_note"]), _q(".".join(nm(x) if isinstance(x, int) else x for x in b["member"]))))
                     if b["member_offset"]:
                         w("    member_offset: 0x%x\n" % b["member_offset"])
                     if "state_default" in b:

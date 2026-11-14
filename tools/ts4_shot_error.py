@@ -64,6 +64,12 @@ ALIASES = {
     "hit_y": ("ball", 0x344),         # contact height (cm)
     "err_min": ("player", 0x6D4),     # ShotSpecific.ErrorResolution.Min (Settings shot definition)
     "err_max": ("player", 0x6D8),     # ShotSpecific.ErrorResolution.Max
+    "serve": ("player", 0x64C),       # Profile.Serve 0..1
+    "serve_timing": ("player", 0x66C),  # #e1fe010c.Timing, the serve gauge timing (-1..1, I)
+    "is_human": ("player", 0x560),    # ShotContext.IsHuman (1.0 for a pad player)
+    "aim_long": ("player", 0x6F4),    # #719dc5ee.Long aim flag
+    "aim_short": ("player", 0x6F8),   # #719dc5ee.Short aim flag
+    "aim_side": ("player", 0x6FC),    # #719dc5ee.Side aim flag
 }
 
 
@@ -116,6 +122,7 @@ def main():
     ap.add_argument("--class", dest="classes", action="append", default=[], help="shot class (repeatable)")
     ap.add_argument("--set", nargs="*", default=[], metavar="KEY=VALUE")
     ap.add_argument("--timing", nargs="*", type=float, default=[-1, -0.6, -0.3, -0.1, 0, 0.1, 0.3, 0.6, 1])
+    ap.add_argument("--timing-key", default="timing", help="field swept by --timing (serve_timing for serves)")
     args = ap.parse_args()
     graphs = A.parse_expressions(open(args.expressions, "rb").read())
     bindings = A.Bindings(open(args.state, "rb").read(), open(args.layout, "rb").read())
@@ -126,7 +133,7 @@ def main():
     classes = args.classes or ["FlatPower"]
     print("timing  " + "  ".join("%-22s" % c for c in classes))
     for t in args.timing:
-        scenario[ALIASES["timing"]] = t
+        scenario[parse_key(args.timing_key)] = t
         cells = []
         for c in classes:
             p, net = shot_error(graphs, bindings, c, scenario)

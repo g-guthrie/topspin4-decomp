@@ -421,6 +421,14 @@ def load_names(*paths):
     for p in paths:
         if not p:
             continue
+        if p.endswith((".yaml", ".yml")):
+            import os as _os
+            sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "ts4data"))
+            import names as _names
+            for h, e in _names.read_yaml_names(p).items():
+                if crc(e[0]) == h:
+                    out.setdefault(h, e[0])
+            continue
         data = open(p, "rb").read()
         if data[:1] in (b"{", b"["):
             d = json.loads(data)

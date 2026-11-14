@@ -352,6 +352,8 @@ def classify_pair(a, b):
 
 
 def function_diff(base_img, img, load_address, names=None):
+    """Match functions of two builds: in-order identical, then identical anywhere (moved by the
+    linker), then same-group pairs by similarity; the rest are added/removed."""
     import difflib
     names = names or {}
     fa, fb = pdata_functions(base_img, load_address), pdata_functions(img, load_address)
@@ -360,38 +362,56 @@ def function_diff(base_img, img, load_address, names=None):
     ka = [hashlib.sha1(struct.pack(">%dI" % len(n), *n)).digest() for n in na]
     kb = [hashlib.sha1(struct.pack(">%dI" % len(n), *n)).digest() for n in nb]
     sm = difflib.SequenceMatcher(None, ka, kb, autojunk=False)
-    out = dict(base_functions=len(fa), patched_functions=len(fb), identical=0, offsets_only=[], changed=[],
-               added=[], removed=[])
+    out = dict(base_functions=len(fa), patched_functions=len(fb), identical=0, moved=0, offsets_only=[],
+               changed=[], added=[], removed=[])
+    groups = []
     for tag, i1, i2, j1, j2 in sm.get_opcodes():
         if tag == "equal":
             out["identical"] += i2 - i1
-            continue
-        ia, ib = list(range(i1, i2)), list(range(j1, j2))
-        # pair the group's functions in order while sizes allow, the rest are added/removed
-        while ia and ib:
-            i, j = ia[0], ib[0]
-            if fa[i][1] == fb[j][1] or len(ia) == len(ib):
-                kind = classify_pair(na[i], nb[j])
-                ndiff = sum(1 for x, y in zip(na[i], nb[j]) if x != y) + abs(len(na[i]) - len(nb[j]))
-                row = dict(base="0x%08X" % fa[i][0], tu="0x%08X" % fb[j][0], base_size=fa[i][1],
-                           tu_size=fb[j][1], words_differing=ndiff)
-                if fa[i][0] in names:
-                    row["name"] = names[fa[i][0]]
-                out["offsets_only" if kind == "offsets" else "changed"].append(row)
-                ia.pop(0)
-                ib.pop(0)
-            elif len(ia) > len(ib):
-                i = ia.pop(0)
-                out["removed"].append(dict(base="0x%08X" % fa[i][0], base_size=fa[i][1],
-                                           **({"name": names[fa[i][0]]} if fa[i][0] in names else {})))
-            else:
-                j = ib.pop(0)
-                out["added"].append(dict(tu="0x%08X" % fb[j][0], tu_size=fb[j][1]))
-        for i in ia:
-            out["removed"].append(dict(base="0x%08X" % fa[i][0], base_size=fa[i][1],
-                                       **({"name": names[fa[i][0]]} if fa[i][0] in names else {})))
+        else:
+            groups.append((list(range(i1, i2)), list(range(j1, j2))))
+    free_b = {}
+    for _ia, ib in groups:
         for j in ib:
-            out["added"].append(dict(tu="0x%08X" % fb[j][0], tu_size=fb[j][1]))
+            free_b.setdefault(kb[j], []).append(j)
+    used_b = set()
+    rest = []
+    for ia, ib in groups:
+        left = []
+        for i in ia:
+            js = [j for j in free_b.get(ka[i], []) if j not in used_b]
+            if js:
+                used_b.add(js[0])
+                out["moved"] += 1
+            else:
+                left.append(i)
+        rest.append((left, ib))
+
+    def named(i):
+        return {"name": names[fa[i][0]]} if fa[i][0] in names else {}
+    for ia, ib in rest:
+        ib = [j for j in ib if j not in used_b]
+        for i in ia:
+            best, bj = 0.0, None
+            for j in ib:
+                if j in used_b:
+                    continue
+                if min(len(na[i]), len(nb[j])) < 0.5 * max(len(na[i]), len(nb[j])):
+                    continue
+                r = difflib.SequenceMatcher(None, na[i], nb[j], autojunk=False).ratio()
+                if r > best:
+                    best, bj = r, j
+            if bj is not None and best >= 0.6:
+                used_b.add(bj)
+                kind = classify_pair(na[i], nb[bj])
+                row = dict(base="0x%08X" % fa[i][0], tu="0x%08X" % fb[bj][0], base_size=fa[i][1],
+                           tu_size=fb[bj][1], similarity=round(best, 3), **named(i))
+                out["offsets_only" if kind == "offsets" else "changed"].append(row)
+            else:
+                out["removed"].append(dict(base="0x%08X" % fa[i][0], base_size=fa[i][1], **named(i)))
+        for j in ib:
+            if j not in used_b:
+                out["added"].append(dict(tu="0x%08X" % fb[j][0], tu_size=fb[j][1]))
     return out
 
 
@@ -441,8 +461,9 @@ def main(argv=None):
         fd = function_diff(base_img, img, info["load_address"], load_function_names(a.names))
         fd.update({k: info[k] for k in ("base_sha256", "patch_sha256", "base_image_sha256", "patched_image_sha256")})
         json.dump(fd, open(a.functions, "w"), indent=1)
-        print("functions: %d base, %d patched, %d identical, %d offset-only, %d changed, %d added, %d removed" % (
-            fd["base_functions"], fd["patched_functions"], fd["identical"], len(fd["offsets_only"]),
+        print("functions: %d base, %d patched, %d identical, %d moved, %d offset-only, %d changed, %d added, "
+              "%d removed" % (fd["base_functions"], fd["patched_functions"], fd["identical"], fd["moved"],
+                              len(fd["offsets_only"]),
             len(fd["changed"]), len(fd["added"]), len(fd["removed"])))
     return 0
 

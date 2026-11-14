@@ -332,9 +332,15 @@ def min_conf(names, *hs):
 
 
 # ---------------------------------------------------------------- vocabulary and guessing
+ENGLISH = re.compile(r"\b(?:the|and|to|of|you|your|is|with|for|this|are|on|in|be|can|will|not)\b")
+
+
+FOREIGN = re.compile(r"\b(?:der|die|das|und|nicht|mit|f\u00fcr|ist|ein|eine|les|des|et|pour|avec|vous|est|une|il|di|che|per|con|non|del|della|el|los|las|para|por|una|que|y|w|z|na|nie|si\u0119|jest)\b")
+
+
 def build_vocab(names, strings, limit):
     """Words ranked: parts of known names, then XML/XPath identifiers, then English text words."""
-    known, xml, eng = Counter(), Counter(), Counter()
+    known, xml, eng, other, foreign = Counter(), Counter(), Counter(), Counter(), set()
     for n, _s, c, _nt in names.found.values():
         if RANK.get(c, 0) < 2:
             continue
@@ -348,15 +354,22 @@ def build_vocab(names, strings, limit):
                     for u in CAMEL_WORD.findall(x):
                         xml[u[:1].upper() + u[1:]] += 1
         if " " in s:
-            for w in re.findall(r"\b[A-Za-z][a-z]{2,13}\b", s):
-                eng[w[:1].upper() + w[1:]] += 1
-
+            ws = [w[:1].upper() + w[1:] for w in re.findall(r"\b[A-Za-z][a-z]{2,13}\b", s)]
+            ne, nf = len(ENGLISH.findall(s)), len(FOREIGN.findall(s))
+            if ne >= 2 and ne > nf:
+                eng.update(ws)
+            elif nf >= 1:
+                foreign.update(ws)
+            else:
+                other.update(ws)
+    for w in foreign:
+        other.pop(w, None)
     def good(w):
         if len(w) == 1:
             return w.isupper() or w.isdigit()
         return bool(re.fullmatch(r"[A-Z][a-z]+|[A-Z]{2,3}|[0-9]{1,2}", w)) and wordlike(w)
     out, seen = [], set()
-    for src, mincount in ((known, 1), (xml, 2), (eng, 3)):
+    for src, mincount in ((known, 1), (xml, 2), (eng, 3), (other, 3)):
         for w, c in src.most_common():
             if c >= mincount and w not in seen and good(w):
                 seen.add(w)
@@ -544,8 +557,10 @@ def main(argv=None):
     ap.add_argument("--vocab", type=int, default=9000, help="vocabulary size for the length-guided guesser")
     ap.add_argument("--top3", type=int, default=800, help="words used for 2+1 word length-guided guesses")
     ap.add_argument("--top", type=int, default=2500, help="words for unconstrained two-word guesses (0 = off)")
+    ap.add_argument("--sibling-words", type=int, default=1200, help="global words combined with sibling words")
     ap.add_argument("--rounds", type=int, default=3)
     ap.add_argument("--out", required=True, help="JSON output (work/, all sources)")
+    ap.add_argument("--strings-from", nargs="*", default=[], help="text files of strings (one per line)")
     ap.add_argument("--dump-strings", help="write the harvested strings here (one per line, work/ only)")
     ap.add_argument("--yaml", help="names.yaml to update (hand-added entries are kept)")
     a = ap.parse_args(argv)
@@ -574,6 +589,9 @@ def main(argv=None):
             except ValueError:
                 pass
         strs.update(strings_of(data))
+    for p in a.strings_from:
+        with open(p, encoding="utf-8", errors="replace") as f:
+            strs.update(line.rstrip("\n") for line in f)
     if a.dump_strings:
         with open(a.dump_strings, "w", encoding="utf-8") as o:
             o.write("\n".join(sorted(x.replace("\n", " ") for x in strs)))
@@ -585,7 +603,7 @@ def main(argv=None):
     toks = set()
     for s in strs:
         toks.update(tokens_of(s))
-    good = [t for t in toks if wordlike(t)]
+    good = {t for t in toks if wordlike(t)}
     for t in toks:
         if t in good or not (X.crc(t) in ttypes or X.crc(t) in tmembers):
             names.add(X.crc(t), t, "token")
@@ -607,7 +625,7 @@ def main(argv=None):
         hints = st.length_hints(list(prefix_map(names)))
         g3 = guess_with_length(names, hints, vocab, a.top3)
         p1 = propagate(names, st)
-        sb = guess_siblings(names, layout, vocab[:150])
+        sb = guess_siblings(names, layout, vocab[:a.sibling_words])
         p2 = propagate(names, st)
         log["round%d" % r] = dict(guess3=g3, sibling=sb, propagated=p1 + p2, total=len(names.found))
         print("round %d: %s" % (r, log["round%d" % r]), flush=True)

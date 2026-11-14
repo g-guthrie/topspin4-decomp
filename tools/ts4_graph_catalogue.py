@@ -125,15 +125,16 @@ def main():
 
     def rshort(p):
         s = ".".join(nm(x) if isinstance(x, int) else "[]" for x in p)
-        s = s.replace("AI.#99d2ac4e.#51b273d0.AIStyle?.[].Difficulty.[].", "AI.Style[].Difficulty[].")
-        s = s.replace("#40dd9ee9.#00236a48.#8c5e64b4.[].", "ShotClassTable[].")
+        s = s.replace("AI.%s.%s.%s.[].Difficulty.[]." % (nm(0x99D2AC4E), nm(0x51B273D0), nm(0x63199A64)),
+                      "AI.Style[].Difficulty[].")
+        s = s.replace("%s.%s.%s.[]." % (nm(0x40DD9EE9), nm(0x00236A48), nm(0x8C5E64B4)), "ShotClassTable[].")
         return s
 
     def lab(p):
         b = B.bind(p)
         if b:
             d = b["domain"] if b["domain"][0] != "#" else nm(p.domain)
-            m = ".".join(nm(x) for x in b["member"])
+            m = ".".join(nm(x) if isinstance(x, int) else x for x in b["member"])
             base = {"player": "S", "ball": "Ball", "match": "Match", "team": "Team", "ai": "AI"}[b["root"]]
             return short("%s.%s" % (d, m)), "%s+0x%x" % (base, b["root_offset"])
         if p.index < 0:
@@ -168,6 +169,8 @@ def main():
             rr = sorted({rshort(p) for p in refs.get(g.name, [])})
             if rr:
                 run.append("Settings `%s`%s" % (rr[0], " (+%d more paths)" % (len(rr) - 1) if len(rr) > 1 else ""))
+            if not run and g.name in getattr(A, "UNREFERENCED_GRAPHS", ()):
+                run = ["never: the hash occurs in no other data file and in no code (graphs-decoded.md 4.3)"]
             W("- runs: %s" % ("; ".join(run) if run else "no loader or data reference found"))
             ins = []
             for x in (lab(p) for p in g.inputs):

@@ -229,7 +229,8 @@ def main(argv=None):
     ap.add_argument("--cache", help="directory with already extracted members (<key>.bin or <Archive>/<key>.bin)")
     ap.add_argument("--layout", default="work/disc/root/Layoutall.bin",
                     help="Layoutall.bin (read from the ISO root when the file does not exist)")
-    ap.add_argument("--names", default="work/disc/values/names.json")
+    ap.add_argument("--names", nargs="*", default=["data/gameplay/names.yaml", "work/disc/values/names.json"],
+                    help="name dictionaries (names.yaml and/or names.json); missing files are skipped")
     ap.add_argument("--xref", default="work/disc/values/xref_settings.json")
     ap.add_argument("--out", default="data/gameplay/tunables")
     ap.add_argument("--only", default="")
@@ -242,7 +243,7 @@ def main(argv=None):
         import xdvdfs
         lay_buf = xdvdfs.XDVDFS(a.iso).open_slice("Layoutall.bin").read()
     layout = X.Layout(lay_buf)
-    names = X.load_names(a.names) if a.names and os.path.exists(a.names) else dict(X.TYPE_NAMES)
+    names = X.load_names(*[p for p in a.names if os.path.exists(p)])
     xref = load_xref(a.xref)
     os.makedirs(a.out, exist_ok=True)
     src = Source(a.iso, a.cache)
