@@ -476,3 +476,23 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
 - Saved-register zero result: `res = 0`, assign in the success branch, `return res` once.
 - Rotated loop keeping top test and bottom `beq`: `while (i < 600) { ...; if (!settled) continue; break; }`.
 - `for (; end != begin; ...)` compare operand order decides `cmplw end,cur`.
+
+## Added from W11 (re-sweep of small gameplay functions with the full rule set)
+- `vor128` copy of a vector stored to two members: write the copy explicitly, `__vector4 w = __vor(v, v);
+  p->a.v = v; p->b.v = w;` (closes the open item; 0x8867D8D0).
+- Three lane stores `stvewx v,r0,rT / v,rT,4 / v,rT,8`: `__stvewx(__vspltw(v,k), t, 0/4/8)` on the array base, not `&t[k]`.
+- Counted store loop kept as `mtctr`/`stwu`: `for (i = 7; 0 < i; --i) { q->b = 0; ++q; }`; `i < 7` counting up is unrolled.
+- `idx = (a < b) ? b : a;` gives `mr rX,b; cmpw; blt; mr rX,a`; the `if` form coalesces into r3.
+- Result copy `mr r11,r3` after a call: `int ok; if (v != 0) { ok = 1; *out = v; } else ok = 0; return ok;`.
+- Fresh `r = 0` in an else branch (not up front) keeps a callee result register alive across a branch.
+- 16-byte vector through a stack temp as `ld/ld/std/std`: one `__vector4` local per element, cast both sides through
+  `struct { unsigned long long q[2]; }`; an inline helper around the pair does not match.
+- `__vcmpgefpR` bool as `mfocrf; extrwi; cmplwi; beqlr`: `unsigned ok = (cr>>7)&1; if ((unsigned char)ok == 0) return;`.
+- Bytewise colour copy with an uninitialised 4th byte: struct `{Rgb rgb; u8 a;}` copied member by member.
+- A named local `Vec *vec = &self->vec;` assigned first puts `this` in r28 and `&vec` in r29 in a loop that later
+  passes it to a call. Loading vector lanes into locals in x, z, y order sets the load order.
+- LTCG register survival needs the WHOLE callee chain in context; a matched callee that itself calls an unmatched
+  function does not provide it. Under LTCG the frame already includes varargs home space (do not add padding locals).
+- Still open after this pass: `li r3,1; cmpwi; beqlr; li r3,0` (0x886C3DA8); the 23-entry jump table (0x8865DAC0);
+  five `mr` copies of one constant (0x8866EB80); float `fadds` operand order in three functions; a 0xa0 frame around a
+  pass-through call (0x886C8C48, 0x886C90F0).
