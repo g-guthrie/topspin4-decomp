@@ -59,6 +59,6 @@ extern "C" void ts4_lookup_then_forward_884230E8(void *self, int a, int b) { voi
 extern "C" void ts4_lookup_then_forward_88423140(void *self, int a, int b) { void *r = (void *)lbl_88CAD568->v4(self); if (r) fn_88422BA0(self, r, a, b); }
 
 // slot 21 of this supplies the third argument of the helper
-extern "C" void fn_8860DCF8(void *, int, int, int);
+extern "C" void ts4_node_dispatch_8860DCF8(void *, int, int, int);
 struct Ts4X21 { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7(); virtual void v8(); virtual void v9(); virtual void v10(); virtual void v11(); virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15(); virtual void v16(); virtual void v17(); virtual void v18(); virtual void v19(); virtual void v20(); virtual int v21(); };
-extern "C" void ts4_call_with_vcall21_88613890(Ts4X21 *s, int a, int b) { fn_8860DCF8(s, a, s->v21(), b); }
+extern "C" void ts4_call_with_vcall21_88613890(Ts4X21 *s, int a, int b) { ts4_node_dispatch_8860DCF8(s, a, s->v21(), b); }

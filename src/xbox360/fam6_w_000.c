@@ -116,11 +116,11 @@ ts4_word fn_8857A878();
 ts4_word fn_8857AFF0();
 ts4_word fn_885EB698();
 ts4_word fn_88605620();
-ts4_word fn_8860A9E0();
-ts4_word fn_8860AB08();
+ts4_word ts4_handle_fwd_slot68_8860A9E0();
+ts4_word ts4_handle_fwd_slot5c_8860AB08();
 ts4_word fn_8860FF08();
 ts4_word fn_886115C0();
-ts4_word fn_88613350();
+ts4_word ts4_node_dispatch_default_88613350();
 ts4_word fn_88614F48();
 ts4_word fn_88627EC0();
 ts4_word ts4_if_set_u32_off0_8862BE08();
@@ -689,7 +689,7 @@ ts4_word ts4_if_call_seq_u8_off4f_88605860(ts4_word a0)
         if ((ts4_word)t14 == 0) {
             p17 = (ts4_word)(ts4_crt_nh_malloc_88565258((ts4_word)(65536)));
         } else {
-            t15 = fn_88613350((ts4_word)t14, (ts4_word)(65536));
+            t15 = ts4_node_dispatch_default_88613350((ts4_word)t14, (ts4_word)(65536));
             p17 = (ts4_word)t15;
         }
         *(ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)p17;
@@ -799,7 +799,7 @@ void ts4_if_call_seq_fn_88627EC0_88628D48(ts4_word a0, ts4_args3 sp1)
     return;
 }
 
-/* Swing_DLL.xex 0x8862CB00: if_call_seq lbl_880DAE20, ts4_if_set_u32_off0_8862C0E8, fn_8860A9E0 */
+/* Swing_DLL.xex 0x8862CB00: if_call_seq lbl_880DAE20, ts4_if_set_u32_off0_8862C0E8, ts4_handle_fwd_slot68_8860A9E0 */
 void ts4_if_call_seq_lbl_880DAE20_8862CB00(void)
 {
     unsigned char b80;
@@ -812,7 +812,7 @@ void ts4_if_call_seq_lbl_880DAE20_8862CB00(void)
     b80 = !((ts4_word)t2 != 0) || ((ts4_word)(loc50[1]) == (ts4_word)((983040) | 65535));
     p6 = (ts4_word)b80;
     if ((ts4_word)(p6 & 0xff) == 0) {
-        fn_8860A9E0((ts4_word)(ts4_word)&loc50[0]);
+        ts4_handle_fwd_slot68_8860A9E0((ts4_word)(ts4_word)&loc50[0]);
     }
     return;
 }
@@ -2827,7 +2827,7 @@ ts4_word ts4_if_get_u32_off0_88943230(ts4_word a0)
     return 1;
 }
 
-/* Swing_DLL.xex 0x88955A90: if_call_seq fn_88955970, u32@0x30, u32@0x30, fn_8860AB08 */
+/* Swing_DLL.xex 0x88955A90: if_call_seq fn_88955970, u32@0x30, u32@0x30, ts4_handle_fwd_slot5c_8860AB08 */
 ts4_word ts4_if_call_seq_fn_88955970_88955A90(ts4_word a0, ts4_args3 sp1, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     unsigned char b80;
@@ -2850,7 +2850,7 @@ ts4_word ts4_if_call_seq_fn_88955970_88955A90(ts4_word a0, ts4_args3 sp1, ts4_wo
         if ((ts4_word)(t8 & 0xff) != 0) {
             t10 = *(ts4_word *)((char *)(ts4_word)(a0) + 48);
             if ((ts4_word)t10 != 0) {
-                fn_8860AB08((ts4_word)(ts4_word)&sp1);
+                ts4_handle_fwd_slot5c_8860AB08((ts4_word)(ts4_word)&sp1);
             }
             return 0;
         }

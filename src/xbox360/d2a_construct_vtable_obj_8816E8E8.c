@@ -9,7 +9,7 @@ typedef unsigned char u8;
 typedef struct Base { void *vt; u32 a, b, c; } Base;
 typedef struct Node { u32 a, b; } Node;
 typedef struct Obj { void *vt; Base base; u8 pad[0x400]; u32 f414; u32 f418; u8 b41c, b41d, b41e, b41f, b420; u8 pad2[3]; u32 f424, f428; } Obj;
-extern void *fn_8860DCF8(void *ctx, u32 size, u32 align, u32 flags);
+extern void *ts4_node_dispatch_8860DCF8(void *ctx, u32 size, u32 align, u32 flags);
 extern u32 lbl_880D5D1C[];
 extern u32 lbl_88C6B4AC;
 static FORCEINLINE Node *base_a(Node *n) { n->b = 0; n->a = 0; return n; }
@@ -24,7 +24,7 @@ extern u32 lbl_880D6D08[];
 
 void *ts4_construct_vtable_obj_8816E8E8(void *ctx)
 {
-    Obj *p = (Obj *)fn_8860DCF8(ctx, 0x430, 4, 2);
+    Obj *p = (Obj *)ts4_node_dispatch_8860DCF8(ctx, 0x430, 4, 2);
     if (p) {
         base_b(&p->base);
         p->f414 = 1;
@@ -45,7 +45,7 @@ void *ts4_construct_vtable_obj_8816E8E8(void *ctx)
 
 void *ts4_construct_vtable_obj_8816E998(void *ctx)
 {
-    Obj *p = (Obj *)fn_8860DCF8(ctx, 0x430, 4, 2);
+    Obj *p = (Obj *)ts4_node_dispatch_8860DCF8(ctx, 0x430, 4, 2);
     if (p) {
         base_b(&p->base);
         p->f414 = 1;
@@ -66,7 +66,7 @@ void *ts4_construct_vtable_obj_8816E998(void *ctx)
 
 void *ts4_construct_vtable_obj_8816EA48(void *ctx)
 {
-    Obj *p = (Obj *)fn_8860DCF8(ctx, 0x430, 4, 2);
+    Obj *p = (Obj *)ts4_node_dispatch_8860DCF8(ctx, 0x430, 4, 2);
     if (p) {
         base_b(&p->base);
         p->f414 = 1;
@@ -87,7 +87,7 @@ void *ts4_construct_vtable_obj_8816EA48(void *ctx)
 
 void *ts4_construct_vtable_obj_88172550(void *ctx)
 {
-    Obj *p = (Obj *)fn_8860DCF8(ctx, 0x430, 4, 2);
+    Obj *p = (Obj *)ts4_node_dispatch_8860DCF8(ctx, 0x430, 4, 2);
     if (p) {
         base_b(&p->base);
         p->f414 = 1;
@@ -108,7 +108,7 @@ void *ts4_construct_vtable_obj_88172550(void *ctx)
 
 void *ts4_construct_vtable_obj_88172A90(void *ctx)
 {
-    Obj *p = (Obj *)fn_8860DCF8(ctx, 0x430, 4, 2);
+    Obj *p = (Obj *)ts4_node_dispatch_8860DCF8(ctx, 0x430, 4, 2);
     if (p) {
         base_b(&p->base);
         p->f414 = 1;
@@ -129,7 +129,7 @@ void *ts4_construct_vtable_obj_88172A90(void *ctx)
 
 void *ts4_construct_vtable_obj_88172B40(void *ctx)
 {
-    Obj *p = (Obj *)fn_8860DCF8(ctx, 0x430, 4, 2);
+    Obj *p = (Obj *)ts4_node_dispatch_8860DCF8(ctx, 0x430, 4, 2);
     if (p) {
         base_b(&p->base);
         p->f414 = 1;
@@ -150,7 +150,7 @@ void *ts4_construct_vtable_obj_88172B40(void *ctx)
 
 void *ts4_construct_vtable_obj_88172F60(void *ctx)
 {
-    Obj *p = (Obj *)fn_8860DCF8(ctx, 0x430, 4, 2);
+    Obj *p = (Obj *)ts4_node_dispatch_8860DCF8(ctx, 0x430, 4, 2);
     if (p) {
         base_b(&p->base);
         p->f414 = 1;

@@ -114,10 +114,10 @@ void ts4_get_u32_off1c_885DA1A8(void);
 void fn_885F2870(void);
 void fn_88603F38(void);
 void fn_88606788(void);
-void fn_8860E668(void);
+void ts4_all_accept_8860E668(void);
 void fn_8860E6E8(void);
 void fn_8860E740(void);
-void fn_8860E7B8(void);
+void ts4_first_accepting_8860E7B8(void);
 void ts4_if_call_seq_u8_off68_886195A0(void);
 void fn_8861A8D0(void);
 void fn_8861DE40(void);
@@ -299,10 +299,10 @@ TS4_FORWARD(886042C0, ts4_msg_buffer_alloc_88278620)
 TS4_FORWARD(88606510, fn_885651F8)
 TS4_FORWARD(88606518, ts4_crt_nh_malloc_88565258)
 TS4_FORWARD(88608988, fn_88606788)
-TS4_FORWARD(88613D40, fn_8860E668)
+TS4_FORWARD(88613D40, ts4_all_accept_8860E668)
 TS4_FORWARD(88613D48, fn_8860E6E8)
 TS4_FORWARD(88613D50, fn_8860E740)
-TS4_FORWARD(88613DF0, fn_8860E7B8)
+TS4_FORWARD(88613DF0, ts4_first_accepting_8860E7B8)
 TS4_FORWARD(88618388, fn_888860A0)
 TS4_FORWARD(8861DB90, fn_88886938)
 TS4_FORWARD(8861F950, ts4_if_call_seq_u8_off68_886195A0)

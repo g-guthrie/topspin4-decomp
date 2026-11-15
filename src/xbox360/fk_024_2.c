@@ -11,7 +11,7 @@ typedef unsigned long long ts4_u64;
 typedef unsigned long ts4_word;
 
 extern char fn_886171D8[];
-extern char fn_8861D6A8[];
+extern char ts4_item_table_register_8861D6A8[];
 extern char ts4_forward_with_global_and_one_88894B08[];
 extern char fn_88894B30[];
 extern char ts4_forward_with_global_and_one_88894B58[];
@@ -92,7 +92,7 @@ ts4_word fn_8841BA98();
 ts4_word fn_8857A1E0();
 ts4_word fn_8857B6D8();
 ts4_word fn_88608590();
-ts4_word fn_88613268();
+ts4_word ts4_node_dispatch_with_target_88613268();
 ts4_word fn_88614938();
 ts4_word fn_88617D88();
 ts4_word fn_8861B128();

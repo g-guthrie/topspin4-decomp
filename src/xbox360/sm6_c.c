@@ -45,7 +45,7 @@ e10_t *ts4_copy_down_8817EEB8(v10_t *v, e10_t *dst, e10_t *src) { int n = v->end
 
 extern void *lbl_88D45B38;
 typedef unsigned int u32_a;
-u32_a fn_88613268(void *heap, u32 size, u32 alignment, u32 flags, u32 pool);
+u32_a ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 alignment, u32 flags, u32 pool);
 char *fn_888AF5C0(void *);
 extern char lbl_880DC930[];
 void *fn_8819B5F8(void *, int);

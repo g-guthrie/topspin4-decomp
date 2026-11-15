@@ -3,12 +3,12 @@
  */
 extern "C" {
 extern void *lbl_88D45B38;   /* shared allocator heap (placeholder name) */
-void *fn_88613268(void *heap, int size, int align, int flags, int tag);
+void *ts4_node_dispatch_with_target_88613268(void *heap, int size, int align, int flags, int tag);
 void ts4_noop_881B3360(void);
 }
 
 inline void *operator new(unsigned, void *heap, int size, int align, int flags, int tag)
-{ return fn_88613268(heap, size, align, flags, tag); }
+{ return ts4_node_dispatch_with_target_88613268(heap, size, align, flags, tag); }
 
 /* Five-entry handler array (function pointers). */
 struct R2HandlerArray { void *entry[5]; };
@@ -31,7 +31,7 @@ extern "C" {
 /* Swing_DLL.xex 0x886A0548: build the five-entry handler/key table (all handlers no-op, keys are name hashes). */
 void ts4_r2_handler_table_init_886A0548(R2HandlerTable *self)
 {
-    self->handlers = (void **)fn_88613268(lbl_88D45B38, 0x14, 4, 0, 2);
+    self->handlers = (void **)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 0x14, 4, 0, 2);
     self->handler_count = 5;
     self->keys = (unsigned int *)new(lbl_88D45B38, 0x14, 4, 0, 2) R2KeyArray();
     self->key_count = 5;

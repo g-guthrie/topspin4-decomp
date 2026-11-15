@@ -115,7 +115,7 @@ ts4_uptr fn_885E76C0(ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_88608590(ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_8860A2A8(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_8860A308(ts4_uptr, ts4_uptr, ts4_uptr);
-ts4_uptr fn_8860DCF8(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr ts4_node_dispatch_8860DCF8(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_8860FA68(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_88613418(ts4_uptr);
 ts4_uptr fn_88617D88(ts4_uptr);

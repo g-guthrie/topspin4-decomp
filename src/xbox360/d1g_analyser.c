@@ -82,7 +82,7 @@ struct Ts4FatigueAnalysers {
 };
 
 extern void *lbl_88D45B38;
-void *fn_88613268(void *heap, int size, int align, int flags, int tag);
+void *ts4_node_dispatch_with_target_88613268(void *heap, int size, int align, int flags, int tag);
 void ts4_registry_dispatch_888860A0(void *p);
 void fn_88911668(struct Ts4Analyser *analyser, void *inputs, struct Ts4GraphSlot *graph, void *graph_inputs,
                  void *graph_outputs);
@@ -122,7 +122,7 @@ void ts4_fatigue_analysers_init_886BC1E0(struct Ts4FatigueAnalysers *self, struc
         self->slots = 0;
         self->slot_count = 0;
     } else {
-        self->slots = (ts4_u8 *)fn_88613268(lbl_88D45B38, n, 1, 0, 2);
+        self->slots = (ts4_u8 *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, n, 1, 0, 2);
         self->slot_count = n;
     }
     for (i = 0; (unsigned)i < (unsigned)n; i++)

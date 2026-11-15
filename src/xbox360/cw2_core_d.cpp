@@ -6,7 +6,7 @@ extern "C" {
 
 extern void *lbl_88D45B38;
 void *ts4_crt_nh_malloc_88565258(cw2_u32 n);
-void *fn_88613350(void *heap, cw2_u32 n);
+void *ts4_node_dispatch_default_88613350(void *heap, cw2_u32 n);
 void *fn_8815D160(cw2_u32 n);
 
 /* Swing_DLL.xex 0x8815C980: allocate; sizes up to 0x80 use the small-block allocator */
@@ -18,7 +18,7 @@ void *ts4_cw2_alloc_8815C980(cw2_u32 n)
         if (heap == 0)
             r = ts4_crt_nh_malloc_88565258(n);
         else
-            r = fn_88613350(heap, n);
+            r = ts4_node_dispatch_default_88613350(heap, n);
         return r;
     }
     return fn_8815D160(n);

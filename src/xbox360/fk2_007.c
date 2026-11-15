@@ -161,7 +161,7 @@ ts4_word fn_8857C1F8();
 ts4_word fn_88581AF0();
 ts4_word fn_88581B70();
 ts4_word fn_8860BBD8();
-ts4_word fn_88613350();
+ts4_word ts4_node_dispatch_default_88613350();
 ts4_word fn_88614938();
 ts4_word ts4_if_call_seq_lbl_880F7EE4_88617D28();
 ts4_word fn_88617D88();
@@ -1074,7 +1074,7 @@ ts4_word ts4_get_u32_off4_88884FB8(ts4_word a0)
     return fn_8857C1F8((ts4_word)t1);
 }
 
-/* Swing_DLL.xex 0x88886160: if_get u32@lbl_88D45B38, fn_88613350, ts4_crt_nh_malloc_88565258 */
+/* Swing_DLL.xex 0x88886160: if_get u32@lbl_88D45B38, ts4_node_dispatch_default_88613350, ts4_crt_nh_malloc_88565258 */
 ts4_word ts4_if_get_u32_lbl_88D45B38_88886160(ts4_word a0)
 {
     ts4_word t1;
@@ -1083,10 +1083,10 @@ ts4_word ts4_if_get_u32_lbl_88D45B38_88886160(ts4_word a0)
     if ((ts4_word)t1 == 0) {
         return ts4_crt_nh_malloc_88565258((ts4_word)a0);
     }
-    return fn_88613350((ts4_word)t1, (ts4_word)a0);
+    return ts4_node_dispatch_default_88613350((ts4_word)t1, (ts4_word)a0);
 }
 
-/* Swing_DLL.xex 0x88886180: if_get u32@lbl_88D45B38, fn_88613350, ts4_crt_nh_malloc_88565258 */
+/* Swing_DLL.xex 0x88886180: if_get u32@lbl_88D45B38, ts4_node_dispatch_default_88613350, ts4_crt_nh_malloc_88565258 */
 ts4_word ts4_if_get_u32_lbl_88D45B38_88886180(ts4_word a0)
 {
     ts4_word t1;
@@ -1095,7 +1095,7 @@ ts4_word ts4_if_get_u32_lbl_88D45B38_88886180(ts4_word a0)
     if ((ts4_word)t1 == 0) {
         return ts4_crt_nh_malloc_88565258((ts4_word)a0);
     }
-    return fn_88613350((ts4_word)t1, (ts4_word)a0);
+    return ts4_node_dispatch_default_88613350((ts4_word)t1, (ts4_word)a0);
 }
 
 /* Swing_DLL.xex 0x888865E8: addr lbl_880D6B70, lbl_880F7F38, u32@0x20, u32@0x0, ts4_if_call_seq_lbl_880F7EE4_88617D28 */
@@ -1106,7 +1106,7 @@ ts4_word ts4_addr_lbl_880D6B70_888865E8(ts4_word a0)
     return ts4_if_call_seq_lbl_880F7EE4_88617D28((ts4_word)a0);
 }
 
-/* Swing_DLL.xex 0x888869A8: if_call_seq u32@lbl_88D45B38, fn_88613350, ts4_crt_nh_malloc_88565258, u32@0x40 */
+/* Swing_DLL.xex 0x888869A8: if_call_seq u32@lbl_88D45B38, ts4_node_dispatch_default_88613350, ts4_crt_nh_malloc_88565258, u32@0x40 */
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_888869A8(ts4_word a0)
 {
     ts4_word p4;
@@ -1119,7 +1119,7 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45B38_888869A8(ts4_word a0)
         t3 = ts4_crt_nh_malloc_88565258((ts4_word)28);
         p4 = (ts4_word)t3;
     } else {
-        t2 = fn_88613350((ts4_word)t1, (ts4_word)28);
+        t2 = ts4_node_dispatch_default_88613350((ts4_word)t1, (ts4_word)28);
         p4 = (ts4_word)t2;
     }
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 64) = (ts4_word)p4;

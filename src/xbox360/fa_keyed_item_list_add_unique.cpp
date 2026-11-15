@@ -4,7 +4,7 @@
    with the shared allocator and appends its pointer to the vector. */
 extern "C" {
 extern void *lbl_88D45B38;   /* shared allocator heap, placeholder name */
-void *fn_88613268(void *heap, int size, int align, int flags, int tag);
+void *ts4_node_dispatch_with_target_88613268(void *heap, int size, int align, int flags, int tag);
 void fn_881898E8(void *vector, void *element_ptr);   /* push_back-like */
 extern int lbl_880D56BC;
 extern int lbl_880D56C8;
@@ -280,7 +280,7 @@ struct ts4_keyed_item;
 struct ts4_item_vector { ts4_keyed_item **begin; ts4_keyed_item **end; };
 
 inline void *operator new(unsigned, void *heap, int size, int align, int flags, int tag)
-{ return fn_88613268(heap, size, align, flags, tag); }
+{ return ts4_node_dispatch_with_target_88613268(heap, size, align, flags, tag); }
 
 #define TS4_KEYED_ITEM_ADD_UNIQUE(NAME, VTBL) \
 struct NAME##_item { void *vtbl; unsigned key; \

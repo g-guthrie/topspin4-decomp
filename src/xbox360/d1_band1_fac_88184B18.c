@@ -3,7 +3,7 @@ typedef unsigned char u8;
 typedef unsigned int u32;
 
 extern void *lbl_88D45B38;
-extern void *fn_88613268(void *heap, u32 size, u32 a, u32 b, u32 c);
+extern void *ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 a, u32 b, u32 c);
 extern void *fn_888C9588(void *self);
 extern void *fn_888DDF98(void *self);
 extern void *fn_888DDE20(void *self);
@@ -29,7 +29,7 @@ extern void *fn_888B0CA8(void *self);
 
 void *ts4_create_object_88188DE0(void)
 {
-    char *p = (char *)fn_88613268(lbl_88D45B38, 60, 4, 0, 2);
+    char *p = (char *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 60, 4, 0, 2);
     if (p != 0) {
         fn_888B1D08(p);
         *(void **)(p + 0) = lbl_880DC680;
@@ -40,7 +40,7 @@ void *ts4_create_object_88188DE0(void)
 
 void *ts4_create_object_88188E58(void)
 {
-    char *p = (char *)fn_88613268(lbl_88D45B38, 60, 4, 0, 0);
+    char *p = (char *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 60, 4, 0, 0);
     if (p != 0) {
         fn_888B1D08(p);
         *(void **)(p + 0) = lbl_880DC680;
@@ -51,7 +51,7 @@ void *ts4_create_object_88188E58(void)
 
 void *ts4_create_object_88188F80(void)
 {
-    char *p = (char *)fn_88613268(lbl_88D45B38, 128, 4, 0, 2);
+    char *p = (char *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 128, 4, 0, 2);
     if (p != 0) {
         return fn_888AF5C0(p);
     }
@@ -60,7 +60,7 @@ void *ts4_create_object_88188F80(void)
 
 void *ts4_create_object_88188FD8(void)
 {
-    char *p = (char *)fn_88613268(lbl_88D45B38, 128, 4, 0, 0);
+    char *p = (char *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 128, 4, 0, 0);
     if (p != 0) {
         return fn_888AF5C0(p);
     }
@@ -69,7 +69,7 @@ void *ts4_create_object_88188FD8(void)
 
 void *ts4_create_object_88189030(void)
 {
-    char *p = (char *)fn_88613268(lbl_88D45B38, 224, 16, 0, 2);
+    char *p = (char *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 224, 16, 0, 2);
     if (p != 0) {
         return fn_888B1230(p);
     }
@@ -78,7 +78,7 @@ void *ts4_create_object_88189030(void)
 
 void *ts4_create_object_88189088(void)
 {
-    char *p = (char *)fn_88613268(lbl_88D45B38, 224, 16, 0, 0);
+    char *p = (char *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 224, 16, 0, 0);
     if (p != 0) {
         return fn_888B1230(p);
     }

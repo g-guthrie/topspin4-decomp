@@ -10,10 +10,10 @@ char *fn_8819B5F8(char **self, u32 newlen);
 
 /* 0x881996B0: true when the call on the global handle returns nonzero */
 extern void *lbl_88D45B38;
-u32 fn_8860D360(void *);
+u32 ts4_find_range_owner_8860D360(void *);
 u32 ts4_global_handle_is_set_881996B0(void)
 {
-    return 0 != fn_8860D360(lbl_88D45B38);
+    return 0 != ts4_find_range_owner_8860D360(lbl_88D45B38);
 }
 
 /* 0x88190F70 / 0x88190AB0: current element of a table iterator */

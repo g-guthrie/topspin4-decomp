@@ -3,7 +3,7 @@ typedef unsigned char u8;
 typedef unsigned int u32;
 
 extern void *lbl_88D45B38;
-extern void *fn_88613268(void *heap, u32 size, u32 a, u32 b, u32 c);
+extern void *ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 a, u32 b, u32 c);
 extern void *ts4_service_ctor_vec_88622D18(void *self);
 extern void *ts4_call_seq_fn_8861B128_88622BF0(void *self);
 extern void *fn_88617D88(void *self);
@@ -22,13 +22,13 @@ extern void *lbl_880F8978[];
 extern void *ts4_call_seq_fn_886197F0_88620480(void *self);
 extern void *ts4_call_seq_fn_886197F0_88620190(void *self);
 extern void *ts4_call_seq_fn_886197F0_8861FE98(void *self);
-extern void *fn_8861F9B8(void *self);
+extern void *ts4_named_list_ctor_8861F9B8(void *self);
 extern void *fn_886197F0(void *self);
 extern void *lbl_880F8748[];
 
 void *ts4_create_object_88284C68(void)
 {
-    char *p = (char *)fn_88613268(lbl_88D45B38, 400, 4, 0, 2);
+    char *p = (char *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 400, 4, 0, 2);
     if (p != 0) {
         return ts4_call_seq_fn_886197F0_88620C10(p);
     }
@@ -37,7 +37,7 @@ void *ts4_create_object_88284C68(void)
 
 void *ts4_create_object_88284CC0(void)
 {
-    char *p = (char *)fn_88613268(lbl_88D45B38, 400, 4, 0, 0);
+    char *p = (char *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 400, 4, 0, 0);
     if (p != 0) {
         return ts4_call_seq_fn_886197F0_88620C10(p);
     }

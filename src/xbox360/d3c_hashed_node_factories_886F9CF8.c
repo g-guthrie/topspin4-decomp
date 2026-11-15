@@ -23,7 +23,7 @@ typedef struct Ts4HashedNodeBase {
 
 extern void *lbl_88D45B38;
 extern void *lbl_88D45AD4;
-extern void *fn_88613268(void *heap, u32 size, u32 align, u32 tag, u32 pool);
+extern void *ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 align, u32 tag, u32 pool);
 extern u32 fn_88923530(u32 pool, Ts4Handle12 h, u32 hash);
 extern void *lbl_880F2C8C[];
 extern void *lbl_880F2BF0[];
@@ -57,7 +57,7 @@ TS4_FORCEINLINE Ts4HashedNodeBase *ts4_hashed_node_base_init(Ts4HashedNodeBase *
         Ts4HashedNode *r; \
         (void)unused; \
         if (lbl_88D45AD4) tag = *(u32 *)((char *)lbl_88D45AD4 + 0x15680); \
-        o = (Ts4HashedNode *)fn_88613268(lbl_88D45B38, 0x10, 4, tag, 2); \
+        o = (Ts4HashedNode *)ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 0x10, 4, tag, 2); \
         if (o) { \
             ts4_hashed_node_base_init((Ts4HashedNodeBase *)o); \
             r = o; \

@@ -5,12 +5,12 @@
 
 extern "C" {
 
-extern void fn_88613268();
+extern void ts4_node_dispatch_with_target_88613268();
 extern char lbl_88D45B38[];
 
 void ts4_call_88613268_88618368(int p0)
 {
-    ((void (*)(int, int, int, int, int))fn_88613268)(*(int *)(lbl_88D45B38), p0, 1, 0, 0);
+    ((void (*)(int, int, int, int, int))ts4_node_dispatch_with_target_88613268)(*(int *)(lbl_88D45B38), p0, 1, 0, 0);
 }
 
 }

@@ -1,7 +1,7 @@
 typedef unsigned int u32;
 
 extern void *lbl_88D45B38;
-extern u32 fn_88613268(void *heap, u32 size, u32 alignment, u32 flags, u32 pool);
+extern u32 ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 alignment, u32 flags, u32 pool);
 extern void *fn_889285A0(void);
 extern void *fn_889296C0(void);
 extern void *fn_8892A0E0(void);
@@ -10,7 +10,7 @@ extern void *fn_889270C0(void);
 
 #define TS4_FACTORY(name, size, pool, constructor) \
     void *name(void) { \
-        if (fn_88613268(lbl_88D45B38, size, 4, 0, pool) != 0) { \
+        if (ts4_node_dispatch_with_target_88613268(lbl_88D45B38, size, 4, 0, pool) != 0) { \
             return constructor(); \
         } \
         return 0; \

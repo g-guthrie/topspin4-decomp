@@ -35,7 +35,7 @@ ts4_word ts4_loop_call_seq_u32_off2c_8831CB38();
 ts4_word fn_8832B030();
 ts4_word fn_8841C678();
 ts4_word fn_885651F8();
-ts4_word fn_8860D360();
+ts4_word ts4_find_range_owner_8860D360();
 ts4_word fn_8860DBC8();
 ts4_word fn_88627EC0();
 ts4_word ts4_if_set_u32_off0_8862C0E8();
@@ -505,7 +505,7 @@ void ts4_loop_get_fn_88610AC8_8878C120(ts4_word a0, ts4_word a1)
         if ((ts4_word)t19 != 0) {
             t20 = *(ts4_word *)lbl_88D45B38;
             if ((ts4_word)t20 != 0) {
-                t22 = fn_8860D360((ts4_word)t20, (ts4_word)t19);
+                t22 = ts4_find_range_owner_8860D360((ts4_word)t20, (ts4_word)t19);
                 if ((ts4_word)t22 != 0) {
                     fn_8860DBC8((ts4_word)t22, (ts4_word)t19);
                 } else {

@@ -153,9 +153,9 @@ ts4_word fn_88605FA0();
 ts4_word ts4_if_call_seq_lbl_880C1320_88606800();
 ts4_word fn_88606978();
 ts4_word fn_886074E8();
-ts4_word fn_886077C0();
+ts4_word ts4_find_handler_slot5_886077C0();
 ts4_word fn_88608590();
-ts4_word fn_88608FE0();
+ts4_word ts4_dispatch_to_target_88608FE0();
 ts4_word fn_8860B180();
 ts4_word ts4_if_get_u32_off10_8860B230();
 ts4_word fn_8860B2A8();
@@ -163,13 +163,13 @@ ts4_word fn_8860BBD8();
 ts4_word ts4_loop_call_seq_u32_offc_8860BD70();
 ts4_word ts4_call_seq_ts4_crt_nh_malloc_88565258_8860CDD8();
 ts4_word ts4_if_call_seq_fn_88883CD0_8860D5B8();
-ts4_word fn_8860DCF8();
+ts4_word ts4_node_dispatch_8860DCF8();
 ts4_word fn_8860E320();
 ts4_word ts4_handle_forward0_88610AC8();
 ts4_word fn_88610FF0();
 ts4_word fn_88612EB8();
 ts4_word ts4_if_call_seq_fn_881F04B8_886131F0();
-ts4_word fn_88613268();
+ts4_word ts4_node_dispatch_with_target_88613268();
 ts4_word fn_88614938();
 ts4_word fn_88614B70();
 ts4_word fn_88615168();
@@ -1332,7 +1332,7 @@ ts4_word ts4_if_get_u32_lbl_88D45B1C_88609EB8(ts4_word a0, ts4_word a1)
         ((ts4_word (*)(ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t6) + 0))) + 4))))((ts4_word)t6, (ts4_word)(ts4_word)&loc58[0], (ts4_word)8);
         t10 = loc50[0];
         ((ts4_word (*)(ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t10) + 0))) + 28))))((ts4_word)t10, (ts4_word)0, (ts4_word)2);
-        t14 = fn_886077C0((ts4_word)(ts4_word)&loc58[0]);
+        t14 = ts4_find_handler_slot5_886077C0((ts4_word)(ts4_word)&loc58[0]);
         if ((ts4_word)t14 != 0) {
             t15 = *(ts4_word *)((char *)(ts4_word)(t14) + 0);
             t16 = loc50[0];
@@ -1819,7 +1819,7 @@ ts4_word ts4_if_get_u32_lbl_88D45B38_88613548(ts4_word a0, ts4_word a1)
     return fn_885651F8((ts4_word)a1, (ts4_word)a1, (ts4_word)a0);
 }
 
-/* Swing_DLL.xex 0x88613D58: if_get fn_88608FE0, u32@0x0, u32@0x4, u32@0x14, u32@0x4, u32@0x0 */
+/* Swing_DLL.xex 0x88613D58: if_get ts4_dispatch_to_target_88608FE0, u32@0x0, u32@0x4, u32@0x14, u32@0x4, u32@0x0 */
 ts4_word ts4_if_get_fn_88608FE0_88613D58(ts4_word a0, ts4_word a1)
 {
     ts4_word p13;
@@ -1830,7 +1830,7 @@ ts4_word ts4_if_get_fn_88608FE0_88613D58(ts4_word a0, ts4_word a1)
     ts4_word t9;
     ts4_word t12;
 
-    t1 = fn_88608FE0();
+    t1 = ts4_dispatch_to_target_88608FE0();
     t2 = *(ts4_word *)((char *)(ts4_word)(a1) + 0);
     p15 = (ts4_word)t1;
     if ((int)t2 != 0 && (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t2) + 4)) == (ts4_word)a0) {
@@ -2048,7 +2048,7 @@ ts4_word ts4_if_set_u32_off4_886171F0(ts4_word a0, ts4_word a1, ts4_word a2, ts4
         if ((ts4_word)(t1 & 0xff) != 0) {
             ts4_if_get_u32_off10_8860B230((ts4_word)a0, (ts4_word)a2);
             t3 = *(ts4_word *)((char *)(ts4_word)(a0) + 28);
-            t5 = fn_88613268((ts4_word)(*(ts4_word *)lbl_88D45B38), (ts4_word)t3, (ts4_word)1, (ts4_word)0, (ts4_word)0);
+            t5 = ts4_node_dispatch_with_target_88613268((ts4_word)(*(ts4_word *)lbl_88D45B38), (ts4_word)t3, (ts4_word)1, (ts4_word)0, (ts4_word)0);
             t6 = *(ts4_word *)((char *)(ts4_word)(a0) + 28);
             *(ts4_word *)((char *)(ts4_word)(a0) + 24) = (ts4_word)t5;
             ((ts4_word (*)(ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a2) + 0))) + 4))))((ts4_word)a2, (ts4_word)t5, (ts4_word)t6);
@@ -2451,7 +2451,7 @@ ts4_word ts4_call_seq_fn_88619628_886203D8(ts4_word a0, ts4_word a1)
     t4 = *(volatile ts4_word *)lbl_88D45B38;
     t6 = fn_88618998((ts4_word)t4, (ts4_word)(*(volatile ts4_word *)((char *)(ts4_word)(a1) + 88)));
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 380) = (ts4_word)t6;
-    t8 = fn_8860DCF8((ts4_word)t6, (ts4_word)((*(volatile ts4_word *)((char *)(ts4_word)(a0) + 392)) << 2), (ts4_word)4, (ts4_word)2);
+    t8 = ts4_node_dispatch_8860DCF8((ts4_word)t6, (ts4_word)((*(volatile ts4_word *)((char *)(ts4_word)(a0) + 392)) << 2), (ts4_word)4, (ts4_word)2);
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 384) = (ts4_word)t8;
     ts4_memset((ts4_word)t8, (ts4_word)0, (ts4_word)((*(volatile ts4_word *)((char *)(ts4_word)(a0) + 392)) << 2));
     t11 = *(volatile ts4_word *)lbl_88D45B38;

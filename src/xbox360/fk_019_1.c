@@ -75,7 +75,7 @@ ts4_word fn_8857C040();
 ts4_word fn_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_8860D250();
-ts4_word fn_88613268();
+ts4_word ts4_node_dispatch_with_target_88613268();
 ts4_word fn_88617D88();
 ts4_word fn_88618998();
 ts4_word ts4_if_get_u32_off0_88644860();

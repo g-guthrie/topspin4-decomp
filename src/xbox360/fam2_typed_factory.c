@@ -6,7 +6,7 @@ typedef unsigned int u32;
 typedef unsigned char u8;
 typedef struct Ts4TypedRecord { void *vt; u32 key; } Ts4TypedRecord;
 extern void *lbl_88D45B38;
-extern void *fn_88613268(void *heap, int size, int align, int flags, int tag);
+extern void *ts4_node_dispatch_with_target_88613268(void *heap, int size, int align, int flags, int tag);
 extern void fn_881898E8(void *list, Ts4TypedRecord **rec);
 extern Ts4TypedRecord *ts4_call_seq_lbl_880D6330_88929A60(void *p);
 extern Ts4TypedRecord *fn_88929B08(void *p);
@@ -20,7 +20,7 @@ void ts4_typed_factory_##A(void *list, const u32 *key, const u8 *kind); \
 void ts4_typed_factory_##A(void *list, const u32 *key, const u8 *kind) \
 { \
     if (*kind == 1) { \
-        void *mem = fn_88613268(lbl_88D45B38, SIZE, 4, 0, 2); \
+        void *mem = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, SIZE, 4, 0, 2); \
         Ts4TypedRecord *rec = mem ? CTOR(mem) : 0; \
         rec->key = *key; \
         fn_881898E8(list, &rec); \

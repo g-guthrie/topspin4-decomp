@@ -8,9 +8,9 @@ typedef struct Pool { char pad[0x20]; Entry *entries; } Pool;
 typedef struct Mgr { char pad[0x24]; char *res; char pad2[0x78]; Pool *pool; } Mgr;
 extern Mgr *lbl_88D45AD4;
 extern void fn_88719D50(void *r);
-extern void fn_88222B50(void *r, int id);
+extern void ts4_ptrvec_add_fin_88222B50(void *r, int id);
 extern void fn_8825FC78(void *e);
-extern void fn_88223890(void *p, int id);
+extern void ts4_pool_rel_b0_88223890(void *p, int id);
 extern void *fn_886F1900(Obj *o);
 
 void *ts4_release_ids_8874B9B8(Obj *o)
@@ -19,7 +19,7 @@ void *ts4_release_ids_8874B9B8(Obj *o)
         void *r = o->vt->find(o, o->id0);
         if (r) {
             fn_88719D50(r);
-            fn_88222B50(lbl_88D45AD4->res + 0x34, o->id0);
+            ts4_ptrvec_add_fin_88222B50(lbl_88D45AD4->res + 0x34, o->id0);
         }
         o->id0 = -1;
     }
@@ -27,7 +27,7 @@ void *ts4_release_ids_8874B9B8(Obj *o)
         void *e = lbl_88D45AD4->pool->entries[o->id1].body;
         if (e) {
             fn_8825FC78(e);
-            fn_88223890(lbl_88D45AD4->pool, o->id1);
+            ts4_pool_rel_b0_88223890(lbl_88D45AD4->pool, o->id1);
         }
         o->id1 = -1;
     }

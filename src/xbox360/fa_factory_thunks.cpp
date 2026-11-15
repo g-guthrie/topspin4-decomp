@@ -1,12 +1,12 @@
 /* Family A: heap-allocating factory thunks (Swing_DLL.xex).
-   Each allocates an object with the shared allocator (fn_88613268), runs the
+   Each allocates an object with the shared allocator (ts4_node_dispatch_with_target_88613268), runs the
    shared base constructor fn_88617D88, installs a per-class vtable pointer
    (the 0x20-byte classes also clear the word at +0x1c) and returns the object,
    or NULL if the allocation failed. The last allocator argument (tag 2 or 0)
    distinguishes the two clusters of each size. */
 extern "C" {
 extern void *lbl_88D45B38;   /* shared allocator heap, placeholder name */
-void *fn_88613268(void *heap, int size, int align, int flags, int tag);
+void *ts4_node_dispatch_with_target_88613268(void *heap, int size, int align, int flags, int tag);
 void fn_88617D88(void *self);   /* shared base constructor */
 extern int lbl_880C13C0;   /* per-class vtable, placeholder name */
 extern int lbl_880C13E8;   /* per-class vtable, placeholder name */
@@ -81,7 +81,7 @@ extern int lbl_880F8978;   /* per-class vtable, placeholder name */
 }
 
 inline void *operator new(unsigned, void *heap, int size, int align, int flags, int tag)
-{ return fn_88613268(heap, size, align, flags, tag); }
+{ return ts4_node_dispatch_with_target_88613268(heap, size, align, flags, tag); }
 
 #define TS4_FACTORY_28(NAME, VTBL, TAG) \
 struct NAME##_obj { void *vtbl; char base_fields[24]; \

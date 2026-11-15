@@ -20,7 +20,7 @@ extern char lbl_88D45B38[];
 ts4_word fn_88150600();
 ts4_word ts4_if_call_seq_u32_off8_88213D38();
 ts4_word fn_8846C178();
-ts4_word fn_88613268();
+ts4_word ts4_node_dispatch_with_target_88613268();
 ts4_word fn_88799490();
 ts4_word fn_88851F00();
 ts4_word fn_88852068();

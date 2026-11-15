@@ -18,7 +18,7 @@ typedef struct Ts4Object { void *vtable; } Ts4Object;
 #define LP(p,o) (*(char **)((char *)(p) + (o)))
 #define VT(p,s) ((*(void ***)(p))[s])
 extern void * lbl_88D45B38;
-extern void * fn_88613268(void *, int, int, int, int);
+extern void * ts4_node_dispatch_with_target_88613268(void *, int, int, int, int);
 extern void * fn_888CB730(void *);
 extern void * fn_887EB298(void *);
 extern void * fn_88629B60(void *);
@@ -75,7 +75,7 @@ extern void ts4_tsu_cleanup_begin(char *);
 extern char * fn_881519D0(char *);
 extern char * fn_8819A098(char *);
 extern char lbl_880DC520;
-extern void fn_88616160(char *);
+extern void ts4_pool_release_all_88616160(char *);
 extern int fn_8832F930(char *, char **);
 extern void fn_8832FC40(char *, char *, int);
 extern void fn_8832FD28(char *, char *, int);
@@ -243,7 +243,7 @@ extern void * lbl_88C6CBF8;
 /* Swing_DLL.xex 0x88183B38 */
 void * ts4_allocate_object_in_global_heap_and_construct_88183B38(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 108, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 108, 4, 0, 0);
     if (p) return fn_888CB730(p);
     return 0;
 }
@@ -251,7 +251,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88183B38(void)
 /* Swing_DLL.xex 0x881BA3D0 */
 void * ts4_allocate_object_in_global_heap_and_construct_881BA3D0(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 108, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 108, 4, 0, 0);
     if (p) return fn_887EB298(p);
     return 0;
 }
@@ -259,7 +259,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881BA3D0(void)
 /* Swing_DLL.xex 0x88285980 */
 void * ts4_allocate_object_in_global_heap_and_construct_88285980(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 108, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 108, 4, 0, 0);
     if (p) return fn_88629B60(p);
     return 0;
 }
@@ -268,7 +268,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88285980(void)
 /* Swing_DLL.xex 0x881842E8 */
 void * ts4_allocate_object_in_global_heap_and_construct_881842E8(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 100, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 100, 4, 0, 0);
     if (p) return fn_888DE430(p);
     return 0;
 }
@@ -276,7 +276,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881842E8(void)
 /* Swing_DLL.xex 0x881BA230 */
 void * ts4_allocate_object_in_global_heap_and_construct_881BA230(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 100, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 100, 4, 0, 0);
     if (p) return fn_887EE810(p);
     return 0;
 }
@@ -284,7 +284,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881BA230(void)
 /* Swing_DLL.xex 0x88235728 */
 void * ts4_allocate_object_in_global_heap_and_construct_88235728(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 100, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 100, 4, 0, 0);
     if (p) return fn_88721D08(p);
     return 0;
 }
@@ -293,7 +293,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88235728(void)
 /* Swing_DLL.xex 0x88184448 */
 void * ts4_allocate_object_in_global_heap_and_construct_88184448(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 96, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 96, 4, 0, 0);
     if (p) return fn_888CA9A0(p);
     return 0;
 }
@@ -301,7 +301,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88184448(void)
 /* Swing_DLL.xex 0x8821A248 */
 void * ts4_allocate_object_in_global_heap_and_construct_8821A248(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 96, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 96, 4, 0, 0);
     if (p) return fn_88773390(p);
     return 0;
 }
@@ -309,7 +309,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_8821A248(void)
 /* Swing_DLL.xex 0x8821A2F8 */
 void * ts4_allocate_object_in_global_heap_and_construct_8821A2F8(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 96, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 96, 4, 0, 0);
     if (p) return fn_887732E8(p);
     return 0;
 }
@@ -318,7 +318,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_8821A2F8(void)
 /* Swing_DLL.xex 0x88185278 */
 void * ts4_allocate_object_in_global_heap_and_construct_88185278(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 84, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 84, 4, 0, 0);
     if (p) return fn_888DF9C0(p);
     return 0;
 }
@@ -326,7 +326,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88185278(void)
 /* Swing_DLL.xex 0x881B7F10 */
 void * ts4_allocate_object_in_global_heap_and_construct_881B7F10(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 84, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 84, 4, 0, 0);
     if (p) return fn_887F90F0(p);
     return 0;
 }
@@ -334,7 +334,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881B7F10(void)
 /* Swing_DLL.xex 0x882174C0 */
 void * ts4_allocate_object_in_global_heap_and_construct_882174C0(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 84, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 84, 4, 0, 0);
     if (p) return fn_88795E40(p);
     return 0;
 }
@@ -343,7 +343,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_882174C0(void)
 /* Swing_DLL.xex 0x881AC190 */
 void * ts4_allocate_object_in_global_heap_and_construct_881AC190(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 56, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 56, 4, 0, 0);
     if (p) return fn_888663D0(p);
     return 0;
 }
@@ -351,7 +351,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881AC190(void)
 /* Swing_DLL.xex 0x881BC760 */
 void * ts4_allocate_object_in_global_heap_and_construct_881BC760(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 56, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 56, 4, 0, 0);
     if (p) return fn_887D2F98(p);
     return 0;
 }
@@ -359,7 +359,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881BC760(void)
 /* Swing_DLL.xex 0x88217060 */
 void * ts4_allocate_object_in_global_heap_and_construct_88217060(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 56, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 56, 4, 0, 0);
     if (p) return fn_88798368(p);
     return 0;
 }
@@ -415,7 +415,7 @@ void ts4_init_base_then_clear_byte8_then_sub16_888F1DC8(char *a)
 /* Swing_DLL.xex 0x88167C58 */
 void * ts4_allocate_object_in_global_heap_and_construct_88167C58(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 236, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 236, 4, 0, 2);
     if (p) return fn_88951BB8(p);
     return 0;
 }
@@ -423,7 +423,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88167C58(void)
 /* Swing_DLL.xex 0x88182F30 */
 void * ts4_allocate_object_in_global_heap_and_construct_88182F30(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 236, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 236, 4, 0, 2);
     if (p) return fn_888DF630(p);
     return 0;
 }
@@ -432,7 +432,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88182F30(void)
 /* Swing_DLL.xex 0x88167E68 */
 void * ts4_allocate_object_in_global_heap_and_construct_88167E68(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 88, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 88, 4, 0, 2);
     if (p) return fn_88951690(p);
     return 0;
 }
@@ -440,7 +440,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88167E68(void)
 /* Swing_DLL.xex 0x8821A4B0 */
 void * ts4_allocate_object_in_global_heap_and_construct_8821A4B0(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 88, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 88, 4, 0, 2);
     if (p) return fn_88772FD8(p);
     return 0;
 }
@@ -449,7 +449,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_8821A4B0(void)
 /* Swing_DLL.xex 0x88168788 */
 void * ts4_allocate_object_in_global_heap_and_construct_88168788(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 112, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 112, 4, 0, 2);
     if (p) return fn_889666A8(p);
     return 0;
 }
@@ -457,7 +457,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88168788(void)
 /* Swing_DLL.xex 0x881AF408 */
 void * ts4_allocate_object_in_global_heap_and_construct_881AF408(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 112, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 112, 4, 0, 2);
     if (p) return fn_88850648(p);
     return 0;
 }
@@ -466,7 +466,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881AF408(void)
 /* Swing_DLL.xex 0x88168A98 */
 void * ts4_allocate_object_in_global_heap_and_construct_88168A98(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 120, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 120, 4, 0, 2);
     if (p) return fn_8896BD28(p);
     return 0;
 }
@@ -474,7 +474,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88168A98(void)
 /* Swing_DLL.xex 0x88184B70 */
 void * ts4_allocate_object_in_global_heap_and_construct_88184B70(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 120, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 120, 4, 0, 2);
     if (p) return fn_888DDF98(p);
     return 0;
 }
@@ -483,7 +483,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88184B70(void)
 /* Swing_DLL.xex 0x88173100 */
 void * ts4_allocate_object_in_global_heap_and_construct_88173100(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 244, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 244, 4, 0, 2);
     if (p) return fn_8891A388(p);
     return 0;
 }
@@ -491,7 +491,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88173100(void)
 /* Swing_DLL.xex 0x88189190 */
 void * ts4_allocate_object_in_global_heap_and_construct_88189190(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 244, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 244, 4, 0, 2);
     if (p) return fn_888B0CA8(p);
     return 0;
 }
@@ -500,7 +500,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88189190(void)
 /* Swing_DLL.xex 0x88183330 */
 void * ts4_allocate_object_in_global_heap_and_construct_88183330(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 104, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 104, 4, 0, 2);
     if (p) return fn_888DF440(p);
     return 0;
 }
@@ -508,7 +508,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88183330(void)
 /* Swing_DLL.xex 0x88235620 */
 void * ts4_allocate_object_in_global_heap_and_construct_88235620(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 104, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 104, 4, 0, 2);
     if (p) return fn_8872A910(p);
     return 0;
 }
@@ -517,7 +517,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88235620(void)
 /* Swing_DLL.xex 0x88183A30 */
 void * ts4_allocate_object_in_global_heap_and_construct_88183A30(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 160, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 160, 4, 0, 2);
     if (p) return fn_888CB860(p);
     return 0;
 }
@@ -525,7 +525,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88183A30(void)
 /* Swing_DLL.xex 0x882848F8 */
 void * ts4_allocate_object_in_global_heap_and_construct_882848F8(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 160, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 160, 4, 0, 2);
     if (p) return fn_88626840(p);
     return 0;
 }
@@ -534,7 +534,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_882848F8(void)
 /* Swing_DLL.xex 0x88184960 */
 void * ts4_allocate_object_in_global_heap_and_construct_88184960(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 272, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 272, 4, 0, 2);
     if (p) return fn_888DE030(p);
     return 0;
 }
@@ -542,7 +542,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88184960(void)
 /* Swing_DLL.xex 0x881B8AB8 */
 void * ts4_allocate_object_in_global_heap_and_construct_881B8AB8(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 272, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 272, 4, 0, 2);
     if (p) return fn_887F13B8(p);
     return 0;
 }
@@ -551,7 +551,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881B8AB8(void)
 /* Swing_DLL.xex 0x88188B48 */
 void * ts4_allocate_object_in_global_heap_and_construct_88188B48(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 184, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 184, 4, 0, 2);
     if (p) return fn_888B92C0(p);
     return 0;
 }
@@ -559,7 +559,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88188B48(void)
 /* Swing_DLL.xex 0x881B2FD0 */
 void * ts4_allocate_object_in_global_heap_and_construct_881B2FD0(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 184, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 184, 4, 0, 2);
     if (p) return fn_888041C0(p);
     return 0;
 }
@@ -568,7 +568,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881B2FD0(void)
 /* Swing_DLL.xex 0x881890E0 */
 void * ts4_allocate_object_in_global_heap_and_construct_881890E0(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 172, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 172, 4, 0, 2);
     if (p) return fn_888B0FF8(p);
     return 0;
 }
@@ -576,7 +576,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881890E0(void)
 /* Swing_DLL.xex 0x881AC298 */
 void * ts4_allocate_object_in_global_heap_and_construct_881AC298(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 172, 4, 0, 2);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 172, 4, 0, 2);
     if (p) return fn_888682F0(p);
     return 0;
 }
@@ -585,7 +585,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881AC298(void)
 /* Swing_DLL.xex 0x88189418 */
 void * ts4_allocate_object_in_global_heap_and_construct_88189418(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 184, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 184, 4, 0, 0);
     if (p) return fn_888B92C0(p);
     return 0;
 }
@@ -593,7 +593,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88189418(void)
 /* Swing_DLL.xex 0x881B3028 */
 void * ts4_allocate_object_in_global_heap_and_construct_881B3028(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 184, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 184, 4, 0, 0);
     if (p) return fn_888041C0(p);
     return 0;
 }
@@ -602,7 +602,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881B3028(void)
 /* Swing_DLL.xex 0x881A5CF8 */
 void * ts4_allocate_object_in_global_heap_and_construct_881A5CF8(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 552, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 552, 4, 0, 0);
     if (p) return fn_88887FA0(p);
     return 0;
 }
@@ -610,7 +610,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881A5CF8(void)
 /* Swing_DLL.xex 0x88284A00 */
 void * ts4_allocate_object_in_global_heap_and_construct_88284A00(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 552, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 552, 4, 0, 0);
     if (p) return fn_886214A0(p);
     return 0;
 }
@@ -619,7 +619,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88284A00(void)
 /* Swing_DLL.xex 0x881AC0E0 */
 void * ts4_allocate_object_in_global_heap_and_construct_881AC0E0(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 32, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 32, 4, 0, 0);
     if (p) return fn_88866480(p);
     return 0;
 }
@@ -627,7 +627,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_881AC0E0(void)
 /* Swing_DLL.xex 0x88211E28 */
 void * ts4_allocate_object_in_global_heap_and_construct_88211E28(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 32, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 32, 4, 0, 0);
     if (p) return fn_887CBD40(p);
     return 0;
 }
@@ -636,7 +636,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88211E28(void)
 /* Swing_DLL.xex 0x88212208 */
 void * ts4_allocate_object_in_global_heap_and_construct_88212208(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 204, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 204, 4, 0, 0);
     if (p) return fn_887C85E0(p);
     return 0;
 }
@@ -644,7 +644,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88212208(void)
 /* Swing_DLL.xex 0x882172E0 */
 void * ts4_allocate_object_in_global_heap_and_construct_882172E0(void)
 {
-    void *p = fn_88613268(lbl_88D45B38, 204, 4, 0, 0);
+    void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 204, 4, 0, 0);
     if (p) return fn_88793C60(p);
     return 0;
 }
@@ -690,7 +690,7 @@ char * ts4_set_field0_to_vcall_result_plus_16_8819AD38(char *a)
 void ts4_dtor_set_vtable_base_destroy_field4_88188868(char *a)
 {
     *(void **)a = &lbl_880DC520;
-    fn_88616160(a);
+    ts4_pool_release_all_88616160(a);
     if (W(a, 4)) ts4_destroy_owned_object(LP(a, 4));
 }
 
@@ -698,7 +698,7 @@ void ts4_dtor_set_vtable_base_destroy_field4_88188868(char *a)
 void ts4_dtor_set_vtable_base_destroy_field4_88629068(char *a)
 {
     *(void **)a = &lbl_880DC520;
-    fn_88616160(a);
+    ts4_pool_release_all_88616160(a);
     if (W(a, 4)) ts4_destroy_owned_object(LP(a, 4));
 }
 
@@ -1795,13 +1795,13 @@ u64 ts4_bit_mask_from_index_plus_32_8890C5D0(u32 a)
 /* Swing_DLL.xex 0x88890B68 */
 void * ts4_alloc_16_bytes_from_global_heap_88890B68(int a, int b)
 {
-    return fn_88613268(lbl_88D45B38, b, 16, 0, 2);
+    return ts4_node_dispatch_with_target_88613268(lbl_88D45B38, b, 16, 0, 2);
 }
 
 /* Swing_DLL.xex 0x88890E18 */
 void * ts4_alloc_16_bytes_from_global_heap_88890E18(int a, int b)
 {
-    return fn_88613268(lbl_88D45B38, b, 16, 0, 2);
+    return ts4_node_dispatch_with_target_88613268(lbl_88D45B38, b, 16, 0, 2);
 }
 
 /* init_vtable_only */

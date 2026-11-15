@@ -57,7 +57,7 @@ ts4_word fn_88580EB8();
 ts4_word fn_885B4B80();
 ts4_word fn_885B4CE8();
 ts4_word fn_88608590();
-ts4_word fn_8860A988();
+ts4_word ts4_handle_fwd_slot6c_8860A988();
 ts4_word fn_8860F6A0();
 ts4_word fn_88617D88();
 ts4_word fn_88625478();
@@ -717,11 +717,11 @@ ts4_word ts4_if_addr_fn_88608590_88708770(ts4_args3 sp0, ts4_word a2, ts4_word a
         t15 = ((ts4_word (*)(ts4_word, ts4_word, ts4_word))((*(volatile ts4_word *)((char *)(ts4_word)(t134) + 68))))((ts4_word)t11, (ts4_word)(ts4_word)&loc98[0], (ts4_word)t12);
         if ((int)t15 == 4) {
             loc60[0] = (ts4_word)((3081895936) | 13899);
-            fn_8860A988((ts4_word)(ts4_word)&loc88[0], (ts4_word)(ts4_word)&loc60[0]);
+            ts4_handle_fwd_slot6c_8860A988((ts4_word)(ts4_word)&loc88[0], (ts4_word)(ts4_word)&loc60[0]);
             loc64[0] = (ts4_word)((3233087488) | 1757);
-            fn_8860A988((ts4_word)(ts4_word)&loc88[0], (ts4_word)(ts4_word)&loc64[0]);
+            ts4_handle_fwd_slot6c_8860A988((ts4_word)(ts4_word)&loc88[0], (ts4_word)(ts4_word)&loc64[0]);
             loc68[0] = (ts4_word)((1505492992) | 22375);
-            fn_8860A988((ts4_word)(ts4_word)&loc88[0], (ts4_word)(ts4_word)&loc68[0]);
+            ts4_handle_fwd_slot6c_8860A988((ts4_word)(ts4_word)&loc88[0], (ts4_word)(ts4_word)&loc68[0]);
             loc6c[0] = (ts4_word)((3081895936) | 13899);
             t19 = ts4_init_range_and_run_service_88164ED0((ts4_word)(ts4_word)&locc8[0], (ts4_word)(ts4_word)&loc88[0], (ts4_word)(ts4_word)&loc6c[0]);
             t20 = *(volatile ts4_word *)((char *)(ts4_word)(t19) + 0);

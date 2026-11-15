@@ -2,7 +2,7 @@
    record inside it" factories (Swing_DLL.xex, Xbox 360, MSVC 16.00.10224.00).
 
    Each factory allocates SIZE bytes from the owner's heap (owner->+0x1c->+0x2c)
-   with fn_8860DCF8(heap, size, align, 2), runs the object's base constructor and
+   with ts4_node_dispatch_8860DCF8(heap, size, align, 2), runs the object's base constructor and
    stores its vtable(s), then builds a 0x1c-byte link record at object+OFF with
    placement new: {owner word, 16-byte {offset, object, 0, 0} pair, word 0,
    byte 0}.  The record pointer (or null when the allocation failed) is returned.
@@ -22,7 +22,7 @@ extern char lbl_880D1F74[];
 extern char lbl_880D2054[];
 extern char lbl_880D2068[];
 extern char lbl_880D207C[];
-ts4_word fn_8860DCF8(ts4_word heap, ts4_word size, ts4_word align, ts4_word flags);
+ts4_word ts4_node_dispatch_8860DCF8(ts4_word heap, ts4_word size, ts4_word align, ts4_word flags);
 ts4_word fn_88995D18(ts4_word object);
 ts4_word fn_88995DB0(ts4_word object);
 ts4_word fn_88995E48(ts4_word object);
@@ -67,7 +67,7 @@ struct ts4_link_record {
         ts4_word made;                                                             \
         pair.zero0 = 0;                                                            \
         pair.zero1 = 0;                                                            \
-        obj = fn_8860DCF8(*(ts4_word *)(ctx + 0x2c), SIZE, ALIGN, 2);              \
+        obj = ts4_node_dispatch_8860DCF8(*(ts4_word *)(ctx + 0x2c), SIZE, ALIGN, 2);              \
         if (obj != 0) {                                                            \
             INIT                                                                   \
             made = obj;                                                            \

@@ -6,12 +6,12 @@ typedef struct DstVtbl { void *s[4]; void (*write)(Dst *, void *, int); } DstVtb
 struct Src { SrcVtbl *vt; };
 struct Dst { DstVtbl *vt; };
 extern unsigned int lbl_88D45B38;
-extern void *fn_88613268(unsigned int heap, int size, int align, int a, int b);
+extern void *ts4_node_dispatch_with_target_88613268(unsigned int heap, int size, int align, int a, int b);
 extern void ts4_registry_dispatch_888860A0(void *p);
 
 int ts4_copy_stream_8861B198(Dst *dst, Src *src, int chunk)
 {
-    void *buf = fn_88613268(lbl_88D45B38, chunk, 1, 0, 0);
+    void *buf = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, chunk, 1, 0, 0);
     int total = 0;
     int n;
     do {

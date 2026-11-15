@@ -22,7 +22,7 @@ extern u32 lbl_880D20E0[];
 extern u32 lbl_880D2170[];
 extern u32 lbl_880D5ED8[];
 extern u32 lbl_880D5CCC[];
-extern void *fn_8860DCF8(void *ctx, u32 size, u32 align, u32 flags); /* pool allocate */
+extern void *ts4_node_dispatch_8860DCF8(void *ctx, u32 size, u32 align, u32 flags); /* pool allocate */
 extern u32 lbl_880D6D18[];
 extern u32 lbl_880D6D08[];
 extern u32 lbl_880D6CF8[];
@@ -103,7 +103,7 @@ Obj *ts4_flagged_object_ctor_extra_##A(Obj *p) \
 void *ts4_flagged_object_create_##A(void *ctx); \
 void *ts4_flagged_object_create_##A(void *ctx) \
 { \
-    Obj *p = (Obj *)fn_8860DCF8(ctx, SIZE, 4, 2); \
+    Obj *p = (Obj *)ts4_node_dispatch_8860DCF8(ctx, SIZE, 4, 2); \
     if (p) { \
         base_b(&p->base); \
         p->f414 = 1; \
@@ -127,7 +127,7 @@ void *ts4_flagged_object_create_##A(void *ctx) \
 void *ts4_flagged_object_create_extra_##A(void *ctx); \
 void *ts4_flagged_object_create_extra_##A(void *ctx) \
 { \
-    Obj *p = (Obj *)fn_8860DCF8(ctx, SIZE, 4, 2); \
+    Obj *p = (Obj *)ts4_node_dispatch_8860DCF8(ctx, SIZE, 4, 2); \
     if (p) { \
         base_b(&p->base); \
         p->f414 = 1; \

@@ -12,7 +12,7 @@ extern int KeTlsAlloc(void);
 extern int lbl_88C6E1A8;
 extern void fn_8856C178(char *);
 extern char lbl_880FCB8C[];
-extern void *fn_8860DCF8(void *, int, int, int);
+extern void *ts4_node_dispatch_8860DCF8(void *, int, int, int);
 extern void *fn_889BB7F0(void *);
 extern void *fn_8864B468(void *);
 extern void *lbl_88D45910;

@@ -8,7 +8,7 @@ typedef struct Ts4TypeRegistry { Ts4TypeEntry **first, **last; } Ts4TypeRegistry
 extern Ts4TypeRegistry *lbl_88D45B20;
 extern void *lbl_88D45B38;
 extern u32 fn_88608590(u32 zero, const char *name);
-extern void *fn_88613268(void *heap, int size, int align, int flags, int tag);
+extern void *ts4_node_dispatch_with_target_88613268(void *heap, int size, int align, int flags, int tag);
 extern void fn_881898E8(Ts4TypeRegistry *list, Ts4TypeEntry **entry);
 extern char lbl_880F6340[], lbl_880F539C[], lbl_880EFB50[], lbl_880E44A8[], lbl_880DD880[];
 extern char lbl_880F6474[], lbl_880F59B8[], lbl_880EFF08[], lbl_880E49D0[], lbl_880DEF50[];
@@ -33,7 +33,7 @@ void ts4_type_register_##A(void) \
     for (it = reg->first; it != end; ++it) \
         if ((*it)->id == id) \
             return; \
-    mem = fn_88613268(lbl_88D45B38, 8, 4, 0, 2); \
+    mem = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 8, 4, 0, 2); \
     { \
         Ts4TypeEntry *r = mem ? type_entry_init((Ts4TypeEntry *)mem, VTBL, id) : 0; \
         e = r; \
