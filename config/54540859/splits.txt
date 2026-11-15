@@ -47595,3 +47595,25 @@ src/xbox360/cx36_r.c:
 
 src/xbox360/cx36_s.c:
 	.text       start:0x88937968 end:0x889379FC
+
+src/xbox360/nm2_check_sides.c:
+	.pdata      start:0x88123EF0 end:0x88123EF8
+	.text       start:0x8868FBC0 end:0x8868FCC0
+
+src/xbox360/nm2_push_pair.c:
+	.text       start:0x886C5C80 end:0x886C5CA4
+
+src/xbox360/nm1_create_items.c:
+	.pdata      start:0x88125300 end:0x88125308
+	.text       start:0x886E5670 end:0x886E57A4
+
+src/xbox360/nm1_buffered_write.c:
+	.pdata      start:0x88122F70 end:0x88122F78
+	.text       start:0x886558B0 end:0x886559C8
+
+src/xbox360/nm1_set_owner_ptrs.c:
+	.text       start:0x886C5160 end:0x886C519C
+
+src/xbox360/nm1_any_handles.c:
+	.pdata      start:0x88122CF8 end:0x88122D00
+	.text       start:0x8864E420 end:0x8864E4A0

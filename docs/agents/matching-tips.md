@@ -356,3 +356,19 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   `__stvewx(vec, base, 4)` with a constant offset gives `li r9,4; stvewx v,r10,r9`. In `af1_mat_mul`, the multiplier by
   value and the other matrix through a pointer gives `addi/lvx r0`; both by value gives `li/lvx base,rK`. A constructor
   embedding three of the 0x44-byte objects: src/xbox360/w9a_a.c.
+
+## Operand order, second pass (from NM1/NM2; notes in docs/agents/near-misses/NM1.md and NM2.md)
+- Base pointer loaded from a struct, index a loaded local: a NAMED local for the base (`list = self->sides;
+  list->side[idx]`) gives (index, base); writing the base load at the use (`self->sides->side[idx]`) gives (base, index).
+  This is separate from the period-8 numbering effect.
+- If aliasing forces the base load ahead of a store, `__restrict` on the aliasing pointer keeps that schedule with the
+  base written at the use (`int *__restrict count; i = *count; *count = i + 1; s->keys[i] = key;`).
+- The period-8 numbering rule also reaches a parameter + field load and a strength-reduced index, once the loaded
+  operand goes through a computed-address local: `u32 *t = &s->total; *t = *t + n;` (flips when `t` is local 7);
+  vector begin/end in a sub-struct read through `v = &s->vec`.
+- A block-scoped copy of a loaded base counts for numbering (`{ Hdr *hb = o->b4c; ... (char*)hb + i*K + hb->rel }`).
+  With two sites, fix left to right; the second site takes its dead locals in its own block.
+- Refuted, do not retry: a site where load and store through the same base need OPPOSITE orders (0x886D9AB8; they
+  always flip together); 0x886CE120, 0x886E3938, 0x88656538 (no pad count or loop/index form flips them).
+- Adjacent-instruction swaps (a `lis`/`li` vs a load, a parameter spill vs a load, `mr r4,r3` vs `mr r31,r3`) and the
+  f9/f10/f11 float numbering: no rule found; the forms tried are listed in NM1.md and NM2.md.
