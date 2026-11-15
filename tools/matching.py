@@ -41834,6 +41834,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_segment_intersect_xz_88670178": 224},
     },
+    {
+        "source": "src/xbox360/me_point_line_dist_sq_xz_88692720.c",
+        "object": "me_point_line_dist_sq_xz_88692720.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_point_line_dist_sq_xz_88692720": 160},
+    },
 )
 
 

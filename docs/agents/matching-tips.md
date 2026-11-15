@@ -560,3 +560,17 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
   `static __inline void addscaled(Vx1Vec *o, const Vx1Vec *a, __vector4 dv, const float *k)` (store `a` then add) makes
   cl.exe crash under wibo (segfault, no message), so "compile failed" with no error text means a compiler crash.
   The same missing piece blocks 0x886C6AE0.
+
+### vmaddfp128 on a local, and clamp register order (found at b93)
+
+- `vor128` + `vmaddfp128` with a local result (0x88692720): the result is built in place in a stack copy that is real
+  memory, here the 16-byte struct copy of the direction (`d = g->d`, copied with ld/std), through a pointer:
+  `{ Vx1Vec *o = &d; l = __vmulfp(o->v, splat); o->v = g->a.v; o->v = __vaddfp(o->v, l); o->v = __vsubfp(o->v, q.v); ... }`.
+  A separate local for the result always fuses to plain `vmaddfp` on v0/v13/v12, whatever the expression shape.
+- With a real out pointer the same shape is `af1_vec_lerp_to` (`*o = *a; *o = __vaddfp(*o, l)`).
+- A float converted to a splat keeps its own stack slot (`lfs; stfs; lvlx`) when the float comes from an inline that
+  returns `t.v.v[0]` and the splat takes its address: `k = dot3(...); __vspltw(__lvlx(&k, 0), 0)`.
+- Clamp register order: `i0 = imin(i0, last); i1 = imin(i0 + 1, last);` with `static __inline int imin(int a, int b)
+  { return a < b ? a : b; }` keeps `last` in the register the count was loaded into; `if (i0 >= last) i0 = last;` moves it.
+- Statement order rarely matters: 504 valid orderings of the sampler body gave only three distinct outputs.
+- Near-miss drafts are now committed under src/xbox360/drafts/me_*_nearmiss.*.

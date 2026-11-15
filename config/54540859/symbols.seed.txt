@@ -32128,3 +32128,4 @@ ts4_is_near_mirrored_x_8866BEE0 = .text:0x8866BEE0; // type:function size:0xD0
 ts4_write_mirrored_vec_886AB438 = .text:0x886AB438; // type:function size:0xC8
 ts4_segment_intersect_xz_88670178 = .text:0x88670178; // type:function size:0xE0
 ts4_anim_record_within_window_886C7B60 = .text:0x886C7B60; // type:function size:0xC4
+ts4_point_line_dist_sq_xz_88692720 = .text:0x88692720; // type:function size:0xA0

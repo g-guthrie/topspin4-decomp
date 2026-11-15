@@ -8084,6 +8084,10 @@
       "src/xbox360/me_anim_record_within_window_886C7B60.c": {
         "status": "Matching",
         "source": "xbox360/me_anim_record_within_window_886C7B60.c"
+      },
+      "src/xbox360/me_point_line_dist_sq_xz_88692720.c": {
+        "status": "Matching",
+        "source": "xbox360/me_point_line_dist_sq_xz_88692720.c"
       }
     }
   }
