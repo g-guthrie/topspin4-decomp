@@ -181,7 +181,7 @@ float swing_anim_busy_ticks_886CD3C8(struct Ctrl *ctrl)
     return busy;
 }
 /* Siblings (same ctrl): fn_886CD1E8 returns (int)the same expression (no clamp) for the topmost layer whose record has
- * seg_count == 2 and that is at or after the first active layer (fn_886C66C0); fn_886CD2E0 returns (int)(
+ * seg_count == 2 and that is at or after the first active layer (fn_886C66C0); ts4_last_key_offset_886CD2E0 returns (int)(
  * (segment[last].+0x10 - L->t_ref) * (ratio - 1) + L->base - now) for the active layer when its slot != -1, its play
  * record type != 0xC222A5E0 and seg_count >= 2; both return -1 when the shape does not fit. */
 

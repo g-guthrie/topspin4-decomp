@@ -46091,3 +46091,46 @@ src/xbox360/fp1_layer_time_warp.c:
 
 src/xbox360/pp1_value_integrate_rate.c:
 	.text       start:0x888ADD78 end:0x888ADDC8
+
+src/xbox360/w5a_a.c:
+	.text       start:0x88670318 end:0x8867036C
+
+src/xbox360/w5a_d.c:
+	.text       start:0x886D1318 end:0x886D13C8
+
+src/xbox360/w5a_e.c:
+	.text       start:0x886CAEC0 end:0x886CAF74
+
+src/xbox360/w5a_h.c:
+	.text       start:0x88691B38 end:0x88691C40
+
+src/xbox360/w5a_j.c:
+	.text       start:0x8866E058 end:0x8866E128
+
+src/xbox360/w5b_b.c:
+	.pdata      start:0x88124420 end:0x88124428
+	.text       start:0x8867C128 end:0x8867C19C
+	.text       start:0x886A48B8 end:0x886A4928
+
+src/xbox360/w5b_c.c:
+	.text       start:0x8867A710 end:0x8867A7BC
+
+src/xbox360/w5b_f.c:
+	.pdata      start:0x88124B20 end:0x88124B28
+	.text       start:0x886C9110 end:0x886C91F0
+
+src/xbox360/w5b_g.c:
+	.pdata      start:0x88124C58 end:0x88124C60
+	.text       start:0x886CD2E0 end:0x886CD3C4
+
+src/xbox360/w5c_a.c:
+	.text       start:0x886CAE50 end:0x886CAEC0
+	.text       start:0x886CBBD8 end:0x886CBC30
+
+src/xbox360/w5c_f.c:
+	.pdata      start:0x88122D28 end:0x88122D30
+	.text       start:0x8864EE78 end:0x8864EF50
+
+src/xbox360/w5c_g.cpp:
+	.pdata      start:0x88124C68 end:0x88124C70
+	.text       start:0x886CD488 end:0x886CD55C

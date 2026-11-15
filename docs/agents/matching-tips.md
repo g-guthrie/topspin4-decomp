@@ -189,3 +189,21 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   `fp1_pool_primer.c` is the older version covering only the first 0x68 bytes.
 - Worked examples: src/xbox360/fp1_anim_busy_frames.cpp, src/xbox360/fp1_layer_time_warp.c. 131 unmatched functions
   (179 KB) contain both patterns; 46 of them (50 KB) are in the gameplay range.
+- Float refinements (W5):
+  - Reciprocal `fres; fnmsubs; fadds; fmuls`: `extern float __fres(float); #pragma intrinsic(__fres)` then
+    `inv = __fres(d); inv = ((1.0f - inv*d) + 1.0f) * inv;`. Keep the divisor in a named local (`float d = ratio - 1.0f;`)
+    to get the fnmsubs operand order. Plain `1.0f/d` gives `fdivs`.
+  - `(unsigned)f` gives `fctidz` + low-word `lwz`; `(float)u` gives `std; fcfid` with no `extsw`.
+  - `fabs`: `extern double fabs(double); #pragma intrinsic(fabs)`, with `float d; d = s->v; d = (float)fabs(d);` (through a
+    local) for a bare `fabs` with no `frsp`. `fabsf` is a call.
+  - Abs written `(x >= kZero) ? x : -x` with a bare compare stays a branch in some contexts; only the
+    `(a - b >= kZero) ? a : b` helper shape reliably gives the table select. Open.
+  - A zero the target keeps in a saved FPR across calls in a loop comes from `extern const float g_ts4_event_value;`
+    plus a local copy; a `static const float` zero is rematerialised from the pool each time. The two do not combine
+    with the table select. Open.
+  - 64-byte float struct copied with an inline `ldu/stdu` + bdnz loop: make the struct a union with
+    `unsigned long long q[8]` and write `T t = *p;`.
+  - Bool kept in a register: `int hit = 1; if (c) hit = 0; if ((unsigned char)hit) {...} return hit;`.
+  - A callee with an unused parameter must be defined in context with `flags(/Ob1):`, or the extra argument is emitted.
+  - Call callees by their current symbols.txt name. An invented `ts4_` name for an unmatched callee passes fn_check with
+    a RENAME note but fails the LTCG build ("unapplied renames").

@@ -220,13 +220,13 @@ int ts4_selected_record_id_886CB618(Ga5AnimStack *self)
 }
 
 extern float lbl_8814B440;            /* 0.0f */
-extern float fn_886CAEC0(void *self, void *clip);
+extern float ts4_ramp_weight_886CAEC0(void *self, void *clip);
 
-/* Swing_DLL.xex 0x886CAF78: evaluate clip via fn_886CAEC0 when the clip's data word (+0x84) is set, else 0.0f. */
+/* Swing_DLL.xex 0x886CAF78: evaluate clip via ts4_ramp_weight_886CAEC0 when the clip's data word (+0x84) is set, else 0.0f. */
 float ts4_eval_clip_if_loaded_886CAF78(void *self, char *clip)
 {
     if (*(unsigned *)(clip + 0x84) != 0)
-        return fn_886CAEC0(self, clip);
+        return ts4_ramp_weight_886CAEC0(self, clip);
     return lbl_8814B440;
 }
 
