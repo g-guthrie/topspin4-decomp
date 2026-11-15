@@ -120,3 +120,21 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   a hill climb over case order took one function from 65 to 8 instructions off.
 - Owner-field reloads kept below stores: route the stores through an inline helper taking `&self->sub`.
 - `srawi; subfc; srwi; adde` is signed `a >= b` with `a` the operand that gets the srawi.
+
+## Added from W2 (small gameplay functions, second pass)
+- Per-element call loop: cache the end (`unsigned *end = s->end; for (p = s->begin; p != end; p++) f(s, *p);`) to get
+  `savegprlr_29`; `p != s->end` gives a std r30/r31 prologue.
+- Counted clear loop with `mtctr` and `beq` on zero: hoist the count, `unsigned n = hdr->count; for (i = 0; i != n; i++)`.
+- Bool-or-minus-one mask: `return 0 != call(a, b) ? -1 : 0;` gives `addi; subfic; subfe`. `call() != 0 ? -1 : 0` does not.
+- u32 callee result stored in a u64 field: declare the callee as returning `unsigned` and assign directly (`rldicl rX,r3,0,32`).
+- Base pointer and zero swapped (target keeps base in r11, zero in r10): store through a local pointer to the first
+  element of a consecutive group, `unsigned *q = &s->sub->w[0]; q[0]=0; q[1]=0; q[2]=0;`.
+- Search over a self-relative array returning the element address: header `&src->hdr`, element
+  `(char*)h + (i*stride + h->rel)`, `r = 0; for (...) { if (e->key == key) { r = e; break; } } out->found = r;`.
+- Under LTCG, small wrappers around two calls need the callees in context, with `flags(/Ob1):` on context files whose
+  functions must not be inlined.
+- Padding macros: use `__COUNTER__`, not `__LINE__`.
+- Open, no source form found on either route: `add`/`lwzx`/`lfsx` (index, base) operand order; a 5-word copy kept as an
+  `lwzu`/`stwu` `bdnz` loop; `mtctr`+`bdz` switch chains.
+- Sources must also pass the host check (`cc -std=c11 -Wall -Wextra -Werror -fsyntax-only`): guard pointer-to-int casts
+  and `__forceinline` behind `_MSC_VER` macros that expand to the same tokens under MSVC.
