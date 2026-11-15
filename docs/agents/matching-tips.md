@@ -496,3 +496,15 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
 - Still open after this pass: `li r3,1; cmpwi; beqlr; li r3,0` (0x886C3DA8); the 23-entry jump table (0x8865DAC0);
   five `mr` copies of one constant (0x8866EB80); float `fadds` operand order in three functions; a 0xa0 frame around a
   pass-through call (0x886C8C48, 0x886C90F0).
+
+## 64-bit return type keeps a 0/1 result as a branch
+- `li r3,1; cmpwi; beqlr; li r3,0; blr` (and similar branchy 0/1 results that every 32-bit form folds to
+  `cntlzw`/`subfe` arithmetic) comes from a function whose RETURN TYPE is 64-bit: `__int64 f(...) { if (c) return 1;
+  return 0; }`. Closes 0x886C3DA8 (src/xbox360/me_status_is_one_886C3DA8.c).
+- Hoisted `li r3,0` before the first test with a separate `li r3,0` block for the second:
+  `res = 0; if (g) res = n ? call(&g->x, n) : 0; return res;` (0x886C5130).
+- A bool helper returning `unsigned char` (`return v == MAX || v < 0;`) used as `if (bad(v)) return 0;`, followed by
+  `int r; if (...) r = 0; else r = 1; return (unsigned char)r;` gives the direct `li r3,0; blr` exit plus the shared
+  `li r11,x; clrlwi r3` exits (0x8866EFA0).
+- Haiku agents: reliable on copies of an already matched function (twin lists), 0 for ~60 on the hard small residue
+  even with per-function packets (work/army/HP/). Use them for copy jobs only.

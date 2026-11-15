@@ -1170,7 +1170,7 @@ void gp4b_probe(Gp4bBall *B, const uint8_t *row, Gp4bSolve *O)
     float m_from[4], m_to[4], c_from[4], c_to[4];
     int i;
     O->probe = 1;
-    for (i = 0; i < 3; i++) { m_from[i] = B->cmd_from[i] * K_CM_TO_M; m_to[i] = B->cmd_to[i] * K_CM_TO_M; }  /* fn_889C0F70 */
+    for (i = 0; i < 3; i++) { m_from[i] = B->cmd_from[i] * K_CM_TO_M; m_to[i] = B->cmd_to[i] * K_CM_TO_M; }  /* ts4_scale_two_vectors_889C0F70 */
     m_from[3] = m_to[3] = K_ZERO;
     B->T = bef32(row + 0x54);
     for (i = 0; i < 4; i++) { B->P0[i] = m_from[i]; B->P1[i] = m_to[i]; }
@@ -1208,7 +1208,7 @@ void gp4b_mode_flags(Gp4bBall *B, uint32_t mode)
     }
 }
 
-/* fn_889C19F0 (live launch).  Preconditions (done by the command apply + fn_889C1160 / fn_889C0F70): P0/P1 already in the LOCAL
+/* fn_889C19F0 (live launch).  Preconditions (done by the command apply + fn_889C1160 / ts4_scale_two_vectors_889C0F70): P0/P1 already in the LOCAL
  * frame (metres, P0 and pos relative to origin), cmd_from scaled to metres (only y is used here), tau / bounce_tick from the command.
  * stepper_ticks_per_second = S+0x1C = 60.0.  Writes the arcs' constants, pos/prev = P0 and the landing frame. */
 void gp4b_launch(Gp4bBall *B, const uint8_t *row, float ticks_per_second)

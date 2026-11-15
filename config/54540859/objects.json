@@ -7836,6 +7836,138 @@
       "src/xbox360/pr3_file_io_oc.c": {
         "status": "Matching",
         "source": "xbox360/pr3_file_io_oc.c"
+      },
+      "src/xbox360/me_global_rng_886C5130.c": {
+        "status": "Matching",
+        "source": "xbox360/me_global_rng_886C5130.c"
+      },
+      "src/xbox360/me_stamp_in_window_8866EFA0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_stamp_in_window_8866EFA0.c"
+      },
+      "src/xbox360/me_status_is_one_886C3DA8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_status_is_one_886C3DA8.c"
+      },
+      "src/xbox360/hka_load_pair.c": {
+        "status": "Matching",
+        "source": "xbox360/hka_load_pair.c"
+      },
+      "src/xbox360/hka_matrix_rotate.c": {
+        "status": "Matching",
+        "source": "xbox360/hka_matrix_rotate.c"
+      },
+      "src/xbox360/hka_scale_two_vectors.c": {
+        "status": "Matching",
+        "source": "xbox360/hka_scale_two_vectors.c"
+      },
+      "src/xbox360/hka_set_slot_marks.c": {
+        "status": "Matching",
+        "source": "xbox360/hka_set_slot_marks.c"
+      },
+      "src/xbox360/hkb_ctor_vt75fc.c": {
+        "status": "Matching",
+        "source": "xbox360/hkb_ctor_vt75fc.c"
+      },
+      "src/xbox360/hkb_ltcg_dtor.c": {
+        "status": "Matching",
+        "source": "xbox360/hkb_ltcg_dtor.c"
+      },
+      "src/xbox360/hkb_ltcg_init_pair.c": {
+        "status": "Matching",
+        "source": "xbox360/hkb_ltcg_init_pair.c"
+      },
+      "src/xbox360/hkb_release_handles.cpp": {
+        "status": "Matching",
+        "source": "xbox360/hkb_release_handles.cpp"
+      },
+      "src/xbox360/hkb_slot_ratio.c": {
+        "status": "Matching",
+        "source": "xbox360/hkb_slot_ratio.c"
+      },
+      "src/xbox360/hp02_8865B570.c": {
+        "status": "Matching",
+        "source": "xbox360/hp02_8865B570.c"
+      },
+      "src/xbox360/hp02_8867D880.c": {
+        "status": "Matching",
+        "source": "xbox360/hp02_8867D880.c"
+      },
+      "src/xbox360/tw1_882802A0.c": {
+        "status": "Matching",
+        "source": "xbox360/tw1_882802A0.c"
+      },
+      "src/xbox360/tw1_8840BA88.c": {
+        "status": "Matching",
+        "source": "xbox360/tw1_8840BA88.c"
+      },
+      "src/xbox360/tw1_884C91E0.c": {
+        "status": "Matching",
+        "source": "xbox360/tw1_884C91E0.c"
+      },
+      "src/xbox360/tw1_885CF5D8.c": {
+        "status": "Matching",
+        "source": "xbox360/tw1_885CF5D8.c"
+      },
+      "src/xbox360/tw1_8860A050.c": {
+        "status": "Matching",
+        "source": "xbox360/tw1_8860A050.c"
+      },
+      "src/xbox360/tw1_8872CDE0.c": {
+        "status": "Matching",
+        "source": "xbox360/tw1_8872CDE0.c"
+      },
+      "src/xbox360/tw1_888791A0.c": {
+        "status": "Matching",
+        "source": "xbox360/tw1_888791A0.c"
+      },
+      "src/xbox360/tw2_8816E830.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_8816E830.c"
+      },
+      "src/xbox360/tw2_881EEA98.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_881EEA98.c"
+      },
+      "src/xbox360/tw2_8820ADD8.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_8820ADD8.c"
+      },
+      "src/xbox360/tw2_8833A450.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_8833A450.c"
+      },
+      "src/xbox360/tw2_88585E68.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_88585E68.c"
+      },
+      "src/xbox360/tw2_88592668.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_88592668.c"
+      },
+      "src/xbox360/tw2_88595070.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_88595070.c"
+      },
+      "src/xbox360/tw2_885ED208.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_885ED208.c"
+      },
+      "src/xbox360/tw2_88824E00.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_88824E00.c"
+      },
+      "src/xbox360/tw2_8887E268.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_8887E268.c"
+      },
+      "src/xbox360/tw2_889A1748.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_889A1748.c"
+      },
+      "src/xbox360/tw2_889BFA88.c": {
+        "status": "Matching",
+        "source": "xbox360/tw2_889BFA88.c"
       }
     }
   }

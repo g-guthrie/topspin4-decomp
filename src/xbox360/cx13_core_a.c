@@ -411,7 +411,7 @@ struct NObj { const NObjVt *vt; };
 extern void ts4_handle_release_881506A0(u32 *out, NH12 *h);
 extern NObj *fn_8816D220(void *reg, u32 key);
 extern void *lbl_88D45B20;
-extern void fn_882802A0(void *self, NObj *o);
+extern void ts4_vector_push_back_u32_882802A0(void *self, NObj *o);
 
 /* 0x88617C68: resolve the handle through the registry, ask the found object for its target, hand it the handle and register it with self */
 NObj *ts4_create_object_from_handle_88617C68(void *self, NH12 h)
@@ -424,7 +424,7 @@ NObj *ts4_create_object_from_handle_88617C68(void *self, NH12 h)
         o = o->vt->get(o);
         if (o != 0) {
             o->vt->f10(o, h);
-            fn_882802A0(self, o);
+            ts4_vector_push_back_u32_882802A0(self, o);
         }
     }
     return o;

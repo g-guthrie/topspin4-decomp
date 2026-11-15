@@ -29,7 +29,7 @@ u32 ts4_table_lookup_882078B8(Cx25cSel *o, u32 key, u32 idx)
 typedef struct Cx25cPr { u32 s; u32 v; } Cx25cPr;
 typedef struct Cx25cPrVec { u32 p0; Cx25cPr *data; u32 count; u32 cap; } Cx25cPrVec;
 extern void ts4_grow_reserve_8_881DA390(Cx25cPrVec *v, u32 n);
-extern void fn_8820ADD8(Cx25cPr *p, u32 n);
+extern void ts4_str_release_each_8820ADD8(Cx25cPr *p, u32 n);
 extern void ts4_slots_init_8820B310(Cx25cPr *p, u32 n);
 extern void ts4_if_call_seq_u32_off0_8819B0C8(void *dst, void *src);
 
@@ -41,14 +41,14 @@ void ts4_prvec_assign_8820ACE8(Cx25cPrVec *d, Cx25cPrVec *s)
     Cx25cPr *dp;
     Cx25cPr *sp;
     if (n == 0) {
-        fn_8820ADD8(d->data, d->count);
+        ts4_str_release_each_8820ADD8(d->data, d->count);
         d->count = 0;
     } else {
         if (n <= d->cap) {
             if (d->count < n) {
                 ts4_slots_init_8820B310(d->data + d->count, n - d->count);
             } else if (d->count > n) {
-                fn_8820ADD8(d->data + n, d->count - n);
+                ts4_str_release_each_8820ADD8(d->data + n, d->count - n);
             }
         } else {
             ts4_grow_reserve_8_881DA390(d, n);

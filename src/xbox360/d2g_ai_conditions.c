@@ -153,8 +153,8 @@ struct Ts4Cond {
 extern float g_ts4_script_constants[];
 extern float lbl_8814B440;      /* 0.0f */
 
-int fn_8865B3B0(struct Ts4Cond *self);
-int fn_8865B570(struct Ts4Cond *self);
+int ts4_ratio_above_threshold_8865B3B0(struct Ts4Cond *self);
+int ts4_ratio_ge_8865B570(struct Ts4Cond *self);
 int ts4_value_at_least_8865B658(struct Ts4Cond *self);
 int ts4_all_ge_8865B6C0(struct Ts4Cond *self);
 
@@ -196,7 +196,7 @@ int ts4_cond_test_88665010(struct Ts4Cond *self)
         result = self->tuning->tc8 >= self->c108;
         break;
     case 0x4914978D:
-        result = fn_8865B570(self);
+        result = ts4_ratio_ge_8865B570(self);
         break;
     case 0x02CA3989:
     case 0x53287703:
@@ -227,7 +227,7 @@ int ts4_cond_test_88665010(struct Ts4Cond *self)
         break;
     case 0x7BEC97F1:
     case 0x97D251D8:
-        result = fn_8865B3B0(self);
+        result = ts4_ratio_above_threshold_8865B3B0(self);
         break;
     case 0x82EF1629:
         result = self->cb8 >= self->tuning->t5c;

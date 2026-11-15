@@ -178,14 +178,14 @@ void ts4_free_list_release_881E1D70(Cw8FreeNode **head)
 }
 
 typedef struct Cw8RefHolder { char *str; u8 pad4[0x18]; Cw8RawVec vec; } Cw8RefHolder;
-extern void fn_8820ADD8(void *data, u32 count);
+extern void ts4_str_release_each_8820ADD8(void *data, u32 count);
 
 /* 0x881D7008: destructor: destroy the elements of the vector, free its storage, drop the string reference */
 void ts4_ref_holder_dtor_881D7008(Cw8RefHolder *self)
 {
     Cw8RawVec *v = &self->vec;
     if (v->data != 0) {
-        fn_8820ADD8(v->data, v->count);
+        ts4_str_release_each_8820ADD8(v->data, v->count);
         if (v->data != 0) {
             fn_881992A8(0, v->data);
         }

@@ -59,7 +59,7 @@ struct Gp4Curve16Key { float x_a, x_b, y_a, y_b; };
  *                    +0x28..+0x30 vector<Gp4BallState*> of balls, +0x34/+0x38 generator objects G1/G2 (0xC bytes each:
  *                    vtable lbl_880D6B70, +4 = 1/60 s per tick, +8 = template table pointer = S+0x3C),
  *                    +0x40 = "ball currently in local frame" flag (fn_889C1160/fn_889C0FE8), +0x41 same for the launch
- *                    vectors (fn_889C0F70/ts4_scale_two_vectors_889C0EF8), +0x42 = flag read by the net bounce (nonzero -> keep the spin).
+ *                    vectors (ts4_scale_two_vectors_889C0F70/ts4_scale_two_vectors_889C0EF8), +0x42 = flag read by the net bounce (nonzero -> keep the spin).
  * --------------------------------------------------------------------------------------------- */
 struct Gp4Generator { void *vtbl; float seconds_per_tick; void *template_table; };
 struct Gp4Stepper {
