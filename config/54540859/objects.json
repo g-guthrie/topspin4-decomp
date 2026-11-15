@@ -7440,6 +7440,18 @@
       "src/xbox360/sc2_ltcg_a.c": {
         "status": "Matching",
         "source": "xbox360/sc2_ltcg_a.c"
+      },
+      "src/xbox360/ra1_a.c": {
+        "status": "Matching",
+        "source": "xbox360/ra1_a.c"
+      },
+      "src/xbox360/ra1_b.c": {
+        "status": "Matching",
+        "source": "xbox360/ra1_b.c"
+      },
+      "src/xbox360/ra1_ltcg_a.c": {
+        "status": "Matching",
+        "source": "xbox360/ra1_ltcg_a.c"
       }
     }
   }

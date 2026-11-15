@@ -40887,6 +40887,22 @@ MATCHING_UNITS = (
             "ts4_construct_manager_88658E40": 152,
         },
     },
+    {
+        "source": "src/xbox360/ra1_a.c",
+        "object": "ra1_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_spawn_pooled_886BC3A0": 220,
+            "ts4_update_flags_886900E8": 288,
+            "ts4_release_pending_88658C80": 220,
+        },
+    },
+    {
+        "source": "src/xbox360/ra1_b.c",
+        "object": "ra1_b.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_register_name_88657810": 268},
+    },
 )
 
 

@@ -173,7 +173,7 @@ struct MatchFrameState {               /* instance->u30 */
  *     } else fn_886C1E80(inst);
  *  F. if (flags->+0x1C && !flags->+0x1D && inst->+0xA1) { inst->+0xA1 = 0; fn_8866E4B8(inst); flags->+0xCE = 1; }
  *  G. if (match->328 || match->329) { flags->+0x318/+0x319 = player0 state bytes +0x57D/+0x5DB == 1 when flags->+0x19A == 1 }
- *  H. fn_886900E8(inst);  flags->+0x3A = 0;
+ *  H. ts4_update_flags_886900E8(inst);  flags->+0x3A = 0;
  *  I. for (p in players): p->anim->+0x3B5 = match->327 ? ((p->+0x18 - (match->310 & ~1 ... parity)) == 0) : 1;
  *        if (*p->u40 && !flags->+0xE4) { p->state->+0x1068 = 0xD32429A6; fn_8867BDB8(p->u64); }
  */

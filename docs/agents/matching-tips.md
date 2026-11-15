@@ -419,3 +419,26 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   - Constructor called as `n ? obj_ctor(n) : 0` after an alloc fixes the `mr`/vtable order.
   - Refuted: changing the type of an address-taken stack local does not change its ordering against stores through a
     parameter (0x886CDED0, 0x88640810).
+
+## Register assignment (from RA1; probe tables in docs/agents/near-misses/RA1.md). Partial rules, not a full formula.
+- Saved registers go r31 downward: parameters in parameter order, then locals in order of FIRST ASSIGNMENT. Declaration
+  order and dead-local pads change nothing. A local first assigned inside a guarded block ranks lowest
+  (`if (G) { g = G; ... }` gives r28; `g = G; if (g)` gives r31).
+- A value is raised above that order by being an `add`/`addi`/`mulli` operand, by being stored to a global, or by use in
+  a conditional arm or a loop. Call arguments, load/store bases, compares, logical ops, shifts, mullw/divw and stores
+  through a pointer do not count, however often repeated. For parameters `a + b` gives b=r31, a=r30.
+- A constant is kept in a saved register only when two or more stores of it fall on both sides of a call. An int
+  argument always gets a fresh `li`. So `mr rArg,rZero` means a 4-byte struct passed by value, a phi copy, or the
+  `li 1`/`li 0` of an `a && b` bool, never an int literal. A user local holding 0/1 is constant-propagated: write the
+  literal stores.
+- `if (n) c = f(n); else c = 0;` and `c = 0; if (n) ...` weight the held zero differently; an explicit `else b = 0;`
+  gives duplicated `stw; mr r3,rZero; bl` tails.
+- Reading through a pointer-to-member local (`a = *slot`) puts its `addi` before the load and gives it the higher
+  register; `a = s->m` the reverse.
+- An early `stw rX,0x50(r1)` with the value still in a register is an address-taken COPY (`val = o; f(&val)`); taking
+  `&o` itself sends `o` to memory.
+- Volatile temporaries are handed out round-robin r11, r10, ..., r3, then wrap; a freed register is not reused before
+  the wrap. Order among temporaries defined together follows the reassociated expression tree (`x*y` evaluates y first;
+  `(x-y)-z` becomes `(x-z)-y`), not statement or declaration order.
+- Distant code matters: rewriting a later loop can move a top-of-function assignment.
+- Open: a chained load reusing its own register (`lwz r11,0x74(r11)`, 0x8866D218); found/count weight swap (0x88650908).

@@ -47994,3 +47994,19 @@ src/xbox360/sc2_a.c:
 src/xbox360/sc2_ltcg_a.c:
 	.pdata      start:0x88123F40 end:0x88123F48
 	.text       start:0x88690AA0 end:0x88690B44
+
+src/xbox360/ra1_a.c:
+	.pdata      start:0x88123168 end:0x88123170
+	.pdata      start:0x88123F00 end:0x88123F08
+	.pdata      start:0x881248C0 end:0x881248C8
+	.text       start:0x88658C80 end:0x88658D5C
+	.text       start:0x886900E8 end:0x88690208
+	.text       start:0x886BC3A0 end:0x886BC47C
+
+src/xbox360/ra1_b.c:
+	.pdata      start:0x88123098 end:0x881230A0
+	.text       start:0x88657810 end:0x8865791C
+
+src/xbox360/ra1_ltcg_a.c:
+	.pdata      start:0x881246D0 end:0x881246D8
+	.text       start:0x886AD030 end:0x886AD124

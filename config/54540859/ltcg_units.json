@@ -1428,5 +1428,20 @@
   "symbols": {
    "ts4_destruct_object_88690AA0": 164
   }
+ },
+ {
+  "source": "src/xbox360/ra1_ltcg_a.c",
+  "object": "ra1_ltcg_a.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_init_886AD030": 244
+  }
  }
 ]
