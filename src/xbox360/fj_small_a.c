@@ -105,7 +105,7 @@ extern u32 fn_88374BD8(char *, int, int, int, int, int, int, int, int);
 extern char lbl_880F98FC;
 extern char lbl_880F9510;
 extern void fn_8890DDA8(char *);
-extern void fn_8890F1E8(char *);
+extern void ts4_obj44_dtor_8890F1E8(char *);
 extern char * g_ts4_session_context;
 extern void fn_889A4970(char *);
 extern void fn_889A53A8(char *);
@@ -972,8 +972,8 @@ void ts4_call_on_subobject_then_self_88662DB8(char *a)
 /* Swing_DLL.xex 0x88695D40 */
 void ts4_call_on_subobject_then_self_88695D40(char *a)
 {
-    fn_8890F1E8(a + 0x44);
-    fn_8890F1E8(a);
+    ts4_obj44_dtor_8890F1E8(a + 0x44);
+    ts4_obj44_dtor_8890F1E8(a);
 }
 
 /* call_on_session_field28_if_set_return_zero */

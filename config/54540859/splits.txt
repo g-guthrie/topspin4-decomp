@@ -47114,3 +47114,24 @@ src/xbox360/w8d_b.c:
 	.text       start:0x886C6F88 end:0x886C7060
 	.text       start:0x886D1910 end:0x886D19C4
 	.text       start:0x886D6C60 end:0x886D6D18
+
+src/xbox360/da1_a.c:
+	.pdata      start:0x88122D40 end:0x88122D48
+	.pdata      start:0x88124DC0 end:0x88124DC8
+	.pdata      start:0x88124FA0 end:0x88124FA8
+	.pdata      start:0x88130288 end:0x88130290
+	.text       start:0x8864F5B0 end:0x8864F618
+	.text       start:0x88695400 end:0x886954F4
+	.text       start:0x88695D78 end:0x88695E1C
+	.text       start:0x88695FB8 end:0x88696020
+	.text       start:0x886A0408 end:0x886A0474
+	.text       start:0x886A04C8 end:0x886A0544
+	.text       start:0x886D0E20 end:0x886D0EB0
+	.text       start:0x886D32A0 end:0x886D3310
+	.text       start:0x886D50F8 end:0x886D513C
+	.text       start:0x886D8020 end:0x886D8078
+	.text       start:0x8890ED08 end:0x8890ED60
+	.text       start:0x8890F1E8 end:0x8890F260
+
+src/xbox360/da1_b.c:
+	.text       start:0x8865ADD0 end:0x8865AE10

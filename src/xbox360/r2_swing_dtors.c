@@ -12,7 +12,7 @@ struct R2DtorHost {
 };
 
 void ts4_destroy_owned_object(void *object);
-void fn_8890F1E8(void *member);
+void ts4_obj44_dtor_8890F1E8(void *member);
 void ts4_if_call_seq_lbl_880F4608_886954F8(void *member);
 void fn_88617D28(void *self);
 
@@ -28,23 +28,23 @@ void ts4_r2_module_destroy_886985B0(struct R2DtorHost *self)
     if (*(void **)((char *)self + 0x590) != 0) {
         ts4_destroy_owned_object(*(void **)((char *)self + 0x590));
     }
-    fn_8890F1E8((char *)self + 0x548);
-    fn_8890F1E8((char *)self + 0x504);
-    fn_8890F1E8((char *)self + 0x4c0);
-    fn_8890F1E8((char *)self + 0x47c);
-    fn_8890F1E8((char *)self + 0x438);
-    fn_8890F1E8((char *)self + 0x3f4);
-    fn_8890F1E8((char *)self + 0x3b0);
-    fn_8890F1E8((char *)self + 0x36c);
-    fn_8890F1E8((char *)self + 0x328);
-    fn_8890F1E8((char *)self + 0x2e4);
-    fn_8890F1E8((char *)self + 0x2a0);
-    fn_8890F1E8((char *)self + 0x25c);
-    fn_8890F1E8((char *)self + 0x218);
-    fn_8890F1E8((char *)self + 0x1d4);
-    fn_8890F1E8((char *)self + 0x190);
-    fn_8890F1E8((char *)self + 0x14c);
-    fn_8890F1E8((char *)self + 0x108);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x548);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x504);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x4c0);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x47c);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x438);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x3f4);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x3b0);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x36c);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x328);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x2e4);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x2a0);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x25c);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x218);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x1d4);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x190);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x14c);
+    ts4_obj44_dtor_8890F1E8((char *)self + 0x108);
     *(void **)((char *)self + 0xf4) = lbl_880F45D0;
     ts4_if_call_seq_lbl_880F4608_886954F8((char *)self + 0x48);
     self->vtbl = (void **)lbl_880F43A4;

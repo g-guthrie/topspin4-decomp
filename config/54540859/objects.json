@@ -6892,6 +6892,14 @@
       "src/xbox360/w8d_b.c": {
         "status": "Matching",
         "source": "xbox360/w8d_b.c"
+      },
+      "src/xbox360/da1_a.c": {
+        "status": "Matching",
+        "source": "xbox360/da1_a.c"
+      },
+      "src/xbox360/da1_b.c": {
+        "status": "Matching",
+        "source": "xbox360/da1_b.c"
       }
     }
   }

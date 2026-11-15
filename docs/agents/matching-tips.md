@@ -313,3 +313,23 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   a `begin` loop for the end-first load order. Callee float-register survival (f10) also works with
   `--context "flags(/Ob1):<callee file>" --include <callee>`. A function-local static table with an inline constructor
   matches in C++ but fn_check rejects the compiler-generated `?$S1` symbols (0x886C40B8): open.
+
+## Dead sub-object `addi` in constructors, destructors and setters (from DA1; notes in docs/agents/near-misses/DA1.md)
+- The dead `addi rX,rObj,K` is the address of a member sub-object passed to an inline helper: write the member's
+  ctor/dtor as `static __inline void sub_init(struct Sub *s)` and call it as `sub_init(&o->sub)`. The address is kept
+  in a register only when the helper uses its pointer for two or more things and at least one is not a plain load or
+  store: (1) it derives another address (`&s->m` to a deeper helper, an array member passed as an argument),
+  (2) the same field is loaded then stored (`v->e = v->e + 1`, or `f(v->e); v->e = 0`), or (3) the same field is
+  loaded twice with a possibly aliasing store between. Loads and stores are re-based onto the parent afterwards, which
+  leaves the `addi` dead. One use, or stores only, gives no `addi`.
+- A chained `addi rY,rX,K2` is a sub-object nested in another. If the parent pointer is dead, the sub-object address
+  becomes the saved base (`addi r31,r3,0x14`). Two separate inline calls `init(&o->m); reset(&o->m);` keep the redundant
+  stores and the `mr` copy of the constant.
+- Member structure fixes store order too: nine zero words written as three `{begin,end,cap}` vector inits put the
+  vtable store first (0x886D32A0).
+- C++ member-initialiser constructors, placement new and `this`-adjusting member functions all fold (no `addi`); use
+  the C inline-helper form.
+- The common 0x44-byte object with vtable `lbl_880D7600` is `{vt; w04..w10; {vec,vec,vec} at +0x14; vec at +0x38}`;
+  its ctor/dtor and embedding constructors are in src/xbox360/da1_a.c (worked examples).
+- Still open: the table select with the zero from extern `g_ts4_event_value` (a one-arm operand is sunk into the branch);
+  r10/r11 swaps between a base pointer and a loaded value.

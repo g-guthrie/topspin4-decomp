@@ -130,7 +130,7 @@ ts4_word fn_88636A70();
 ts4_word fn_886391E0();
 ts4_word fn_88639B88();
 ts4_word fn_88647608();
-ts4_word fn_8864F5B0();
+ts4_word ts4_ctor_range_8864F5B0();
 ts4_word ts4_call_seq_lbl_880F5878_88652260();
 ts4_word ts4_call_seq_fn_88617D88_88658910();
 ts4_word fn_88658E40();
@@ -141,7 +141,7 @@ ts4_word ts4_call_seq_fn_88617D88_88681D60();
 ts4_word ts4_call_seq_fn_88617D88_88682A28();
 ts4_word fn_88690B48();
 ts4_word fn_8869BC48();
-ts4_word fn_886A04C8();
+ts4_word ts4_obj44_array_ctor_886A04C8();
 ts4_word fn_886A9050();
 ts4_word fn_886D0EB0();
 ts4_word fn_886D7878();
@@ -151,7 +151,7 @@ ts4_word fn_886E9BC8();
 ts4_word ts4_if_call_seq_u32_off0_886F9C80();
 ts4_word fn_88745F58();
 ts4_word fn_888860A0();
-ts4_word fn_8890F1E8();
+ts4_word ts4_obj44_dtor_8890F1E8();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
 #endif

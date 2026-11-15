@@ -2,12 +2,12 @@
  * Small leaf functions whose instructions are a single idiom; the names
  * describe that behaviour and end in the function address. */
 
-extern void fn_886D0E20(void *);
+extern void ts4_reset_state_886D0E20(void *);
 
 void ts4_store_u32_160_and_forward_30_886D48C8(char *object)
 {
     *(unsigned int *)(object + 0x160) = 0;
-    fn_886D0E20(object + 0x30);
+    ts4_reset_state_886D0E20(object + 0x30);
 }
 
 void ts4_store_u32_0_4_8_2c_30_34_0_886D9938(char *object)

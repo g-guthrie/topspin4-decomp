@@ -39903,6 +39903,25 @@ MATCHING_UNITS = (
             "ts4_bump_side_tally_88668490": 216,
         },
     },
+    {
+        "source": "src/xbox360/da1_a.c",
+        "object": "da1_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_obj44_ctor_8890ED08": 88,
+            "ts4_obj44_dtor_8890F1E8": 120,
+            "ts4_obj44_pair_ctor_88695D78": 164,
+            "ts4_obj44_triple_ctor_88695400": 244,
+            "ts4_obj44_holder_ctor_88695FB8": 104,
+            "ts4_obj44_holder_ctor_886A0408": 108,
+            "ts4_obj44_array_ctor_886A04C8": 124,
+            "ts4_clear_vec_block_886D50F8": 68,
+            "ts4_construct_singleton_886D32A0": 112,
+            "ts4_destroy_three_886D8020": 88,
+            "ts4_ctor_range_8864F5B0": 104,
+            "ts4_reset_state_886D0E20": 144,
+        },
+    },
 )
 
 

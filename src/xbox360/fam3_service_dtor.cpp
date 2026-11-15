@@ -15,7 +15,7 @@ void ts4_tsu_cleanup_end(void *object);             /* operator delete */
 extern void *lbl_88D45B38;                          /* game heap */
 void fn_885E58B0(void *self);
 void fn_8860BBD8(void *self);
-void fn_8890F1E8(void *self);
+void ts4_obj44_dtor_8890F1E8(void *self);
 void ts4_if_call_seq_lbl_880F21E8_88720080(void *self);
 void ts4_if_call_seq_lbl_880F7908_8862C308(void *self);
 void ts4_if_call_seq_lbl_880F7EE4_88617D28(void *self);
@@ -356,7 +356,7 @@ SERVICE_DELETING_DTOR(8821D3C8, lbl_880F2A08, lbl_88D45ACC, Ts4Base_88720080, ch
 SERVICE_DELETING_DTOR(8821D888, lbl_880F285C, lbl_88D45AE0, Ts4Base_88617D28, char pad4[0x24]; Ts4OwnedRaw m28;)
 VT_OBJECT_DELETING_DTOR(882737A0, lbl_880F51C4, lbl_880F9018, Ts4NoBase, Ts4OwnedRaw m4;)
 SERVICE_DTOR(886211F8, lbl_880F85DC, lbl_88D45B30, Ts4Base_88617D28, char pad4[0x18]; Ts4OwnedRef m1C;)
-OBJECT_DTOR(8869CD68, lbl_880F4314, Ts4NoBase, char pad4[0xC]; Ts4OwnedRef m10; char pad14[0x20]; Ts4ExtMember<fn_8890F1E8> m34; char pad38[0x40]; Ts4ExtMember<fn_8890F1E8> m78; char pad7C[0x40]; Ts4ExtMember<fn_8890F1E8> mBC; char padC0[0x40]; Ts4ExtMember<fn_8890F1E8> m100; char pad104[0x40]; Ts4Holder8869CD68_144 m144;)
+OBJECT_DTOR(8869CD68, lbl_880F4314, Ts4NoBase, char pad4[0xC]; Ts4OwnedRef m10; char pad14[0x20]; Ts4ExtMember<ts4_obj44_dtor_8890F1E8> m34; char pad38[0x40]; Ts4ExtMember<ts4_obj44_dtor_8890F1E8> m78; char pad7C[0x40]; Ts4ExtMember<ts4_obj44_dtor_8890F1E8> mBC; char padC0[0x40]; Ts4ExtMember<ts4_obj44_dtor_8890F1E8> m100; char pad104[0x40]; Ts4Holder8869CD68_144 m144;)
 OBJECT_DTOR(886AD128, lbl_880F4850, Ts4NoBase, char pad4[0x20]; Ts4Holder886AD128_24 m24;)
 OBJECT_DTOR(886CA260, lbl_880F37D0, Ts4NoBase, char pad4[0x4]; Ts4OwnedRef m8; char padC[0x8]; Ts4OwnedRef m14; char pad18[0x8]; Ts4OwnedRef m20; char pad24[0x8]; Ts4OwnedRef m2C;)
 OBJECT_DTOR(886CEF70, lbl_880F37D8, Ts4NoBase, char pad4[0x4]; Ts4OwnedRef m8; char padC[0x8]; Ts4OwnedRef m14; char pad18[0x8]; Ts4OwnedRef m20;)

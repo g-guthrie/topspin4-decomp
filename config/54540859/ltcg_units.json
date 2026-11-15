@@ -1058,5 +1058,20 @@
    "ts4_find_and_clear_88658268": 204,
    "ts4_mark_last_active_886C6F88": 216
   }
+ },
+ {
+  "source": "src/xbox360/da1_b.c",
+  "object": "da1_b.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_copy_v2_8865ADD0": 64
+  }
  }
 ]

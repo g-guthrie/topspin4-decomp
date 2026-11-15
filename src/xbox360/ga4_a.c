@@ -43,7 +43,7 @@ void ga4_publish_query_flag_8869A4D0(struct Ga4Host154 *host)
 
 /* ------------------------------------------------------------------ */
 extern char lbl_880F4428, lbl_880D19F0, lbl_880F46F0, lbl_880F4BCC, lbl_880D6B70;
-extern void fn_8890F1E8(void *element);
+extern void ts4_obj44_dtor_8890F1E8(void *element);
 
 /* 0x44-byte element with its own vtable. */
 struct Ga4Element {
@@ -67,7 +67,7 @@ void ga4_owner_four_dtor_886A0478(struct Ga4OwnerFour *self)
     self->vtbl = &lbl_880F4428;
     for (n = 3; n >= 0; n--) {
         e--;
-        fn_8890F1E8(e);
+        ts4_obj44_dtor_8890F1E8(e);
     }
     self->vtbl = &lbl_880D19F0;
 }
@@ -269,9 +269,9 @@ struct Ga4MultiPart {
 static void ga4_base_part_dtor(struct Ga4BasePart *b)
 {
     b->vtbl = &lbl_880F4BCC;
-    fn_8890F1E8(&b->elem[2]);
-    fn_8890F1E8(&b->elem[1]);
-    fn_8890F1E8(&b->elem[0]);
+    ts4_obj44_dtor_8890F1E8(&b->elem[2]);
+    ts4_obj44_dtor_8890F1E8(&b->elem[1]);
+    ts4_obj44_dtor_8890F1E8(&b->elem[0]);
 }
 
 /* Destroy the four elements (back to front), then the base part, and reset the secondary vtable.
@@ -279,10 +279,10 @@ static void ga4_base_part_dtor(struct Ga4BasePart *b)
 void ga4_multipart_dtor_886A3A38(struct Ga4MultiPart *self)
 {
     self->vtbl = &lbl_880F46F0;
-    fn_8890F1E8(&self->elem[3]);
-    fn_8890F1E8(&self->elem[2]);
-    fn_8890F1E8(&self->elem[1]);
-    fn_8890F1E8(&self->elem[0]);
+    ts4_obj44_dtor_8890F1E8(&self->elem[3]);
+    ts4_obj44_dtor_8890F1E8(&self->elem[2]);
+    ts4_obj44_dtor_8890F1E8(&self->elem[1]);
+    ts4_obj44_dtor_8890F1E8(&self->elem[0]);
     ga4_base_part_dtor(&self->base);
     self->vtbl_28 = &lbl_880D6B70;
 }
