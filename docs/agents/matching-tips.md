@@ -21,7 +21,8 @@
 - Callee names: once a function is renamed in symbols.txt, fn_check fails the relocation check if you use the fn_ name.
   Check with `grep -i "0xADDR;" config/54540859/symbols.txt`.
 - Leave alone (whole-program patterns, under investigation by agent LT1): callers relying on r4/r6/r7/r9/f10 surviving a
-  call, fsel/mfcr float selects, `clrrwi rX,rX,0`, divw with no trap, v0-v13 vector register use.
+  call, fsel/mfcr float selects, v0-v13 vector register use. (`clrrwi rX,rX,0` is solved, see the CL1 section; divw
+  with no trap is `/Oc`.)
 
 ## Added from GA3
 - Hash/id arguments: pass a 4-byte hash or id as a one-member struct by value (`struct Ga3Id` in src/xbox360/ga3_types.h).
@@ -151,3 +152,16 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
 - Operand order, refinements (W3): with several sites in one function, pads before one site shift every later site, so
   fix sites left to right. Block-scoped base locals are numbered separately and flip independently (7 and 15 in
   0x8866D070). One `int x = 0;` per pad; a comma-separated declaration inside a macro argument fails to compile.
+
+## `clrrwi rD,rS,0` copies (from CL1; full notes in docs/agents/near-misses/CL1.md)
+- The copy is a load that the compiler removed late: the `lwz` is replaced by a zero-extending copy of the register that
+  already holds the value. It appears when the early CSE did not see two accesses as the same location:
+  1. the second access goes through an inline accessor called again (`static __inline struct S *get(struct S *p)
+     { return p; }  get(p)->n--; return get(p)->n < 0;`), or an inline helper that re-reads a pointer field;
+  2. a store on two paths, read after the merge (`if (f) p->c++; else p->c = 0; t->x = p->c > 300;`);
+  3. another memory access between the store and the reload;
+  4. a rotated loop condition re-reading a field the body just stored.
+- Inside an inline body only the first load off the parameter becomes the copy, so the level that gets the copy tells
+  you which pointer the helper took. The same expression written twice, or a local pointer used twice, gives no copy.
+  Float fields give `fmr`. No flag is involved; 64-bit casts, `& 0xffffffff`, `/Oc`, `/fp:precise`, LTCG make no difference.
+- Worked examples: src/xbox360/cl1_clrrwi_reload.c. 1,508 unmatched functions in the image contain this pattern.

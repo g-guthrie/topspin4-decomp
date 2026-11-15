@@ -38935,6 +38935,21 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_update_flags_88667B28": 364},
     },
+    {
+        "source": "src/xbox360/cl1_clrrwi_reload.c",
+        "object": "cl1_clrrwi_reload.obj",
+        "symbols": {
+            "ts4_counter_dec_is_negative_8865AB58": 24,
+            "ts4_frame_counter_update_8865B278": 72,
+            "ts4_last_record_8865A3E8": 36,
+            "ts4_first_record_8865A410": 32,
+            "ts4_registry_release_886615D0": 104,
+            "ts4_registry_release_8865E7C0": 104,
+            "ts4_token_publish_8865EE40": 80,
+            "ts4_max_track_update_8865BF80": 60,
+            "ts4_current_item_8865F0D0": 56,
+        },
+    },
 )
 
 
