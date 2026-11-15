@@ -3,7 +3,7 @@
  */
 typedef unsigned int ts4_word;
 
-void fn_886E0C48(void *obj);
+void ts4_reset_core_886E0C48(void *obj);
 
 /* Layout of the object at owner +0x28 (reset targets only). */
 struct Ga6Flags14 { char pad_00[0x34]; unsigned char b34; char pad_35[0x20]; unsigned char b55; };
@@ -28,7 +28,7 @@ struct Ga6ResetOwner {
 /* Re-run the sim refresh, then clear its latch words and flags. */
 void ga6_reset_sim_flags_886E2BF8(struct Ga6ResetOwner *self)
 {
-    fn_886E0C48(self->sim);
+    ts4_reset_core_886E0C48(self->sim);
     self->sim->wf8 = 0;
     self->sim->wfc = 0;
     self->sim->b102 = 0;

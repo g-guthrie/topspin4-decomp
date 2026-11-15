@@ -5,7 +5,7 @@
  * Units: time is 60 Hz ticks in floats ("anim time"), match frames are ints; positions are cm.
  *
  * Object map (all offsets measured):
- *   Engine E (vtable 0x880F37A8, ctor fn_886D7878, dtor fn_886D77B8, Update fn_886E5F50, Init fn_886E57A8,
+ *   Engine E (vtable 0x880F37A8, ctor fn_886D7878, dtor ts4_destroy_manager_886D77B8, Update fn_886E5F50, Init fn_886E57A8,
  *             Exit ts4_engine_exit_886E11C8; registered under the node type name "SwingAnimationEngine", crc32 0xB7625AE0):
  *     +0x28/0x2c/0x30  XData handle of the AnimationData tree      +0x34 -> GamePlay frame block (type 0x5E16CF76)
  *     +0x38 -> per-player records, stride 0x140 (type 0x1E51C496)  +0x3c -> type 0x1367BD6D
@@ -75,7 +75,7 @@ void engine_update_886E5F50(struct Engine *e)
 
 /* fn_886E5178: the per-player pipeline in execution order
  *  1. command intake: live  -> ts4_poll_command_masks_886C5D20(P+0x5ac) polls the command streams;
- *                     if state+0x100 (new command): [state+0x102 -> fn_886E0C48 reset], [state+0x55 -> fn_886E2E78 spawn/teleport]
+ *                     if state+0x100 (new command): [state+0x102 -> ts4_reset_core_886E0C48 reset], [state+0x55 -> fn_886E2E78 spawn/teleport]
  *                     replay -> fn_886E4958(P+0xd0) reads recorded commands.   Then state+0x100/+0x102 := 0.
  *  2. if P has playing layers (P+0x8c != P+0x90) and the AnimData per-player node is bound:
  *       fn_886DF5D0(Planner)  advance the planner clock, pick/replace animations (below)

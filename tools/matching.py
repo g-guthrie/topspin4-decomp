@@ -41379,6 +41379,30 @@ MATCHING_UNITS = (
         "object": "cx50_m.obj",
         "symbols": {"ts4_cx50_remove_entry_889C72B8": 252},
     },
+    {
+        "source": "src/xbox360/w11e_a.cpp",
+        "object": "w11e_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_call_with_tmp_88661A38": 52},
+    },
+    {
+        "source": "src/xbox360/w11g_a.c",
+        "object": "w11g_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_object_dtor_886E34F8": 184},
+    },
+    {
+        "source": "src/xbox360/w11g_b.c",
+        "object": "w11g_b.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_has_pair_886C7F10": 188},
+    },
+    {
+        "source": "src/xbox360/w11g_c.c",
+        "object": "w11g_c.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_pick_target_88660F70": 212},
+    },
 )
 
 
