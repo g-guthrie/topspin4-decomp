@@ -18,7 +18,7 @@
 extern const __vector4 lbl_88001AF0;          /* up (0, 1, 0, 0) */
 extern const __vector4 lbl_880FC6B0;          /* fallback axis (0, 0, 1, 0) */
 extern const float lbl_880C88DC;              /* pi */
-extern const float lbl_8814B440;              /* 0.0f */
+extern const float g_ts4_event_value;              /* 0.0f */
 extern const float g_ts4_script_constants[];  /* +0 1.0, +0xE8 pi/2, +0x1E0 5.0, +0x490 0.99999 */
 #define RT1_K(off) g_ts4_script_constants[(off) / 4]
 
@@ -95,7 +95,7 @@ void ts4_ball_bounce_response_889C1C80(struct Rt1Ball *ball, struct Rt1Vec4 *vel
     yaw = fn_881899D8(spin[1], &tmpl->yaw_kick);
     delta = fn_881899D8(theta, &tmpl->out_angle) - theta;
     weight = spin_a * RT1_K(0x1E0);
-    fzero = lbl_8814B440;
+    fzero = g_ts4_event_value;
     weight = (weight < fzero) ? -weight : weight;
     fn_8817B608(&delta);
 

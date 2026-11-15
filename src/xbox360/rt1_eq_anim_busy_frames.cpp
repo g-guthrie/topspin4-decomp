@@ -21,7 +21,7 @@
 
 extern "C" {
 
-extern const float lbl_8814B440;              /* 0.0f */
+extern const float g_ts4_event_value;              /* 0.0f */
 extern const float g_ts4_script_constants[];  /* +0: 1.0f */
 
 int ts4_anim_stack_top_active_layer_886C4638(Gp7AnimStack *stack, float unused);
@@ -41,7 +41,7 @@ struct Rt1TwoEventTable {
 float ts4_anim_busy_frames_886CD3C8(Rt1SwingAnimController *self)
 {
     Gp7AnimStack *stack = self->stack;
-    float zero = lbl_8814B440;
+    float zero = g_ts4_event_value;
     int top = ts4_anim_stack_top_active_layer_886C4638(stack, zero);
     if (top != -1) {
         Gp7AnimLayer *layer = stack->layers[top];

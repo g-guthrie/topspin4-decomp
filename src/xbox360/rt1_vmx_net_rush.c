@@ -15,7 +15,7 @@
  */
 #include "rt1_types.h"
 
-extern const float lbl_8814B440;              /* 0.0f */
+extern const float g_ts4_event_value;              /* 0.0f */
 extern const float g_ts4_script_constants[];  /* +0x184 pi/180, +0x2AC 0.1 */
 #define RT1_K(off) g_ts4_script_constants[(off) / 4]
 
@@ -76,7 +76,7 @@ void ts4_repositioning_human_mode_8869B928(struct Rt1Repositioning *r)
 
             pc = r->pc;
             rb = pc->state->req_fast_repos;
-            if (aligned && (float)far != lbl_8814B440) {
+            if (aligned && (float)far != g_ts4_event_value) {
                 if ((in_box && pc->match->mode->kind != 1) || rb)
                     r->mode = 2;
             }

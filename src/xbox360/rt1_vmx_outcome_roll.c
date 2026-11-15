@@ -32,7 +32,7 @@
  */
 #include "rt1_types.h"
 
-extern const float lbl_8814B440;              /* 0.0f */
+extern const float g_ts4_event_value;              /* 0.0f */
 extern const float g_ts4_script_constants[];  /* +0 1.0, +0x38 -1.0, +0x2AC 0.1, +0x364 200, +0x604 75, +0x610 -75, +0x614 40000 */
 #define RT1_K(off) g_ts4_script_constants[(off) / 4]
 
@@ -93,7 +93,7 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
     ts4_u32 side_tag = pc->team->state->side_tag;
     ts4_bool serve = pc->match->flow->state == RT1_MATCH_STATE_SERVE;
     struct Rt1CourtBounds bounds;
-    const float zero = lbl_8814B440;
+    const float zero = g_ts4_event_value;
     const float one = RT1_K(0);
     float p, roll1, roll2, roll3, let_p;
     ts4_bool gate, let, error, net, off, to_net, to_out, to_in;

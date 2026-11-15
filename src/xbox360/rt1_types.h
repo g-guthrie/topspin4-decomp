@@ -530,4 +530,41 @@ struct Rt1Repositioning {                  /* repositioning controller R */
     int mode;                              /* +0x40 0 none, 2 go to the net */
 };
 
+/* ---- Aiming (aiming.md s3, s4) ---- */
+
+/* ReceiverState.QuadAimingState (S+0xD44). */
+struct Rt1QuadAimingState {
+    float aim_x;                           /* AimX */
+    float aim_y;                           /* AimY */
+};
+/* ReceiverState.AimingState (S+0xD20, 0x90 bytes). */
+struct Rt1AimingState {
+    struct Rt1Vec4 current_target;         /* +0x00 CurrentTarget */
+    ts4_u8 pad_10[0x14];
+    struct Rt1QuadAimingState quad;        /* +0x24 (S+0xD44) QuadAimingState */
+    ts4_u8 pad_2c[0x3C];
+    float efficiency;                      /* +0x68 (S+0xD88) Efficiency */
+    float out_efficiency;                  /* +0x6C (S+0xD8C) OutEfficiency */
+    float quad_efficiency;                 /* +0x70 (S+0xD90) QuadEfficiency */
+    ts4_u8 pad_74[0x14];
+    float final_efficiency;                /* +0x88 (S+0xDA8) FinalEfficiency */
+    ts4_u8 flag_8c;                        /* +0x8C #10b3e424 */
+    ts4_bool direction_selected;           /* +0x8D (S+0xDAD) DirectionSelected */
+    ts4_u8 flag_8e;                        /* +0x8E #389561c8 */
+    ts4_u8 pad_8f;
+};
+/* Aiming quad built by AimSelector_BuildQuad: four corners and the centre. */
+struct Rt1AimQuad {
+    struct Rt1Vec4 corner[4];
+    struct Rt1Vec4 center;                 /* +0x40 */
+};
+struct Rt1PlayerStateA {                   /* PlayerState view for aiming */
+    ts4_u8 pad_000[0xD20];
+    struct Rt1AimingState aim;             /* +0xD20 ReceiverState.AimingState */
+};
+struct Rt1PlayerCtxA {                     /* PlayerController view for aiming */
+    ts4_u8 pad_00[0x74];
+    struct Rt1PlayerStateA *state;         /* +0x74 */
+};
+
 #endif

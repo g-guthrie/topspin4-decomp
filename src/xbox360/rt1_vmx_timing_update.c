@@ -15,7 +15,7 @@
  */
 #include "rt1_types.h"
 
-extern const float lbl_8814B440;           /* 0.0f */
+extern const float g_ts4_event_value;           /* 0.0f */
 extern const float g_ts4_script_constants[]; /* +0x38: -1.0f */
 
 /* Look-ahead position of the player after `frames` frames (fn_8867A908). */
@@ -77,11 +77,11 @@ void ts4_timing_state_update_8867DF68(struct Rt1SubController *self)
         int frames;
         float f, worst;
 
-        side.v[1] = lbl_8814B440;
-        side.v[3] = lbl_8814B440;
+        side.v[1] = g_ts4_event_value;
+        side.v[3] = g_ts4_event_value;
         side.v[2] = p->body->line.dir.v[0];
         side.v[0] = -p->body->line.dir.v[2];
-        fn_8867A908(p, &pos, lbl_8814B440);
+        fn_8867A908(p, &pos, g_ts4_event_value);
         ts4_if_get_8865E730(&pos, p->team->state->side_tag);
 
         zero = __vspltisw(0);
