@@ -63,7 +63,7 @@ static void gp2_evaluate_side(
     const struct Gp2CandidateSet *first_set,
     int now_tick,                        /* PlayerCtx->world->clock+0x310 */
     Gp2Vec3 player_pos,                  /* PlayerState+0x8e0 */
-    float anim_busy_ticks,               /* fn_886CD3C8(PlayerCtx->swing_anim) */
+    float anim_busy_ticks,               /* ts4_anim_busy_frames_886CD3C8(PlayerCtx->swing_anim) */
     const struct Gp2BallPrediction *prediction,
     float (*run_turn_time)(void *ctx, Gp2Vec3 delta),     /* fn_88564BF8 atan2 + ts4_table2d_eval_8826D278 table */
     Gp2Vec3 (*predict_pos)(void *ctx, float ticks),       /* fn_8867A908 */

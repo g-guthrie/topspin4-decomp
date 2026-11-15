@@ -46081,3 +46081,10 @@ src/xbox360/w4b_c.c:
 src/xbox360/w4b_h.c:
 	.pdata      start:0x881235F8 end:0x88123600
 	.text       start:0x8866DD78 end:0x8866DE3C
+
+src/xbox360/fp1_anim_busy_frames.cpp:
+	.pdata      start:0x88124C60 end:0x88124C68
+	.text       start:0x886CD3C8 end:0x886CD488
+
+src/xbox360/fp1_layer_time_warp.c:
+	.text       start:0x886D1408 end:0x886D148C

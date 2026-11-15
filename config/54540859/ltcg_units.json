@@ -206,5 +206,38 @@
    "ts4_pool_dispatch_889C0910": 44,
    "ts4_set_rec_by_keys_886C84B8": 52
   }
+ },
+ {
+  "source": "src/xbox360/fp1_anim_busy_frames.cpp",
+  "object": "fp1_anim_busy_frames.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/gp7_anim_busy.cpp",
+   "src/xbox360/fp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_anim_stack_top_active_layer_886C4638"
+  ],
+  "symbols": {
+   "ts4_anim_busy_frames_886CD3C8": 192
+  }
+ },
+ {
+  "source": "src/xbox360/fp1_layer_time_warp.c",
+  "object": "fp1_layer_time_warp.obj",
+  "context": [
+   "src/xbox360/fp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_layer_time_warp_886D1408": 132
+  }
  }
 ]

@@ -381,3 +381,8 @@ source shape.
   `tools/ltcg_route.py` and `tools/fn_check_ltcg.py`, so matching.py needs no further change.
 - `docs/ltcg-ranges.json`: the range map.
 - `src/xbox360/lt1_msg_send_encrypted.c`, `src/xbox360/lt1_lua_auxsort.c`, and specs in `work/specs/LT1/`.
+
+## Correction (FP1)
+
+Float code in the game was not built with `/fp:precise`. It uses the default float model; the mfcr/fsel select comes
+from a named file-scope zero constant. See `docs/agents/near-misses/FP1.md`.

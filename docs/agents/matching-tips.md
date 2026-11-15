@@ -172,3 +172,19 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   gives the copy with no helper. Open: a reload the target keeps as a real `lwz` before the copy (0x886696A8), a
   redundant re-test kept after the copy (0x8866BAE0), and the stack-temporary id round trip
   `addi r10,r1,0x50; stw id,0x50(r1); lwz r5,0(r10)` (0x886A37D0, 0x88669B98).
+
+## Float code: fmadds together with the mfcr/fsel select (from FP1; full notes in docs/agents/near-misses/FP1.md)
+- Game float code is compiled in the DEFAULT float model (the one that emits `fmadds`), not `/fp:precise`. Do not use
+  `/fp:precise` to get the mfcr select: it gives the wrong orientation (`xori`/GT). All 479 select sites in the LTCG
+  game range are LT|UN with no `xori`.
+- The `fcmpu; mfcr; rlwinm 27; rlwinm 30; or; lfsx {1.0,-1.0}; fsel` select comes from comparing against a NAMED
+  file-scope `static const float kZero = 0.0f;`. A literal 0 gives a bare `fsel`; a variable gives branches. Once the
+  named zero exists in a file, every literal `0.0f` in it is redirected to it.
+  `float f(float a,float b,float c,float lo){ float v=a*b+c; return (v-lo >= kZero) ? v : lo; }`
+- Max written as a helper `(a - b >= kZero) ? a : b` and called as `max(0, x)` gives the target's `fneg` before `fcmpu`.
+  Nest the helpers (`min(max(x, base), limit)`); two separate select statements turn the first into a branch.
+- LTCG route: the select table and constants are addressed off the module constant pool, so add
+  `src/xbox360/fp1_pool_primer.c` as context; it reproduces the first 0x68 bytes of the pool layout. Constants beyond
+  +0x68 (e.g. 30.0f at +0x42c) are not covered yet.
+- Worked examples: src/xbox360/fp1_anim_busy_frames.cpp, src/xbox360/fp1_layer_time_warp.c. 131 unmatched functions
+  (179 KB) contain both patterns; 46 of them (50 KB) are in the gameplay range.

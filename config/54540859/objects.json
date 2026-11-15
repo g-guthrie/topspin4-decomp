@@ -6300,6 +6300,14 @@
       "src/xbox360/w4b_h.c": {
         "status": "Matching",
         "source": "xbox360/w4b_h.c"
+      },
+      "src/xbox360/fp1_anim_busy_frames.cpp": {
+        "status": "Matching",
+        "source": "xbox360/fp1_anim_busy_frames.cpp"
+      },
+      "src/xbox360/fp1_layer_time_warp.c": {
+        "status": "Matching",
+        "source": "xbox360/fp1_layer_time_warp.c"
       }
     }
   }

@@ -2,7 +2,7 @@
  * Evidence: work/equiv/rt3_886CD3C8.json (3450 valid trials, 100% blocks, seed 7). Flags /Oc /fp:precise. */
 /*
  * RT3: swing animation busy time (Top Spin 4, Xbox 360, Swing_DLL.xex).
- * fn_886CD3C8: ticks until the swing event of the topmost playing animation layer.
+ * ts4_anim_busy_frames_886CD3C8: ticks until the swing event of the topmost playing animation layer.
  * Types: src/xbox360/gp7_types.h.
  */
 #include "../gp7_types.h"

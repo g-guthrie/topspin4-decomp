@@ -149,7 +149,7 @@ struct AnimationRecord {             /* 0x8c bytes, Animations.bin; table at Ani
     u32  id;                         /* +0x84 animation id == AOD file number */
 };
 
-/* fn_886D1408: time warp of a layer. 'ratio' is the clip's time ratio; the extra stretch grows linearly with the
+/* ts4_layer_time_warp_886D1408: time warp of a layer. 'ratio' is the clip's time ratio; the extra stretch grows linearly with the
  * time elapsed since t_ref and is clamped to [base, limit].  (Four fsel-table selects; not matched.) */
 float layer_time_warp_886D1408(struct AnimLayer *L, float t)
 {
@@ -159,7 +159,7 @@ float layer_time_warp_886D1408(struct AnimLayer *L, float t)
     return x;
 }
 
-/* fn_886CD3C8 (called by the GP2 reach evaluation as "anim busy ticks", gameplay PlayerCtx+0x60 -> ctrl).
+/* ts4_anim_busy_frames_886CD3C8 (called by the GP2 reach evaluation as "anim busy ticks", gameplay PlayerCtx+0x60 -> ctrl).
  * Ticks until the event stored in segment[1] (+0x10 of a 0x28-byte segment => +0x38 from the table base is read
  * for a 2-segment record, i.e. the SWING record shape) of the topmost playing layer; 0 when nothing / other shape.
  * ctrl->+0x2c = Planner (layer vector +0x5c/+0x60, now = +0x18). Not matched: the compiler's LTCG keeps the 0.0
