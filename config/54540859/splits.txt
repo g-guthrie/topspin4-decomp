@@ -46048,3 +46048,11 @@ src/xbox360/op1_rel_side_flags.c:
 
 src/xbox360/op1_value_at_least.c:
 	.text       start:0x8865B658 end:0x8865B6A0
+
+src/xbox360/w3_a.c:
+	.text       start:0x88664FC8 end:0x8866500C
+	.text       start:0x8866D070 end:0x8866D110
+
+src/xbox360/w3_c.c:
+	.pdata      start:0x88123488 end:0x88123490
+	.text       start:0x88667B28 end:0x88667C94

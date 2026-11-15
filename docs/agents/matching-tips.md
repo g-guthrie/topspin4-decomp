@@ -148,3 +148,6 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   into named locals, or give each repeated access its own block-scoped locals). `python3 tools/operand_order_pad.py SRC
   FUNC name=0xADDR 9` tries 0-9 dead locals and prints the diff count for each, to find the count to aim for.
 - Not covered: both operands loaded straight off a parameter, or a strength-reduced induction temp.
+- Operand order, refinements (W3): with several sites in one function, pads before one site shift every later site, so
+  fix sites left to right. Block-scoped base locals are numbered separately and flip independently (7 and 15 in
+  0x8866D070). One `int x = 0;` per pad; a comma-separated declaration inside a macro argument fails to compile.

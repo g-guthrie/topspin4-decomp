@@ -38920,6 +38920,21 @@ MATCHING_UNITS = (
         "object": "op1_value_at_least.obj",
         "symbols": {"ts4_value_at_least_8865B658": 72},
     },
+    {
+        "source": "src/xbox360/w3_a.c",
+        "object": "w3_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_rec_field_zero_88664FC8": 68,
+            "ts4_select_sub_8866D070": 160,
+        },
+    },
+    {
+        "source": "src/xbox360/w3_c.c",
+        "object": "w3_c.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_update_flags_88667B28": 364},
+    },
 )
 
 

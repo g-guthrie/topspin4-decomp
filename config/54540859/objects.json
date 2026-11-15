@@ -6272,6 +6272,14 @@
       "src/xbox360/op1_value_at_least.c": {
         "status": "Matching",
         "source": "xbox360/op1_value_at_least.c"
+      },
+      "src/xbox360/w3_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w3_a.c"
+      },
+      "src/xbox360/w3_c.c": {
+        "status": "Matching",
+        "source": "xbox360/w3_c.c"
       }
     }
   }

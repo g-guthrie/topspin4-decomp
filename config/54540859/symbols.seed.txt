@@ -30839,3 +30839,6 @@ ts4_set_side_flags_8866A8C8 = .text:0x8866A8C8; // type:function size:0x68
 ts4_set_side_flags_8866ABD0 = .text:0x8866ABD0; // type:function size:0x68
 ts4_set_side_flags_8866AF38 = .text:0x8866AF38; // type:function size:0x68
 ts4_value_at_least_8865B658 = .text:0x8865B658; // type:function size:0x48
+ts4_rec_field_zero_88664FC8 = .text:0x88664FC8; // type:function size:0x44
+ts4_select_sub_8866D070 = .text:0x8866D070; // type:function size:0xA0
+ts4_update_flags_88667B28 = .text:0x88667B28; // type:function size:0x16C
