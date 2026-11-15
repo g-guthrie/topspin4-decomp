@@ -554,9 +554,9 @@ struct Ga1LockedSet {
     struct Ga1LockItem **begin;
     struct Ga1LockItem **end;
 };
-extern ts4_u8 fn_88655BC8(void *data);
+extern ts4_u8 ts4_flush_queue_88655BC8(void *data);
 
-/* Under the interface lock (slot 1 enter, slot 2 leave), ANDs the result of fn_88655BC8 over
+/* Under the interface lock (slot 1 enter, slot 2 leave), ANDs the result of ts4_flush_queue_88655BC8 over
    every item's data; returns 0 immediately when not enabled. Swing_DLL.xex 0x88657920 */
 ts4_u8 ts4_all_items_valid_88657920(struct Ga1LockedSet *set)
 {
@@ -571,7 +571,7 @@ ts4_u8 ts4_all_items_valid_88657920(struct Ga1LockedSet *set)
     ok = 1;
     end = set->end;
     for (it = set->begin; it != end; it++)
-        ok = fn_88655BC8((*it)->data) & ok;
+        ok = ts4_flush_queue_88655BC8((*it)->data) & ok;
     ((void (*)(struct Ga1Iface *))lock->vtbl[2])(lock);
     return ok;
 }

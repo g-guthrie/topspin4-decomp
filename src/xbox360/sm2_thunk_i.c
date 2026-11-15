@@ -8,7 +8,7 @@ extern void fn_886CC560(void *a, int b, int c);
 extern void fn_8852CB30(int a, int b, int c, int d);
 extern void ts4_node_dispatch_8860DCF8(void *a, int b, int c, int d);
 extern void fn_886DEDD8(void *a, int b, float x, float y);
-extern void fn_886DFA60(float f, void *a, int b, int c, int d);
+extern void ts4_walk_clamped_886DFA60(float f, void *a, int b, int c, int d);
 extern void fn_885459F8(void *a, void *b);
 extern void fn_886CF1E0(void *a, int b, int c, int d);
 extern void fn_8861E598(void *a, float x, float y);

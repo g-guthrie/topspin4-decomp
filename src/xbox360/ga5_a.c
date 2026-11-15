@@ -204,14 +204,14 @@ typedef struct Ga5AnimStack {         /* animation layer owner: records vector a
     Ga5IdRecord **records;            /* +0x5c */
 } Ga5AnimStack;
 
-extern int fn_886C66C0(void *self);   /* index of the layer to query, or -1 */
+extern int ts4_anim_layer_index_886C66C0(void *self);   /* index of the layer to query, or -1 */
 
-/* Swing_DLL.xex 0x886CB618: id (+0x78) of the record chosen by fn_886C66C0, or -1 when there is none. */
+/* Swing_DLL.xex 0x886CB618: id (+0x78) of the record chosen by ts4_anim_layer_index_886C66C0, or -1 when there is none. */
 int ts4_selected_record_id_886CB618(Ga5AnimStack *self)
 {
     int result = -1;
     int index;
-    index = fn_886C66C0(self);
+    index = ts4_anim_layer_index_886C66C0(self);
     if (index != -1) {
         Ga5IdRecord **records = self->records;
         result = (int)records[index]->id;

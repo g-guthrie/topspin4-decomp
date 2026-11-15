@@ -74,7 +74,7 @@ void engine_update_886E5F50(struct Engine *e)
  * = publish the pose of this player to the animation interface (AnimationData ToDisplay/Position|Rotation). */
 
 /* fn_886E5178: the per-player pipeline in execution order
- *  1. command intake: live  -> fn_886C5D20(P+0x5ac) polls the command streams;
+ *  1. command intake: live  -> ts4_poll_command_masks_886C5D20(P+0x5ac) polls the command streams;
  *                     if state+0x100 (new command): [state+0x102 -> fn_886E0C48 reset], [state+0x55 -> fn_886E2E78 spawn/teleport]
  *                     replay -> fn_886E4958(P+0xd0) reads recorded commands.   Then state+0x100/+0x102 := 0.
  *  2. if P has playing layers (P+0x8c != P+0x90) and the AnimData per-player node is bound:
@@ -108,7 +108,7 @@ void engine_publish_timing_886C8158(struct Engine *e)
             /* replay/cutscene variant of the same min with P+0x5f4 / state+0x102 / state+0x55 gating */
         }
         if (p->state->player_index == 0) {
-            int first = planner_first_layer(&p->planner);          /* fn_886C66C0 */
+            int first = planner_first_layer(&p->planner);          /* ts4_anim_layer_index_886C66C0 */
             if (first != -1)
                 e->frame->ticks_to_event_p0 = (int)(p->playing_begin[first]->event_time - p->playing_begin[first]->cur_time);  /* +0x28 - +0x48 -> frame+0xEC */
         }
@@ -181,7 +181,7 @@ float swing_anim_busy_ticks_886CD3C8(struct Ctrl *ctrl)
     return busy;
 }
 /* Siblings (same ctrl): fn_886CD1E8 returns (int)the same expression (no clamp) for the topmost layer whose record has
- * seg_count == 2 and that is at or after the first active layer (fn_886C66C0); ts4_last_key_offset_886CD2E0 returns (int)(
+ * seg_count == 2 and that is at or after the first active layer (ts4_anim_layer_index_886C66C0); ts4_last_key_offset_886CD2E0 returns (int)(
  * (segment[last].+0x10 - L->t_ref) * (ratio - 1) + L->base - now) for the active layer when its slot != -1, its play
  * record type != 0xC222A5E0 and seg_count >= 2; both return -1 when the shape does not fit. */
 

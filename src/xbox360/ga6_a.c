@@ -6,7 +6,7 @@
 typedef unsigned int ts4_word;
 
 /* Worker callees (placeholder symbols). */
-void fn_886DFA60(void *dest, float value, ts4_word arg, ts4_word size);
+void ts4_walk_clamped_886DFA60(void *dest, float value, ts4_word arg, ts4_word size);
 void fn_886CEB68(void *self, ts4_word a, ts4_word b, ts4_word c, ts4_word d, void *entry);
 
 struct Ga6Ctx158 {
@@ -24,7 +24,7 @@ struct Ga6OwnerB {
 /* Forward a float property of the object (+0x18) to the sub-object at +0x58 with size 0x40. */
 void ga6_forward_scalar_886E2088(char *self, ts4_word arg)
 {
-    fn_886DFA60(self + 0x58, *(float *)(self + 0x18), arg, 0x40);
+    ts4_walk_clamped_886DFA60(self + 0x58, *(float *)(self + 0x18), arg, 0x40);
 }
 
 /* Look up the current entry (stride 0x1C) in the self-relative table and forward to the worker. */

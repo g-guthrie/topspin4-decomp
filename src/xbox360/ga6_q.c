@@ -100,7 +100,7 @@ struct Ga6BigObj {
 
 /* ---- reverse walk of an item vector ---- */
 void ts4_clear_three_vectors_886C3658(void *self);
-int fn_886C66C0(void *obj);
+int ts4_anim_layer_index_886C66C0(void *obj);
 void fn_886D4978(void *self, void *obj, ts4_word item, int index);
 
 struct Ga6StlVec { ts4_word pad_00; ts4_word *begin; ts4_word *end; };

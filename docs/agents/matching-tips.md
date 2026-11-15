@@ -289,3 +289,22 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   element loops read `end` once into a local. `return 0 != r;` gives the `addi rX,r3,0` copy before `subic/subfe`.
   Under LTCG, declaration order of two constant-holding locals decides which constant gets which `lis/lfs` slot.
   A callee that returns its `this` is used as `o = callee(o, o)` to get `mr r4,r3` and the later r3 reuse.
+
+## Added from W8 (132-224 byte gameplay functions)
+- A store that must precede a later load: `{ u32 *sp = &p->steps; *sp = *sp + 1; }`, not `p->steps++`.
+- Nested counted loops keep the target's shape: `for i<4 { for k<5 {...} }` gives `mtctr 4` with a 5-way unrolled body;
+  a flat 20-iteration loop does not.
+- Lane extraction without a `vor128` copy: `float t[4]; __stvewx(__vspltw(*rp, k), &t[k], 0)` with every splat taken
+  from `*rp` (no named vector local).
+- Float bool chain: `int a = x < lim; ... if ((u8)b==1 && (u8)c==1 && (u8)a==1) call();`. Result bool in r3 via r11:
+  `int x = cmp; u8 r = (u8)x;`.
+- 64-bit elapsed time: `u64 start = (unsigned)get();` gives `rldicl`; write the wrap as
+  `if (now < start) d = now - start + 0xffffffffu; else d = now - start;`.
+- A float first parameter takes r3's slot (integer parameters start at r4); find a parameter's position from its home
+  slot offset (1st = 0x14(r1), 5th = 0x34(r1)).
+- Zero stored on one branch only: `float z = g_ts4_event_value;` as the first statement of that branch.
+- Address-taken stack id round trip (`addi r10,r1,0x50; stw; lwz r5,0(r10)`): `struct Id *pid = &id; f(..., *pid)`.
+- LTCG callee register survival: `--context "flags(/Ob1):<callee file>"`, sometimes also `--include <callee>`; when the
+  real callee has an unused float parameter, pass a dummy `0.0f`.
+- Open: the table select together with a zero from extern `g_ts4_event_value` (0x886C4970, 0x886C5770, 0x886C6EE8);
+  a 23-entry jump table the compiler folds to compares (0x8865DAC0); r10/r11 register swaps; dead sub-object `addi`.

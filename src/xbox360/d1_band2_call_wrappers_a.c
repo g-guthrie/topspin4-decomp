@@ -248,7 +248,7 @@ ts4_uptr ts4_if_call_seq_u32_off2c_88646210(ts4_uptr);
 ts4_uptr ts4_if_get_u32_off0_88647668(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr ts4_call_seq_u32_lbl_88D45B20_886496F0(ts4_uptr);
 ts4_uptr fn_88649A90(ts4_uptr, ts4_uptr);
-ts4_uptr fn_8864CF98(void);
+ts4_uptr ts4_pump_state_8864CF98(void);
 ts4_uptr ts4_type_register_886529C8(ts4_uptr);
 ts4_uptr ts4_call_seq_lbl_880F5230_88652A90(void);
 ts4_uptr fn_88655718(ts4_uptr);

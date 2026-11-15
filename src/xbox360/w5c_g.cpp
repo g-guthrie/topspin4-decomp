@@ -10,7 +10,7 @@ struct W5gRecord { unsigned char pad00[4]; float value; };
 struct W5gKeyArg { unsigned int key; };
 struct W5gSwingController { unsigned char pad00[0x2c]; Gp7AnimStack *stack; };
 
-int fn_886C66C0(Gp7AnimStack *stack);
+int ts4_anim_layer_index_886C66C0(Gp7AnimStack *stack);
 W5gRecord *ts4_find_record_by_key_88265440(void *table, W5gKeyArg *key);
 
 /* Swing_DLL.xex 0x886CD488 */
@@ -21,7 +21,7 @@ int ts4_anim_frames_to_event_886CD488(W5gSwingController *self, int *out)
     int top;
     *out = -1;
     result = 0;
-    top = fn_886C66C0(stack);
+    top = ts4_anim_layer_index_886C66C0(stack);
     if (top != -1) {
         Gp7AnimLayer *layer = stack->layers[top];
         Gp7ClipDesc *desc = layer->inner->desc;

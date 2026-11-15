@@ -28,13 +28,13 @@ typedef struct W5gOwner {
 } W5gOwner;
 typedef struct W5gSelf { unsigned char pad00[0x2c]; W5gOwner *owner; } W5gSelf;
 
-extern int fn_886C66C0(W5gOwner *o);
+extern int ts4_anim_layer_index_886C66C0(W5gOwner *o);
 
 int ts4_last_key_offset_886CD2E0(W5gSelf *self)
 {
     W5gOwner *ow = self->owner;
     int r = -1;
-    W5gInst *in = ow->inst[fn_886C66C0(ow)];
+    W5gInst *in = ow->inst[ts4_anim_layer_index_886C66C0(ow)];
     unsigned n;
     if (in->link->def->id != 0xffff && *in->tag != 0xc222a5e0u && (n = in->link->def->count) >= 2) {
         int *h = &in->link->def->rel;

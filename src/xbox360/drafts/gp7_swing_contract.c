@@ -73,7 +73,7 @@ struct AnimIface {                   /* offsets measured; names are roles */
  *                               checks ts4_count_top_layers_with_id_after_limit_886C45E8 (< 2 sources) and fn_886DD4D8 pass; else fn_882659B0 + fn_886E0328
  *        0x20D7985E "Swing"  -> same with segment[idx], preceded by fn_886E40E0 (clear pending) when the top layer is free
  *        0x959A9407          -> fn_886E28C8 (blend in) when the playing record type differs, else just clear flags
- *   Command intake: fn_886C5D20 polls the three command streams at P+0x5ac / P+0xd0 (replay); streams are scanned for a
+ *   Command intake: ts4_poll_command_masks_886C5D20 polls the three command streams at P+0x5ac / P+0xd0 (replay); streams are scanned for a
  *   1<<bit mask of the first entry type.
  * fn_886CD668(P, cmd, key_a, key_b, key_c, seg_ptr, play_flag)  = "start play record" on the topmost layer L:
  *   R = L->+0x6c (record taken from the free list at P+0x3c); R.state flags +0x2c/+0x2d, R.type := *key (0x959A9407 etc.),
