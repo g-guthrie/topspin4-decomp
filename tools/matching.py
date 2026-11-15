@@ -41298,6 +41298,87 @@ MATCHING_UNITS = (
             "ts4_add_vec3_8864EF60": 52,
         },
     },
+    {
+        "source": "src/xbox360/cx49_a.c",
+        "object": "cx49_a.obj",
+        "symbols": {
+            "cx49_luaobj_set_int_888364F8": 96,
+            "cx49_luaobj_set_num_888365A8": 84,
+            "cx49_value_set_string_88836400": 104,
+            "cx49_get_index_int_88837E58": 120,
+            "cx49_get_bool_88837ED0": 120,
+            "cx49_luaobj_set_named_888368B0": 184,
+        },
+    },
+    {
+        "source": "src/xbox360/cx49_b.c",
+        "object": "cx49_b.obj",
+        "symbols": {
+            "cx49_luaobj_new_table_at_88837A68": 148,
+            "cx49_luaobj_new_table_named_88837B00": 148,
+            "cx49_luaobj_set_named_raw_888367F8": 180,
+        },
+    },
+    {
+        "source": "src/xbox360/cx49_c.c",
+        "object": "cx49_c.obj",
+        "symbols": {
+            "cx49_luaobj_assign_value_88836BC0": 188,
+            "cx49_luaobj_assign_int_88836EB8": 172,
+            "cx49_luaobj_assign_nil_88836F68": 176,
+        },
+    },
+    {
+        "source": "src/xbox360/cx50_a.c",
+        "object": "cx50_a.obj",
+        "symbols": {
+            "ts4_cx50_copy4_889D2B00": 52,
+            "ts4_cx50_copy2_889D2B38": 36,
+            "ts4_cx50_copy4_889D2B60": 52,
+            "ts4_cx50_copy4_889D2B98": 52,
+        },
+    },
+    {
+        "source": "src/xbox360/cx50_d.c",
+        "object": "cx50_d.obj",
+        "symbols": {"ts4_cx50_read4_889C6280": 68},
+    },
+    {
+        "source": "src/xbox360/cx50_e.c",
+        "object": "cx50_e.obj",
+        "symbols": {"ts4_cx50_register_two_889C60A0": 152},
+    },
+    {
+        "source": "src/xbox360/cx50_g.c",
+        "object": "cx50_g.obj",
+        "symbols": {"ts4_cx50_ctor_889C7180": 132},
+    },
+    {
+        "source": "src/xbox360/cx50_h.c",
+        "object": "cx50_h.obj",
+        "symbols": {"ts4_cx50_write_str_889C6AE8": 144},
+    },
+    {
+        "source": "src/xbox360/cx50_j.c",
+        "object": "cx50_j.obj",
+        "symbols": {"ts4_cx50_has_key_889C70A0": 116},
+    },
+    {
+        "source": "src/xbox360/cx50_k.c",
+        "object": "cx50_k.obj",
+        "symbols": {"ts4_cx50_read_chunks_889C7C58": 136},
+    },
+    {
+        "source": "src/xbox360/cx50_l.c",
+        "object": "cx50_l.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_cx50_lock_889D1918": 160},
+    },
+    {
+        "source": "src/xbox360/cx50_m.c",
+        "object": "cx50_m.obj",
+        "symbols": {"ts4_cx50_remove_entry_889C72B8": 252},
+    },
 )
 
 

@@ -8,7 +8,7 @@ struct ts4_str20 { int f00, f04, f08, f0c, f10, f14, f18, f1c; };
 struct ts4_lobj { char pad[0x3c]; int *ctx; };
 void ts4_call_seq_u32_off0_88832F70(struct ts4_str20 *out, int *ctx, const char *name);
 void fn_881B18E0(struct ts4_str20 *s, void *a, void *b);
-struct ts4_str20 *fn_88837B00(struct ts4_str20 *out, struct ts4_str20 *in, const char *name);
+struct ts4_str20 *cx49_luaobj_new_table_named_88837B00(struct ts4_str20 *out, struct ts4_str20 *in, const char *name);
 void fn_881B19A0(struct ts4_str20 *s);
 void fn_88836968(struct ts4_str20 *s, const char *name, void *thunk, void *a, int asz, void *b, int bsz);
 int ts4_lua_call_thunk_881B3080();
@@ -29,7 +29,7 @@ void ts4_lua_register_methods_##ADDR(struct ts4_lobj *self) \
         struct ts4_str20 base, full; \
         struct ts4_str20 *r; \
         ts4_str20_init(&base, self->ctx, (char *)(long)*self->ctx + 0x48); \
-        r = fn_88837B00(&full, &base, table); \
+        r = cx49_luaobj_new_table_named_88837B00(&full, &base, table); \
         fn_881B19A0(&path); \
         fn_881B18E0(&path, (void *)(long)r->f18, &r->f08); \
         fn_881B19A0(&full); \

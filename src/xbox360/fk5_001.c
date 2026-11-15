@@ -256,7 +256,7 @@ ts4_word fn_888063B0();
 ts4_word fn_88806428();
 ts4_word lib3_lua_type_88822738();
 ts4_word lib3_lua_tostring_88822888();
-ts4_word fn_88837B00();
+ts4_word cx49_luaobj_new_table_named_88837B00();
 ts4_word fn_88866030();
 ts4_word ts4_format_save_path_entry_88867E68();
 ts4_word fn_88883CD0();
@@ -4277,7 +4277,7 @@ ts4_word ts4_if_call_seq_fn_88627EC0_8886EEB8(ts4_word a0, ts4_args3 sp1)
     loc50[2] = (ts4_word)0;
     loc50[4] = (ts4_word)0;
     fn_881B18E0((ts4_word)(ts4_word)&loc50[0], (ts4_word)t6, (ts4_word)(t7 + 72));
-    fn_88837B00((ts4_word)(ts4_word)&loc70[0], (ts4_word)(ts4_word)&loc50[0], (ts4_word)(ts4_word)lbl_880E04C4);
+    cx49_luaobj_new_table_named_88837B00((ts4_word)(ts4_word)&loc70[0], (ts4_word)(ts4_word)&loc50[0], (ts4_word)(ts4_word)lbl_880E04C4);
     fn_881B19A0((ts4_word)(ts4_word)&loc50[0]);
     t11 = *(ts4_word *)((char *)(ts4_word)(t3) + 32);
     if ((ts4_word)t11 > 0) {

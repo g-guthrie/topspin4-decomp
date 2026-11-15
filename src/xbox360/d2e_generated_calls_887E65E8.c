@@ -159,7 +159,7 @@ ts4_word ts4_match_flag_char_8882EED0();
 ts4_word lib3_wmatchbracketclass_8882F1E8();
 ts4_word lua3_wstr_format_888319E0();
 ts4_word ts4_call_seq_u32_off0_88832F70();
-ts4_word fn_888368B0();
+ts4_word cx49_luaobj_set_named_888368B0();
 ts4_word fn_88838B00();
 ts4_word ts4_member_field_addr_8883B578();
 ts4_word ts4_member_is_listed_8883DDA0();
@@ -241,7 +241,7 @@ ts4_word ts4_if_get_fn_88804058_888083C0(ts4_word a0)
     fn_881B18E0((ts4_word)(ts4_word)&loc60[0], (ts4_word)t12, (ts4_word)(t13 + 72));
     loc50[0] = (ts4_word)0;
     loc50[2] = (ts4_word)0;
-    fn_888368B0((ts4_word)(ts4_word)&loc60[0], (ts4_word)(ts4_word)lbl_880E3658, (ts4_word)(ts4_word)&loc50[0]);
+    cx49_luaobj_set_named_888368B0((ts4_word)(ts4_word)&loc60[0], (ts4_word)(ts4_word)lbl_880E3658, (ts4_word)(ts4_word)&loc50[0]);
     fn_881B19A0((ts4_word)(ts4_word)&loc60[0]);
     t17 = *(unsigned char *)((char *)(ts4_word)(a0) + 65);
     if ((ts4_word)t17 == 1) {

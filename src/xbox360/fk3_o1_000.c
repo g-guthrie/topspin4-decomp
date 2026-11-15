@@ -64,7 +64,7 @@ ts4_word ts4_read_indexed_u32_property_885DCDA8();
 ts4_word fn_885DCE58();
 ts4_word fn_88883DE0();
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88884DE0();
-ts4_word fn_889D1918();
+ts4_word ts4_cx50_lock_889D1918();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
 #endif
@@ -727,26 +727,26 @@ ts4_word ts4_loop_call_seq_fn_88563230_88884B20(ts4_word a0, ts4_word a1, ts4_wo
     return t1;
 }
 
-/* Swing_DLL.xex 0x889D19B8: get fn_889D1918, u32@lbl_88C6E1A8, KeTlsFree, lbl_88D4DAB0, u32@lbl_88C6E1A8, interlocked_xchg */
+/* Swing_DLL.xex 0x889D19B8: get ts4_cx50_lock_889D1918, u32@lbl_88C6E1A8, KeTlsFree, lbl_88D4DAB0, u32@lbl_88C6E1A8, interlocked_xchg */
 ts4_word ts4_get_fn_889D1918_889D19B8(void)
 {
     ts4_word t3;
 
-    fn_889D1918();
+    ts4_cx50_lock_889D1918();
     t3 = KeTlsFree((ts4_word)(*(ts4_word *)lbl_88C6E1A8));
     *(ts4_word *)lbl_88C6E1A8 = (ts4_word)((4276813824) | 53261);
     _InterlockedExchange((volatile long *)(ts4_word)((ts4_word)lbl_88D4DAB0), (long)0);
     return t3;
 }
 
-/* Swing_DLL.xex 0x889D1A20: if_get fn_889D1918, u32@lbl_88C6E1A8, KeTlsSetValue, lbl_88D4DAB0, interlocked_xchg */
+/* Swing_DLL.xex 0x889D1A20: if_get ts4_cx50_lock_889D1918, u32@lbl_88C6E1A8, KeTlsSetValue, lbl_88D4DAB0, interlocked_xchg */
 ts4_word ts4_if_get_fn_889D1918_889D1A20(void)
 {
     ts4_word p4;
     ts4_word t2;
     ts4_word t3;
 
-    fn_889D1918();
+    ts4_cx50_lock_889D1918();
     t2 = *(ts4_word *)lbl_88C6E1A8;
     p4 = (ts4_word)t2;
     if ((ts4_word)t2 != (ts4_word)((4276813824) | 53261)) {

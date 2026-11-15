@@ -87,7 +87,7 @@ extern char *lbl_88D45940;
 extern void *lbl_88D45A0C;
 extern void *ts4_find_record_by_key_881ACFC8(void *, u32 *);
 extern void fn_887DD110(void *, u32, u8, u32);
-extern void fn_888368B0(void *, int, void *);
+extern void cx49_luaobj_set_named_888368B0(void *, int, void *);
 extern void fn_887FEA98(void *, int, int, u64);
 extern void fn_88947E40(void *, u64, int);
 extern u32 ts4_get_u32__imp_KeTimeStampBundle_8857B830(void);
@@ -126,7 +126,7 @@ void ts4_call_with_tagged_byte_888373F8(void *self, int b, u8 c)
     ts4_sm3_tagval t;
     t.tag = 1;
     t.val = c;
-    fn_888368B0(self, b, &t);
+    cx49_luaobj_set_named_888368B0(self, b, &t);
 }
 
 /* 0x887FEC60: forward the high word of a 64-bit argument (low word cleared). */

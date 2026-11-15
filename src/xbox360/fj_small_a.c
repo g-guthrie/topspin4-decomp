@@ -118,8 +118,8 @@ extern u32 fn_886328B0(char *);
 extern char lbl_880D44A8[];
 extern char * ts4_fixed_string_append_8816CF48(char *, char *, char *);
 extern void lua2_DumpBlock_8881C828(u32 *, int, u32);
-extern u32 fn_888367F8(int, int, u32 *);
-extern u32 fn_888368B0(int, int, u32 *);
+extern u32 cx49_luaobj_set_named_raw_888367F8(int, int, u32 *);
+extern u32 cx49_luaobj_set_named_888368B0(int, int, u32 *);
 extern void ts4_loop_get_u32_off1c_887EA320(void);
 extern void fn_88563110(int);
 extern void fn_887EA6E0(void);
@@ -230,7 +230,7 @@ extern u32 fn_8841B5E0(char *);
 extern u32 ga3_add_to_first_other_counter_886917F8(int, int, int);
 extern u32 lua2_subexpr_88816C30(int, int, int);
 extern char * fn_885643D0(int);
-extern u32 fn_888364F8(int, int, u32 *);
+extern u32 cx49_luaobj_set_int_888364F8(int, int, u32 *);
 extern void fn_884259B8(void);
 extern void fn_889D0020(void);
 extern void ts4_locked_set_889AC440(void);
@@ -1188,7 +1188,7 @@ u32 ts4_call_with_local_tag2_record_88837018(int a, int b, u32 c)
     u32 rec[3];
     rec[0] = 2;
     rec[2] = c;
-    return fn_888367F8(a, b, rec);
+    return cx49_luaobj_set_named_raw_888367F8(a, b, rec);
 }
 
 /* Swing_DLL.xex 0x88837050 */
@@ -1197,7 +1197,7 @@ u32 ts4_call_with_local_tag2_record_88837050(int a, int b, u32 c)
     u32 rec[3];
     rec[0] = 2;
     rec[2] = c;
-    return fn_888368B0(a, b, rec);
+    return cx49_luaobj_set_named_888368B0(a, b, rec);
 }
 
 /* pop_u16_from_buffer */
@@ -3099,13 +3099,13 @@ u32 ts4_get_field108_88834DF8(char *a)
 /* Swing_DLL.xex 0x888365A0 */
 u32 ts4_forward_third_arg_plus_8_888365A0(int a, int b, u32 *c)
 {
-    return fn_888364F8(a, b, c + 2);
+    return cx49_luaobj_set_int_888364F8(a, b, c + 2);
 }
 
 /* Swing_DLL.xex 0x88837048 */
 u32 ts4_forward_third_arg_plus_8_88837048(int a, int b, u32 *c)
 {
-    return fn_888368B0(a, b, c + 2);
+    return cx49_luaobj_set_named_888368B0(a, b, c + 2);
 }
 
 /* set_float_field12 */

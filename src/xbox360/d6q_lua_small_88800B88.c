@@ -15,7 +15,7 @@ extern void ts4_lua_pushlstring_88823FC0(lua_State *L, const char *s, u32 len);
 extern void ts4_lua_pushnil_88824188(lua_State *L);
 extern void ts4_lua_call_8881E258(lua_State *L, TValue *func, int nresults);
 extern int fn_88822738(lua_State *L, int idx);
-extern void fn_888368B0(lua_State *L, int a, TValue *v);
+extern void cx49_luaobj_set_named_888368B0(lua_State *L, int a, TValue *v);
 extern const char *lbl_880C9684[];
 extern char lbl_880E17A4[];
 extern TS4_NORETURN int ts4_luaL_typerror_8882E950(lua_State *L, int narg, const char *tname);
@@ -170,7 +170,7 @@ void ts4_call_with_number_888373B8(lua_State *L, int a, int n)
     TValue v;
     v.tt = 3;
     v.u.n = (double)n;
-    fn_888368B0(L, a, &v);
+    cx49_luaobj_set_named_888368B0(L, a, &v);
 }
 
 /* wcsncmp over 16-bit characters. */

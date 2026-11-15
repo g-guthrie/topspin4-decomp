@@ -185,7 +185,7 @@ ts4_word ts4_if_call_seq_u32_off10_88815520();
 ts4_word lua2_luaK_exp2anyreg_888216D0();
 ts4_word lua2_luaK_exp2RK_88821878();
 ts4_word ts4_call_seq_u32_off0_88832F70();
-ts4_word fn_888368B0();
+ts4_word cx49_luaobj_set_named_888368B0();
 ts4_word ts4_if_call_seq_u32_lbl_88D459E4_8883F238();
 ts4_word fn_88864E48();
 ts4_word fn_88865AB0();

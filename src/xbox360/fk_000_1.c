@@ -147,7 +147,7 @@ ts4_word fn_889A0CA8();
 ts4_word fn_889A3CF0();
 ts4_word fn_889A4270();
 ts4_word fn_889C53E0();
-ts4_word fn_889C7180();
+ts4_word ts4_cx50_ctor_889C7180();
 ts4_word fn_889C7E98();
 ts4_word ts4_assign_formatted_text();
 ts4_word ts4_destroy_owned_object();

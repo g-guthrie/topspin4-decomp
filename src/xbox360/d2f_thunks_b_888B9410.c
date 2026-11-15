@@ -370,7 +370,7 @@ ts4_word ts4_keyed_item_add_or_remove_889A7A20();
 ts4_word ts4_keyed_item_add_or_remove_889A7B00();
 ts4_word ts4_deflate_finish_889C0AE0();
 ts4_word fn_889C63A0();
-ts4_word fn_889C6AE8();
+ts4_word ts4_cx50_write_str_889C6AE8();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
 #endif
