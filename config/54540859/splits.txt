@@ -45915,3 +45915,10 @@ src/xbox360/cx13_core_b.c:
 	.text       start:0x886226C0 end:0x88622778
 	.text       start:0x88624A90 end:0x88624B58
 	.text       start:0x88624E20 end:0x88624EE0
+
+src/xbox360/rt1_serve_flags.c:
+	.text       start:0x88669878 end:0x88669A94
+
+src/xbox360/rt1_aim_get_target.c:
+	.pdata      start:0x88123FF8 end:0x88124000
+	.text       start:0x886935A0 end:0x8869362C

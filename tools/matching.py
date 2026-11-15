@@ -38783,6 +38783,16 @@ MATCHING_UNITS = (
             "ts4_queue_dispatch_88624E20": 192,
         },
     },
+    {
+        "source": "src/xbox360/rt1_serve_flags.c",
+        "object": "rt1_serve_flags.obj",
+        "symbols": {"ts4_rules_publish_point_end_flags_88669878": 540},
+    },
+    {
+        "source": "src/xbox360/rt1_aim_get_target.c",
+        "object": "rt1_aim_get_target.obj",
+        "symbols": {"ts4_aim_selector_get_target_886935A0": 140},
+    },
 )
 
 

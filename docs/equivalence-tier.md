@@ -528,3 +528,34 @@ Notes for the next stage:
   hash keys built with `lis`/`ori` (4, and much of the swing code) would gain coverage if those
   keys were seeded too. This is a small, isolated change to `code_consts`.
 - Evidence: `work/eq1/res_gameplay.jsonl` (one JSON result per candidate, uncovered blocks included).
+
+### 9.1 RT1 update (2026-11-15)
+
+Agent RT1 wrote typed whole-function C (real names, shared headers `rt1_types.h`, `rt1_scoring.h`)
+for every row above except 4. Checker runs used `TS4_MATCHING_DIR=work/matching-b46`, seed 1;
+specs and evidence are under `work/specs/RT1/` and `work/equiv/rt1_<addr>.json`. Rows marked
+`+hashes` used `work/army/RT1/fn_equiv_hashes.py`, which runs `tools/fn_equiv.py` unchanged and
+only adds the `lis`/`ori` and `addis`/`addi` 32-bit constants to `code_consts` (the change the
+notes above asked for). Equivalent files are named `rt1_eq_*` and are not listed as matched.
+
+| # | function | RT1 source | status | evidence |
+|---|---|---|---|---|
+| 1 | `fn_886629C8` | `rt1_eq_shot_specific_fill.c` | **EQUIVALENT** (45 valid of 609, 15/15 blocks, /Oc) | 8 scheduling diffs on the plain and LTCG routes |
+| 2 | `fn_886AFDF8` | `rt1_eq_swing_category_walk.c` | **EQUIVALENT** (345 of 584, 67/67, /Oc) | the original keeps r4 live across `fn_8866D930` (LTCG convention) |
+| 3 | `fn_886B0250` | `rt1_eq_swing_category_select.c` | **EQUIVALENT** (339 of 432, 11/11) | 57 diffs (register allocation, block order) |
+| 5 | `fn_8867DF68` | `rt1_vmx_timing_update.c` | compiles, **unverified** (VMX) | 0x314 vs 0x320 bytes, 193 diffs (frame 0x130 vs 0x120); trace plan in `docs/agents/near-misses/RT1.failed.md` |
+| 6 | `fn_886935A0` | `rt1_aim_get_target.c` | **byte-matched** (0x8C) | spec `rt1_aim_get_target.json` |
+| 7 | `fn_88695C48` | `rt1_eq_aiming_evaluate.c` | **EQUIVALENT** (264 of 325, 11/11) | 6 register-numbering diffs |
+| 8 | `fn_886807C0` | `rt1_vmx_outcome_roll.c` | compiles, **unverified** (VMX) | 0x7A8 vs 0x900 bytes, 568 diffs, 21 vs 33 relocations (constants addressed off one base); trace plan in RT1.failed.md |
+| 9 | `fn_8869B928` | `rt1_vmx_net_rush.c` | compiles, **unverified** (VMX) | 0x29C vs 0x2A4 bytes, 161 diffs; trace plan in RT1.failed.md |
+| 10 | `fn_8866F740` | `rt1_eq_prehit_freeze.c` | **EQUIVALENT** `+hashes` (429 of 613, 28/28) | 0x2AC vs 0x2B0, 138 diffs; `clrrwi rX,rY,0` move copies (open idiom) |
+| 11 | `fn_886CD3C8` | `rt1_eq_anim_busy_frames.cpp` | **EQUIVALENT** (956 of 1500, 4/4, /Oc) | LTCG with `flags(/Ob1):src/xbox360/gp7_anim_busy.cpp` 37 diffs (clrrwi, fmadds, mfcr/fsel) |
+| 12 | `fn_8866A1C8` | `rt1_eq_serve_point_end.c` | **EQUIVALENT** `+hashes` (1865 of 3000, 95%, 38/40, /Oc) | plain checker 82%; 10 diffs |
+| 13 | `fn_88669878` | `rt1_serve_flags.c` | **byte-matched** (0x21C) | spec `rt1_serve_flags.json` |
+| 14 | `fn_889C1C80` | `rt1_vmx_ball_bounce.c` | compiles, **unverified** (VMX) | 0x300 vs 0x2EC bytes, 164 diffs; trace plan in RT1.failed.md |
+
+RT1 summary: 2 byte-matched (680 bytes), 8 EQUIVALENT, 4 VMX functions compile but cannot be
+checked by `fn_equiv.py`. Corrections found on the way: `fn_881899D8` takes `(float x, list)`
+(x in f1, list in r4); the swing walk increments ctrl+0x40 when TimingBaseFrame < 30; 0x029EAAF4
+is the serve state, not "point end".
+

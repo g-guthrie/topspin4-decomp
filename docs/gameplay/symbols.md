@@ -186,3 +186,28 @@ Same grades. Details: movement-and-ai.md s E, movement-and-animation.md s7; mode
 | `fn_886D89E8` | `AnimNode_UpdateBlend` | `void (AnimNode *)` | linear cross-fade weight (clock - +0x24) / +0x2C | C | anim s7.2 |
 | `fn_886CD3C8` | `AnimNode_BusyFrames` | `float (AnimNode *)` | frames to TE[1] (only for 2-event clips) | C | anim s7.5 |
 | `fn_886C5A08` | `Transition_IsAllowed` | `bool (...)` | matrix lookup (root+0x44), Allow 0x575896F4, event index checks | C | anim s7.5 |
+
+## RT1 additions (2026-11-15; sources `src/xbox360/rt1_*`)
+
+Prototypes are as written in the RT1 sources, which compile against the original register use.
+Layouts are in `src/xbox360/rt1_types.h` and `rt1_scoring.h`.
+
+| function | proposed name | prototype | what it does | grade | note |
+|---|---|---|---|---|---|
+| `fn_886629C8` | `ShotSpecific_Fill` | `void (ShotContext *sc, ShotDef *def)` | grade selection for the shot template; inlines IsReturnOfServe | C | EQUIVALENT |
+| `fn_8867DF68` | `TimingState_Update` | `void (SubController *self)` | TimingBaseFrame from the first predicted sample beyond the reach point; TimingValue = lerp(worst, best, TimingAbility) | C | VMX, unverified |
+| `fn_886AFDF8` | `SwingCategory_Walk` | `bool (SwingRequest *, const RelArray *list, bool autoswing)` | category row walk with autoswing windows | C | EQUIVALENT |
+| `fn_886807C0` | `ShotOutcome_Roll` | `u32 *(u32 *out, void *let_analysers, ShotPlan *, Vec4 *target, PlayerController *, bool forced)` | In / Out / Net / Let roll and target move | C | VMX, unverified |
+| `fn_889C1C80` | `Ball_BounceResponse` | `void (Ball *, Vec4 *vel)` | bounce response | C | VMX, unverified |
+| `fn_8869B928` | `Repositioning_HumanMode` | `void (Repositioning *)` | net-rush repositioning rule | C | VMX, unverified |
+| `fn_8866A1C8` | `Scoring_OnPointEnd` | `void (Scoring *self)` | serve rules at point end | C | EQUIVALENT |
+| `fn_88669878` | `Rules_PublishPointEndFlags` | `void (PointEndPublisher *self)` | serve-number bookkeeping; writes second_serve_let then missed_serve | C | byte-matched |
+| `fn_8866F740` | `Mover_PreHitFreeze` | `void (Mover *self)` | see movement-and-ai.md E.4; self +0x14 latched, +0x15 released, +0x18 pc, +0x1C->+0x70->+0x40 own frames-to-hit (INT_MAX = none) | C | EQUIVALENT |
+| `fn_8865EF98` | `Match_GetPlannedHitFrame` | `bool (Match *, int *frame_out)` | planned hit frame of the next hitter | I | callee of 8866F740 |
+| `fn_881899D8` | `RangeCurve_Eval` | `float (float x, const RangeList *list)` | **correction**: x in f1, list in r4 (earlier rows had the arguments swapped) | C | |
+
+Corrections: the swing walk increments ctrl+0x40 when TimingBaseFrame **< 30** (not >= 30);
+`0x029EAAF4` is the **serve** match state (fn_8866E318 returns the service box for it), not
+"point end". PlayerState `S+0x9D0` move block: +0x9D0 RequiredMove {LocalDirection, Power},
++0x9D8 #b21d6f76 (stick move), +0x9E0 ConstrainedMove, +0x9E8 #3e07c540 (latched), +0x9F0
+#6964749b (pre-hit freeze flag). Settings +0xA88 hit-lead frames (20), +0xA8C release frames (10).

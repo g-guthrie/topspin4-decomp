@@ -136,7 +136,7 @@ struct MatchFrameState {               /* instance->u30 */
  *         // END OF POINT: flags->+0x60 cleared, +0xE4=0, +0xD0=0x22703895, several +0xCC..+0xD6 =1 ...
  *         ga3_apply_arg_8868F9C8(inst, &out) -> fn_88685060: point-end modifiers/stat evaluation (WP1);
  *         inst->u48->+0 = out; match->318 = 0x85E3E155; if !match->328 inst->u48->+8 = 1;
- *         inst->u6c->u8->vtbl[6]();   fn_88669878(inst->u68);  fn_88669040(inst->u4c);
+ *         inst->u6c->u8->vtbl[6]();   ts4_rules_publish_point_end_flags_88669878(inst->u68);  fn_88669040(inst->u4c);
  *         inst->u6c->u8->vtbl[10]();  inst->+0x9C = 0; inst->+0xA4 = match->310; flags->+0x60 = 0;
  *         for (p in players) { p->anim->+0x14E = 1; fn_8869FE10(p->u64); }   // push to 10-entry history ring (stride 0x41C)
  *     }

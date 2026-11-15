@@ -404,7 +404,7 @@ struct Rt1PlayerStateO {                   /* PlayerState view for the outcome r
     float out_efficiency;                  /* +0xD8C AimingState.OutEfficiency */
     float quad_efficiency;                 /* +0xD90 AimingState.QuadEfficiency */
 };
-/* Aim selector (template row +0xC): vtable slot 4 = AimSelector_GetTarget (fn_886935A0). */
+/* Aim selector (template row +0xC): vtable slot 4 = AimSelector_GetTarget (ts4_aim_selector_get_target_886935A0). */
 struct Rt1AimSelector;
 struct Rt1PlayerCtxO;
 struct Rt1AimSelectorVtbl {

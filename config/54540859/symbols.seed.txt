@@ -30780,3 +30780,5 @@ ts4_owned_stack_destroy_8861F018 = .text:0x8861F018; // type:function size:0xAC
 ts4_item_vec_destroy_886226C0 = .text:0x886226C0; // type:function size:0xB8
 ts4_parse_try_all_88624A90 = .text:0x88624A90; // type:function size:0xC8
 ts4_queue_dispatch_88624E20 = .text:0x88624E20; // type:function size:0xC0
+ts4_rules_publish_point_end_flags_88669878 = .text:0x88669878; // type:function size:0x21C
+ts4_aim_selector_get_target_886935A0 = .text:0x886935A0; // type:function size:0x8C

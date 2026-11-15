@@ -67,7 +67,7 @@ typedef struct Rt4Rules {                    /* PC->0x48 */
 typedef struct Rt4Selector Rt4Selector;
 struct Rt4SelectorVtbl {
     void *slot[4];
-    void (*clip_to_court)(Rt4Selector *self, __vector4 *target, void *pc);   /* slot 4 (fn_886935A0) */
+    void (*clip_to_court)(Rt4Selector *self, __vector4 *target, void *pc);   /* slot 4 (ts4_aim_selector_get_target_886935A0) */
 };
 struct Rt4Selector { const struct Rt4SelectorVtbl *vtbl; };
 typedef struct Rt4Link { PAD(0xC, p0); Rt4Selector *selector; } Rt4Link;

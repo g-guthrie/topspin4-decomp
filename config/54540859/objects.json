@@ -6204,6 +6204,14 @@
       "src/xbox360/cx13_core_b.c": {
         "status": "Matching",
         "source": "xbox360/cx13_core_b.c"
+      },
+      "src/xbox360/rt1_serve_flags.c": {
+        "status": "Matching",
+        "source": "xbox360/rt1_serve_flags.c"
+      },
+      "src/xbox360/rt1_aim_get_target.c": {
+        "status": "Matching",
+        "source": "xbox360/rt1_aim_get_target.c"
       }
     }
   }
