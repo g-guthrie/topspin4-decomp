@@ -10,6 +10,16 @@ nested boxes, efficiency); movement stays as retail except the agreed net rules;
 the forehand ceiling is 110 mph; everything must run through inputs and outputs the engine already
 has, or be a clearly labelled code change.
 
+## 0. Scope after revision 3 of the plan (owner, 2026-11-15)
+
+The plan is now the conservative version (`docs/design/retune-plan.html`). In scope: ball flight,
+bounce and spin; the top end of pace; grades; timing windows; the power swing; volley outcomes and
+approach shots; serve and return; ratings. Out of scope and parked, each as its own later switch:
+the net-movement locks (rush buffering, the pre-hit freeze at the net, freeing the feet sooner after
+volleys and approach shots), the first step from rest, the depth pull scaled by timing, change of
+spin, open-court and score-pressure rules, and skill rebalancing. Aiming and movement are not
+changed. The sprint corridor block on the put-away (section 6) goes with the parked movement items.
+
 ## 1. Two questions, kept separate
 
 Every shot answers two questions, and they must not be mixed:

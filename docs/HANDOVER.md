@@ -22,6 +22,8 @@ Standing owner decisions:
   Averages stay about where retail has them.
 * No new player ratings. Every change maps onto something the engine has, or is a labelled code change.
 * Port first, with decomp where the port needs it. Full byte-matching is a background goal.
+* Revision 3 of the plan is conservative: aiming and movement are not changed at all. The net-movement
+  changes listed above are parked as an optional later pack (`docs/design/retune-plan.html`, "Parked").
 
 ## 2. Where each track stands
 
