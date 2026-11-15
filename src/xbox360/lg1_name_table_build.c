@@ -108,7 +108,7 @@ extern const char lbl_880EF220[];
 extern const char lbl_880EF244[];
 void fn_8877CCE0(void);
 void fn_8877CD80(void);
-void fn_8877CE20(void);
+void ts4_script_set_int_8877CE20(void);
 void fn_8877CE80(void);
 void fn_88789E40(void);
 void fn_88789F10(void);
@@ -448,7 +448,7 @@ void ts4_callback_table_build_887BAF90(void *self, lg1_table_source *source)
     fn_88836968(&ctx, lbl_880EF060, ts4_lua_call_thunk_881B1860, 0, 0, &cell, 4);
     cell.fn = fn_887A6A78;
     fn_88836968(&ctx, lbl_880EF07C, ts4_lua_call_thunk_881B1860, 0, 0, &cell, 4);
-    cell.fn = fn_8877CE20;
+    cell.fn = ts4_script_set_int_8877CE20;
     fn_88836968(&ctx, lbl_880EF098, ts4_lua_call_thunk_881B1860, 0, 0, &cell, 4);
     cell.fn = fn_887A69C8;
     fn_88836968(&ctx, lbl_880EF0B4, ts4_lua_call_thunk_881B1860, 0, 0, &cell, 4);

@@ -5,7 +5,7 @@
  * the same code (an extern global schedules the vtable address differently). */
 
 extern void ts4_tsu_cleanup_end(void *object);
-extern void fn_88756848(void *self);
+extern void ts4_dtor_88756848(void *self);
 extern void ts4_if_call_seq_lbl_880F2254_88721C40(void *self);
 extern void ts4_if_call_seq_lbl_880F63C0_88638FC8(void *self);
 extern void ts4_if_call_seq_lbl_880F7EE4_88617D28(void *self);
@@ -90,12 +90,12 @@ TS4_SINGLETON_DELETING_DTOR(881BD6C0, lbl_880E731C, lbl_88D45A28, ts4_if_call_se
 TS4_SINGLETON_DELETING_DTOR(88211638, lbl_880E4C8C, lbl_88D45A08, ts4_if_call_seq_lbl_880F7EE4_88617D28) /* Swing_DLL.xex 0x88211638 */
 TS4_SINGLETON_DELETING_DTOR(88213AD0, lbl_880EF370, lbl_88D45A64, ts4_if_call_seq_lbl_880F63C0_88638FC8) /* Swing_DLL.xex 0x88213AD0 */
 TS4_SINGLETON_DELETING_DTOR(8821AD20, lbl_880F22A8, lbl_88D45A6C, ts4_if_call_seq_lbl_880F2254_88721C40) /* Swing_DLL.xex 0x8821AD20 */
-TS4_SINGLETON_DELETING_DTOR(8821C908, lbl_880F2118, lbl_88D45AD4, fn_88756848) /* Swing_DLL.xex 0x8821C908 */
+TS4_SINGLETON_DELETING_DTOR(8821C908, lbl_880F2118, lbl_88D45AD4, ts4_dtor_88756848) /* Swing_DLL.xex 0x8821C908 */
 TS4_SINGLETON_DELETING_DTOR(88273628, lbl_880F5118, lbl_88D45B08, ts4_if_call_seq_lbl_880F7EE4_88617D28) /* Swing_DLL.xex 0x88273628 */
 TS4_SINGLETON_DELETING_DTOR(8827CF00, lbl_880F7B28, lbl_88D45B2C, ts4_if_call_seq_lbl_880F7EE4_88617D28) /* Swing_DLL.xex 0x8827CF00 */
 TS4_SINGLETON_DTOR(8861A990, lbl_880F7B28, lbl_88D45B2C, ts4_if_call_seq_lbl_880F7EE4_88617D28) /* Swing_DLL.xex 0x8861A990 */
 TS4_SINGLETON_DTOR(8872B110, lbl_880F22A8, lbl_88D45A6C, ts4_if_call_seq_lbl_880F2254_88721C40) /* Swing_DLL.xex 0x8872B110 */
-TS4_SINGLETON_DTOR(88756950, lbl_880F2118, lbl_88D45AD4, fn_88756848) /* Swing_DLL.xex 0x88756950 */
+TS4_SINGLETON_DTOR(88756950, lbl_880F2118, lbl_88D45AD4, ts4_dtor_88756848) /* Swing_DLL.xex 0x88756950 */
 TS4_SINGLETON_DTOR(8878BE78, lbl_880EF370, lbl_88D45A64, ts4_if_call_seq_lbl_880F63C0_88638FC8) /* Swing_DLL.xex 0x8878BE78 */
 TS4_SINGLETON_DTOR(887CBD20, lbl_880E4C8C, lbl_88D45A08, ts4_if_call_seq_lbl_880F7EE4_88617D28) /* Swing_DLL.xex 0x887CBD20 */
 TS4_SINGLETON_DTOR(887CD8F0, lbl_880E731C, lbl_88D45A28, ts4_if_call_seq_lbl_880F7EE4_88617D28) /* Swing_DLL.xex 0x887CD8F0 */

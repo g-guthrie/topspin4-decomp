@@ -27,7 +27,7 @@ extern void * fn_887EE810(void *);
 extern void * fn_88721D08(void *);
 extern void * fn_888CA9A0(void *);
 extern void * fn_88773390(void *);
-extern void * fn_887732E8(void *);
+extern void * ts4_object_ctor_887732E8(void *);
 extern void * fn_888DF9C0(void *);
 extern void * fn_887F90F0(void *);
 extern void * fn_88795E40(void *);
@@ -46,7 +46,7 @@ extern void ts4_loop_call_seq_ts4_if_addr_lbl_88D45908_888E7A80_888EE890(char *)
 extern void * fn_88951BB8(void *);
 extern void * fn_888DF630(void *);
 extern void * fn_88951690(void *);
-extern void * fn_88772FD8(void *);
+extern void * ts4_object_ctor_88772FD8(void *);
 extern void * fn_889666A8(void *);
 extern void * fn_88850648(void *);
 extern void * fn_8896BD28(void *);
@@ -310,7 +310,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_8821A248(void)
 void * ts4_allocate_object_in_global_heap_and_construct_8821A2F8(void)
 {
     void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 96, 4, 0, 0);
-    if (p) return fn_887732E8(p);
+    if (p) return ts4_object_ctor_887732E8(p);
     return 0;
 }
 
@@ -441,7 +441,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88167E68(void)
 void * ts4_allocate_object_in_global_heap_and_construct_8821A4B0(void)
 {
     void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 88, 4, 0, 2);
-    if (p) return fn_88772FD8(p);
+    if (p) return ts4_object_ctor_88772FD8(p);
     return 0;
 }
 

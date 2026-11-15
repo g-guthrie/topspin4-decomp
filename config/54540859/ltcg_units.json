@@ -1702,5 +1702,18 @@
   "symbols": {
    "ts4_select_basis_vec_8866CB28": 180
   }
+ },
+ {
+  "source": "src/xbox360/cx48_f.c",
+  "object": "cx48_f.obj",
+  "context": [
+   "src/xbox360/cw1_ctx_format_text.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_format_into_887784E8": 76
+  }
  }
 ]
