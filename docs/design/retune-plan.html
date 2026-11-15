@@ -201,7 +201,7 @@ Skill rebalancing
 <li><strong>It comes from the opponent's weak ball:</strong> a mistimed or framed shot, a defensive ball hit under pressure, a floated slice, a short lob, a poor drop shot you reached early.</li>
 <li><strong>An ordinary rally ball you are standing still for is VeryGood,</strong> not Tee-off. So is a slow ball taken from deep behind the baseline.</li>
 <li><strong>It can be missed:</strong> by mistiming, or by going for the lines at full power. At medium power with decent timing it is close to a certain winner.</li>
-<li><strong>How often:</strong> about three per player per set in simulation.</li>
+<li><strong>How often:</strong> three to four per player per set in simulation.</li>
 </ul>
 <h3>Each kind of shot is graded on its own terms</h3>
 <div class="tw"><table>
@@ -349,7 +349,7 @@ Skill rebalancing
 </table></div>
 
 <h2 id="sim">What the simulation says, and what it cannot</h2>
-<p>A point-by-point model plays thousands of matches between archetype builds and min-max builds using these rules. It has caught two broken rules so far: grading returns like rally balls, which made the big server dominant, and volleys carrying no base error, which made serve-and-volley too strong. Both are corrected in the design; the second is being re-run.</p>
+<p>A point-by-point model plays thousands of matches between archetype builds and min-max builds using these rules. Over three runs it caught two broken rules: grading returns like rally balls, which made the big server dominant, and volleys carrying no base error, which made serve-and-volley too strong. Both are corrected. The figures below are from the final run.</p>
 <div class="tw"><table>
 <tr><th>Holds up</th><th>Still fails or unknown</th></tr>
 <tr><td>
@@ -361,14 +361,28 @@ The opponent-timing effect is modest and does not snowball<br>
 Moonballing loses; always aiming at the corner only works against an opponent who never anticipates<br>
 Min-max builds lose to balanced ones
 </td><td>
-Serve-and-volley was the strongest style in 15 of 16 stress tests before the volley fix<br>
-Heavy topspin came out weakest in most variations, which is wrong for the game's default stroke<br>
-Hold and break: the specialist holds 76%, not 90%, because servers win only 59 to 62% of points in the model<br>
-Rallies run about 7 shots against the tour's 4 to 5<br>
+The slicer is now narrowly the best style: strongest in 14 of 16 stress tests, though its edge over the next two is within the noise<br>
+Heavy topspin is the weakest in 15 of 16, which is wrong for the game's default stroke<br>
+Hold and break: two of five targets met. The specialist holds about 80%, not 90%, and breaks 20%, not 10 to 15%<br>
+The exact ranking of styles, and anything that depends on court geometry<br>
 Whether any of it feels good
 </td></tr>
 </table></div>
-<p>Use it for direction and rough size. Fine balance between styles has to be settled by playing.</p>
+<div class="tw"><table>
+<tr><th>Style, final run</th><th>Share of matches won against the field</th></tr>
+<tr><td>Slicer</td><td>0.61</td></tr>
+<tr><td>Counterpuncher</td><td>0.56</td></tr>
+<tr><td>Flat hitter</td><td>0.48</td></tr>
+<tr><td>Serve and volley</td><td>0.48</td></tr>
+<tr><td>Big server</td><td>0.47</td></tr>
+<tr><td>Heavy topspin</td><td>0.39</td></tr>
+</table></div>
+<ul>
+<li><strong>The spread is the narrowest of the three runs,</strong> and min-max builds take at most 0.03 from any style.</li>
+<li><strong>The first adjustment to try in play:</strong> slice is taking too little of the grade penalty and topspin too much. Move slice from 50% toward 60 to 70%, and topspin from 80% to 90%. This is untested.</li>
+<li><strong>The specialist against the all-rounder</strong> now comes out close to even (0.44), with the all-rounder breaking 21% of the time, as intended.</li>
+</ul>
+<p>Use the model for direction and rough size. Fine balance between styles has to be settled by playing.</p>
 
 <h2 id="not">What this plan does not change</h2>
 <ul>

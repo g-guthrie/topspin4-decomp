@@ -30,7 +30,7 @@ Standing owner decisions:
 | Track | State | Read |
 |---|---|---|
 | Gameplay understanding | Done as far as code reading goes. About 24 checks need the running game. | `docs/gameplay/GAMEPLAY.md`, `TUNING.md`, `OPEN.md` (section 11 = runtime checks R1-R24), `symbols.md` |
-| Retune design | Structure fixed. Numbers tuned by simulation; a balance re-run was in progress at handover. Nothing is implemented in the game. | `docs/design/retune-systems.md` (authority for structure), `retune-spec.md` (numbers), `retune-baseline.md` (measured retail) |
+| Retune design | Structure fixed. Numbers tuned by simulation over three runs; the spec ends with a "State at handover" section (what the model shows, what is reliable, starting values, what to check first on the real game). Nothing is implemented in the game. | `docs/design/retune-systems.md` (authority for structure), `retune-spec.md` (numbers), `retune-baseline.md` (measured retail) |
 | Retune plan for the owner | Published page, revision 2 with later edits; the page source is committed. The design notes above are the record where they differ. | `docs/design/retune-plan.html` |
 | Data-only patch set | Cancelled by the owner, who is applying data changes to their own copy locally. A nearly complete draft (grouped patch files and an apply script) was removed from the tree; it is in history at commit `38e12fd` (`tuning/retune-v0/`, `tools/apply_retune.py`) if wanted. | `docs/data-patching.md` |
 | Native build | All three modules translate and compile. A scripted, headless run boots through the logos and title screen, reaches the practice ground (court, net, ball machine and player drawn; the player renders as a black silhouette) and then the main menu (scene S4MainMenu). No match yet. The earlier black frames were a host render-target problem on the software renderer, fixed by running with `--render_target_path_vulkan=fsi`. | `docs/recomp-feasibility.md`, `docs/recomp-build.md`, `tools/recomp/` |
@@ -67,8 +67,9 @@ kept between 60% and 175% of retail. A power swing is a commitment; an overcharg
 full meter, standing still) is the biggest swing. The put-away becomes how the top grades look.
 Shot type scales the grade's effect: flat 100%, topspin 80%, slice and lob 50%.
 
-Open at handover: the big server was too strong in simulation before returns were regraded (re-run
-pending); the two functions that matter most for the code changes, grade selection `fn_886629C8` and
+Open at handover: in the final simulation run the slicer is narrowly the best style and heavy
+topspin the weakest (first adjustment to try, untested: slice share of the grade effect from 50%
+toward 60-70%, topspin from 80% to 90%); the serve specialist holds about 80% against a 90% target; the two functions that matter most for the code changes, grade selection `fn_886629C8` and
 the timing value `fn_8867DF68`, have no usable C yet; whether the grade is known before the swing
 commits is unconfirmed.
 

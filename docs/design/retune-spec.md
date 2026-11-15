@@ -33,10 +33,10 @@ python3 -m unittest tests.test_design_retune
 **What the simulation is and is not.** The rally simulator is a point-level abstraction: situations, grades, windows, error and winner probabilities per shot, and stamina. It is not the game engine.
 
 - Use it to compare rules and their relative effects. Its absolute rally lengths and point shares are calibration targets for play-testing, not predictions.
-- Known gaps against real tennis (computed, second run, 100-120 matches per row, 4d and 9d):
-  - Rally length: 5.5 shots per point for average pros and 6.7 for elite players. Tour average is about 4-5.
-  - Server points won: 59-62% (9d). Tour is about 62-64%, so this gap has nearly closed since the first run (48-58%).
-  - Holds: 71-79% for the builds in 9d, against the systems note's 80-90% targets (9d, still failing).
+- Known gaps against real tennis (computed, final run, 100-120 matches per row, 4d and 9d):
+  - Rally length: 5.1 shots per point for average pros and 6.7 for elite players. Tour average is about 4-5.
+  - Server points won: 60-65% (9d). Tour is about 62-64%; the first run gave 48-58%.
+  - Holds: 73-84% for the builds in 9d, against the systems note's 80-90% targets (still short, see "State at handover").
 - The serve model alone (section 2d) is close to tour figures. The remaining gap comes from the rally model's error rates.
 
 ### Model fixes and game proposals
@@ -56,7 +56,10 @@ Some rules in `retune_model.py` exist only to make the simulation's numbers trus
 | Rally-model widths, depths, vigor costs, pass error, flat margin | yes (calibration) | only where stated (flat margin, vigor cost) | section 9 |
 | Grade score and rows, W, opponent term, pace caps and ceiling, rushed swing and overcharge, aim feed, DeepDeviation by timing, put-away folded into the grade, S+0x770 re-keying, movement rules | no | yes | sections 4-10, table in section 11 |
 | Return outcome calibration: Perfect first-serve returns attacking only 40% of the time, return error by timing 0.10 / 0.25 / 0.60 / 0.90, weaker return balls | yes: with the per-family return grade the model returned too well (holds 54-66%) | no | rally-model terms only; the engine's return is graded by s2a |
-| Situation base error 0.09 per groundstroke | yes (calibration): with the retail zero-error band almost no neutral ball errs on timing, so rallies would run 9+ shots; raised from 0.05 to 0.09 in the second run to bring rallies to about 6.5 shots and holds closer to the targets. Volleys do not carry it, which is the cause of the serve-and-volleyer's lead (9b reading); charging volleys +0.03 is the proposed next model fix, not applied in these tables | no | stands for the control-sum penalties (running, fatigue) the model does not resolve |
+| Situation base error 0.09 per groundstroke | yes (calibration): with the retail zero-error band almost no neutral ball errs on timing, so rallies would run 9+ shots; raised from 0.05 to 0.09 in the second run to bring rallies to about 6.5 shots and holds closer to the targets. Volleys carry a third of it (next row) | no | stands for the control-sum penalties (running, fatigue) the model does not resolve |
+| Situation base error 0.03 per volley | yes (final run): with the base error on groundstrokes only, the serve-and-volleyer led 15 of 16 robustness variants (second run, 0.62-0.76) | yes, separately: volleys carry a small base error like groundstrokes, in addition to the outcome bands of section 8 (retail volleys have none, baseline 3c and 7b) | a small constant term in the volley fault graphs, for example VolleyPower and the standard volley's graph (data) |
+| Hold lever 1: a Bad or VeryBad return grade lowers the return ball one step (attacking -> neutral -> weak) | yes (final run, calibration of the first rally shots) | no new rule: in the engine the Bad return row's aim and pace caps already weaken the ball; play should confirm it is weak enough | ShotResolution Bad row of the return ShotDefs (existing, data) |
+| Hold lever 2: return error +0.30 per unit of Return stat below 0.80 (rating about 85): +0.08 at Return 60, +0.03 at 75 | yes (final run, calibration) | only as a check: the Return rating's weight in the return fault graphs | Return input S.Profile of the return fault graphs (data) |
 
 ### Which results to trust
 
@@ -64,7 +67,7 @@ Some rules in `retune_model.py` exist only to make the simulation's numbers trus
   - Shot and serve distributions (sections 2 and 3): these are not match-level, and their inputs are swept in 2c.
   - Within-model comparisons of direction and rough size: the opponent-timing term (5c); corner policy with and without anticipation (7d); min-max penalties; the Tee-off depth and let-drop rules (4d); single rules (9c).
 - **Not reliable:**
-  - Absolute rally length (sim 5.5-6.7 shots against tour 4-5), server points won (59-62% against 62-64%) and hold percentages (71-79% against the 80-90% targets). The situation base error (0.09) and the return calibration are the knobs for these.
+  - Absolute rally length (sim 5.1-6.7 shots against tour 4-5), server points won (60-65% against 62-64%) and hold percentages (73-84% against the 80-90% targets). The situation base error (0.09) and the return calibration are the knobs for these.
   - Exact style field shares: single rules move them by ±0.1-0.2.
   - Serve-and-volley strength in particular, because the model has no court geometry and no swing tails.
 - Match-level shares say which builds are clearly out of line (min-max), not the final balance.
@@ -232,9 +235,9 @@ stamina = 1 + 3 effort^2
 
 | server | 1st mean | p90 | p99 | max | > 140 per 1,000 / per match | > 148 per 1,000 / per match | 1st in | unreturned (incl. aces) / 1st in | 2nd mean | unreturned / 2nd in | double faults / point |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| average pro | 105.1 | 112.3 | 118.3 | 125.7 | 0 / 0 | 0 / 0 | 0.568 | 0.250 | 73.6 | 0.166 | 0.052 |
-| elite all-rounder | 121.4 | 130.3 | 137.5 | 146.3 | 2.4 / 0.21 | 0 / 0 | 0.631 | 0.269 | 95.5 | 0.181 | 0.038 |
-| pace specialist | 127.9 | 139.2 | 152.5 | 159.7 | 90 / 8.1 | 38 / 3.4 | 0.611 | 0.275 | 100.1 | 0.186 | 0.042 |
+| average pro | 105.1 | 112.3 | 118.2 | 125.7 | 0 / 0 | 0 / 0 | 0.568 | 0.342 | 73.6 | 0.263 | 0.052 |
+| elite all-rounder | 121.4 | 130.3 | 137.4 | 146.3 | 2.4 / 0.21 | 0 / 0 | 0.631 | 0.360 | 95.5 | 0.277 | 0.039 |
+| pace specialist | 127.8 | 139.2 | 152.5 | 158.8 | 90 / 8.1 | 37 / 3.4 | 0.611 | 0.366 | 100.1 | 0.283 | 0.041 |
 
 Effort against speed, first-serve-in probability and stamina cost (pace specialist, Perfect gauge, fresh):
 
@@ -251,9 +254,9 @@ Effort against speed, first-serve-in probability and stamina cost (pace speciali
 Reading:
 - There is no ceiling near 120 mph. The specialist averages 128 mph (the fastest real server averages 134 *(sourced)*) and passes 148 mph about 3.4 times per match, all from maximum-effort serves.
 - At maximum effort the specialist pays: P(in) falls to 35%, and each serve costs 4 times the stamina of a comfort serve.
-- First serve in is 57-63% (tour about 62%). Unreturned first serves are 25-28% against an average-pro returner (tour: aces 16% + unreturned 22% of first serves).
+- First serve in is 57-63% (tour about 62%). Unreturned first serves, aces included, are 34-37% against an average-pro returner (tour: aces 16% + unreturned 22% = 38% of first serves). Unreturned second serves are 26-28%. The second run gave 25-28% for first serves; the rise is hold lever 2 (the average pro's Return 54 adds 0.10 return error).
 - Second serves average 74-100 mph, 26-32 mph below first serves (tour 17-19 mph *(sourced)*). The average pro's gap is too large; this is a calibration point.
-- Double faults: elite 3.8% *(computed)* against the top-50's 3.4% *(sourced)*; average pro 5.2%.
+- Double faults: elite 3.9% *(computed)* against the top-50's 3.4% *(sourced)*; average pro 5.2%.
 
 ---
 
@@ -446,18 +449,18 @@ Checks *(computed, 4c)*:
 
 **Row effects** (4b). The pace and aim caps are ratios to the Good row, and the Good row is the retail row unchanged. Error added: 0 / 0 / 0 / +0.03 / +0.08 / +0.15. W_grade: 1.30 / 1.10 / 1.00 / 0.95 / 0.90 / 0.85. Spin follows the PowerResolution row through the spin blend (S+0x774 is a curve of the PowerfulFactor, OPEN 2.6). That is a model term, not a new rule.
 
-Grade frequencies in the section 2 situation mix (2b, more short balls than a match between equals): Tee-off 4.3%, VeryGood 30%, Good 40%, Normal 7%, Bad 17.5%, VeryBad 1% (the same for every build, because the grade does not read ratings except through speed). In matches between equals (4d) the groundstroke shares are Tee-off 2.0-2.6% and VeryGood 13-18%.
+Grade frequencies in the section 2 situation mix (2b, more short balls than a match between equals): Tee-off 4.3%, VeryGood 30%, Good 40%, Normal 7%, Bad 17.5%, VeryBad 1% (the same for every build, because the grade does not read ratings except through speed). In matches between equals (4d) the groundstroke shares are Tee-off 2.2-2.6% and VeryGood 13-18%.
 
 ### 4d. Tee-off frequency in matches between equals *(computed, 120 best-of-3 matches per row)*
 
 | variant | players | groundstrokes per player per set | Tee-off groundstrokes per player per set | volley put-aways (Tee-off) per player per set | Tee-off share of groundstrokes | VeryGood share | shots per point |
 |---|---|---|---|---|---|---|---|
-| as proposed (contact <= 100 cm behind the baseline; high balls let drop when set) | average pro | 131 | 3.4 | 0.1 | 0.026 | 0.179 | 5.50 |
-| as proposed (contact <= 100 cm behind the baseline; high balls let drop when set) | elite all-rounder | 166 | 3.3 | 0.1 | 0.020 | 0.128 | 6.68 |
-| Tee-off depth limit 150 cm | average pro | 130 | 3.9 | 0.1 | 0.030 | 0.173 | 5.47 |
-| Tee-off depth limit 150 cm | elite all-rounder | 167 | 4.0 | 0.1 | 0.024 | 0.124 | 6.68 |
-| no letting high balls drop (height at the top of the bounce) | average pro | 130 | 3.2 | 0.1 | 0.024 | 0.176 | 5.46 |
-| no letting high balls drop (height at the top of the bounce) | elite all-rounder | 166 | 3.4 | 0.1 | 0.021 | 0.128 | 6.69 |
+| as proposed (contact <= 100 cm behind the baseline; high balls let drop when set) | average pro | 120 | 3.1 | 0.1 | 0.026 | 0.177 | 5.07 |
+| as proposed (contact <= 100 cm behind the baseline; high balls let drop when set) | elite all-rounder | 165 | 3.6 | 0.1 | 0.022 | 0.135 | 6.65 |
+| Tee-off depth limit 150 cm | average pro | 118 | 3.6 | 0.1 | 0.031 | 0.172 | 5.08 |
+| Tee-off depth limit 150 cm | elite all-rounder | 163 | 4.2 | 0.1 | 0.026 | 0.131 | 6.62 |
+| no letting high balls drop (height at the top of the bounce) | average pro | 114 | 3.0 | 0.1 | 0.026 | 0.172 | 5.04 |
+| no letting high balls drop (height at the top of the bounce) | elite all-rounder | 165 | 3.5 | 0.1 | 0.021 | 0.134 | 6.58 |
 
 ### 4e. Moonballing as a tactic *(computed, elite all-rounder against the plain elite all-rounder, 100 matches per row)*
 
@@ -465,22 +468,22 @@ The moonballer hits, on balls graded Good or worse, a high slow deep topspin (la
 
 | moonball share | rules | moonballer's match win share |
 |---|---|---|
-| 0 % | as proposed | 0.450 |
-| 30 % | as proposed | 0.230 |
-| 30 % | depth limit 150 cm | 0.270 |
-| 30 % | no letting drop | 0.280 |
-| 60 % | as proposed | 0.150 |
-| 60 % | depth limit 150 cm | 0.090 |
-| 60 % | no letting drop | 0.220 |
+| 0 % | as proposed | 0.540 |
+| 30 % | as proposed | 0.330 |
+| 30 % | depth limit 150 cm | 0.280 |
+| 30 % | no letting drop | 0.310 |
+| 60 % | as proposed | 0.180 |
+| 60 % | depth limit 150 cm | 0.120 |
+| 60 % | no letting drop | 0.150 |
 
 Reading *(computed)*:
-- **A few per set.** Elite players get 3.3 Tee-off groundstrokes per player per set (2.0% of groundstrokes), average pros 3.4 (2.6%). The first run gave 5.8 / 5.0; the drop comes from the higher situation base error (shorter rallies) and from returns no longer reaching Tee-off (s2a).
-- **The 1 m depth limit** (owner clarification) costs about 0.5-0.7 Tee-offs per set against a 150 cm limit (4.0 / 3.9). Those balls become VeryGood, where a full charge is still available.
-- **Letting high balls drop** changes the count by less than the sampling noise in this run (3.4 -> 3.3 for elite players, 3.2 -> 3.4 for average pros; noise about ±0.2).
+- **A few per set.** Elite players get 3.6 Tee-off groundstrokes per player per set (2.2% of groundstrokes), average pros 3.1 (2.6%). The first run gave 5.8 / 5.0; the drop comes from the higher situation base error (shorter rallies) and from returns no longer reaching Tee-off (s2a).
+- **The 1 m depth limit** (owner clarification) costs about 0.5-0.6 Tee-offs per set against a 150 cm limit (4.2 / 3.6). Those balls become VeryGood, where a full charge is still available.
+- **Letting high balls drop** changes the count by less than the sampling noise (3.5 -> 3.6 for elite players, 3.0 -> 3.1 for average pros; noise about ±0.2).
 - **Volley Tee-offs** are rare (0.1 per set), because the -1 pace point needs a ball under 52 km/h at contact. Net winners come from band-1 volleys (section 8).
-- **Moonballing (4e) is not a winning tactic** under any of the rule variants. At a 30% moonball share the moonballer wins 23% of matches against the plain player; at 60% he wins 15% (the 0% control row is 0.45, sampling noise about ±0.05).
+- **Moonballing (4e) is not a winning tactic** under any of the rule variants. At a 30% moonball share the moonballer wins 33% of matches against the plain player; at 60% he wins 18% (the 0% control row is 0.54, sampling noise about ±0.05).
   - The cause is the slow-ball pace point: a moonball reaches the receiver at about 49 km/h, so he scores -1 (VeryGood at worst).
-  - The depth limit and the let-drop rule move this by only a few points (23-28% at 30%, 9-22% at 60%).
+  - The depth limit and the let-drop rule move this by only a few points (28-33% at 30%, 12-18% at 60%).
   - Model limit: the model has no court geometry in which a deep moonball drives the receiver 3-4 m back. Letting it drop costs only 1.2 cm per cm of drop (about 35 cm for a 175 cm bounce). On clay, a real moonball works partly through that geometry, so play has to judge it.
 
 ### 4f. Grades per shot family, and shot type (retune-systems s2a)
@@ -588,18 +591,18 @@ The opponent's last release multiplies W for that one shot. It is its own input,
 
 | scale | factor after Perfect / Good / Average / Poor / Mistimed | shots per point | points ended by a timing error | points ended by any error | winners | P(Perfect) after opp. Perfect | after opp. Good | after opp. Poor | P(error) after opp. Perfect | after opp. Poor |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 0.0 | 1.00 / 1.00 / 1.00 / 1.00 / 1.00 | 7.00 | 0.108 | 0.696 | 0.054 | 0.485 | 0.486 | 0.452 | 0.119 | 0.110 |
-| 0.5 | 0.93 / 0.97 / 1.00 / 1.07 / 1.15 | 6.88 | 0.114 | 0.688 | 0.053 | 0.456 | 0.477 | 0.478 | 0.121 | 0.113 |
-| 1.0 | 0.85 / 0.93 / 1.00 / 1.15 / 1.30 | 6.72 | 0.126 | 0.674 | 0.053 | 0.434 | 0.468 | 0.498 | 0.122 | 0.116 |
-| 1.5 | 0.80 / 0.90 / 1.00 / 1.22 / 1.40 | 6.51 | 0.134 | 0.666 | 0.050 | 0.418 | 0.461 | 0.521 | 0.126 | 0.113 |
-| 2.0 | 0.80 / 0.86 / 1.00 / 1.30 / 1.40 | 6.53 | 0.134 | 0.665 | 0.048 | 0.418 | 0.453 | 0.536 | 0.126 | 0.111 |
+| 0.0 | 1.00 / 1.00 / 1.00 / 1.00 / 1.00 | 6.81 | 0.104 | 0.689 | 0.054 | 0.485 | 0.484 | 0.458 | 0.121 | 0.114 |
+| 0.5 | 0.93 / 0.97 / 1.00 / 1.07 / 1.15 | 6.67 | 0.113 | 0.682 | 0.051 | 0.457 | 0.476 | 0.477 | 0.123 | 0.117 |
+| 1.0 | 0.85 / 0.93 / 1.00 / 1.15 / 1.30 | 6.53 | 0.121 | 0.666 | 0.054 | 0.433 | 0.466 | 0.500 | 0.123 | 0.117 |
+| 1.5 | 0.80 / 0.90 / 1.00 / 1.22 / 1.40 | 6.41 | 0.132 | 0.663 | 0.048 | 0.417 | 0.459 | 0.520 | 0.128 | 0.117 |
+| 2.0 | 0.80 / 0.86 / 1.00 / 1.30 / 1.40 | 6.39 | 0.130 | 0.664 | 0.047 | 0.417 | 0.456 | 0.536 | 0.129 | 0.116 |
 
 Scale 1.0 is the owner's starting sizes (Perfect x0.85, Good x0.93, Average x1.00, Poor x1.15, Mistimed x1.30); W clamped to 0.60-1.75; 'after opp. Good' pools the opponent's Good and Average releases.
 
 Recommendation *(computed, then judgement)*: keep the owner's sizes (Perfect 0.85, Good 0.93, Average 1.00, Poor 1.15, Mistimed 1.30) inside the W clamp of 0.60-1.75.
-- **Rally length:** against no term, it shortens rallies by 4% (7.00 to 6.72 shots per point, elite mirror).
-- **Timing errors:** it raises the share of points ended by a timing error from 10.8% to 12.6%. This is lower than in the first draft (23%), because the retail zero-error band now forgives most releases at W = 1.
-- **No snowball.** After an opponent's Perfect, P(Perfect) falls from 0.485 to 0.434, and P(error) rises only from 0.119 to 0.122. After an opponent's Poor release, P(Perfect) rises from 0.452 to 0.498. The term uses only the last release, so it never compounds.
+- **Rally length:** against no term, it shortens rallies by 4% (6.81 to 6.53 shots per point, elite mirror).
+- **Timing errors:** it raises the share of points ended by a timing error from 10.4% to 12.1%. This is lower than in the first draft (23%), because the retail zero-error band now forgives most releases at W = 1.
+- **No snowball.** After an opponent's Perfect, P(Perfect) falls from 0.485 to 0.433, and P(error) rises only from 0.121 to 0.123. After an opponent's Poor release, P(Perfect) rises from 0.458 to 0.500. The term uses only the last release, so it never compounds.
 - **Larger sizes buy little:** scale 1.5-2 adds about 1 point of timing-error share and 3% shorter rallies.
 - **The 0.60 clamp** binds only on volleys against clean passes and on returns of the fastest serves (5a).
 
@@ -739,8 +742,8 @@ Each build is the elite all-rounder with a different share of balls aimed at the
 
 | receiver anticipation | corner 0 % | 25 % | 50 % | 75 % | 100 % |
 |---|---|---|---|---|---|
-| 0.00 | 0.050 | 0.288 | 0.519 | 0.731 | 0.912 |
-| 0.35 | 0.219 | 0.547 | 0.669 | 0.650 | 0.416 |
+| 0.00 | 0.069 | 0.278 | 0.503 | 0.725 | 0.925 |
+| 0.35 | 0.231 | 0.613 | 0.666 | 0.603 | 0.387 |
 
 ### 7e. Angle access (fraction of the sideline reach usable) *(proposal)*
 
@@ -802,10 +805,10 @@ It is a data edit of each aiming graph's DeepDeviation branch, narrowing its Ran
 
 **Is the corner on every ball dominant? (7d)**
 - Under the agreed rules a corner aim costs no error, as in retail: the In target is clipped to the lines, and the Out roll does not read the direction.
-- In the rally model, a player who aims at the corner on every ball therefore wins 91% of matches against the field of corner shares, when the receiver does not adapt.
+- In the rally model, a player who aims at the corner on every ball therefore wins 92% of matches against the field of corner shares, when the receiver does not adapt.
 - It stops being dominant only through the receiver reading the habit (anticipation 0.35: a predictable corner aim is reached with 35% less running, and a safe ball then catches the cheat):
-  - the always-corner player falls to 42%;
-  - the best share becomes 50-75% (field shares 0.67 / 0.65).
+  - the always-corner player falls to 39%;
+  - the best share becomes 25-50% (field shares 0.61 / 0.67).
 - For human opponents this is ordinary play. For the AI it is a requirement: the AI's positioning must weight the hitter's corner tendency. That is AI work, outside this spec, and listed under play.
 - If the owner wants a rule-side counter as well, the model has one option, not proposed: LINE_RISK, extra error per unit of a corner aim's FinalEfficiency. It would contradict "risk through shot type, hold and overcharge", and even 12 pp only cut the always-corner share against 50% from 0.98 to 0.72 in a test run.
 
@@ -869,8 +872,8 @@ What each band hands the passer (the reply's grade at the opponent, rating 80, f
 
 | net player | match win share vs a baseline mirror | points won: serve-volley | after a good approach (VeryGood+ and deep) | after another approach |
 |---|---|---|---|---|
-| rushes every point (serve-volley and every short ball) | 0.25 | 0.411 (3451) | 0.636 (1025) | 0.517 (1242) |
-| comes in only on short balls (default) | 0.58 | - | 0.613 (444) | 0.502 (1292) |
+| rushes every point (serve-volley and every short ball) | 0.12 | 0.364 (3404) | 0.637 (1039) | 0.515 (1281) |
+| comes in only on short balls (default) | 0.58 | - | 0.550 (518) | 0.494 (1496) |
 
 Real approaches: about 65-70% won (section 1).
 
@@ -888,10 +891,10 @@ Real approaches: about 65-70% won (section 1).
   - band 1 leaves him Bad or worse 56% of the time, band 2 48%.
 - **Errors come mainly from overreach:** 1-3% in bands 1-3, 10% in band 4, plus 30% for a power volley on a low or blistering ball.
 - **Rushing the net (8c):**
-  - A player who rushes on every point (serve-volley and every short ball) wins 25% of matches against a baseline mirror (12% in the first run). His serve-volley points are won 41% of the time (32%), so he still loses clearly to a set passer. The rise comes from the return calibration and the higher situation base error, which make returns and passes weaker.
-  - Behind a good approach (VeryGood or better, and deep) net points are won 61-64%; behind other approaches 50-52%. Real approaches win 65-70% *(sourced)*.
+  - A player who rushes on every point (serve-volley and every short ball) wins 12% of matches against a baseline mirror. His serve-volley points are won 36% of the time, so he loses clearly to a set passer. (Second run, without the volley base error: 25% and 41%.)
+  - Behind a good approach (VeryGood or better, and deep) net points are won 55-64%; behind other approaches 49-52%. Real approaches win 65-70% *(sourced)*.
   - The default row is a mirror (the same player on both sides); its 0.58 is sampling noise at 60 matches (sd about 0.06).
-  - The serve-and-volley build itself (Volley 95, Serve 90) is 0.66 against the field (9b), now the strongest style: see the reading in section 9.
+  - The serve-and-volley build itself (Volley 95, Serve 90) is 0.48 against the field (9b): net play pays with the ratings for it, without dominating.
 - **The passer's view (8a).** The approach decides the passer's grade:
   - a deep corner approach that stretches the passer leaves him Bad (Efficiency 0.39, angle access 0.42);
   - deep or mid-court approaches without a stretch leave him Good;
@@ -959,19 +962,19 @@ Real approaches: about 65-70% won (section 1).
 
 | row beats column | heavy topspin | flat hitter | slicer | big server | serve-and-voll | counterpuncher | mm: no legs (s | mm: no serve,  | mm: no backhan | field share |
 |---|---|---|---|---|---|---|---|---|---|---|
-| heavy topspin | - | 0.47 | 0.27 | 0.39 | 0.26 | 0.42 | 1.00 | 1.00 | 0.95 | 0.595 |
-| flat hitter | 0.53 | - | 0.28 | 0.41 | 0.51 | 0.44 | 1.00 | 0.99 | 0.95 | 0.637 |
-| slicer | 0.73 | 0.72 | - | 0.54 | 0.25 | 0.69 | 1.00 | 0.99 | 0.96 | 0.736 |
-| big server | 0.61 | 0.59 | 0.46 | - | 0.44 | 0.61 | 1.00 | 0.99 | 0.96 | 0.708 |
-| serve-and-voll | 0.74 | 0.49 | 0.75 | 0.56 | - | 0.76 | 1.00 | 0.99 | 0.94 | 0.779 |
-| counterpuncher | 0.58 | 0.56 | 0.31 | 0.39 | 0.24 | - | 1.00 | 0.99 | 0.90 | 0.623 |
-| mm: no legs (s | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | - | 0.20 | 0.16 | 0.045 |
-| mm: no serve,  | 0.00 | 0.01 | 0.01 | 0.01 | 0.01 | 0.01 | 0.80 | - | 0.16 | 0.126 |
-| mm: no backhan | 0.05 | 0.05 | 0.04 | 0.04 | 0.06 | 0.10 | 0.84 | 0.84 | - | 0.252 |
+| heavy topspin | - | 0.49 | 0.29 | 0.49 | 0.34 | 0.33 | 1.00 | 0.99 | 0.97 | 0.613 |
+| flat hitter | 0.51 | - | 0.31 | 0.52 | 0.73 | 0.35 | 1.00 | 1.00 | 0.98 | 0.675 |
+| slicer | 0.71 | 0.69 | - | 0.62 | 0.51 | 0.53 | 1.00 | 1.00 | 0.99 | 0.757 |
+| big server | 0.51 | 0.48 | 0.38 | - | 0.57 | 0.42 | 1.00 | 1.00 | 0.98 | 0.668 |
+| serve-and-voll | 0.66 | 0.27 | 0.49 | 0.43 | - | 0.58 | 0.98 | 0.99 | 1.00 | 0.673 |
+| counterpuncher | 0.68 | 0.65 | 0.47 | 0.57 | 0.42 | - | 1.00 | 1.00 | 0.99 | 0.723 |
+| mm: no legs (s | 0.00 | 0.00 | 0.00 | 0.00 | 0.02 | 0.00 | - | 0.63 | 0.73 | 0.173 |
+| mm: no serve,  | 0.01 | 0.00 | 0.00 | 0.00 | 0.01 | 0.00 | 0.37 | - | 0.22 | 0.076 |
+| mm: no backhan | 0.03 | 0.02 | 0.01 | 0.02 | 0.00 | 0.01 | 0.27 | 0.78 | - | 0.142 |
 
-Among the six intended styles only (min-max builds removed): field share heavy topspin 0.362, flat hitter 0.431, slicer 0.586, big server 0.542, serve-and-volleyer 0.659, counterpuncher 0.419.
-Builds that beat every other build: none.
-Runtime 123 s.
+Among the six intended styles only (min-max builds removed): field share heavy topspin 0.389, flat hitter 0.484, slicer 0.614, big server 0.472, serve-and-volleyer 0.484, counterpuncher 0.557.
+Builds that beat every other build: slicer.
+Runtime 106 s.
 
 ### 9d. Hold and break against the systems note's targets (s2a) *(computed, 100 best-of-3 matches per row)*
 
@@ -979,45 +982,41 @@ Serve specialist = the big-server build; all-rounder = Serve 75, Return 75, FH 8
 
 | match | first player holds | first player breaks | second player holds | first player's match share | tie-breaks per set | shots per point | server points won |
 |---|---|---|---|---|---|---|---|
-| specialist vs all-rounder | 0.764 | 0.285 | 0.715 | 0.630 | 0.22 | 6.27 | 0.604 |
-| all-rounder mirror | 0.713 | 0.294 | 0.706 | 0.500 | 0.13 | 6.63 | 0.588 |
-| specialist mirror | 0.768 | 0.207 | 0.793 | 0.450 | 0.18 | 5.81 | 0.620 |
+| specialist vs all-rounder | 0.786 | 0.205 | 0.795 | 0.440 | 0.23 | 5.76 | 0.628 |
+| all-rounder mirror | 0.748 | 0.274 | 0.726 | 0.550 | 0.16 | 6.35 | 0.604 |
+| specialist mirror | 0.840 | 0.191 | 0.809 | 0.570 | 0.22 | 5.23 | 0.648 |
 
 ### 9e. What each shot type is used for when the ball is bad *(computed, elite mirror, 50 matches, groundstrokes)*
 
 | grade | Flat: share / P(error) | TopSpin | Slice | Lob |
 |---|---|---|---|---|
-| Tee-off | 0.90 / 0.102 | 0.10 / 0.103 | - | - |
-| VeryGood | 0.35 / 0.096 | 0.53 / 0.096 | 0.12 / 0.096 | - |
-| Good | 0.36 / 0.101 | 0.53 / 0.097 | 0.12 / 0.095 | - |
-| Normal | 0.35 / 0.135 | 0.53 / 0.128 | 0.12 / 0.118 | - |
-| Bad | 0.01 / 0.225 | 0.44 / 0.161 | 0.46 / 0.136 | 0.10 / 0.135 |
-| VeryBad | - | 0.41 / 0.217 | 0.48 / 0.172 | 0.11 / 0.172 |
+| Tee-off | 0.91 / 0.103 | 0.09 / 0.102 | - | - |
+| VeryGood | 0.35 / 0.096 | 0.52 / 0.096 | 0.13 / 0.096 | - |
+| Good | 0.35 / 0.101 | 0.53 / 0.097 | 0.12 / 0.095 | - |
+| Normal | 0.36 / 0.135 | 0.53 / 0.127 | 0.11 / 0.116 | - |
+| Bad | 0.01 / 0.221 | 0.44 / 0.160 | 0.46 / 0.136 | 0.10 / 0.135 |
+| VeryBad | - | 0.41 / 0.218 | 0.47 / 0.171 | 0.12 / 0.172 |
 
 Shot-type share of the grade's effect (s2a): Flat 100%, TopSpin 80%, Slice 50%, Lob 50%, Drop 120%.
 
-Reading of 9d *(computed; targets from retune-systems s2a)*:
-- **The hold and break targets still fail.**
-  - Holds are 71-79%, 5-15 points under the targets (specialist about 90%, all-rounder 80-85%). The specialist holds 76% against the all-rounder and 79% in the mirror; the all-rounder holds 71-72%.
-  - The specialist breaks the all-rounder 28.5% of the time (target 10-15%). The all-rounder breaks the specialist 24% (target about 20%, nearly met).
-  - The specialist wins 63% of their matches (target: close to even), with 0.22 tie-breaks per set.
-- **Why: server points won is 59-62%.** A game is held 71% of the time at 59% of points, 78% at 62%, 85% at 66% and 90% at 70% *(computed, the standard game formula)*. The targets therefore need about 70% of points for the specialist and 64-66% for the all-rounder. The serve model alone is close to tour (2d: unreturned first serves 25-28%), so the shortfall is in the first rally shots after the return.
-- **Why the specialist wins too often** *(judgement, not isolated by a run)*: his Return 60 breaks the all-rounder's Serve 75 too often. The likely path is that the all-rounder's serve leads to a neutral rally, where the specialist's Power 90 wins the exchange. The first run pointed the same way (the big server led every robustness variant); s2a reduced it (match share 0.63 here, field share 0.54 in 9b) but did not remove it.
-- **Levers, not applied** *(judgement)*: a stronger first shot for the server after a Bad return grade (a weaker return ball), or more return error for a low Return rating. Both are rally-model calibration, not game rules. Try them together with the volley base-error fix in the 9b reading, because both also move the serve-and-volleyer.
+Reading of 9d *(computed; targets from retune-systems s2a; final run with both hold levers)*:
+- **Specialist against all-rounder:** the specialist holds 78.6% and breaks 20.5%; the all-rounder holds 79.5% and breaks 21.4%. The specialist wins 44% of their matches, with 0.23 tie-breaks per set: close to even, as the target asks (sampling noise about ±0.05). Second run: holds 76% / 71.5%, specialist breaks 28.5%, match share 0.63.
+- **Mirrors:** the all-rounder holds 73-75%, the specialist 81-84%.
+- **Still short:** the specialist's hold (target about 90%) by 6-11 points, his break of the all-rounder (target 10-15%) by 5-10 points, and the all-rounder's hold in the mirror (target 80-85%).
+- **Why:** server points won is 60-65%. A game is held 71% of the time at 59% of points, 78% at 62%, 85% at 66% and 90% at 70% *(computed, the standard game formula)*. A 90% hold needs about 70% of points, above the tour's 62-64% but normal for the biggest real servers. The serve model gives 34-37% unreturned first serves (tour 38%), so the remaining gap is in the server's first rally shot.
+- **What the levers did:** together they raised server points won by 2-3 points and moved the specialist-against-all-rounder match from 0.63 to 0.44. Lever 2 also costs the dumped-Return min-max build (0.25 -> 0.14 against the field).
 
-Reading of the style matrix (9b, second run, with the s2a family grades and shot-type shares):
-- No build beats every other build, but only just: the serve-and-volleyer beats four of the five styles (0.56-0.76) and is level with the flat hitter (0.49 against 0.51, inside the sampling noise of about ±0.04 at 160 matches).
-- The six styles are 0.36-0.66 against each other: serve-and-volleyer 0.659, slicer 0.586, big server 0.542, flat hitter 0.431, counterpuncher 0.419, heavy topspin 0.362. First run: big server 0.573, serve-and-volleyer 0.537, counterpuncher 0.525, slicer 0.504, heavy topspin 0.475, flat hitter 0.386.
-- **What moved.**
-  - The big server is no longer on top (0.573 -> 0.542): returns of fast serves are now Good by default (s2a), not Bad or VeryBad.
-  - The slicer rose (0.504 -> 0.586). Slice keeps 50% of a grade's effect, so it is the safe answer on a bad ball (9e): on Bad balls slice is 46% of shots with P(error) 0.136, against topspin 0.161 and flat 0.225; on VeryBad balls 0.172 against 0.217. **Slice now has a real use when stretched.**
-  - **The flat hitter is no longer the weakest** (0.386 -> 0.431). Heavy topspin is (0.475 -> 0.362): topspin keeps only 80% of the bonus on VeryGood and Tee-off balls, and its long rallies meet the higher situation base error.
-- **What still fails: the serve-and-volleyer.** The cause is a model term, not a game rule. The situation base error (0.09, a model fix standing for the control-sum penalties) is charged on groundstrokes only; volleys carry only their band error of 1-3%. Raising the base error from 0.05 to 0.09 in this run therefore taxed baseline play and not net play. Evidence *(computed)*:
-  - In 9c, base error x0.8 makes the slicer best and no style dominant; x1.2 makes the serve-and-volleyer dominant (0.76).
-  - A probe charging volleys part of the same term (scratch script, not in the generator; 80 matches per pair): +0.03 on every volley band gives serve-and-volleyer 0.51, big server and slicer 0.59, heavy topspin 0.40, flat hitter 0.49, counterpuncher 0.42; +0.06 drops the serve-and-volleyer to 0.40.
-  - Proposed next model fix *(judgement, not applied in these tables)*: charge volleys about a third of the base error (+0.03). It is a model fix only: the game's volleys already pay through the control sum.
-- Cycles (9b): flat hitter edges serve-and-volleyer (0.51), serve-and-volleyer beats slicer (0.75), slicer beats flat hitter (0.72); slicer beats big server (0.54), big server beats counterpuncher (0.61), counterpuncher beats heavy topspin (0.58).
-- Every min-max build still pays heavily: "no legs" wins 5% against the field, "no serve, no volley" 13%, "no backhand, no return" 25%.
+Reading of the style matrix (9b, final run: s2a family grades and shot-type shares, volley base error 0.03, both hold levers):
+- **The slicer beats every other build, narrowly.** Its field share is 0.614; it beats heavy topspin 0.71, the flat hitter 0.69 and the big server 0.62, but the serve-and-volleyer (0.51) and the counterpuncher (0.53) only within the sampling noise (about ±0.04 at 160 matches). The design property "no build beats every other" therefore fails at the edge of the noise.
+- The six styles are 0.39-0.61 against each other: slicer 0.614, counterpuncher 0.557, flat hitter 0.484, serve-and-volleyer 0.484, big server 0.472, heavy topspin 0.389. That spread is narrower than both earlier runs (first 0.39-0.57, second 0.36-0.66).
+- **History of the three runs.**
+  - First run: big server on top (0.573), flat hitter weakest (0.386). Cause: returns graded on the rally scale.
+  - Second run (s2a family grades, shot-type shares): serve-and-volleyer on top (0.659), heavy topspin weakest. Cause: the base error charged on groundstrokes only.
+  - Final run (volley base error 0.03, hold levers): the serve-and-volleyer falls to 0.484 and the big server to 0.472; the slicer (0.614) and the counterpuncher (0.557) rise, because the hold levers weaken returns and rallies now cost the net player too.
+- **The flat hitter is not the weakest** (0.484, mid-field). **Slice has a real use when stretched** (9e): on Bad balls slice is 46% of shots with P(error) 0.136, against topspin 0.160 and flat 0.221; on VeryBad balls 0.171 against 0.218.
+- **Heavy topspin is the weakest style** (0.389): topspin keeps only 80% of the bonus on VeryGood and Tee-off balls, and its long rallies meet the situation base error. A lever, not tested: topspin's grade share 0.8 -> 0.9, or slice's 0.5 -> 0.6-0.7 for the slicer *(judgement)*.
+- Cycles (9b): flat hitter beats serve-and-volleyer (0.73), serve-and-volleyer beats counterpuncher (0.58), counterpuncher beats flat hitter (0.65); big server beats serve-and-volleyer (0.57), counterpuncher beats big server (0.57).
+- Every min-max build still pays heavily: none takes more than 0.03 from any style. Against the field (min-max builds included) "no legs" wins 17%, "no serve, no volley" 8%, "no backhand, no return" 14% (hold lever 2 costs the dumped Return).
 - Balancing history *(model calibration, judgement)*. Earlier, after the owner's aim, floor, Tee-off and volley decisions:
   - flat pace margin 78 -> 81 mph;
   - Powerful-swing vigor cost 0.008 -> 0.006;
@@ -1033,34 +1032,35 @@ Reading of the style matrix (9b, second run, with the s2a family grades and shot
   - slice drop at the receiver 72 -> 50 cm, because the height points made the slicer too strong;
   - pace error 0.006 -> 0.003 per mph, because the retail Good rows already carry the pace;
   - situation base error on every groundstroke (new): 0.05 in the first run, 0.09 in the second (see the first table in this document).
+- Final run, model fixes (first table in this document): situation base error 0.03 on every volley; a Bad or VeryBad return grade lowers the return ball one step; return error +0.30 per unit of Return stat below 0.80.
 
 ### 9c. Robustness: field share of the six styles when one rule moves by +-20 % *(computed, 80 matches per pair)*
 
 | rule | change | best style (field share) | worst style | beats every other |
 |---|---|---|---|---|
-| pace error per mph | x0.8 | serve-and-volleyer 0.66 | heavy topspin 0.35 | none |
-| pace error per mph | x1.2 | serve-and-volleyer 0.63 | heavy topspin 0.36 | none |
-| slice drop | x0.8 | serve-and-volleyer 0.64 | heavy topspin 0.39 | big server |
-| slice drop | x1.2 | serve-and-volleyer 0.73 | heavy topspin 0.38 | serve-and-volleyer |
-| Speed stat run value | x0.8 | serve-and-volleyer 0.64 | heavy topspin 0.38 | none |
-| Speed stat run value | x1.2 | serve-and-volleyer 0.68 | flat hitter 0.36 | serve-and-volleyer |
-| power-swing vigor cost | x0.8 | serve-and-volleyer 0.66 | heavy topspin 0.36 | none |
-| power-swing vigor cost | x1.2 | serve-and-volleyer 0.65 | heavy topspin 0.34 | none |
-| pass error vs net player | x0.8 | serve-and-volleyer 0.64 | counterpuncher 0.40 | none |
-| pass error vs net player | x1.2 | serve-and-volleyer 0.66 | heavy topspin 0.33 | none |
-| topspin kick per hand | x0.8 | serve-and-volleyer 0.65 | heavy topspin 0.35 | none |
-| topspin kick per hand | x1.2 | serve-and-volleyer 0.70 | heavy topspin 0.35 | serve-and-volleyer |
-| floor error | x0.8 | serve-and-volleyer 0.66 | heavy topspin 0.40 | none |
-| floor error | x1.2 | serve-and-volleyer 0.62 | heavy topspin 0.37 | none |
-| base situation error | x0.8 | slicer 0.61 | flat hitter 0.38 | none |
-| base situation error | x1.2 | serve-and-volleyer 0.76 | heavy topspin 0.36 | serve-and-volleyer |
+| pace error per mph | x0.8 | slicer 0.61 | heavy topspin 0.40 | none |
+| pace error per mph | x1.2 | slicer 0.63 | heavy topspin 0.41 | slicer |
+| slice drop | x0.8 | slicer 0.61 | heavy topspin 0.39 | slicer |
+| slice drop | x1.2 | slicer 0.66 | heavy topspin 0.39 | none |
+| Speed stat run value | x0.8 | slicer 0.65 | heavy topspin 0.37 | slicer |
+| Speed stat run value | x1.2 | slicer 0.65 | heavy topspin 0.34 | none |
+| power-swing vigor cost | x0.8 | slicer 0.62 | heavy topspin 0.38 | none |
+| power-swing vigor cost | x1.2 | slicer 0.64 | heavy topspin 0.37 | slicer |
+| pass error vs net player | x0.8 | slicer 0.62 | heavy topspin 0.37 | none |
+| pass error vs net player | x1.2 | slicer 0.64 | heavy topspin 0.41 | none |
+| topspin kick per hand | x0.8 | slicer 0.63 | heavy topspin 0.35 | none |
+| topspin kick per hand | x1.2 | slicer 0.66 | heavy topspin 0.38 | slicer |
+| floor error | x0.8 | slicer 0.63 | heavy topspin 0.35 | slicer |
+| floor error | x1.2 | slicer 0.64 | heavy topspin 0.37 | slicer |
+| base situation error | x0.8 | counterpuncher 0.65 | serve-and-volleyer 0.38 | slicer |
+| base situation error | x1.2 | serve-and-volleyer 0.59 | heavy topspin 0.34 | none |
 
-Reading of 9c (second run):
-- **The serve-and-volleyer is the best style in 15 of 16 variants** (field share 0.62-0.76) and beats every other style in 4 of them (slice drop x1.2, Speed run value x1.2, topspin kick x1.2, base error x1.2). In the first run the big server held that place (best in 16, dominant in 12). The family grades (s2a) fixed the big server; the remaining dominance has moved to net play.
-- **The one variant where it is not best is base error x0.8** (slicer 0.61, no dominant style), and base error x1.2 gives the largest lead (0.76). This points at the cause given in the 9b reading: the base error taxes groundstrokes and not volleys. The volley base-error probe there (+0.03 per volley) removes the lead.
-- **The big server is dominant in one variant** (slice drop x0.8), without being the best style: its share against each style stays just over 0.5.
-- **The weakest style is heavy topspin in 13 of 16 variants** (0.33-0.40); the flat hitter (2: base error x0.8 and Speed x1.2) and the counterpuncher (1: pass error x0.8) take the other three. The flat hitter is no longer the weakest by default.
-- Spread: the best minus the worst style is 0.23-0.40, wider than the first run (0.23-0.37). Single rules still move shares by ±0.05-0.1, so this table ranks causes; it does not fix the final balance.
+Reading of 9c (final run):
+- **The slicer is the best style in 14 of 16 variants** (0.61-0.66) and beats every other style in 8 of them, as in the default matrix. The counterpuncher is best at base error x0.8 (0.65) and the serve-and-volleyer at base error x1.2 (0.59).
+- **No other style dominates any variant.** The serve-and-volleyer's lead of the second run (best in 15, dominant in 4) is gone: the volley base error removed it, as the second-run probe predicted.
+- **Heavy topspin is the weakest style in 15 of 16 variants** (0.34-0.41); the serve-and-volleyer is the weakest at base error x0.8 (0.38).
+- **Spread:** best minus worst is 0.21-0.31, narrower than the second run (0.23-0.40).
+- The slicer's narrow dominance is the open balance item. Its likely source is slice keeping only 50% of a bad grade's cost (9e). Slice drop is not the cause: x0.8 and x1.2 both leave the slicer on top. Not tested: slice share 0.6-0.7.
 
 The design property to keep, and to re-measure after every change, is "no build beats every other build". The robustness table's last column checks it.
 
@@ -1197,3 +1197,40 @@ Re-run the section 2 Monte Carlo and the section 9 abuse check after each step, 
 - Whether the overcharge is seen often enough to matter: with the retail tiers and the 10-frame wait it needs about 2.0 s from the opponent's contact (section 6).
 - How often a player holds into the auto-commit (35% of wanted-but-unreachable Powerful swings, judgement), which sets the rushed share and part of the average pace.
 - The relative strength of the six styles. Robustness shows ±0.1-0.2 swings from single rules, so the final balance can only come from play.
+
+## State at handover
+
+Final run of 2026-11-15, Python 3.13.18, one worker under nice; every table above is from it except section 3 (flight, unchanged by these rules).
+
+**What the model shows** *(computed)*:
+- **Style matrix (9b).** The six styles span 0.39-0.61. The slicer (0.614) beats every other build, two of them only within sampling noise (0.51 and 0.53). Heavy topspin is the weakest (0.389). Min-max builds take at most 0.03 from any style.
+- **Robustness (9c).** The slicer is the best style in 14 of 16 single-rule variants (0.61-0.66) and beats every other style in 8 of them. The counterpuncher (base error x0.8) and the serve-and-volleyer (base error x1.2) are best in the other two. Heavy topspin is the weakest in 15 of 16. The best-to-worst spread is 0.21-0.31.
+- **Hold and break against the 2a targets (9d).**
+
+| quantity | target (s2a) | final run | verdict |
+|---|---|---|---|
+| specialist holds | about 90% | 79% against the all-rounder, 81-84% in the mirror | short by 6-11 points |
+| specialist breaks the all-rounder | 10-15% | 20.5% | too high |
+| all-rounder holds | 80-85% | 79.5% against the specialist, 73-75% in the mirror | at the edge / short |
+| all-rounder breaks the specialist | about 20% | 21.4% | met |
+| specialist vs all-rounder match share | close to even, tie-breaks | 0.44, 0.23 tie-breaks per set | met (within noise) |
+| server points won | (tour 62-64%) | 60-65% | met |
+
+- **Other targets met**: averages within 0.3 mph of retail; 110 mph cap about once in 25 matches for the pace specialist; Tee-off 3-4 per player per set; overcharge about once in 11 matches; moonballing loses (33% / 18% at 30% / 60%); the opponent-timing term does not snowball.
+
+**Reliable**: shot-speed and serve distributions (sections 2, 2d); within-model directions (the opponent term, corner policy with and without anticipation, the Tee-off depth and let-drop rules, min-max penalties, single-rule effects in 9c); the cause analysis of the three runs (return grade -> big server; groundstroke-only base error -> serve-and-volleyer).
+**Not reliable**: the exact style ranking (single rules move shares by 0.05-0.1, and the leader changed in each run); absolute hold percentages and rally length; anything that depends on court geometry (moonball depth, angles), smashes (not modelled) or swing tails.
+
+**Values to start play-testing with** (all in `tools/design/retune_model.py`):
+- Grade score (4a): arrival edges 30 / 15 / 1 frames (still moving 3, reach 4); height 50 / 95 / 145 / 185 cm; pace at contact 52 / 78 / 100 km/h; rushed +1, vigor < 0.3 +1; score <= 0 VeryGood (Tee-off at -1 with contact <= 100 cm behind the baseline), 1-2 Good, 3 Normal, 4-5 Bad, 6+ VeryBad. Volleys: 50 / 36 / 25 frames, height against the net, pace 52 / 80 / 100. Returns: Good; Bad when stretched (placement >= 0.80) or jammed; VeryGood at <= 90 mph; never Tee-off.
+- Rows (ratios to the retail Good row): pace cap 1.18 / 1.08 / 1.00 / 0.93 / 0.82 / 0.70; aim cap 1.18 / 1.12 / 1.00 / 0.82 / 0.59 / 0.35; error added 0 / 0 / 0 / 0.03 / 0.08 / 0.15; W_grade 1.30 / 1.10 / 1.00 / 0.95 / 0.90 / 0.85; shot-type share flat 1.0, topspin 0.8, slice 0.5, lob 0.5, drop 1.2.
+- Window: W = W_rating (0.90-1.10) x W_opp (0.85 / 0.93 / 1.00 / 1.15 / 1.30) x W_grade x W_react (0.70-1.00), clamped 0.60-1.75; Perfect 2W and Good 6W frames; zero-error band 19 frames x W; overcharge W x 0.80.
+- Swing: retail tiers 12 / 53 / 75 frames; overcharge 10 frames past full (+4% pace); ceilings 110 mph forehand / 105 backhand; pace skill +2%.
+- Placement: DeepDeviation by timing 0-40 / 0-150 cm / retail 2-3 m. S+0x770 curves re-keyed to 100-130 km/h (fast-ball penalty) and 110-150 km/h (frame shot, 0.10).
+- Volleys: a small base error in addition to the outcome bands (model 0.03 per volley; in the game, a constant term in the volley fault graphs).
+
+**Check first on the real game:**
+1. **Engine order.** That the grade is known before the commit (`fn_886AE528 +0x430` against `fn_8867DF68`), and that dividing t by W moves the Perfect and Good bands and the fault graphs' forgiveness together. Items 7 and 9 of section 11 depend on it.
+2. **The human release spread** (model sd 3.4 frames), measured from recorded inputs. It sets the Perfect rate, the timing-error share and every window size.
+3. **Slice on bad balls.** Whether slice at a 50% share becomes the default defensive answer, as the model's slicer suggests; if so, try slice 0.6-0.7 and topspin 0.9.
+4. **Tee-off and hold feel.** Whether 3-4 Tee-offs per set with the 52 km/h and 1 m lines reads as "a few sitters", and whether big servers hold often enough once the real return rows (Bad on stretched returns) are in.
