@@ -48923,3 +48923,10 @@ src/xbox360/me_anim_record_within_window_886C7B60.c:
 
 src/xbox360/me_point_line_dist_sq_xz_88692720.c:
 	.text       start:0x88692720 end:0x886927C0
+
+src/xbox360/me_reset_record_array_8867B260.c:
+	.text       start:0x8867B260 end:0x8867B2D4
+
+src/xbox360/me_sample_and_offset_points_886E2348.c:
+	.pdata      start:0x88125228 end:0x88125230
+	.text       start:0x886E2348 end:0x886E240C

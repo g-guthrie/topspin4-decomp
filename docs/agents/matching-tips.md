@@ -574,3 +574,10 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
   { return a < b ? a : b; }` keeps `last` in the register the count was loaded into; `if (i0 >= last) i0 = last;` moves it.
 - Statement order rarely matters: 504 valid orderings of the sampler body gave only three distinct outputs.
 - Near-miss drafts are now committed under src/xbox360/drafts/me_*_nearmiss.*.
+- Separate loop iterator (`mr rP, rB; cmplw rB, rE; beqlr` then a do-while on rP, constants loaded after the guard):
+  a fill helper that takes the value by value and copies it after its own guard (0x8867B260):
+  `static __inline void fill(Rec *b, Rec *e, __vector4 v, float f){ if (b != e) { __vector4 z = v; do { b->f10 = f;
+  b->v = z; b++; } while (b != e); } }`. A plain `for` in the caller merges the iterator with `b`.
+- A sub-object pointer stays in its own saved register (`addi r28, r31, 0x30` ... `addi r3, r28, 0x58`) when it has
+  several uses in the source, even though its member loads are emitted against the outer base (`lfs 0x44(r31)`).
+  Read the other fields through the sub-object pointer too: `q = &l->sub; call(&q->f58, q->f18, ..., q->f14)` (0x886E2348).

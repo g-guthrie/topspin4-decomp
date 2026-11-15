@@ -8088,6 +8088,14 @@
       "src/xbox360/me_point_line_dist_sq_xz_88692720.c": {
         "status": "Matching",
         "source": "xbox360/me_point_line_dist_sq_xz_88692720.c"
+      },
+      "src/xbox360/me_reset_record_array_8867B260.c": {
+        "status": "Matching",
+        "source": "xbox360/me_reset_record_array_8867B260.c"
+      },
+      "src/xbox360/me_sample_and_offset_points_886E2348.c": {
+        "status": "Matching",
+        "source": "xbox360/me_sample_and_offset_points_886E2348.c"
       }
     }
   }

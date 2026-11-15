@@ -41840,6 +41840,18 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_point_line_dist_sq_xz_88692720": 160},
     },
+    {
+        "source": "src/xbox360/me_reset_record_array_8867B260.c",
+        "object": "me_reset_record_array_8867B260.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_reset_record_array_8867B260": 116},
+    },
+    {
+        "source": "src/xbox360/me_sample_and_offset_points_886E2348.c",
+        "object": "me_sample_and_offset_points_886E2348.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_sample_and_offset_points_886E2348": 196},
+    },
 )
 
 
