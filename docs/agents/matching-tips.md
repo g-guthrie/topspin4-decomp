@@ -165,3 +165,10 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   you which pointer the helper took. The same expression written twice, or a local pointer used twice, gives no copy.
   Float fields give `fmr`. No flag is involved; 64-bit casts, `& 0xffffffff`, `/Oc`, `/fp:precise`, LTCG make no difference.
 - Worked examples: src/xbox360/cl1_clrrwi_reload.c. 1,508 unmatched functions in the image contain this pattern.
+- clrrwi refinements (W4): pass the expression to the inline helper at each call site (`lempty(in->list)` then
+  `lback(in->list)`), not a named local; a local caching the first accessor result turns the copy back into an `lwz`.
+  For a decrement or store of an element, use a tiny inline returning the address for the write only
+  (`--*counter(self)`, `(*elem(s->o->arr, i))--`) and read the value directly. `while (begin != end) { ...; end--; }`
+  gives the copy with no helper. Open: a reload the target keeps as a real `lwz` before the copy (0x886696A8), a
+  redundant re-test kept after the copy (0x8866BAE0), and the stack-temporary id round trip
+  `addi r10,r1,0x50; stw id,0x50(r1); lwz r5,0(r10)` (0x886A37D0, 0x88669B98).

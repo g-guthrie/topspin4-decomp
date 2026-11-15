@@ -46067,3 +46067,17 @@ src/xbox360/cl1_clrrwi_reload.c:
 	.text       start:0x8865EE40 end:0x8865EE90
 	.text       start:0x8865F0D0 end:0x8865F108
 	.text       start:0x886615D0 end:0x88661638
+
+src/xbox360/w4a_b.c:
+	.text       start:0x886C4F20 end:0x886C4F70
+
+src/xbox360/w4b_a.c:
+	.text       start:0x8866FC18 end:0x8866FC68
+
+src/xbox360/w4b_c.c:
+	.pdata      start:0x88124468 end:0x88124470
+	.text       start:0x886A5C00 end:0x886A5C88
+
+src/xbox360/w4b_h.c:
+	.pdata      start:0x881235F8 end:0x88123600
+	.text       start:0x8866DD78 end:0x8866DE3C

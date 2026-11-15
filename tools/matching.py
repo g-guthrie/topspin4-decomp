@@ -38950,6 +38950,26 @@ MATCHING_UNITS = (
             "ts4_current_item_8865F0D0": 56,
         },
     },
+    {
+        "source": "src/xbox360/w4a_b.c",
+        "object": "w4a_b.obj",
+        "symbols": {"ts4_decay_counters_886C4F20": 80},
+    },
+    {
+        "source": "src/xbox360/w4b_a.c",
+        "object": "w4b_a.obj",
+        "symbols": {"ts4_record_by_key_8866FC18": 80},
+    },
+    {
+        "source": "src/xbox360/w4b_c.c",
+        "object": "w4b_c.obj",
+        "symbols": {"ts4_tick_selection_886A5C00": 136},
+    },
+    {
+        "source": "src/xbox360/w4b_h.c",
+        "object": "w4b_h.obj",
+        "symbols": {"ts4_registry_release_8866DD78": 196},
+    },
 )
 
 

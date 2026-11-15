@@ -106,7 +106,7 @@ ts4_word fn_8865A9C8();
 ts4_word fn_8865D6E8();
 ts4_word fn_88669C30();
 ts4_word fn_8866BDD8();
-ts4_word fn_8866DD78();
+ts4_word ts4_registry_release_8866DD78();
 ts4_word fn_8866E250();
 ts4_word fn_88674ED0();
 ts4_word fn_888860A0();

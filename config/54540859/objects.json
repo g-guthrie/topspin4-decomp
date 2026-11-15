@@ -6284,6 +6284,22 @@
       "src/xbox360/cl1_clrrwi_reload.c": {
         "status": "Matching",
         "source": "xbox360/cl1_clrrwi_reload.c"
+      },
+      "src/xbox360/w4a_b.c": {
+        "status": "Matching",
+        "source": "xbox360/w4a_b.c"
+      },
+      "src/xbox360/w4b_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w4b_a.c"
+      },
+      "src/xbox360/w4b_c.c": {
+        "status": "Matching",
+        "source": "xbox360/w4b_c.c"
+      },
+      "src/xbox360/w4b_h.c": {
+        "status": "Matching",
+        "source": "xbox360/w4b_h.c"
       }
     }
   }

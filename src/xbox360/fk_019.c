@@ -103,7 +103,7 @@ ts4_word fn_8865A9C8();
 ts4_word fn_8865D6E8();
 ts4_word fn_88669C30();
 ts4_word fn_8866BDD8();
-ts4_word fn_8866DD78();
+ts4_word ts4_registry_release_8866DD78();
 ts4_word fn_8866E250();
 ts4_word fn_88674ED0();
 ts4_word fn_888860A0();
@@ -2301,7 +2301,7 @@ void ts4_addr_lbl_880F482C_88670508(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x88671550: call_seq u32@0x10, fn_8866DD78, ts4_object_finalize, ts4_object_finalize */
+/* Swing_DLL.xex 0x88671550: call_seq u32@0x10, ts4_registry_release_8866DD78, ts4_object_finalize, ts4_object_finalize */
 ts4_word ts4_call_seq_u32_off10_88671550(ts4_word a0)
 {
     ts4_word loc50[1];
@@ -2310,7 +2310,7 @@ ts4_word ts4_call_seq_u32_off10_88671550(ts4_word a0)
 
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 16);
     loc50[0] = (ts4_word)((1191575552) | 245);
-    fn_8866DD78((ts4_word)t1, (ts4_word)(ts4_word)&loc50[0]);
+    ts4_registry_release_8866DD78((ts4_word)t1, (ts4_word)(ts4_word)&loc50[0]);
     ts4_object_finalize((ts4_word)(a0 + 60));
     t4 = ts4_object_finalize((ts4_word)(a0 + 48));
     return t4;

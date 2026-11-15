@@ -30851,3 +30851,7 @@ ts4_registry_release_8865E7C0 = .text:0x8865E7C0; // type:function size:0x68
 ts4_token_publish_8865EE40 = .text:0x8865EE40; // type:function size:0x50
 ts4_max_track_update_8865BF80 = .text:0x8865BF80; // type:function size:0x3C
 ts4_current_item_8865F0D0 = .text:0x8865F0D0; // type:function size:0x38
+ts4_decay_counters_886C4F20 = .text:0x886C4F20; // type:function size:0x50
+ts4_record_by_key_8866FC18 = .text:0x8866FC18; // type:function size:0x50
+ts4_tick_selection_886A5C00 = .text:0x886A5C00; // type:function size:0x88
+ts4_registry_release_8866DD78 = .text:0x8866DD78; // type:function size:0xC4

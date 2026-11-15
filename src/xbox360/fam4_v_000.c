@@ -154,13 +154,13 @@ ts4_word fn_8862AAC0();
 ts4_word fn_88639480();
 ts4_word ts4_get_fn_8864F6E8_88650C70();
 ts4_word fn_8865C578();
-ts4_word fn_8866DD78();
+ts4_word ts4_registry_release_8866DD78();
 ts4_word ts4_graph_set_find_8866F028();
 ts4_word fn_88674BC8();
 ts4_word fn_88674ED0();
 ts4_word fn_88676898();
 ts4_word fn_886A4F28();
-ts4_word fn_886A5C00();
+ts4_word ts4_tick_selection_886A5C00();
 ts4_word ts4_if_call_seq_u32_off64_886AA6D0();
 ts4_word fn_886EA398();
 ts4_word fn_886F6128();
@@ -2466,7 +2466,7 @@ void ts4_call_seq_u32_off48_8868E1D8(ts4_word a0, ts4_word a1, ts4_word a2)
     return;
 }
 
-/* Swing_DLL.xex 0x88691888: loop_call_seq u32@0x0, u32@0x4, u32@0x0, u32@0x4, fn_8866DD78 */
+/* Swing_DLL.xex 0x88691888: loop_call_seq u32@0x0, u32@0x4, u32@0x0, u32@0x4, ts4_registry_release_8866DD78 */
 void ts4_loop_call_seq_u32_off0_88691888(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p4;
@@ -2498,14 +2498,14 @@ void ts4_loop_call_seq_u32_off0_88691888(ts4_word a0, ts4_word a1, ts4_word a2, 
         t7 = *(ts4_word *)((char *)(ts4_word)(lv6) + 0);
         t8 = *(ts4_word *)((char *)(ts4_word)(a0) + 4);
         loc50[0] = (ts4_word)t7;
-        fn_8866DD78((ts4_word)t8, (ts4_word)(ts4_word)&loc50[0]);
+        ts4_registry_release_8866DD78((ts4_word)t8, (ts4_word)(ts4_word)&loc50[0]);
         p10 = (ts4_word)(lv6 + 4);
         lv6 = p10;
     }
     return;
 }
 
-/* Swing_DLL.xex 0x886A6510: loop_get u32@0x8, u32@0x4, u32@0x0, fn_886A5C00, u32@0x14, u32@0x10 */
+/* Swing_DLL.xex 0x886A6510: loop_get u32@0x8, u32@0x4, u32@0x0, ts4_tick_selection_886A5C00, u32@0x14, u32@0x10 */
 void ts4_loop_get_u32_off8_886A6510(ts4_word a0)
 {
     ts4_word lv3;
@@ -2528,7 +2528,7 @@ void ts4_loop_get_u32_off8_886A6510(ts4_word a0)
     while ((ts4_word)lv3 != (ts4_word)t1) {
         t4 = *(ts4_word *)((char *)(ts4_word)(lv3) + 0);
         if ((ts4_word)t4 != 0) {
-            fn_886A5C00((ts4_word)t4);
+            ts4_tick_selection_886A5C00((ts4_word)t4);
         }
         p7 = (ts4_word)(lv3 + 4);
         lv3 = p7;
