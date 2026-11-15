@@ -82,7 +82,7 @@ ts4_word fn_881A7FF8();
 ts4_word fn_881A84E8();
 ts4_word fn_881A88D8();
 ts4_word fn_881A8AB0();
-ts4_word fn_881A8D28();
+ts4_word ts4_destroy_owned_range_881A8D28();
 ts4_word fn_881A9BE8();
 ts4_word fn_881AB108();
 ts4_word fn_881B9148();

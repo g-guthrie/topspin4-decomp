@@ -89,7 +89,7 @@ ts4_word ts4_if_call_seq_u8_off68_886195A0();
 ts4_word fn_88619628();
 ts4_word fn_886197F0();
 ts4_word ts4_owned_vec_destroy_8861A720();
-ts4_word fn_8861AA20();
+ts4_word ts4_u32_vec_push_8861AA20();
 ts4_word fn_8861B128();
 ts4_word fn_8861B4D8();
 ts4_word ts4_if_call_seq_u8_off824_8861B790();

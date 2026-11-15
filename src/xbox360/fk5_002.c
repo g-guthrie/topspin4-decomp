@@ -46,8 +46,8 @@ ts4_word fn_8893AD90();
 ts4_word fn_8893CFD8();
 ts4_word fn_88940B18();
 ts4_word fn_88941B30();
-ts4_word fn_88943AA0();
-ts4_word fn_88943B70();
+ts4_word ts4_find_by_name_88943AA0();
+ts4_word ts4_find_by_name_88943B70();
 ts4_word fn_8894F188();
 ts4_word fn_88950808();
 ts4_word ts4_call_seq_ts4_assign_formatted_text_8895BDD8();
@@ -447,7 +447,7 @@ ts4_word ts4_call_seq_u32_off0_889643F8(ts4_args3 sp0, ts4_word a2, ts4_word a3,
     return t6;
 }
 
-/* Swing_DLL.xex 0x8897D0A0: if_call_seq u32@0x0, fn_88608590, u32@0x0, fn_88608590, fn_88941B30, fn_88943AA0 */
+/* Swing_DLL.xex 0x8897D0A0: if_call_seq u32@0x0, fn_88608590, u32@0x0, fn_88608590, fn_88941B30, ts4_find_by_name_88943AA0 */
 ts4_word ts4_if_call_seq_u32_off0_8897D0A0(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word loc50[2];
@@ -462,7 +462,7 @@ ts4_word ts4_if_call_seq_u32_off0_8897D0A0(ts4_word a0, ts4_word a1, ts4_word a2
     loc50[0] = (ts4_word)t4;
     t5 = fn_88941B30((ts4_word)a0, (ts4_word)(ts4_word)&loc50[0]);
     if ((ts4_word)t5 == 0) {
-        t6 = fn_88943AA0((ts4_word)a0, (ts4_word)a1);
+        t6 = ts4_find_by_name_88943AA0((ts4_word)a0, (ts4_word)a1);
         if ((ts4_word)t6 != 0) {
             t7 = fn_8897CD88((ts4_word)a2, (ts4_word)t6);
             return t7;
@@ -471,7 +471,7 @@ ts4_word ts4_if_call_seq_u32_off0_8897D0A0(ts4_word a0, ts4_word a1, ts4_word a2
     return t5;
 }
 
-/* Swing_DLL.xex 0x889804E8: if_call_seq u32@0x0, fn_88608590, u32@0x0, fn_88608590, fn_88941B30, fn_88943B70 */
+/* Swing_DLL.xex 0x889804E8: if_call_seq u32@0x0, fn_88608590, u32@0x0, fn_88608590, fn_88941B30, ts4_find_by_name_88943B70 */
 ts4_word ts4_if_call_seq_u32_off0_889804E8(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word loc50[2];
@@ -488,7 +488,7 @@ ts4_word ts4_if_call_seq_u32_off0_889804E8(ts4_word a0, ts4_word a1, ts4_word a2
     loc50[0] = (ts4_word)t4;
     t5 = fn_88941B30((ts4_word)a0, (ts4_word)(ts4_word)&loc50[0]);
     if ((ts4_word)t5 == 0) {
-        t6 = fn_88943B70((ts4_word)a0, (ts4_word)a1);
+        t6 = ts4_find_by_name_88943B70((ts4_word)a0, (ts4_word)a1);
         if ((ts4_word)t6 != 0) {
             t7 = fn_88980358((ts4_word)a2, (ts4_word)t6);
             t8 = *(ts4_word *)((char *)(ts4_word)(t7) + 4);

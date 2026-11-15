@@ -30,7 +30,7 @@ TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_88919C88, fn_88172B40)
 /* Swing_DLL.xex 0x88919CE8 */
 TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_88919CE8, fn_88172A90)
 /* Swing_DLL.xex 0x8891A018 */
-TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_8891A018, fn_88172980)
+TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_8891A018, ts4_create_obj434_88172980)
 /* Swing_DLL.xex 0x8891A158 */
 TS4_SESSION_VCALL8(ts4_session_field_getter_vcall8_8891A158, fn_881728C8)
 /* Swing_DLL.xex 0x8891A298 */

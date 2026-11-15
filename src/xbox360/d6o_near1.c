@@ -358,7 +358,7 @@ ts4_word ts4_tailcall_NetDll_ioctlsocket_884F0268();
 ts4_word ts4_tailcall_NetDll_listen_884F02D0();
 ts4_word ts4_tailcall_NetDll_socket_884F0240();
 extern char fn_88432FD0[];
-extern char fn_88433078[];
+extern char ts4_if_call_seq_lbl_88042008_88433078[];
 extern char lbl_8803A308[];
 extern char lbl_8803A51C[];
 extern char lbl_8803A528[];

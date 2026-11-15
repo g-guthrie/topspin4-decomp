@@ -144,7 +144,7 @@ ts4_word ts4_if_call_seq_u32_lbl_88D3E3B4_8818A0F8();
 ts4_word ts4_node_list_run_8818A530();
 ts4_word ts4_call_seq_fn_881928F8_8818AB48();
 ts4_word ts4_release_slot_8818ADD0();
-ts4_word fn_88190570();
+ts4_word ts4_hashtable_rehash_88190570();
 ts4_word ts4_call_seq_fn_8818F850_88190770();
 ts4_word ts4_if_call_seq_u32_off8_881929F8();
 ts4_word fn_88192DF0();
@@ -2253,7 +2253,7 @@ ts4_word ts4_if_call_seq_fn_88190770_881906E8(ts4_word a0, ts4_word a1)
     p8 = (ts4_word)t1;
     if ((ts4_word)(t3 + -1) < (ts4_word)t4 && (ts4_word)(*(volatile ts4_word *)((char *)(ts4_word)(a0) + 52)) == 0) {
         t6 = fn_881F0388((ts4_word)a0, (ts4_word)(t3 + -1));
-        t7 = fn_88190570((ts4_word)a0, (ts4_word)t6);
+        t7 = ts4_hashtable_rehash_88190570((ts4_word)a0, (ts4_word)t6);
         p8 = (ts4_word)t7;
     }
     return p8;

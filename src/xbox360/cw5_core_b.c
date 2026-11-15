@@ -24,7 +24,7 @@ ts4_word fn_881519D0();
 ts4_word fn_8818A3E0();
 ts4_word fn_8818EB10();
 ts4_word fn_8818F1D8();
-ts4_word fn_88190570();
+ts4_word ts4_hashtable_rehash_88190570();
 ts4_word fn_88195368();
 ts4_word fn_88196708();
 ts4_word fn_88198CE0();
@@ -73,7 +73,7 @@ ts4_word ts4_if_get_u32_off14_88190490(ts4_word a0, ts4_word a1, ts4_word a2, ts
     t17 = *(ts4_word *)((char *)(ts4_word)(a0) + 44);
     if ((ts4_word)t16 > (ts4_word)t17 && (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 52)) == 0) {
         t19 = fn_881F0388((ts4_word)a0, (ts4_word)t16);
-        fn_88190570((ts4_word)a0, (ts4_word)t19);
+        ts4_hashtable_rehash_88190570((ts4_word)a0, (ts4_word)t19);
     }
     return t5;
 }

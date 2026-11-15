@@ -93,7 +93,7 @@ extern void *lbl_88D45A0C;
 extern void fn_88617D88(void *);
 extern u32 fn_8857B6D8(u32, u32, u32, u32);
 extern void RtlInitializeCriticalSection(void *);
-extern void fn_881B9640(void *);
+extern void ts4_pv_reserve2_881B9640(void *);
 #define CX40_W(o) (*(volatile u32 *)((char *)self + (o)))
 typedef struct Cx40O { char pad[0x70]; } Cx40O;
 /* 0x887EB298: construct the worker object (queues at +0x48/+0x54, critical section at +0x28) and register it globally. */
@@ -120,8 +120,8 @@ Cx40O *ts4_worker_ctor_887EB298(Cx40O *self)
     }
     CX40_W(0x64) = fn_8857B6D8(0, 0, 0, 0);
     RtlInitializeCriticalSection((char *)self + 0x28);
-    fn_881B9640((char *)self + 0x48);
-    fn_881B9640((char *)self + 0x54);
+    ts4_pv_reserve2_881B9640((char *)self + 0x48);
+    ts4_pv_reserve2_881B9640((char *)self + 0x54);
     lbl_88D45A0C = self;
     return self;
 }

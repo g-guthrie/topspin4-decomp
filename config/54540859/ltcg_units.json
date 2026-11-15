@@ -1967,5 +1967,35 @@
   "symbols": {
    "ts4_flagged_object_ctor_m2_889A1748": 120
   }
+ },
+ {
+  "source": "src/xbox360/hp08_886616D0.c",
+  "object": "hp08_886616D0.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_fill_f4_886616D0": 160
+  }
+ },
+ {
+  "source": "src/xbox360/hp08_886CC4B8.c",
+  "object": "hp08_886CC4B8.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_offset_886CC4B8": 164
+  }
  }
 ]

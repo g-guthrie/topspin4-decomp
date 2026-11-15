@@ -64,7 +64,7 @@ void ts4_load_pair_88651060(W9cA2O *s, W9cA2H h)
 typedef struct W9cA3H { unsigned a, b, c; } W9cA3H;
 typedef struct W9cA3Rec { int rel; unsigned cnt; unsigned f8; unsigned fc; unsigned f10; unsigned f14; } W9cA3Rec;
 typedef struct W9cA3Node { int rel; unsigned type; } W9cA3Node;
-extern unsigned fn_886CC4B8(W9cA3H h, void *p);
+extern unsigned ts4_offset_886CC4B8(W9cA3H h, void *p);
 extern void ts4_walk_886CC560(void *self, W9cA3Node *n, W9cA3H *h);
 /* 0x886CC560: recursive walk of a self-relative node tree; two node kinds fill a result slot from the handle and recurse into their children. */
 void ts4_walk_886CC560(void *self, W9cA3Node *n, W9cA3H *h)
@@ -75,13 +75,13 @@ void ts4_walk_886CC560(void *self, W9cA3Node *n, W9cA3H *h)
     if (t == 0x8361F2CAu) {
         W9cA3Rec *r = (W9cA3Rec *)((char *)n + n->rel);
         unsigned i;
-        r->f10 = fn_886CC4B8(*h, &r->fc);
+        r->f10 = ts4_offset_886CC4B8(*h, &r->fc);
         for (i = 0; i < r->cnt; i++)
             ts4_walk_886CC560(self, (W9cA3Node *)((char *)r + (r->rel + i * 8)), h);
     } else if (t != 0xA0B2A282u && t == 0x1F84BB8Du) {
         W9cA3Rec *r = (W9cA3Rec *)((char *)n + n->rel);
         unsigned i;
-        r->f14 = fn_886CC4B8(*h, &r->fc);
+        r->f14 = ts4_offset_886CC4B8(*h, &r->fc);
         for (i = 0; i < r->cnt; i++)
             ts4_walk_886CC560(self, (W9cA3Node *)((char *)r + (r->rel + i * 12)), h);
     }
