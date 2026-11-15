@@ -41097,6 +41097,33 @@ MATCHING_UNITS = (
             "ts4_create_linked_object_88157F10": 204,
         },
     },
+    {
+        "source": "src/xbox360/w10a_c.cpp",
+        "object": "w10a_c.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_pool_new_obj_889C0A40": 148},
+    },
+    {
+        "source": "src/xbox360/w10a_d.c",
+        "object": "w10a_d.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_deflate_finish_889C0AE0": 164},
+    },
+    {
+        "source": "src/xbox360/w10a_e.c",
+        "object": "w10a_e.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_slot_table_init_886A02B0": 156},
+    },
+    {
+        "source": "src/xbox360/w10b_f.c",
+        "object": "w10b_f.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_counter_inc_saturate_886567A8": 156,
+            "ts4_counter_inc16_saturate_88655DF0": 216,
+        },
+    },
 )
 
 

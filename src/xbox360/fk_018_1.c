@@ -134,7 +134,7 @@ ts4_word fn_8863F068();
 ts4_word fn_8863F858();
 ts4_word fn_88640150();
 ts4_word fn_88640968();
-ts4_word fn_886412C0();
+ts4_word ts4_singleton_init_886412C0();
 ts4_word fn_88641970();
 ts4_word fn_88641A58();
 ts4_word fn_88644138();

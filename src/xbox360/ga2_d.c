@@ -38,7 +38,7 @@ struct Ga2StatsTotals { PAD(0x38); int total_38; };
 struct Ga2StatsBinding { PAD(0xa9); ga2_u8 flag_a9; };
 struct Ga2StatsSelf { PAD(0x20); struct Ga2StatsFlags *state; PAD(4); struct Ga2StatsTotals *totals; PAD(8); struct Ga2StatsBinding *binding; };
 
-void fn_886567A8(void *obj, int id);
+void ts4_counter_inc_saturate_886567A8(void *obj, int id);
 extern void *lbl_88D45B0C;
 
 /* 0x88668C38: count the event and, when the binding is flagged, post event 0x2F. */
@@ -47,7 +47,7 @@ void ts4_ga2_count_and_post_88668C38(struct Ga2StatsSelf *self)
     if (!self->state->flag_e4) return;
     self->totals->total_38++;
     if (!self->binding->flag_a9) return;
-    fn_886567A8(lbl_88D45B0C, 0x2f);
+    ts4_counter_inc_saturate_886567A8(lbl_88D45B0C, 0x2f);
 }
 
 /* ---- 0x8866DF18: default hash, or the value of the selected entry in mode 2 ---- */

@@ -49,7 +49,7 @@ typedef struct J1P { char pad[0x18]; J1H h0; J1H h1; J1H h2; J1H h3; } J1P;
 typedef struct J1SubV { void **vt; } J1SubV;
 typedef struct J1S { char p0[0x1c]; J1SubV sub; } J1S;
 extern void *ts4_memset(void *d, int c, unsigned n);
-extern void fn_886562A0(J1S *s, unsigned i);
+extern void ts4_zero_record_886562A0(J1S *s, unsigned i);
 #define J1VC30(o) (((unsigned char (*)(void *))((o)->vt[0x30 / 4]))(o))
 #define J1VC4C(o, a) (((J1P *(*)(void *, int))((o)->vt[0x4c / 4]))(o, a))
 static __inline void j1_clear(J1H *h, int k)
@@ -67,10 +67,10 @@ void ts4_clear_slot_tables_88656B48(J1S *s)
         j1_clear(&p->h1, 2);
         j1_clear(&p->h2, 4);
         j1_clear(&p->h3, 4);
-        fn_886562A0(s, 0);
-        fn_886562A0(s, 1);
-        fn_886562A0(s, 2);
-        fn_886562A0(s, 3);
+        ts4_zero_record_886562A0(s, 0);
+        ts4_zero_record_886562A0(s, 1);
+        ts4_zero_record_886562A0(s, 2);
+        ts4_zero_record_886562A0(s, 3);
     }
 }
 

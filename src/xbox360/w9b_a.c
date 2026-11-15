@@ -6,7 +6,7 @@ typedef struct W9aSubV { void **vt; } W9aSubV;
 typedef struct W9aS { char p0[0x1c]; W9aSubV sub; char p1[0x78 - 0x20]; unsigned w78; } W9aS;
 extern unsigned ts4_alloc_slot_by_id_88656ED0(W9aS *s, unsigned k);
 extern unsigned fn_88656378(W9aS *s, unsigned k);
-extern void fn_886562A0(W9aS *s, unsigned i);
+extern void ts4_zero_record_886562A0(W9aS *s, unsigned i);
 #define VC30(o) (((unsigned char (*)(void *))((o)->vt[0x30 / 4]))(o))
 #define VC4C(o, a) (((W9aP *(*)(void *, int))((o)->vt[0x4c / 4]))(o, a))
 #ifdef _MSC_VER
@@ -31,7 +31,7 @@ unsigned ts4_alloc_slot_by_id_88656ED0(W9aS *s, unsigned key)
                 if (e->key == 0) { found = e; break; }
                 r++;
             }
-            if (found) { found->key = key; fn_886562A0(s, r); }
+            if (found) { found->key = key; ts4_zero_record_886562A0(s, r); }
         }
         if (r > 4) r = 4;
     }

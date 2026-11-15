@@ -456,3 +456,23 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
 - Measured: 1 of 12 random 330-700 byte functions matched (PL1: 3 of 12); five more ended 2-10 instructions off. Top
   residues: register numbering (GPR rank, VMX temps, FPR) 5, adjacent swaps 2, unmatched callee needed in context 2,
   strength-reduction base choice 1. No vector function matched.
+
+## Added from W10 (132-224 byte gameplay functions, full rule set)
+- Integer-only functions in the LTCG range can need the LTCG route: try it when a plain draft is 3-4 instructions off
+  on scheduling (0x886412C0, 0x88677870 match on LTCG only).
+- Before writing a callee as "context", check it is not already matched (`grep -l "0xADDR" src/xbox360/*.c*`); use the
+  existing matched source as `flags(/Ob1):` context with `--include <callee>`.
+- A function that recomputes `a+b` after a call where the default model would reuse it: `--flags /Oc /fp:strict` on the
+  LTCG route (0x8867EB98). This is the one case seen where a non-default float mode was needed.
+- Saturating counters: each branch stores its own value (`if (0xffffffffu - v >= 1) *e = v+1; else *e = 0xffffffffu;`);
+  the `?:` form differs. The 16-bit case needs `int v` and no `unsigned short` cast.
+- Float 3-vector select with odd load/store orders: float locals, loads in one declared order, stores in another;
+  brute-force the 36 combinations (0x8866DC98: loads x,y,z, stores y,x,z).
+- Vector select through a `switch`: one local `__vector4 r = default; ... r = ...; *out = r;`, the selector read
+  directly in both switches; the case order sets the bdz/bdnz chain.
+- Placement-new style pool bump: `b = p.cursor; p.cursor = b + n; p.remaining -= n;` in this order; temp register
+  numbers follow source definition order.
+- Byte offset shared by several arrays (`int o = i*32; (char*)base + o`) gives (base,index) adds.
+- Saved-register zero result: `res = 0`, assign in the success branch, `return res` once.
+- Rotated loop keeping top test and bottom `beq`: `while (i < 600) { ...; if (!settled) continue; break; }`.
+- `for (; end != begin; ...)` compare operand order decides `cmplw end,cur`.

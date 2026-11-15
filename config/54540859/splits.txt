@@ -48228,3 +48228,74 @@ src/xbox360/sc2_ltcg_c.c:
 src/xbox360/sc2_ltcg_d.c:
 	.pdata      start:0x8810CC00 end:0x8810CC08
 	.text       start:0x8820F740 end:0x8820F7B8
+
+src/xbox360/w10a_b.c:
+	.pdata      start:0x88123D00 end:0x88123D08
+	.text       start:0x88687710 end:0x886877A8
+
+src/xbox360/w10a_c.cpp:
+	.pdata      start:0x88133CD8 end:0x88133CE0
+	.text       start:0x889C0A40 end:0x889C0AD4
+
+src/xbox360/w10a_d.c:
+	.pdata      start:0x88133CE0 end:0x88133CE8
+	.text       start:0x889C0AE0 end:0x889C0B84
+
+src/xbox360/w10a_e.c:
+	.pdata      start:0x881242C0 end:0x881242C8
+	.text       start:0x886A02B0 end:0x886A034C
+
+src/xbox360/w10a_f.c:
+	.pdata      start:0x88122860 end:0x88122868
+	.text       start:0x886412C0 end:0x88641360
+
+src/xbox360/w10a_g.c:
+	.pdata      start:0x88123848 end:0x88123850
+	.text       start:0x88677870 end:0x88677914
+
+src/xbox360/w10a_h.c:
+	.pdata      start:0x88122FB8 end:0x88122FC0
+	.text       start:0x88656118 end:0x886561DC
+
+src/xbox360/w10a_i.c:
+	.pdata      start:0x88122FD8 end:0x88122FE0
+	.text       start:0x88656468 end:0x88656534
+
+src/xbox360/w10a_j.c:
+	.pdata      start:0x88122FC8 end:0x88122FD0
+	.text       start:0x886562A0 end:0x88656374
+
+src/xbox360/w10a_k.c:
+	.pdata      start:0x88124B50 end:0x88124B58
+	.text       start:0x886C9808 end:0x886C98E8
+
+src/xbox360/w10a_l.c:
+	.text       start:0x886C42D0 end:0x886C4360
+
+src/xbox360/w10b_a.c:
+	.pdata      start:0x88123838 end:0x88123840
+	.pdata      start:0x88123850 end:0x88123858
+	.pdata      start:0x88123860 end:0x88123868
+	.text       start:0x88677500 end:0x886775C4
+	.text       start:0x88677918 end:0x886779C0
+	.text       start:0x88677CE0 end:0x88677D90
+
+src/xbox360/w10b_b.c:
+	.pdata      start:0x88124B90 end:0x88124B98
+	.text       start:0x886CA480 end:0x886CA52C
+
+src/xbox360/w10b_c.c:
+	.text       start:0x8866DC98 end:0x8866DD6C
+
+src/xbox360/w10b_d.c:
+	.pdata      start:0x88123AD8 end:0x88123AE0
+	.text       start:0x8867EB98 end:0x8867EC50
+
+src/xbox360/w10b_e.c:
+	.text       start:0x8866CB28 end:0x8866CBDC
+
+src/xbox360/w10b_f.c:
+	.pdata      start:0x88122F98 end:0x88122FA0
+	.pdata      start:0x88123000 end:0x88123008
+	.text       start:0x88655DF0 end:0x88655EC8
+	.text       start:0x886567A8 end:0x88656844

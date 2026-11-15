@@ -110,7 +110,7 @@ void ga4_notify_same_side_8869D870(struct Ga4SideHost *self)
 
 /* ------------------------------------------------------------------ */
 extern void *fn_8865FD40(void *self, int index);
-extern void fn_886A02B0(void *dst, void *entry);
+extern void ts4_slot_table_init_886A02B0(void *dst, void *entry);
 extern void ts4_if_call_seq_u32_off4_8865E5C0(void *obj, void *rel_base);
 extern void ts4_loop_call_seq_fn_886917F8_88691900(void *dst, void *src_a, void *src_b);
 
@@ -132,7 +132,7 @@ void ga4_entry_select_886A7610(struct Ga4EntryHost *self, void *dst, int index)
 {
     struct Ga4EntryRec *rec = (struct Ga4EntryRec *)fn_8865FD40(self, index);
     int *rel;
-    fn_886A02B0(dst, rec);
+    ts4_slot_table_init_886A02B0(dst, rec);
     self->index = index;
     rel = &rec->rel;
     ts4_if_call_seq_u32_off4_8865E5C0(self->inner->sub->sink, (char *)rel - *rel);

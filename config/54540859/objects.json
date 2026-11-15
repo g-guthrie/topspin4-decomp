@@ -7536,6 +7536,74 @@
       "src/xbox360/sc2_ltcg_d.c": {
         "status": "Matching",
         "source": "xbox360/sc2_ltcg_d.c"
+      },
+      "src/xbox360/w10a_b.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_b.c"
+      },
+      "src/xbox360/w10a_c.cpp": {
+        "status": "Matching",
+        "source": "xbox360/w10a_c.cpp"
+      },
+      "src/xbox360/w10a_d.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_d.c"
+      },
+      "src/xbox360/w10a_e.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_e.c"
+      },
+      "src/xbox360/w10a_f.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_f.c"
+      },
+      "src/xbox360/w10a_g.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_g.c"
+      },
+      "src/xbox360/w10a_h.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_h.c"
+      },
+      "src/xbox360/w10a_i.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_i.c"
+      },
+      "src/xbox360/w10a_j.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_j.c"
+      },
+      "src/xbox360/w10a_k.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_k.c"
+      },
+      "src/xbox360/w10a_l.c": {
+        "status": "Matching",
+        "source": "xbox360/w10a_l.c"
+      },
+      "src/xbox360/w10b_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w10b_a.c"
+      },
+      "src/xbox360/w10b_b.c": {
+        "status": "Matching",
+        "source": "xbox360/w10b_b.c"
+      },
+      "src/xbox360/w10b_c.c": {
+        "status": "Matching",
+        "source": "xbox360/w10b_c.c"
+      },
+      "src/xbox360/w10b_d.c": {
+        "status": "Matching",
+        "source": "xbox360/w10b_d.c"
+      },
+      "src/xbox360/w10b_e.c": {
+        "status": "Matching",
+        "source": "xbox360/w10b_e.c"
+      },
+      "src/xbox360/w10b_f.c": {
+        "status": "Matching",
+        "source": "xbox360/w10b_f.c"
       }
     }
   }
