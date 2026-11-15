@@ -21,7 +21,7 @@ void ts4_if_call_seq_u32_off0_88886CB8(void *p);
 void fn_888871D0(void *p);
 void ts4_copy_bytes(void *dst, const void *src, u32 n);
 void fn_88568BC0(void *dst, const void *src, u32 n);
-void *fn_88614938(void *a, int b);
+void *ts4_pad_record_find_88614938(void *a, int b);
 u32 ts4_tailcall_XamContentCreateEnumerator_8857B2F0(int id, int a, int b, int c, int d, int *e, int *f);
 u32 ts4_tailcall_XamEnumerate_8857A1C8(int a, int b, int c, int *d, int e);
 void ts4_tailcall_fn_885827E0_88563110(int a);
@@ -123,7 +123,7 @@ int ts4_enumerate_content_result_888876F0(Cx32OpE *t)
     int one;
     u32 rc;
     int id;
-    Cx32Hnd *hd = (Cx32Hnd *)fn_88614938(lbl_88D45B1C->tbl, t->c->f1c);
+    Cx32Hnd *hd = (Cx32Hnd *)ts4_pad_record_find_88614938(lbl_88D45B1C->tbl, t->c->f1c);
     id = hd ? hd->id : -1;
     rc = ts4_tailcall_XamContentCreateEnumerator_8857B2F0(id, t->f14, t->f10, 0, t->fc, &l54, &l50);
     one = 1;

@@ -21,7 +21,7 @@ extern char lbl_88D45B38[];
 ts4_word ts4_if_tail_fn_8858B180_88581C90();
 ts4_word ts4_find_range_owner_8860D360();
 ts4_word fn_8860DBC8();
-ts4_word fn_88614938();
+ts4_word ts4_pad_record_find_88614938();
 ts4_word ts4_if_set_u32_off314_887993C8();
 ts4_word fn_887ADEB8();
 ts4_word ts4_own2_reset_88865708();
@@ -62,7 +62,7 @@ void ts4_if_call_seq_u32_lbl_88D45B1C_887AE088(ts4_word a0)
         if ((ts4_word)t17 != 0) {
             ts4_loop_call_seq_u32_off30_8886B150((ts4_word)t17, (ts4_word)((55902208) | 14141), (ts4_word)1);
             ts4_own2_reset_88865708((ts4_word)t17);
-            t20 = fn_88614938((ts4_word)t4, (ts4_word)t12);
+            t20 = ts4_pad_record_find_88614938((ts4_word)t4, (ts4_word)t12);
             if ((ts4_word)t20 != 0 && (ts4_word)(*(unsigned char *)((char *)(ts4_word)(t20) + 26)) != 0) {
                 fn_8886BB78((ts4_word)t17, (ts4_word)(t12 + 1));
                 ts4_loop_call_seq_u32_off30_8886B150((ts4_word)t17, (ts4_word)((55902208) | 14141), (ts4_word)0);

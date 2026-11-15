@@ -114,7 +114,7 @@ typedef struct Own2c { u8 pad[0x2c]; u8 *f2c; u8 pad30[0x2e4]; char text[1]; } O
 typedef struct H234 { u8 pad[0x234]; void *f234; } H234;
 extern H234 *lbl_88D45B1C;
 extern void *lbl_88D45B38;
-extern HdlN *fn_88614938(void *a, u32 b);
+extern HdlN *ts4_pad_record_find_88614938(void *a, u32 b);
 extern u32 ts4_parse_type_flags_88778558(const char *s);
 extern void *ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 align, u32 tag, u32 pool);
 extern VN *ts4_object_ctor_88782260(void *mem, u32 b);
@@ -122,7 +122,7 @@ extern VN *ts4_object_ctor_88782260(void *mem, u32 b);
 /* 0x88784CC8 */
 void ts4_cx31_spawn_node_88784CC8(Own2c *self, u32 a, u32 b)
 {
-    HdlN *h = fn_88614938(lbl_88D45B1C->f234, b);
+    HdlN *h = ts4_pad_record_find_88614938(lbl_88D45B1C->f234, b);
     if (h && h->f19) {
         u32 flags;
         VN *n;

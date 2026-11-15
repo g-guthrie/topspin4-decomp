@@ -93,7 +93,7 @@ ts4_word fn_8857A1E0();
 ts4_word fn_8857B6D8();
 ts4_word fn_88608590();
 ts4_word ts4_node_dispatch_with_target_88613268();
-ts4_word fn_88614938();
+ts4_word ts4_pad_record_find_88614938();
 ts4_word fn_88617D88();
 ts4_word fn_8861B128();
 ts4_word fn_886220F8();

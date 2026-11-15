@@ -48612,3 +48612,85 @@ src/xbox360/cx52_plain.c:
 	.text       start:0x887E69C8 end:0x887E6A4C
 	.text       start:0x887EE5A0 end:0x887EE5D8
 	.text       start:0x887F9DC0 end:0x887F9E38
+
+src/xbox360/pr1_display_frame.c:
+	.pdata      start:0x881272B8 end:0x881272C0
+	.pdata      start:0x881273B8 end:0x881273C0
+	.text       start:0x8875F308 end:0x8875F488
+	.text       start:0x887690A8 end:0x88769194
+
+src/xbox360/pr2_attr_request.c:
+	.pdata      start:0x88128878 end:0x88128880
+	.text       start:0x8879CD88 end:0x8879CE74
+
+src/xbox360/pr2_frontend.c:
+	.pdata      start:0x88128350 end:0x88128358
+	.pdata      start:0x881283F8 end:0x88128400
+	.pdata      start:0x8812F6E8 end:0x8812F6F0
+	.pdata      start:0x8812F888 end:0x8812F890
+	.pdata      start:0x88130170 end:0x88130178
+	.text       start:0x88790FF0 end:0x887910F0
+	.text       start:0x88792D48 end:0x88792F38
+	.text       start:0x888E0148 end:0x888E01DC
+	.text       start:0x888E67A8 end:0x888E69E0
+	.text       start:0x8890BAF8 end:0x8890BC9C
+
+src/xbox360/pr2_loading_poll.cpp:
+	.pdata      start:0x8812EF30 end:0x8812EF38
+	.text       start:0x888CD978 end:0x888CDB34
+
+src/xbox360/pr2_script_entry.c:
+	.pdata      start:0x88127980 end:0x88127988
+	.pdata      start:0x88128818 end:0x88128820
+	.pdata      start:0x88128988 end:0x88128990
+	.pdata      start:0x88128C60 end:0x88128C68
+	.pdata      start:0x88128E70 end:0x88128E78
+	.pdata      start:0x88128FB8 end:0x88128FC0
+	.pdata      start:0x88129130 end:0x88129138
+	.text       start:0x8877C740 end:0x8877C808
+	.text       start:0x8879BE08 end:0x8879BF1C
+	.text       start:0x8879FE68 end:0x8879FF30
+	.text       start:0x887A76A0 end:0x887A76F0
+	.text       start:0x887AE240 end:0x887AE318
+	.text       start:0x887B6C00 end:0x887B6CB4
+	.text       start:0x887C09D8 end:0x887C0AF0
+
+src/xbox360/pr2_signin.c:
+	.pdata      start:0x881278B0 end:0x881278B8
+	.pdata      start:0x88128768 end:0x88128770
+	.pdata      start:0x8812E990 end:0x8812E998
+	.pdata      start:0x8812EB20 end:0x8812EB28
+	.text       start:0x88614938 end:0x88614990
+	.text       start:0x8877AF50 end:0x8877B114
+	.text       start:0x8879A918 end:0x8879AA40
+	.text       start:0x888C0260 end:0x888C0328
+	.text       start:0x888C5338 end:0x888C53D4
+
+src/xbox360/pr2_trigger_message_box.c:
+	.pdata      start:0x88128368 end:0x88128370
+	.text       start:0x88791270 end:0x887915B0
+
+src/xbox360/pr3_file_io.c:
+	.pdata      start:0x8810A098 end:0x8810A0A0
+	.pdata      start:0x8810F750 end:0x8810F758
+	.pdata      start:0x8810F848 end:0x8810F850
+	.pdata      start:0x88121C70 end:0x88121C78
+	.pdata      start:0x88121D60 end:0x88121D68
+	.pdata      start:0x88121D68 end:0x88121D70
+	.pdata      start:0x88122330 end:0x88122338
+	.pdata      start:0x88122350 end:0x88122358
+	.pdata      start:0x88122358 end:0x88122360
+	.pdata      start:0x88122610 end:0x88122618
+	.text       start:0x881A5508 end:0x881A55F4
+	.text       start:0x8827D280 end:0x8827D2F8
+	.text       start:0x8827ED60 end:0x8827EDFC
+	.text       start:0x8827EEA0 end:0x8827EEEC
+	.text       start:0x886216A8 end:0x886216F0
+	.text       start:0x88623190 end:0x88623400
+	.text       start:0x88630C90 end:0x88630D98
+	.text       start:0x88630EE8 end:0x8863102C
+	.text       start:0x88639A78 end:0x88639AE8
+
+src/xbox360/pr3_file_io_oc.c:
+	.pdata      start:0x8810F740 end:0x8810F748
+	.text       start:0x8827D0D8 end:0x8827D1F0

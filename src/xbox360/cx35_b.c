@@ -47,12 +47,12 @@ int ts4_script_row_field_887A7578(void *self, Args *a)
 }
 
 typedef struct Row { char pad[0x10]; int f10; } Row;
-extern Row *fn_88614938(void *tbl, int n);
+extern Row *ts4_pad_record_find_88614938(void *tbl, int n);
 
 int ts4_script_row_lookup_887A75F0(void *self, Args *a)
 {
     int n = (int)ts4_lua_tonumber_88822420(*a->f1.L, a->f1.idx);
-    Row *r = fn_88614938(lbl_88D45B1C->f234, n);
+    Row *r = ts4_pad_record_find_88614938(lbl_88D45B1C->f234, n);
     int v;
     if (r) {
         v = r->f10;

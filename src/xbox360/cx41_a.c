@@ -241,7 +241,7 @@ extern void fn_888C0698(void *self, u32 id);
 
 
 extern void *ts4_if_call_seq_u32_lbl_88D459E4_8883F238(void *self);
-extern char *fn_88614938(char *a, void *b);
+extern char *ts4_pad_record_find_88614938(char *a, void *b);
 extern void *fn_8860E208(void *svc, u32 id);
 extern void *ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 align, u32 a, u32 b);
 extern void ts4_format_save_dir_88866980(void *self, char *buf, u32 n);

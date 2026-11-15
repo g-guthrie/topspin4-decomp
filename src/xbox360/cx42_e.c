@@ -13,7 +13,7 @@ typedef unsigned int u32;
 #define B(o, off) (*(u8 *)((u8 *)(o) + (off)))
 extern u8 *g_ts4_session_context;
 extern u8 *lbl_88D45B1C;
-extern u8 *fn_88614938(u32 a, u32 b);
+extern u8 *ts4_pad_record_find_88614938(u32 a, u32 b);
 
 /* 0x88994CA0: zero n bytes */
 void ts4_cx42_zero_bytes_88994CA0(u8 *p, u32 n)
@@ -31,7 +31,7 @@ extern Pair lbl_880D0E78[];
 u32 ts4_cx42_query_mask_889975D0(u32 id)
 {
     u32 acc = 0;
-    u8 *s = fn_88614938(W(lbl_88D45B1C, 0x234), id);
+    u8 *s = ts4_pad_record_find_88614938(W(lbl_88D45B1C, 0x234), id);
     u32 h;
     u32 i;
     if (s != 0) h = W(s, 0x10); else h = (u32)-1;
@@ -56,7 +56,7 @@ int ts4_cx42_overlapped_88996908(u8 *o, u32 unused, int *out)
     if (W(o, 0x4c) == 0) return 1;
     g = (u8 *)W(g_ts4_session_context, 0x1c);
     if (g == 0) return 1;
-    s = fn_88614938(W(lbl_88D45B1C, 0x234), 0);
+    s = ts4_pad_record_find_88614938(W(lbl_88D45B1C, 0x234), 0);
     if (s != 0) h = W(s, 0x10); else h = (u32)-1;
     if (B((u8 *)W(g, 0x14), 0x2c) != 0) ts4_memset(o + 0x54, 0, 0x3c);
     else h = 0xfe;

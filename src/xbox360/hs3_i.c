@@ -332,7 +332,7 @@ extern struct HS3GlobalsSvc *lbl_88D45B1C_svc;
 
 struct HS3RelHdrN *fn_88841D10(void *self);
 struct HS3RelHdrN *ts4_hash_find_null_888E1D40(void *self);
-struct HS3RelHdrN *fn_88614938(void *svc, void *arg);
+struct HS3RelHdrN *ts4_pad_record_find_88614938(void *svc, void *arg);
 void *ts4_find_service(unsigned id);
 
 /* Clear the +0x24/+0x28 words of every 0x2c-byte entry in the hash-null table. */

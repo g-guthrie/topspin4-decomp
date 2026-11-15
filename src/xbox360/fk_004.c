@@ -101,7 +101,7 @@ ts4_word ts4_loop_call_seq_u32_offc_882619C0();
 ts4_word fn_882781B0();
 ts4_word fn_882782A8();
 ts4_word fn_88278368();
-ts4_word fn_8827D280();
+ts4_word ts4_dstream_chunk_csize_8827D280();
 ts4_word fn_8827DC68();
 ts4_word fn_8841A590();
 ts4_word fn_8841FC98();
@@ -2591,7 +2591,7 @@ ts4_word ts4_if_get_u32_off40_8827D4B0(ts4_word a0, ts4_word a1)
         p8 = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 32));
     }
     loc50[0] = (ts4_word)p8;
-    t9 = fn_8827D280((ts4_word)a0, (ts4_word)a1);
+    t9 = ts4_dstream_chunk_csize_8827D280((ts4_word)a0, (ts4_word)a1);
     p15 = (ts4_word)0;
     if ((int)t9 != 0) {
         t10 = *(ts4_word *)((char *)(ts4_word)(a0) + 20);

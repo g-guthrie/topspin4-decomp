@@ -41442,6 +41442,87 @@ MATCHING_UNITS = (
             "ts4_apply_children_887F9DC0": 120,
         },
     },
+    {
+        "source": "src/xbox360/pr1_display_frame.c",
+        "object": "pr1_display_frame.obj",
+        "symbols": {
+            "ts4_render_frame_8875F308": 384,
+            "ts4_reset_device_887690A8": 236,
+        },
+    },
+    {
+        "source": "src/xbox360/pr2_attr_request.c",
+        "object": "pr2_attr_request.obj",
+        "symbols": {"ts4_attr_request_run_8879CD88": 236},
+    },
+    {
+        "source": "src/xbox360/pr2_frontend.c",
+        "object": "pr2_frontend.obj",
+        "symbols": {
+            "ts4_player_loading_mgr_init_888E0148": 148,
+            "ts4_script_change_sub_part_88790FF0": 256,
+            "ts4_loading_mgr_begin_8890BAF8": 420,
+            "ts4_script_init_match_rules_88792D48": 496,
+            "ts4_venue_plugin_claim_slot_888E67A8": 568,
+        },
+    },
+    {
+        "source": "src/xbox360/pr2_loading_poll.cpp",
+        "object": "pr2_loading_poll.obj",
+        "symbols": {"ts4_loading_mgr_ready_888CD978": 444},
+    },
+    {
+        "source": "src/xbox360/pr2_script_entry.c",
+        "object": "pr2_script_entry.obj",
+        "symbols": {
+            "ts4_script_get_master_pad_887A76A0": 80,
+            "ts4_script_tcr_go_to_start_screen_887B6C00": 180,
+            "ts4_script_is_package_not_ready_8877C740": 200,
+            "ts4_script_wait_for_scene_deactivation_8879FE68": 200,
+            "ts4_script_tcr_set_active_pad_887AE240": 216,
+            "ts4_script_change_package_887C09D8": 280,
+            "ts4_script_player_select_load_saved_player_info_8879BE08": 276,
+        },
+    },
+    {
+        "source": "src/xbox360/pr2_signin.c",
+        "object": "pr2_signin.obj",
+        "symbols": {
+            "ts4_wait_system_ui_closed_888C0260": 200,
+            "ts4_pad_record_find_88614938": 88,
+            "ts4_signin_watch_poll_888C5338": 156,
+            "ts4_script_tcr_load_profile_settings_8879A918": 296,
+            "ts4_script_on_launch_sign_in_game_mode_8877AF50": 452,
+        },
+    },
+    {
+        "source": "src/xbox360/pr2_trigger_message_box.c",
+        "object": "pr2_trigger_message_box.obj",
+        "symbols": {"ts4_script_trigger_message_box_88791270": 832},
+    },
+    {
+        "source": "src/xbox360/pr3_file_io.c",
+        "object": "pr3_file_io.obj",
+        "symbols": {
+            "ts4_pack_archive_exists_886216A8": 72,
+            "ts4_arc_member_seek_8827EEA0": 76,
+            "ts4_arc_member_read_8827ED60": 156,
+            "ts4_dstream_chunk_csize_8827D280": 120,
+            "ts4_lzx_create_context_88639A78": 112,
+            "ts4_io_run_request_88630C90": 264,
+            "ts4_io_open_request_88630F80": 172,
+            "ts4_io_query_request_88630EE8": 152,
+            "ts4_file_stream_win32_ctor_881A5508": 236,
+            "ts4_archive_create_for_path_88623190": 312,
+            "ts4_archive_resolve_path_886232C8": 312,
+        },
+    },
+    {
+        "source": "src/xbox360/pr3_file_io_oc.c",
+        "object": "pr3_file_io_oc.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_dstream_read_8827D0D8": 280},
+    },
 )
 
 

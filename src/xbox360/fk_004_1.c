@@ -101,7 +101,7 @@ ts4_word ts4_loop_call_seq_u32_offc_882619C0();
 ts4_word fn_882781B0();
 ts4_word fn_882782A8();
 ts4_word fn_88278368();
-ts4_word fn_8827D280();
+ts4_word ts4_dstream_chunk_csize_8827D280();
 ts4_word ts4_call_seq_fn_8861B128_8827DA88();
 ts4_word fn_8827DC68();
 ts4_word fn_8841A590();

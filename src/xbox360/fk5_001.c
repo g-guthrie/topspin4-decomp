@@ -218,7 +218,7 @@ ts4_word fn_8860DBC8();
 ts4_word fn_8860F748();
 ts4_word fn_88612D60();
 ts4_word ts4_node_dispatch_with_target_88613268();
-ts4_word fn_88614938();
+ts4_word ts4_pad_record_find_88614938();
 ts4_word fn_88615280();
 ts4_word fn_88617D88();
 ts4_word ts4_if_addr_ts4_call_88613268_88618368_8861D760();
@@ -1251,7 +1251,7 @@ void ts4_if_get_u32_off1c_88657290(ts4_word a0, ts4_word a1, ts4_word a2)
     if ((ts4_word)a1 != 0) {
         t3 = ((ts4_word (*)(ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 28))) + 48))))((ts4_word)(a0 + 28));
         if ((ts4_word)(t3 & 0xff) != 0 && (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 120)) == (ts4_word)a2) {
-            t7 = fn_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)a2);
+            t7 = ts4_pad_record_find_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)a2);
             if ((ts4_word)t7 != 0) {
                 t10 = ((ts4_word (*)(ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)((a0 + 28)) + 0))) + 76))))((ts4_word)(a0 + 28), (ts4_word)0);
                 t11 = *(ts4_u64 *)((char *)(ts4_word)(t7) + 168);

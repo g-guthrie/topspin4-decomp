@@ -141,7 +141,7 @@ void fn_887A7508(void);
 void ts4_script_row_field_887A7578(void);
 void ts4_script_row_lookup_887A75F0(void);
 void ts4_script_count_flag1_887A7668(void);
-void fn_887A76A0(void);
+void ts4_script_get_master_pad_887A76A0(void);
 void ts4_if_get_u32_lbl_88D45A60_887A76F0(void);
 void fn_887A7790(void);
 void fn_887AACE0(void);
@@ -378,7 +378,7 @@ void ts4_callback_table_build_887BAF90(void *self, lg1_table_source *source)
     fn_88836968(&ctx, lbl_880EED98, ts4_lua_call_thunk_881B1860, 0, 0, &cell, 4);
     cell.fn = ts4_if_get_u32_lbl_88D45A60_887A76F0;
     fn_88836968(&ctx, lbl_880EEDAC, ts4_lua_call_thunk_881B1860, 0, 0, &cell, 4);
-    cell.fn = fn_887A76A0;
+    cell.fn = ts4_script_get_master_pad_887A76A0;
     fn_88836968(&ctx, lbl_880EEDC0, ts4_lua_call_thunk_881B1860, 0, 0, &cell, 4);
     cell.fn = ts4_script_count_flag1_887A7668;
     fn_88836968(&ctx, lbl_880EEDD0, ts4_lua_call_thunk_881B1860, 0, 0, &cell, 4);

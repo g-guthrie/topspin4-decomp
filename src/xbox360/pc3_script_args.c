@@ -15,7 +15,7 @@ extern char *g_ts4_online_state;
 extern char *g_ts4_session_context;
 
 void **ts4_member_field_addr_8883B578(void *, int);
-void *fn_88614938(int, int);
+void *ts4_pad_record_find_88614938(int, int);
 void ts4_tailcall_XamShowAchievementsUI_8857A6A8(int);
 int fn_8899CA48(void *, unsigned *);
 char *fn_8899F970(char *, int);
@@ -66,7 +66,7 @@ int ts4_script_show_achievements_ui_8877B138(struct TS4ScriptContext *context)
     double number;
     char *player;
     TS4_SCRIPT_ARG_NUMBER(context, 0, number);
-    player = (char *)fn_88614938(*(int *)(lbl_88D45B1C + 0x234), (int)number);
+    player = (char *)ts4_pad_record_find_88614938(*(int *)(lbl_88D45B1C + 0x234), (int)number);
     ts4_tailcall_XamShowAchievementsUI_8857A6A8(player != 0 ? *(int *)(player + 0x10) : -1);
     return 0;
 }

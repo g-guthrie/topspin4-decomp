@@ -27,7 +27,7 @@ ts4_word ts4_crt_nh_malloc_88565258();
 ts4_word fn_88581AF0();
 ts4_word fn_88581B70();
 ts4_word ts4_node_dispatch_default_88613350();
-ts4_word fn_88614938();
+ts4_word ts4_pad_record_find_88614938();
 ts4_word fn_8861AB88();
 ts4_word lua2_next_88814BB8();
 ts4_word ts4_if_call_seq_u32_off10_88815520();

@@ -114,7 +114,7 @@ ts4_word fn_88748150();
 ts4_word fn_887482D8();
 ts4_word fn_8874B668();
 ts4_word ts4_loop_get_u32_off1c_8875F488();
-ts4_word fn_887690A8();
+ts4_word ts4_reset_device_887690A8();
 ts4_word fn_8876BCA8();
 ts4_word fn_8876CF38();
 ts4_word fn_8876D180();

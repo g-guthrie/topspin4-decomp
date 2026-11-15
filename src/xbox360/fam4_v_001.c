@@ -106,7 +106,7 @@ ts4_word ts4_handle_fwd_slot5c_8860AB08();
 ts4_word fn_88611620();
 ts4_word ts4_if_call_seq_fn_881F04B8_886131F0();
 ts4_word ts4_node_dispatch_with_target_88613268();
-ts4_word fn_88614938();
+ts4_word ts4_pad_record_find_88614938();
 ts4_word fn_88617788();
 ts4_word fn_88627EC0();
 ts4_word fn_88628C48();
@@ -1297,7 +1297,7 @@ void ts4_if_call_seq_fn_88868A88_88869E80(ts4_word a0, ts4_word a1, ts4_word a2)
     return;
 }
 
-/* Swing_DLL.xex 0x8886B520: if_call_seq u32@lbl_88D45B1C, u32@0x234, fn_88614938, u8@0x1a, u32@g_ts4_session_state, fn_881AB830 */
+/* Swing_DLL.xex 0x8886B520: if_call_seq u32@lbl_88D45B1C, u32@0x234, ts4_pad_record_find_88614938, u8@0x1a, u32@g_ts4_session_state, fn_881AB830 */
 void ts4_if_call_seq_u32_lbl_88D45B1C_8886B520(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t3;
@@ -1305,7 +1305,7 @@ void ts4_if_call_seq_u32_lbl_88D45B1C_8886B520(ts4_word a0, ts4_word a1, ts4_wor
     ts4_word t7;
     ts4_word t8;
 
-    t3 = fn_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)a2);
+    t3 = ts4_pad_record_find_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)a2);
     if ((ts4_word)t3 != 0 && (ts4_word)(*(unsigned char *)((char *)(ts4_word)(t3) + 26)) != 0) {
         t6 = fn_881AB830((ts4_word)(*(ts4_word *)g_ts4_session_state), (ts4_word)((3846111232) | 7677));
         t7 = *(ts4_word *)g_ts4_session_state;
@@ -2867,7 +2867,7 @@ void ts4_if_call_seq_fn_889423E0_8897EE18(ts4_word a0, ts4_word a1, ts4_word a2)
     return;
 }
 
-/* Swing_DLL.xex 0x88997B88: if_get u32@0xc, u8@0x6c, u32@0x4, u32@lbl_88D45B1C, u32@0x234, fn_88614938 */
+/* Swing_DLL.xex 0x88997B88: if_get u32@0xc, u8@0x6c, u32@0x4, u32@lbl_88D45B1C, u32@0x234, ts4_pad_record_find_88614938 */
 void ts4_if_get_u32_offc_88997B88(ts4_word a0, ts4_word a1)
 {
     ts4_word p8;
@@ -2882,7 +2882,7 @@ void ts4_if_get_u32_offc_88997B88(ts4_word a0, ts4_word a1)
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 12);
     if (((int)t1 != 0 && (ts4_word)a1 != 0) && (ts4_word)(*(unsigned char *)((char *)(ts4_word)(a1) + 108)) != 1) {
         t3 = *(ts4_word *)((char *)(ts4_word)(a1) + 4);
-        t6 = fn_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)t3);
+        t6 = ts4_pad_record_find_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)t3);
         if ((ts4_word)t6 != 0) {
             p8 = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t6) + 16));
         } else {

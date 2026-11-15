@@ -164,12 +164,12 @@ done:
 
 typedef struct Cx40G234 { char pad[0x234]; void *f234; } Cx40G234;
 extern Cx40G234 *lbl_88D45B1C;
-extern char *fn_88614938(void *);
+extern char *ts4_pad_record_find_88614938(void *);
 typedef struct Cx40VO { void **vt; } Cx40VO;
 /* 0x887EA5C8: with the guard at +0x1c held, test whether the current key is in the vector of the object at +0x20. */
 u32 ts4_key_known_887EA5C8(char *self)
 {
-    char *r = fn_88614938(lbl_88D45B1C->f234);
+    char *r = ts4_pad_record_find_88614938(lbl_88D45B1C->f234);
     u32 key;
     Cx40VO *sub;
     u32 res;

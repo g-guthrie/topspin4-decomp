@@ -16,7 +16,7 @@ void fn_8857BBB0(int h, int a, int b, int *out, int c);
 int ts4_tailcall_fn_88582660_8857B840(void);
 void ts4_tailcall_fn_885827E0_88563110(int a);
 extern struct Cx32G { char pad[0x234]; void *tbl; } *lbl_88D45B1C;
-void *fn_88614938(void *a, int b);
+void *ts4_pad_record_find_88614938(void *a, int b);
 int ts4_call_seq_XNetLogonGetTitleID_884F1EE8(int a, void *b, int c, void *d, int e);
 
 typedef struct Cx32Res { int w0; int w4; u8 b8; } Cx32Res;
@@ -50,7 +50,7 @@ int ts4_titleid_result_88887610(Cx32Op3 *t)
     int id;
     Cx32Hnd *hd;
     int one;
-    hd = (Cx32Hnd *)fn_88614938(lbl_88D45B1C->tbl, t->c->f1c);
+    hd = (Cx32Hnd *)ts4_pad_record_find_88614938(lbl_88D45B1C->tbl, t->c->f1c);
     id = hd ? hd->id : -1;
     rc = ts4_call_seq_XNetLogonGetTitleID_884F1EE8(id, t->fc, 8, t->f8, 0);
     one = 1;

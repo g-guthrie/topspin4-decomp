@@ -15,7 +15,7 @@ extern void fn_8884EB98(void *self, const char *name, void *handle);
 typedef struct Cx18Svc { u8 pad[0x234]; void *mid; } Cx18Svc;
 extern Cx18Svc *lbl_88D45B1C;
 typedef struct Cx18Rec { u8 pad[0x10]; int v; } Cx18Rec;
-extern Cx18Rec *fn_88614938(void *mid, u32 id);
+extern Cx18Rec *ts4_pad_record_find_88614938(void *mid, u32 id);
 extern void ts4_format_record_value_88865760(u32 id, char *buf, u32 size);
 extern void ts4_format_save_dir_88866980(u32 id, char *out, u32 size);
 
@@ -28,7 +28,7 @@ void ts4_format_record_value_88865760(u32 id, char *buf, u32 size)
     Cx18Rec *r;
     int v;
     ts4_memset(buf, 0, size);
-    r = fn_88614938(lbl_88D45B1C->mid, id);
+    r = ts4_pad_record_find_88614938(lbl_88D45B1C->mid, id);
     v = r != 0 ? r->v : -1;
     ts4_format_text(buf, size, lbl_880D312C, v);
 }

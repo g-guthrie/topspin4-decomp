@@ -34,7 +34,7 @@ ts4_word fn_881E88D0();
 ts4_word fn_881EC8C8();
 ts4_word fn_882253A0();
 ts4_word fn_88263908();
-ts4_word fn_88614938();
+ts4_word ts4_pad_record_find_88614938();
 ts4_word fn_888CC218();
 ts4_word ts4_count_true_elements_88931388();
 ts4_word fn_88933EF8();
@@ -875,14 +875,14 @@ void ts4_loop_get_fn_8893BF30_8893DFF0(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x88996128: if_call_seq u32@lbl_88D45B1C, u32@0x234, fn_88614938, u32@0x10, ts4_tailcall_fn_8857A338_8857A3F0 */
+/* Swing_DLL.xex 0x88996128: if_call_seq u32@lbl_88D45B1C, u32@0x234, ts4_pad_record_find_88614938, u32@0x10, ts4_tailcall_fn_8857A338_8857A3F0 */
 void ts4_if_call_seq_u32_lbl_88D45B1C_88996128(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3)
 {
     ts4_word p5;
     ts4_word t3;
 
     (void)a0;
-    t3 = fn_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)a1);
+    t3 = ts4_pad_record_find_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)a1);
     if ((ts4_word)t3 != 0) {
         p5 = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t3) + 16));
     } else {
@@ -892,14 +892,14 @@ void ts4_if_call_seq_u32_lbl_88D45B1C_88996128(ts4_word a0, ts4_word a1, ts4_wor
     return;
 }
 
-/* Swing_DLL.xex 0x88996188: if_call_seq u32@lbl_88D45B1C, u32@0x234, fn_88614938, u32@0x10, ts4_tailcall_fn_8857A338_8857A3F0 */
+/* Swing_DLL.xex 0x88996188: if_call_seq u32@lbl_88D45B1C, u32@0x234, ts4_pad_record_find_88614938, u32@0x10, ts4_tailcall_fn_8857A338_8857A3F0 */
 void ts4_if_call_seq_u32_lbl_88D45B1C_88996188(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3)
 {
     ts4_word p5;
     ts4_word t3;
 
     (void)a0;
-    t3 = fn_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)a1);
+    t3 = ts4_pad_record_find_88614938((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 564)), (ts4_word)a1);
     if ((ts4_word)t3 != 0) {
         p5 = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t3) + 16));
     } else {

@@ -7800,6 +7800,42 @@
       "src/xbox360/cx52_plain.c": {
         "status": "Matching",
         "source": "xbox360/cx52_plain.c"
+      },
+      "src/xbox360/pr1_display_frame.c": {
+        "status": "Matching",
+        "source": "xbox360/pr1_display_frame.c"
+      },
+      "src/xbox360/pr2_attr_request.c": {
+        "status": "Matching",
+        "source": "xbox360/pr2_attr_request.c"
+      },
+      "src/xbox360/pr2_frontend.c": {
+        "status": "Matching",
+        "source": "xbox360/pr2_frontend.c"
+      },
+      "src/xbox360/pr2_loading_poll.cpp": {
+        "status": "Matching",
+        "source": "xbox360/pr2_loading_poll.cpp"
+      },
+      "src/xbox360/pr2_script_entry.c": {
+        "status": "Matching",
+        "source": "xbox360/pr2_script_entry.c"
+      },
+      "src/xbox360/pr2_signin.c": {
+        "status": "Matching",
+        "source": "xbox360/pr2_signin.c"
+      },
+      "src/xbox360/pr2_trigger_message_box.c": {
+        "status": "Matching",
+        "source": "xbox360/pr2_trigger_message_box.c"
+      },
+      "src/xbox360/pr3_file_io.c": {
+        "status": "Matching",
+        "source": "xbox360/pr3_file_io.c"
+      },
+      "src/xbox360/pr3_file_io_oc.c": {
+        "status": "Matching",
+        "source": "xbox360/pr3_file_io_oc.c"
       }
     }
   }

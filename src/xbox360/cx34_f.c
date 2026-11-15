@@ -106,7 +106,7 @@ extern void ts4_if_call_seq_lbl_880F7EE4_88617D28(void *self);
 
 extern void fn_88187BC0(char *a, char *b);
 
-extern char *fn_88614938(char *o, u32 i);
+extern char *ts4_pad_record_find_88614938(char *o, u32 i);
 extern u32 ts4_if_call_seq_u32_off0_8857B180(int id, char *out);
 
 extern void *fn_88617788(char *o, u32 id);

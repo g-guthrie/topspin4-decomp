@@ -63,7 +63,7 @@ typedef struct C2C390 {
     const void *f58; void *f5c; const void *f60; void *f64; u32 f68, f6c, f70;
 } C2C390;
 
-extern void fn_88630F80(void *out, u32 key, void *obj, const char *path, u32 a, u32 b);
+extern void ts4_io_open_request_88630F80(void *out, u32 key, void *obj, const char *path, u32 a, u32 b);
 typedef struct PObj33FC0 { u8 pad[0x24]; char prefix[0x200]; u32 f224; } PObj33FC0;
 /* 0x88633FC0: join the object's prefix and the given path (skipping a drive spec when a prefix exists), then run the request builder */
 void *ts4_join_path_request_88633FC0(void *out, PObj33FC0 *obj, const char *path, u32 a, u32 b)
@@ -72,7 +72,7 @@ void *ts4_join_path_request_88633FC0(void *out, PObj33FC0 *obj, const char *path
     if (obj->prefix[0] != 0 && path[1] == ':') path += 3;
     strcpy(buf, obj->prefix);
     strcat(buf, path);
-    fn_88630F80(out, obj->f224, obj, buf, a, b);
+    ts4_io_open_request_88630F80(out, obj->f224, obj, buf, a, b);
     return out;
 }
 
@@ -125,7 +125,7 @@ typedef struct C29B60 {
     u32 f38, f3c, f40, f44, f48; u8 pad4c[8]; u32 f54, f58, f5c; u8 pad60[8]; u32 f68;
 } C29B60;
 
-extern void *fn_88630C90(void *self, void *blk);
+extern void *ts4_io_run_request_88630C90(void *self, void *blk);
 typedef struct Blk {
     u32 f0; u8 f4; u8 pad5[3]; u32 f8; u8 padc[0x20c - 0xc];
     u32 f20c, f210, f214, f218, f21c, f220, f224, f228, f22c, f230; u8 f234; u8 pad235[3]; u32 f238;
@@ -150,7 +150,7 @@ u32 ts4_run_blk_mode3_88630D98(void *self, u32 a, u32 b, u32 c)
     blk.f218 = 0;
     blk.f224 = 0;
     blk.f21c = c;
-    fn_88630C90(self, (void *)&blk);
+    ts4_io_run_request_88630C90(self, (void *)&blk);
     return blk.f238;
 }
 
@@ -173,7 +173,7 @@ u32 ts4_run_blk_mode1_88630E08(void *self, u32 a, u32 b, u32 c, u32 d, u32 e)
     blk.f224 = c;
     blk.f220 = d;
     blk.f21c = e;
-    fn_88630C90(self, (void *)&blk);
+    ts4_io_run_request_88630C90(self, (void *)&blk);
     return blk.f238;
 }
 
