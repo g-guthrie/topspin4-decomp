@@ -11,7 +11,7 @@ typedef unsigned long ts4_word;
 extern "C" {
 extern char lbl_8814B440[];
 }
-extern "C" ts4_word fn_8864E9F8(...);
+extern "C" ts4_word ts4_transform_vec3_in_place_8864E9F8(...);
 extern "C" ts4_word ts4_if_get_fn_88804058_888083C0(...);
 
 
@@ -77,7 +77,7 @@ ts4_word ts4_if_get_u32_offc_8887A540(ts4_word a0, ts4_word a1, ts4_word a2, ts4
         *(float *)((char *)loc50 + 0) = t5;
         *(float *)((char *)loc50 + 4) = t5;
         *(float *)((char *)loc50 + 8) = t5;
-        t6 = fn_8864E9F8((ts4_word)(ts4_word)&loc50[0], (ts4_word)(ts4_word)&loc60[0]);
+        t6 = ts4_transform_vec3_in_place_8864E9F8((ts4_word)(ts4_word)&loc50[0], (ts4_word)(ts4_word)&loc60[0]);
         p7 = (ts4_word)t6;
     }
     return p7;

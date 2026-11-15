@@ -32099,15 +32099,23 @@
     {"source":"src/xbox360/w6b_f.c","symbol":"ts4_clear_three_vectors_886C3658","text_range":"0x886C3658-0x886C3738","matched_code_bytes":224,"function_match_percent":100.0},
     {"source":"src/xbox360/w6b_f.c","symbol":"ts4_clear_four_vectors_886C3820","text_range":"0x886C3820-0x886C3938","matched_code_bytes":280,"function_match_percent":100.0},
     {"source":"src/xbox360/w6b_f.c","symbol":"ts4_init_slot_blocks_8865F410","text_range":"0x8865F410-0x8865F518","matched_code_bytes":264,"function_match_percent":100.0},
-    {"source":"src/xbox360/w6b_f.c","symbol":"ts4_start_interp_8866F668","text_range":"0x8866F668-0x8866F70C","matched_code_bytes":164,"function_match_percent":100.0}
+    {"source":"src/xbox360/w6b_f.c","symbol":"ts4_start_interp_8866F668","text_range":"0x8866F668-0x8866F70C","matched_code_bytes":164,"function_match_percent":100.0},
+    {"source":"src/xbox360/af1_mat.c","symbol":"ts4_transform_coord_8864E980","text_range":"0x8864E980-0x8864E9F8","pdata_range":null,"matched_code_bytes":120,"function_match_percent":100.0},
+    {"source":"src/xbox360/af1_mat.c","symbol":"ts4_xform_lerp_8867D2B0","text_range":"0x8867D2B0-0x8867D34C","pdata_range":"0x88123A18-0x88123A20","matched_code_bytes":156,"function_match_percent":100.0},
+    {"source":"src/xbox360/af1_mat.c","symbol":"ts4_transform_coord_in_place_8864E908","text_range":"0x8864E908-0x8864E980","pdata_range":null,"matched_code_bytes":120,"function_match_percent":100.0},
+    {"source":"src/xbox360/af1_mat.c","symbol":"ts4_transform_vec3_in_place_8864E9F8","text_range":"0x8864E9F8-0x8864EAB8","pdata_range":null,"matched_code_bytes":192,"function_match_percent":100.0},
+    {"source":"src/xbox360/af1_mat.c","symbol":"ts4_mat_translation_8864E7F8","text_range":"0x8864E7F8-0x8864E84C","pdata_range":null,"matched_code_bytes":84,"function_match_percent":100.0},
+    {"source":"src/xbox360/af1_mat.c","symbol":"ts4_mat_translation_from_ptr_8864EFF0","text_range":"0x8864EFF0-0x8864F050","pdata_range":null,"matched_code_bytes":96,"function_match_percent":100.0},
+    {"source":"src/xbox360/af1_mat.c","symbol":"ts4_mat_translation_from_ptr_8864F050","text_range":"0x8864F050-0x8864F0B0","pdata_range":null,"matched_code_bytes":96,"function_match_percent":100.0},
+    {"source":"src/xbox360/af1_mat_transpose.c","symbol":"ts4_mat_transpose_8864E6B8","text_range":"0x8864E6B8-0x8864E708","matched_code_bytes":80,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 2989232,
+  "matched_code_bytes": 2990176,
   "module_total_code_bytes": 10154036,
-  "module_matched_code_percent": 29.438856,
+  "module_matched_code_percent": 29.44815,
   "module_total_functions": 46736,
-  "module_matched_functions": 30818,
-  "module_matched_functions_percent": 65.9406,
-  "module_total_units": 22603,
-  "module_complete_units": 1599,
-  "note": "The canonical whole-module report verifies all thirty thousand eight hundred eighteen functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 30826,
+  "module_matched_functions_percent": 65.95772,
+  "module_total_units": 22609,
+  "module_complete_units": 1601,
+  "note": "The canonical whole-module report verifies all thirty thousand eight hundred twenty-six functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

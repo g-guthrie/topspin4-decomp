@@ -6416,6 +6416,14 @@
       "src/xbox360/w6c_vec_a.c": {
         "status": "Matching",
         "source": "xbox360/w6c_vec_a.c"
+      },
+      "src/xbox360/af1_mat.c": {
+        "status": "Matching",
+        "source": "xbox360/af1_mat.c"
+      },
+      "src/xbox360/af1_mat_transpose.c": {
+        "status": "Matching",
+        "source": "xbox360/af1_mat_transpose.c"
       }
     }
   }

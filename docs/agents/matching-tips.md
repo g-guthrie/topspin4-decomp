@@ -245,3 +245,20 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   - Open: `li off; lvx rBase,rOff` vs `addi; lvx r0,rT` address form (both directions), VMX32 register numbering in the
     TransformCoord chain (v7/v13 vs v13/v11), `vor128` copy of a constant stored to two members, `vmaddfp128` with the
     addend as destination, bdz/bdnz switch chains.
+
+## Vector address form and matrix helpers (from AF1; full notes in docs/agents/near-misses/AF1.md)
+- Address form is fixed when the address is CSE'd: `base+K` used twice or more gives `addi rT,base,K; lvx128 v,r0,rT`;
+  used once it gives `li rK,K; lvx128 v,base,rK`, with the `li` register shared by every base using K once. Indexing
+  vs pointer arithmetic vs member access makes no difference.
+- `li` form for both the loads and the stores of one matrix: pass the matrix BY VALUE to a `__forceinline` helper and
+  assign the result row by row (`Af1Mat t = transpose(*m); af1_mat_set(m, &t);`). A plain `*m = f(*m)` struct assignment
+  gives an ldu/stdu loop.
+- TransformCoord: matrix by value, `r = __vmaddfp(m.r[2], z, m.r[3]); r = __vmaddfp(y, m.r[1], r);
+  r = __vmaddfp(x, m.r[0], r);` then the refined reciprocal. Matrix multiply: one nested
+  `vmaddfp(vmaddfp(vmaddfp(vmulfp)))` expression per row. Translation matrix: build rows in the order r[3], r[2], r[1], r[0].
+- `vmaddfp128 vD,vA,vB` (addend as destination) is a contracted `__vmulfp` + `__vaddfp` on a value stored then reloaded:
+  `l = __vmulfp(__vsubfp(b,*a), s); *o = *a; *o = __vaddfp(*o, l);`. There is no vmaddfp128 intrinsic.
+- Helpers in src/xbox360/af1_vector.h (`Af1Mat`, `af1_mat_mul`, `af1_mat_set`, `af1_mat_transpose`, `af1_recip`,
+  `af1_transform_coord`, `af1_mat_translation`, ...). Worked examples: src/xbox360/af1_mat.c, af1_mat_transpose.c.
+- Open: `add; lvx r0` with a strength-reduced offset (0x88645B98, 0x8866C8B8); the `vor128` copy of a constant stored
+  to two members (0x8867D8D0 is 6 instructions off on that alone).

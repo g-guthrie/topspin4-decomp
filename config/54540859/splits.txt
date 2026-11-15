@@ -46197,3 +46197,13 @@ src/xbox360/w6c_vec_a.c:
 	.text       start:0x886C3E08 end:0x886C3E28
 	.text       start:0x886C4DF0 end:0x886C4E44
 	.text       start:0x886C9688 end:0x886C9710
+
+src/xbox360/af1_mat.c:
+	.pdata      start:0x88123A18 end:0x88123A20
+	.text       start:0x8864E7F8 end:0x8864E84C
+	.text       start:0x8864E908 end:0x8864EAB8
+	.text       start:0x8864EFF0 end:0x8864F0B0
+	.text       start:0x8867D2B0 end:0x8867D34C
+
+src/xbox360/af1_mat_transpose.c:
+	.text       start:0x8864E6B8 end:0x8864E708

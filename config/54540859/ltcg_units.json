@@ -644,5 +644,41 @@
    "ts4_init_slot_blocks_8865F410": 264,
    "ts4_start_interp_8866F668": 164
   }
+ },
+ {
+  "source": "src/xbox360/af1_mat.c",
+  "object": "af1_mat.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_transform_coord_8864E980": 120,
+   "ts4_xform_lerp_8867D2B0": 156,
+   "ts4_transform_coord_in_place_8864E908": 120,
+   "ts4_transform_vec3_in_place_8864E9F8": 192,
+   "ts4_mat_translation_8864E7F8": 84,
+   "ts4_mat_translation_from_ptr_8864EFF0": 96,
+   "ts4_mat_translation_from_ptr_8864F050": 96
+  }
+ },
+ {
+  "source": "src/xbox360/af1_mat_transpose.c",
+  "object": "af1_mat_transpose.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_mat_transpose_8864E6B8": 80
+  }
  }
 ]
