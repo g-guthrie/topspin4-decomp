@@ -602,3 +602,25 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
   (`me_refresh_timing_pair_886D8928.c`).
 - 0x886A0A48 (14 off) and 0x886925A8 (7 off) are invariant to statement order, helper shape, types, flags and route
   (about 150 and 30 variants): scheduling of independent stores and VMX128 register numbering respectively.
+
+## Found at b97
+
+- **Relative-offset arrays whose offset is re-read at every use.** Some `{int offset; u32 count}` tables
+  (the ones embedded in the big data blocks, e.g. `+0x50` with 0x8c-byte entries, `+0x5b0`, `+0x824`,
+  `+0x170`) reload `offset` for `begin`, again for `end`, and again inside loops. Declare that field
+  `volatile int offset` and read it once per helper into a local (`int off = t->offset; if (off != -1)
+  r = (T *)((char *)t + (t->count * SIZE + off));`). Tables reached through a plain parameter usually
+  share one load: leave those non-volatile. Matched 0x886CA530, 0x886AC928, 0x88668EE8, 0x886C84F0.
+- `begin`/`end` helpers are `T *r = 0; if (off != -1) r = ...; return r;` (if-form, not `?:`), and need
+  `__forceinline` once a function uses them three or more times, or the third use becomes a call.
+- A result written through the first argument before the loop, with later loads hoisted above that
+  store, needs `T *__restrict out` (0x886C84F0).
+- A 12-byte struct passed by value arrives as r4 (first 8 bytes) plus the high half of r5; the callee
+  spills r5 with `std` and reloads the word (`rldicr r5,rN,32,31` when passing it on). Declare the
+  parameter as `struct { int a, b, c; }` by value (0x886DCDC0).
+- Callee-saved register order follows weighted use counts: `if (best == -1) best = r; else if (r < best)
+  best = r;` weights `best` above the object pointer where `best == -1 || r < best` does not (0x886AC928).
+- Two branches that zero the same three fields in different source order can be emitted in one shared
+  order; when one branch's order looks rotated, write both branches identically (0x88668EE8).
+- Callees that do not touch r3 can be chained (`c(b(a(o)))`) when the target never reloads the object
+  between the calls.

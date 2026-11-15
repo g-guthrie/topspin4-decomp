@@ -48953,3 +48953,21 @@ src/xbox360/me_ctor_two_tables_8869D000.c:
 src/xbox360/me_restart_named_endpoint_8864D0A0.c:
 	.pdata      start:0x88122C70 end:0x88122C78
 	.text       start:0x8864D0A0 end:0x8864D17C
+
+src/xbox360/me_select_next_entry_of_kind_886CA530.c:
+	.text       start:0x886CA530 end:0x886CA60C
+
+src/xbox360/me_reset_tracker_88668EE8.c:
+	.pdata      start:0x881234A0 end:0x881234A8
+	.text       start:0x88668EE8 end:0x88668FC4
+
+src/xbox360/me_min_cost_over_ids_886AC928.c:
+	.pdata      start:0x881246B0 end:0x881246B8
+	.text       start:0x886AC928 end:0x886AC9D8
+
+src/xbox360/me_span_handle_for_entry_886C84F0.c:
+	.text       start:0x886C84F0 end:0x886C85BC
+
+src/xbox360/me_resolve_table_items_886DCDC0.c:
+	.pdata      start:0x88125118 end:0x88125120
+	.text       start:0x886DCDC0 end:0x886DCE78

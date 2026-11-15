@@ -1,9 +1,10 @@
-/* 0x8868E950 (draft, 25 instructions off): two-level threshold lookup in relative-offset tables.
- * Open: the target materialises the table pointer (addi) and reloads its offset for begin after end;
- * ours folds the offset load and shares it. Typed/volatile reads of the offset did not change that. */
+/* 0x8868E950 (draft, 27 instructions off, all block placement): two-level threshold lookup in
+ * relative-offset tables. The outer table's offset is re-read at every use (volatile field, as in the
+ * matched 0x886CA530). Open: the target places the row-found copy (`mr r10,r11; b`) after the entry
+ * loop at the end of the function; every source shape tried keeps it right after the row loop. */
 typedef struct Entry { float key; float value; } Entry;
 typedef struct Row { int offset; unsigned int count; int pad; float limit; } Row;
-typedef struct Table { int offset; unsigned int count; } Table;
+typedef struct Table { volatile int offset; unsigned int count; } Table;
 typedef struct Data { char p[0x824]; Table rows; } Data;
 typedef struct Mid { char p[0x6c]; Data *data; } Mid;
 typedef struct Obj { char p[0x44]; Mid *mid; } Obj;
