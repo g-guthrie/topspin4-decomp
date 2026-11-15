@@ -72,7 +72,7 @@ ts4_word fn_88660690();
 ts4_word fn_8866EBC0();
 ts4_word ts4_graph_set_find_8866F028();
 ts4_word fn_8866F090();
-ts4_word fn_8867C418();
+ts4_word ts4_reset_and_free_8867C418();
 ts4_word ga3_release_all_pooled_8867DB30();
 ts4_word ga3_update_sub_controller_8867DEF0();
 ts4_word fn_8867DF68();

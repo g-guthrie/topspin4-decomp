@@ -72,7 +72,7 @@ ts4_word fn_88660690();
 ts4_word fn_8866EBC0();
 ts4_word ts4_graph_set_find_8866F028();
 ts4_word fn_8866F090();
-ts4_word fn_8867C418();
+ts4_word ts4_reset_and_free_8867C418();
 ts4_word ga3_release_all_pooled_8867DB30();
 ts4_word ga3_update_sub_controller_8867DEF0();
 ts4_word fn_8867DF68();
@@ -541,7 +541,7 @@ ts4_word ts4_if_call_seq_u32_off28_88691230(ts4_word a0)
     *(ts4_word *)((char *)(ts4_word)(a0) + 40) = (ts4_word)0;
     p9 = (ts4_word)p5;
     if ((ts4_word)t6 != 0) {
-        fn_8867C418((ts4_word)t6);
+        ts4_reset_and_free_8867C418((ts4_word)t6);
         t8 = ts4_tsu_cleanup_end((ts4_word)t6);
         p9 = (ts4_word)t8;
     }

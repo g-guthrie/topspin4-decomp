@@ -17,11 +17,11 @@ extern char lbl_88B30F80[];
 extern void ts4_addr_lbl_88000A3C_88AFF440(void);
 extern void fn_8864C170(void *);
 extern void fn_881B9148(void *);
-extern void fn_889C0BC8(void *);
+extern void ts4_clear_vec_889C0BC8(void *);
 
 void ts4_reset_889C14B8(char *x)
 {
     x[8] = 0;
     fn_881B9148(x + 0x10);
-    fn_889C0BC8(x);
+    ts4_clear_vec_889C0BC8(x);
 }

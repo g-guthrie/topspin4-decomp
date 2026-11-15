@@ -284,3 +284,8 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
 - Whole-struct assignment of an 8-byte element gives `ld/std`; per-word copies give `lwz/stw` pairs.
 - Open: dead `addi` of a sub-object address in constructors; a parameter spill ordered before the first load;
   five register copies of one constant (0x8866EB80); callers needing an unmatched callee in context.
+- More from W7: container teardown `v->last = copy(v->last, v->last, v->first)` with a copy helper calling
+  `fn_88562DC0` that returns `dest` when first==last, else `dest + n` (worked examples src/xbox360/w7b_b.c, w7b_c.c);
+  element loops read `end` once into a local. `return 0 != r;` gives the `addi rX,r3,0` copy before `subic/subfe`.
+  Under LTCG, declaration order of two constant-holding locals decides which constant gets which `lis/lfs` slot.
+  A callee that returns its `this` is used as `o = callee(o, o)` to get `mr r4,r3` and the later r3 reuse.

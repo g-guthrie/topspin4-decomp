@@ -171,7 +171,7 @@ ts4_word ts4_call_seq_lbl_880D2EFC_88629F58();
 ts4_word ts4_if_set_u32_off0_8862BE08();
 ts4_word ts4_vector_clear_8865A5E0();
 ts4_word fn_8865D8D8();
-ts4_word fn_88662E58();
+ts4_word ts4_destroy_container_88662E58();
 ts4_word ts4_registry_release_8866DD78();
 ts4_word ts4_loop_get_u32_off98_8866DE40();
 ts4_word ts4_shot_reward_list_push_88673630();
@@ -246,7 +246,7 @@ ts4_word fn_888F67B8();
 ts4_word ts4_loop_call_seq_u32_off2c_8890E988();
 ts4_word ts4_if_call_seq_lbl_880D72B0_88912A38();
 ts4_word ts4_call_seq_lbl_880D72B0_88912AC0();
-ts4_word fn_889C0BC8();
+ts4_word ts4_clear_vec_889C0BC8();
 ts4_word ts4_assign_formatted_text();
 ts4_word ts4_destroy_owned_object();
 ts4_word ts4_memset();
@@ -898,7 +898,7 @@ ts4_word ts4_if_call_seq_lbl_880F4420_886716A0(ts4_word a0)
     return p6;
 }
 
-/* Swing_DLL.xex 0x88671A28: loop_get u32@0x10, u32@0x14, u32@0x0, fn_88662E58, u32@0x0, u32@0x0 */
+/* Swing_DLL.xex 0x88671A28: loop_get u32@0x10, u32@0x14, u32@0x0, ts4_destroy_container_88662E58, u32@0x0, u32@0x0 */
 ts4_word ts4_loop_get_u32_off10_88671A28(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word lv3;
@@ -923,7 +923,7 @@ ts4_word ts4_loop_get_u32_off10_88671A28(ts4_word a0, ts4_word a1, ts4_word a2, 
     if ((ts4_word)t1 != (ts4_word)t2) {
         lv3 = (ts4_word)t1;
         do {
-            fn_88662E58((ts4_word)(*(ts4_word *)((char *)(ts4_word)(lv3) + 0)));
+            ts4_destroy_container_88662E58((ts4_word)(*(ts4_word *)((char *)(ts4_word)(lv3) + 0)));
             t6 = *(ts4_word *)((char *)(ts4_word)(lv3) + 0);
             p10 = (ts4_word)t6;
             if ((ts4_word)t6 != 0) {
@@ -1372,7 +1372,7 @@ ts4_word ts4_loop_call_seq_u32_off7c_886A6E48(ts4_word a0, ts4_word a1, ts4_word
     return p7;
 }
 
-/* Swing_DLL.xex 0x886A6F78: loop_get u32@0x84, fn_889C0BC8, u32@0x7c, u32@0x78, u32@0x0, fn_886A65F8 */
+/* Swing_DLL.xex 0x886A6F78: loop_get u32@0x84, ts4_clear_vec_889C0BC8, u32@0x7c, u32@0x78, u32@0x0, fn_886A65F8 */
 ts4_word ts4_loop_get_u32_off84_886A6F78(ts4_word a0)
 {
     ts4_word lv5;
@@ -1383,7 +1383,7 @@ ts4_word ts4_loop_get_u32_off84_886A6F78(ts4_word a0)
     ts4_word t19;
     ts4_word t22;
 
-    fn_889C0BC8((ts4_word)(*(volatile ts4_word *)((char *)(ts4_word)(a0) + 132)));
+    ts4_clear_vec_889C0BC8((ts4_word)(*(volatile ts4_word *)((char *)(ts4_word)(a0) + 132)));
     t3 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 124);
     t4 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 120);
     if ((ts4_word)t4 != (ts4_word)t3) {
