@@ -229,3 +229,19 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
 - Use the LTCG route with `src/xbox360/pp1_pool_primer.c` as last context and `/Oc`. Worked examples:
   src/xbox360/vx1_scale_velocity_xz.c, vx1_clamp_speed_half_vel.c, vx1_polar_offset_xz.c.
 - 2,025 unmatched vector functions (1.5 MB) in the image; 422 (295 KB) in the gameplay range.
+- Vector refinements (W6):
+  - Load-all-then-store-all copies of a 4x4 matrix: two loops through `__vector4 t[4]` (`t[i]=m[i]` loop, then
+    `dst[i]=t[i]` loop). Direct `dst[i]=m[i]` interleaves.
+  - Compare-to-bool: `__vcmpgefpR(a, b, &cr); return (cr >> 7) & 1;` (declarations for `__vslw`, `__vsldoi`,
+    `__vcmpgefpR`, `__vcmpgtfpR` in src/xbox360/w6a_types.h). 0.5 is `__vcfsx(__vspltisw(1), 1)`.
+  - `__vupkd3d(v, imm)`: the disassembly shows imm<<2. 3-input vmaddfp prints as `vD, a, b, addend`.
+  - Members written after a vector store need pointer helpers on both sides; scalars as `*p = *p * k` (k on the right).
+  - A literal `1.0f` loads at the use; `g_ts4_script_constants[0]` loads earlier.
+  - A second `self->field` read kept as a real `lwz`: write the long expression `self->a->b->c` at each use, no local.
+  - Vector-member erase (`v->end = copy(...)`) loops: `*dest = *src; ++src; ++dest;` in braces, sub-struct pointer
+    assigned right before each use.
+  - 16-byte copy from a stack vector as `ld/ld/std/std`: cast through an 8-aligned `unsigned long long q[2]` struct.
+  - A vector kept in v1 or v126/v127 across a call needs the real callee in the LTCG context.
+  - Open: `li off; lvx rBase,rOff` vs `addi; lvx r0,rT` address form (both directions), VMX32 register numbering in the
+    TransformCoord chain (v7/v13 vs v13/v11), `vor128` copy of a constant stored to two members, `vmaddfp128` with the
+    addend as destination, bdz/bdnz switch chains.

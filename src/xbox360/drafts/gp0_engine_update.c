@@ -157,7 +157,7 @@ struct MatchFrameState {               /* instance->u30 */
  *         if (match->310 == world->+0xE0) fn_886660A0(inst->u58);
  *         fn_886C1E80(inst);                                               // <= 8 queued command steps (matched)
  *         if (!(match->60 valid)) fn_8868FCC0(inst);
- *         if (inst->+0x35 == 1) { fn_8865C170(inst->u68); fn_8869EF08(inst); inst->+0x35 = 0; }
+ *         if (inst->+0x35 == 1) { ts4_update_speed_from_vector_8865C170(inst->u68); fn_8869EF08(inst); inst->+0x35 = 0; }
  *         inst->u68->vtbl[1]();                                             // sub-object update
  *         if (flags->+0x68) { flags->+0x68 = 0; ts4_loop_get_u32_off8_8866E448(inst); }       // sync per-player active flag (+0x4E5)
  *         for (p in players) {

@@ -38970,6 +38970,18 @@ MATCHING_UNITS = (
         "object": "w4b_h.obj",
         "symbols": {"ts4_registry_release_8866DD78": 196},
     },
+    {
+        "source": "src/xbox360/w6c_vec_a.c",
+        "object": "w6c_vec_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_vec_spill_8866D168": 20,
+            "ts4_vec_copy_886C3E08": 32,
+            "ts4_scale_vv_88670BD8": 72,
+            "ts4_boxes_minmax_886C9688": 136,
+            "ts4_track_get_886C4DF0": 84,
+        },
+    },
 )
 
 

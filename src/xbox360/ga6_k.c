@@ -15,7 +15,7 @@ void ts4_registry_dispatch_888860A0(void *buffer);
 void fn_886CE170(void *owner, void *item, void *a, void *b, int c);
 void fn_886D5028(void *obj, void *arg);
 void fn_886CECE0(void *obj);
-void fn_886C9688(void *obj);
+void ts4_boxes_minmax_886C9688(void *obj);
 void ts4_r2_swing_ring_release_entry_886DC9C0(void *self, ts4_word item);
 
 /* Global table of live object pointers; the count lives after the 0xC69 slots. */
@@ -118,7 +118,7 @@ void ga6_refresh_on_limit_change_886D7D08(struct Ga6Watcher *self)
         target = self->target;
         fn_886D5028(target, (char *)owner + 0x30);
         fn_886CECE0(target);
-        fn_886C9688(target);
+        ts4_boxes_minmax_886C9688(target);
     }
 }
 

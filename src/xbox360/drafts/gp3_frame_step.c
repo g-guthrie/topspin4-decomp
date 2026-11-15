@@ -26,7 +26,7 @@ void fn_8867B2D8(struct Gp3Instance *inst, int init);       /* fill ball.event_f
 void fn_8866F090(void *world);
 void ga4_update_members_8869F068(struct Gp3Instance *inst);
 void ga4_update_members_with_result_8869EFC8(struct Gp3Instance *inst);
-void fn_8865EE90(struct Gp3Instance *inst);
+void ts4_collect_entries_8865EE90(struct Gp3Instance *inst);
 void ts4_gp3_flip_active_group_8865F030(struct Gp3Instance *inst);                 /* flip the active group (doubles) */
 int  fn_8866E250(struct Gp3Instance *inst, int *frame);     /* another scheduled command in the group? */
 void fn_88675840(void *helper68, struct Gp3Player *p);
@@ -130,7 +130,7 @@ void gp3_gameplay_frame(struct Gp3Instance *inst_)
      *       fn_886AD278(world->prediction, inst, ball, 0, 1);               // re-predict the launched ball
      *       fn_8866F090(world);
      *       team[0..1]->+0x400/+0x404 = ticks of the last two samples;
-     *       ga4_update_members_8869F068(inst); ga4_update_members_with_result_8869EFC8(inst); fn_8865EE90(inst);
+     *       ga4_update_members_8869F068(inst); ga4_update_members_with_result_8869EFC8(inst); ts4_collect_entries_8865EE90(inst);
      *       team->flag_32A = 0 unless match state is POINT_END with rules flag;
      *       if (fn_8866E250(inst, &f)) { rec->flag14 = 0; C->valid = 0; rec_174 = 0; fn_8867B2D8(inst, 1); }   // cancelled
      *       else { fn_8867B2D8(inst, 0); ts4_gp3_flip_active_group_8865F030(inst); ... }

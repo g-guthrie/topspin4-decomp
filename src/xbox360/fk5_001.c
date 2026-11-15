@@ -229,7 +229,7 @@ ts4_word fn_8862CC90();
 ts4_word ts4_if_get_u32_off1c_88656900();
 ts4_word ts4_vector_clear_8865A5E0();
 ts4_word fn_8865E638();
-ts4_word fn_88661188();
+ts4_word ts4_matrix_flip_z_swap_rows_88661188();
 ts4_word fn_88661A70();
 ts4_word fn_8866CDC8();
 float fn_886887C0(ts4_word, float);
@@ -1787,7 +1787,7 @@ void ts4_get_u32_off20_8866F5E0(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x886708D0: call_seq fn_88661188 */
+/* Swing_DLL.xex 0x886708D0: call_seq ts4_matrix_flip_z_swap_rows_88661188 */
 void ts4_call_seq_fn_88661188_886708D0(void)
 {
     __vector4 vv3;
@@ -1796,7 +1796,7 @@ void ts4_call_seq_fn_88661188_886708D0(void)
     ts4_word loc50[2];
     ts4_word t1;
 
-    t1 = fn_88661188();
+    t1 = ts4_matrix_flip_z_swap_rows_88661188();
     *(float *)((char *)loc50 + 0) = (-(*(float *)((char *)(ts4_word)(t1) + 72)));
     vv3 = *(__vector4 *)((ts4_word)((t1 + 64)));
     vv4 = __lvlx((void *)((ts4_word)&loc50[0]), 0);

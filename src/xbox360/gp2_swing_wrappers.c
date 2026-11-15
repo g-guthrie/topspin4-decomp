@@ -34,7 +34,7 @@ struct Gp2SwingModule {
 
 void fn_886AC2C8(void *brain);
 void fn_886921A0(void *owner, int a, int b, int c);
-void fn_8866BB80(void *module);
+void ts4_fill_position_8866BB80(void *module);
 
 /* Swing_DLL.xex 0x886B0418: module debug-render slot (vtable 0x880F4478 +0x38). */
 void ts4_swing_module_debug_render_886B0418(struct Gp2SwingModule *module)
@@ -47,7 +47,7 @@ void ts4_swing_module_debug_render_886B0418(struct Gp2SwingModule *module)
         fn_886921A0(module->ctx->ball_prediction_owner, 0, 0, 1);
     }
     if (debug->show_swing_marker) {
-        fn_8866BB80(module);
+        ts4_fill_position_8866BB80(module);
     }
 }
 

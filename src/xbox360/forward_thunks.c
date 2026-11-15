@@ -129,7 +129,7 @@ void fn_8863A8F0(void);
 void fn_8863FB00(void);
 void fn_88655BC8(void);
 void fn_886580B8(void);
-void fn_8865A7D8(void);
+void ts4_reset_second_vec_8865A7D8(void);
 void fn_88661A70(void);
 void fn_88668650(void);
 void ts4_clear_records_88668D70(void);
@@ -320,7 +320,7 @@ TS4_FORWARD(8864E058, fn_8899F760)
 TS4_FORWARD(88655DE8, fn_88655BC8)
 TS4_FORWARD(886584E8, fn_886580B8)
 TS4_FORWARD(88658870, fn_88628098)
-TS4_FORWARD(8865ABA8, fn_8865A7D8)
+TS4_FORWARD(8865ABA8, ts4_reset_second_vec_8865A7D8)
 TS4_FORWARD(88668FC8, fn_88668650)
 TS4_FORWARD(88669030, ts4_clear_records_88668D70)
 TS4_FORWARD(88669038, fn_88668DF8)

@@ -46145,3 +46145,55 @@ src/xbox360/vx1_polar_offset_xz.c:
 src/xbox360/vx1_scale_velocity_xz.c:
 	.pdata      start:0x88123A38 end:0x88123A40
 	.text       start:0x8867D7C8 end:0x8867D87C
+
+src/xbox360/w6a_a.c:
+	.text       start:0x88670918 end:0x88670950
+	.text       start:0x886C35E0 end:0x886C360C
+	.text       start:0x886C3C30 end:0x886C3C54
+
+src/xbox360/w6a_d.c:
+	.text       start:0x8865C170 end:0x8865C1EC
+
+src/xbox360/w6a_e.c:
+	.pdata      start:0x88123688 end:0x88123690
+	.text       start:0x88670868 end:0x886708CC
+
+src/xbox360/w6a_h.c:
+	.text       start:0x886605C0 end:0x8866066C
+
+src/xbox360/w6b_a.c:
+	.text       start:0x886C3610 end:0x886C363C
+	.text       start:0x886C5070 end:0x886C5098
+
+src/xbox360/w6b_b.c:
+	.text       start:0x8864F618 end:0x8864F658
+
+src/xbox360/w6b_c.c:
+	.text       start:0x8864EF98 end:0x8864EFEC
+
+src/xbox360/w6b_d.c:
+	.pdata      start:0x881231E0 end:0x881231E8
+	.pdata      start:0x88123520 end:0x88123528
+	.text       start:0x8865A7D8 end:0x8865A868
+	.text       start:0x8865ECE0 end:0x8865ED74
+	.text       start:0x8865EE90 end:0x8865EF14
+	.text       start:0x8865FCE0 end:0x8865FD3C
+	.text       start:0x8866BB80 end:0x8866BC1C
+	.text       start:0x886C4408 end:0x886C4468
+
+src/xbox360/w6b_e.c:
+	.text       start:0x88661188 end:0x88661238
+
+src/xbox360/w6b_f.c:
+	.text       start:0x8865F410 end:0x8865F518
+	.text       start:0x8866F668 end:0x8866F70C
+	.text       start:0x886C3658 end:0x886C3738
+	.text       start:0x886C3820 end:0x886C3938
+
+src/xbox360/w6c_vec_a.c:
+	.pdata      start:0x88124B40 end:0x88124B48
+	.text       start:0x8866D168 end:0x8866D17C
+	.text       start:0x88670BD8 end:0x88670C20
+	.text       start:0x886C3E08 end:0x886C3E28
+	.text       start:0x886C4DF0 end:0x886C4E44
+	.text       start:0x886C9688 end:0x886C9710

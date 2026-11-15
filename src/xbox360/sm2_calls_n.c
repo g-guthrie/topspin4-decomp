@@ -3,7 +3,7 @@ extern void ts4_destroy_owned_object(void *object);
 extern double fn_8841DFD0(void *p);
 extern void fn_886D5028(void *p);
 extern void fn_886CECE0(void *p);
-extern void fn_886C9688(void *p);
+extern void ts4_boxes_minmax_886C9688(void *p);
 extern void fn_886C5C28(void *p);
 extern void fn_88279F40(void *p, float a, float b);
 extern void fn_88262730(void *p);
@@ -27,7 +27,7 @@ void ts4_run_three_stages_886D50B8(void *p)
 {
     fn_886D5028(p);
     fn_886CECE0(p);
-    fn_886C9688(p);
+    ts4_boxes_minmax_886C9688(p);
 }
 void ts4_reset_owner_counter_886C7ED0(char *p)
 {
