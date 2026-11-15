@@ -81,7 +81,7 @@ ts4_word fn_88618998();
 ts4_word ts4_if_get_u32_off0_88644860();
 ts4_word fn_88644A48();
 ts4_word fn_88644AE0();
-ts4_word fn_88644BD0();
+ts4_word ts4_apply_scale_88644BD0();
 ts4_word fn_886456A0();
 ts4_word fn_88645A68();
 ts4_word fn_88646388();

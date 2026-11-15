@@ -6884,6 +6884,14 @@
       "src/xbox360/os2_xmltok_skip_s_little2_888973C8.c": {
         "status": "Matching",
         "source": "xbox360/os2_xmltok_skip_s_little2_888973C8.c"
+      },
+      "src/xbox360/w8d_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w8d_a.c"
+      },
+      "src/xbox360/w8d_b.c": {
+        "status": "Matching",
+        "source": "xbox360/w8d_b.c"
       }
     }
   }

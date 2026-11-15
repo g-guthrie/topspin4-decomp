@@ -1035,5 +1035,28 @@
   "symbols": {
    "os1_deflateReset_88877328": 212
   }
+ },
+ {
+  "source": "src/xbox360/w8d_b.c",
+  "object": "w8d_b.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_apply_scale_88644BD0": 136,
+   "ts4_dispatch_blocks_8865A890": 168,
+   "ts4_multiply_by_keys_886491E8": 172,
+   "ts4_copy_shot_state_886783B0": 180,
+   "ts4_scale_range_with_gain_886D1910": 180,
+   "ts4_apply_range_gain_cur_886D6C60": 184,
+   "ts4_find_and_flush_886579B8": 176,
+   "ts4_find_and_clear_88658268": 204,
+   "ts4_mark_last_active_886C6F88": 216
+  }
  }
 ]

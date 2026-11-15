@@ -308,3 +308,8 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   real callee has an unused float parameter, pass a dummy `0.0f`.
 - Open: the table select together with a zero from extern `g_ts4_event_value` (0x886C4970, 0x886C5770, 0x886C6EE8);
   a 23-entry jump table the compiler folds to compares (0x8865DAC0); r10/r11 register swaps; dead sub-object `addi`.
+- More from W8: the fmadds multiplicand order follows the declaration order of the float locals. `unsigned char sign =
+  h >> 15` keeps `srwi 15; nor; clrlwi 31` where `~(h >> 15) & 1` folds to `nor; extrwi`. Read `end` into a local before
+  a `begin` loop for the end-first load order. Callee float-register survival (f10) also works with
+  `--context "flags(/Ob1):<callee file>" --include <callee>`. A function-local static table with an inline constructor
+  matches in C++ but fn_check rejects the compiler-generated `?$S1` symbols (0x886C40B8): open.

@@ -47092,3 +47092,25 @@ src/xbox360/os2_xmltok_skip_s_big2_888952A8.c:
 
 src/xbox360/os2_xmltok_skip_s_little2_888973C8.c:
 	.text       start:0x888973C8 end:0x88897410
+
+src/xbox360/w8d_a.c:
+	.text       start:0x88667ED0 end:0x88667FA4
+	.text       start:0x88668490 end:0x88668568
+
+src/xbox360/w8d_b.c:
+	.pdata      start:0x881228F0 end:0x881228F8
+	.pdata      start:0x88122A88 end:0x88122A90
+	.pdata      start:0x881230A8 end:0x881230B0
+	.pdata      start:0x88123110 end:0x88123118
+	.pdata      start:0x881231E8 end:0x881231F0
+	.pdata      start:0x88124DF0 end:0x88124DF8
+	.pdata      start:0x88124F28 end:0x88124F30
+	.text       start:0x88644BD0 end:0x88644C58
+	.text       start:0x886491E8 end:0x88649294
+	.text       start:0x886579B8 end:0x88657A68
+	.text       start:0x88658268 end:0x88658334
+	.text       start:0x8865A890 end:0x8865A938
+	.text       start:0x886783B0 end:0x88678464
+	.text       start:0x886C6F88 end:0x886C7060
+	.text       start:0x886D1910 end:0x886D19C4
+	.text       start:0x886D6C60 end:0x886D6D18

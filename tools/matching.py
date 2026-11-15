@@ -39894,6 +39894,15 @@ MATCHING_UNITS = (
         "object": "os2_xmltok_skip_s_little2_888973C8.obj",
         "symbols": {"os2_xmltok_little2_skip_s_888973C8": 72},
     },
+    {
+        "source": "src/xbox360/w8d_a.c",
+        "object": "w8d_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_bump_side_counts_88667ED0": 212,
+            "ts4_bump_side_tally_88668490": 216,
+        },
+    },
 )
 
 
