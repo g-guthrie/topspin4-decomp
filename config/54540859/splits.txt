@@ -46207,3 +46207,67 @@ src/xbox360/af1_mat.c:
 
 src/xbox360/af1_mat_transpose.c:
 	.text       start:0x8864E6B8 end:0x8864E708
+
+src/xbox360/w7a_a.c:
+	.pdata      start:0x88123278 end:0x88123280
+	.text       start:0x8865D6E8 end:0x8865D78C
+	.text       start:0x8865DB50 end:0x8865DBA4
+	.text       start:0x8865E490 end:0x8865E530
+	.text       start:0x8865E980 end:0x8865E9CC
+	.text       start:0x88667FA8 end:0x88668074
+	.text       start:0x88668780 end:0x88668850
+	.text       start:0x886714C0 end:0x88671508
+	.text       start:0x886811A0 end:0x886811B4
+	.text       start:0x886C4058 end:0x886C40B4
+	.text       start:0x886C4878 end:0x886C48C8
+	.text       start:0x886C5098 end:0x886C50D0
+	.text       start:0x886C7150 end:0x886C71C4
+
+src/xbox360/w7a_g.c:
+	.pdata      start:0x88122A40 end:0x88122A48
+	.text       start:0x88648020 end:0x886480B0
+
+src/xbox360/w7a_l.c:
+	.pdata      start:0x88123208 end:0x88123210
+	.text       start:0x8865AEF8 end:0x8865AF6C
+	.text       start:0x8865B058 end:0x8865B0D8
+	.text       start:0x886C3A48 end:0x886C3A9C
+
+src/xbox360/w7c_a.c:
+	.pdata      start:0x88122FC0 end:0x88122FC8
+	.pdata      start:0x881231B8 end:0x881231C0
+	.pdata      start:0x88123308 end:0x88123310
+	.pdata      start:0x88123468 end:0x88123470
+	.pdata      start:0x881236C8 end:0x881236D0
+	.text       start:0x886561E0 end:0x8865629C
+	.text       start:0x8865A348 end:0x8865A3CC
+	.text       start:0x8865ABB0 end:0x8865ABD8
+	.text       start:0x88660338 end:0x8866038C
+	.text       start:0x88661950 end:0x886619C0
+	.text       start:0x88666E68 end:0x88666F14
+	.text       start:0x88671430 end:0x886714B4
+	.text       start:0x886C3978 end:0x886C3A44
+	.text       start:0x886C3D50 end:0x886C3DA8
+	.text       start:0x886E61E0 end:0x886E6238
+
+src/xbox360/w7d_a.c:
+	.pdata      start:0x88122B90 end:0x88122B98
+	.text       start:0x8864B030 end:0x8864B084
+	.text       start:0x8865B6C0 end:0x8865B73C
+	.text       start:0x8865C018 end:0x8865C0B8
+
+src/xbox360/w7d_b.c:
+	.pdata      start:0x88124A10 end:0x88124A18
+	.text       start:0x886C5C28 end:0x886C5C80
+
+src/xbox360/w7d_c.c:
+	.pdata      start:0x88123518 end:0x88123520
+	.text       start:0x8866B6E0 end:0x8866B734
+
+src/xbox360/w7d_d.c:
+	.text       start:0x88668078 end:0x88668118
+	.text       start:0x886685E0 end:0x88668650
+
+src/xbox360/w7d_e.c:
+	.pdata      start:0x881236C0 end:0x881236C8
+	.text       start:0x88671350 end:0x88671430

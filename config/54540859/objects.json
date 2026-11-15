@@ -6424,6 +6424,42 @@
       "src/xbox360/af1_mat_transpose.c": {
         "status": "Matching",
         "source": "xbox360/af1_mat_transpose.c"
+      },
+      "src/xbox360/w7a_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w7a_a.c"
+      },
+      "src/xbox360/w7a_g.c": {
+        "status": "Matching",
+        "source": "xbox360/w7a_g.c"
+      },
+      "src/xbox360/w7a_l.c": {
+        "status": "Matching",
+        "source": "xbox360/w7a_l.c"
+      },
+      "src/xbox360/w7c_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w7c_a.c"
+      },
+      "src/xbox360/w7d_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w7d_a.c"
+      },
+      "src/xbox360/w7d_b.c": {
+        "status": "Matching",
+        "source": "xbox360/w7d_b.c"
+      },
+      "src/xbox360/w7d_c.c": {
+        "status": "Matching",
+        "source": "xbox360/w7d_c.c"
+      },
+      "src/xbox360/w7d_d.c": {
+        "status": "Matching",
+        "source": "xbox360/w7d_d.c"
+      },
+      "src/xbox360/w7d_e.c": {
+        "status": "Matching",
+        "source": "xbox360/w7d_e.c"
       }
     }
   }

@@ -19,7 +19,7 @@ void ga3_ring_process_last_88691758(struct Ga3Ring *self)
 }
 
 void ts4_object_finalize(void *p);
-void fn_8865A348(void *p);
+void ts4_delete_all_8865A348(void *p);
 void fn_8867C350(void *p);
 
 /* Tears down the 10-slot pool: finalizes the member at +0x294C, the one at +0x20, then each slot. */
@@ -28,7 +28,7 @@ void ga3_pool_destroy_88691798(unsigned char *self)
     int i;
     unsigned char *slot;
     ts4_object_finalize(self + 0x294C);
-    fn_8865A348(self + 0x20);
+    ts4_delete_all_8865A348(self + 0x20);
     slot = self + 0x34;
     for (i = 10; i != 0; i--) {
         fn_8867C350(slot);

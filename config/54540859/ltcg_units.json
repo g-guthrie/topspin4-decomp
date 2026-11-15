@@ -680,5 +680,120 @@
   "symbols": {
    "ts4_mat_transpose_8864E6B8": 80
   }
+ },
+ {
+  "source": "src/xbox360/w7a_g.c",
+  "object": "w7a_g.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/ga1_gameplay_a.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_push_tagged_element_88648020": 144
+  }
+ },
+ {
+  "source": "src/xbox360/w7a_l.c",
+  "object": "w7a_l.obj",
+  "context": [
+   "src/xbox360/cw1_ctx_format_text.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_format_debug_pair_8865AEF8": 116,
+   "ts4_fade_frames_all_ready_8865B058": 128,
+   "ts4_bilinear_weights_886C3A48": 84
+  }
+ },
+ {
+  "source": "src/xbox360/w7d_a.c",
+  "object": "w7d_a.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_wait_200_8864B030": 84,
+   "ts4_all_ge_8865B6C0": 124,
+   "ts4_clear_state_8865C018": 160
+  }
+ },
+ {
+  "source": "src/xbox360/w7d_b.c",
+  "object": "w7d_b.obj",
+  "context": [
+   "src/xbox360/w6b_f.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_clear_three_vectors_886C3658"
+  ],
+  "symbols": {
+   "ts4_reset_sub_886C5C28": 88
+  }
+ },
+ {
+  "source": "src/xbox360/w7d_c.c",
+  "object": "w7d_c.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_z_below_limit_8866B6E0": 84
+  }
+ },
+ {
+  "source": "src/xbox360/w7d_d.c",
+  "object": "w7d_d.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_count_886685E0": 112,
+   "ts4_count_88668078": 160
+  }
+ },
+ {
+  "source": "src/xbox360/w7d_e.c",
+  "object": "w7d_e.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_pick_entry_88671350": 224
+  }
  }
 ]

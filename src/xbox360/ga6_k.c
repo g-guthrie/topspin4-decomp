@@ -10,7 +10,7 @@ extern void *lbl_88D45B1C;
 
 void ts4_tailcall_fn_88584548_8857AFE8(int arg);
 void fn_886D2E78(void *self);
-unsigned char fn_886C3D50(void *self);
+unsigned char ts4_none_kind_012_886C3D50(void *self);
 void ts4_registry_dispatch_888860A0(void *buffer);
 void fn_886CE170(void *owner, void *item, void *a, void *b, int c);
 void fn_886D5028(void *obj, void *arg);
@@ -161,12 +161,12 @@ void ga6_add_reference_886D2AF0(void *owner, struct Ga6Counted2 *item)
     item->count = item->count + 1;
 }
 
-/* Run the type check loop: while fn_886C3D50 says not done (max 1000 times), idle-hook and step. */
+/* Run the type check loop: while ts4_none_kind_012_886C3D50 says not done (max 1000 times), idle-hook and step. */
 void ga6_wait_loop_886D7970(void *self)
 {
     int i;
     for (i = 0; i < 1000; i++) {
-        if (fn_886C3D50(self))
+        if (ts4_none_kind_012_886C3D50(self))
             break;
         ts4_tailcall_fn_88584548_8857AFE8(1);
         fn_886D2E78(self);

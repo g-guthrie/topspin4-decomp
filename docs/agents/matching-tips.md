@@ -262,3 +262,25 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   `af1_transform_coord`, `af1_mat_translation`, ...). Worked examples: src/xbox360/af1_mat.c, af1_mat_transpose.c.
 - Open: `add; lvx r0` with a strength-reduced offset (0x88645B98, 0x8866C8B8); the `vor128` copy of a constant stored
   to two members (0x8867D8D0 is 6 instructions off on that alone).
+
+## Added from W7 (gameplay re-sweep with all rules)
+- Operand-order pads: the pad locals must be used (`(void)x;` at the end) to pass the host check. The flip period is 8
+  (3 and 11 in 0x88671350). Pads also fix some pure scheduling differences. A per-call-site fix: a second copy of the
+  inline accessor with its own dead locals shifts only that site; pads in the caller shift every site.
+- `(char*)h + i*K + h->rel` (index term written before `rel`) gives `mulli; add h; lwz rel; add`.
+- Self-relative record counters: `helper(&s->own->hdr, idx)->field++` with the helper returning `h + (i*K + h->rel)`
+  reproduces the dead `addi` of the field address.
+- Late-forwarded float reload `fmr`: re-read a field just stored (`s->a = 1.0f - s->b - s->c - x`).
+- Result in a local returned once (`unsigned char r = 1; ... r = 0; break;`) fixes loop-exit layouts; a `?:` feeding an
+  early return can schedule differently from `if`.
+- Bool chain kept as branches: `int x = a>=b; int y = ...;` up front, then
+  `if ((unsigned char)x && (unsigned char)y) return 1; return 0;`.
+- Storing in both branches (`if (c) p->f = K1; else p->f = K2;`) instead of a local stored at the end removes a
+  register shuffle.
+- `(float)unsigned` drops `extsw`; `do {} while (--n != 0)` gives `subic.`.
+- Float args take GPR slots: `(this, int, float a, const float *p, float b)` puts the pointer in r6.
+- LTCG callee register survival: add the real matched callee's source as plain `--context` (no `/Ob1` prefix) with
+  `--include <callee>`; a varargs caller of `ts4_format_text` needs `src/xbox360/cw1_ctx_format_text.c` as context.
+- Whole-struct assignment of an 8-byte element gives `ld/std`; per-word copies give `lwz/stw` pairs.
+- Open: dead `addi` of a sub-object address in constructors; a parameter spill ordered before the first load;
+  five register copies of one constant (0x8866EB80); callers needing an unmatched callee in context.

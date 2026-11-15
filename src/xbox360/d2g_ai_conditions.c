@@ -156,7 +156,7 @@ extern float lbl_8814B440;      /* 0.0f */
 int fn_8865B3B0(struct Ts4Cond *self);
 int fn_8865B570(struct Ts4Cond *self);
 int ts4_value_at_least_8865B658(struct Ts4Cond *self);
-int fn_8865B6C0(struct Ts4Cond *self);
+int ts4_all_ge_8865B6C0(struct Ts4Cond *self);
 
 /* The side's row in the table holds an empty self-relative reference. */
 static int ts4_cond_slot_empty(struct Ts4Cond *self)
@@ -244,7 +244,7 @@ int ts4_cond_test_88665010(struct Ts4Cond *self)
         result = self->ca0 >= self->tuning->t9c;
         break;
     case 0xB501BC47:
-        result = fn_8865B6C0(self);
+        result = ts4_all_ge_8865B6C0(self);
         break;
     case 0xB81FCC00:
         result = self->cf0 == self->tuning->t34;

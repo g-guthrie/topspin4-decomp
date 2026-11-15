@@ -4,7 +4,7 @@ extern double fn_8841DFD0(void *p);
 extern void fn_886D5028(void *p);
 extern void fn_886CECE0(void *p);
 extern void ts4_boxes_minmax_886C9688(void *p);
-extern void fn_886C5C28(void *p);
+extern void ts4_reset_sub_886C5C28(void *p);
 extern void fn_88279F40(void *p, float a, float b);
 extern void fn_88262730(void *p);
 extern void *fn_886F3798(void *p);
@@ -31,14 +31,14 @@ void ts4_run_three_stages_886D50B8(void *p)
 }
 void ts4_reset_owner_counter_886C7ED0(char *p)
 {
-    fn_886C5C28(*(char **)(p + 0x28) + 0x3f0);
+    ts4_reset_sub_886C5C28(*(char **)(p + 0x28) + 0x3f0);
     *(int *)(*(char **)(p + 0x28) + 0x544) = 0;
 }
 #define RESET_VIA_OWNER(NAME) \
     void NAME(char *p) \
     { \
         char *q = *(char **)(*(char **)(p + 4) + 0x60); \
-        fn_886C5C28(*(char **)(q + 0x28) + 0x3f0); \
+        ts4_reset_sub_886C5C28(*(char **)(q + 0x28) + 0x3f0); \
         *(int *)(*(char **)(q + 0x28) + 0x544) = 0; \
     }
 RESET_VIA_OWNER(ts4_reset_via_owner_88671508)

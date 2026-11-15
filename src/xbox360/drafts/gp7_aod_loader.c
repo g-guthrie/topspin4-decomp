@@ -5,7 +5,7 @@
  *
  * Covers: fn_886CE170 (enqueue), ga6_acquire_hold_886CE5B0 (request by clip), fn_886CE2D8 / fn_886D2B58 (start the next
  * file read, single / loop form), fn_886D2E78 (per-frame tick), fn_886CE648 (finish a read),
- * ts4_if_set_u32_off0_886C52F0 (cancel), fn_886C3D50 / ts4_find_by_id_886C3DC0 / fn_886C3DA8 (queries), ga6_wait_loop_886D7970 / ga6_run_while_type012_886D79D8 /
+ * ts4_if_set_u32_off0_886C52F0 (cancel), ts4_none_kind_012_886C3D50 / ts4_find_by_id_886C3DC0 / fn_886C3DA8 (queries), ga6_wait_loop_886D7970 / ga6_run_while_type012_886D79D8 /
  * ga6_run_while_type4_886D7A60 (blocking waits), fn_886472C0 (hkx packfile -> animation object).
  *
  * What it does: clips live in one file each, "Media\Animation\AOD\%u.hkx" (%u = clip id, the u32 at +0 of
@@ -145,7 +145,7 @@ void aod_tick_886D2E78(struct AodManager *m)
 }
 
 /* ---- blocking helpers (poll the tick, Sleep(1) between polls, at most 1000 iterations) ---- */
-/* ga6_wait_loop_886D7970: wait until no request is in state 0/1/2 (fn_886C3D50 == 1 means "all settled"). */
+/* ga6_wait_loop_886D7970: wait until no request is in state 0/1/2 (ts4_none_kind_012_886C3D50 == 1 means "all settled"). */
 /* ga6_run_while_type012_886D79D8: wait until the request for `clip` (ts4_find_by_id_886C3DC0: lookup by clip pointer at request+4) leaves states 0/1/2. */
 /* ga6_run_while_type4_886D7A60: wait until the request for `clip` leaves state 4. */
 
