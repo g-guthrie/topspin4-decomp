@@ -8076,6 +8076,10 @@
       "src/xbox360/me_write_mirrored_vec_886AB438.c": {
         "status": "Matching",
         "source": "xbox360/me_write_mirrored_vec_886AB438.c"
+      },
+      "src/xbox360/me_segment_intersect_xz_88670178.c": {
+        "status": "Matching",
+        "source": "xbox360/me_segment_intersect_xz_88670178.c"
       }
     }
   }

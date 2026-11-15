@@ -544,3 +544,6 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
 - 0x886707C8 (12 off, registers only): three keys copied to a stack array and two of them also kept in saved registers.
 - 0x889C0C70 (25 off, registers only): switch on the ball mode hash; structure exact with a `bool` helper for the test.
 - 0x886AD1F0, 0x886C5DB0, 0x8866CFA8: store placed before a compare/call in the target, after it in ours.
+- Float multiply operand order (`fmuls`/`fmadds` with the two factors swapped): dead-local pads and declaration order do
+  nothing here. Write the factors as inline sub-expressions (macros such as `#define DX (b.v[0] - a.v[0])`) instead of
+  named float locals; `me_segment_intersect_xz_88670178.c` went from 4 off to a match that way.

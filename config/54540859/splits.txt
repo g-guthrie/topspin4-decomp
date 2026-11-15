@@ -48913,3 +48913,6 @@ src/xbox360/me_is_near_mirrored_x_8866BEE0.c:
 src/xbox360/me_write_mirrored_vec_886AB438.c:
 	.pdata      start:0x88124668 end:0x88124670
 	.text       start:0x886AB438 end:0x886AB500
+
+src/xbox360/me_segment_intersect_xz_88670178.c:
+	.text       start:0x88670178 end:0x88670258

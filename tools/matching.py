@@ -41828,6 +41828,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_write_mirrored_vec_886AB438": 200},
     },
+    {
+        "source": "src/xbox360/me_segment_intersect_xz_88670178.c",
+        "object": "me_segment_intersect_xz_88670178.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_segment_intersect_xz_88670178": 224},
+    },
 )
 
 
