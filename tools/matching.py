@@ -41022,6 +41022,12 @@ MATCHING_UNITS = (
             "ts4_factory_obj_new_88167DB8": 176,
         },
     },
+    {
+        "source": "src/xbox360/pl2_analysers.c",
+        "object": "pl2_analysers.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_analysers_init_886BDB58": 360},
+    },
 )
 
 

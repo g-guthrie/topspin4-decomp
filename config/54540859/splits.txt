@@ -48137,3 +48137,7 @@ src/xbox360/sc2_factory.c:
 	.text       start:0x88167818 end:0x88167A3C
 	.text       start:0x88167A40 end:0x88167AF4
 	.text       start:0x88167D08 end:0x88167E68
+
+src/xbox360/pl2_analysers.c:
+	.pdata      start:0x88124908 end:0x88124910
+	.text       start:0x886BDB58 end:0x886BDCC0

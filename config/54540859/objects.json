@@ -7492,6 +7492,10 @@
       "src/xbox360/sc2_factory.c": {
         "status": "Matching",
         "source": "xbox360/sc2_factory.c"
+      },
+      "src/xbox360/pl2_analysers.c": {
+        "status": "Matching",
+        "source": "xbox360/pl2_analysers.c"
       }
     }
   }

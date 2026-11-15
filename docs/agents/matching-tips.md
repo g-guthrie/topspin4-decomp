@@ -442,3 +442,17 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   `(x-y)-z` becomes `(x-z)-y`), not statement or declaration order.
 - Distant code matters: rewriting a later loop can move a top-of-function assignment.
 - Open: a chained load reusing its own register (`lwz r11,0x74(r11)`, 0x8866D218); found/count weight swap (0x88650908).
+
+## Added from the second mid-size pilot (PL2)
+- Two stores through the same pointer whose values are ready together can come out in REVERSE source order
+  (`e->w8 = 0; e->wc = 0;` emitted wc first): if a pair is swapped, swap the source statements.
+- Branch-free signed max keeping literal zeros in registers (`li 0; subfc; srwi; srwi; subfe; and`): inline
+  `max(a,b){ return a<b ? b : a; }` called as `max(0, x)`. `max(x, 0)` and `x<0?0:x` fold the zero.
+- Element at index `1-i` with the stride folded into field offsets: `arr(h) - i` then `[1].field`.
+- A separate reload of `d` (not merged with an earlier read) comes from writing stores as direct expressions
+  (`s->w->d->f = ...`); a local or helper parameter gets merged.
+- `#pragma fp_contract(off)` also stops vector `vmulfp` + `vaddfp` fusing into `vmaddfp`.
+- Bool defaulted before the branch (`u8 c = side == 0; if (side == 1) {...; c = ...;}`) hoists the `cntlzw`.
+- Measured: 1 of 12 random 330-700 byte functions matched (PL1: 3 of 12); five more ended 2-10 instructions off. Top
+  residues: register numbering (GPR rank, VMX temps, FPR) 5, adjacent swaps 2, unmatched callee needed in context 2,
+  strength-reduction base choice 1. No vector function matched.

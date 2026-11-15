@@ -31846,3 +31846,4 @@ ts4_factory_obj_new_881670D8 = .text:0x881670D8; // type:function size:0xBC
 ts4_factory_obj_new_88167198 = .text:0x88167198; // type:function size:0xBC
 ts4_factory_obj_new_88167D08 = .text:0x88167D08; // type:function size:0xB0
 ts4_factory_obj_new_88167DB8 = .text:0x88167DB8; // type:function size:0xB0
+ts4_analysers_init_886BDB58 = .text:0x886BDB58; // type:function size:0x168
