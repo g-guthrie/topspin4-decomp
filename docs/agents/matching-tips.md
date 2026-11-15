@@ -333,3 +333,21 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   its ctor/dtor and embedding constructors are in src/xbox360/da1_a.c (worked examples).
 - Still open: the table select with the zero from extern `g_ts4_event_value` (a one-arm operand is sunk into the branch);
   r10/r11 swaps between a base pointer and a loaded value.
+
+## Added from W9 (228-328 byte gameplay functions)
+- Two matched functions in one file where one calls the other: mark the callee `__declspec(noinline)` (under
+  `#ifdef _MSC_VER`) from the start. fn_check passes while the call still uses the fn_ placeholder; after integration the
+  call resolves to the same-file definition and gets inlined, and the build then reports "not a perfect match".
+- Per-site operand-order pads: block-scoped base local in each branch plus N dead top-level locals flips only the later
+  site (0x886CC560 needed exactly 2).
+- Element helper with explicit stride, `(E*)((char*)h + (i*0x18 + h->rel))`, called with constants 0 then 1, gives the
+  two separate `add` copies and the dead `mr`.
+- Two stack temporaries swapped between helper calls: ONE `struct {u32 a,b,c,d;} tmp[2]`, using `&tmp[0]`/`&tmp[1]`.
+- 12-byte handle read from a struct and passed on: `Id id = p->id; f(id.c, id, key);`.
+- Index search with a slow path: `r = 4; if (...) { i = 4; if (vc) {scan} if (i >= 4) r = call(); else r = i; } return r;`.
+- Conditional negate through a float local: `t = out[0]; if (c) t = -t; out[0] = t;`.
+- Buffered writer with a shared direct-write tail:
+  `if ((long)buf != 0) { if (fill + n > cap) { flush; fill = 0; if (n > cap) direct; else copy; } else copy; } else direct;`.
+- `(t < 20)` stored as a byte gives `subfc; eqv; srwi 31; addze; clrlwi 31`.
+- Open at this size: vtable store scheduled first in constructors with many zero stores; a failure block placed before
+  the success block; `one`/`zero` kept as saved-register locals; loads the scheduler hoists above a store.

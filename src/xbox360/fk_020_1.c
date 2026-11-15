@@ -69,7 +69,7 @@ ts4_word fn_88617D88();
 ts4_word fn_88644990();
 ts4_word ts4_reset_second_vec_8865A7D8();
 ts4_word fn_88660690();
-ts4_word fn_8866EBC0();
+ts4_word ts4_reset_entries_8866EBC0();
 ts4_word ts4_graph_set_find_8866F028();
 ts4_word fn_8866F090();
 ts4_word ts4_reset_and_free_8867C418();

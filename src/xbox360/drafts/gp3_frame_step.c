@@ -20,7 +20,7 @@ struct Gp3Instance;
 struct Gp3Player;
 
 /* helpers called by the frame (all in Swing_DLL.xex) */
-void fn_8866EBC0(struct Gp3Instance *inst);                 /* clear ball sample history (prediction +0x5A0 vector, per-player sample vectors) */
+void ts4_reset_entries_8866EBC0(struct Gp3Instance *inst);                 /* clear ball sample history (prediction +0x5A0 vector, per-player sample vectors) */
 void fn_886AD278(void *prediction, struct Gp3Instance *inst, struct Gp3BallState *ball, int keep_mode, int full); /* ball prediction */
 void fn_8867B2D8(struct Gp3Instance *inst, int init);       /* fill ball.event_frame[] from the prediction */
 void fn_8866F090(void *world);
@@ -99,7 +99,7 @@ void gp3_gameplay_frame(struct Gp3Instance *inst_)
      *   limit = world->ball->event_frame[5][0];             // +0xD8
      *   if (limit != 0x7FFFFFFF && limit >= 0 && match->frame == limit &&
      *       (ball->mode == GP3_HASH_LET_IN || ball->mode == GP3_HASH_LET_OUT)) {
-     *       fn_8866EBC0(inst);
+     *       ts4_reset_entries_8866EBC0(inst);
      *       for (p in players) if (p) { c = find_component(p->components, GP3_HASH_RECEIVER); c->vtbl[0x34/4](c); }
      *       fn_886AD278(world->prediction, inst, ball, 1, 1);
      *       fn_8867B2D8(inst, 0);  ball->event_frame[5][0] = limit;      // restored (the call resets it)
@@ -126,7 +126,7 @@ void gp3_gameplay_frame(struct Gp3Instance *inst_)
      *       ball->enabled = 1; ball->new_shot = 1;  copy C -> ball (see Gp3SwingCommand/Gp3BallState);
      *       ball->launch_frame = match->frame; ball->mode = C->mode_80; ball->shot_u_434 = p->swing;
      *       gp3_describe_incoming_shot(opposing_group->info, match->frame, p->index, C->shot_type_hash);
-     *       fn_8866EBC0(inst);
+     *       ts4_reset_entries_8866EBC0(inst);
      *       fn_886AD278(world->prediction, inst, ball, 0, 1);               // re-predict the launched ball
      *       fn_8866F090(world);
      *       team[0..1]->+0x400/+0x404 = ticks of the last two samples;

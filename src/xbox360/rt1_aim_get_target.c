@@ -9,7 +9,7 @@
 
 struct Rt1AimSelectorA;
 /* Aim_StickToQuadState: picks the stick source; true when a direction is selected. */
-ts4_bool fn_886706C8(struct Rt1PlayerCtxA *pc, struct Rt1QuadAimingState *out);
+ts4_bool ts4_pick_aim_vector_886706C8(struct Rt1PlayerCtxA *pc, struct Rt1QuadAimingState *out);
 /* AimSelector_BuildQuad: zone quads interpolated by QuadEfficiency `m`. */
 void fn_88693040(struct Rt1AimSelectorA *self, struct Rt1AimQuad *out, struct Rt1PlayerCtxA *pc, float m);
 /* Aim_QuadPoint: stick direction to the quad edge. */
@@ -22,7 +22,7 @@ void ts4_aim_selector_get_target_886935A0(struct Rt1AimSelectorA *self, struct R
     struct Rt1QuadAimingState *quad_state = &aim->quad;
     struct Rt1AimQuad quad;
 
-    aim->direction_selected = fn_886706C8(pc, quad_state);
+    aim->direction_selected = ts4_pick_aim_vector_886706C8(pc, quad_state);
     fn_88693040(self, &quad, pc, pc->state->aim.quad_efficiency);
     if (!aim->direction_selected)
         *out = quad.center;

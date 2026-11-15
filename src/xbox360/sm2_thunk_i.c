@@ -4,7 +4,7 @@ typedef long long ts4_s64;
 
 extern void fn_886DCFF8(void *a, void *b);
 extern void fn_886CDB48(void *a, int b);
-extern void fn_886CC560(void *a, int b, int c);
+extern void ts4_walk_886CC560(void *a, int b, int c);
 extern void fn_8852CB30(int a, int b, int c, int d);
 extern void ts4_node_dispatch_8860DCF8(void *a, int b, int c, int d);
 extern void fn_886DEDD8(void *a, int b, float x, float y);
@@ -32,7 +32,7 @@ extern char lbl_88D26F54[];
 
 void ts4_call_with_two_fields_886E1840(char *p) { fn_886DCFF8(*(void **)(p + 0x154), *(void **)(p + 0x150)); }
 void ts4_call_with_field28_zero_886D1DB8(char *p) { fn_886CDB48(*(void **)(p + 0x28), 0); }
-void ts4_call_with_first_word_886CC678(int *p, int x) { fn_886CC560(p, *p, x); }
+void ts4_call_with_first_word_886CC678(int *p, int x) { ts4_walk_886CC560(p, *p, x); }
 #define DROP_ARGS_FWD(NAME) \
     void NAME(int a, int b, int c, int d, int e) { fn_8852CB30(b, b, c, e); }
 void ts4_call_with_fields_886E1828(char *p) { fn_886DEDD8(*(void **)(p + 0x154), *(int *)(p + 0x168), *(float *)(p + 0x174), *(float *)(p + 0x178)); }

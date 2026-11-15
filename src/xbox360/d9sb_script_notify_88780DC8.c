@@ -14,7 +14,7 @@ extern double g_ts4_script_constants[];
 extern void *lbl_88D45B0C;
 extern void *lbl_88D459E0;
 extern void *ts4_member_field_get_or0_88838C40(void *p, u32 n);
-extern void fn_88656FD0(void *a, void *b, int c);
+extern void ts4_find_slot_by_id_88656FD0(void *a, void *b, int c);
 
 INL Val *arg_at(Args *a, u32 i)
 {
@@ -42,7 +42,7 @@ u32 NAME(Ctx *c) \
     u32 *pn = &n; \
     void *a = lbl_88D45B0C; \
     if (a && lbl_88D459E0) { \
-        fn_88656FD0(a, ts4_member_field_get_or0_88838C40(lbl_88D459E0, *pn), 0); \
+        ts4_find_slot_by_id_88656FD0(a, ts4_member_field_get_or0_88838C40(lbl_88D459E0, *pn), 0); \
     } \
     return 0; \
 }

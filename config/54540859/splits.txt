@@ -47364,3 +47364,43 @@ src/xbox360/cx34_d.c:
 src/xbox360/cx34_e.c:
 	.pdata      start:0x8812EAB0 end:0x8812EAB8
 	.text       start:0x888C3A40 end:0x888C3AC4
+
+src/xbox360/w9b_a.c:
+	.pdata      start:0x88123040 end:0x88123048
+	.pdata      start:0x88123048 end:0x88123050
+	.text       start:0x88656ED0 end:0x886570B4
+
+src/xbox360/w9b_b.c:
+	.pdata      start:0x88123030 end:0x88123038
+	.pdata      start:0x881244A8 end:0x881244B0
+	.text       start:0x88656B48 end:0x88656C84
+	.text       start:0x8865AF70 end:0x8865B058
+	.text       start:0x88677380 end:0x8867747C
+	.text       start:0x886A6CF8 end:0x886A6E14
+
+src/xbox360/w9c_a.c:
+	.pdata      start:0x88122DE8 end:0x88122DF0
+	.pdata      start:0x88124C28 end:0x88124C30
+	.text       start:0x88651060 end:0x8865115C
+	.text       start:0x886779C0 end:0x88677ABC
+	.text       start:0x886CC560 end:0x886CC678
+
+src/xbox360/w9c_b.c:
+	.pdata      start:0x88123870 end:0x88123878
+	.pdata      start:0x88124C18 end:0x88124C20
+	.text       start:0x886781E0 end:0x886782D0
+	.text       start:0x886CC318 end:0x886CC404
+
+src/xbox360/w9d_88658b90.c:
+	.pdata      start:0x88123160 end:0x88123168
+	.text       start:0x88658B90 end:0x88658C80
+
+src/xbox360/w9d_8866ebc0.c:
+	.pdata      start:0x88123618 end:0x88123620
+	.text       start:0x8866EBC0 end:0x8866ECA8
+
+src/xbox360/w9d_886706c8.c:
+	.text       start:0x886706C8 end:0x886707C8
+
+src/xbox360/w9d_886e7010.c:
+	.text       start:0x886E7010 end:0x886E7110

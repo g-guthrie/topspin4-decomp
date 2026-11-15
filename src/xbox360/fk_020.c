@@ -69,7 +69,7 @@ ts4_word fn_88617D88();
 ts4_word fn_88644990();
 ts4_word ts4_reset_second_vec_8865A7D8();
 ts4_word fn_88660690();
-ts4_word fn_8866EBC0();
+ts4_word ts4_reset_entries_8866EBC0();
 ts4_word ts4_graph_set_find_8866F028();
 ts4_word fn_8866F090();
 ts4_word ts4_reset_and_free_8867C418();
@@ -955,14 +955,14 @@ ts4_word ts4_tailcall_fn_886B0250_886B0410(ts4_word a0)
     return fn_886B0250((ts4_word)a0, (ts4_word)0);
 }
 
-/* Swing_DLL.xex 0x886B1268: call_seq fn_8866EBC0, u32@0x7c, u8@0x42, u32@0x5c, u32@0x20, u32@0x24 */
+/* Swing_DLL.xex 0x886B1268: call_seq ts4_reset_entries_8866EBC0, u32@0x7c, u8@0x42, u32@0x5c, u32@0x20, u32@0x24 */
 ts4_word ts4_call_seq_fn_8866EBC0_886B1268(ts4_word a0)
 {
     ts4_word t3;
     ts4_word t4;
     ts4_word t9;
 
-    fn_8866EBC0();
+    ts4_reset_entries_8866EBC0();
     *(unsigned char *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 124))) + 66) = (unsigned char)1;
     t3 = *(ts4_word *)((char *)(ts4_word)(a0) + 92);
     t4 = *(ts4_word *)((char *)(ts4_word)(t3) + 32);
