@@ -21,7 +21,7 @@ extern double g_ts4_script_constants[];
 extern void *g_ts4_session_state;
 extern Svc *ts4_find_service(u32 id);
 extern Msg *fn_882156B8(void *state, u32 key);
-extern void fn_88151560(void *state, Msg *m);
+extern void ts4_guarded_update_88151560(void *state, Msg *m);
 
 INL Val *arg_at(Args *a, u32 i)
 {
@@ -58,7 +58,7 @@ u32 NAME(Ctx *c) \
             Body *b = m->body; \
             b->slot = slot; \
             b->stamp = *(u64 *)rec; \
-            fn_88151560(st, m); \
+            ts4_guarded_update_88151560(st, m); \
         } \
     } \
     return 0; \

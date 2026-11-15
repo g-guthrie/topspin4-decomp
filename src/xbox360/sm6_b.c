@@ -79,13 +79,13 @@ void *ts4_pick_assign_8815EB28(char *t, char *o)
 
 /* 0x88173D30: find from position; index of the match or -1 */
 typedef struct { char *b, *e; } ts4_range2;
-char *fn_88173D98(char *, char *, void *);
+char *ts4_find_char_88173D98(char *, char *, void *);
 int ts4_find_from_88173D30(ts4_range2 *s, void *x, u32 pos)
 {
     char *e = s->e;
     char *b = s->b;
     if (pos < (u32)(e - b)) {
-        char *r = fn_88173D98(b + pos, e, x);
+        char *r = ts4_find_char_88173D98(b + pos, e, x);
         if (r != e) return r - b;
     }
     return -1;

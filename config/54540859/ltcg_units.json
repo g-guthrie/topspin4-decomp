@@ -40,5 +40,32 @@
   "symbols": {
    "lt1_msg_channel_send_encrypted_8864BE20": 316
   }
+ },
+ {
+  "source": "src/xbox360/cw1_core_ctors.c",
+  "object": "cw1_core_ctors.obj",
+  "context": [
+   "src/xbox360/cw1_ctx_format_text.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_label_init_flags_88151E90": 140,
+   "ts4_label_init_88151F20": 160
+  }
+ },
+ {
+  "source": "src/xbox360/cw1_core_log.c",
+  "object": "cw1_core_log.obj",
+  "context": [
+   "src/xbox360/port1_varargs_forward_833E18F0.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_log_ring_add_88151680": 148
+  }
  }
 ]

@@ -21,7 +21,7 @@ extern Session *g_ts4_session_context;
 extern void *g_ts4_session_state;
 extern Rec *fn_8899F970(void *lobby, int idx);
 extern Msg *fn_882156B8(void *state, u32 key);
-extern void fn_88151560(void *state, Msg *m);
+extern void ts4_guarded_update_88151560(void *state, Msg *m);
 
 INL Val *arg_at(Args *a, u32 i)
 {
@@ -55,7 +55,7 @@ u32 ts4_script_set_slot_stamp_88787EB0(Ctx *c)
             Body *b = m->body;
             b->slot = slot;
             b->stamp = r->stamp;
-            fn_88151560(st, m);
+            ts4_guarded_update_88151560(st, m);
         }
     }
     return 0;
@@ -75,7 +75,7 @@ u32 ts4_script_set_slot_stamp_88788268(Ctx *c)
             Body *b = m->body;
             b->slot = slot;
             b->stamp = r->stamp;
-            fn_88151560(st, m);
+            ts4_guarded_update_88151560(st, m);
         }
     }
     return 0;
@@ -95,7 +95,7 @@ u32 ts4_script_set_slot_stamp_88788620(Ctx *c)
             Body *b = m->body;
             b->slot = slot;
             b->stamp = r->stamp;
-            fn_88151560(st, m);
+            ts4_guarded_update_88151560(st, m);
         }
     }
     return 0;

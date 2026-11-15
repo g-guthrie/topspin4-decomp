@@ -77,7 +77,7 @@ extern char lbl_88D45B20[];
 extern char lbl_88D45B34[];
 extern char lbl_88D45B38[];
 extern char lbl_88D45CC0[];
-ts4_word fn_88151560();
+ts4_word ts4_guarded_update_88151560();
 ts4_word fn_8815D480();
 ts4_word fn_8816C2F0();
 ts4_word fn_8816CAA0();
@@ -1312,7 +1312,7 @@ void ts4_if_call_seq_u32_lbl_88D45B1C_8886B520(ts4_word a0, ts4_word a1, ts4_wor
         t8 = *(ts4_word *)((char *)(ts4_word)(t6) + 8);
         *(ts4_word *)((char *)(ts4_word)(t8) + 20) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(((a1 + 7) << 2)) + a0));
         *(ts4_word *)((char *)(ts4_word)(t8) + 24) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t3) + 16));
-        fn_88151560((ts4_word)t7, (ts4_word)t6);
+        ts4_guarded_update_88151560((ts4_word)t7, (ts4_word)t6);
         fn_888F67B8((ts4_word)a2, (ts4_word)(*(ts4_word *)lbl_88D45B34));
     }
     return;

@@ -93,7 +93,7 @@ ts4_word fn_8818EB10();
 ts4_word fn_8818F1D8();
 ts4_word fn_88199068();
 ts4_word fn_881992A8();
-ts4_word fn_8819ACC8();
+ts4_word ts4_string_copy_with_owner_8819ACC8();
 ts4_word ts4_if_call_seq_u32_off0_8819B0C8();
 ts4_word ts4_if_call_seq_u32_off0_8819C190();
 ts4_word fn_881BD170();

@@ -37,11 +37,11 @@ typedef struct { char *b, *e; } rng_t;
 /* Swing_DLL.xex 0x88162B48: find a sub-range at/after pos; index or -1 */
 int ts4_find_sub_88162B48(rng_t *s, char *a, u32 pos, u32 n) { char *e = s->e; char *b = s->b; if (pos + n <= (u32)(e - b)) { char *r = fn_88168F08(b + pos, e, a, a + n); if (r != e) return r - b; } return -1; }
 void fn_881864B8(void *, void *);
-void fn_881816D8(void *, void *);
+void ts4_destroy_ent16_range_881816D8(void *, void *);
 typedef struct { int a; int b[3]; } e10_t;
 typedef struct { int pad; e10_t *end; } v10_t;
 /* Swing_DLL.xex 0x8817EEB8: copy elements (int + sub-object) from src to dst, then fix up the old tail */
-e10_t *ts4_copy_down_8817EEB8(v10_t *v, e10_t *dst, e10_t *src) { int n = v->end - src; e10_t *d = dst; for (; n > 0; n--) { d->a = src->a; fn_881864B8(d->b, src->b); d++; src++; } fn_881816D8(d, v->end); v->end = d; return dst; }
+e10_t *ts4_copy_down_8817EEB8(v10_t *v, e10_t *dst, e10_t *src) { int n = v->end - src; e10_t *d = dst; for (; n > 0; n--) { d->a = src->a; fn_881864B8(d->b, src->b); d++; src++; } ts4_destroy_ent16_range_881816D8(d, v->end); v->end = d; return dst; }
 
 extern void *lbl_88D45B38;
 typedef unsigned int u32_a;

@@ -66,7 +66,7 @@ extern char lbl_88D45B1C[];
 extern char lbl_88D45B20[];
 ts4_word fn_88150310();
 ts4_word fn_88150600();
-ts4_word fn_88151560();
+ts4_word ts4_guarded_update_88151560();
 ts4_word fn_881542F8();
 ts4_word fn_88157B78();
 ts4_word fn_88157C20();
@@ -2279,7 +2279,7 @@ ts4_word ts4_if_call_seq_u8_off42c_8899A558(ts4_word a0, ts4_word a1, ts4_word a
         return t2;
     }
     t4 = fn_881542F8((ts4_word)(*(ts4_word *)g_ts4_session_state), (ts4_word)((3350265856) | 47176));
-    t6 = fn_88151560((ts4_word)(*(ts4_word *)g_ts4_session_state), (ts4_word)t4);
+    t6 = ts4_guarded_update_88151560((ts4_word)(*(ts4_word *)g_ts4_session_state), (ts4_word)t4);
     return t6;
 }
 

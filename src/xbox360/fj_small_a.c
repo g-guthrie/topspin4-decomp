@@ -97,7 +97,7 @@ extern char * fn_88883CD0(int);
 extern void * ts4_find_service(u32);
 extern void ts4_object_finalize(char *);
 extern void fn_88922B28(char *);
-extern void fn_881B1860(void);
+extern void ts4_lua_call_thunk_881B1860(void);
 extern u32 fn_88836968(int, int, void (*)(void), int, int, u32 *, int);
 extern void fn_881B1818(void);
 extern u32 fn_88374760(char *, int, int, int, int, int, int, int, int);
@@ -109,7 +109,7 @@ extern void fn_8890F1E8(char *);
 extern char * g_ts4_session_context;
 extern void fn_889A4970(char *);
 extern void fn_889A53A8(char *);
-extern void fn_88177110(char *);
+extern void ts4_vec28_trim_88177110(char *);
 extern void fn_88912090(char *);
 extern char lbl_880F96E0;
 extern char lbl_880F9498;
@@ -883,7 +883,7 @@ void ts4_finalize_then_destroy_owned_field0_889285F8(char *a)
 /* Swing_DLL.xex 0x88836B28 */
 u32 ts4_call_with_callback_and_local_word_88836B28(int a, int b, u32 c)
 {
-    return fn_88836968(a, b, fn_881B1860, 0, 0, &c, 4);
+    return fn_88836968(a, b, ts4_lua_call_thunk_881B1860, 0, 0, &c, 4);
 }
 
 /* Swing_DLL.xex 0x88836B68 */
@@ -997,14 +997,14 @@ u32 ts4_call_on_session_field28_if_set_return_zero_887876E0(void)
 /* Swing_DLL.xex 0x887982D0 */
 void ts4_call_on_subobject8_then_self_887982D0(char *a)
 {
-    fn_88177110(a + 8);
+    ts4_vec28_trim_88177110(a + 8);
     fn_88912090(a);
 }
 
 /* Swing_DLL.xex 0x88912A00 */
 void ts4_call_on_subobject8_then_self_88912A00(char *a)
 {
-    fn_88177110(a + 8);
+    ts4_vec28_trim_88177110(a + 8);
     fn_88912090(a);
 }
 

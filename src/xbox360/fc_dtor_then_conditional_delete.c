@@ -5,8 +5,8 @@ void fn_881992A8(void *, void *);
 void *fn_8818BC98(void *);
 void *fn_881909D0(void *);
 void *ts4_if_call_seq_u32_off8_881929F8(void *);
-void *fn_88197A28(void *);
-void *fn_88198068(void *);
+void *ts4_cw5_obj_dtor_88197A28(void *);
+void *ts4_cw5_obj_dtor_88198068(void *);
 void *ts4_call_seq_u32_offc_881CCDF0(void *);
 void *ts4_call_seq_u32_off28_881CD908(void *);
 void *fn_881CEBD0(void *);
@@ -61,10 +61,10 @@ DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_88190978, fn_881909D0)
 DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881929A0, ts4_if_call_seq_u32_off8_881929F8)
 
 /* Swing_DLL.xex 0x881979D0 */
-DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881979D0, fn_88197A28)
+DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881979D0, ts4_cw5_obj_dtor_88197A28)
 
 /* Swing_DLL.xex 0x88198010 */
-DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_88198010, fn_88198068)
+DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_88198010, ts4_cw5_obj_dtor_88198068)
 
 /* Swing_DLL.xex 0x881CD8B0 */
 DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881CD8B0, ts4_call_seq_u32_off28_881CD908)

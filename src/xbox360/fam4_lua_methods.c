@@ -1,7 +1,7 @@
 /* Lua method registration (Swing_DLL.xex 0x88805B48 group).  The table path
    is looked up under the object's context; when missing it is built from the
    context's base path plus TABLE.  Each method is bound as a C closure
-   (thunk fn_881B3080) with the object and the C function as 4-byte upvalues.
+   (thunk ts4_lua_call_thunk_881B3080) with the object and the C function as 4-byte upvalues.
    Strings are the 0x20-byte script string type (fn_881B18E0 construct,
    fn_881B19A0 destroy).  Verified byte-for-byte with tools/fn_check.py. */
 struct ts4_str20 { int f00, f04, f08, f0c, f10, f14, f18, f1c; };
@@ -11,7 +11,7 @@ void fn_881B18E0(struct ts4_str20 *s, void *a, void *b);
 struct ts4_str20 *fn_88837B00(struct ts4_str20 *out, struct ts4_str20 *in, const char *name);
 void fn_881B19A0(struct ts4_str20 *s);
 void fn_88836968(struct ts4_str20 *s, const char *name, void *thunk, void *a, int asz, void *b, int bsz);
-int fn_881B3080();
+int ts4_lua_call_thunk_881B3080();
 static __inline void ts4_str20_init(struct ts4_str20 *s, void *a, void *b)
 {
     s->f08 = 0;
@@ -45,7 +45,7 @@ void ts4_lua_register_methods_##ADDR(struct ts4_lobj *self) \
         void *fn; \
         obj = self; \
         fn = (void *)FN; \
-        fn_88836968(&path, NAME, (void *)fn_881B3080, &obj, 4, &fn, 4); \
+        fn_88836968(&path, NAME, (void *)ts4_lua_call_thunk_881B3080, &obj, 4, &fn, 4); \
     }
 extern char lbl_880E3658[];
 extern char lbl_880E3674[];

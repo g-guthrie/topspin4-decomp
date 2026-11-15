@@ -16,7 +16,7 @@ extern void ts4_call_seq_lbl_88C6E268_88AFF458(void);
 extern void *lbl_88D3EB60;
 extern void fn_8857A1E0(void *);
 extern void ts4_if_call_seq_u32_off0_8864BC08(void *);
-extern void fn_88177110(void *);
+extern void ts4_vec28_trim_88177110(void *);
 extern void fn_88912090(void *);
 
 int ts4_call_889CE9A8(void *x)

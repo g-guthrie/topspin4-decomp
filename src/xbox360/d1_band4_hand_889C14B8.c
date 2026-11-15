@@ -6,7 +6,7 @@ extern int KeTlsAlloc(void);
 extern int lbl_88CACF08;
 extern void fn_88563470(void (*)(void));
 extern void ts4_get_u32_lbl_88CACF08_88AFF4C8(void);
-extern void fn_88177110(void *);
+extern void ts4_vec28_trim_88177110(void *);
 extern void fn_88912090(void *);
 extern void fn_88616A70(void *);
 extern void fn_88935C70(void *);

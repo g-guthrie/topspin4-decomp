@@ -6040,6 +6040,74 @@
       "src/xbox360/t1_000.c": {
         "status": "Matching",
         "source": "xbox360/t1_000.c"
+      },
+      "src/xbox360/cw1_core_ctors.c": {
+        "status": "Matching",
+        "source": "xbox360/cw1_core_ctors.c"
+      },
+      "src/xbox360/cw1_core_dtors.c": {
+        "status": "Matching",
+        "source": "xbox360/cw1_core_dtors.c"
+      },
+      "src/xbox360/cw1_core_lock.cpp": {
+        "status": "Matching",
+        "source": "xbox360/cw1_core_lock.cpp"
+      },
+      "src/xbox360/cw1_core_log.c": {
+        "status": "Matching",
+        "source": "xbox360/cw1_core_log.c"
+      },
+      "src/xbox360/cw2_core_a.c": {
+        "status": "Matching",
+        "source": "xbox360/cw2_core_a.c"
+      },
+      "src/xbox360/cw2_core_b.c": {
+        "status": "Matching",
+        "source": "xbox360/cw2_core_b.c"
+      },
+      "src/xbox360/cw2_core_c.c": {
+        "status": "Matching",
+        "source": "xbox360/cw2_core_c.c"
+      },
+      "src/xbox360/cw2_core_d.cpp": {
+        "status": "Matching",
+        "source": "xbox360/cw2_core_d.cpp"
+      },
+      "src/xbox360/cw2_core_e.c": {
+        "status": "Matching",
+        "source": "xbox360/cw2_core_e.c"
+      },
+      "src/xbox360/cw3_core_helpers.c": {
+        "status": "Matching",
+        "source": "xbox360/cw3_core_helpers.c"
+      },
+      "src/xbox360/cw4_core_a.c": {
+        "status": "Matching",
+        "source": "xbox360/cw4_core_a.c"
+      },
+      "src/xbox360/cw4_core_b.c": {
+        "status": "Matching",
+        "source": "xbox360/cw4_core_b.c"
+      },
+      "src/xbox360/cw5_core_a.c": {
+        "status": "Matching",
+        "source": "xbox360/cw5_core_a.c"
+      },
+      "src/xbox360/cw5_core_b.c": {
+        "status": "Matching",
+        "source": "xbox360/cw5_core_b.c"
+      },
+      "src/xbox360/cw5_core_c.c": {
+        "status": "Matching",
+        "source": "xbox360/cw5_core_c.c"
+      },
+      "src/xbox360/cw6_misc_a.c": {
+        "status": "Matching",
+        "source": "xbox360/cw6_misc_a.c"
+      },
+      "src/xbox360/cw6_vec_tail.c": {
+        "status": "Matching",
+        "source": "xbox360/cw6_vec_tail.c"
       }
     }
   }

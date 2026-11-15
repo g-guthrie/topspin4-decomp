@@ -83,7 +83,7 @@ ts4_word fn_881878A0();
 ts4_word ts4_if_call_seq_u32_off0_8819B0C8();
 ts4_word ts4_call_seq_u32_off0_881B1A98();
 ts4_word ts4_loop_call_seq_u32_off0_881B1B68();
-ts4_word fn_881B1BF8();
+ts4_word ts4_lua_push_wstring_881B1BF8();
 ts4_word fn_881B4740();
 ts4_word fn_881B47A8();
 ts4_word fn_881B9148();

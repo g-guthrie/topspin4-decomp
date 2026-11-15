@@ -35,12 +35,12 @@ extern char lbl_88CACF08[];
 extern char lbl_88D459E8[];
 extern char lbl_88D45A48[];
 ts4_word KeTlsGetValue();
-ts4_word fn_88151560();
+ts4_word ts4_guarded_update_88151560();
 ts4_word fn_88153120();
 ts4_word fn_881542F8();
 ts4_word fn_8815A998();
 ts4_word fn_88165170();
-ts4_word fn_8819B4C8();
+ts4_word ts4_string_assign_concat_8819B4C8();
 ts4_word fn_881BD170();
 ts4_word fn_8841A590();
 ts4_word fn_884A0420();
@@ -138,7 +138,7 @@ ts4_word ts4_loop_get_u32_off0_881977B0(ts4_word a0, ts4_word a1, ts4_word a2)
         p9 = (ts4_word)0;
     }
     t10 = *(ts4_word *)((char *)(ts4_word)(a1) + 0);
-    fn_8819B4C8((ts4_word)a0, (ts4_word)t10, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t10) + -12)), (ts4_word)a2, (ts4_word)p9, (ts4_word)(t5 + 16));
+    ts4_string_assign_concat_8819B4C8((ts4_word)a0, (ts4_word)t10, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t10) + -12)), (ts4_word)a2, (ts4_word)p9, (ts4_word)(t5 + 16));
     return a0;
 }
 
@@ -217,7 +217,7 @@ ts4_word ts4_loop_get_u32_off0_881C2190(ts4_word a0, ts4_word a1, ts4_word a2)
     } else {
         p11 = (ts4_word)0;
     }
-    fn_8819B4C8((ts4_word)a0, (ts4_word)a1, (ts4_word)p11, (ts4_word)t6, (ts4_word)t7, (ts4_word)(t5 + 16));
+    ts4_string_assign_concat_8819B4C8((ts4_word)a0, (ts4_word)a1, (ts4_word)p11, (ts4_word)t6, (ts4_word)t7, (ts4_word)(t5 + 16));
     return a0;
 }
 
@@ -885,7 +885,7 @@ void ts4_if_call_seq_u8_off2c_8893B648(ts4_word a0)
         t5 = *(ts4_word *)((char *)(ts4_word)(t3) + 108);
         if ((ts4_word)t5 == (ts4_word)((2696740864) | 58926) && (int)(*(ts4_word *)((char *)(ts4_word)(t3) + 112)) != 1) {
             t8 = fn_881542F8((ts4_word)(*(ts4_word *)g_ts4_session_state), (ts4_word)((3350265856) | 47176));
-            fn_88151560((ts4_word)a0, (ts4_word)t8);
+            ts4_guarded_update_88151560((ts4_word)a0, (ts4_word)t8);
             t10 = *(ts4_word *)((char *)(ts4_word)(a0) + 32);
             if ((int)t10 >= 0) {
                 t11 = *(ts4_word *)g_ts4_session_context;
@@ -896,7 +896,7 @@ void ts4_if_call_seq_u8_off2c_8893B648(ts4_word a0)
                     t15 = *(ts4_word *)((char *)(ts4_word)(t13) + 808);
                     if ((int)(t10 + 1) < (int)t15) {
                         t17 = fn_88153120((ts4_word)a0, (ts4_word)((3367501824) | 6458));
-                        fn_88151560((ts4_word)a0, (ts4_word)t17);
+                        ts4_guarded_update_88151560((ts4_word)a0, (ts4_word)t17);
                         return;
                     }
                     t16 = *(ts4_word *)((char *)(ts4_word)(t11) + 60);
