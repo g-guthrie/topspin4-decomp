@@ -108,7 +108,7 @@ typedef struct Ts4Stopwatch {
     long long accumulated;
     int running;
 } Ts4Stopwatch;
-extern double fn_8856B2C0(long long ticks);
+extern double __u64tod(long long ticks);
 extern void fn_8857AFF0(long long *out_now);
 
 /* Swing_DLL.xex 0x88193B60: elapsed time of a stopwatch (accumulated + now - start while running) in scaled units. */
@@ -120,7 +120,7 @@ float ts4_stopwatch_elapsed_scaled_88193B60(Ts4Stopwatch *self)
         fn_8857AFF0(&now);
         t += now - self->start;
     }
-    return g_ts4_script_constants[15] * ((float)fn_8856B2C0(t) * lbl_88D459B0);
+    return g_ts4_script_constants[15] * ((float)__u64tod(t) * lbl_88D459B0);
 }
 
 /* ---- accumulator ---- */

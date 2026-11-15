@@ -7276,6 +7276,18 @@
       "src/xbox360/cx38_oc.c": {
         "status": "Matching",
         "source": "xbox360/cx38_oc.c"
+      },
+      "src/xbox360/pl1_clamp_window.c": {
+        "status": "Matching",
+        "source": "xbox360/pl1_clamp_window.c"
+      },
+      "src/xbox360/pl1_engine_exit.c": {
+        "status": "Matching",
+        "source": "xbox360/pl1_engine_exit.c"
+      },
+      "src/xbox360/pl1_step_runner.c": {
+        "status": "Matching",
+        "source": "xbox360/pl1_step_runner.c"
       }
     }
   }

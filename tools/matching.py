@@ -40606,6 +40606,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_check_minute_887CF598": 132},
     },
+    {
+        "source": "src/xbox360/pl1_engine_exit.c",
+        "object": "pl1_engine_exit.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_engine_exit_886E11C8": 348},
+    },
 )
 
 

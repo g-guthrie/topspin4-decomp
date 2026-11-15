@@ -47712,3 +47712,15 @@ src/xbox360/cx38_ltcg_a.c:
 
 src/xbox360/cx38_oc.c:
 	.text       start:0x887CF598 end:0x887CF61C
+
+src/xbox360/pl1_clamp_window.c:
+	.pdata      start:0x88124F30 end:0x88124F38
+	.text       start:0x886D6D18 end:0x886D6EB0
+
+src/xbox360/pl1_engine_exit.c:
+	.pdata      start:0x881251E8 end:0x881251F0
+	.text       start:0x886E11C8 end:0x886E1324
+
+src/xbox360/pl1_step_runner.c:
+	.pdata      start:0x881232F0 end:0x881232F8
+	.text       start:0x8865F618 end:0x8865F858

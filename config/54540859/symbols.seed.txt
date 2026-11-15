@@ -31646,3 +31646,7 @@ ts4_find_name_887C76D8 = .text:0x887C76D8; // type:function size:0x98
 ts4_append_path_887CC320 = .text:0x887CC320; // type:function size:0xA4
 ts4_format_copy_887CCA38 = .text:0x887CCA38; // type:function size:0x5C
 ts4_check_minute_887CF598 = .text:0x887CF598; // type:function size:0x84
+ts4_clamp_window_apply_886D6D18 = .text:0x886D6D18; // type:function size:0x198
+ts4_engine_exit_886E11C8 = .text:0x886E11C8; // type:function size:0x15C
+ts4_step_runner_update_8865F618 = .text:0x8865F618; // type:function size:0x240
+__u64tod = .text:0x8856B2C0; // type:function size:0x28

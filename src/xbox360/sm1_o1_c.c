@@ -26,6 +26,6 @@ extern int fn_883E7028(void *, int);
 int ts4_forward_optional_value_883FF800(void **t, int *a) { if (*t) { int r = fn_883E7028(*t, a ? *a : 0); if (r != 0) return r; } return 0; }
 
 /* 0x883FF460: fn(a) divided by the unsigned count at +0x2c */
-extern double fn_8856B2C0(int);
+extern double __u64tod(int);
 typedef struct Ts4Counter2C { char pad[0x2c]; u32 count; } Ts4Counter2C;
-float ts4_div_by_count_883FF460(Ts4Counter2C *t, int a) { return (float)fn_8856B2C0(a) / (float)(u64)t->count; }
+float ts4_div_by_count_883FF460(Ts4Counter2C *t, int a) { return (float)__u64tod(a) / (float)(u64)t->count; }

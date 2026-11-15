@@ -6,7 +6,7 @@
  *
  * Object map (all offsets measured):
  *   Engine E (vtable 0x880F37A8, ctor fn_886D7878, dtor fn_886D77B8, Update fn_886E5F50, Init fn_886E57A8,
- *             Exit fn_886E11C8; registered under the node type name "SwingAnimationEngine", crc32 0xB7625AE0):
+ *             Exit ts4_engine_exit_886E11C8; registered under the node type name "SwingAnimationEngine", crc32 0xB7625AE0):
  *     +0x28/0x2c/0x30  XData handle of the AnimationData tree      +0x34 -> GamePlay frame block (type 0x5E16CF76)
  *     +0x38 -> per-player records, stride 0x140 (type 0x1E51C496)  +0x3c -> type 0x1367BD6D
  *     +0x40 AodManager*   +0x48 -> AnimationData root "SwingAnimation" (type 0x3A60FEE2)

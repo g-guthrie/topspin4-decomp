@@ -372,3 +372,16 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   always flip together); 0x886CE120, 0x886E3938, 0x88656538 (no pad count or loop/index form flips them).
 - Adjacent-instruction swaps (a `lis`/`li` vs a load, a parameter spill vs a load, `mr r4,r3` vs `mr r31,r3`) and the
   f9/f10/f11 float numbering: no rule found; the forms tried are listed in NM1.md and NM2.md.
+
+## Added from the mid-size pilot (PL1, 330-700 byte functions)
+- A dead `mr r7,r5` before a call: the callee takes that incoming argument as an extra pass-through parameter.
+- `(double)` of an unsigned 64-bit value is a call to `__u64tod` (0x8856B2C0); `(long long)f` gives a bare `fctidz`.
+- Record-vector clear: an inline `destroy(first, last)` called with the parent's fields, then an inline `clear(&vec)`
+  doing `erase(v, v->first, v->last)`; an all-in-one helper swaps two saved registers.
+- Self-relative array loop with `(rel+h)+off` add order: byte-offset counter `for (i = 0; i < 0x70; i += 0x1c)` with `h`
+  block-scoped inside the loop.
+- min as `(n >= *p) ? *p : n` gives `mr rX,p; bge; mr rX,n`.
+- A vector difference whose lanes are read after a call: pass it by pointer to the lane-reading helper.
+- Measured: 3 of 12 random functions of this size matched at 6-16 hand compiles each; 3 more ended 2-7 instructions off
+  on classes with no rule (adjacent swaps, two-register swaps, load/store order); the rest on block layout, global
+  scheduling, multi-site operand order and vector code.
