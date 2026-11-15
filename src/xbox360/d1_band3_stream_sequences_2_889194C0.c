@@ -7,7 +7,7 @@ struct TS4Stream *fn_88938F38(struct TS4Stream *stream, void *value);
 struct TS4Stream *fn_88939288(struct TS4Stream *stream, void *value, unsigned int extra);
 struct TS4Stream *fn_88939470(struct TS4Stream *stream, void *value, unsigned int extra);
 struct TS4Stream *fn_889395D8(struct TS4Stream *stream, void *value);
-struct TS4Stream *fn_88939840(struct TS4Stream *stream, void *value);
+struct TS4Stream *ts4_bits_read_u8_88939840(struct TS4Stream *stream, void *value);
 
 void ts4_stream_sequence_889184D8(void *self, struct TS4Stream *stream)
 {

@@ -237,7 +237,7 @@ ts4_word fn_8892D5F8();
 ts4_word fn_88933EF8();
 ts4_word fn_88936AF0();
 ts4_word fn_88939288();
-ts4_word fn_889393C0();
+ts4_word ts4_bits_write_bits_889393C0();
 ts4_word fn_88995AB8();
 ts4_word ts4_make_by_key_889BD910();
 ts4_word fn_889C14F8();
@@ -5726,7 +5726,7 @@ ts4_word ts4_if_call_seq_u32_off38_889181D0(ts4_word a0)
     return t47;
 }
 
-/* Swing_DLL.xex 0x8891B8E0: loop_get u32@0x0, u32@0xc, u32@lbl_88C6B4AC, vcall, fn_889393C0, u32@0x42c */
+/* Swing_DLL.xex 0x8891B8E0: loop_get u32@0x0, u32@0xc, u32@lbl_88C6B4AC, vcall, ts4_bits_write_bits_889393C0, u32@0x42c */
 ts4_word ts4_loop_get_u32_off0_8891B8E0(ts4_word a0, ts4_word a1)
 {
     ts4_word p8;
@@ -5749,7 +5749,7 @@ ts4_word ts4_loop_get_u32_off0_8891B8E0(ts4_word a0, ts4_word a1)
     t2 = *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 0))) + 12);
     t3 = *(ts4_word *)lbl_88C6B4AC;
     t4 = ((ts4_word (*)(ts4_word))(t2))((ts4_word)a0);
-    fn_889393C0((ts4_word)a1, (ts4_word)t4, (ts4_word)t3);
+    ts4_bits_write_bits_889393C0((ts4_word)a1, (ts4_word)t4, (ts4_word)t3);
     t6 = *(ts4_word *)((char *)(ts4_word)(a0) + 1068);
     t7 = fn_88933EF8((ts4_word)a1, (ts4_word)3);
     if ((ts4_word)(t7 & 0xff) != 0) {
@@ -5787,7 +5787,7 @@ ts4_word ts4_loop_get_u32_off0_8891B8E0(ts4_word a0, ts4_word a1)
     return t32;
 }
 
-/* Swing_DLL.xex 0x8891F628: loop_get u32@0x0, u32@0xc, u32@lbl_88C6B4AC, vcall, fn_889393C0, u32@0x42c */
+/* Swing_DLL.xex 0x8891F628: loop_get u32@0x0, u32@0xc, u32@lbl_88C6B4AC, vcall, ts4_bits_write_bits_889393C0, u32@0x42c */
 ts4_word ts4_loop_get_u32_off0_8891F628(ts4_word a0, ts4_word a1)
 {
     ts4_word p8;
@@ -5809,7 +5809,7 @@ ts4_word ts4_loop_get_u32_off0_8891F628(ts4_word a0, ts4_word a1)
     t2 = *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 0))) + 12);
     t3 = *(ts4_word *)lbl_88C6B4AC;
     t4 = ((ts4_word (*)(ts4_word))(t2))((ts4_word)a0);
-    fn_889393C0((ts4_word)a1, (ts4_word)t4, (ts4_word)t3);
+    ts4_bits_write_bits_889393C0((ts4_word)a1, (ts4_word)t4, (ts4_word)t3);
     t6 = *(ts4_word *)((char *)(ts4_word)(a0) + 1068);
     t7 = fn_88933EF8((ts4_word)a1, (ts4_word)3);
     if ((ts4_word)(t7 & 0xff) != 0) {

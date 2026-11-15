@@ -56,7 +56,7 @@ void ts4_dtor_889A3C20(Cx43Big *o)
 /* 0x889B1320 */
 typedef struct Cx43Wr { void **vt; u8 pad[0x42c - 4]; u8 e[0x38]; u8 pad1[0x50c - 0x464]; u32 w50c; } Cx43Wr;
 extern u32 lbl_88C6B4AC;
-extern void fn_889393C0(void *a, void *b, u32 c);
+extern void ts4_bits_write_bits_889393C0(void *a, void *b, u32 c);
 extern void ts4_if_call_seq_fn_88933EF8_889396A8(void *a, u32 n);
 extern void ts4_if_call_seq_u32_off0_889AFEE8(void *e, void *a);
 void ts4_write_entries_889B1320(Cx43Wr *self, void *a)
@@ -64,7 +64,7 @@ void ts4_write_entries_889B1320(Cx43Wr *self, void *a)
     u32 g = lbl_88C6B4AC;
     u32 i;
     u8 *p;
-    fn_889393C0(a, ((void *(*)(void *))self->vt[3])(self), g);
+    ts4_bits_write_bits_889393C0(a, ((void *(*)(void *))self->vt[3])(self), g);
     ts4_if_call_seq_fn_88933EF8_889396A8(a, self->w50c);
     i = 0;
     if (self->w50c > 0) {

@@ -41403,6 +41403,45 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_pick_target_88660F70": 212},
     },
+    {
+        "source": "src/xbox360/cx51_a.c",
+        "object": "cx51_a.obj",
+        "symbols": {
+            "ts4_add_child_88934AC8": 160,
+            "ts4_adopt_child_889332B8": 164,
+            "ts4_bits_read_u16_88939738": 160,
+            "ts4_bits_read_u8_88939840": 116,
+            "ts4_bits_write_bits_889393C0": 172,
+            "ts4_bits_write_signed_88939548": 144,
+            "ts4_endpoint_init_88932418": 128,
+            "ts4_flagged_object_dtor_8893BDE0": 128,
+            "ts4_obj80_ctor_8892A0E0": 112,
+            "ts4_post_message_889387F0": 140,
+            "ts4_reset_and_notify_8892F1C0": 128,
+            "ts4_wstr_mask_88930D20": 144,
+        },
+    },
+    {
+        "source": "src/xbox360/cx52_ctor.c",
+        "object": "cx52_ctor.obj",
+        "symbols": {
+            "ts4_object_ctor_887E9600": 60,
+            "ts4_object_ctor_887EA150": 76,
+            "ts4_object_ctor_887FC040": 92,
+        },
+    },
+    {
+        "source": "src/xbox360/cx52_plain.c",
+        "object": "cx52_plain.obj",
+        "symbols": {
+            "ts4_release_ref_887D4B98": 108,
+            "ts4_zero_record_887D55E0": 68,
+            "ts4_lookup_with_scratch_887DACE0": 112,
+            "ts4_attach_node_887E69C8": 132,
+            "ts4_lookup_is_zero_887EE5A0": 56,
+            "ts4_apply_children_887F9DC0": 120,
+        },
+    },
 )
 
 

@@ -9,7 +9,7 @@ typedef unsigned int u32;
 #endif
 
 extern void *fn_889395D8(void *s, u32 *v);
-extern void *fn_88939840(void *s, u8 *v);
+extern void *ts4_bits_read_u8_88939840(void *s, u8 *v);
 extern void *fn_88938F38(void *s, u8 *buf, int n);
 extern void fn_88933C58(void *p);
 extern void ts4_if_call_seq_fn_88933EF8_889397D8(void *p, u16 v);
@@ -58,7 +58,7 @@ void ts4_msg_read_fields_a_8893BBD8(Cx36Msg *m, void *stream)
 {
     u8 *name = &m->b431;
     void *s = fn_889395D8(stream, &m->w42c);
-    s = fn_88939840(s, &m->b430);
+    s = ts4_bits_read_u8_88939840(s, &m->b430);
     fn_88938F38(s, name, 0x100);
 }
 #endif

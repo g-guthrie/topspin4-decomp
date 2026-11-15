@@ -92,7 +92,7 @@ void ts4_store_scaled_ratio_and_update_888C1990(char *self)
     fn_888C1910(self);
 }
 
-extern void fn_889393C0(void *self, u32 value, int n);
+extern void ts4_bits_write_bits_889393C0(void *self, u32 value, int n);
 
 typedef struct pc4_mode_holder {
     char pad_00[0xC];
@@ -103,7 +103,7 @@ typedef struct pc4_mode_holder {
 void *ts4_set_scaled_or_default_mode_8893C880(pc4_mode_holder *self, float x)
 {
     if (x >= lbl_8814B440 && x <= g_ts4_script_constants[0]) {
-        fn_889393C0(self, (u32)(x * POOLD(0x338)), 10);
+        ts4_bits_write_bits_889393C0(self, (u32)(x * POOLD(0x338)), 10);
     } else if (self->mode == 0) {
         self->mode = 3;
     }

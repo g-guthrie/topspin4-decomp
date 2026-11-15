@@ -94,7 +94,7 @@ ts4_word fn_88926A70();
 ts4_word fn_88926B40();
 ts4_word fn_8892F328(ts4_word);
 ts4_word fn_889395D8(ts4_word, ts4_word);
-ts4_word fn_88939738(ts4_word, ts4_word);
+ts4_word ts4_bits_read_u16_88939738(ts4_word, ts4_word);
 ts4_word fn_88941780(ts4_word);
 ts4_word fn_889461A8(ts4_word);
 ts4_word ts4_find_service(ts4_word);
@@ -1445,19 +1445,19 @@ void ts4_addr_lbl_880D60C0_88934978(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x8893A9A0: tailcall fn_88939738 */
+/* Swing_DLL.xex 0x8893A9A0: tailcall ts4_bits_read_u16_88939738 */
 ts4_word ts4_tailcall_fn_88939738_8893A9A0(ts4_word a0, ts4_word a1)
 {
-    return fn_88939738((ts4_word)a1, (ts4_word)a0);
+    return ts4_bits_read_u16_88939738((ts4_word)a1, (ts4_word)a0);
 }
 
-/* Swing_DLL.xex 0x8893BFC8: call_seq fn_889395D8, fn_88939738 */
+/* Swing_DLL.xex 0x8893BFC8: call_seq fn_889395D8, ts4_bits_read_u16_88939738 */
 ts4_word ts4_call_seq_fn_889395D8_8893BFC8(ts4_word a0, ts4_word a1)
 {
     ts4_word t2;
 
     fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 1068));
-    t2 = fn_88939738((ts4_word)a1, (ts4_word)(a0 + 1072));
+    t2 = ts4_bits_read_u16_88939738((ts4_word)a1, (ts4_word)(a0 + 1072));
     return t2;
 }
 

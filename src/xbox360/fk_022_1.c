@@ -168,7 +168,7 @@ ts4_word fn_887D87C0();
 ts4_word fn_887D9C90();
 ts4_word fn_887DA038();
 ts4_word fn_887DAC00();
-ts4_word fn_887DACE0();
+ts4_word ts4_lookup_with_scratch_887DACE0();
 ts4_word fn_887DC1F0();
 ts4_word fn_887DC2D0();
 ts4_word fn_887DC338();

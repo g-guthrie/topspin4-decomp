@@ -165,7 +165,7 @@ ts4_word fn_887D87C0();
 ts4_word fn_887D9C90();
 ts4_word fn_887DA038();
 ts4_word fn_887DAC00();
-ts4_word fn_887DACE0();
+ts4_word ts4_lookup_with_scratch_887DACE0();
 ts4_word fn_887DC1F0();
 ts4_word fn_887DC2D0();
 ts4_word fn_887DC338();
@@ -1708,7 +1708,7 @@ ts4_word ts4_if_call_seq_fn_887DAC00_887DB670(ts4_word a0, ts4_word a1, ts4_word
     return t3;
 }
 
-/* Swing_DLL.xex 0x887DB6B0: if_call_seq fn_887DACE0, ts4_destroy_owned_object */
+/* Swing_DLL.xex 0x887DB6B0: if_call_seq ts4_lookup_with_scratch_887DACE0, ts4_destroy_owned_object */
 ts4_word ts4_if_call_seq_fn_887DACE0_887DB6B0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3)
 {
     ts4_word loc50[3];
@@ -1718,7 +1718,7 @@ ts4_word ts4_if_call_seq_fn_887DACE0_887DB6B0(ts4_word a0, ts4_word a1, ts4_word
     loc50[0] = (ts4_word)0;
     loc50[1] = (ts4_word)0;
     loc50[2] = (ts4_word)0;
-    t1 = fn_887DACE0((ts4_word)a0, (ts4_word)(ts4_word)&loc50[0], (ts4_word)a1, (ts4_word)a2, (ts4_word)a3);
+    t1 = ts4_lookup_with_scratch_887DACE0((ts4_word)a0, (ts4_word)(ts4_word)&loc50[0], (ts4_word)a1, (ts4_word)a2, (ts4_word)a3);
     t2 = loc50[0];
     if ((ts4_word)t2 != 0) {
         ts4_destroy_owned_object((ts4_word)t2);

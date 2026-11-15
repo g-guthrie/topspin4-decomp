@@ -35,7 +35,7 @@ void ts4_cx42_e_8899CAE0(u32 *out, u8 *o, u32 key)
     }
     *out = W(lbl_88D45B1C, 0x27c);
 }
-extern void fn_88930D20(u32 a);
+extern void ts4_wstr_mask_88930D20(u32 a);
 extern void fn_88930C60(u32 a);
 void ts4_cx42_i_889967F0(u8 *unused, u8 *o)
 {
@@ -46,7 +46,7 @@ void ts4_cx42_i_889967F0(u8 *unused, u8 *o)
         do {
             u8 *tab = (u8 *)*(u32 *)((u8 *)W(o, 0xdb8) + 2);
             if ((int)W(tab, k) != 0) {
-                if (B(f, 8) != 0) fn_88930D20(W(f, 0));
+                if (B(f, 8) != 0) ts4_wstr_mask_88930D20(W(f, 0));
                 else fn_88930C60(W(f, 0));
             }
             n--; f += 0x110; k += 4;

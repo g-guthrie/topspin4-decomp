@@ -79,7 +79,7 @@ ts4_word fn_88933EF8();
 ts4_word ts4_dispatch_to_channel_889340B0();
 ts4_word fn_88934990();
 ts4_word fn_88936AF0();
-ts4_word fn_889393C0();
+ts4_word ts4_bits_write_bits_889393C0();
 ts4_word fn_889396A8();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy

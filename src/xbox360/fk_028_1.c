@@ -123,7 +123,7 @@ ts4_word ts4_send_empty_message_88937A00();
 ts4_word fn_88937A88();
 ts4_word fn_88938660();
 ts4_word fn_88938F38();
-ts4_word fn_889393C0();
+ts4_word ts4_bits_write_bits_889393C0();
 ts4_word fn_88939470();
 ts4_word fn_889395D8();
 ts4_word fn_889396A8();
