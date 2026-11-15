@@ -111,7 +111,7 @@ ts4_word fn_8890DDA8();
 ts4_word ts4_vec16_clear_8890E088();
 ts4_word fn_8892AFF0();
 ts4_word fn_8899F760();
-ts4_word fn_889BD910();
+ts4_word ts4_make_by_key_889BD910();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
 #endif
@@ -643,10 +643,10 @@ ts4_word ts4_get_u32_off0_8864B198(ts4_word a0)
     return RtlEnterCriticalSection((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 0)));
 }
 
-/* Swing_DLL.xex 0x8864B460: tailcall fn_889BD910 */
+/* Swing_DLL.xex 0x8864B460: tailcall ts4_make_by_key_889BD910 */
 ts4_word ts4_tailcall_fn_889BD910_8864B460(ts4_word a0)
 {
-    return fn_889BD910((ts4_word)a0, (ts4_word)0);
+    return ts4_make_by_key_889BD910((ts4_word)a0, (ts4_word)0);
 }
 
 /* Swing_DLL.xex 0x8864BB40: if_call_seq u32@0x44, u32@0x0, RtlEnterCriticalSection, ts4_msg_pool_service_get_8864DFF0, fn_8899F760, fn_88151A70 */

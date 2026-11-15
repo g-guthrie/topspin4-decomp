@@ -1399,5 +1399,19 @@
   "symbols": {
    "ts4_init_state_8864A920": 164
   }
+ },
+ {
+  "source": "src/xbox360/cx43_f.c",
+  "object": "cx43_f.obj",
+  "context": [
+   "src/xbox360/cw1_ctx_format_text.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_lookup_by_index_889A5510": 132,
+   "ts4_show_label_889B3128": 140
+  }
  }
 ]

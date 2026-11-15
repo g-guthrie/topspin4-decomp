@@ -40750,6 +40750,134 @@ MATCHING_UNITS = (
             "ts4_alloc_item_88646FD0": 172,
         },
     },
+    {
+        "source": "src/xbox360/cx42_a.c",
+        "object": "cx42_a.obj",
+        "symbols": {
+            "ts4_cx42_ptr_nz_8899D3B0": 44,
+            "ts4_cx42_eq_8899F8F0": 64,
+            "ts4_cx42_same_8899C870": 60,
+            "ts4_cx42_setall_8899F930": 64,
+            "ts4_cx42_clrall_8899C5F8": 68,
+            "ts4_cx42_init_889955F0": 72,
+            "ts4_runtime_process_record_family_98000": 72,
+            "ts4_runtime_process_record_family_98048": 72,
+            "ts4_runtime_process_record_family_98090": 72,
+            "ts4_cx42_findw_8899C8B0": 72,
+            "ts4_cx42_a_88995490": 76,
+            "ts4_cx42_d_8899C668": 76,
+            "ts4_cx42_i_8899CB48": 92,
+            "ts4_cx42_g_8899B6B8": 88,
+            "ts4_cx42_j_8899C498": 84,
+        },
+    },
+    {
+        "source": "src/xbox360/cx42_b.c",
+        "object": "cx42_b.obj",
+        "symbols": {
+            "ts4_cx42_b_8899D750": 96,
+            "ts4_cx42_e_8899CAE0": 104,
+            "ts4_cx42_i_889967F0": 112,
+            "ts4_cx42_c_88996B28": 104,
+            "ts4_cx42_d_88996B90": 108,
+        },
+    },
+    {
+        "source": "src/xbox360/cx42_c.c",
+        "object": "cx42_c.obj",
+        "symbols": {
+            "ts4_cx42_copy_block_8899DC40": 116,
+            "ts4_cx42_poll_88995638": 120,
+            "ts4_cx42_overlapped_88996C00": 144,
+        },
+    },
+    {
+        "source": "src/xbox360/cx42_d.c",
+        "object": "cx42_d.obj",
+        "symbols": {
+            "ts4_cx42_signal_flag2_8899C348": 52,
+            "ts4_cx42_signal_if_set_88994E10": 56,
+            "ts4_cx42_signal_if_set_8899C380": 56,
+            "ts4_cx42_scaled_sq_8899C758": 148,
+            "ts4_cx42_scaled_sqrt_8899C7F0": 128,
+            "ts4_cx42_overlapped_88996C90": 148,
+            "ts4_cx42_alloc_overlapped_88996860": 168,
+        },
+    },
+    {
+        "source": "src/xbox360/cx42_e.c",
+        "object": "cx42_e.obj",
+        "symbols": {
+            "ts4_cx42_zero_bytes_88994CA0": 32,
+            "ts4_cx42_query_mask_889975D0": 172,
+            "ts4_cx42_overlapped_88996908": 188,
+        },
+    },
+    {
+        "source": "src/xbox360/cx43_a.c",
+        "object": "cx43_a.obj",
+        "symbols": {"ts4_find_alt_entry_889A5598": 76},
+    },
+    {
+        "source": "src/xbox360/cx43_b.c",
+        "object": "cx43_b.obj",
+        "symbols": {"ts4_flagged_object_ctor_889A0FB8": 112},
+    },
+    {
+        "source": "src/xbox360/cx43_c.c",
+        "object": "cx43_c.obj",
+        "symbols": {
+            "ts4_load_entries_889B12C0": 96,
+            "ts4_wait_889BCB10": 112,
+            "ts4_grid_valid_889A0478": 116,
+        },
+    },
+    {
+        "source": "src/xbox360/cx43_d.c",
+        "object": "cx43_d.obj",
+        "symbols": {
+            "ts4_apply_name_889BD188": 128,
+            "ts4_locked_set_889AC440": 112,
+        },
+    },
+    {
+        "source": "src/xbox360/cx43_e.c",
+        "object": "cx43_e.obj",
+        "symbols": {
+            "ts4_post_event_message_889A4028": 148,
+            "ts4_forward_message_889A55E8": 136,
+            "ts4_send_message_889A5080": 152,
+            "ts4_send_message_889A53A8": 152,
+        },
+    },
+    {
+        "source": "src/xbox360/cx43_g.c",
+        "object": "cx43_g.obj",
+        "symbols": {"ts4_load_columns_889A7788": 144},
+    },
+    {
+        "source": "src/xbox360/cx43_h.c",
+        "object": "cx43_h.obj",
+        "symbols": {
+            "ts4_online_forfeit_in_lobby": 140,
+            "ts4_title_server_logout": 132,
+        },
+    },
+    {
+        "source": "src/xbox360/cx43_i.c",
+        "object": "cx43_i.obj",
+        "symbols": {"ts4_send_empty_889B2F08": 160},
+    },
+    {
+        "source": "src/xbox360/cx43_k.c",
+        "object": "cx43_k.obj",
+        "symbols": {"ts4_make_by_key_889BD910": 156},
+    },
+    {
+        "source": "src/xbox360/cx43_l.c",
+        "object": "cx43_l.obj",
+        "symbols": {"ts4_renumber_889A4888": 132},
+    },
 )
 
 

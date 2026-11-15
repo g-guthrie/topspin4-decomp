@@ -5,7 +5,7 @@
 extern void fn_881B9148(void *);
 extern void fn_88617D28(void *);
 extern void ts4_call_seq_u32_lbl_88D45B20_886496F0(void *);
-extern void fn_889BD910(void *, int);
+extern void ts4_make_by_key_889BD910(void *, int);
 extern char lbl_880C88D9[];
 extern char lbl_880C88DA[];
 extern char lbl_880D6B70[];

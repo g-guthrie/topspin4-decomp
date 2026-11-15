@@ -51,7 +51,7 @@ extern void *lbl_88D45AC8, *lbl_88D45AC4, *lbl_88D45AB4, *lbl_88D45AB0;
 extern void fn_88933B20(void *, int, void *);
 extern void fn_8893DB88(void *, void *);
 extern void fn_8893D788(void *, void *, void *);
-extern int fn_889A0478(void *);
+extern int ts4_grid_valid_889A0478(void *);
 extern void *g_ts4_session_context;
 extern void *fn_881AC7D0(void *, u32 *);
 extern void *ts4_find_record_by_key_881AC778(void *, u32 *);
@@ -93,7 +93,7 @@ extern void fn_88947E40(void *, u64, int);
 extern u32 ts4_get_u32__imp_KeTimeStampBundle_8857B830(void);
 extern float fn_88771618(void *, int);
 extern int ts4_obj_sub_vcall_count_887E9778(void *);
-extern int fn_88996860(void);
+extern int ts4_cx42_alloc_overlapped_88996860(void);
 
 /* 0x887CF258: bounds-checked (0..3) pointer slot at +8; returns byte field +0x28 of the slot. */
 char *ts4_slot_byte_field28_887CF258(char *self, int i)
@@ -162,7 +162,7 @@ bool ts4_global_helper_positive_8877C318(void)
 /* 0x8899DCB8: -1 if helper returned -1, else 0. */
 int ts4_helper_is_minus1_mask_8899DCB8(void)
 {
-    int r = fn_88996860() + 1;
+    int r = ts4_cx42_alloc_overlapped_88996860() + 1;
     return r ? 0 : -1;
 }
 /* Linear searches / fills over [begin,end) ranges stored in the object. */

@@ -210,7 +210,7 @@ void fn_88943390(void);
 void fn_8894A840(void);
 void fn_8899F760(void);
 void fn_889BD8B0(void);
-void fn_889BD910(void);
+void ts4_make_by_key_889BD910(void);
 void ts4_object_finalize(void);
 void ts4_resume_thread(void);
 void ts4_tsu_notify_object(void);
@@ -291,7 +291,7 @@ TS4_FORWARD(885DA210, ts4_get_u32_off1c_885DA1A8)
 TS4_FORWARD(885DBBA8, fn_8856C298)
 TS4_FORWARD(885F2BF8, fn_885F2870)
 TS4_FORWARD(885FC4F8, fn_88603F38)
-TS4_FORWARD(88600D78, fn_889BD910)
+TS4_FORWARD(88600D78, ts4_make_by_key_889BD910)
 TS4_FORWARD(88600D80, fn_889BD8B0)
 TS4_FORWARD(88602050, fn_88603F38)
 TS4_FORWARD(88603348, fn_88603F38)

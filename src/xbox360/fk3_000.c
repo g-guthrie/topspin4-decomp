@@ -239,7 +239,7 @@ ts4_word fn_88936AF0();
 ts4_word fn_88939288();
 ts4_word fn_889393C0();
 ts4_word fn_88995AB8();
-ts4_word fn_889BD910();
+ts4_word ts4_make_by_key_889BD910();
 ts4_word fn_889C14F8();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
@@ -3564,7 +3564,7 @@ void ts4_get_88644DC8(ts4_word a0, __vector4 vp1)
     return;
 }
 
-/* Swing_DLL.xex 0x8864C0D0: if_call_seq fn_889BD910, u32@0x4, u32@0x24, u16@0xc, u64@0x30, u64@0x20 */
+/* Swing_DLL.xex 0x8864C0D0: if_call_seq ts4_make_by_key_889BD910, u32@0x4, u32@0x24, u16@0xc, u64@0x30, u64@0x20 */
 ts4_word ts4_if_call_seq_fn_889BD910_8864C0D0(ts4_word a0, ts4_word a1)
 {
     ts4_word p9;
@@ -3572,7 +3572,7 @@ ts4_word ts4_if_call_seq_fn_889BD910_8864C0D0(ts4_word a0, ts4_word a1)
     ts4_word t2;
     ts4_word t5;
 
-    t1 = fn_889BD910((ts4_word)28, (ts4_word)0);
+    t1 = ts4_make_by_key_889BD910((ts4_word)28, (ts4_word)0);
     if ((ts4_word)t1 == 0) {
         p9 = (ts4_word)-1;
     } else {
@@ -3591,7 +3591,7 @@ ts4_word ts4_if_call_seq_fn_889BD910_8864C0D0(ts4_word a0, ts4_word a1)
     return p9;
 }
 
-/* Swing_DLL.xex 0x8864C6A8: if_call_seq u32@0x18, u32@0x38, ts4_crc32_guarded_8864B2C8, u32@0x14, fn_889BD910, u32@0x4 */
+/* Swing_DLL.xex 0x8864C6A8: if_call_seq u32@0x18, u32@0x38, ts4_crc32_guarded_8864B2C8, u32@0x14, ts4_make_by_key_889BD910, u32@0x4 */
 ts4_word ts4_if_call_seq_u32_off18_8864C6A8(ts4_word a0, ts4_word a1)
 {
     ts4_word t1;
@@ -3603,7 +3603,7 @@ ts4_word ts4_if_call_seq_u32_off18_8864C6A8(ts4_word a0, ts4_word a1)
     t1 = *(ts4_word *)((char *)(ts4_word)(a1) + 24);
     t3 = ts4_crc32_guarded_8864B2C8((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 56)), (ts4_word)t1);
     *(ts4_word *)((char *)(ts4_word)(a1) + 20) = (ts4_word)t3;
-    t4 = fn_889BD910((ts4_word)27, (ts4_word)0);
+    t4 = ts4_make_by_key_889BD910((ts4_word)27, (ts4_word)0);
     if ((ts4_word)t4 == 0) {
         return -1;
     }
@@ -6517,13 +6517,13 @@ ts4_word ts4_loop_get_u32_g_ts4_online_state_889A2750(int a0)
     return 0;
 }
 
-/* Swing_DLL.xex 0x889BFB60: if_call_seq fn_889BD910, u32@0x0, u16@0xc, u64@0x8, u64@0x10, fn_8864BBB0 */
+/* Swing_DLL.xex 0x889BFB60: if_call_seq ts4_make_by_key_889BD910, u32@0x0, u16@0xc, u64@0x8, u64@0x10, fn_8864BBB0 */
 ts4_word ts4_if_call_seq_fn_889BD910_889BFB60(ts4_word a0, ts4_word a1)
 {
     ts4_word p5;
     ts4_word t1;
 
-    t1 = fn_889BD910((ts4_word)1536, (ts4_word)0);
+    t1 = ts4_make_by_key_889BD910((ts4_word)1536, (ts4_word)0);
     if ((ts4_word)t1 == 0) {
         p5 = (ts4_word)-1;
     } else {
@@ -6535,13 +6535,13 @@ ts4_word ts4_if_call_seq_fn_889BD910_889BFB60(ts4_word a0, ts4_word a1)
     return p5;
 }
 
-/* Swing_DLL.xex 0x889BFBD0: if_call_seq fn_889BD910, u32@0x0, u16@0xc, u64@0x8, u64@0x10, fn_8864BBB0 */
+/* Swing_DLL.xex 0x889BFBD0: if_call_seq ts4_make_by_key_889BD910, u32@0x0, u16@0xc, u64@0x8, u64@0x10, fn_8864BBB0 */
 ts4_word ts4_if_call_seq_fn_889BD910_889BFBD0(ts4_word a0, ts4_word a1)
 {
     ts4_word p5;
     ts4_word t1;
 
-    t1 = fn_889BD910((ts4_word)1, (ts4_word)0);
+    t1 = ts4_make_by_key_889BD910((ts4_word)1, (ts4_word)0);
     if ((ts4_word)t1 == 0) {
         p5 = (ts4_word)-1;
     } else {
@@ -6553,14 +6553,14 @@ ts4_word ts4_if_call_seq_fn_889BD910_889BFBD0(ts4_word a0, ts4_word a1)
     return p5;
 }
 
-/* Swing_DLL.xex 0x889C0778: if_call_seq fn_889BD910, u32@0x0, u16@0x18, u16@0x10, u16@0x20, u16@0x12 */
+/* Swing_DLL.xex 0x889C0778: if_call_seq ts4_make_by_key_889BD910, u32@0x0, u16@0x18, u16@0x10, u16@0x20, u16@0x12 */
 ts4_word ts4_if_call_seq_fn_889BD910_889C0778(ts4_word a0, ts4_word a1)
 {
     ts4_word t1;
     unsigned short t6;
     ts4_word t7;
 
-    t1 = fn_889BD910((ts4_word)23, (ts4_word)0);
+    t1 = ts4_make_by_key_889BD910((ts4_word)23, (ts4_word)0);
     if ((ts4_word)t1 == 0) {
         return -1;
     }
@@ -6570,7 +6570,7 @@ ts4_word ts4_if_call_seq_fn_889BD910_889C0778(ts4_word a0, ts4_word a1)
     ts4_field_set_string_885F8540((ts4_word)t1, (ts4_word)(a1 + 20));
     t6 = *(unsigned short *)((char *)(ts4_word)(a1) + 18);
     if ((ts4_word)t6 != 0) {
-        t7 = fn_889BD910((ts4_word)24, (ts4_word)0);
+        t7 = ts4_make_by_key_889BD910((ts4_word)24, (ts4_word)0);
         ts4_field_set_string_885FFC30((ts4_word)t7, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 40)));
         ts4_field_set_string_885FFCB0((ts4_word)t7, (ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 40)) + 17));
         *(ts4_word *)((char *)(ts4_word)(t7) + 12) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 40))) + 36));

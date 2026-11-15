@@ -108,7 +108,7 @@ extern void fn_8890DDA8(char *);
 extern void ts4_obj44_dtor_8890F1E8(char *);
 extern char * g_ts4_session_context;
 extern void fn_889A4970(char *);
-extern void fn_889A53A8(char *);
+extern void ts4_send_message_889A53A8(char *);
 extern void ts4_vec28_trim_88177110(char *);
 extern void ts4_hub_delete_all_88912090(char *);
 extern char lbl_880F96E0;
@@ -233,7 +233,7 @@ extern char * fn_885643D0(int);
 extern u32 fn_888364F8(int, int, u32 *);
 extern void fn_884259B8(void);
 extern void fn_889D0020(void);
-extern void fn_889AC440(void);
+extern void ts4_locked_set_889AC440(void);
 extern void fn_889AC4B0(void);
 extern void * lbl_88C6CBFC;
 extern u32 ts4_if_call_seq_u32_off70_887961A0(int, void *, int);
@@ -989,7 +989,7 @@ u32 ts4_call_on_session_field28_if_set_return_zero_88787590(void)
 u32 ts4_call_on_session_field28_if_set_return_zero_887876E0(void)
 {
     char *p = LP(g_ts4_session_context, 0x1c);
-    if (p) fn_889A53A8(p);
+    if (p) ts4_send_message_889A53A8(p);
     return 0;
 }
 
@@ -3138,7 +3138,7 @@ void ts4_tail_call_noargs_889D01F0(void)
 /* Swing_DLL.xex 0x889ACC18 */
 void ts4_tail_call_noargs_b_889ACC18(void)
 {
-    fn_889AC440();
+    ts4_locked_set_889AC440();
 }
 
 /* Swing_DLL.xex 0x889ACC88 */
