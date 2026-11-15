@@ -48949,3 +48949,7 @@ src/xbox360/me_refresh_timing_pair_886D8928.c:
 
 src/xbox360/me_ctor_two_tables_8869D000.c:
 	.text       start:0x8869D000 end:0x8869D0C4
+
+src/xbox360/me_restart_named_endpoint_8864D0A0.c:
+	.pdata      start:0x88122C70 end:0x88122C78
+	.text       start:0x8864D0A0 end:0x8864D17C

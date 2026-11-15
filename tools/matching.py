@@ -41882,6 +41882,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_ctor_two_tables_8869D000": 196},
     },
+    {
+        "source": "src/xbox360/me_restart_named_endpoint_8864D0A0.c",
+        "object": "me_restart_named_endpoint_8864D0A0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_restart_named_endpoint_8864D0A0": 220},
+    },
 )
 
 

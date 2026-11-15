@@ -8116,6 +8116,10 @@
       "src/xbox360/me_ctor_two_tables_8869D000.c": {
         "status": "Matching",
         "source": "xbox360/me_ctor_two_tables_8869D000.c"
+      },
+      "src/xbox360/me_restart_named_endpoint_8864D0A0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_restart_named_endpoint_8864D0A0.c"
       }
     }
   }

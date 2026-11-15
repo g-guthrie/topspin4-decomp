@@ -32136,3 +32136,4 @@ ts4_copy_record_positions_88645AD8 = .text:0x88645AD8; // type:function size:0xC
 ts4_edge_point_at_x_8867C4E8 = .text:0x8867C4E8; // type:function size:0xC0
 ts4_refresh_timing_pair_886D8928 = .text:0x886D8928; // type:function size:0xC0
 ts4_ctor_two_tables_8869D000 = .text:0x8869D000; // type:function size:0xC4
+ts4_restart_named_endpoint_8864D0A0 = .text:0x8864D0A0; // type:function size:0xDC
