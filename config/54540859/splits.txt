@@ -46088,3 +46088,6 @@ src/xbox360/fp1_anim_busy_frames.cpp:
 
 src/xbox360/fp1_layer_time_warp.c:
 	.text       start:0x886D1408 end:0x886D148C
+
+src/xbox360/pp1_value_integrate_rate.c:
+	.text       start:0x888ADD78 end:0x888ADDC8

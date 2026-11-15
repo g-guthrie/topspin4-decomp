@@ -183,8 +183,9 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   `float f(float a,float b,float c,float lo){ float v=a*b+c; return (v-lo >= kZero) ? v : lo; }`
 - Max written as a helper `(a - b >= kZero) ? a : b` and called as `max(0, x)` gives the target's `fneg` before `fcmpu`.
   Nest the helpers (`min(max(x, base), limit)`); two separate select statements turn the first into a branch.
-- LTCG route: the select table and constants are addressed off the module constant pool, so add
-  `src/xbox360/fp1_pool_primer.c` as context; it reproduces the first 0x68 bytes of the pool layout. Constants beyond
-  +0x68 (e.g. 30.0f at +0x42c) are not covered yet.
+- LTCG route: the select table and constants are addressed off the module constant pool (0xA70 bytes). Add
+  `src/xbox360/pp1_pool_primer.c` as the LAST `context` entry; it reproduces the whole pool layout, so any constant
+  lands at its original offset (notes: docs/agents/near-misses/PP1.md; regenerate with tools/ltcg_pool_primer.py).
+  `fp1_pool_primer.c` is the older version covering only the first 0x68 bytes.
 - Worked examples: src/xbox360/fp1_anim_busy_frames.cpp, src/xbox360/fp1_layer_time_warp.c. 131 unmatched functions
   (179 KB) contain both patterns; 46 of them (50 KB) are in the gameplay range.

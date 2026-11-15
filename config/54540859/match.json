@@ -32050,15 +32050,16 @@
     {"source":"src/xbox360/w4b_c.c","symbol":"ts4_tick_selection_886A5C00","text_range":"0x886A5C00-0x886A5C88","pdata_range":"0x88124468-0x88124470","matched_code_bytes":136,"function_match_percent":100.0},
     {"source":"src/xbox360/w4b_h.c","symbol":"ts4_registry_release_8866DD78","text_range":"0x8866DD78-0x8866DE3C","pdata_range":"0x881235F8-0x88123600","matched_code_bytes":196,"function_match_percent":100.0},
     {"source":"src/xbox360/fp1_anim_busy_frames.cpp","symbol":"ts4_anim_busy_frames_886CD3C8","text_range":"0x886CD3C8-0x886CD488","pdata_range":"0x88124C60-0x88124C68","matched_code_bytes":192,"function_match_percent":100.0},
-    {"source":"src/xbox360/fp1_layer_time_warp.c","symbol":"ts4_layer_time_warp_886D1408","text_range":"0x886D1408-0x886D148C","matched_code_bytes":132,"function_match_percent":100.0}
+    {"source":"src/xbox360/fp1_layer_time_warp.c","symbol":"ts4_layer_time_warp_886D1408","text_range":"0x886D1408-0x886D148C","matched_code_bytes":132,"function_match_percent":100.0},
+    {"source":"src/xbox360/pp1_value_integrate_rate.c","symbol":"ts4_value_integrate_rate_888ADD78","text_range":"0x888ADD78-0x888ADDC8","matched_code_bytes":80,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 2983288,
+  "matched_code_bytes": 2983368,
   "module_total_code_bytes": 10154036,
-  "module_matched_code_percent": 29.380318,
+  "module_matched_code_percent": 29.381105,
   "module_total_functions": 46736,
-  "module_matched_functions": 30772,
-  "module_matched_functions_percent": 65.84218,
-  "module_total_units": 22556,
-  "module_complete_units": 1572,
-  "note": "The canonical whole-module report verifies all thirty thousand seven hundred seventy-two functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 30773,
+  "module_matched_functions_percent": 65.844315,
+  "module_total_units": 22558,
+  "module_complete_units": 1573,
+  "note": "The canonical whole-module report verifies all thirty thousand seven hundred seventy-three functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

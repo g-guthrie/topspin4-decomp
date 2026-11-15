@@ -6308,6 +6308,10 @@
       "src/xbox360/fp1_layer_time_warp.c": {
         "status": "Matching",
         "source": "xbox360/fp1_layer_time_warp.c"
+      },
+      "src/xbox360/pp1_value_integrate_rate.c": {
+        "status": "Matching",
+        "source": "xbox360/pp1_value_integrate_rate.c"
       }
     }
   }

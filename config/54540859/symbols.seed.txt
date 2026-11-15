@@ -30857,3 +30857,4 @@ ts4_tick_selection_886A5C00 = .text:0x886A5C00; // type:function size:0x88
 ts4_registry_release_8866DD78 = .text:0x8866DD78; // type:function size:0xC4
 ts4_anim_busy_frames_886CD3C8 = .text:0x886CD3C8; // type:function size:0xC0
 ts4_layer_time_warp_886D1408 = .text:0x886D1408; // type:function size:0x84
+ts4_value_integrate_rate_888ADD78 = .text:0x888ADD78; // type:function size:0x50

@@ -239,5 +239,20 @@
   "symbols": {
    "ts4_layer_time_warp_886D1408": 132
   }
+ },
+ {
+  "source": "src/xbox360/pp1_value_integrate_rate.c",
+  "object": "pp1_value_integrate_rate.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_value_integrate_rate_888ADD78": 80
+  }
  }
 ]
