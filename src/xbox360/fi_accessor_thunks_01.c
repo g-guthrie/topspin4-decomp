@@ -77,7 +77,7 @@ ts4_word lua2_luaK_stringK_88820AF0(ts4_word, ts4_word);
 ts4_word fn_88822420(ts4_word, ts4_word, ts4_word, ts4_word, ts4_word);
 ts4_word lib3_lua_type_88822738(ts4_word, ts4_word);
 ts4_word fn_8883F238();
-ts4_word fn_8884E2A0(ts4_word);
+ts4_word ts4_hash_fetch_pair_8884E2A0(ts4_word);
 ts4_word fn_8885B210(ts4_word);
 ts4_word ts4_loop_call_seq_u32_off30_8886B150(ts4_word, ts4_word, ts4_word);
 ts4_word fn_8886CC78(ts4_word, ts4_word, ts4_word, ts4_word);
@@ -1092,10 +1092,10 @@ ts4_word ts4_call_seq_ts4_object_finalize_8883D088(ts4_word a0)
     return t2;
 }
 
-/* Swing_DLL.xex 0x88852490: tailcall fn_8884E2A0 */
+/* Swing_DLL.xex 0x88852490: tailcall ts4_hash_fetch_pair_8884E2A0 */
 ts4_word ts4_tailcall_fn_8884E2A0_88852490(ts4_word a0)
 {
-    return fn_8884E2A0((ts4_word)(a0 + 32));
+    return ts4_hash_fetch_pair_8884E2A0((ts4_word)(a0 + 32));
 }
 
 /* Swing_DLL.xex 0x8885C280: get u32@0x44, fn_8885B210 */

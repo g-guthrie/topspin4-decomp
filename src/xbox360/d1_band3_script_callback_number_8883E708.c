@@ -27,8 +27,8 @@ struct TS4Flag { char reserved[0x18]; unsigned char flag; };
 extern struct TS4Mgr *lbl_88D459E8;
 
 void ts4_loop_get_u32_lbl_88D459E0_8883CB50(int value);
-void fn_888411F0(unsigned int value);
-void fn_88841250(unsigned int value);
+void ts4_state_flag_entry_888411F0(unsigned int value);
+void ts4_state_flag_entry_88841250(unsigned int value);
 void fn_88852FA0(unsigned int value);
 void ts4_loop_call_seq_u32_lbl_88D459E0_8884FDE8(int value);
 void fn_8883EC28(struct TS4Mgr *mgr, unsigned int value);
@@ -48,14 +48,14 @@ unsigned int ts4_script_callback_8883E708(void *unused, struct TS4CallContext *c
 
 unsigned int ts4_script_callback_888455F0(void *unused, struct TS4CallContext *context)
 {
-    fn_888411F0(TS4_ARG_UINT(context));
+    ts4_state_flag_entry_888411F0(TS4_ARG_UINT(context));
     (void)unused;
     return 0;
 }
 
 unsigned int ts4_script_callback_88845638(void *unused, struct TS4CallContext *context)
 {
-    fn_88841250(TS4_ARG_UINT(context));
+    ts4_state_flag_entry_88841250(TS4_ARG_UINT(context));
     (void)unused;
     return 0;
 }

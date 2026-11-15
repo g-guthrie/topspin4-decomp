@@ -170,8 +170,8 @@ void lua3_luaG_errormsg_8881F900(void);
 void ts4_lua_opt_number_default_8882EA98(void);
 void fn_88835A88(void);
 void fn_8883F238(void);
-void fn_888411F0(void);
-void fn_88841250(void);
+void ts4_state_flag_entry_888411F0(void);
+void ts4_state_flag_entry_88841250(void);
 void fn_88842FD0(void);
 void fn_888514B0(void);
 void fn_88855B70(void);
@@ -383,8 +383,8 @@ TS4_FORWARD(8882EBE8, ts4_lua_opt_number_default_8882EA98)
 TS4_FORWARD(88835D80, fn_88835A88)
 TS4_FORWARD(888375B0, fn_881B19A0)
 TS4_FORWARD(8883F2A0, fn_8883F238)
-TS4_FORWARD(88844300, fn_888411F0)
-TS4_FORWARD(88844308, fn_88841250)
+TS4_FORWARD(88844300, ts4_state_flag_entry_888411F0)
+TS4_FORWARD(88844308, ts4_state_flag_entry_88841250)
 TS4_FORWARD(88845778, fn_88842FD0)
 TS4_FORWARD(888540E0, fn_888514B0)
 TS4_FORWARD(88857A18, fn_88855B70)

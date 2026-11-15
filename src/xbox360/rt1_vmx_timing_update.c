@@ -1,3 +1,6 @@
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wuninitialized"
+#endif
 /*
  * RT1: TimingState_Update (docs/gameplay/timing-and-fatigue.md s1, symbols.md).
  *

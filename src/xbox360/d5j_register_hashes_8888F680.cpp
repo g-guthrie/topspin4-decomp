@@ -48,7 +48,7 @@ struct Ts4RegOwner {
     char pad70[0xBC - 0x70]; Ts4RegVec vec;
 };
 extern "C" {
-void fn_88639600(Ts4RegOwner *o);
+void ts4_release_entries_88639600(Ts4RegOwner *o);
 void fn_8815F510(Ts4RegSub *dst, const Ts4RegSub *src);
 void ts4_register_hashes_8888F680(Ts4RegOwner *o)
 {
@@ -152,6 +152,6 @@ void ts4_register_hashes_8888F680(Ts4RegOwner *o)
         o->vec.clear();
         o->f2c = 0;
     }
-    fn_88639600(o);
+    ts4_release_entries_88639600(o);
 }
 }

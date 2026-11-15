@@ -45922,3 +45922,72 @@ src/xbox360/rt1_serve_flags.c:
 src/xbox360/rt1_aim_get_target.c:
 	.pdata      start:0x88123FF8 end:0x88124000
 	.text       start:0x886935A0 end:0x8869362C
+
+src/xbox360/cx14_core_a.c:
+	.pdata      start:0x8812C368 end:0x8812C370
+	.pdata      start:0x8812C398 end:0x8812C3A0
+	.pdata      start:0x8812C430 end:0x8812C438
+	.pdata      start:0x8812C520 end:0x8812C528
+	.text       start:0x8883D038 end:0x8883D084
+	.text       start:0x8883FD88 end:0x8883FE08
+	.text       start:0x88840430 end:0x888404B4
+	.text       start:0x88840E60 end:0x88840EAC
+	.text       start:0x88840EB0 end:0x88840F2C
+	.text       start:0x888411F0 end:0x8884124C
+	.text       start:0x88841250 end:0x888412AC
+	.text       start:0x88842BA8 end:0x88842C30
+
+src/xbox360/cx14_core_b.c:
+	.text       start:0x8883CD50 end:0x8883CD78
+
+src/xbox360/cx14_core_c.c:
+	.pdata      start:0x8812C228 end:0x8812C230
+	.pdata      start:0x8812C3B0 end:0x8812C3B8
+	.pdata      start:0x8812C860 end:0x8812C868
+	.pdata      start:0x8812C940 end:0x8812C948
+	.text       start:0x8883DDA0 end:0x8883DE38
+	.text       start:0x88840708 end:0x8884079C
+	.text       start:0x8884C318 end:0x8884C3A0
+	.text       start:0x8884E2A0 end:0x8884E330
+
+src/xbox360/cx15_core_a.c:
+	.pdata      start:0x88121ED8 end:0x88121EE0
+	.pdata      start:0x88121EE0 end:0x88121EE8
+	.pdata      start:0x88121FB8 end:0x88121FC0
+	.pdata      start:0x88122028 end:0x88122030
+	.pdata      start:0x88122480 end:0x88122488
+	.pdata      start:0x88122488 end:0x88122490
+	.pdata      start:0x881225E8 end:0x881225F0
+	.pdata      start:0x88122640 end:0x88122648
+	.text       start:0x88626A18 end:0x88626A44
+	.text       start:0x88626A48 end:0x88626AE4
+	.text       start:0x88628998 end:0x88628A20
+	.text       start:0x88629310 end:0x88629368
+	.text       start:0x88636EF0 end:0x88636F44
+	.text       start:0x88636F48 end:0x88636FA0
+	.text       start:0x88639600 end:0x88639678
+	.text       start:0x8863A368 end:0x8863A3C0
+	.text       start:0x8863A680 end:0x8863A6CC
+	.text       start:0x8863A9E0 end:0x8863AA58
+
+src/xbox360/cx15_core_b.c:
+	.pdata      start:0x88121F80 end:0x88121F88
+	.pdata      start:0x88121FC0 end:0x88121FC8
+	.pdata      start:0x881222D8 end:0x881222E0
+	.pdata      start:0x88122338 end:0x88122340
+	.pdata      start:0x88122340 end:0x88122348
+	.pdata      start:0x88122360 end:0x88122368
+	.pdata      start:0x88122400 end:0x88122408
+	.pdata      start:0x88122468 end:0x88122470
+	.pdata      start:0x88122498 end:0x881224A0
+	.pdata      start:0x881225F8 end:0x88122600
+	.text       start:0x88628568 end:0x886285F4
+	.text       start:0x88628A20 end:0x88628AF4
+	.text       start:0x8862FC08 end:0x8862FCD0
+	.text       start:0x88630D98 end:0x88630E04
+	.text       start:0x88630E08 end:0x88630E74
+	.text       start:0x88631048 end:0x88631100
+	.text       start:0x88633FC0 end:0x8863407C
+	.text       start:0x88636C30 end:0x88636CF0
+	.text       start:0x886370B8 end:0x88637158
+	.text       start:0x886396E8 end:0x886397CC

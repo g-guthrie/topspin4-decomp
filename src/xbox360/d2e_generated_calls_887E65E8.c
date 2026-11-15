@@ -162,7 +162,7 @@ ts4_word ts4_call_seq_u32_off0_88832F70();
 ts4_word fn_888368B0();
 ts4_word fn_88838B00();
 ts4_word ts4_member_field_addr_8883B578();
-ts4_word fn_8883DDA0();
+ts4_word ts4_member_is_listed_8883DDA0();
 ts4_word fn_888429E8();
 ts4_word ts4_reltbl_record_da554856_mode_88843650();
 ts4_word fn_8884C160();

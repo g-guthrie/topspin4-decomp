@@ -177,5 +177,18 @@
    "ts4_block_owner_ok_8860C880": 80,
    "ts4_block_user_or_minus1_8860C8D0": 48
   }
+ },
+ {
+  "source": "src/xbox360/cx14_core_b.c",
+  "object": "cx14_core_b.obj",
+  "context": [],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_obj_reset_8883CD50": 40
+  }
  }
 ]
