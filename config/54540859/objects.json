@@ -7044,6 +7044,26 @@
       "src/xbox360/w9d_886e7010.c": {
         "status": "Matching",
         "source": "xbox360/w9d_886e7010.c"
+      },
+      "src/xbox360/w9a_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w9a_a.c"
+      },
+      "src/xbox360/w9a_b.c": {
+        "status": "Matching",
+        "source": "xbox360/w9a_b.c"
+      },
+      "src/xbox360/w9a_c.c": {
+        "status": "Matching",
+        "source": "xbox360/w9a_c.c"
+      },
+      "src/xbox360/w9a_ltcg_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w9a_ltcg_a.c"
+      },
+      "src/xbox360/w9a_ltcg_b.c": {
+        "status": "Matching",
+        "source": "xbox360/w9a_ltcg_b.c"
       }
     }
   }

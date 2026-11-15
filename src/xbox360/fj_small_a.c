@@ -89,7 +89,7 @@ extern char * fn_88198CE0(void *);
 extern void * lbl_88D45290;
 extern void fn_8863F8D0(void *);
 extern void * lbl_88D45AF4;
-extern void fn_886E0E60(void *);
+extern void ts4_reset_entries_886E0E60(void *);
 extern void * lbl_88D45AF8;
 extern void fn_886E53F0(void *);
 extern int lbl_88D45B14;
@@ -755,8 +755,8 @@ void ts4_call_wrapped_around_lookup_8863FBA8(void)
 /* Swing_DLL.xex 0x886E37D0 */
 void ts4_call_if_global_set_twice_886E37D0(void)
 {
-    if (lbl_88D45AF4) fn_886E0E60(lbl_88D45AF4);
-    if (lbl_88D45AF8) fn_886E0E60(lbl_88D45AF8);
+    if (lbl_88D45AF4) ts4_reset_entries_886E0E60(lbl_88D45AF4);
+    if (lbl_88D45AF8) ts4_reset_entries_886E0E60(lbl_88D45AF8);
 }
 
 /* Swing_DLL.xex 0x886E6198 */

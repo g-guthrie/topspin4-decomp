@@ -40201,6 +40201,24 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_bind_blob_886E7010": 256},
     },
+    {
+        "source": "src/xbox360/w9a_a.c",
+        "object": "w9a_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_obj44_triple_ctor_8869AF98": 268},
+    },
+    {
+        "source": "src/xbox360/w9a_b.c",
+        "object": "w9a_b.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_clear_buffers_886DB398": 260},
+    },
+    {
+        "source": "src/xbox360/w9a_c.c",
+        "object": "w9a_c.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_resize_and_copy_886C9710": 248},
+    },
 )
 
 

@@ -351,3 +351,8 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
 - `(t < 20)` stored as a byte gives `subfc; eqv; srwi 31; addze; clrlwi 31`.
 - Open at this size: vtable store scheduled first in constructors with many zero stores; a failure block placed before
   the success block; `one`/`zero` kept as saved-register locals; loads the scheduler hoists above a store.
+- More from W9: unfused float code (separate `fmuls` then `fadds`) is `#pragma fp_contract(off)` in the default float
+  model. A copy loop written `for (; 0 < n; --n) { *d = *s; ++d; ++s; }` gives the dead `subf.; ble; mtctr` inline loop.
+  `__stvewx(vec, base, 4)` with a constant offset gives `li r9,4; stvewx v,r10,r9`. In `af1_mat_mul`, the multiplier by
+  value and the other matrix through a pointer gives `addi/lvx r0`; both by value gives `li/lvx base,rK`. A constructor
+  embedding three of the 0x44-byte objects: src/xbox360/w9a_a.c.

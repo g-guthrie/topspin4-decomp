@@ -93,7 +93,7 @@ ts4_word fn_88617D88();
 ts4_word fn_886220F8();
 ts4_word ts4_if_set_u32_off0_8862BE08();
 ts4_word ts4_if_set_u32_off0_8862C0E8();
-ts4_word fn_886E0E60();
+ts4_word ts4_reset_entries_886E0E60();
 ts4_word fn_886F1FC0();
 ts4_word ts4_member_field_addr_8883B578();
 ts4_word ts4_if_call_seq_u32_lbl_88D459E4_8883F238();
