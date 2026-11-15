@@ -16,7 +16,7 @@ const u16 *lua3_wcschr_flags_8882EE50(u16 c)
     return 0;
 }
 
-extern const u16 *fn_888348A0(lua_State *L, int narg); /* lua_towstring */
+extern const u16 *cx19_lua_tolwstring_888348A0(lua_State *L, int narg); /* lua_towstring */
 extern LUA2_NORETURN void lib3_luaL_typerror_8882E950(lua_State *L, int narg, const char *tname);
 extern const char *const lbl_880C9684[]; /* luaT_typenames */
 extern u32 lib3_lua_strlen_888222F0(lua_State *L, int idx);
@@ -24,7 +24,7 @@ extern u32 lib3_lua_strlen_888222F0(lua_State *L, int idx);
 /* Same-TU copy of luaL_checklwstring: callers rely on LTCG knowing it does not retain len. */
 LUA2_LOCAL const u16 *lib3_luaL_checklwstring_8882EA30(lua_State *L, int narg, u32 *len)
 {
-    const u16 *s = fn_888348A0(L, narg);
+    const u16 *s = cx19_lua_tolwstring_888348A0(L, narg);
     if (!s) lib3_luaL_typerror_8882E950(L, narg, lbl_880C9684[9]);
     if (len) *len = lib3_lua_strlen_888222F0(L, narg);
     return s;
@@ -127,7 +127,7 @@ int lua3_wstr_char_88831668(lua_State *L)
 }
 
 #if 0 /* near miss: 4 instructions differ in register choice for the pushlwstring arguments */
-extern void fn_88834B28(lua_State *L, const u16 *s, u32 l); /* lua_pushlwstring */
+extern void cx19_lua_pushlwstring_88834B28(lua_State *L, const u16 *s, u32 l); /* lua_pushlwstring */
 extern const double g_ts4_script_constants[];             /* [294] = -1.0 */
 extern const u16 lbl_880DFC68[];                           /* L"" */
 
@@ -148,9 +148,9 @@ int lua3_wstr_sub_88832648(lua_State *L)
     if (start < 1) start = 1;
     if (end > (int)l) end = (int)l;
     if (start <= end)
-        fn_88834B28(L, s + start - 1, end - start + 1);
+        cx19_lua_pushlwstring_88834B28(L, s + start - 1, end - start + 1);
     else
-        fn_88834B28(L, lbl_880DFC68, 0);
+        cx19_lua_pushlwstring_88834B28(L, lbl_880DFC68, 0);
     return 1;
 }
 #endif
@@ -162,7 +162,7 @@ extern const double g_ts4_script_constants[]; /* [11] = 0.0 */
 
 LUA2_FORCEINLINE const u16 *checkwstring_(lua_State *L, int narg)
 {
-    const u16 *s = fn_888348A0(L, narg);
+    const u16 *s = cx19_lua_tolwstring_888348A0(L, narg);
     if (!s) lib3_luaL_typerror_8882E950(L, narg, lbl_880C9684[9]);
     return s;
 }
@@ -318,7 +318,7 @@ void lua3_wadd_s_8882FD10(WMatchState *ms, WBuffer *b, const u16 *s, const u16 *
 {
     lua_State *L = ms->L;
     if (iswstring_(L, 3)) {
-        const u16 *news = fn_888348A0(L, 3);
+        const u16 *news = cx19_lua_tolwstring_888348A0(L, 3);
         u32 l = lib3_lua_strlen_888222F0(L, 3);
         u32 i;
         for (i = 0; i < l; i++) {
@@ -704,7 +704,7 @@ int lua3_wstr_unescape_88830178(lua_State *L)
 
 #if 0 /* NEAR MISS 0x888313E0 gfind_aux: 21 instructions, L and s swap r27/r28 */
 
-extern int fn_88834740(lua_State *L, TValue *obj); /* luaV_towstring */
+extern int cx19_lua_v_tolwstring_88834740(lua_State *L, TValue *obj); /* luaV_towstring */
 extern int ts4_lua_v_tostring_8880C9F8(lua_State *L, TValue *obj);
 extern TValue *ts4_lua_v_tonumber_8880CAF0(lua_State *L, TValue *obj, TValue *n);
 extern void ts4_lua_replace_88824340(lua_State *L, int idx);
@@ -717,7 +717,7 @@ LUA2_FORCEINLINE const u16 *towstring_obj(lua_State *L, TValue *o)
     else if (ttype(o) == LUA2_TWSTRING) return (const u16 *)getstr(tsvalue(o));
     else {
         const u16 *s;
-        s = (fn_88834740(L, o) ? (const u16 *)getstr(tsvalue(o)) : 0);
+        s = (cx19_lua_v_tolwstring_88834740(L, o) ? (const u16 *)getstr(tsvalue(o)) : 0);
         return s;
     }
 }

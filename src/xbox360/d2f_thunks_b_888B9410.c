@@ -295,7 +295,7 @@ ts4_word ts4_vector_erase_range_88150310();
 ts4_word ts4_loop_call_seq_u32_off0_88150378();
 ts4_word fn_88150600();
 ts4_word fn_88154D40();
-ts4_word fn_88157B78();
+ts4_word ts4_list_destroy_88157B78();
 ts4_word fn_88159870();
 ts4_word ts4_call_seq_u32_off0_8815E810();
 ts4_word ts4_if_call_seq_u32_offd4_881600E8();

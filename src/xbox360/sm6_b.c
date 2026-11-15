@@ -46,7 +46,7 @@ SB0(ts4_sbuf_ctor_init_88181138, 0x32, 0x3c, ts4_sbuf_shrink_88185800)
 SB0(ts4_sbuf_ctor_init_88281740, 0xff, 0x108, ts4_sbuf_shrink_881855E8)
 
 /* 0x8821B490: 0x80-byte buffer, assign, then store an extra word */
-void *fn_88236690(void *);
+void *ts4_inline_str_shrink_88236690(void *);
 void *ts4_byte_string_assign_cstr_88235298(void *, int);
 void *ts4_sbuf_ctor_ext_8821B490(char *t, int a, int b)
 {
@@ -56,7 +56,7 @@ void *ts4_sbuf_ctor_ext_8821B490(char *t, int a, int b)
     *(char **)t = p; *(char **)(t + 4) = p;
     *(volatile char **)q = p + 8;
     t[8] = 0;
-    fn_88236690(t);
+    ts4_inline_str_shrink_88236690(t);
     ts4_byte_string_assign_cstr_88235298(t, a);
     *(int *)(t + 0x8c) = b;
     return t;
@@ -107,14 +107,14 @@ ts4_text14 *ts4_uninit_copy_text_88185E50(ts4_text14 *first, ts4_text14 *last, t
 }
 
 /* 0x8818EB70: set the used length, growing when above capacity */
-void fn_881F25F0(void *, u32);
+void ts4_pv_reserve_881F25F0(void *, u32);
 typedef struct { int pad[2]; u32 len; u32 cap; } ts4_lenbuf;
 void ts4_set_length_8818EB70(ts4_lenbuf *t, u32 n)
 {
     if (n == 0) {
         t->len = 0;
     } else {
-        if (n > t->cap) fn_881F25F0(t, n);
+        if (n > t->cap) ts4_pv_reserve_881F25F0(t, n);
         t->len = n;
     }
 }

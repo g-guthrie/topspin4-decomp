@@ -408,7 +408,7 @@ typedef struct NH12 { u32 a, b, c; } NH12;
 typedef struct NObj NObj;
 typedef struct NObjVt { void *s0; NObj *(*get)(NObj *); void *s2[2]; void (*f10)(NObj *, NH12); } NObjVt;
 struct NObj { const NObjVt *vt; };
-extern void fn_881506A0(u32 *out, NH12 *h);
+extern void ts4_handle_release_881506A0(u32 *out, NH12 *h);
 extern NObj *fn_8816D220(void *reg, u32 key);
 extern void *lbl_88D45B20;
 extern void fn_882802A0(void *self, NObj *o);
@@ -418,7 +418,7 @@ NObj *ts4_create_object_from_handle_88617C68(void *self, NH12 h)
 {
     u32 tmp;
     NObj *o;
-    fn_881506A0(&tmp, &h);
+    ts4_handle_release_881506A0(&tmp, &h);
     o = fn_8816D220(lbl_88D45B20, tmp);
     if (o != 0) {
         o = o->vt->get(o);

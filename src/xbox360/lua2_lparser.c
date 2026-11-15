@@ -122,9 +122,9 @@ extern void ts4_call_seq_u32_off34_888145C8(LexState *ls, FuncState *fs);       
 #define MAXARG_sBx (MAXARG_Bx >> 1)
 
 #define luaM_growvector(L, v, nelems, size, t, limit, e) \
-    if (((nelems) + 1) > (size)) ((v) = (t *)fn_889CE7D8(L, v, &(size), sizeof(t), limit, e))
+    if (((nelems) + 1) > (size)) ((v) = (t *)cx19_luaM_growaux_889CE7D8(L, v, &(size), sizeof(t), limit, e))
 #define luaM_reallocvector(L, v, oldn, n, t) \
-    ((v) = (t *)fn_889CE718(L, v, (oldn) * (u32)sizeof(t), (n) * (u32)sizeof(t)))
+    ((v) = (t *)cx19_luaM_realloc_889CE718(L, v, (oldn) * (u32)sizeof(t), (n) * (u32)sizeof(t)))
 
 LUA2_FORCEINLINE void luaX_checklimit(LexState *ls, int val, int limit, const char *msg)
 {

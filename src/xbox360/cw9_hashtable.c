@@ -9,7 +9,7 @@ typedef unsigned long cw9_uptr;
 extern void fn_881992A8(u32, void *);
 extern void ts4_call_seq_u32_off4_881F0400(void *node);
 extern u32 fn_881F0388(void *ht, u32 n);
-extern void fn_881EFE08(void *ht, u32 n);
+extern void ts4_hashtable_rehash_881EFE08(void *ht, u32 n);
 extern void fn_881C5AA8(void *ht, u32 n, u32 flag);
 struct Cw9HNode;
 extern struct Cw9HNode *fn_8818F1D8(void *ht);
@@ -48,7 +48,7 @@ Cw9HNode *ts4_hashtable_insert_881EEBB0(Cw9HT *ht, u32 key, u32 idx, u32 val)
     node->chain = ht->buckets[idx];
     ht->buckets[idx] = node;
     if (ht->count > ht->highmark && ht->depth == 0)
-        fn_881EFE08(ht, fn_881F0388(ht, ht->count));
+        ts4_hashtable_rehash_881EFE08(ht, fn_881F0388(ht, ht->count));
     return node;
 }
 
@@ -68,7 +68,7 @@ void ts4_hashtable_clear_881EEE60(Cw9HT *ht)
                 ht->freelist = cur;
                 ht->count--;
                 if (ht->count < ht->lowmark && ht->depth == 0)
-                    fn_881EFE08(ht, fn_881F0388(ht, ht->count));
+                    ts4_hashtable_rehash_881EFE08(ht, fn_881F0388(ht, ht->count));
             }
         }
     }

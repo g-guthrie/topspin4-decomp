@@ -23,7 +23,7 @@ int ts4_xmlrole_doctype1_888A27C0 HPARAMS
     case TS4_XML_TOK_PROLOG_S:
         return 3;
     case 25:
-        state->handler = fn_888A2458;
+        state->handler = os2_xmlrole_internal_subset_888A2458;
         return 7;
     case TS4_XML_TOK_DECL_CLOSE:
         state->handler = fn_888A1178;

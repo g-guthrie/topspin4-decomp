@@ -19,7 +19,7 @@ extern void ts4_lua_pushnumber_888240B8(void *L, double n);
 extern void lib3_lua_pushcclosure_88823E00(void *L, void *fn, int n);
 extern void lib3_gfind_aux_88828338(void);
 extern void fn_888313E0(void);
-extern int fn_888348A0(void *L, int idx);
+extern int cx19_lua_tolwstring_888348A0(void *L, int idx);
 extern char lbl_880C9684[];
 extern float lbl_8814B440;
 extern char lbl_880DC810[];

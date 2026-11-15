@@ -216,7 +216,7 @@ ts4_uptr fn_885E5BC8(ts4_uptr);
 ts4_uptr fn_885E76C0(ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr ts4_if_get_u32_off8_885F4C70(ts4_uptr);
 ts4_uptr ts4_if_call_seq_lbl_880F90BC_886049F0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
-ts4_uptr fn_88606788(ts4_uptr);
+ts4_uptr ts4_slots_run_88606788(ts4_uptr);
 ts4_uptr fn_88608590(ts4_uptr, ts4_uptr);
 ts4_uptr ts4_hash_normalized_path_886090A0(ts4_uptr, ts4_uptr);
 ts4_uptr fn_8860A168(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);

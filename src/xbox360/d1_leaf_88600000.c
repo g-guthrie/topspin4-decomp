@@ -7,7 +7,7 @@ extern void fn_885651F8(void *);
 extern void ts4_crt_nh_malloc_88565258(void *);
 extern void fn_8857C1F8(void *);
 extern void fn_88603F38(void *);
-extern void fn_88606788(void *);
+extern void ts4_slots_run_88606788(void *);
 extern void ts4_find_handler_slot2_88607740(void *);
 extern void fn_889BD8B0(void *);
 extern void fn_889BD910(void *);

@@ -39,7 +39,7 @@ extern char lbl_88B3302C[];
 extern char lbl_88C42CC8[];
 extern char lbl_88C42E88[];
 extern char lbl_88D429E2[];
-ts4_word fn_881506A0();
+ts4_word ts4_handle_release_881506A0();
 ts4_word ts4_if_call_seq_fn_8892EE88_8817F5E0();
 ts4_word fn_882A1038();
 ts4_word fn_882A13A8();
@@ -514,12 +514,12 @@ void ts4_set_u32_off24_886ED140(ts4_word a0, ts4_args3 sp1)
     return;
 }
 
-/* Swing_DLL.xex 0x886F54A0: call_seq fn_881506A0 */
+/* Swing_DLL.xex 0x886F54A0: call_seq ts4_handle_release_881506A0 */
 ts4_word ts4_call_seq_fn_881506A0_886F54A0(ts4_args3 sp0)
 {
     ts4_word loc50[2];
 
-    fn_881506A0((ts4_word)(ts4_word)&loc50[0], (ts4_word)(ts4_word)&sp0);
+    ts4_handle_release_881506A0((ts4_word)(ts4_word)&loc50[0], (ts4_word)(ts4_word)&sp0);
     return 0;
 }
 

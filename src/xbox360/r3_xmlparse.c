@@ -760,10 +760,10 @@ int ts4_xml_handle_unknown_encoding_888A81F8(ts4_xml_parser *parser, const char 
 }
 
 /* Placeholders: XmlParseXmlDecl (namespace-aware and plain). */
-extern int fn_8889B480(int is_general_text_entity, const struct ts4_xml_encoding *enc, const char *ptr, const char *end,
+extern int os2_xmltok_parse_xml_decl_8889B480(int is_general_text_entity, const struct ts4_xml_encoding *enc, const char *ptr, const char *end,
                        const char **eventp, const char **version, const char **version_end, const char **encoding_name,
                        const struct ts4_xml_encoding **new_encoding, int *standalone);
-extern int fn_8889B4F0(int is_general_text_entity, const struct ts4_xml_encoding *enc, const char *ptr, const char *end,
+extern int os2_xmltok_parse_xml_decl_ns_8889B4F0(int is_general_text_entity, const struct ts4_xml_encoding *enc, const char *ptr, const char *end,
                        const char **eventp, const char **version, const char **version_end, const char **encoding_name,
                        const struct ts4_xml_encoding **new_encoding, int *standalone);
 extern int ts4_xml_handle_unknown_encoding_888A81F8(ts4_xml_parser *parser, const char *encoding_name);

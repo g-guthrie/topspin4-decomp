@@ -19,7 +19,7 @@ typedef struct ts4_args3 { ts4_word w[3]; } ts4_args3;
 extern char lbl_880C1320[];
 extern char lbl_88CAD32C[];
 extern char lbl_88D4589C[];
-ts4_word fn_88164000();
+ts4_word ts4_bstr_concat_88164000();
 ts4_word ts4_string_assign_range_8819B448();
 ts4_word fn_8819C360();
 ts4_word fn_88280ED8();
@@ -369,7 +369,7 @@ ts4_word ts4_if_call_seq_u32_off3c_88957C58(ts4_word a0, ts4_word a1, ts4_word a
     return a0;
 }
 
-/* Swing_DLL.xex 0x88958408: if_call_seq u32@0x3c, u32@0x0, lbl_880C1320, u32@lbl_88D4589C, fn_88164000, ts4_if_call_seq_u32_off0_8816D140 */
+/* Swing_DLL.xex 0x88958408: if_call_seq u32@0x3c, u32@0x0, lbl_880C1320, u32@lbl_88D4589C, ts4_bstr_concat_88164000, ts4_if_call_seq_u32_off0_8816D140 */
 ts4_word ts4_if_call_seq_u32_off3c_88958408(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6)
 {
     ts4_word q70;
@@ -389,7 +389,7 @@ ts4_word ts4_if_call_seq_u32_off3c_88958408(ts4_word a0, ts4_word a1, ts4_word a
     } else {
         p3 = (ts4_word)(ts4_word)lbl_880C1320;
     }
-    t5 = fn_88164000((ts4_word)(ts4_word)&loc50[0], (ts4_word)((*(ts4_word *)lbl_88D4589C) + 40), (ts4_word)p3, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)a6, (ts4_word)t2);
+    t5 = ts4_bstr_concat_88164000((ts4_word)(ts4_word)&loc50[0], (ts4_word)((*(ts4_word *)lbl_88D4589C) + 40), (ts4_word)p3, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)a6, (ts4_word)t2);
     ts4_if_call_seq_u32_off0_8816D140((ts4_word)a0, (ts4_word)t5);
     t7 = loc50[0];
     ts4_destroy_owned_object((ts4_word)t7);

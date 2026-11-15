@@ -113,7 +113,7 @@ void ts4_if_atomic_interlocked_dec_885A6E48(void);
 void ts4_get_u32_off1c_885DA1A8(void);
 void fn_885F2870(void);
 void fn_88603F38(void);
-void fn_88606788(void);
+void ts4_slots_run_88606788(void);
 void ts4_all_accept_8860E668(void);
 void fn_8860E6E8(void);
 void fn_8860E740(void);
@@ -298,7 +298,7 @@ TS4_FORWARD(88603348, fn_88603F38)
 TS4_FORWARD(886042C0, ts4_msg_buffer_alloc_88278620)
 TS4_FORWARD(88606510, fn_885651F8)
 TS4_FORWARD(88606518, ts4_crt_nh_malloc_88565258)
-TS4_FORWARD(88608988, fn_88606788)
+TS4_FORWARD(88608988, ts4_slots_run_88606788)
 TS4_FORWARD(88613D40, ts4_all_accept_8860E668)
 TS4_FORWARD(88613D48, fn_8860E6E8)
 TS4_FORWARD(88613D50, fn_8860E740)

@@ -22,7 +22,7 @@ typedef unsigned long ts4_word;
 typedef struct ts4_args3 { ts4_word w[3]; } ts4_args3;
 
 extern char lbl_880C1320[];
-ts4_word fn_881506A0();
+ts4_word ts4_handle_release_881506A0();
 ts4_word fn_88169D00();
 ts4_word ts4_if_get_fn_88150770_886F7C08();
 ts4_word ts4_assign_formatted_text();
@@ -31,7 +31,7 @@ ts4_word ts4_handle_forward0_88610948();
 ts4_word ts4_handle_forward0_88610AC8();
 ts4_word ts4_if_call_seq_u32_off8_88160D30();
 
-/* Swing_DLL.xex 0x8895A1E8: loop_call_seq ts4_handle_forward0_88610AC8, lbl_880C1320, fn_881506A0, u32@0x0, ts4_if_get_fn_88150770_886F7C08, u32@0x4 */
+/* Swing_DLL.xex 0x8895A1E8: loop_call_seq ts4_handle_forward0_88610AC8, lbl_880C1320, ts4_handle_release_881506A0, u32@0x0, ts4_if_get_fn_88150770_886F7C08, u32@0x4 */
 void ts4_loop_call_seq_fn_88610AC8_8895A1E8(ts4_args3 sp0, ts4_word a2)
 {
     unsigned char b80;
@@ -76,7 +76,7 @@ void ts4_loop_call_seq_fn_88610AC8_8895A1E8(ts4_args3 sp0, ts4_word a2)
             if ((ts4_word)(p12 & 0xff) != 0) {
                 return;
             }
-            t13 = fn_881506A0((ts4_word)(ts4_word)&loc54[0], (ts4_word)(ts4_word)&loc58[0]);
+            t13 = ts4_handle_release_881506A0((ts4_word)(ts4_word)&loc54[0], (ts4_word)(ts4_word)&loc58[0]);
             t14 = *(ts4_word *)((char *)(ts4_word)(t13) + 0);
             if ((ts4_word)t14 == (ts4_word)((147062784) | 9629)) {
                 (void)loc58[2];

@@ -50,7 +50,7 @@ typedef struct ex3_config {
 static const ex3_config lbl_880CBA48[10] = {{1, 1, 1, 1, 0}};
 
 unsigned ts4_if_call_seq_u32_off4_88876668(ex3_zs *strm, unsigned char *buf, unsigned size); /* read_buf */
-int fn_88877328(ex3_zs *strm); /* deflateReset: not matched yet (needs _tr_init in the same translation unit) */
+int os1_deflateReset_88877328(ex3_zs *strm); /* deflateReset: not matched yet (needs _tr_init in the same translation unit) */
 
 void *ts4_tailcall_fn_88565258_88871CF0(void *opaque, unsigned items, unsigned size); /* zcalloc */
 void ts4_tailcall_fn_885651F8_88871CE8(void *opaque, void *address);                    /* zcfree */
@@ -349,5 +349,5 @@ int ex3_deflateInit2__88877400(ex3_zs *strm, int level, int method, int windowBi
     s->strategy = strategy;
     s->method = (unsigned char)method;
 
-    return fn_88877328(strm);
+    return os1_deflateReset_88877328(strm);
 }

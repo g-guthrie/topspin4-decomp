@@ -35,7 +35,7 @@ extern void ts4_call_seq_fn_8881C130_8881C200(lua_State *L); /* luaC_collectgarb
 #define LUA3_UNREACHABLE() __builtin_unreachable()
 #endif
 extern void ts4_lua_pushnumber_888240B8(lua_State *L, double n);
-extern void fn_88834B28(lua_State *L, const u16 *s, u32 l); /* lua_pushlwstring */
+extern void cx19_lua_pushlwstring_88834B28(lua_State *L, const u16 *s, u32 l); /* lua_pushlwstring */
 const u16 *lua3_wmatch_8882FEF8(WMatchState *ms, const u16 *s, const u16 *p);
 extern char lbl_880E1B28[]; /* "unfinished capture" */
 extern char lbl_880E1B14[]; /* "too many captures" */
@@ -66,7 +66,7 @@ LUA2_NOINLINE void lua3_wpush_onecapture_8882F7D8(WMatchState *ms, int i)
     if (l == CAP_POSITION)
         ts4_lua_pushnumber_888240B8(ms->L, (double)(ms->capture[i].init - ms->src_init + 1));
     else
-        fn_88834B28(ms->L, ms->capture[i].init, l);
+        cx19_lua_pushlwstring_88834B28(ms->L, ms->capture[i].init, l);
 }
 
 /* start_capture */
@@ -218,7 +218,7 @@ int lua3_wpush_captures_8882FB28(WMatchState *ms, const u16 *s, const u16 *e)
     int i;
     luaL_checkstack_(ms->L, ms->level, lbl_880E1B14);
     if (ms->level == 0 && s) { /* no explicit captures? */
-        fn_88834B28(ms->L, s, e - s); /* return whole match */
+        cx19_lua_pushlwstring_88834B28(ms->L, s, e - s); /* return whole match */
         return 1;
     } else { /* return all captures */
         for (i = 0; i < ms->level; i++) lua3_wpush_onecapture_8882F7D8(ms, i);

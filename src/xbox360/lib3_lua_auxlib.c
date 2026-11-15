@@ -55,7 +55,7 @@ typedef struct Lib3Debug {
 extern unsigned int lib3_lua_strlen_888222F0(lua_State *L, int idx);
 extern void ts4_lua_concat_88822DB0(lua_State *L, int n);
 extern void ts4_lua_pushlstring_88823FC0(lua_State *L, const char *s, unsigned int l);
-extern void fn_88834B28(lua_State *L, const void *s, unsigned int l);
+extern void cx19_lua_pushlwstring_88834B28(lua_State *L, const void *s, unsigned int l);
 extern void ts4_lua_pushnil_88824188(lua_State *L);
 extern void ts4_lua_rawget_88823AE8(lua_State *L, int idx);
 extern void ts4_lua_rawgeti_888239E0(lua_State *L, int idx, int n);
@@ -162,7 +162,7 @@ int lib3_emptybuffer_8882DE88(Lib3Buffer *B)
     unsigned int l = B->p - B->buffer;
     if (l == 0) return 0;
     if (B->wide)
-        fn_88834B28(B->L, B->buffer, l / 2);
+        cx19_lua_pushlwstring_88834B28(B->L, B->buffer, l / 2);
     else
         ts4_lua_pushlstring_88823FC0(B->L, B->buffer, l);
     B->p = B->buffer;

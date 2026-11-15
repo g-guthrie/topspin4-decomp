@@ -85,6 +85,6 @@ typedef struct Ts5CI {
     int tailcalls;
 } Ts5CI;
 
-extern void *fn_889CE718(lua_State *L, void *block, unsigned int osize, unsigned int nsize);
+extern void *cx19_luaM_realloc_889CE718(lua_State *L, void *block, unsigned int osize, unsigned int nsize);
 
 #endif

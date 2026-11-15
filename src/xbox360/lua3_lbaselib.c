@@ -172,7 +172,7 @@ int lua3_luaB_ipairs_8882CC08(lua_State *L)
 
 extern void ts4_if_call_seq_fn_88822738_8882E8A0(lua_State *L, int narg); /* luaL_checkany */
 extern void ts4_lua_pushnil_88824188(lua_State *L);
-extern const u16 *fn_888348A0(lua_State *L, int idx);              /* lua_towstring */
+extern const u16 *cx19_lua_tolwstring_888348A0(lua_State *L, int idx);              /* lua_towstring */
 extern const char *lib3_lua_tostring_88822888(lua_State *L, int idx);
 extern u32 ts4_tailcall_fn_88564828_88564B08(const char *s, char **endptr, int base); /* strtoul */
 extern const unsigned short *ts4_get_u32_lbl_88C311F4_88567FC8(void);                /* __pctype_func */
@@ -196,7 +196,7 @@ LUA2_FORCEINLINE u32 wcslen_(const u16 *s)
 /* luaL_checklwstring(L, narg, NULL) */
 LUA2_FORCEINLINE const u16 *checkwstring_(lua_State *L, int narg)
 {
-    const u16 *s = fn_888348A0(L, narg);
+    const u16 *s = cx19_lua_tolwstring_888348A0(L, narg);
     if (!s) lib3_luaL_typerror_8882E950(L, narg, lbl_880C9684[LUA2_TWSTRING]);
     return s;
 }
@@ -310,7 +310,7 @@ int lua3_luaB_tostring_8882C1A0(lua_State *L)
         ts4_lua_pushvalue_88824248(L, 1);
         return 1;
     case LUA2_TWSTRING: {
-        const u16 *s = fn_888348A0(L, 1);
+        const u16 *s = cx19_lua_tolwstring_888348A0(L, 1);
         u32 len = lib3_lua_strlen_888222F0(L, 1);
         u32 i;
         Buffer b;
@@ -399,7 +399,7 @@ int lua3_luaB_loadstring_8882DA28(lua_State *L)
     return load_aux(L, loadbuffer_(L, s, l, chunkname));
 }
 
-extern void fn_88834B28(lua_State *L, const u16 *s, u32 l); /* lua_pushlwstring */
+extern void cx19_lua_pushlwstring_88834B28(lua_State *L, const u16 *s, u32 l); /* lua_pushlwstring */
 extern const u16 lbl_880DFC68[];                           /* L"" */
 extern char lbl_880E1FF4[];                                /* "%.40s: %p" */
 extern char lbl_880E17A4[];                                /* "no value" */
@@ -422,7 +422,7 @@ LUA2_FORCEINLINE void pushwstring_(lua_State *L, const u16 *s)
     if (s == 0)
         ts4_lua_pushnil_88824188(L);
     else
-        fn_88834B28(L, s, wcslen_(s));
+        cx19_lua_pushlwstring_88834B28(L, s, wcslen_(s));
 }
 
 /* luaB_towstring (LuaPlus) */
@@ -433,14 +433,14 @@ int lua3_luaB_towstring_8882B998(lua_State *L)
     Buffer wb;
     switch (lua_type_(L, 1)) {
     case LUA2_TNUMBER:
-        pushwstring_(L, fn_888348A0(L, 1));
+        pushwstring_(L, cx19_lua_tolwstring_888348A0(L, 1));
         return 1;
     case LUA2_TSTRING: {
         const char *s = lib3_lua_tostring_88822888(L, 1);
         u32 len = lib3_lua_strlen_888222F0(L, 1);
         u32 i;
         if (len == 0) {
-            fn_88834B28(L, lbl_880DFC68, 0);
+            cx19_lua_pushlwstring_88834B28(L, lbl_880DFC68, 0);
             return 1;
         }
         b.L = L;
@@ -479,7 +479,7 @@ int lua3_luaB_towstring_8882B998(lua_State *L)
         lib3_luaL_argerror_8882E6B8(L, 1, lbl_880E1C98);
     }
     {
-        const u16 *s = fn_888348A0(L, 1);
+        const u16 *s = cx19_lua_tolwstring_888348A0(L, 1);
         u32 len = lib3_lua_strlen_888222F0(L, 1);
         u32 i;
         wb.L = L;

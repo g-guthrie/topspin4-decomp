@@ -2,7 +2,7 @@
 /* Family SWB2 (jump-table switch): expat contentTok (normal encoding). One function per file (fn_check label names repeat). */
 #include "swb2_expat.h"
 
-int fn_8889EC00(const SwbEnc *enc, const char *ptr, const char *end, const char **next);
+int os2_xml_scan_lt_normal_8889EC00(const SwbEnc *enc, const char *ptr, const char *end, const char **next);
 int ts4_xml_scan_ref_8889B160(const SwbEnc *enc, const char *ptr, const char *end, const char **next);
 
 int ts4_xml_content_tok_8889FE20(const SwbEnc *enc, const char *ptr, const char *end, const char **next)
@@ -11,7 +11,7 @@ int ts4_xml_content_tok_8889FE20(const SwbEnc *enc, const char *ptr, const char 
         return -4;
     switch (SWB_BYTE_TYPE(enc, ptr)) {
     case SWB_BT_LT:
-        return fn_8889EC00(enc, ptr + 1, end, next);
+        return os2_xml_scan_lt_normal_8889EC00(enc, ptr + 1, end, next);
     case SWB_BT_AMP:
         return ts4_xml_scan_ref_8889B160(enc, ptr + 1, end, next);
     case SWB_BT_CR:

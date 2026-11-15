@@ -10,7 +10,7 @@ void ts4_object_finalize(void *object);
 void ts4_destroy_owned_object(void *object);
 
 void ts4_vec204_move_tail_881B9148(void *object);
-void fn_88263A08(void *list, ts4_word first, ts4_word last);
+void ts4_dc20e_erase_88263A08(void *list, ts4_word first, ts4_word last);
 void fn_886D9788(void *self);
 void ts4_vector24_reserve_10_882660C0(void *object);
 void fn_88264F28(void *object, int size);
@@ -33,7 +33,7 @@ void ga6_teardown_886D98E0(struct Ga6Teardown *self)
     fn_886D9788(self);
     self->field_48 = 0;
     ts4_object_finalize(self->sub_10);
-    fn_88263A08(&self->list_1c, self->list_1c, self->list_20);
+    ts4_dc20e_erase_88263A08(&self->list_1c, self->list_1c, self->list_20);
     ts4_object_finalize(self->sub_04);
 }
 

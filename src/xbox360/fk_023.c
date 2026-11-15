@@ -162,7 +162,7 @@ ts4_word fn_8883EF20();
 ts4_word fn_8883F0C0();
 ts4_word fn_8883F508();
 ts4_word fn_88840B50();
-ts4_word fn_88840F30();
+ts4_word ts4_set_rec_value_88840F30();
 ts4_word fn_88843768();
 ts4_word fn_888443A8();
 ts4_word fn_88846890();
@@ -188,7 +188,7 @@ ts4_word fn_888522D0();
 ts4_word fn_88854258();
 ts4_word fn_889254C8();
 ts4_word fn_88925640();
-ts4_word fn_889CE718();
+ts4_word cx19_luaM_realloc_889CE718();
 ts4_word ts4_assign_formatted_text();
 ts4_word ts4_build_name_from_two_literals_8883AEE0();
 ts4_word ts4_destroy_owned_object();
@@ -418,14 +418,14 @@ ts4_word ts4_if_get_u32_off0_888110D8(ts4_word a0, ts4_word a1)
     return (*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 8))) + 16));
 }
 
-/* Swing_DLL.xex 0x88811AC0: if_call_seq fn_889CE718, u16@0xa, u32@0x14, u32@0x4, u32@0x14, u32@0x14 */
+/* Swing_DLL.xex 0x88811AC0: if_call_seq cx19_luaM_realloc_889CE718, u16@0xa, u32@0x14, u32@0x4, u32@0x14, u32@0x14 */
 ts4_word ts4_if_call_seq_fn_889CE718_88811AC0(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t1;
     ts4_word t6;
     ts4_word t8;
 
-    t1 = fn_889CE718((ts4_word)a0, (ts4_word)0, (ts4_word)0, (ts4_word)40);
+    t1 = cx19_luaM_realloc_889CE718((ts4_word)a0, (ts4_word)0, (ts4_word)0, (ts4_word)40);
     *(unsigned short *)((char *)(ts4_word)(t1) + 10) = (unsigned short)0;
     *(ts4_word *)((char *)(ts4_word)(t1) + 4) = (ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 20)) + 20);
     *(ts4_word *)((char *)(ts4_word)(t1) + 0) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 20))) + 20));
@@ -2124,7 +2124,7 @@ ts4_word ts4_get_u32_off34_88843700(ts4_word a0, ts4_word a1)
     return fn_8883F508((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 52)), (ts4_word)a1, (ts4_word)0);
 }
 
-/* Swing_DLL.xex 0x88844710: call_seq fn_88840B50, fn_88840F30 */
+/* Swing_DLL.xex 0x88844710: call_seq fn_88840B50, ts4_set_rec_value_88840F30 */
 ts4_word ts4_call_seq_fn_88840B50_88844710(ts4_word a0, ts4_word a1)
 {
     ts4_word loc50[3];
@@ -2136,7 +2136,7 @@ ts4_word ts4_call_seq_fn_88840B50_88844710(ts4_word a0, ts4_word a1)
     loc50[2] = (ts4_word)0;
     fn_88840B50((ts4_word)(ts4_word)&loc50[0], (ts4_word)a1);
     t2 = loc50[1];
-    t3 = fn_88840F30((ts4_word)(a0 + 12), (ts4_word)((731316224) | 32497), (ts4_word)t2);
+    t3 = ts4_set_rec_value_88840F30((ts4_word)(a0 + 12), (ts4_word)((731316224) | 32497), (ts4_word)t2);
     return t3;
 }
 

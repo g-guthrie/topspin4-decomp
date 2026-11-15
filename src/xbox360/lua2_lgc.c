@@ -116,7 +116,7 @@ LUA2_NOINLINE void lua2_checkSizes_8881AB98(lua_State *L, u32 deadmem)
     /* check size of buffer */
     if (G(L)->buff.buffsize > LUA_MINBUFFER * 2) { /* buffer too big? */
         u32 newsize = G(L)->buff.buffsize / 2;
-        G(L)->buff.buffer = (char *)fn_889CE718(L, G(L)->buff.buffer, G(L)->buff.buffsize, newsize);
+        G(L)->buff.buffer = (char *)cx19_luaM_realloc_889CE718(L, G(L)->buff.buffer, G(L)->buff.buffsize, newsize);
         G(L)->buff.buffsize = newsize;
     }
     G(L)->GCthreshold = 2 * G(L)->nblocks - deadmem; /* new threshold */
@@ -243,11 +243,11 @@ LUA2_FORCEINLINE void freeobj_inl(lua_State *L, GCheader *o)
     case LUA2_TFUNCTION: {
         Closure *c = (Closure *)o;
         u32 size = (c->c.isC) ? sizeCclosure(c->c.nupvalues) : sizeLclosure(c->l.nupvalues);
-        fn_889CE718(L, c, size, 0);
+        cx19_luaM_realloc_889CE718(L, c, size, 0);
         break;
     }
     case LUA2_TUPVAL:
-        fn_889CE718(L, o, sizeof(UpVal), 0);
+        cx19_luaM_realloc_889CE718(L, o, sizeof(UpVal), 0);
         break;
     case LUA2_TTABLE:
         lua2_luaH_free_888115F8(L, (Table *)o);
@@ -256,17 +256,17 @@ LUA2_FORCEINLINE void freeobj_inl(lua_State *L, GCheader *o)
         lua_State *L1 = (lua_State *)o;
         lua2_luaF_close_8881C3C0(L1, L1->stack);
         lua2_freestack_88813598(L, L1);
-        fn_889CE718(L, L1, sizeof(lua_State), 0);
+        cx19_luaM_realloc_889CE718(L, L1, sizeof(lua_State), 0);
         break;
     }
     case LUA2_TSTRING:
-        fn_889CE718(L, o, sizestring(((TString *)o)->len), 0);
+        cx19_luaM_realloc_889CE718(L, o, sizestring(((TString *)o)->len), 0);
         break;
     case LUA2_TWSTRING:
-        fn_889CE718(L, o, sizewstring(((TString *)o)->len), 0);
+        cx19_luaM_realloc_889CE718(L, o, sizewstring(((TString *)o)->len), 0);
         break;
     case LUA2_TUSERDATA:
-        fn_889CE718(L, o, sizeudata(((Udata *)o)->len), 0);
+        cx19_luaM_realloc_889CE718(L, o, sizeudata(((Udata *)o)->len), 0);
         break;
     }
 }

@@ -15,7 +15,7 @@ typedef unsigned long ts4_word;
 
 extern char lbl_880E97F0[];
 ts4_word fn_8818EB10();
-ts4_word fn_88199068();
+ts4_word ts4_dispatch2_88199068();
 ts4_word fn_881992A8();
 ts4_word fn_881F8DF8();
 ts4_word fn_881FBC60();
@@ -52,7 +52,7 @@ ts4_word ts4_if_call_seq_lbl_880E97F0_881F8C48(ts4_word a0, ts4_word a1)
     loc50[0] = (ts4_word)1000;
     loc50[1] = (ts4_word)0;
     *(ts4_word *)((char *)(ts4_word)(a0) + 64) = (ts4_word)0;
-    t2 = fn_88199068((ts4_word)0, (ts4_word)280, (ts4_word)(ts4_word)&loc50[0]);
+    t2 = ts4_dispatch2_88199068((ts4_word)0, (ts4_word)280, (ts4_word)(ts4_word)&loc50[0]);
     if ((ts4_word)t2 != 0) {
         t3 = fn_881F8DF8((ts4_word)t2);
         p4 = (ts4_word)t3;
@@ -67,7 +67,7 @@ ts4_word ts4_if_call_seq_lbl_880E97F0_881F8C48(ts4_word a0, ts4_word a1)
     *(ts4_word *)((char *)(ts4_word)(a0) + 8) = (ts4_word)p4;
     loc58[0] = (ts4_word)1000;
     loc58[1] = (ts4_word)0;
-    t10 = fn_88199068((ts4_word)0, (ts4_word)32, (ts4_word)(ts4_word)&loc58[0]);
+    t10 = ts4_dispatch2_88199068((ts4_word)0, (ts4_word)32, (ts4_word)(ts4_word)&loc58[0]);
     if ((ts4_word)t10 != 0) {
         *(ts4_word *)((char *)(ts4_word)(t10) + 0) = (ts4_word)0;
         *(ts4_word *)((char *)(ts4_word)(t10) + 4) = (ts4_word)0;

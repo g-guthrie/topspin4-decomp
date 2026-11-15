@@ -5,7 +5,7 @@ extern void fn_88161A18(void *v, void *where, const void *item);
 extern void fn_88162688(void *v, void *where, const void *item);
 extern void fn_88166938(void *dst, const void *src);
 extern void fn_88166AF8(void *dst, const void *src);
-extern void fn_88214708(void *v, void *where, const void *item);
+extern void ts4_dc5c_grow_append_88214708(void *v, void *where, const void *item);
 extern void fn_88225880(void *v, void *where, const void *item);
 extern void fn_88225990(void *v, void *where, const void *item);
 extern void fn_8822A4A0(void *dst, const void *src);
@@ -55,7 +55,7 @@ void ts4_vector_push_back_construct_88213DB0(Vec_88213DB0 *v, const Elem_88213DB
         }
         v->end++;
     } else {
-        fn_88214708(v, v->end, item);
+        ts4_dc5c_grow_append_88214708(v, v->end, item);
     }
 }
 

@@ -52,18 +52,18 @@ const char *lua2_luaF_getlocalname_8881C258(const Proto *f, int local_number, in
 void lua2_luaF_freeclosure_8881C2C8(lua_State *L, Closure *c)
 {
     int size = (c->c.isC) ? sizeCclosure(c->c.nupvalues) : sizeLclosure(c->l.nupvalues);
-    fn_889CE718(L, c, size, 0);
+    cx19_luaM_realloc_889CE718(L, c, size, 0);
 }
 
 /* luaF_freeproto: line information is not kept by this build */
 void lua2_luaF_freeproto_8881C2F8(lua_State *L, Proto *f)
 {
-    fn_889CE718(L, f->code, f->sizecode * sizeof(Instruction), 0);
-    fn_889CE718(L, f->p, f->sizep * sizeof(Proto *), 0);
-    fn_889CE718(L, f->k, f->sizek * sizeof(TValue), 0);
-    fn_889CE718(L, f->locvars, f->sizelocvars * sizeof(LocVar), 0);
-    fn_889CE718(L, f->upvalues, f->sizeupvalues * sizeof(TString *), 0);
-    fn_889CE718(L, f, sizeof(Proto), 0);
+    cx19_luaM_realloc_889CE718(L, f->code, f->sizecode * sizeof(Instruction), 0);
+    cx19_luaM_realloc_889CE718(L, f->p, f->sizep * sizeof(Proto *), 0);
+    cx19_luaM_realloc_889CE718(L, f->k, f->sizek * sizeof(TValue), 0);
+    cx19_luaM_realloc_889CE718(L, f->locvars, f->sizelocvars * sizeof(LocVar), 0);
+    cx19_luaM_realloc_889CE718(L, f->upvalues, f->sizeupvalues * sizeof(TString *), 0);
+    cx19_luaM_realloc_889CE718(L, f, sizeof(Proto), 0);
 }
 
 /* luaF_close */
@@ -88,7 +88,7 @@ UpVal *lua2_luaF_findupval_8881C4B8(lua_State *L, StkId level)
         if (p->v == level) return p;
         pp = &p->h.next;
     }
-    v = (UpVal *)fn_889CE718(L, 0, 0, sizeof(UpVal)); /* not found: create a new one */
+    v = (UpVal *)cx19_luaM_realloc_889CE718(L, 0, 0, sizeof(UpVal)); /* not found: create a new one */
     v->h.tt = LUA2_TUPVAL;
     v->h.marked = 1; /* open upvalues should not be collected */
     v->v = level;    /* current value lives in the stack */
@@ -108,7 +108,7 @@ UpVal *lua2_luaF_findupval_8881C4B8(lua_State *L, StkId level)
 /* luaF_newLclosure */
 Closure *lua2_luaF_newLclosure_8881C580(lua_State *L, int nelems, TValue *e)
 {
-    Closure *c = (Closure *)fn_889CE718(L, 0, 0, sizeLclosure(nelems));
+    Closure *c = (Closure *)cx19_luaM_realloc_889CE718(L, 0, 0, sizeLclosure(nelems));
     c->l.h.refs = 0;
     luaC_link_inl(L, &c->l.h, LUA2_TFUNCTION);
     c->l.isC = 0;
@@ -125,7 +125,7 @@ Closure *lua2_luaF_newLclosure_8881C580(lua_State *L, int nelems, TValue *e)
 /* luaF_newCclosure */
 Closure *lua2_luaF_newCclosure_8881C768(lua_State *L, int nelems)
 {
-    Closure *c = (Closure *)fn_889CE718(L, 0, 0, sizeCclosure(nelems));
+    Closure *c = (Closure *)cx19_luaM_realloc_889CE718(L, 0, 0, sizeCclosure(nelems));
     c->c.h.refs = 0;
     luaC_link_inl(L, &c->c.h, LUA2_TFUNCTION);
     c->c.isC = 1;

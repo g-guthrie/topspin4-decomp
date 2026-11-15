@@ -12,7 +12,7 @@ extern int strcmp(const char *, const char *);
 
 extern void ts4_destroy_owned_object(void *obj);
 extern void *fn_88562DC0(void *dst, void *src, u32 n);
-extern void *fn_8817EE38(void *dst, void *a, void *b);
+extern void *ts4_dc14_erase_8817EE38(void *dst, void *a, void *b);
 extern void ts4_loop_call_seq_u32_0x4_88181670(void *begin, void *end);
 extern void *fn_88566220(void *a, void *b, void *c);
 extern int ts4_if_call_seq_u32_offc_88565B10(void *p);
@@ -95,7 +95,7 @@ void ts4_destroy_ent16_range_881816D8(Cw4Ent16 *begin, Cw4Ent16 *end)
     Cw4Ent16 *p;
     for (p = begin; p != end; p++) {
         p->f0 = 0;
-        fn_8817EE38(&p->first, p->first, p->last);
+        ts4_dc14_erase_8817EE38(&p->first, p->first, p->last);
         ts4_loop_call_seq_u32_0x4_88181670(p->first, p->last);
         if (p->first) ts4_destroy_owned_object(p->first);
     }

@@ -23,7 +23,7 @@ extern char lbl_880E24B8[];
 extern char lbl_880C9A48[];
 extern int fn_8882E0D8(void *, char *, char *);
 extern void *fn_887FFFB8(void *a, int b, int c);
-extern void fn_88834B28(lua_State *L, const unsigned short *s, unsigned len);
+extern void cx19_lua_pushlwstring_88834B28(lua_State *L, const unsigned short *s, unsigned len);
 extern void *fn_881AC7D0(void *tbl, int *key);
 extern void *ts4_find_record_by_key_881AC778(void *tbl, int *key);
 extern const unsigned char lbl_880C970C[];
@@ -90,7 +90,7 @@ void ts4_lua_pushwstring_88834C10(lua_State *L, const unsigned short *s)
     p = s;
     while (*p)
         p++;
-    fn_88834B28(L, s, (unsigned)(p - s));
+    cx19_lua_pushlwstring_88834B28(L, s, (unsigned)(p - s));
 }
 
 /* Swap every adjacent byte pair of an n-pair buffer. */

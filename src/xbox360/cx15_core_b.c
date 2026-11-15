@@ -195,7 +195,7 @@ void ts4_join_path_notify_8862FC08(P2FC08 *self, PathSrc *src)
     ts4_destroy_owned_object(str.p);
 }
 
-extern Str16 *fn_881640A8(Str16 *out, const char *prefix, Str16 *tail);
+extern Str16 *ts4_bstr_concat_rev_881640A8(Str16 *out, const char *prefix, Str16 *tail);
 extern void ts4_if_call_seq_u32_off0_8816D140(Str16 *out, Str16 *src);
 extern int ts4_crt_chmod_88568CB0(const char *name, int mode);
 extern int ts4_tailcall_fn_88567748_88567798(const char *name);

@@ -70,12 +70,12 @@ int ts4_align4_advance_8815FA48(ts4_align4 *t, int n)
 
 /* 0x88160C80: erase_last-style helper: move tail, shrink end by 0x30 and destroy the three owned members */
 void ts4_destroy_owned_object(int);
-void *fn_88165FC8(void *, void *, void *);
+void *ts4_dc30_copy_88165FC8(void *, void *, void *);
 typedef struct { int pad; char *end; } ts4_vec30;
 void *ts4_vec_pop_destroy_88160C80(ts4_vec30 *v, char *x)
 {
     char *e;
-    if (x + 0x30 != v->end) fn_88165FC8(x + 0x30, v->end, x);
+    if (x + 0x30 != v->end) ts4_dc30_copy_88165FC8(x + 0x30, v->end, x);
     e = v->end - 0x30;
     v->end = e;
     ts4_destroy_owned_object(*(int *)(e + 0x18));

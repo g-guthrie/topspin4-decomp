@@ -44,7 +44,7 @@ typedef void (*Pfunc)(lua_State *L, void *ud);
 void lua2_luaD_reallocCI_8881D170(lua_State *L, int newsize)
 {
     CallInfo *oldci = L->base_ci;
-    L->base_ci = (CallInfo *)fn_889CE718(L, L->base_ci, L->size_ci * sizeof(CallInfo), newsize * sizeof(CallInfo));
+    L->base_ci = (CallInfo *)cx19_luaM_realloc_889CE718(L, L->base_ci, L->size_ci * sizeof(CallInfo), newsize * sizeof(CallInfo));
     L->size_ci = (u16)newsize;
     L->ci = (L->ci - oldci) + L->base_ci;
     L->end_ci = L->base_ci + L->size_ci;
@@ -114,7 +114,7 @@ void lua2_luaD_reallocstack_8881D478(lua_State *L, int newsize)
         o = L->stack + newsize;
         while (o < top) setnilvalue(L, o++);
     }
-    L->stack = (TValue *)fn_889CE718(L, L->stack, L->stacksize * sizeof(TValue), newsize * sizeof(TValue));
+    L->stack = (TValue *)cx19_luaM_realloc_889CE718(L, L->stack, L->stacksize * sizeof(TValue), newsize * sizeof(TValue));
     L->stacksize = newsize;
     L->stack_last = L->stack + newsize - 1 - EXTRA_STACK;
     lua2_correctstack_8881D1F8(L, oldstack);

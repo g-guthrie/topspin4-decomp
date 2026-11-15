@@ -3,7 +3,7 @@ typedef unsigned int u32;
 
 void fn_881992A8(void *, void *);
 void *fn_8818BC98(void *);
-void *fn_881909D0(void *);
+void *ts4_hold_dtor_881909D0(void *);
 void *ts4_if_call_seq_u32_off8_881929F8(void *);
 void *ts4_cw5_obj_dtor_88197A28(void *);
 void *ts4_cw5_obj_dtor_88198068(void *);
@@ -55,7 +55,7 @@ void *name(void *self, u32 flags) \
 DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_8818BC40, fn_8818BC98)
 
 /* Swing_DLL.xex 0x88190978 */
-DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_88190978, fn_881909D0)
+DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_88190978, ts4_hold_dtor_881909D0)
 
 /* Swing_DLL.xex 0x881929A0 */
 DTOR_THEN_CONDITIONAL_FREE(ts4_dtor_then_conditional_free_881929A0, ts4_if_call_seq_u32_off8_881929F8)

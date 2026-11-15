@@ -211,7 +211,7 @@ int lib3_str_unescape_88827170(lua_State *L)
     return 1;
 }
 
-extern const unsigned short *fn_888348A0(lua_State *L, int idx);
+extern const unsigned short *cx19_lua_tolwstring_888348A0(lua_State *L, int idx);
 extern int fn_885635D0(char *buf, const char *fmt, ...);
 extern char lbl_880E191C[];
 extern char lbl_880E1928[];
@@ -219,7 +219,7 @@ extern char lbl_880E1928[];
 /* Wide variant of luaL_checklstring. */
 LIB3_NOINLINE const unsigned short *lib3_luaL_checklwstring_8882EA30(lua_State *L, int narg, unsigned int *len)
 {
-    const unsigned short *s = fn_888348A0(L, narg);
+    const unsigned short *s = cx19_lua_tolwstring_888348A0(L, narg);
     if (!s) lib3_luaL_typerror_8882E950(L, narg, lbl_880C9684[9]);
     if (len) *len = lib3_lua_strlen_888222F0(L, narg);
     return s;

@@ -73,7 +73,7 @@ extern char lbl_88D45B20[];
 extern char lbl_88D45B24[];
 ts4_word ts4_loop_call_seq_u32_off0_88150378();
 ts4_word fn_88161620();
-ts4_word fn_881640A8();
+ts4_word ts4_bstr_concat_rev_881640A8();
 ts4_word fn_8816CAA0();
 ts4_word fn_881898E8();
 ts4_word fn_8819AE68();
@@ -169,25 +169,25 @@ ts4_word fn_8884C160();
 ts4_word ts4_hash_lookup_null_release_clear_8884CB50();
 ts4_word fn_88864E48();
 ts4_word fn_88865AB0();
-ts4_word fn_88866980();
+ts4_word ts4_format_save_dir_88866980();
 ts4_word fn_88866DA0();
-ts4_word fn_88867E68();
+ts4_word ts4_format_save_path_entry_88867E68();
 ts4_word ts4_hash_lookup_null_888689A8();
 ts4_word fn_88868B48();
 ts4_word fn_888690F0();
 ts4_word fn_88869530();
-ts4_word fn_8886B1B0();
+ts4_word ts4_format_save_entry_8886B1B0();
 ts4_word fn_8886B5C0();
 ts4_word fn_8886F9A0();
 ts4_word fn_88870220();
-ts4_word fn_888708D8();
+ts4_word ts4_ring_visit_888708D8();
 ts4_word fn_88879AA8();
 ts4_word fn_88879B28();
 ts4_word fn_8887EEB0();
 ts4_word fn_88882868();
 ts4_word fn_889254C8();
 ts4_word ts4_if_call_seq_u32_off0_889C6EF0();
-ts4_word fn_889CE7D8();
+ts4_word cx19_luaM_growaux_889CE7D8();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
 #endif
@@ -529,7 +529,7 @@ ts4_word ts4_get_u32_off0_88870C28(ts4_word a0, ts4_word a1)
     ((ts4_word (*)(ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 0))) + 4))))((ts4_word)a1, (ts4_word)(a0 + 116), (ts4_word)4);
     ((ts4_word (*)(ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 0))) + 4))))((ts4_word)a1, (ts4_word)(a0 + 124), (ts4_word)4);
     ((ts4_word (*)(ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 0))) + 4))))((ts4_word)a1, (ts4_word)(a0 + 128), (ts4_word)4);
-    fn_888708D8((ts4_word)a0, (ts4_word)a1, (ts4_word)(a0 + 100), (ts4_word)(a0 + 88));
+    ts4_ring_visit_888708D8((ts4_word)a0, (ts4_word)a1, (ts4_word)(a0 + 100), (ts4_word)(a0 + 88));
     fn_88870220((ts4_word)(a0 + 12), (ts4_word)a1, (ts4_word)(a0 + 104), (ts4_word)(a0 + 88));
     return 1;
 }

@@ -66,7 +66,7 @@ ts4_word fn_8862BF38();
 ts4_word fn_887CFAC0();
 ts4_word fn_887F0CA0();
 ts4_word fn_88864D78();
-ts4_word fn_88867E68();
+ts4_word ts4_format_save_path_entry_88867E68();
 ts4_word fn_88886548();
 ts4_word fn_88923530();
 ts4_word fn_8892EE88();
@@ -970,7 +970,7 @@ void ts4_loop_call_seq_u32_lbl_88D45B30_888680A0(ts4_word a0, ts4_word a1)
             }
             t10 = fn_88886548((ts4_word)t9, (ts4_word)((347537408) | 24449));
             t11 = fn_88864D78((ts4_word)(t10 + 4));
-            fn_88867E68((ts4_word)a1, (ts4_word)t11, (ts4_word)a0, (ts4_word)512, (ts4_word)(ts4_word)lbl_880DFEDC);
+            ts4_format_save_path_entry_88867E68((ts4_word)a1, (ts4_word)t11, (ts4_word)a0, (ts4_word)512, (ts4_word)(ts4_word)lbl_880DFEDC);
             break;
         }
         p13 = (ts4_word)(lv4 + 8);

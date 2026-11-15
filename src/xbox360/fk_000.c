@@ -60,7 +60,7 @@ extern char lbl_88D458A0[];
 extern char lbl_88D45B38[];
 ts4_word fn_88150600();
 ts4_word fn_88155A40();
-ts4_word fn_88157B78();
+ts4_word ts4_list_destroy_88157B78();
 ts4_word ts4_byte_string_assign_88158908();
 ts4_word fn_88159870();
 ts4_word fn_8815B060();
@@ -78,7 +78,7 @@ ts4_word fn_881616D8();
 ts4_word fn_881617C8();
 ts4_word fn_88161B30();
 ts4_word fn_88165F68();
-ts4_word fn_88165FC8();
+ts4_word ts4_dc30_copy_88165FC8();
 ts4_word ts4_call_seq_fn_8815ED78_88166A10();
 ts4_word fn_8816C6B0();
 ts4_word fn_8816D1A8();
@@ -381,11 +381,11 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88154CE8(void)
     return 0;
 }
 
-/* Swing_DLL.xex 0x88156F58: if_call_seq lbl_880D2DEC, u32@0x0, fn_88157B78, fn_88936F98, ts4_tsu_cleanup_end */
+/* Swing_DLL.xex 0x88156F58: if_call_seq lbl_880D2DEC, u32@0x0, ts4_list_destroy_88157B78, fn_88936F98, ts4_tsu_cleanup_end */
 ts4_word ts4_if_call_seq_lbl_880D2DEC_88156F58(ts4_word a0, ts4_word a1)
 {
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880D2DEC;
-    fn_88157B78((ts4_word)(a0 + 36));
+    ts4_list_destroy_88157B78((ts4_word)(a0 + 36));
     fn_88936F98((ts4_word)a0);
     if ((ts4_word)(a1 & 0x1) != 0) {
         ts4_tsu_cleanup_end((ts4_word)a0);
@@ -1041,7 +1041,7 @@ ts4_word ts4_if_call_seq_u32_off8_88160C08(ts4_word a0, ts4_word a1, ts4_word a2
     return t6;
 }
 
-/* Swing_DLL.xex 0x88160CE0: call_seq u32@0x4, u32@0x0, fn_88165FC8, u32@0x4, fn_88165F68, u32@0x4 */
+/* Swing_DLL.xex 0x88160CE0: call_seq u32@0x4, u32@0x0, ts4_dc30_copy_88165FC8, u32@0x4, fn_88165F68, u32@0x4 */
 ts4_word ts4_call_seq_u32_off4_88160CE0(ts4_word a0)
 {
     ts4_word t1;
@@ -1049,7 +1049,7 @@ ts4_word ts4_call_seq_u32_off4_88160CE0(ts4_word a0)
     ts4_word t5;
 
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 4);
-    t3 = fn_88165FC8((ts4_word)t1, (ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 0)));
+    t3 = ts4_dc30_copy_88165FC8((ts4_word)t1, (ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 0)));
     t5 = fn_88165F68((ts4_word)t3, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 4)));
     *(ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)t3;
     return t5;

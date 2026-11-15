@@ -58,8 +58,8 @@ u16 ts4_reader_read_u16_88177B78(Cw4Reader *r)
 }
 
 
-/* 0x8818B650 / 0x8818BB88: allocate a 0x14-byte object through fn_88199068 (size 1000 request record), clear its fields, set vtable */
-extern void *fn_88199068(void *a, u32 size, void *req);
+/* 0x8818B650 / 0x8818BB88: allocate a 0x14-byte object through ts4_dispatch2_88199068 (size 1000 request record), clear its fields, set vtable */
+extern void *ts4_dispatch2_88199068(void *a, u32 size, void *req);
 extern void *lbl_880DD0A0[];
 extern void *lbl_880DD110[];
 typedef struct Cw4Obj14 { void **vtbl; u32 f4; u32 f8; u8 fc; u8 pad[3]; u32 f10; } Cw4Obj14;
@@ -70,7 +70,7 @@ Cw4Obj14 *ts4_create_obj14_8818B650(void)
     volatile Cw4Obj14 *p;
     req[0] = 1000;
     req[1] = 0;
-    p = (volatile Cw4Obj14 *)fn_88199068(0, 0x14, req);
+    p = (volatile Cw4Obj14 *)ts4_dispatch2_88199068(0, 0x14, req);
     if (p != 0) {
         p->f4 = 0;
         p->f8 = 0;
@@ -88,7 +88,7 @@ Cw4Obj14 *ts4_create_obj14_8818BB88(void)
     Cw4Obj14 *p;
     req[0] = 1000;
     req[1] = 0;
-    p = (Cw4Obj14 *)fn_88199068(0, 0x14, req);
+    p = (Cw4Obj14 *)ts4_dispatch2_88199068(0, 0x14, req);
     if (p != 0) {
         p->f4 = 0;
         p->f8 = 0;
@@ -157,11 +157,11 @@ void ts4_growbuf_reserve_8818B2F0(Cw4GrowBuf *b, u32 want)
         if (b->data == 0) {
             req[0] = 1000;
             req[1] = 0;
-            p = fn_88199068(0, n, req);
+            p = ts4_dispatch2_88199068(0, n, req);
         } else {
             req2[0] = 1000;
             req2[1] = 0;
-            p = fn_88199068(0, n, req2);
+            p = ts4_dispatch2_88199068(0, n, req2);
             memcpy(p, b->data, b->size);
             if (b->data != 0) fn_881992A8(0, b->data);
         }

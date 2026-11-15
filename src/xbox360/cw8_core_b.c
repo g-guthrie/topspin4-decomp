@@ -50,13 +50,13 @@ Cw8Obj88 *ts4_obj88_ctor_881D4788(Cw8Obj88 *self)
 }
 
 typedef struct Cw8U32Vec { u32 pad0; u32 *data; u32 count; } Cw8U32Vec;
-extern void fn_881F25F0(Cw8U32Vec *v, u32 needed);
+extern void ts4_pv_reserve_881F25F0(Cw8U32Vec *v, u32 needed);
 
 /* 0x881E21F0: append one u32 to the vector (reserving first); returns the old count */
 u32 ts4_u32vec_push_back_881E21F0(Cw8U32Vec *v, const u32 *value)
 {
     u32 *slot;
-    fn_881F25F0(v, v->count + 1);
+    ts4_pv_reserve_881F25F0(v, v->count + 1);
     slot = v->data + v->count;
     if (slot != 0) {
         *slot = *value;

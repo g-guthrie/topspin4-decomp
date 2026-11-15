@@ -1,10 +1,10 @@
 /* Swing_DLL.xex 0x888A8340-0x888A8610, executable version 0.0.0.3. */
 #include "d9ex_xmlparse.h"
 
-extern int fn_8889B480(int is_general_text_entity, const struct ts4_xml_encoding *enc, const char *ptr, const char *end,
+extern int os2_xmltok_parse_xml_decl_8889B480(int is_general_text_entity, const struct ts4_xml_encoding *enc, const char *ptr, const char *end,
                        const char **eventp, const char **version, const char **version_end, const char **encoding_name,
                        const struct ts4_xml_encoding **new_encoding, int *standalone);
-extern int fn_8889B4F0(int is_general_text_entity, const struct ts4_xml_encoding *enc, const char *ptr, const char *end,
+extern int os2_xmltok_parse_xml_decl_ns_8889B4F0(int is_general_text_entity, const struct ts4_xml_encoding *enc, const char *ptr, const char *end,
                        const char **eventp, const char **version, const char **version_end, const char **encoding_name,
                        const struct ts4_xml_encoding **new_encoding, int *standalone);
 extern char *ts4_xml_pool_append_888A35A8(ts4_xml_string_pool *pool, const struct ts4_xml_encoding *enc,
@@ -56,7 +56,7 @@ int ts4_xml_process_xml_decl_888A8340(d9_xml_parser *parser, int is_general_text
     const char *stored_version = 0;
     int standalone = -1;
 
-    if (!(parser->ns ? fn_8889B480 : fn_8889B4F0)(is_general_text_entity, parser->encoding, s, next,
+    if (!(parser->ns ? os2_xmltok_parse_xml_decl_8889B480 : os2_xmltok_parse_xml_decl_ns_8889B4F0)(is_general_text_entity, parser->encoding, s, next,
                                                    &parser->event_ptr, &version, &version_end, &encoding_name,
                                                    &new_encoding, &standalone))
         return 2;

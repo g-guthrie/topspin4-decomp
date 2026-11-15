@@ -21,7 +21,7 @@ int ts4_xmlrole_external_subset1_888A10A0 HPARAMS
             break;
         return 0;
     default:
-        return fn_888A2458(state, tok, ptr, end, enc);
+        return os2_xmlrole_internal_subset_888A2458(state, tok, ptr, end, enc);
     }
     D8_COMMON(state, tok);
 }

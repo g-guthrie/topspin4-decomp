@@ -12,7 +12,7 @@ extern int memcmp(const void *a, const void *b, unsigned int n);
 /* luaS_resize */
 void lua2_luaS_resize_88812CF8(lua_State *L, int newsize)
 {
-    GCheader **newhash = (GCheader **)fn_889CE718(L, 0, 0, newsize * sizeof(GCheader *));
+    GCheader **newhash = (GCheader **)cx19_luaM_realloc_889CE718(L, 0, 0, newsize * sizeof(GCheader *));
     stringtable *tb = &G(L)->strt;
     int i;
     for (i = 0; i < newsize; i++) newhash[i] = 0;
@@ -30,7 +30,7 @@ void lua2_luaS_resize_88812CF8(lua_State *L, int newsize)
             p = next;
         }
     }
-    fn_889CE718(L, tb->hash, tb->size * sizeof(TString *), 0);
+    cx19_luaM_realloc_889CE718(L, tb->hash, tb->size * sizeof(TString *), 0);
     tb->size = newsize;
     tb->hash = newhash;
 }
@@ -52,7 +52,7 @@ void lua2_luaS_resize_88812CF8(lua_State *L, int newsize)
 /* newlwstr: allocate and chain a wide string. */
 TString *lua2_newlwstr_88812DE8(lua_State *L, const unsigned short *str, u32 l, u32 h)
 {
-    TString *ts = (TString *)fn_889CE718(L, 0, 0, sizeof(TString) + (l + 1) * 2);
+    TString *ts = (TString *)cx19_luaM_realloc_889CE718(L, 0, 0, sizeof(TString) + (l + 1) * 2);
     ts->len = l;
     ts->hash = h;
     ts->h.marked = 0;
@@ -68,7 +68,7 @@ TString *lua2_newlwstr_88812DE8(lua_State *L, const unsigned short *str, u32 l, 
 /* newlstr */
 TString *lua2_newlstr_88812EE0(lua_State *L, const char *str, u32 l, u32 h)
 {
-    TString *ts = (TString *)fn_889CE718(L, 0, 0, sizeof(TString) + l + 1);
+    TString *ts = (TString *)cx19_luaM_realloc_889CE718(L, 0, 0, sizeof(TString) + l + 1);
     ts->len = l;
     ts->hash = h;
     ts->h.marked = 0;

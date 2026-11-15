@@ -49,7 +49,7 @@ typedef struct LoadState {
 
 LUA2_FORCEINLINE void *luaM_newvector_inl(lua_State *L, u32 n)
 {
-    return fn_889CE718(L, 0, 0, n);
+    return cx19_luaM_realloc_889CE718(L, 0, 0, n);
 }
 
 /* luaM_realloc with a zero new size, as LTCG expanded it. */

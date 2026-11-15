@@ -490,7 +490,7 @@ ts4_word KeReleaseSemaphore();
 ts4_word KeTlsAlloc();
 ts4_word KeWaitForSingleObject();
 ts4_word fn_8818A6A0();
-ts4_word fn_8822D3D0();
+ts4_word ts4_init_global_deque_8822D3D0();
 ts4_word fn_88255AA0();
 ts4_word fn_8830EC08();
 ts4_word ts4_addr_ts4_forward_88315998_883159B0();
@@ -904,12 +904,12 @@ ts4_word ts4_addr_fn_88AFF390_889D31C0(void)
     return fn_88563470((ts4_word)(ts4_word)ts4_addr_lbl_880D19F0_88AFF390);
 }
 
-/* Swing_DLL.xex 0x889D31F8: call_seq fn_8822D3D0, ts4_tailcall_fn_88224B38_88AFF3D0, fn_88563470 */
+/* Swing_DLL.xex 0x889D31F8: call_seq ts4_init_global_deque_8822D3D0, ts4_tailcall_fn_88224B38_88AFF3D0, fn_88563470 */
 ts4_word ts4_call_seq_fn_8822D3D0_889D31F8(void)
 {
     ts4_word t2;
 
-    fn_8822D3D0();
+    ts4_init_global_deque_8822D3D0();
     t2 = fn_88563470((ts4_word)(ts4_word)ts4_tailcall_fn_88224B38_88AFF3D0);
     return t2;
 }

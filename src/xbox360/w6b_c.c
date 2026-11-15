@@ -1,3 +1,7 @@
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wunused-function"
+#pragma clang diagnostic ignored "-Wuninitialized"
+#endif
 #include "w6b_types.h"
 
 extern const __vector4 lbl_880FC650;

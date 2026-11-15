@@ -5,7 +5,7 @@ extern void fn_888860A0(void *);
 extern int ts4_if_call_seq_u32_off44_8864BB40(void *);
 extern int ts4_tailcall_fn_88582F30_8857A128(void *, int);
 extern void fn_889C67F0(void *, float *);
-extern void fn_8822D3D0(void);
+extern void ts4_init_global_deque_8822D3D0(void);
 extern void fn_88563470(void (*)(void));
 extern void ts4_tailcall_fn_88224B38_88AFF3D0(void);
 

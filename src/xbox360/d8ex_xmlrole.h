@@ -10,7 +10,7 @@
 extern int ts4_fn_888A09C0 HPARAMS;
 extern int fn_888A1200 HPARAMS;
 extern int fn_888A10A0 HPARAMS;
-extern int fn_888A2458 HPARAMS;
+extern int os2_xmlrole_internal_subset_888A2458 HPARAMS;
 extern int fn_888A1178 HPARAMS;
 extern int fn_888A0AC8 HPARAMS;
 extern int fn_888A19F0 HPARAMS;
@@ -29,5 +29,5 @@ extern int ts4_prolog_attlist_type_888A0F78 HPARAMS;
     } while (0)
 
 #define D8_SET_TOP_LEVEL(state) \
-    ((state)->handler = (state)->document_entity ? fn_888A2458 : fn_888A10A0)
+    ((state)->handler = (state)->document_entity ? os2_xmlrole_internal_subset_888A2458 : fn_888A10A0)
 #endif

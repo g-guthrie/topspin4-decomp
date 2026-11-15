@@ -52,7 +52,7 @@ extern char lbl_88D45B20[];
 ts4_word fn_881512B8();
 ts4_word ts4_guarded_update_88151560();
 ts4_word ts4_flagged_object_create_extra_88153678();
-ts4_word fn_88153A70();
+ts4_word ts4_create_obj434_88153A70();
 ts4_word ts4_flagged_object_create_88153B30();
 ts4_word ts4_flagged_object_create_88153BE0();
 ts4_word ts4_flagged_object_create_extra_88153C90();
@@ -85,7 +85,7 @@ ts4_word fn_88608088();
 ts4_word fn_88608590();
 ts4_word ts4_node_dispatch_8860DCF8();
 ts4_word fn_88616758();
-ts4_word fn_88616A70();
+ts4_word ts4_dc0crobj_reset_88616A70();
 ts4_word fn_88617D28();
 ts4_word fn_88617D88();
 ts4_word fn_8862F0B8();
@@ -1169,12 +1169,12 @@ ts4_word ts4_if_get_u32_g_ts4_session_context_889A68B8(ts4_word a0)
     return p6;
 }
 
-/* Swing_DLL.xex 0x889A6A20: get u32@g_ts4_session_context, u32@0xc, fn_88153A70, u32@0x0, u32@0x8, vcall */
+/* Swing_DLL.xex 0x889A6A20: get u32@g_ts4_session_context, u32@0xc, ts4_create_obj434_88153A70, u32@0x0, u32@0x8, vcall */
 ts4_word ts4_get_u32_g_ts4_session_context_889A6A20(ts4_word a0)
 {
     ts4_word t3;
 
-    t3 = fn_88153A70((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)g_ts4_session_context)) + 12)));
+    t3 = ts4_create_obj434_88153A70((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)g_ts4_session_context)) + 12)));
     ((ts4_word (*)(ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t3) + 0))) + 8))))((ts4_word)t3, (ts4_word)a0);
     return t3;
 }
@@ -2008,12 +2008,12 @@ ts4_word ts4_tailcall_fn_889122D8_889C3868(ts4_word a0)
     return fn_889122D8((ts4_word)a0);
 }
 
-/* Swing_DLL.xex 0x889C53A0: call_seq fn_88616A70, ts4_vec28_trim_88177110, fn_88912090 */
+/* Swing_DLL.xex 0x889C53A0: call_seq ts4_dc0crobj_reset_88616A70, ts4_vec28_trim_88177110, fn_88912090 */
 ts4_word ts4_call_seq_fn_88616A70_889C53A0(ts4_word a0)
 {
     ts4_word t3;
 
-    fn_88616A70((ts4_word)(a0 + 32));
+    ts4_dc0crobj_reset_88616A70((ts4_word)(a0 + 32));
     ts4_vec28_trim_88177110((ts4_word)(a0 + 8));
     t3 = fn_88912090((ts4_word)a0);
     return t3;

@@ -9,7 +9,7 @@ extern "C" {
 extern char *lbl_88D45AD4;
 extern char *lbl_88D45B1C;
 extern char lbl_880FC790[], lbl_880FC780[], g_ts4_tsu_format[], lbl_880EAD84[], lbl_880EA5E4[], lbl_880EF510[], lbl_880E4BA0[];
-extern void fn_8822A1E8(void *, void *, u8);
+extern void ts4_sort_ptrs_8822A1E8(void *, void *, u8);
 extern void fn_88712108(void *, void *);
 extern void fn_8875DCD8(void *, void *, int);
 extern void ts4_format_text(char *, u32, const char *, ...);

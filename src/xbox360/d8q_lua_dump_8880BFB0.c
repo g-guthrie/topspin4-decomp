@@ -28,7 +28,7 @@ char *ts4_luaZ_openspace_8880BFB0(lua_State *L, Ts8Mbuffer *buff, unsigned int n
         int saved = TS5_AT(int, L, 0x68);
         if (n < 32) n = 32;
         TS5_AT(int, L, 0x68) = 1;
-        buff->buffer = (char *)fn_889CE718(L, buff->buffer, buff->buffsize, n);
+        buff->buffer = (char *)cx19_luaM_realloc_889CE718(L, buff->buffer, buff->buffsize, n);
         TS5_AT(int, L, 0x68) = saved;
         buff->buffsize = n;
     }

@@ -225,7 +225,7 @@ LUA2_FORCEINLINE void luaZ_openspace_inl(lua_State *L, Mbuffer *buff, u32 n)
         int old = L->inrealloc;
         if (n < LUA_MINBUFFER) n = LUA_MINBUFFER;
         L->inrealloc = 1;
-        buff->buffer = (char *)fn_889CE718(L, buff->buffer, buff->buffsize, n);
+        buff->buffer = (char *)cx19_luaM_realloc_889CE718(L, buff->buffer, buff->buffsize, n);
         L->inrealloc = old;
         buff->buffsize = n;
     }

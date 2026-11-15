@@ -251,7 +251,7 @@ struct global_State {
 #define l_isfalse(o) (ttype(o) == LUA2_TNIL || (ttype(o) == LUA2_TBOOLEAN && bvalue(o) == 0))
 
 /* Shared out-of-line helpers. */
-extern void *fn_889CE718(lua_State *L, void *block, u32 oldsize, u32 size); /* luaM_realloc */
+extern void *cx19_luaM_realloc_889CE718(lua_State *L, void *block, u32 oldsize, u32 size); /* luaM_realloc */
 extern const TValue lbl_880C9748; /* luaO_nilobject */
 
 extern void fn_88818C88(lua_State *L, GCheader *o);

@@ -85,7 +85,7 @@ ts4_word ts4_cs_obj_ctor_88197958();
 ts4_word fn_88197E10();
 ts4_word ts4_cs_obj_ctor_88197F90();
 ts4_word fn_88198CE0();
-ts4_word fn_88199068();
+ts4_word ts4_dispatch2_88199068();
 ts4_word fn_881992A8();
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88199880();
 ts4_word fn_88199C90();

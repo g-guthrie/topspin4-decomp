@@ -52,7 +52,7 @@ extern int fn_88820948(FuncState *fs);                                          
 #define OPR_MINUS 0
 
 #define luaM_growvector(L, v, nelems, size, t, limit, e) \
-    if (((nelems) + 1) > (size)) ((v) = (t *)fn_889CE7D8(L, v, &(size), sizeof(t), limit, e))
+    if (((nelems) + 1) > (size)) ((v) = (t *)cx19_luaM_growaux_889CE7D8(L, v, &(size), sizeof(t), limit, e))
 
 LUA2_NOINLINE int lua2_luaK_code_888208A8(FuncState *fs, Instruction i);
 LUA2_NOINLINE int lua2_addk_88820600(FuncState *fs, TValue *k, TValue *v);

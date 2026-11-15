@@ -15,7 +15,7 @@ extern int fn_888A1200(struct ts4_prolog_state *, int, const char *, const char 
 extern int fn_888A19F0(struct ts4_prolog_state *, int, const char *, const char *, const struct ts4_xml_encoding *);
 extern int fn_888A0F08(struct ts4_prolog_state *, int, const char *, const char *, const struct ts4_xml_encoding *);
 extern int fn_888A0E38(struct ts4_prolog_state *, int, const char *, const char *, const struct ts4_xml_encoding *);
-extern int fn_888A0C10(struct ts4_prolog_state *, int, const char *, const char *, const struct ts4_xml_encoding *);
+extern int os2_xmlrole_attlist8_888A0C10(struct ts4_prolog_state *, int, const char *, const char *, const struct ts4_xml_encoding *);
 extern int fn_888A2150(struct ts4_prolog_state *, int, const char *, const char *, const struct ts4_xml_encoding *);
 extern int fn_888A21B0(struct ts4_prolog_state *, int, const char *, const char *, const struct ts4_xml_encoding *);
 extern int fn_888A16C0(struct ts4_prolog_state *, int, const char *, const char *, const struct ts4_xml_encoding *);
@@ -78,7 +78,7 @@ int ts4_prolog_attlist_type_888A0F78(struct ts4_prolog_state *state, int tok, co
         int i;
         for (i = 0; i < 8; i++) {
             if (TS4_NAME_MATCHES(enc, ptr, end, lbl_88C6ADE4[i])) {
-                state->handler = fn_888A0C10;
+                state->handler = os2_xmlrole_attlist8_888A0C10;
                 return 23 + i;
             }
         }

@@ -5,7 +5,7 @@ typedef unsigned char cw2_u8;
 
 void fn_881BD170(void *, void *);
 void fn_88166108(void *, void *);
-void fn_88166178(void *, void *);
+void ts4_destroy_rec30_range_88166178(void *, void *);
 void fn_88162CC8(void *, void *);
 void fn_88150600(void *, void *);
 
@@ -78,6 +78,6 @@ static struct Cw2E30 *cw2_copy30(struct Cw2E30 *first, struct Cw2E30 *last, stru
 void ts4_cw2_vec30_clear_88160F30(struct Cw2Vec30 *v)
 {
     struct Cw2E30 *dst = cw2_copy30(v->end, v->end, v->begin);
-    fn_88166178(dst, v->end);
+    ts4_destroy_rec30_range_88166178(dst, v->end);
     v->end = dst;
 }

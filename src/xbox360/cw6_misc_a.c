@@ -176,7 +176,7 @@ LuaRes_881B36D0 *ts4_lua_get_string_field_881B36D0(LuaRes_881B36D0 *out, LuaCtx_
 typedef unsigned short u16;
 typedef struct LuaCtx_881B1BF8 { LuaStk_881B36D0 *L; int idx; } LuaCtx_881B1BF8;
 typedef struct LuaRes_881B1BF8 { LuaCtx_881B1BF8 *ctx; int count; } LuaRes_881B1BF8;
-extern void fn_88834B28(void *L, const u16 *s, int len);
+extern void cx19_lua_pushlwstring_88834B28(void *L, const u16 *s, int len);
 
 /* Pushes a UTF-16 string (nil when null) on the context's Lua stack and returns the owner plus the stack count. */
 LuaRes_881B1BF8 *ts4_lua_push_wstring_881B1BF8(LuaRes_881B1BF8 *out, LuaCtx_881B1BF8 *c, const u16 *w)
@@ -190,7 +190,7 @@ LuaRes_881B1BF8 *ts4_lua_push_wstring_881B1BF8(LuaRes_881B1BF8 *out, LuaCtx_881B
         while (*e) {
             e++;
         }
-        fn_88834B28(L, w, (int)(e - w));
+        cx19_lua_pushlwstring_88834B28(L, w, (int)(e - w));
     }
     stk = c->L;
     out->ctx = c;

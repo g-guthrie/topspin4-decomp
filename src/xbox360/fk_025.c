@@ -72,7 +72,7 @@ ts4_word ts4_loop_call_seq_u32_off4_88174B90();
 ts4_word ts4_loop_call_seq_u32_off4_88174C40();
 ts4_word ts4_vec28_trim_88177110();
 ts4_word fn_88178C40();
-ts4_word fn_8817E720();
+ts4_word ts4_dc14b_erase_8817E720();
 ts4_word ts4_destroy_ent16_range_881816D8();
 ts4_word fn_881882D0();
 ts4_word fn_881A6A00();
@@ -97,7 +97,7 @@ ts4_word fn_886E0E60();
 ts4_word fn_886F1FC0();
 ts4_word ts4_member_field_addr_8883B578();
 ts4_word ts4_if_call_seq_u32_lbl_88D459E4_8883F238();
-ts4_word fn_8886B8E0();
+ts4_word ts4_register_records_8886B8E0();
 ts4_word fn_8886FE50();
 ts4_word fn_8886FED0();
 ts4_word fn_88870500();
@@ -1395,7 +1395,7 @@ ts4_word ts4_if_call_seq_fn_888F4E70_888FA018(ts4_word a0)
     return p12;
 }
 
-/* Swing_DLL.xex 0x888FA388: if_get u32@0x5c, u32@0x58, fn_8817E720, u32@0x0, u32@0x68, vcall */
+/* Swing_DLL.xex 0x888FA388: if_get u32@0x5c, u32@0x58, ts4_dc14b_erase_8817E720, u32@0x0, u32@0x68, vcall */
 ts4_word ts4_if_get_u32_off5c_888FA388(ts4_word a0)
 {
     ts4_word t1;
@@ -1404,7 +1404,7 @@ ts4_word ts4_if_get_u32_off5c_888FA388(ts4_word a0)
     ts4_word t13;
 
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 92);
-    fn_8817E720((ts4_word)(a0 + 88), (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 88)), (ts4_word)t1);
+    ts4_dc14b_erase_8817E720((ts4_word)(a0 + 88), (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 88)), (ts4_word)t1);
     ((ts4_word (*)(ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 0))) + 104))))((ts4_word)a0);
     t7 = *(ts4_word *)((char *)(ts4_word)(a0) + 64);
     if ((int)t7 != 0) {
@@ -1434,7 +1434,7 @@ ts4_word ts4_call_seq_fn_888F70A0_888FB920(ts4_word a0)
     return t2;
 }
 
-/* Swing_DLL.xex 0x888FDAA0: if_call_seq u8@0x8, fn_881B9148, u32@lbl_88D459DC, fn_8886B8E0 */
+/* Swing_DLL.xex 0x888FDAA0: if_call_seq u8@0x8, fn_881B9148, u32@lbl_88D459DC, ts4_register_records_8886B8E0 */
 ts4_word ts4_if_call_seq_u8_off8_888FDAA0(ts4_word a0)
 {
     ts4_word p4;
@@ -1446,7 +1446,7 @@ ts4_word ts4_if_call_seq_u8_off8_888FDAA0(ts4_word a0)
     t2 = *(ts4_word *)lbl_88D459DC;
     p4 = (ts4_word)t2;
     if ((ts4_word)t2 != 0) {
-        t3 = fn_8886B8E0((ts4_word)t2);
+        t3 = ts4_register_records_8886B8E0((ts4_word)t2);
         p4 = (ts4_word)t3;
     }
     return p4;

@@ -3,7 +3,7 @@ struct TS4ArgList { void *list; };
 struct TS4CallState { char reserved[0x6C]; struct TS4ArgList *args; };
 struct TS4CallContext { struct TS4CallState *state; };
 double fn_88822420(void *list, int index);
-unsigned int fn_888348A0(void *list, int index);
+unsigned int cx19_lua_tolwstring_888348A0(void *list, int index);
 unsigned int fn_88822398(void *list, int index);
 extern void *lbl_88D459E0;
 extern void *lbl_88D459E8;
@@ -138,7 +138,7 @@ unsigned int ts4_script_callback_88842DE0(void *unused, struct TS4CallContext *c
     struct TS4ArgList *args = context->state->args;
     int first = (int)fn_88822420(args->list, 1);
     void *list = args->list;
-    unsigned int second = fn_888348A0(list, 2);
+    unsigned int second = cx19_lua_tolwstring_888348A0(list, 2);
     fn_88842698(lbl_88D459E0, first, second);
     (void)unused;
     return 0;
@@ -149,7 +149,7 @@ unsigned int ts4_script_callback_88842E48(void *unused, struct TS4CallContext *c
     struct TS4ArgList *args = context->state->args;
     int first = (int)fn_88822420(args->list, 1);
     void *list = args->list;
-    unsigned int second = fn_888348A0(list, 2);
+    unsigned int second = cx19_lua_tolwstring_888348A0(list, 2);
     fn_88842740(lbl_88D459E0, first, second);
     (void)unused;
     return 0;
@@ -160,7 +160,7 @@ unsigned int ts4_script_callback_88842EB0(void *unused, struct TS4CallContext *c
     struct TS4ArgList *args = context->state->args;
     int first = (int)fn_88822420(args->list, 1);
     void *list = args->list;
-    unsigned int second = fn_888348A0(list, 2);
+    unsigned int second = cx19_lua_tolwstring_888348A0(list, 2);
     fn_888427E8(lbl_88D459E0, first, second);
     (void)unused;
     return 0;
@@ -171,7 +171,7 @@ unsigned int ts4_script_callback_88842F18(void *unused, struct TS4CallContext *c
     struct TS4ArgList *args = context->state->args;
     int first = (int)fn_88822420(args->list, 1);
     void *list = args->list;
-    unsigned int second = fn_888348A0(list, 2);
+    unsigned int second = cx19_lua_tolwstring_888348A0(list, 2);
     fn_88842890(lbl_88D459E0, first, second);
     (void)unused;
     return 0;

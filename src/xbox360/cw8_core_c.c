@@ -199,8 +199,8 @@ typedef struct Cw8AssignObj {
     u32 f74, f78, f7c, f80;
 } Cw8AssignObj;
 extern void ts4_if_call_seq_u32_off0_8819B0C8(void *dst, const void *src);
-extern void fn_8820B1A0(void *vec, u32 n);
-extern void fn_8820ACE8(void *dst, const void *src);
+extern void ts4_v2c_resize_8820B1A0(void *vec, u32 n);
+extern void ts4_prvec_assign_8820ACE8(void *dst, const void *src);
 extern void ts4_assign_counted_8820AB10(void *dst, void *src);
 
 CW8C_INL void cw8_vec_assign(Cw8ElemVec *dv, Cw8ElemVec *sv)
@@ -208,7 +208,7 @@ CW8C_INL void cw8_vec_assign(Cw8ElemVec *dv, Cw8ElemVec *sv)
     Cw8Elem *dst;
     Cw8Elem *src;
     u32 n;
-    fn_8820B1A0(dv, sv->count);
+    ts4_v2c_resize_8820B1A0(dv, sv->count);
     n = sv->count;
     src = sv->data;
     dst = dv->data;
@@ -218,7 +218,7 @@ CW8C_INL void cw8_vec_assign(Cw8ElemVec *dv, Cw8ElemVec *sv)
         dst++;
         ts4_if_call_seq_u32_off0_8819B0C8(d, src);
         d->words = src->words;
-        fn_8820ACE8(d->sub, src->sub);
+        ts4_prvec_assign_8820ACE8(d->sub, src->sub);
         src++;
     }
 }
@@ -267,7 +267,7 @@ extern Cw8Singleton *lbl_88D41F98;
 extern void *lbl_88D41FC0;
 extern char lbl_880C1320[];
 extern void *fn_88198CE0(void *p);
-extern void *fn_88199068(u32 zero, u32 size, Cw8AllocArgs *args);
+extern void *ts4_dispatch2_88199068(u32 zero, u32 size, Cw8AllocArgs *args);
 extern void fn_881DAA70(void *obj, u32 n);
 extern void fn_881DAC88(void *obj);
 extern void *fn_881DAFA8(void *obj, const char *s, u32 n);
@@ -287,7 +287,7 @@ extern void fn_881C5AA8(Cw8HTable *t, u32 n, u32 flag);
 extern Cw8HNode *fn_8818F1D8(Cw8HTable *t);
 extern void *fn_8818EB10(void *node, const void *key);
 extern u32 fn_881F0388(Cw8HTable *t);
-extern void fn_881EFE08(Cw8HTable *t, u32 n);
+extern void ts4_hashtable_rehash_881EFE08(Cw8HTable *t, u32 n);
 
 /* 0x881EE128: find the entry for key in the hash table, creating and linking a new node when absent; returns the value part */
 void *ts4_htable_find_or_add_881EE128(Cw8HTable *t, const void *key)
@@ -308,7 +308,7 @@ void *ts4_htable_find_or_add_881EE128(Cw8HTable *t, const void *key)
         n->chain = *(u32 *)(off + (char *)t->buckets);
         *(Cw8HNode **)((char *)t->buckets + off) = n;
         if (t->count > t->f2c && t->f34 == 0)
-            fn_881EFE08(t, fn_881F0388(t));
+            ts4_hashtable_rehash_881EFE08(t, fn_881F0388(t));
     }
     return (char *)n + 4;
 }

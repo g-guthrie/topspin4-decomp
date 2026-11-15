@@ -133,6 +133,6 @@ extern const char *lua2_luaX_token2str_888194C0(LexState *ls, int token);       
 extern int lua2_luaX_lex_8881A6E8(LexState *ls, SemInfo *seminfo);              /* luaX_lex */
 
 extern int lua2_luaK_code_888208A8(FuncState *fs, Instruction i);                /* luaK_code (line taken from ls) */
-extern void *fn_889CE7D8(lua_State *L, void *block, int *size, int size_elem, int limit, const char *errormsg); /* luaM_growaux */
+extern void *cx19_luaM_growaux_889CE7D8(lua_State *L, void *block, int *size, int size_elem, int limit, const char *errormsg); /* luaM_growaux */
 
 #endif

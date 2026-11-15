@@ -212,7 +212,7 @@ extern void ts4_if_call_seq_u32_off0_8819C190(char *);
 extern u32 fn_8856CAD0(char *);
 extern u32 fn_8856C878(char *);
 extern u32 fn_88566FE8(char *);
-extern u32 fn_88867F10(char *);
+extern u32 ts4_tbl_find_forward_88867F10(char *);
 extern u32 fn_88334C60(int, int, int, int);
 extern u32 fn_88851F00(int, int, int, int);
 extern u32 fn_88438270(char *);
@@ -2780,7 +2780,7 @@ u32 ts4_forward_field12_of_second_arg_882F5390(int a, char *b)
 /* Swing_DLL.xex 0x888DA2F0 */
 u32 ts4_forward_field12_of_second_arg_888DA2F0(int a, char *b)
 {
-    return fn_88867F10(LP(b, 12));
+    return ts4_tbl_find_forward_88867F10(LP(b, 12));
 }
 
 /* forward_with_zero_fourth_arg */

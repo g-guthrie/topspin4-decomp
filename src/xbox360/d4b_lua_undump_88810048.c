@@ -23,7 +23,7 @@ typedef struct Ts4LoadState {
 
 extern int ex3_luaZ_fill_8880C040(Ts4ZIO *z);
 extern int ex3_luaZ_read_8880C0C8(Ts4ZIO *z, void *b, unsigned int n);
-extern void *fn_889CE718(lua_State *L, void *block, unsigned int osize, unsigned int nsize);
+extern void *cx19_luaM_realloc_889CE718(lua_State *L, void *block, unsigned int osize, unsigned int nsize);
 extern void *fn_8880BFB0(lua_State *L, void *buff, unsigned int n);
 extern void *fn_888131A0(lua_State *L, const char *s, unsigned int len);
 extern void *fn_88812FC8(lua_State *L, const void *s, unsigned int len);
@@ -177,7 +177,7 @@ typedef struct Ts4MemState {
 static TS4_NOINLINE void lua2_LoadCode_88810780(Ts4LoadState *S, Ts4Proto *f)
 {
     int n = load_size_inline(S);
-    f->lineinfo = fn_889CE718(S->L, 0, 0, (unsigned int)n * 4);
+    f->lineinfo = cx19_luaM_realloc_889CE718(S->L, 0, 0, (unsigned int)n * 4);
     f->nlineinfo = n;
     lua2_LoadVector_88810250(S, f->lineinfo, n);
 }
@@ -187,7 +187,7 @@ static TS4_NOINLINE void lua2_LoadLines_888106C8(Ts4LoadState *S, Ts4Proto *f)
 {
     Ts4MemState *g;
     int n = load_size_inline(S);
-    f->tmp18 = fn_889CE718(S->L, 0, 0, (unsigned int)n * 4);
+    f->tmp18 = cx19_luaM_realloc_889CE718(S->L, 0, 0, (unsigned int)n * 4);
     f->ntmp = n;
     lua2_LoadVector_88810250(S, f->tmp18, n);
     {
@@ -254,7 +254,7 @@ TS4_NOINLINE void ts4_undump_load_locvars_88810D48(Ts4LoadState *S, Ts4ProtoVars
 {
     int i;
     int n = load_size_inline(S);
-    f->locvars = (Ts4LocVar *)fn_889CE718(S->L, 0, 0, (unsigned int)n * 12);
+    f->locvars = (Ts4LocVar *)cx19_luaM_realloc_889CE718(S->L, 0, 0, (unsigned int)n * 12);
     f->sizelocvars = n;
     for (i = 0; i < n; i++) {
         f->locvars[i].varname = (Ts4LuaObject *)lua2_LoadString_888108C0(S);

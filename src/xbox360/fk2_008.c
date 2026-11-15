@@ -189,9 +189,9 @@ ts4_word RtlInitializeCriticalSection();
 ts4_word fn_88150310();
 ts4_word ts4_loop_call_seq_u32_off0_88150378();
 ts4_word fn_88150600();
-ts4_word fn_881506A0();
+ts4_word ts4_handle_release_881506A0();
 ts4_word fn_88154D40();
-ts4_word fn_88157B78();
+ts4_word ts4_list_destroy_88157B78();
 ts4_word fn_88159870();
 ts4_word fn_8815B210();
 ts4_word ts4_call_seq_u32_off0_8815E810();
@@ -1149,7 +1149,7 @@ ts4_word ts4_if_call_seq_fn_8892F508_8892FDA0(ts4_word a0, ts4_word a1, ts4_word
     t1 = fn_8892F508((ts4_word)a1, (ts4_word)a2);
     if ((ts4_word)(t1 & 0xff) != 0) {
         t5 = fn_88923380((ts4_word)(ts4_word)&loc50[0], (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 20)));
-        fn_881506A0((ts4_word)a0, (ts4_word)t5);
+        ts4_handle_release_881506A0((ts4_word)a0, (ts4_word)t5);
     } else {
         *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 636));
     }
@@ -1950,9 +1950,9 @@ ts4_word ts4_loop_get_u32_off8_8893B328(ts4_word a0, ts4_word a1, ts4_word a2, t
         fn_88935E70((ts4_word)t11);
         fn_88935E70((ts4_word)(t11 + 8));
         fn_88935E70((ts4_word)(t11 + 16));
-        fn_88157B78((ts4_word)(t11 + 16));
-        fn_88157B78((ts4_word)(t11 + 8));
-        fn_88157B78((ts4_word)t11);
+        ts4_list_destroy_88157B78((ts4_word)(t11 + 16));
+        ts4_list_destroy_88157B78((ts4_word)(t11 + 8));
+        ts4_list_destroy_88157B78((ts4_word)t11);
         t18 = ts4_tsu_cleanup_end((ts4_word)t11);
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)0;
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 20) = (ts4_word)0;
@@ -3330,7 +3330,7 @@ ts4_word ts4_if_call_seq_lbl_880D245C_889A41F0(ts4_word a0, ts4_word a1, ts4_wor
             fn_885651F8((ts4_word)t1, (ts4_word)t1);
         }
     }
-    fn_88157B78((ts4_word)(a0 + 332));
+    ts4_list_destroy_88157B78((ts4_word)(a0 + 332));
     ts4_netdb_release_owned_list((ts4_word)(a0 + 324));
     t11 = ts4_if_call_seq_lbl_880F7EE4_88617D28((ts4_word)a0);
     return t11;

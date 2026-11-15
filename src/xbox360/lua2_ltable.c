@@ -48,9 +48,9 @@ LUA2_LOCAL int ts4_if_addr_lbl_880C9758_888182A8(unsigned int x)
 /* luaH_free */
 void lua2_luaH_free_888115F8(lua_State *L, Table *t)
 {
-    if (t->lsizenode) fn_889CE718(L, t->node, sizenode(t) * sizeof(Node), 0);
-    fn_889CE718(L, t->array, t->sizearray * sizeof(TValue), 0);
-    fn_889CE718(L, t, sizeof(Table), 0);
+    if (t->lsizenode) cx19_luaM_realloc_889CE718(L, t->node, sizenode(t) * sizeof(Node), 0);
+    cx19_luaM_realloc_889CE718(L, t->array, t->sizearray * sizeof(TValue), 0);
+    cx19_luaM_realloc_889CE718(L, t, sizeof(Table), 0);
 }
 
 /* setnodevector */
@@ -62,7 +62,7 @@ void lua2_setnodevector_88811688(lua_State *L, Table *t, int lsize)
     if (lsize == 0) {
         t->node = (Node *)((char *)G(L) + 0x60); /* dummynode */
     } else {
-        t->node = (Node *)fn_889CE718(L, 0, 0, size * sizeof(Node));
+        t->node = (Node *)cx19_luaM_realloc_889CE718(L, 0, 0, size * sizeof(Node));
         for (i = 0; i < size; i++) {
             t->node[i].next = 0;
             setnilvalue_raw(gkey(gnode(t, i)));
@@ -77,7 +77,7 @@ void lua2_setnodevector_88811688(lua_State *L, Table *t, int lsize)
 void lua2_setarrayvector_88811768(lua_State *L, Table *t, int size)
 {
     int i;
-    t->array = (TValue *)fn_889CE718(L, t->array, t->sizearray * sizeof(TValue), size * sizeof(TValue));
+    t->array = (TValue *)cx19_luaM_realloc_889CE718(L, t->array, t->sizearray * sizeof(TValue), size * sizeof(TValue));
     for (i = t->sizearray; i < size; i++) setnilvalue_raw(&t->array[i]);
     t->sizearray = size;
 }
@@ -227,7 +227,7 @@ void lua2_resize_88812378(lua_State *L, Table *t, int nasize, int nhsize)
                 setnilvalue(L, &t->array[i]);
             }
         }
-        t->array = (TValue *)fn_889CE718(L, t->array, oldasize * sizeof(TValue), nasize * sizeof(TValue));
+        t->array = (TValue *)cx19_luaM_realloc_889CE718(L, t->array, oldasize * sizeof(TValue), nasize * sizeof(TValue));
     }
     for (i = twoto(oldhsize) - 1; i >= 0; i--) {
         Node *old = nold + i;
@@ -243,7 +243,7 @@ void lua2_resize_88812378(lua_State *L, Table *t, int nasize, int nhsize)
                 setnilvalue(L, gval(old));
             }
         }
-        fn_889CE718(L, nold, twoto(oldhsize) * sizeof(Node), 0);
+        cx19_luaM_realloc_889CE718(L, nold, twoto(oldhsize) * sizeof(Node), 0);
     }
 }
 
