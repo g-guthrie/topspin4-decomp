@@ -48888,3 +48888,21 @@ src/xbox360/tw2_88943B70.c:
 
 src/xbox360/me_reset_floats_886468B8.c:
 	.text       start:0x886468B8 end:0x886468F4
+
+src/xbox360/me_lookup_hash_8866DF18.cpp:
+	.text       start:0x8866DF18 end:0x8866DF60
+
+src/xbox360/me_destroy_two_subs_88671A98.c:
+	.pdata      start:0x88123710 end:0x88123718
+	.text       start:0x88671A98 end:0x88671B10
+
+src/xbox360/me_copy_vec_fill_hashes_88672878.c:
+	.text       start:0x88672878 end:0x88672934
+
+src/xbox360/me_lookup_scaled_vec_88649828.c:
+	.pdata      start:0x88122AC0 end:0x88122AC8
+	.text       start:0x88649828 end:0x886498F0
+
+src/xbox360/me_find_and_notify_88658968.cpp:
+	.pdata      start:0x88123150 end:0x88123158
+	.text       start:0x88658968 end:0x88658A34

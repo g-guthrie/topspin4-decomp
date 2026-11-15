@@ -518,3 +518,20 @@ different sections, e.g. the shared zero at 0x8814B440 in BINKCONS and a literal
 function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloads or changes registers), and use the
 `lbl_` extern only for constants whose label has no size in symbols.txt. Worked example: `me_reset_floats_886468B8.c`
 (also shows that a `set(&v, 0.0f, 10.0f, 0.0f)` inline vector setter makes the second constant load one store early).
+
+## C++ forms that C cannot reproduce (found at b89)
+
+- **Small class returned by value** (`me_lookup_hash_8866DF18.cpp`): the target loads a field of an argument, then
+  stores a default constant through the hidden return pointer in r3, then tests. Write the return type as a class with a
+  constructor that sets the default (`struct Hash { unsigned v; Hash() : v(0xca68aaecu) {} };`), declare the local
+  after the first load, assign `h.v` on the taken path and `return h`. A C function with an `out` pointer hoists the
+  constant above the load (2 off) whatever the statement order.
+- **Virtual calls** (`me_find_and_notify_88658968.cpp`): when the target loads the method pointer BEFORE setting up the
+  arguments (`lwz r7,0(r31); lwz r6,0x3c(r7); addi r4,..; mr r3,r31; mtctr r6`), declare real classes with `virtual`
+  members (pad the vtable with dummy virtuals) and call `m->method(&t)`. A C struct of function pointers sets the
+  arguments first. A method returning a struct takes the hidden pointer in r3 and `this` in r4.
+- Stack locals: the frame size tells the size of locals the code never touches; pad the local structs until the frame
+  and the slot offsets agree (text object 12 bytes, handle 8 bytes in that example).
+- Float arguments consume GPR slots: `f(obj, float, float, out)` passes `out` in r6.
+- Functions no agent has tried go fast by hand (5 of 9 tried at b89 matched in one to three runs); the long-open
+  near misses are almost all instruction-scheduling cases and do not.
