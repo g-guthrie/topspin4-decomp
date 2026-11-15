@@ -31,10 +31,10 @@ ts4_word fn_88179740();
 ts4_word fn_88198CE0();
 ts4_word fn_881B19A0();
 ts4_word fn_881B9148();
-ts4_word fn_881C2390();
+ts4_word ts4_each_call_881C2390();
 ts4_word fn_881C23E8();
 ts4_word fn_881C6998();
-ts4_word fn_881E1D70();
+ts4_word ts4_free_list_release_881E1D70();
 ts4_word fn_8841C678();
 ts4_word fn_884214A8();
 ts4_word fn_88423660();
@@ -112,7 +112,7 @@ void ts4_if_call_seq_u32_off6ec_881BDDB0(ts4_word a0)
     ts4_call_seq_fn_881B19A0_881C6008((ts4_word)((q80) + 912));
     t4 = *(ts4_word *)((char *)(ts4_word)(a0) + 1664);
     if ((ts4_word)t4 != 0) {
-        fn_881C2390((ts4_word)t4, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((q80)) + 900)));
+        ts4_each_call_881C2390((ts4_word)t4, (ts4_word)(*(ts4_word *)((char *)(ts4_word)((q80)) + 900)));
     }
     t8 = *(ts4_word *)((char *)(ts4_word)(a0) + 748);
     if ((ts4_word)t8 != 0) {
@@ -124,16 +124,16 @@ void ts4_if_call_seq_u32_off6ec_881BDDB0(ts4_word a0)
         *(ts4_word *)((char *)(ts4_word)(a0) + 24) = (ts4_word)0;
     }
     q81 = a0 + 16;
-    fn_881E1D70((ts4_word)(q81));
+    ts4_free_list_release_881E1D70((ts4_word)(q81));
     q82 = a0 + 12;
-    fn_881E1D70((ts4_word)(q82));
+    ts4_free_list_release_881E1D70((ts4_word)(q82));
     t17 = *(ts4_word *)((char *)(ts4_word)(a0) + 8);
     ts4_str_release((ts4_word)t17);
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880DD088;
     return;
 }
 
-/* Swing_DLL.xex 0x881C63E0: if_call_seq u32@0x380, u32@0x384, fn_881C2390, u32@0x380, u32@0x384, u32@0x388 */
+/* Swing_DLL.xex 0x881C63E0: if_call_seq u32@0x380, u32@0x384, ts4_each_call_881C2390, u32@0x380, u32@0x384, u32@0x388 */
 void ts4_if_call_seq_u32_off380_881C63E0(ts4_word a0)
 {
     ts4_word q80;
@@ -141,7 +141,7 @@ void ts4_if_call_seq_u32_off380_881C63E0(ts4_word a0)
 
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 896);
     if ((ts4_word)t1 != 0) {
-        fn_881C2390((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 900)));
+        ts4_each_call_881C2390((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 900)));
         *(ts4_word *)((char *)(ts4_word)(a0) + 896) = (ts4_word)0;
     }
     *(ts4_word *)((char *)(ts4_word)(a0) + 900) = (ts4_word)0;

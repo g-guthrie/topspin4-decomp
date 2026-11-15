@@ -66,7 +66,7 @@ extern double floor(float);
 extern float lbl_8814B910;
 extern float lbl_8814B440;
 extern void *ts4_if_call_seq_u32_off0_8819B0C8(void *, void *);
-extern void *fn_88213CC8(void *, void *);
+extern void *ts4_vec10_erase_88213CC8(void *, void *);
 extern void *ts4_find_record_by_key_881AD100(void *, u32 *);
 extern void *ts4_find_record_by_key_881AD0A8(void *, u32 *);
 extern void fn_88865388(void *, int, int, u8 *);
@@ -356,7 +356,7 @@ void ts4_init_sub_and_set_byte5_8898EE30(char *self) { ts4_byte_string_assign_88
 void ts4_clear_byte_65_in_all_records_88778878(char *self) { u32 i; for (i = 0; i < *(u32 *)(self + 0x1c4); i++) { char *b = *(char **)(self + 0xa4); u32 o = i * 0x98; b[o + 0x65] = 0; } }
 
 /* 0x88796118: find 16-byte entry in the range at +0x1EC with word0 == key; call helper(range base, entry) */
-void *ts4_find_entry_by_word0_then_call_88796118(char *self, u32 k) { char *v = self + 0x1ec; char *e = *(char **)(self + 0x1f0); char *p = *(char **)v; if (e == p) return v; do { if (k == *(u32 *)p) return fn_88213CC8(v, p); p += 0x10; } while (e != p); return v; }
+void *ts4_find_entry_by_word0_then_call_88796118(char *self, u32 k) { char *v = self + 0x1ec; char *e = *(char **)(self + 0x1f0); char *p = *(char **)v; if (e == p) return v; do { if (k == *(u32 *)p) return ts4_vec10_erase_88213CC8(v, p); p += 0x10; } while (e != p); return v; }
 
 /* 0x8899DD78: if both objects have word +0x80, compare word +0x84 (this greater); else whether this one has it */
 bool ts4_pair_greater_8899DD78(char *a, char *b) { if (*(u32 *)(a + 0x80) != 0 && *(u32 *)(b + 0x80) != 0) return *(u32 *)(b + 0x84) < *(u32 *)(a + 0x84); return *(u32 *)(a + 0x80) != 0; }

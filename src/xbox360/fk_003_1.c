@@ -105,7 +105,7 @@ ts4_word fn_881CCD90();
 ts4_word ts4_call_seq_u32_offc_881CCDF0();
 ts4_word fn_881CCEE0();
 ts4_word fn_881CE5B8();
-ts4_word fn_881E1D70();
+ts4_word ts4_free_list_release_881E1D70();
 ts4_word fn_881E9010();
 ts4_word fn_881F08F0();
 ts4_word fn_881F2498();

@@ -9,7 +9,7 @@ typedef struct RegC { char pad[0x34]; void *tabA; void *tabB; } RegC;
 typedef struct RegB { char pad[0x40]; void *tabA; char pad2[4]; void *tabB; } RegB;
 extern Reg *lbl_88D45894;
 extern double ts4_lua_tonumber_88822420(lua_State *L, int idx);
-extern Rec *fn_88216268(void *tab, int *key);
+extern Rec *ts4_find_rec_by_id_88216268(void *tab, int *key);
 extern void ts4_call_seq_u32_off0_881B1A98(Out *out, void *self, int v);
 
 int ts4_script_lookup_value_887A6150(void *self, Args *a)
@@ -21,7 +21,7 @@ int ts4_script_lookup_value_887A6150(void *self, Args *a)
             int key = (int)ts4_lua_tonumber_88822420(*a->f2.L, a->f2.idx);
             Reg *g = lbl_88D45894;
             int *kp = &key;
-            if (sel == 0xF5BF4F97u) r = fn_88216268(g->tabA, kp); else r = fn_88216268(g->tabB, kp);
+            if (sel == 0xF5BF4F97u) r = ts4_find_rec_by_id_88216268(g->tabA, kp); else r = ts4_find_rec_by_id_88216268(g->tabB, kp);
         }
         if (r) {
             Out o;
@@ -43,7 +43,7 @@ int ts4_script_lookup_value_887A6590(void *self, Args *a)
             int key = (int)ts4_lua_tonumber_88822420(*a->f2.L, a->f2.idx);
             RegB *g = (RegB *)lbl_88D45894;
             int *kp = &key;
-            if (sel == 0xF5BF4F97u) r = fn_88216268(g->tabA, kp); else r = fn_88216268(g->tabB, kp);
+            if (sel == 0xF5BF4F97u) r = ts4_find_rec_by_id_88216268(g->tabA, kp); else r = ts4_find_rec_by_id_88216268(g->tabB, kp);
         }
         if (r) {
             Out o;
@@ -65,7 +65,7 @@ int ts4_script_lookup_value_887A6D50(void *self, Args *a)
             int key = (int)ts4_lua_tonumber_88822420(*a->f2.L, a->f2.idx);
             RegC *g = (RegC *)lbl_88D45894;
             int *kp = &key;
-            if (sel == 0xF5BF4F97u) r = fn_88216268(g->tabA, kp); else r = fn_88216268(g->tabB, kp);
+            if (sel == 0xF5BF4F97u) r = ts4_find_rec_by_id_88216268(g->tabA, kp); else r = ts4_find_rec_by_id_88216268(g->tabB, kp);
         }
         if (r) {
             Out o;

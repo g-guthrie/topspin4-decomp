@@ -89,7 +89,7 @@ Elem_881B47A8 *ts4_vector_erase_range_881B47A8(Vec_881B47A8 *v, Elem_881B47A8 *f
 typedef struct Elem_881BB8C0 { u8 bytes[36]; } Elem_881BB8C0;
 typedef struct Vec_881BB8C0 { u32 pad; Elem_881BB8C0 *end; } Vec_881BB8C0;
 extern void ts4_call_seq_u8_off0_881BD0F0(Elem_881BB8C0 *dst, Elem_881BB8C0 *src);
-extern void fn_881BC0D0(Elem_881BB8C0 *first, Elem_881BB8C0 *last);
+extern void ts4_destroy_range_e24_881BC0D0(Elem_881BB8C0 *first, Elem_881BB8C0 *last);
 
 /* Erases [first, last): shifts the tail down element by element, destroys the leftovers and shrinks the vector. */
 Elem_881BB8C0 *ts4_vector_erase_range_881BB8C0(Vec_881BB8C0 *v, Elem_881BB8C0 *first, Elem_881BB8C0 *last)
@@ -102,7 +102,7 @@ Elem_881BB8C0 *ts4_vector_erase_range_881BB8C0(Vec_881BB8C0 *v, Elem_881BB8C0 *f
             ++d;
         } while (--n > 0);
     }
-    fn_881BC0D0(d, v->end);
+    ts4_destroy_range_e24_881BC0D0(d, v->end);
     v->end = d;
     return first;
 }
@@ -131,7 +131,7 @@ Elem_88214378 *ts4_vector_erase_range_88214378(Vec_88214378 *v, Elem_88214378 *f
 typedef struct Elem_882143E0 { u8 bytes[624]; } Elem_882143E0;
 typedef struct Vec_882143E0 { u32 pad; Elem_882143E0 *end; } Vec_882143E0;
 extern void fn_882184A8(Elem_882143E0 *dst, Elem_882143E0 *src);
-extern void fn_88216460(Elem_882143E0 *first, Elem_882143E0 *last);
+extern void ts4_destroy_ent270_range_88216460(Elem_882143E0 *first, Elem_882143E0 *last);
 
 /* Erases [first, last): shifts the tail down element by element, destroys the leftovers and shrinks the vector. */
 Elem_882143E0 *ts4_vector_erase_range_882143E0(Vec_882143E0 *v, Elem_882143E0 *first, Elem_882143E0 *last)
@@ -144,7 +144,7 @@ Elem_882143E0 *ts4_vector_erase_range_882143E0(Vec_882143E0 *v, Elem_882143E0 *f
             ++d;
         } while (--n > 0);
     }
-    fn_88216460(d, v->end);
+    ts4_destroy_ent270_range_88216460(d, v->end);
     v->end = d;
     return first;
 }

@@ -92,9 +92,9 @@ ts4_word fn_881B2AC8();
 ts4_word fn_881B9148();
 ts4_word fn_881C5950();
 ts4_word fn_881C8BD0();
-ts4_word fn_881E1D70();
-ts4_word fn_881E2DA0();
-ts4_word fn_881E2ED0();
+ts4_word ts4_free_list_release_881E1D70();
+ts4_word ts4_str_release_each_881E2DA0();
+ts4_word ts4_inline_vec_reserve_881E2ED0();
 ts4_word fn_881F0608();
 ts4_word fn_881F25F0();
 ts4_word fn_881F26C0();
@@ -715,7 +715,7 @@ void ts4_if_call_seq_u32_off4_881E2258(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x881E2E38: if_call_seq u32@0x30, u32@0x2c, fn_881E2ED0, u32@0x2c, u32@0x28, fn_881E2DA0 */
+/* Swing_DLL.xex 0x881E2E38: if_call_seq u32@0x30, u32@0x2c, ts4_inline_vec_reserve_881E2ED0, u32@0x2c, u32@0x28, ts4_str_release_each_881E2DA0 */
 void ts4_if_call_seq_u32_off30_881E2E38(ts4_word a0)
 {
     ts4_word t1;
@@ -726,7 +726,7 @@ void ts4_if_call_seq_u32_off30_881E2E38(ts4_word a0)
     if ((ts4_word)t1 >= 10) {
         t4 = *(ts4_word *)((char *)(ts4_word)(a0) + 44);
         if ((ts4_word)t4 > 10) {
-            fn_881E2DA0((ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 40)) + 40), (ts4_word)(t4 + -10));
+            ts4_str_release_each_881E2DA0((ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 40)) + 40), (ts4_word)(t4 + -10));
             t7 = *(ts4_word *)((char *)(ts4_word)(a0) + 44);
             fn_88562DC0((ts4_word)a0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 40)), (ts4_word)(t7 << 2));
             *(ts4_word *)((char *)(ts4_word)(a0) + 40) = (ts4_word)a0;
@@ -736,7 +736,7 @@ void ts4_if_call_seq_u32_off30_881E2E38(ts4_word a0)
         }
         return;
     }
-    fn_881E2ED0((ts4_word)a0, (ts4_word)10);
+    ts4_inline_vec_reserve_881E2ED0((ts4_word)a0, (ts4_word)10);
     return;
 }
 
@@ -829,9 +829,9 @@ void ts4_if_call_seq_u32_off0_88200EB8(ts4_word a0)
         if ((ts4_word)t9 != 0) {
             fn_881F26C0((ts4_word)t9, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t1) + 108)));
         }
-        fn_881E1D70((ts4_word)(t1 + 64));
-        fn_881E1D70((ts4_word)(t1 + 60));
-        fn_881E1D70((ts4_word)(t1 + 56));
+        ts4_free_list_release_881E1D70((ts4_word)(t1 + 64));
+        ts4_free_list_release_881E1D70((ts4_word)(t1 + 60));
+        ts4_free_list_release_881E1D70((ts4_word)(t1 + 56));
         ts4_call_seq_fn_881EF750_881EDCD8((ts4_word)t1);
         fn_881992A8((ts4_word)0, (ts4_word)t1);
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)0;

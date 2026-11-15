@@ -9,7 +9,7 @@ typedef struct Reg { char pad[0x3c]; void *tab; } Reg;
 typedef struct RegT { char pad[0x3c]; Tab *tab; } RegT;
 extern Reg *lbl_88D45894;
 extern double ts4_lua_tonumber_88822420(lua_State *L, int idx);
-extern Rec *fn_88216268(void *tab, int *key);
+extern Rec *ts4_find_rec_by_id_88216268(void *tab, int *key);
 extern void ts4_call_seq_u32_off0_881B1A98(Out *out, void *self, int v);
 
 int ts4_script_lookup_global_value_887A6930(void *self, Args *a)
@@ -18,7 +18,7 @@ int ts4_script_lookup_global_value_887A6930(void *self, Args *a)
         Rec *r;
         {
             int key = (int)ts4_lua_tonumber_88822420(*a->f1.L, a->f1.idx);
-            r = fn_88216268(lbl_88D45894->tab, &key);
+            r = ts4_find_rec_by_id_88216268(lbl_88D45894->tab, &key);
         }
         if (r) {
             Out o;

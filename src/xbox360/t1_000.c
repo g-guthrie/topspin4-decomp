@@ -35,7 +35,7 @@ extern char ts4_noop_88778370[];
 extern char ts4_vcall_slot9_881DD468[];
 ts4_word KeTlsSetValue();
 ts4_word fn_881C6D48();
-ts4_word fn_881C70D8();
+ts4_word ts4_release_ref_881C70D8();
 ts4_word fn_881C7920();
 ts4_word fn_881DA660();
 ts4_word fn_881DA880();
@@ -106,7 +106,7 @@ void ts4_call_seq_lbl_88C698A4_881DD520(void)
     *(volatile ts4_word *)((char *)(ts4_word)(t7) + 16) = (ts4_word)(ts4_word)ts4_vcall_slot9_881DD468;
     ts4_if_call_seq_u32_off0_881C8A60((ts4_word)t1, (ts4_word)(ts4_word)&s50);
     fn_881DA880((ts4_word)t5);
-    fn_881C70D8((ts4_word)(ts4_word)&s50);
+    ts4_release_ref_881C70D8((ts4_word)(ts4_word)&s50);
     return;
 }
 
@@ -136,7 +136,7 @@ void ts4_call_seq_lbl_88C69734_881FBFA8(void)
     *(volatile ts4_word *)((char *)(ts4_word)(t7) + 16) = (ts4_word)(ts4_word)ts4_forward_float_from_ptr_881FBF90;
     ts4_if_call_seq_u32_off0_881C8A60((ts4_word)t1, (ts4_word)(ts4_word)&s50);
     fn_881DA880((ts4_word)t5);
-    fn_881C70D8((ts4_word)(ts4_word)&s50);
+    ts4_release_ref_881C70D8((ts4_word)(ts4_word)&s50);
     return;
 }
 
@@ -166,7 +166,7 @@ void ts4_call_seq_lbl_88C69544_8820F680(void)
     *(volatile ts4_word *)((char *)(ts4_word)(t7) + 16) = (ts4_word)(ts4_word)ts4_if_call_seq_u32_lbl_88D41FC4_8820F5B8;
     ts4_if_call_seq_u32_off0_881C8A60((ts4_word)t1, (ts4_word)(ts4_word)&s50);
     fn_881DA880((ts4_word)t5);
-    fn_881C70D8((ts4_word)(ts4_word)&s50);
+    ts4_release_ref_881C70D8((ts4_word)(ts4_word)&s50);
     return;
 }
 
@@ -196,7 +196,7 @@ void ts4_call_seq_lbl_88C69510_8820FCC0(void)
     *(volatile ts4_word *)((char *)(ts4_word)(t7) + 16) = (ts4_word)(ts4_word)ts4_if_call_seq_u32_lbl_88D41FC4_8820FBF8;
     ts4_if_call_seq_u32_off0_881C8A60((ts4_word)t1, (ts4_word)(ts4_word)&s50);
     fn_881DA880((ts4_word)t5);
-    fn_881C70D8((ts4_word)(ts4_word)&s50);
+    ts4_release_ref_881C70D8((ts4_word)(ts4_word)&s50);
     return;
 }
 
@@ -226,7 +226,7 @@ void ts4_call_seq_lbl_88C476C0_887B5BD8(void)
     *(volatile ts4_word *)((char *)(ts4_word)(t7) + 16) = (ts4_word)(ts4_word)ts4_noop_88778370;
     ts4_if_call_seq_u32_off0_881C8A60((ts4_word)t1, (ts4_word)(ts4_word)&s50);
     fn_881DA880((ts4_word)t5);
-    fn_881C70D8((ts4_word)(ts4_word)&s50);
+    ts4_release_ref_881C70D8((ts4_word)(ts4_word)&s50);
     return;
 }
 

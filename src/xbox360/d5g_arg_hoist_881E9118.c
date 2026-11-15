@@ -23,7 +23,7 @@ ts4_word ts4_if_atomic_interlocked_dec_881876D0();
 ts4_word fn_88198CE0();
 ts4_word fn_88199068();
 ts4_word fn_881C38D0();
-ts4_word fn_881EE128();
+ts4_word ts4_htable_find_or_add_881EE128();
 ts4_word ts4_string_table_find_881FBA58();
 ts4_word fn_8820B418();
 
@@ -75,7 +75,7 @@ ts4_word ts4_if_get_u32_off4_881E9118(ts4_word a0, ts4_word a1, ts4_word a2)
     t14 = fn_88198CE0((ts4_word)(*(ts4_word *)lbl_88D41FC0));
     t15 = *(ts4_word *)((char *)(ts4_word)(a1) + 4);
     *(unsigned char *)lbl_88D45A1F = (unsigned char)1;
-    t16 = fn_881EE128((ts4_word)(t15 + 5160), (ts4_word)a2);
+    t16 = ts4_htable_find_or_add_881EE128((ts4_word)(t15 + 5160), (ts4_word)a2);
     *(ts4_word *)((char *)(ts4_word)(t16) + 0) = (ts4_word)p6;
     t17 = *(ts4_word *)((char *)(ts4_word)(a1) + 4);
     *(unsigned char *)lbl_88D45A1F = (unsigned char)0;
