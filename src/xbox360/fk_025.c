@@ -114,7 +114,7 @@ ts4_word fn_888CB3F0();
 ts4_word fn_888CC2C8();
 ts4_word fn_888CC890();
 ts4_word fn_888CCCC8();
-ts4_word fn_888CEBA8();
+ts4_word ts4_reset_four_slots_888CEBA8();
 ts4_word fn_888D3330();
 ts4_word fn_888D3648();
 ts4_word ts4_if_call_seq_u32_off15c_888D73B0();
@@ -151,7 +151,7 @@ ts4_word fn_88918EA8();
 ts4_word fn_889254C8();
 ts4_word fn_8892AF80();
 ts4_word fn_8892AFF0();
-ts4_word fn_88936BB0();
+ts4_word ts4_bits_step_88936BB0();
 ts4_word fn_88938660();
 ts4_word fn_889393C0();
 ts4_word fn_88939470();
@@ -1347,13 +1347,13 @@ ts4_word ts4_get_fn_888F70A0_888F7B20(ts4_word a0)
     return t4;
 }
 
-/* Swing_DLL.xex 0x888F7B60: call_seq fn_888F70A0, fn_888CEBA8 */
+/* Swing_DLL.xex 0x888F7B60: call_seq fn_888F70A0, ts4_reset_four_slots_888CEBA8 */
 ts4_word ts4_call_seq_fn_888F70A0_888F7B60(ts4_word a0)
 {
     ts4_word t2;
 
     fn_888F70A0();
-    t2 = fn_888CEBA8((ts4_word)a0);
+    t2 = ts4_reset_four_slots_888CEBA8((ts4_word)a0);
     return t2;
 }
 
@@ -1423,13 +1423,13 @@ ts4_word ts4_if_get_u32_off5c_888FA388(ts4_word a0)
     return t13;
 }
 
-/* Swing_DLL.xex 0x888FB920: call_seq fn_888F70A0, fn_888CEBA8, u8@0xe6 */
+/* Swing_DLL.xex 0x888FB920: call_seq fn_888F70A0, ts4_reset_four_slots_888CEBA8, u8@0xe6 */
 ts4_word ts4_call_seq_fn_888F70A0_888FB920(ts4_word a0)
 {
     ts4_word t2;
 
     fn_888F70A0();
-    t2 = fn_888CEBA8((ts4_word)a0);
+    t2 = ts4_reset_four_slots_888CEBA8((ts4_word)a0);
     *(unsigned char *)((char *)(ts4_word)(a0) + 230) = (unsigned char)1;
     return t2;
 }
@@ -2513,7 +2513,7 @@ ts4_word ts4_call_seq_fn_88938660_8891B100(ts4_word a0)
     return a0;
 }
 
-/* Swing_DLL.xex 0x8891B158: if_call_seq fn_88936BB0, ts4_read_scaled_counter_8893C808, u8@0x42c, ts4_read_scaled_counter_8893C808 */
+/* Swing_DLL.xex 0x8891B158: if_call_seq ts4_bits_step_88936BB0, ts4_read_scaled_counter_8893C808, u8@0x42c, ts4_read_scaled_counter_8893C808 */
 ts4_word ts4_if_call_seq_fn_88936BB0_8891B158(ts4_word a0, ts4_word a1)
 {
     ts4_word p5;
@@ -2521,7 +2521,7 @@ ts4_word ts4_if_call_seq_fn_88936BB0_8891B158(ts4_word a0, ts4_word a1)
     unsigned char t3;
     ts4_word t4;
 
-    fn_88936BB0((ts4_word)a1, (ts4_word)(a0 + 1068));
+    ts4_bits_step_88936BB0((ts4_word)a1, (ts4_word)(a0 + 1068));
     t2 = ts4_read_scaled_counter_8893C808((ts4_word)a1, (ts4_word)(a0 + 1072));
     t3 = *(unsigned char *)((char *)(ts4_word)(a0) + 1068);
     p5 = (ts4_word)t2;

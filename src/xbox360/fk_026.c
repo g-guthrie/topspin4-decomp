@@ -60,7 +60,7 @@ ts4_word fn_88919780();
 ts4_word fn_8891AE70();
 ts4_word fn_8891FA30();
 ts4_word fn_88921740();
-ts4_word fn_88922B28();
+ts4_word ts4_pv_destroy_all_88922B28();
 ts4_word fn_88923380();
 ts4_word fn_88929308();
 ts4_word fn_88929420();
@@ -68,13 +68,13 @@ ts4_word ts4_call_seq_lbl_880D60F8_889298D8();
 ts4_word fn_8892EB28();
 ts4_word fn_8892F508();
 ts4_word fn_889310A0();
-ts4_word fn_88931388();
-ts4_word fn_889313E8();
+ts4_word ts4_count_true_elements_88931388();
+ts4_word ts4_erase_first_accepted_889313E8();
 ts4_word fn_88931950();
-ts4_word fn_88933198();
+ts4_word ts4_remove_notify_by_key_88933198();
 ts4_word fn_889333F0();
 ts4_word fn_88933EF8();
-ts4_word fn_889340B0();
+ts4_word ts4_dispatch_to_channel_889340B0();
 ts4_word fn_88934990();
 ts4_word fn_88936AF0();
 ts4_word fn_889393C0();
@@ -948,7 +948,7 @@ ts4_word ts4_if_get_u32_off1c_88928368(ts4_word a0, ts4_word a1, ts4_word a2, ts
         ((ts4_word (*)(ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t1) + 0))) + 0))))((ts4_word)t1, (ts4_word)1);
         *(ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)0;
     }
-    fn_88922B28((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 36)));
+    ts4_pv_destroy_all_88922B28((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 36)));
     *(unsigned char *)((char *)(ts4_word)(a0) + 8) = (unsigned char)0;
     t11 = fn_881B9148((ts4_word)(a0 + 16));
     return t11;
@@ -985,7 +985,7 @@ void ts4_set_u32_off0_889292F0(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x889293A0: if_call_seq u32@0x10, lbl_880D6330, u32@0x0, fn_88922B28, u32@0x0, ts4_destroy_owned_object */
+/* Swing_DLL.xex 0x889293A0: if_call_seq u32@0x10, lbl_880D6330, u32@0x0, ts4_pv_destroy_all_88922B28, u32@0x0, ts4_destroy_owned_object */
 ts4_word ts4_if_call_seq_u32_off10_889293A0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6)
 {
     ts4_word p7;
@@ -997,7 +997,7 @@ ts4_word ts4_if_call_seq_u32_off10_889293A0(ts4_word a0, ts4_word a1, ts4_word a
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880D6330;
     p7 = (ts4_word)a0;
     if ((ts4_word)t1 != 0) {
-        fn_88922B28((ts4_word)t1, (ts4_word)a1, (ts4_word)a2, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)a6, (ts4_word)(ts4_word)lbl_880D6330);
+        ts4_pv_destroy_all_88922B28((ts4_word)t1, (ts4_word)a1, (ts4_word)a2, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)a6, (ts4_word)(ts4_word)lbl_880D6330);
         t3 = *(ts4_word *)((char *)(ts4_word)(t1) + 0);
         if ((ts4_word)t3 != 0) {
             ts4_destroy_owned_object((ts4_word)t3);
@@ -1852,10 +1852,10 @@ ts4_word ts4_fn_88932380(ts4_word a0)
     return (a0 + 4);
 }
 
-/* Swing_DLL.xex 0x88932498: get u32@0x1c, fn_88931388 */
+/* Swing_DLL.xex 0x88932498: get u32@0x1c, ts4_count_true_elements_88931388 */
 ts4_word ts4_get_u32_off1c_88932498(ts4_word a0)
 {
-    return fn_88931388((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 28)));
+    return ts4_count_true_elements_88931388((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 28)));
 }
 
 /* Swing_DLL.xex 0x889328E8: tailcall RtlLeaveCriticalSection */
@@ -1950,14 +1950,14 @@ ts4_word ts4_get_u32_off14_889330A0(ts4_word a0)
     return (*(unsigned char *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 20))) + 44));
 }
 
-/* Swing_DLL.xex 0x889330D8: if_call_seq fn_88931950, u32@0x68, fn_889313E8 */
+/* Swing_DLL.xex 0x889330D8: if_call_seq fn_88931950, u32@0x68, ts4_erase_first_accepted_889313E8 */
 ts4_word ts4_if_call_seq_fn_88931950_889330D8(ts4_word a0, ts4_word a1)
 {
     ts4_word t3;
 
     if ((ts4_word)a1 != 0) {
         fn_88931950((ts4_word)(a0 + 72));
-        t3 = fn_889313E8((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 104)), (ts4_word)a1);
+        t3 = ts4_erase_first_accepted_889313E8((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 104)), (ts4_word)a1);
         return t3;
     }
     return 0;
@@ -2036,10 +2036,10 @@ void ts4_set_u32_off4_88933FD0(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x88934010: get u32@0x1c, fn_88933198 */
+/* Swing_DLL.xex 0x88934010: get u32@0x1c, ts4_remove_notify_by_key_88933198 */
 ts4_word ts4_get_u32_off1c_88934010(ts4_word a0)
 {
-    return fn_88933198((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 28)));
+    return ts4_remove_notify_by_key_88933198((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 28)));
 }
 
 /* Swing_DLL.xex 0x88934088: if_get u32@0x42c, u32@0x4, u8@0x430, u8@0x6d */
@@ -2057,10 +2057,10 @@ void ts4_if_get_u32_off42c_88934088(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x889340E8: tailcall fn_889340B0 */
+/* Swing_DLL.xex 0x889340E8: tailcall ts4_dispatch_to_channel_889340B0 */
 ts4_word ts4_tailcall_fn_889340B0_889340E8(ts4_word a0, ts4_word a1, ts4_word a2)
 {
-    return fn_889340B0((ts4_word)a2, (ts4_word)a0, (ts4_word)a1);
+    return ts4_dispatch_to_channel_889340B0((ts4_word)a2, (ts4_word)a0, (ts4_word)a1);
 }
 
 /* Swing_DLL.xex 0x889343E8: call_seq u32@0x8, u32@0x4, u32@lbl_88D45B1C, u32@0xc, u32@0x27c, u32@0x64 */

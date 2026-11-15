@@ -117,9 +117,9 @@ ts4_word fn_88934458();
 ts4_word fn_88934B80();
 ts4_word fn_88935C70();
 ts4_word fn_88935D10();
-ts4_word fn_88936BB0();
+ts4_word ts4_bits_step_88936BB0();
 ts4_word fn_889375D8();
-ts4_word fn_88937A00();
+ts4_word ts4_send_empty_message_88937A00();
 ts4_word fn_88937A88();
 ts4_word fn_88938660();
 ts4_word fn_88938F38();
@@ -789,10 +789,10 @@ ts4_word ts4_addr_lbl_880D24B8_889A0C98(ts4_word a0, ts4_word a1, ts4_word a2, t
     return fn_88617D28((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)a6, (ts4_word)(ts4_word)lbl_880D24B8);
 }
 
-/* Swing_DLL.xex 0x889A0DE8: tailcall fn_88936BB0 */
+/* Swing_DLL.xex 0x889A0DE8: tailcall ts4_bits_step_88936BB0 */
 ts4_word ts4_tailcall_fn_88936BB0_889A0DE8(ts4_word a0, ts4_word a1)
 {
-    return fn_88936BB0((ts4_word)a1, (ts4_word)(a0 + 1068));
+    return ts4_bits_step_88936BB0((ts4_word)a1, (ts4_word)(a0 + 1068));
 }
 
 /* Swing_DLL.xex 0x889A22A0: tailcall fn_889988E0 */
@@ -1213,12 +1213,12 @@ ts4_word ts4_tailcall_fn_889395D8_889A7440(ts4_word a0, ts4_word a1)
     return fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 1068));
 }
 
-/* Swing_DLL.xex 0x889A7450: call_seq fn_88936BB0, fn_889395D8, fn_889395D8, fn_889395D8 */
+/* Swing_DLL.xex 0x889A7450: call_seq ts4_bits_step_88936BB0, fn_889395D8, fn_889395D8, fn_889395D8 */
 ts4_word ts4_call_seq_fn_88936BB0_889A7450(ts4_word a0, ts4_word a1)
 {
     ts4_word t4;
 
-    fn_88936BB0((ts4_word)a1, (ts4_word)(a0 + 1068));
+    ts4_bits_step_88936BB0((ts4_word)a1, (ts4_word)(a0 + 1068));
     fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 1072));
     fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 1076));
     t4 = fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 1080));
@@ -1296,7 +1296,7 @@ ts4_word ts4_if_get_u32_g_ts4_session_context_889ABDB0(ts4_word a0)
     return p6;
 }
 
-/* Swing_DLL.xex 0x889ABE68: if_call_seq u8@0x2c, fn_88937A00, fn_889A4FD0 */
+/* Swing_DLL.xex 0x889ABE68: if_call_seq u8@0x2c, ts4_send_empty_message_88937A00, fn_889A4FD0 */
 ts4_word ts4_if_call_seq_u8_off2c_889ABE68(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     unsigned char t1;
@@ -1310,7 +1310,7 @@ ts4_word ts4_if_call_seq_u8_off2c_889ABE68(ts4_word a0, ts4_word a1, ts4_word a2
     (void)a7;
     t1 = *(unsigned char *)((char *)(ts4_word)(a1) + 44);
     if ((ts4_word)t1 != 0) {
-        fn_88937A00((ts4_word)a0);
+        ts4_send_empty_message_88937A00((ts4_word)a0);
     }
     t4 = fn_889A4FD0((ts4_word)a0, (ts4_word)a1);
     return t4;
@@ -1483,14 +1483,14 @@ ts4_word ts4_tailcall_fn_881512B8_889AF7D0(ts4_word a0)
     return fn_881512B8((ts4_word)(a0 + 1068));
 }
 
-/* Swing_DLL.xex 0x889AFFA0: call_seq fn_88936BB0, fn_889395D8, fn_889395D8, fn_889A7818, u32@0x0, u32@0x438 */
+/* Swing_DLL.xex 0x889AFFA0: call_seq ts4_bits_step_88936BB0, fn_889395D8, fn_889395D8, fn_889A7818, u32@0x0, u32@0x438 */
 ts4_word ts4_call_seq_fn_88936BB0_889AFFA0(ts4_word a0, ts4_word a1)
 {
     ts4_word loc50[1];
     ts4_word t4;
     ts4_word t6;
 
-    fn_88936BB0((ts4_word)a1, (ts4_word)(a0 + 1068));
+    ts4_bits_step_88936BB0((ts4_word)a1, (ts4_word)(a0 + 1068));
     fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 1072));
     fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 1076));
     t4 = fn_889A7818((ts4_word)(ts4_word)&loc50[0], (ts4_word)a1);
@@ -1600,14 +1600,14 @@ ts4_word ts4_tailcall_fn_889B0AD8_889B0CF8(ts4_word a0, ts4_word a1, ts4_word a2
     return fn_889B0AD8((ts4_word)a2, (ts4_word)a0, (ts4_word)a1);
 }
 
-/* Swing_DLL.xex 0x889B0D10: call_seq fn_8893CCE8, fn_88938F38, fn_88936BB0, fn_889395D8 */
+/* Swing_DLL.xex 0x889B0D10: call_seq fn_8893CCE8, fn_88938F38, ts4_bits_step_88936BB0, fn_889395D8 */
 ts4_word ts4_call_seq_fn_8893CCE8_889B0D10(ts4_word a0, ts4_word a1)
 {
     ts4_word t4;
 
     fn_8893CCE8((ts4_word)a0, (ts4_word)a1);
     fn_88938F38((ts4_word)a1, (ts4_word)(a0 + 112), (ts4_word)8);
-    fn_88936BB0((ts4_word)a1, (ts4_word)(a0 + 120));
+    ts4_bits_step_88936BB0((ts4_word)a1, (ts4_word)(a0 + 120));
     t4 = fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 128));
     return t4;
 }

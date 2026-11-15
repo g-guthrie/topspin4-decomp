@@ -19,7 +19,7 @@ typedef struct Ts4Object { void *vtable; } Ts4Object;
 #define VT(p,s) ((*(void ***)(p))[s])
 extern void * lbl_88D45B38;
 extern void * ts4_node_dispatch_with_target_88613268(void *, int, int, int, int);
-extern void * fn_888CB730(void *);
+extern void * ts4_init_singleton_888CB730(void *);
 extern void * fn_887EB298(void *);
 extern void * fn_88629B60(void *);
 extern void * fn_888DE430(void *);
@@ -96,7 +96,7 @@ extern int lbl_88D45B14;
 extern char * fn_88883CD0(int);
 extern void * ts4_find_service(u32);
 extern void ts4_object_finalize(char *);
-extern void fn_88922B28(char *);
+extern void ts4_pv_destroy_all_88922B28(char *);
 extern void ts4_lua_call_thunk_881B1860(void);
 extern u32 fn_88836968(int, int, void (*)(void), int, int, u32 *, int);
 extern void fn_881B1818(void);
@@ -244,7 +244,7 @@ extern void * lbl_88C6CBF8;
 void * ts4_allocate_object_in_global_heap_and_construct_88183B38(void)
 {
     void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 108, 4, 0, 0);
-    if (p) return fn_888CB730(p);
+    if (p) return ts4_init_singleton_888CB730(p);
     return 0;
 }
 
@@ -875,7 +875,7 @@ void ts4_finalize_then_destroy_owned_field0_88627A90(char *a)
 /* Swing_DLL.xex 0x889285F8 */
 void ts4_finalize_then_destroy_owned_field0_889285F8(char *a)
 {
-    fn_88922B28(a);
+    ts4_pv_destroy_all_88922B28(a);
     if (W(a, 0)) ts4_destroy_owned_object(LP(a, 0));
 }
 

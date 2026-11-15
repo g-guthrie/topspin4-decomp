@@ -10,7 +10,7 @@ void ts4_if_call_seq_u32_off0_887C7E70(void *self);
 void fn_887D87C0(void *self);
 void fn_887D8170(void *self);
 void fn_888F70A0(void *self);
-void fn_888CEBA8(void *self);
+void ts4_reset_four_slots_888CEBA8(void *self);
 void fn_8891FA30(void *self);
 void fn_8891AE70(void *self);
 void fn_88935C70(void *self);

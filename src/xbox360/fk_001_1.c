@@ -150,7 +150,7 @@ ts4_word fn_8888D278();
 ts4_word ts4_call_seq_fn_88617D88_888C7980();
 ts4_word ts4_call_seq_fn_88617D88_888C7F30();
 ts4_word fn_888C80A0();
-ts4_word fn_888C9588();
+ts4_word ts4_init_state_888C9588();
 ts4_word fn_888C9618();
 ts4_word ts4_call_seq_fn_88617D88_888CA4E0();
 ts4_word ts4_call_seq_fn_88617D88_888CAA40();

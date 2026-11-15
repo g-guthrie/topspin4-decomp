@@ -4,7 +4,7 @@ typedef unsigned int u32;
 
 extern void *lbl_88D45B38;
 extern void *ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 a, u32 b, u32 c);
-extern void *fn_888C9588(void *self);
+extern void *ts4_init_state_888C9588(void *self);
 extern void *fn_888DDF98(void *self);
 extern void *fn_888DDE20(void *self);
 extern void *fn_888E1EE0(void *self);
