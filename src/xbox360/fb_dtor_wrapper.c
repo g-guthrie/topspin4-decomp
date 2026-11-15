@@ -83,7 +83,7 @@ extern void ts4_service_dtor_888C8048(Ts4Object *object);
 extern void fn_888DF960(Ts4Object *object);
 extern void fn_888B93A8(Ts4Object *object);
 extern void fn_888B0C50(Ts4Object *object);
-extern void fn_888B8E48(Ts4Object *object);
+extern void ts4_destroy_camera_set_888B8E48(Ts4Object *object);
 extern void fn_888B8D98(Ts4Object *object);
 extern void fn_889C1600(Ts4Object *object);
 extern void fn_8818F480(Ts4Object *object);
@@ -359,7 +359,7 @@ TS4_DTOR(ts4_dtor_wrapper_8817DD08, ts4_service_dtor_888C8048, ts4_tsu_cleanup_e
 TS4_DTOR(ts4_dtor_wrapper_8817DEE0, fn_888DF960, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x8817DEE0 */
 TS4_DTOR(ts4_dtor_wrapper_88188700, fn_888B93A8, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x88188700 */
 TS4_DTOR(ts4_dtor_wrapper_88188750, fn_888B0C50, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x88188750 */
-TS4_DTOR(ts4_dtor_wrapper_881888B0, fn_888B8E48, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x881888B0 */
+TS4_DTOR(ts4_dtor_wrapper_881888B0, ts4_destroy_camera_set_888B8E48, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x881888B0 */
 TS4_DTOR(ts4_dtor_wrapper_88188900, fn_888B8D98, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x88188900 */
 TS4_DTOR(ts4_dtor_wrapper_88189838, fn_889C1600, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x88189838 */
 TS4_DTOR(ts4_dtor_wrapper_8818F430, fn_8818F480, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x8818F430 */

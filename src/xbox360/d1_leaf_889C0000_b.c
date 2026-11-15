@@ -3,7 +3,7 @@
  * describe that behaviour and end in the function address. */
 
 extern void fn_881B9148(void *);
-extern void fn_889122D8(void *);
+extern void ts4_hub_remove_by_key_889122D8(void *);
 extern void fn_889BE668(void *);
 extern void ts4_if_call_seq_fn_889BD910_889BFAB8(void *);
 extern void ts4_if_call_seq_fn_889BD910_889BFB60(void *);

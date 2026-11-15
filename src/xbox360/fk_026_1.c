@@ -55,7 +55,7 @@ ts4_word fn_88617D88();
 ts4_word fn_88628098();
 ts4_word fn_888860A0();
 ts4_word fn_88918EA8();
-ts4_word fn_88919348();
+ts4_word ts4_flagged_object_ctor_f_88919348();
 ts4_word fn_88919780();
 ts4_word fn_8891AE70();
 ts4_word fn_8891FA30();

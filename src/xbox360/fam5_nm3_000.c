@@ -38,7 +38,7 @@ ts4_word fn_8846D4A0();
 ts4_word fn_884758C0();
 ts4_word fn_884B3FF8();
 ts4_word fn_8860BBD8();
-ts4_word fn_88912090();
+ts4_word ts4_hub_delete_all_88912090();
 #ifndef _MSC_VER
 #define memcpy ts4_host_memcpy
 #endif
@@ -342,7 +342,7 @@ void ts4_if_call_seq_u32_off48_884D3770(ts4_word a0, ts4_word a1, ts4_word a2)
     return;
 }
 
-/* Swing_DLL.xex 0x88912A38: if_call_seq lbl_880D72B0, u32@0x0, ts4_vec28_trim_88177110, fn_88912090, u32@0x14, ts4_destroy_owned_object */
+/* Swing_DLL.xex 0x88912A38: if_call_seq lbl_880D72B0, u32@0x0, ts4_vec28_trim_88177110, ts4_hub_delete_all_88912090, u32@0x14, ts4_destroy_owned_object */
 void ts4_if_call_seq_lbl_880D72B0_88912A38(ts4_word a0)
 {
     ts4_word q80;
@@ -353,7 +353,7 @@ void ts4_if_call_seq_lbl_880D72B0_88912A38(ts4_word a0)
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880D72B0;
     q80 = a0 + 8;
     ts4_vec28_trim_88177110((ts4_word)(q80));
-    fn_88912090((ts4_word)a0);
+    ts4_hub_delete_all_88912090((ts4_word)a0);
     t3 = *(ts4_word *)((char *)(ts4_word)(a0) + 20);
     if ((ts4_word)t3 != 0) {
         ts4_destroy_owned_object((ts4_word)t3);

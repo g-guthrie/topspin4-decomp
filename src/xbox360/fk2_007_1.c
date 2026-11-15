@@ -239,7 +239,7 @@ ts4_word fn_888F7160();
 ts4_word fn_889006D8();
 ts4_word fn_88901010();
 ts4_word fn_88907570();
-ts4_word fn_88908B38();
+ts4_word ts4_slots_each_get_88908B38();
 ts4_word ts4_net_update_slots_88908B80();
 ts4_word fn_8890A1F0();
 ts4_word fn_8890CB18();

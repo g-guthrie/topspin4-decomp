@@ -108,7 +108,7 @@ ts4_word ts4_find_scheduled_frame_8866E250();
 ts4_word fn_88674ED0();
 ts4_word fn_888860A0();
 ts4_word fn_8890DDA8();
-ts4_word fn_8890E088();
+ts4_word ts4_vec16_clear_8890E088();
 ts4_word fn_8892AFF0();
 ts4_word fn_8899F760();
 ts4_word fn_889BD910();
@@ -2362,7 +2362,7 @@ ts4_word ts4_call_seq_u8_off8_88679FC8(ts4_word a0)
     return t1;
 }
 
-/* Swing_DLL.xex 0x8867A068: call_seq fn_8890DDA8, fn_8890DDA8, fn_8890DDA8, fn_8890DDA8, fn_8890E088, u32@0x24 */
+/* Swing_DLL.xex 0x8867A068: call_seq fn_8890DDA8, fn_8890DDA8, fn_8890DDA8, fn_8890DDA8, ts4_vec16_clear_8890E088, u32@0x24 */
 ts4_word ts4_call_seq_fn_8890DDA8_8867A068(ts4_word a0)
 {
     ts4_word t6;
@@ -2371,7 +2371,7 @@ ts4_word ts4_call_seq_fn_8890DDA8_8867A068(ts4_word a0)
     fn_8890DDA8((ts4_word)(a0 + 188));
     fn_8890DDA8((ts4_word)(a0 + 120));
     fn_8890DDA8((ts4_word)(a0 + 52));
-    fn_8890E088((ts4_word)(a0 + 324));
+    ts4_vec16_clear_8890E088((ts4_word)(a0 + 324));
     *(ts4_word *)((char *)(ts4_word)(a0) + 36) = (ts4_word)0;
     t6 = ts4_object_finalize((ts4_word)(a0 + 16));
     *(ts4_word *)((char *)(ts4_word)(a0) + 32) = (ts4_word)0;

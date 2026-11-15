@@ -176,7 +176,7 @@ ts4_word fn_887EDF40();
 ts4_word fn_887EFAE8();
 ts4_word lib3_lua_dostring_8882ED00();
 ts4_word cx19_lua_tolwstring_888348A0();
-ts4_word fn_888AD568();
+ts4_word ts4_find_child_by_id_888AD568();
 ts4_word ts4_if_call_seq_fn_8817EA90_888D85B0();
 ts4_word fn_888DDD70();
 ts4_word fn_888F67B8();

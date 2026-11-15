@@ -29,7 +29,7 @@ extern void fn_888B2CE8(float);
 extern void fn_888B2838(float);
 extern void fn_888B2AB0(float);
 extern void fn_888B24E8(float);
-extern void fn_888BB5A8(void *, int, int);
+extern void ts4_bind_child_by_id_888BB5A8(void *, int, int);
 extern void *lbl_88D45960;
 extern void fn_888E8A80(void *, void *);
 extern void fn_889254C8(void *, int);
@@ -578,7 +578,7 @@ void ts4_dispatch_const14_by_flag_888B3CB0(char *self) { if (self[0x68] == 0) fn
 void ts4_dispatch_const14_by_flag_888B3CD0(char *self) { if (self[0x68] == 0) fn_888B2AB0(g_ts4_script_constants[14]); else fn_888B24E8(g_ts4_script_constants[14]); }
 
 /* 0x888BD808: if object at +0xC is set, call helper(obj, field +8, field +4) */
-void ts4_forward_fields_if_f0c_888BD808(char *self) { void *p = *(void **)(self + 0xc); if (p) fn_888BB5A8(p, *(int *)(self + 8), *(int *)(self + 4)); }
+void ts4_forward_fields_if_f0c_888BD808(char *self) { void *p = *(void **)(self + 0xc); if (p) ts4_bind_child_by_id_888BB5A8(p, *(int *)(self + 8), *(int *)(self + 4)); }
 
 /* 0x888EE870: call helper(global, self) if the global is set */
 void ts4_forward_to_global_if_set_888EE870(void *self) { if (lbl_88D45960) fn_888E8A80(lbl_88D45960, self); }

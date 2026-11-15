@@ -136,7 +136,7 @@ struct Ga3PoolOwner { unsigned char pad_00[0x64]; unsigned char *pool; };   /* f
 struct Ga3PoolHost { unsigned char pad_00[0x48]; struct Ga3PoolOwner *owner; };
 struct Ga3ActiveList { void **begin; void **end; };
 void fn_8890DDA8(void *p);
-void fn_8890E088(void *p);
+void ts4_vec16_clear_8890E088(void *p);
 
 /* Releases every object in the active list (newest first): resets its three parts and returns it to the host's free stack. */
 void ga3_release_all_pooled_8867DB30(struct Ga3ActiveList *self, struct Ga3PoolHost *host)
@@ -146,7 +146,7 @@ void ga3_release_all_pooled_8867DB30(struct Ga3ActiveList *self, struct Ga3PoolH
         struct Ga3FreeStack *fs;
         fn_8890DDA8(obj);
         fn_8890DDA8(obj + 0x44);
-        fn_8890E088(obj + 0x88);
+        ts4_vec16_clear_8890E088(obj + 0x88);
         fs = (struct Ga3FreeStack *)(host->owner->pool + 0x60);
         if (fs->top != fs->limit) {
             fs->top--;

@@ -9,7 +9,7 @@ extern void *lbl_88D41FC4;
 void ts4_if_call_seq_u32_lbl_88D45B1C_887AE088(void *object);
 void fn_8886FCC0(void *object);
 void fn_888647B0(void *object);
-void fn_88908258(void *object);
+void ts4_pending_pop_first_88908258(void *object);
 void fn_88202CD8(void *manager, void *value);
 
 /* Registered as DLL_InitMasterPad. */
@@ -43,7 +43,7 @@ ts4_u32 ts4_script_start_loading(void)
 {
     struct TS4LoadingState *state = lbl_88D4594C;
     state->starting = 1;
-    fn_88908258(state);
+    ts4_pending_pop_first_88908258(state);
     return 0;
 }
 

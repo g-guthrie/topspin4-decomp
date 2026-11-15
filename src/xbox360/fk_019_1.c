@@ -111,7 +111,7 @@ ts4_word ts4_find_scheduled_frame_8866E250();
 ts4_word fn_88674ED0();
 ts4_word fn_888860A0();
 ts4_word fn_8890DDA8();
-ts4_word fn_8890E088();
+ts4_word ts4_vec16_clear_8890E088();
 ts4_word fn_8892AFF0();
 ts4_word fn_8899F760();
 ts4_word fn_889BD910();

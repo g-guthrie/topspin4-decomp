@@ -258,7 +258,7 @@ ts4_uptr fn_88883CD0(ts4_uptr, ts4_uptr);
 ts4_uptr fn_888860A0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr ts4_call_seq_lbl_880DF0F0_88888338(ts4_uptr);
 ts4_uptr fn_8890DDA8(ts4_uptr);
-ts4_uptr fn_8890E088(ts4_uptr);
+ts4_uptr ts4_vec16_clear_8890E088(ts4_uptr);
 ts4_uptr fn_8892EB28(ts4_uptr, ts4_uptr);
 ts4_uptr ts4_if_call_seq_u32_off8_8892ED88(ts4_uptr, ts4_uptr);
 extern unsigned int lbl_88003A00;

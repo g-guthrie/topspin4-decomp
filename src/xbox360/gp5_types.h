@@ -117,7 +117,7 @@ struct Gp5MatchContext {
     gp5_u32 game_mode_hash;           /* +0x238 "KingOfTheCourt" ... */
 };
 
-/* The sound-event controller ("this" of fn_8888A658 and friends). */
+/* The sound-event controller ("this" of ts4_vcall_13_10_11_15_8888A658 and friends). */
 struct Gp5SoundEvents {
     void *vtbl;                       /* +0x00 slot 0x28 play, 0x2c commit, 0x34 prepare, 0x3c set volume */
     GP5_PAD(4, 0x28);

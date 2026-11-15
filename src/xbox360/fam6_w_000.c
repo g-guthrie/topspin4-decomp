@@ -139,7 +139,7 @@ ts4_word fn_887BAB70();
 ts4_word fn_887F0CA0();
 ts4_word fn_8884C268();
 ts4_word fn_88853540();
-ts4_word fn_888AD568();
+ts4_word ts4_find_child_by_id_888AD568();
 ts4_word fn_888C2560();
 ts4_word fn_888C28A0();
 ts4_word fn_888C4B70();
@@ -2722,7 +2722,7 @@ void ts4_if_get_u8_off43_888FDE30(ts4_word a0)
     }
     if ((ts4_word)t4 == (ts4_word)((203882496) | 60736)) {
         t5 = *(ts4_word *)lbl_88D45934;
-        t7 = fn_888AD568((ts4_word)(*(ts4_word *)lbl_88D45964), (ts4_word)((t5 << 2) + (ts4_word)lbl_88C6B8EC));
+        t7 = ts4_find_child_by_id_888AD568((ts4_word)(*(ts4_word *)lbl_88D45964), (ts4_word)((t5 << 2) + (ts4_word)lbl_88C6B8EC));
         if ((ts4_word)t7 != 0) {
             t10 = ((ts4_word (*)(ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t7) + 0))) + 32))))((ts4_word)t7);
             if ((ts4_word)(t10 & 0xff) != 0) {

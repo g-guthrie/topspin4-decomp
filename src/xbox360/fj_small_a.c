@@ -110,7 +110,7 @@ extern char * g_ts4_session_context;
 extern void fn_889A4970(char *);
 extern void fn_889A53A8(char *);
 extern void ts4_vec28_trim_88177110(char *);
-extern void fn_88912090(char *);
+extern void ts4_hub_delete_all_88912090(char *);
 extern char lbl_880F96E0;
 extern char lbl_880F9498;
 extern char lbl_880F93F8;
@@ -998,14 +998,14 @@ u32 ts4_call_on_session_field28_if_set_return_zero_887876E0(void)
 void ts4_call_on_subobject8_then_self_887982D0(char *a)
 {
     ts4_vec28_trim_88177110(a + 8);
-    fn_88912090(a);
+    ts4_hub_delete_all_88912090(a);
 }
 
 /* Swing_DLL.xex 0x88912A00 */
 void ts4_call_on_subobject8_then_self_88912A00(char *a)
 {
     ts4_vec28_trim_88177110(a + 8);
-    fn_88912090(a);
+    ts4_hub_delete_all_88912090(a);
 }
 
 /* init_vtable_object_with_two_bytes */
