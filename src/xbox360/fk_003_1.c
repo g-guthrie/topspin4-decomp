@@ -172,7 +172,7 @@ ts4_word fn_88785A00();
 ts4_word ts4_singleton_service_ctor_8878BE98();
 ts4_word fn_8879C218();
 ts4_word fn_887A15A8();
-ts4_word fn_887B53E8();
+ts4_word ts4_ctor_zero3_887B53E8();
 ts4_word ts4_call_seq_fn_881F1060_887B5CF8();
 ts4_word fn_887B5E20();
 ts4_word fn_887B6808();

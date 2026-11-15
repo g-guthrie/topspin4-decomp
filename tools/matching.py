@@ -40476,6 +40476,136 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_any_handles_8864E420": 128},
     },
+    {
+        "source": "src/xbox360/cx37_a.c",
+        "object": "cx37_a.obj",
+        "symbols": {
+            "ts4_range_reset_88941940": 44,
+            "ts4_range_reset_88941970": 44,
+            "ts4_range_reset_88943730": 44,
+        },
+    },
+    {
+        "source": "src/xbox360/cx37_b.c",
+        "object": "cx37_b.obj",
+        "symbols": {
+            "ts4_service_value_889453A0": 64,
+            "ts4_col_load_889428C0": 84,
+            "ts4_col_store_889427D8": 92,
+            "ts4_col_load_rel_88942918": 92,
+        },
+    },
+    {
+        "source": "src/xbox360/cx37_c.c",
+        "object": "cx37_c.obj",
+        "symbols": {"ts4_array44_act_889579D0": 116},
+    },
+    {
+        "source": "src/xbox360/cx37_d.c",
+        "object": "cx37_d.obj",
+        "symbols": {
+            "ts4_text_at_10_88957D88": 96,
+            "ts4_text_at_28_88957EA0": 96,
+            "ts4_text_at_10b_88958038": 96,
+            "ts4_text_at_4c_88958150": 96,
+        },
+    },
+    {
+        "source": "src/xbox360/cx37_e.c",
+        "object": "cx37_e.obj",
+        "symbols": {"ts4_find_named_88941038": 152},
+    },
+    {
+        "source": "src/xbox360/cx37_f.c",
+        "object": "cx37_f.obj",
+        "symbols": {
+            "ts4_own_reset_88943500": 136,
+            "ts4_lookup_call_88946090": 136,
+            "ts4_lookup_call_88946118": 144,
+        },
+    },
+    {
+        "source": "src/xbox360/cx37_g.c",
+        "object": "cx37_g.obj",
+        "symbols": {
+            "ts4_find_by_name_88942080": 176,
+            "ts4_act_on_named_88953D40": 204,
+            "ts4_act_on_named_all_88953C78": 196,
+            "ts4_find_by_name_88943978": 208,
+            "ts4_walk_records_88946EA0": 208,
+            "ts4_snapshot_clear_88953FA0": 212,
+            "ts4_release_and_clear_88948200": 72,
+            "ts4_apply_two_889537F0": 96,
+            "ts4_text_obj_4c_88957DF0": 176,
+            "ts4_text_obj_40a_88957F88": 176,
+            "ts4_text_obj_40b_889580A0": 176,
+        },
+    },
+    {
+        "source": "src/xbox360/cx37_h.c",
+        "object": "cx37_h.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_clear_list_244_88952D90": 128,
+            "ts4_clear_list_238_88952E10": 128,
+        },
+    },
+    {
+        "source": "src/xbox360/cx38_a.c",
+        "object": "cx38_a.obj",
+        "symbols": {
+            "ts4_crit_leave_887C78F0": 52,
+            "ts4_ctor_zero3_887B53E8": 80,
+            "ts4_set_mode_887CB690": 80,
+            "ts4_release_if_owner_887CB618": 96,
+            "ts4_flags_check_887CEBF0": 100,
+            "ts4_get_flag_pair_887CF188": 100,
+            "ts4_get_flag_pair_887CF1F0": 100,
+        },
+    },
+    {
+        "source": "src/xbox360/cx38_b.c",
+        "object": "cx38_b.obj",
+        "symbols": {
+            "ts4_lookup_is_minus1_887CBA00": 104,
+            "ts4_close_content_887CBBE8": 112,
+            "ts4_update_rows_887B9F08": 112,
+            "ts4_check_hashes_887CF748": 120,
+        },
+    },
+    {
+        "source": "src/xbox360/cx38_c.c",
+        "object": "cx38_c.obj",
+        "symbols": {
+            "ts4_hash_to_slot_887CF328": 132,
+            "ts4_check_mod3_887CF620": 128,
+            "ts4_event_category_887CE5C0": 160,
+        },
+    },
+    {
+        "source": "src/xbox360/cx38_d.c",
+        "object": "cx38_d.obj",
+        "symbols": {
+            "ts4_check_unlock_887CE1F8": 84,
+            "ts4_table_record_887CEA80": 60,
+        },
+    },
+    {
+        "source": "src/xbox360/cx38_e.c",
+        "object": "cx38_e.obj",
+        "symbols": {
+            "ts4_notify_vcall_887CE750": 72,
+            "ts4_state_tick_887C0948": 144,
+            "ts4_find_name_887C76D8": 152,
+            "ts4_append_path_887CC320": 164,
+        },
+    },
+    {
+        "source": "src/xbox360/cx38_oc.c",
+        "object": "cx38_oc.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_check_minute_887CF598": 132},
+    },
 )
 
 

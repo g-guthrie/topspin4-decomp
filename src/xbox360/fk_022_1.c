@@ -149,7 +149,7 @@ ts4_word fn_887BBD10();
 ts4_word fn_887BFBA0();
 ts4_word fn_887C0AF0();
 ts4_word fn_887C2798();
-ts4_word fn_887C76D8();
+ts4_word ts4_find_name_887C76D8();
 ts4_word ts4_if_call_seq_u32_off0_887C7E70();
 ts4_word fn_887C83B8();
 ts4_word fn_887C9618();

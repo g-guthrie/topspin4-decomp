@@ -3,7 +3,7 @@
  * describe that behaviour and end in the function address. */
 
 extern int fn_887816A0(void *);
-extern int fn_887B53E8(void *);
+extern int ts4_ctor_zero3_887B53E8(void *);
 extern int ts4_call_seq_fn_881F1060_887B5CF8(void *);
 extern int fn_887B5E20(void *);
 extern int fn_887B6808(void *);
@@ -44,7 +44,7 @@ int ts4_forward_if_set_else_zero_882134A0(void *object)
 int ts4_forward_if_set_else_zero_88213570(void *object)
 {
     if (object != 0) {
-        return fn_887B53E8(object);
+        return ts4_ctor_zero3_887B53E8(object);
     }
     return 0;
 }

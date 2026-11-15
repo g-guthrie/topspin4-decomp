@@ -1252,5 +1252,18 @@
   "symbols": {
    "ts4_format_version_889317F0": 76
   }
+ },
+ {
+  "source": "src/xbox360/cx38_ltcg_a.c",
+  "object": "cx38_ltcg_a.obj",
+  "context": [
+   "src/xbox360/cw1_ctx_format_text.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_format_copy_887CCA38": 92
+  }
  }
 ]
