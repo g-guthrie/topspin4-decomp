@@ -8096,6 +8096,26 @@
       "src/xbox360/me_sample_and_offset_points_886E2348.c": {
         "status": "Matching",
         "source": "xbox360/me_sample_and_offset_points_886E2348.c"
+      },
+      "src/xbox360/me_store_heading_to_target_88679518.c": {
+        "status": "Matching",
+        "source": "xbox360/me_store_heading_to_target_88679518.c"
+      },
+      "src/xbox360/me_copy_record_positions_88645AD8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_copy_record_positions_88645AD8.c"
+      },
+      "src/xbox360/me_edge_point_at_x_8867C4E8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_edge_point_at_x_8867C4E8.c"
+      },
+      "src/xbox360/me_refresh_timing_pair_886D8928.c": {
+        "status": "Matching",
+        "source": "xbox360/me_refresh_timing_pair_886D8928.c"
+      },
+      "src/xbox360/me_ctor_two_tables_8869D000.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ctor_two_tables_8869D000.c"
       }
     }
   }

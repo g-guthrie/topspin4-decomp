@@ -79,7 +79,7 @@ void engine_update_886E5F50(struct Engine *e)
  *                     replay -> fn_886E4958(P+0xd0) reads recorded commands.   Then state+0x100/+0x102 := 0.
  *  2. if P has playing layers (P+0x8c != P+0x90) and the AnimData per-player node is bound:
  *       fn_886DF5D0(Planner)  advance the planner clock, pick/replace animations (below)
- *       fn_886CDC90, fn_886D8928, fn_886CCB60(P+0xc0), fn_886E2C80 (only when !state+0x55)
+ *       fn_886CDC90, ts4_refresh_timing_pair_886D8928, fn_886CCB60(P+0xc0), fn_886E2C80 (only when !state+0x55)
  *       fn_886D6478, fn_886D5958(Planner, state+0x200)    root-motion / pose evaluation of the layer stack
  *       fn_886DCCB0 / fn_886DCAC8                         racket-hand nodes (state+0x210) -> side tag Both/Left/Right
  *       fn_886CB238, fn_886D56B0, fn_886D81A0              blend + output

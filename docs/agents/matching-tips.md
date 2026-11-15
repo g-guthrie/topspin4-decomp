@@ -581,3 +581,24 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
 - A sub-object pointer stays in its own saved register (`addi r28, r31, 0x30` ... `addi r3, r28, 0x58`) when it has
   several uses in the source, even though its member loads are emitted against the outer base (`lfs 0x44(r31)`).
   Read the other fields through the sub-object pointer too: `q = &l->sub; call(&q->f58, q->f18, ..., q->f14)` (0x886E2348).
+
+## Found at b95
+
+- **Float zero hoisted out of a loop**: a `0.0f` *literal* passed to an inline `make(x, y, z, 0.0f)` is loaded and
+  stored once in the loop pre-header (after the `n == 0` guard); the `g_ts4_event_value` extern reloads every iteration,
+  and a local copy of it is stored before the guard (`me_copy_record_positions_88645AD8.c`).
+- **Lane getters**: `static __inline float plx(const __vector4 *v) { float f; __stvewx(__vspltw(*v, 0), &f, 0); return f; }`
+  taking a pointer gives `add; addi; lvx 0,rX` plus one load; pass the calls directly as arguments of the inline
+  constructor to get the target's stack slot order.
+- **Pointer chain reloaded for a call argument** (`lwz r4,0x1c(r31)` again after it was read before the branch): do not
+  keep the pointer in a local; spell `s->f1c->...` each time (`me_store_heading_to_target_88679518.c`).
+- **Dead `addi rX, rBase, off` pairs in a constructor**: two levels of inline helper, the inner one taking the array
+  through a cast pointer (`arr_init(int *b) { Quad *q = (Quad *)b; quad_init(&q[0]); ... }`); one level leaves one
+  dead `addi`, a plain run of stores leaves none (`me_ctor_two_tables_8869D000.c`).
+- **Bool then restores after a call**: `if (cond) c = 1; else c = 0; o->a = saved; o->flag = c; ...` puts the compare
+  ahead of the restoring stores; the `?:` form puts it after (0x889C2940, 4 off to 2).
+- Inline vector args written in the call (`fn(o, &r, make(...), make(...))`) matched where named locals did not
+  (`me_edge_point_at_x_8867C4E8.c`); if/else on a float local matched where `?:` on an array slot did not
+  (`me_refresh_timing_pair_886D8928.c`).
+- 0x886A0A48 (14 off) and 0x886925A8 (7 off) are invariant to statement order, helper shape, types, flags and route
+  (about 150 and 30 variants): scheduling of independent stores and VMX128 register numbering respectively.

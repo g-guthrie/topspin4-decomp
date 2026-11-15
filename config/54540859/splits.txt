@@ -48930,3 +48930,22 @@ src/xbox360/me_reset_record_array_8867B260.c:
 src/xbox360/me_sample_and_offset_points_886E2348.c:
 	.pdata      start:0x88125228 end:0x88125230
 	.text       start:0x886E2348 end:0x886E240C
+
+src/xbox360/me_store_heading_to_target_88679518.c:
+	.pdata      start:0x881238D0 end:0x881238D8
+	.text       start:0x88679518 end:0x886795C4
+
+src/xbox360/me_copy_record_positions_88645AD8.c:
+	.pdata      start:0x88122968 end:0x88122970
+	.text       start:0x88645AD8 end:0x88645B98
+
+src/xbox360/me_edge_point_at_x_8867C4E8.c:
+	.pdata      start:0x881239E0 end:0x881239E8
+	.text       start:0x8867C4E8 end:0x8867C5A8
+
+src/xbox360/me_refresh_timing_pair_886D8928.c:
+	.pdata      start:0x88124FC8 end:0x88124FD0
+	.text       start:0x886D8928 end:0x886D89E8
+
+src/xbox360/me_ctor_two_tables_8869D000.c:
+	.text       start:0x8869D000 end:0x8869D0C4

@@ -41852,6 +41852,36 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_sample_and_offset_points_886E2348": 196},
     },
+    {
+        "source": "src/xbox360/me_store_heading_to_target_88679518.c",
+        "object": "me_store_heading_to_target_88679518.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_store_heading_to_target_88679518": 172},
+    },
+    {
+        "source": "src/xbox360/me_copy_record_positions_88645AD8.c",
+        "object": "me_copy_record_positions_88645AD8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_copy_record_positions_88645AD8": 192},
+    },
+    {
+        "source": "src/xbox360/me_edge_point_at_x_8867C4E8.c",
+        "object": "me_edge_point_at_x_8867C4E8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_edge_point_at_x_8867C4E8": 192},
+    },
+    {
+        "source": "src/xbox360/me_refresh_timing_pair_886D8928.c",
+        "object": "me_refresh_timing_pair_886D8928.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_refresh_timing_pair_886D8928": 192},
+    },
+    {
+        "source": "src/xbox360/me_ctor_two_tables_8869D000.c",
+        "object": "me_ctor_two_tables_8869D000.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_ctor_two_tables_8869D000": 196},
+    },
 )
 
 
