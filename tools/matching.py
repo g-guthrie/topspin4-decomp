@@ -40739,6 +40739,17 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_advance_selection_888F6390": 200},
     },
+    {
+        "source": "src/xbox360/sc1_a.c",
+        "object": "sc1_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_obj44_pair_owner_ctor_88695E78": 248,
+            "ts4_clear_records_88668C80": 236,
+            "ts4_owner_dtor_886B4C10": 236,
+            "ts4_alloc_item_88646FD0": 172,
+        },
+    },
 )
 
 

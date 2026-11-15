@@ -9,7 +9,7 @@ void fn_886CDFD8(void *self);
 void ts4_r2_swing_ring_release_entry_886DC9C0(void *self, ts4_word item);
 void fn_886D3A00(void *list, void *item, int a, ts4_word b, int c);
 void fn_886DBF40(void *a, ts4_word b, void *c, ts4_word d, int e, ts4_word f);
-void fn_8864A920(void *obj, ts4_word a, ts4_word b, void *owner);
+void ts4_init_state_8864A920(void *obj, ts4_word a, ts4_word b, void *owner);
 void fn_8864A770(void *obj, ts4_word a, void *b, ts4_word c);
 void fn_8864A5E8(void *obj);
 void ts4_if_call_seq_u32_off40_8864A8A8(void *obj);

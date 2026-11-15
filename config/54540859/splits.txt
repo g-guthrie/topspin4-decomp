@@ -47874,3 +47874,15 @@ src/xbox360/cx41_l1.c:
 	.pdata      start:0x8812FDB8 end:0x8812FDC0
 	.text       start:0x888FBBF0 end:0x888FBC4C
 	.text       start:0x888FBC50 end:0x888FBCA0
+
+src/xbox360/sc1_a.c:
+	.pdata      start:0x881229E0 end:0x881229E8
+	.pdata      start:0x881240B0 end:0x881240B8
+	.pdata      start:0x881247B0 end:0x881247B8
+	.text       start:0x88646FD0 end:0x8864707C
+	.text       start:0x88668C80 end:0x88668D6C
+	.text       start:0x88695E78 end:0x88695F70
+	.text       start:0x886B4C10 end:0x886B4CFC
+
+src/xbox360/sc1_ltcg_a.c:
+	.text       start:0x8864A920 end:0x8864A9C4

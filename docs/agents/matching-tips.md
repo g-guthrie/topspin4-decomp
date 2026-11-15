@@ -385,3 +385,26 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
 - Measured: 3 of 12 random functions of this size matched at 6-16 hand compiles each; 3 more ended 2-7 instructions off
   on classes with no rule (adjacent swaps, two-register swaps, load/store order); the rest on block layout, global
   scheduling, multi-site operand order and vector code.
+
+## Store scheduling, constructors and block layout (from SC1; notes and probe tables in docs/agents/near-misses/SC1.md)
+- The scheduler only reorders memory accesses that go through the SAME pointer value (same parameter or local, different
+  constant offsets). Accesses through different pointer values keep source order in both directions: an inline helper's
+  pointer parameter used two or more times, a local `p = &o->m`, a second parameter. A helper pointer used once folds
+  onto `o` and counts as `o`. Store types, `__restrict`, `/Oa`, `/Ow` and C++ inline member ctors change nothing.
+  `ainit(&o->a); o->w[0] = x;` emits `stw x` last; the same stores written directly through `o` emit it first.
+- Among stores free to move: a store of a `lis/addi` address (the vtable) or of a loaded value is emitted as soon as its
+  value is ready, so it comes out near the top even when written last; stores whose values are ready together keep
+  source order; when stores are free every `lis` is hoisted to the top, when chained a later group's `lis` is
+  materialised just before that group.
+- To apply: if the target materialises a constant late, puts the vtable store first, or keeps a run of stores in strict
+  source order, split the members into sub-objects, each with its own `static __inline` init called on `&o->member`,
+  and sweep the grouping (0x88695E78 matched only with header words grouped {2,2,1} or {2,1,2}).
+- Destructors: `free(&s->p)` (with `*pp` inside the helper) keeps `stw vt; lwz p`; `free(s->p)` hoists the load above the
+  vtable store.
+- LTCG: loads through `extern const` objects are held behind the stores; a literal `1.0f` is pool entry 0 and its load
+  floats freely. An early global read is sunk to its use unless it is a volatile read.
+- Block layout: a failure block placed right after the first test and reached from the second test by a backward branch
+  is an inline helper returned from at both sites (`static __inline int fail(S*){...; return 0;}`,
+  `if (..) return fail(s);` twice); the copies are tail-merged at the first site. Not universal (0x886D16F8).
+- Worked examples: src/xbox360/sc1_a.c, sc1_ltcg_a.c. Open: a call-argument `addi`/`mr` one slot early or late
+  (0x8864C170, 0x886D48F8); float stores interleaved with a sub-object's stores (0x886A3AC8).

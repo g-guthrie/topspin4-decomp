@@ -7360,6 +7360,14 @@
       "src/xbox360/cx41_l1.c": {
         "status": "Matching",
         "source": "xbox360/cx41_l1.c"
+      },
+      "src/xbox360/sc1_a.c": {
+        "status": "Matching",
+        "source": "xbox360/sc1_a.c"
+      },
+      "src/xbox360/sc1_ltcg_a.c": {
+        "status": "Matching",
+        "source": "xbox360/sc1_ltcg_a.c"
       }
     }
   }

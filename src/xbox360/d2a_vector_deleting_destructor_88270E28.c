@@ -5,7 +5,7 @@ extern void ts4_tsu_cleanup_end(void *p);
 extern void ts4_object_dtor_8869CD68(void *p);
 extern void ts4_if_get_u32_offd4_886A7988(void *p);
 extern void fn_886ACB08(void *p);
-extern void fn_886B4C10(void *p);
+extern void ts4_owner_dtor_886B4C10(void *p);
 
 /* Vector/scalar deleting destructor for a 976-byte element type: flag 2 destroys the counted array. */
 void *ts4_vector_deleting_destructor_88270E28(char *self, u32 flags)
@@ -17,14 +17,14 @@ void *ts4_vector_deleting_destructor_88270E28(char *self, u32 flags)
         int i;
         for (i = n - 1; i >= 0; --i) {
             e -= 976;
-            fn_886B4C10(e);
+            ts4_owner_dtor_886B4C10(e);
         }
         if (flags & 1) {
             ts4_registry_dispatch_888860A0(base);
         }
         return base;
     }
-    fn_886B4C10(self);
+    ts4_owner_dtor_886B4C10(self);
     if (flags & 1) {
         ts4_tsu_cleanup_end(self);
     }

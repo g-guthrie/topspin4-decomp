@@ -8,7 +8,7 @@ typedef unsigned int ts4_word;
 void fn_886C7500(void *self);
 void fn_886E2410(void *self);
 void fn_886DBF40(void *a, ts4_word b, void *c, ts4_word d, int e, ts4_word f);
-void fn_8864A920(void *obj, ts4_word a, ts4_word b, void *owner);
+void ts4_init_state_8864A920(void *obj, ts4_word a, ts4_word b, void *owner);
 void fn_8864A770(void *obj, ts4_word a, void *b, ts4_word c);
 void fn_8864A5E8(void *obj);
 void ts4_if_call_seq_u32_off40_8864A8A8(void *obj);

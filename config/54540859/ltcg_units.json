@@ -1384,5 +1384,20 @@
    "ts4_set_value_b0_888FBC50": 80,
    "ts4_add_value_b0_888FBBF0": 92
   }
+ },
+ {
+  "source": "src/xbox360/sc1_ltcg_a.c",
+  "object": "sc1_ltcg_a.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_init_state_8864A920": 164
+  }
  }
 ]
