@@ -98,7 +98,7 @@ ts4_word fn_886BEEE8();
 ts4_word ts4_clear_three_vectors_886C3658();
 ts4_word ts4_bind_slot_link_by_id_886C3FE0();
 ts4_word ts4_anim_layer_index_886C66C0();
-ts4_word fn_886C71C8();
+ts4_word ts4_on_clip_message_886C71C8();
 ts4_word fn_886C73B8();
 ts4_word ts4_remove_id_886E61E0();
 ts4_word ts4_loop_get_u32_off48_886ECE38();
@@ -1371,10 +1371,10 @@ void ts4_addr_g_ts4_script_constants_886C7100(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x886C72B8: tailcall fn_886C71C8 */
+/* Swing_DLL.xex 0x886C72B8: tailcall ts4_on_clip_message_886C71C8 */
 ts4_word ts4_tailcall_fn_886C71C8_886C72B8(ts4_word a0)
 {
-    return fn_886C71C8((ts4_word)(a0 + 4));
+    return ts4_on_clip_message_886C71C8((ts4_word)(a0 + 4));
 }
 
 /* Swing_DLL.xex 0x886C7D58: if_call_seq u32@0x28, u32@0x0, ts4_anim_layer_index_886C66C0, u32@0x8c, u32@0x4, u32@0x8 */

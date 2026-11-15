@@ -138,7 +138,7 @@ struct MatchFrameState {               /* instance->u30 */
  *         inst->u48->+0 = out; match->318 = 0x85E3E155; if !match->328 inst->u48->+8 = 1;
  *         inst->u6c->u8->vtbl[6]();   ts4_rules_publish_point_end_flags_88669878(inst->u68);  fn_88669040(inst->u4c);
  *         inst->u6c->u8->vtbl[10]();  inst->+0x9C = 0; inst->+0xA4 = match->310; flags->+0x60 = 0;
- *         for (p in players) { p->anim->+0x14E = 1; fn_8869FE10(p->u64); }   // push to 10-entry history ring (stride 0x41C)
+ *         for (p in players) { p->anim->+0x14E = 1; ts4_discard_pending_8869FE10(p->u64); }   // push to 10-entry history ring (stride 0x41C)
  *     }
  *  D. inst->+0xA0 = match->2DD; for (p in players) p->anim->+0x3FC = match->310;
  *  E. if (fn_8867B608(inst)) {                      // "may simulate this frame"

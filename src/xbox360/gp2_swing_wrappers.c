@@ -68,7 +68,7 @@ struct Gp2SelectionScorer {
 
 void fn_8868B4E8(struct Gp2ReachEvaluator *evaluator, struct Gp2CandidateSet *set);
 void fn_8868BD80(struct Gp2ReachEvaluator *evaluator);
-void fn_8869B0A8(struct Gp2ReachEvaluator *evaluator);
+void ts4_reach_sample_lanes_8869B0A8(struct Gp2ReachEvaluator *evaluator);
 void fn_8869AB70(struct Gp2SelectionScorer *scorer, void *style);
 void fn_8868AF88(struct Gp2SelectionScorer *scorer);
 void ts4_selection_scorer_score_both_sides_88689AF0(struct Gp2SelectionScorer *scorer, int has_commit);
@@ -84,7 +84,7 @@ void ts4_reach_evaluator_run_8869B128(struct Gp2ReachEvaluator *evaluator)
     fn_8868B4E8(evaluator, evaluator->sets);
     fn_8868B4E8(evaluator, evaluator->sets + 1);
     fn_8868BD80(evaluator);
-    fn_8869B0A8(evaluator);
+    ts4_reach_sample_lanes_8869B0A8(evaluator);
 }
 
 /* Swing_DLL.xex 0x8869AEF8: selection pipeline: pick side, input notation, selection score. */
@@ -152,7 +152,7 @@ void ts4_swing_brain_refresh_reach_if_dirty_886A39A8(struct Gp2SwingBrain *brain
         fn_8868B4E8(evaluator, evaluator->sets);
         fn_8868B4E8(evaluator, evaluator->sets + 1);
         fn_8868BD80(evaluator);
-        fn_8869B0A8(evaluator);
+        ts4_reach_sample_lanes_8869B0A8(evaluator);
         brain->sets[0].dirty = 0;
         brain->sets[1].dirty = 0;
     }

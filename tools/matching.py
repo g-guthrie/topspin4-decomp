@@ -41232,6 +41232,72 @@ MATCHING_UNITS = (
         "object": "cx48_j.obj",
         "symbols": {"fn_88773A18": 156},
     },
+    {
+        "source": "src/xbox360/w11a_a.c",
+        "object": "w11a_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_reset_slots_886C7CA0": 56,
+            "ts4_sum_two_tables_88669EF0": 64,
+            "ts4_init_rel_record_88677480": 124,
+            "ts4_claim_slot_886CC408": 172,
+            "ts4_call_xdata_8864A848": 96,
+        },
+    },
+    {
+        "source": "src/xbox360/w11a_b.cpp",
+        "object": "w11a_b.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_start_entries_886619C0": 120,
+            "ts4_service_entries_8866D248": 128,
+        },
+    },
+    {
+        "source": "src/xbox360/w11b_b.c",
+        "object": "w11b_b.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_init_elems_886E6FA0": 88},
+    },
+    {
+        "source": "src/xbox360/w11b_c.cpp",
+        "object": "w11b_c.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_notify_flag_entries_8865E9D0": 96},
+    },
+    {
+        "source": "src/xbox360/w11b_d.c",
+        "object": "w11b_d.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_reset_color_block_88681AE0": 156},
+    },
+    {
+        "source": "src/xbox360/w11c_a.c",
+        "object": "w11c_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_destroy_members_88678A10": 120,
+            "ts4_finalize_and_clear_88661A70": 96,
+            "ts4_get_u32_889C0940": 88,
+            "ts4_init_table_886CF6B0": 164,
+        },
+    },
+    {
+        "source": "src/xbox360/w11c_b.c",
+        "object": "w11c_b.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_scale_two_vectors_889C0EF8": 116},
+    },
+    {
+        "source": "src/xbox360/w11d_a.c",
+        "object": "w11d_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_clear_vec_then_four_886C3938": 64,
+            "ts4_discard_pending_8869FE10": 172,
+            "ts4_add_vec3_8864EF60": 52,
+        },
+    },
 )
 
 

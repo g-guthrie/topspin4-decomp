@@ -140,7 +140,7 @@ struct Ga3Decider {
     int *counter;                    /* +0x2C */
 };
 struct Ga3Decider *ts4_if_get_u32_off20_88659C48(struct Ga3Decider *self);   /* returns self */
-void fn_88681AE0(struct Ga3Decider *self);
+void ts4_reset_color_block_88681AE0(struct Ga3Decider *self);
 
 /* Decides the stage after a point: nothing when the amount is positive; stage 3 when the counter exceeds the rally limit and key A is held without key B; stage 1 when any of the three latches is set; stage 2 when the range check passes and the stage output is armed. */
 void ga3_decide_stage_88681B80(struct Ga3Decider *self)
@@ -165,7 +165,7 @@ void ga3_decide_stage_88681B80(struct Ga3Decider *self)
         {
             struct Ga3Decider *same = ts4_if_get_u32_off20_88659C48(self);
             lat->done = 1;
-            fn_88681AE0(same);
+            ts4_reset_color_block_88681AE0(same);
         }
         self->latches->word_40 = 0;
         return;
@@ -176,7 +176,7 @@ void ga3_decide_stage_88681B80(struct Ga3Decider *self)
         {
             struct Ga3Decider *same = ts4_if_get_u32_off20_88659C48(self);
             lat->done = 1;
-            fn_88681AE0(same);
+            ts4_reset_color_block_88681AE0(same);
         }
         self->latches->word_40 = 0;
         return;
@@ -185,6 +185,6 @@ void ga3_decide_stage_88681B80(struct Ga3Decider *self)
         self->out->stage = 2;
         lat->s36 = 0;
         lat->s35 = 1;
-        fn_88681AE0(self);
+        ts4_reset_color_block_88681AE0(self);
     }
 }

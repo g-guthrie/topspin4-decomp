@@ -130,7 +130,7 @@ void fn_8863FB00(void);
 void ts4_flush_queue_88655BC8(void);
 void fn_886580B8(void);
 void ts4_reset_second_vec_8865A7D8(void);
-void fn_88661A70(void);
+void ts4_finalize_and_clear_88661A70(void);
 void fn_88668650(void);
 void ts4_clear_records_88668D70(void);
 void fn_88668DF8(void);
@@ -324,7 +324,7 @@ TS4_FORWARD(8865ABA8, ts4_reset_second_vec_8865A7D8)
 TS4_FORWARD(88668FC8, fn_88668650)
 TS4_FORWARD(88669030, ts4_clear_records_88668D70)
 TS4_FORWARD(88669038, fn_88668DF8)
-TS4_FORWARD(886714B8, fn_88661A70)
+TS4_FORWARD(886714B8, ts4_finalize_and_clear_88661A70)
 TS4_FORWARD(886742F0, ts4_check_ball_limits_88674218)
 TS4_FORWARD(8867C820, fn_8867C5A8)
 TS4_FORWARD(8868F170, fn_8868EA30)

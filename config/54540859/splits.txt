@@ -48401,3 +48401,72 @@ src/xbox360/cx48_i.c:
 src/xbox360/cx48_j.c:
 	.pdata      start:0x881276A0 end:0x881276A8
 	.text       start:0x88773A18 end:0x88773AB4
+
+src/xbox360/w11a_a.c:
+	.pdata      start:0x88122B48 end:0x88122B50
+	.text       start:0x8864A848 end:0x8864A8A8
+	.text       start:0x88669EF0 end:0x88669F30
+	.text       start:0x88677480 end:0x886774FC
+	.text       start:0x886C7CA0 end:0x886C7CD8
+	.text       start:0x886CC408 end:0x886CC4B4
+
+src/xbox360/w11a_b.cpp:
+	.pdata      start:0x88123360 end:0x88123368
+	.pdata      start:0x881235B0 end:0x881235B8
+	.text       start:0x886619C0 end:0x88661A38
+	.text       start:0x8866D248 end:0x8866D2C8
+
+src/xbox360/w11a_ltcg_a.c:
+	.pdata      start:0x88122930 end:0x88122938
+	.pdata      start:0x88124A68 end:0x88124A70
+	.text       start:0x886455A0 end:0x88645624
+	.text       start:0x8865FA18 end:0x8865FA6C
+	.text       start:0x886C3EB8 end:0x886C3F24
+	.text       start:0x886C71C8 end:0x886C7230
+
+src/xbox360/w11b_a.c:
+	.pdata      start:0x881241A8 end:0x881241B0
+	.text       start:0x88670D10 end:0x88670D50
+	.text       start:0x8867D8D0 end:0x8867D900
+	.text       start:0x8869B0A8 end:0x8869B128
+
+src/xbox360/w11b_b.c:
+	.text       start:0x886E6FA0 end:0x886E6FF8
+
+src/xbox360/w11b_c.cpp:
+	.pdata      start:0x881232C8 end:0x881232D0
+	.text       start:0x8865E9D0 end:0x8865EA30
+
+src/xbox360/w11b_d.c:
+	.pdata      start:0x88123B80 end:0x88123B88
+	.text       start:0x88681AE0 end:0x88681B7C
+
+src/xbox360/w11c_a.c:
+	.pdata      start:0x88123370 end:0x88123378
+	.pdata      start:0x881238A0 end:0x881238A8
+	.pdata      start:0x88124D48 end:0x88124D50
+	.pdata      start:0x88133CC0 end:0x88133CC8
+	.text       start:0x88661A70 end:0x88661AD0
+	.text       start:0x88678A10 end:0x88678A88
+	.text       start:0x886CF6B0 end:0x886CF754
+	.text       start:0x889C0940 end:0x889C0998
+
+src/xbox360/w11c_b.c:
+	.text       start:0x889C0EF8 end:0x889C0F6C
+
+src/xbox360/w11c_c.c:
+	.text       start:0x88672828 end:0x88672874
+
+src/xbox360/w11c_e.c:
+	.pdata      start:0x881232A0 end:0x881232A8
+	.text       start:0x8865E388 end:0x8865E40C
+
+src/xbox360/w11d_a.c:
+	.pdata      start:0x881242B0 end:0x881242B8
+	.text       start:0x8864EF60 end:0x8864EF94
+	.text       start:0x8869FE10 end:0x8869FEBC
+	.text       start:0x886C3938 end:0x886C3978
+
+src/xbox360/w11d_ltcg_a.c:
+	.pdata      start:0x881247E8 end:0x881247F0
+	.text       start:0x886B63B8 end:0x886B6448

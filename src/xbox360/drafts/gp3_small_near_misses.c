@@ -67,5 +67,5 @@ void gp3_flip_active_group_8865F030(struct Gp3InstanceGroups *instance)
  * fn_check: identical logic, different register allocation (original keeps the flag byte in r31 and the begin pointer masked with clrrwi). */
 
 /* Swing_DLL.xex 0x886A39A8: if either candidate-set dirty byte (sets+0x20 / sets+0x80) is set: rebuild both sets
- * (fn_8868B4E8(planner+0x28, sets), fn_8868B4E8(planner+0x28, sets+0x60), fn_8868BD80, fn_8869B0A8) and clear both bytes.
+ * (fn_8868B4E8(planner+0x28, sets), fn_8868B4E8(planner+0x28, sets+0x60), fn_8868BD80, ts4_reach_sample_lanes_8869B0A8) and clear both bytes.
  * fn_check: the original reloads planner->sets (+0x2C) for the first call instead of reusing the register of the condition. */

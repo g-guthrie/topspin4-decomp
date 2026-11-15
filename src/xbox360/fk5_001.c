@@ -230,7 +230,7 @@ ts4_word ts4_if_get_u32_off1c_88656900();
 ts4_word ts4_vector_clear_8865A5E0();
 ts4_word fn_8865E638();
 ts4_word ts4_matrix_flip_z_swap_rows_88661188();
-ts4_word fn_88661A70();
+ts4_word ts4_finalize_and_clear_88661A70();
 ts4_word fn_8866CDC8();
 float fn_886887C0(ts4_word, float);
 ts4_word ga3_add_to_first_other_counter_886917F8();
@@ -1951,7 +1951,7 @@ ts4_word ts4_if_get_u32_offd4_886A7988(ts4_word a0)
     if ((ts4_word)t20 != 0) {
         ts4_destroy_owned_object((ts4_word)t20);
     }
-    fn_88661A70((ts4_word)(a0 + 216));
+    ts4_finalize_and_clear_88661A70((ts4_word)(a0 + 216));
     t24 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 228);
     if ((ts4_word)t24 != 0) {
         ts4_destroy_owned_object((ts4_word)t24);

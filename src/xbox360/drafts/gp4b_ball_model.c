@@ -1184,7 +1184,7 @@ void gp4b_probe(Gp4bBall *B, const uint8_t *row, Gp4bSolve *O)
     c_from[3] = c_to[3] = K_ZERO;
     for (i = 0; i < 4; i++) { B->P0[i] = c_from[i]; B->P1[i] = c_to[i]; B->pos[i] = c_from[i]; B->prev[i] = c_from[i]; }
     B->origin[0] = K_ZERO; B->origin[1] = B->radius_cm; B->origin[2] = K_ZERO; B->origin[3] = K_ZERO;  /* local y = world y - radius */
-    for (i = 0; i < 4; i++) { B->cmd_from[i] = c_from[i]; B->cmd_to[i] = c_to[i]; }                   /* fn_889C0EF8 */
+    for (i = 0; i < 4; i++) { B->cmd_from[i] = c_from[i]; B->cmd_to[i] = c_to[i]; }                   /* ts4_scale_two_vectors_889C0EF8 */
 }
 
 /* net-interaction flags from the shot id / ball mode (fn_889C0C70, called by the launch with B->shot_id) */

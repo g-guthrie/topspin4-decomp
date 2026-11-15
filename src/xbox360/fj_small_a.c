@@ -69,7 +69,7 @@ extern void * fn_88866480(void *);
 extern void * fn_887CBD40(void *);
 extern void * fn_887C85E0(void *);
 extern void * fn_88793C60(void *);
-extern void fn_88661A70(char *);
+extern void ts4_finalize_and_clear_88661A70(char *);
 extern void ts4_destroy_owned_object(char *);
 extern void ts4_tsu_cleanup_begin(char *);
 extern char * fn_881519D0(char *);
@@ -653,7 +653,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_882172E0(void)
 /* Swing_DLL.xex 0x886A1088 */
 void ts4_dtor_base_then_destroy_fields_12_0_886A1088(char *a)
 {
-    fn_88661A70(a);
+    ts4_finalize_and_clear_88661A70(a);
     if (W(a, 12)) ts4_destroy_owned_object(LP(a, 12));
     if (W(a, 0)) ts4_destroy_owned_object(LP(a, 0));
 }

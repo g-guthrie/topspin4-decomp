@@ -7652,6 +7652,58 @@
       "src/xbox360/cx48_j.c": {
         "status": "Matching",
         "source": "xbox360/cx48_j.c"
+      },
+      "src/xbox360/w11a_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w11a_a.c"
+      },
+      "src/xbox360/w11a_b.cpp": {
+        "status": "Matching",
+        "source": "xbox360/w11a_b.cpp"
+      },
+      "src/xbox360/w11a_ltcg_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w11a_ltcg_a.c"
+      },
+      "src/xbox360/w11b_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w11b_a.c"
+      },
+      "src/xbox360/w11b_b.c": {
+        "status": "Matching",
+        "source": "xbox360/w11b_b.c"
+      },
+      "src/xbox360/w11b_c.cpp": {
+        "status": "Matching",
+        "source": "xbox360/w11b_c.cpp"
+      },
+      "src/xbox360/w11b_d.c": {
+        "status": "Matching",
+        "source": "xbox360/w11b_d.c"
+      },
+      "src/xbox360/w11c_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w11c_a.c"
+      },
+      "src/xbox360/w11c_b.c": {
+        "status": "Matching",
+        "source": "xbox360/w11c_b.c"
+      },
+      "src/xbox360/w11c_c.c": {
+        "status": "Matching",
+        "source": "xbox360/w11c_c.c"
+      },
+      "src/xbox360/w11c_e.c": {
+        "status": "Matching",
+        "source": "xbox360/w11c_e.c"
+      },
+      "src/xbox360/w11d_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w11d_a.c"
+      },
+      "src/xbox360/w11d_ltcg_a.c": {
+        "status": "Matching",
+        "source": "xbox360/w11d_ltcg_a.c"
       }
     }
   }

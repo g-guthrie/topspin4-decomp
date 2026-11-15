@@ -86,7 +86,7 @@ struct R2ResetHost {
 };
 
 void ga6_free_buffers_886CF110(struct R2PtrNode *node);
-void fn_88678A10(void *child);
+void ts4_destroy_members_88678A10(void *child);
 void fn_8890DDA8(void *member);
 void fn_881B9148(void *list);
 
@@ -111,7 +111,7 @@ void ts4_r2_swing_brain_reset_886A2378(struct R2ResetHost *self)
     self->node_100 = 0;
     ((void (*)(void *))self->hook_f4.vtbl[3])(&self->hook_f4);
     ((void (*)(void *))self->hook_48.vtbl[3])(&self->hook_48);
-    fn_88678A10(self->child_24);
+    ts4_destroy_members_88678A10(self->child_24);
     self->zero_30 = 0;
     self->zero_2c = 0;
     fn_8890DDA8((char *)self + 0x548);
