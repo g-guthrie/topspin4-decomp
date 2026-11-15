@@ -32118,3 +32118,4 @@ ts4_u32_vec_push_8861AA20 = .text:0x8861AA20; // type:function size:0x68
 ts4_ring_write_out_88870220 = .text:0x88870220; // type:function size:0x108
 ts4_ga4_owner_four_dtor_888E78D8 = .text:0x888E78D8; // type:function size:0x4C
 ts4_find_by_name_88943B70 = .text:0x88943B70; // type:function size:0xD0
+ts4_reset_floats_886468B8 = .text:0x886468B8; // type:function size:0x3C

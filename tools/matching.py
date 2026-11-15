@@ -41786,6 +41786,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_find_by_name_88943B70": 208},
     },
+    {
+        "source": "src/xbox360/me_reset_floats_886468B8.c",
+        "object": "me_reset_floats_886468B8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_reset_floats_886468B8": 60},
+    },
 )
 
 

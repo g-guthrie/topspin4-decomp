@@ -508,3 +508,13 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   `li r11,x; clrlwi r3` exits (0x8866EFA0).
 - Haiku agents: reliable on copies of an already matched function (twin lists), 0 for ~60 on the hard small residue
   even with per-function packets (work/army/HP/). Use them for copy jobs only.
+
+## Float literals on the plain route (checker fixed at b88)
+
+`tools/fn_check.py` used to reject any candidate whose float literal (`__real@XXXXXXXX`) faced a labelled constant in
+the target, which pushed every float function to the LTCG route. It now accepts the literal when the target label holds
+the same bytes. Rule of thumb: when the target loads its constants through **separate `lis` bases** (constants in
+different sections, e.g. the shared zero at 0x8814B440 in BINKCONS and a literal in .rdata), the function is a plain-route
+function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloads or changes registers), and use the
+`lbl_` extern only for constants whose label has no size in symbols.txt. Worked example: `me_reset_floats_886468B8.c`
+(also shows that a `set(&v, 0.0f, 10.0f, 0.0f)` inline vector setter makes the second constant load one store early).

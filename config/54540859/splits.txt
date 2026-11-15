@@ -48885,3 +48885,6 @@ src/xbox360/tw2_888E78D8.c:
 src/xbox360/tw2_88943B70.c:
 	.pdata      start:0x881318C8 end:0x881318D0
 	.text       start:0x88943B70 end:0x88943C40
+
+src/xbox360/me_reset_floats_886468B8.c:
+	.text       start:0x886468B8 end:0x886468F4

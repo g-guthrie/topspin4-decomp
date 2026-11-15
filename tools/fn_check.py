@@ -220,6 +220,16 @@ def main() -> int:
                         continue
                     problems.append(f"reloc +{r.offset:#x}: table {c_sym} differs from {t_sym}")
                     continue
+                if c_sym.startswith("__real@"):
+                    # Float/double literal: accept it when the target label
+                    # holds the same bytes (the literal's name encodes them).
+                    try:
+                        want = bytes.fromhex(c_sym[len("__real@"):])
+                    except ValueError:
+                        want = b""
+                    t_data = target_data(t_sym) if want else None
+                    if t_data and t_data[:len(want)] == want:
+                        continue
                 if c_sym.startswith("?") or c_sym.startswith("__real@") or c_sym.startswith("$"):
                     problems.append(f"reloc +{r.offset:#x}: candidate uses {c_sym}, target {t_sym}")
                 elif t_sym.startswith(PLACEHOLDER_PREFIXES) and (c_sym not in known_names):
