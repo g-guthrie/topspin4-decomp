@@ -555,3 +555,8 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
 - 0x886E2348 (plain): everything matches except the target keeps `layer + 0x30` in a saved register before adding 0x58.
 - 0x886A0A48 (14 off), 0x88640810 (7 off), 0x8867B260 (22 off): store or load scheduling only; structure is right.
 - LTCG tip confirmed: when a caller keeps values in r6/r7 across a call, add the callee's source file as `--context` (0x886C7B60 matched this way).
+- 0x88692720 (17 off): point-to-line distance; everything matches except `vor128` + `vmaddfp128` (addend as destination).
+  With locals the `__vmulfp` + `__vaddfp` pair fuses into plain `vmaddfp` on v0/v13/v12. The form
+  `static __inline void addscaled(Vx1Vec *o, const Vx1Vec *a, __vector4 dv, const float *k)` (store `a` then add) makes
+  cl.exe crash under wibo (segfault, no message), so "compile failed" with no error text means a compiler crash.
+  The same missing piece blocks 0x886C6AE0.
