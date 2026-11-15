@@ -62,7 +62,7 @@ ts4_word fn_88153EA8();
 ts4_word ts4_flagged_object_create_extra_88153F60();
 ts4_word ts4_flagged_object_create_88154018();
 ts4_word ts4_flagged_object_create_88154180();
-ts4_word fn_88154230();
+ts4_word ts4_create_linked_object_88154230();
 ts4_word ts4_flagged_object_create_881544D8();
 ts4_word ts4_vec28_trim_88177110();
 ts4_word fn_881ACBA8();

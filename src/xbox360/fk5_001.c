@@ -197,7 +197,7 @@ ts4_word fn_881B19A0();
 ts4_word ts4_if_call_seq_u32_off0_881B1CF0();
 ts4_word fn_881BBC00();
 ts4_word fn_881F04B8();
-ts4_word fn_882159B0();
+ts4_word ts4_object_new_882159B0();
 ts4_word fn_88221570();
 ts4_word fn_88280708();
 ts4_word fn_8841CBF8();
@@ -3113,7 +3113,7 @@ ts4_word ts4_loop_addr_lbl_880D8300_8878FC70(void)
             t11 = *(unsigned char *)((char *)(ts4_word)(lv10) + 13);
             p22 = (ts4_word)lv9;
             if ((ts4_word)t11 != 0 && (ts4_word)(*(unsigned char *)((char *)(ts4_word)(lv10) + 14)) != 0) {
-                t14 = fn_882159B0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(lv10) + 0)));
+                t14 = ts4_object_new_882159B0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(lv10) + 0)));
                 t15 = *(ts4_word *)((char *)(ts4_word)(lv10) + 0);
                 t16 = *(ts4_word *)((char *)(ts4_word)(t14) + 0);
                 *(ts4_word *)((char *)(ts4_word)(t14) + 32) = (ts4_word)t15;

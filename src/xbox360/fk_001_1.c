@@ -157,7 +157,7 @@ ts4_word ts4_call_seq_fn_88617D88_888CAA40();
 ts4_word fn_888CAB28();
 ts4_word fn_888CAD50();
 ts4_word fn_888CAFE8();
-ts4_word fn_888D03A0();
+ts4_word ts4_object_ctor_888D03A0();
 ts4_word fn_888DDE20();
 ts4_word fn_888DE118();
 ts4_word fn_888DE300();

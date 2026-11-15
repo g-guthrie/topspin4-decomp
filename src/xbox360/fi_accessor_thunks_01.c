@@ -62,7 +62,7 @@ ts4_word fn_887043D8(ts4_word, ts4_word);
 ts4_word fn_88704528(ts4_word, ts4_word);
 ts4_word fn_887140B8(ts4_word, ts4_word);
 ts4_word fn_887141A0(ts4_word, ts4_word);
-ts4_word fn_88714280(ts4_word, ts4_word);
+ts4_word ts4_set_mode_words_88714280(ts4_word, ts4_word);
 ts4_word fn_88714348(ts4_word, ts4_word);
 ts4_word fn_887143E0(ts4_word, ts4_word);
 ts4_word fn_88714478(ts4_word, ts4_word);
@@ -732,7 +732,7 @@ void ts4_set_u32_off8_886ECF68(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x88719CD8: call_seq fn_887143E0, fn_88714348, fn_88714478, fn_88714280, fn_887141A0, fn_887140B8 */
+/* Swing_DLL.xex 0x88719CD8: call_seq fn_887143E0, fn_88714348, fn_88714478, ts4_set_mode_words_88714280, fn_887141A0, fn_887140B8 */
 ts4_word ts4_call_seq_fn_887143E0_88719CD8(ts4_word a0, ts4_word a1)
 {
     ts4_word t6;
@@ -740,7 +740,7 @@ ts4_word ts4_call_seq_fn_887143E0_88719CD8(ts4_word a0, ts4_word a1)
     fn_887143E0((ts4_word)a0, (ts4_word)a1);
     fn_88714348((ts4_word)a0, (ts4_word)a1);
     fn_88714478((ts4_word)a0, (ts4_word)a1);
-    fn_88714280((ts4_word)a0, (ts4_word)a1);
+    ts4_set_mode_words_88714280((ts4_word)a0, (ts4_word)a1);
     fn_887141A0((ts4_word)a0, (ts4_word)a1);
     t6 = fn_887140B8((ts4_word)a0, (ts4_word)a1);
     return t6;

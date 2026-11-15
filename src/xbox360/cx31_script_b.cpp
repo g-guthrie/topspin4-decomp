@@ -50,7 +50,7 @@ extern "C" Owner *g_ts4_session_state;
 extern "C" void ts4_loop_get_u32_off8_8861DDB0(Shared *shared, Msg *m);
 extern "C" Msg *fn_882156B8(void *state, u32 key);
 extern "C" Msg *fn_882155E0(void *state, u32 key);
-extern "C" Msg *fn_881542F8(void *state, u32 key);
+extern "C" Msg *ts4_create_linked_object_881542F8(void *state, u32 key);
 
 INL void guarded_update(Shared **sp, Msg *m)
 {
@@ -85,7 +85,7 @@ extern "C" u32 ts4_script_session_msg_slot18_88788CA0(Ctx *c)
 /* 0x88789368 */
 extern "C" u32 ts4_script_session_msg_send_88789368(Ctx *c)
 {
-    Msg *m = fn_881542F8(g_ts4_session_state, 0xD98C63D3u);
+    Msg *m = ts4_create_linked_object_881542F8(g_ts4_session_state, 0xD98C63D3u);
     (void)c;
     guarded_update(&g_ts4_session_state->shared, m);
     return 0;

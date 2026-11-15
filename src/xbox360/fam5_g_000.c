@@ -36,8 +36,8 @@ extern char lbl_88D459E8[];
 extern char lbl_88D45A48[];
 ts4_word KeTlsGetValue();
 ts4_word ts4_guarded_update_88151560();
-ts4_word fn_88153120();
-ts4_word fn_881542F8();
+ts4_word ts4_create_linked_object_88153120();
+ts4_word ts4_create_linked_object_881542F8();
 ts4_word fn_8815A998();
 ts4_word fn_88165170();
 ts4_word ts4_string_assign_concat_8819B4C8();
@@ -50,7 +50,7 @@ ts4_word fn_886F0B30(ts4_word, float, float, float, float, ts4_word, ts4_word);
 ts4_word fn_886F2298(ts4_word, float, float, float, ts4_word, float);
 ts4_word fn_886F34D0(ts4_word, ts4_word, float);
 ts4_word fn_8870DAB0();
-ts4_word fn_8870DD10();
+ts4_word ts4_notify_tables_8870DD10();
 ts4_word fn_8870DE10();
 ts4_word fn_8870DF38();
 ts4_word fn_88717218();
@@ -732,7 +732,7 @@ void ts4_loop_get_u32_off44_8871B6A0(ts4_word a0)
                 }
                 t30 = fn_886F34D0((ts4_word)lv21, (ts4_word)t19, (*(float *)((char *)(ts4_word)(a0) + 308)));
                 if ((ts4_word)(t30 & 0xff) != 0) {
-                    fn_8870DD10((ts4_word)lv21);
+                    ts4_notify_tables_8870DD10((ts4_word)lv21);
                 }
             } else {
                 *(unsigned char *)((char *)(ts4_word)(lv21) + 16) = (unsigned char)0;
@@ -884,7 +884,7 @@ void ts4_if_call_seq_u8_off2c_8893B648(ts4_word a0)
     if ((ts4_word)t1 == 0 && (ts4_word)(*(unsigned char *)((char *)(ts4_word)(t3) + 104)) == 1) {
         t5 = *(ts4_word *)((char *)(ts4_word)(t3) + 108);
         if ((ts4_word)t5 == (ts4_word)((2696740864) | 58926) && (int)(*(ts4_word *)((char *)(ts4_word)(t3) + 112)) != 1) {
-            t8 = fn_881542F8((ts4_word)(*(ts4_word *)g_ts4_session_state), (ts4_word)((3350265856) | 47176));
+            t8 = ts4_create_linked_object_881542F8((ts4_word)(*(ts4_word *)g_ts4_session_state), (ts4_word)((3350265856) | 47176));
             ts4_guarded_update_88151560((ts4_word)a0, (ts4_word)t8);
             t10 = *(ts4_word *)((char *)(ts4_word)(a0) + 32);
             if ((int)t10 >= 0) {
@@ -895,7 +895,7 @@ void ts4_if_call_seq_u8_off2c_8893B648(ts4_word a0)
                 if ((int)(t10 + 1) < (int)t12) {
                     t15 = *(ts4_word *)((char *)(ts4_word)(t13) + 808);
                     if ((int)(t10 + 1) < (int)t15) {
-                        t17 = fn_88153120((ts4_word)a0, (ts4_word)((3367501824) | 6458));
+                        t17 = ts4_create_linked_object_88153120((ts4_word)a0, (ts4_word)((3367501824) | 6458));
                         ts4_guarded_update_88151560((ts4_word)a0, (ts4_word)t17);
                         return;
                     }

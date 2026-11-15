@@ -130,7 +130,7 @@ ts4_word fn_8820E000();
 ts4_word ts4_if_addr_lbl_880C1320_8820EF88();
 ts4_word fn_8820F160();
 ts4_word ts4_wstr_ne_8820F448();
-ts4_word fn_8820F740();
+ts4_word ts4_matrix_obj_ctor_8820F740();
 ts4_word fn_8820FD80();
 ts4_word fn_88212420();
 ts4_word fn_88222338();
@@ -147,7 +147,7 @@ ts4_word fn_88613570();
 ts4_word fn_88617D28();
 ts4_word fn_88617D88();
 ts4_word fn_886E81D8();
-ts4_word fn_887104B8();
+ts4_word ts4_ctor_named_887104B8();
 ts4_word ts4_call_seq_fn_88617D88_8871FFB0();
 ts4_word fn_88720018();
 ts4_word ts4_call_seq_fn_88255AA0_88721960();
@@ -1092,7 +1092,7 @@ ts4_word ts4_addr_lbl_88C69528_8820F4E8(void)
     return (ts4_word)lbl_88C69528;
 }
 
-/* Swing_DLL.xex 0x8820F4F8: if_call_seq ts4_dispatch2_88199068, fn_8820F740 */
+/* Swing_DLL.xex 0x8820F4F8: if_call_seq ts4_dispatch2_88199068, ts4_matrix_obj_ctor_8820F740 */
 ts4_word ts4_if_call_seq_fn_88199068_8820F4F8(void)
 {
     ts4_word loc50[2];
@@ -1103,7 +1103,7 @@ ts4_word ts4_if_call_seq_fn_88199068_8820F4F8(void)
     loc50[1] = (ts4_word)0;
     t1 = ts4_dispatch2_88199068((ts4_word)0, (ts4_word)96, (ts4_word)(ts4_word)&loc50[0]);
     if ((ts4_word)t1 != 0) {
-        t2 = fn_8820F740((ts4_word)t1);
+        t2 = ts4_matrix_obj_ctor_8820F740((ts4_word)t1);
         return t2;
     }
     return 0;
@@ -2571,7 +2571,7 @@ ts4_word ts4_if_get_u32_off0_8822B1B0(ts4_word a0)
     return (*(ts4_word *)((char *)(ts4_word)(t14) + 0));
 }
 
-/* Swing_DLL.xex 0x8822BC48: if_call_seq u32@lbl_88D45AD4, u32@lbl_88D45B38, ts4_node_dispatch_with_target_88613268, fn_887104B8 */
+/* Swing_DLL.xex 0x8822BC48: if_call_seq u32@lbl_88D45AD4, u32@lbl_88D45B38, ts4_node_dispatch_with_target_88613268, ts4_ctor_named_887104B8 */
 ts4_word ts4_if_call_seq_u32_lbl_88D45AD4_8822BC48(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p4;
@@ -2594,7 +2594,7 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45AD4_8822BC48(ts4_word a0, ts4_word a1, ts4
     }
     t7 = ts4_node_dispatch_with_target_88613268((ts4_word)(*(ts4_word *)lbl_88D45B38), (ts4_word)324, (ts4_word)4, (ts4_word)p4, (ts4_word)2);
     if ((ts4_word)t7 != 0) {
-        t8 = fn_887104B8((ts4_word)t7);
+        t8 = ts4_ctor_named_887104B8((ts4_word)t7);
         return t8;
     }
     return 0;

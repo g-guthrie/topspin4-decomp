@@ -67,7 +67,7 @@ extern char lbl_88D45B20[];
 ts4_word fn_88150310();
 ts4_word fn_88150600();
 ts4_word ts4_guarded_update_88151560();
-ts4_word fn_881542F8();
+ts4_word ts4_create_linked_object_881542F8();
 ts4_word ts4_list_destroy_88157B78();
 ts4_word fn_88157C20();
 ts4_word ts4_create_obj430_88157DA8();

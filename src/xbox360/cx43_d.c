@@ -95,11 +95,11 @@ void ts4_check_done_889ADEC8(void *self)
 typedef struct Cx43Lock { void **vt; } Cx43Lock;
 typedef struct Cx43State { u8 pad[0x1c]; u8 *p1c; } Cx43State;
 extern Cx43State *g_ts4_session_state;
-extern u32 fn_88154230(void *st, u32 key);
+extern u32 ts4_create_linked_object_88154230(void *st, u32 key);
 extern void ts4_loop_get_u32_off8_8861DDB0(void *o, u32 v);
 void ts4_locked_set_889AC440(void)
 {
-    u32 h = fn_88154230(g_ts4_session_state, 0x322598DE);
+    u32 h = ts4_create_linked_object_88154230(g_ts4_session_state, 0x322598DE);
     Cx43State *st = g_ts4_session_state;
     u8 **pp = &st->p1c;
     Cx43Lock *lk = (Cx43Lock *)(*pp + 8);

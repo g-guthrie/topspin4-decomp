@@ -8,7 +8,7 @@ extern void *ts4_init_state_888C9588(void *self);
 extern void *fn_888DDF98(void *self);
 extern void *fn_888DDE20(void *self);
 extern void *fn_888E1EE0(void *self);
-extern void *fn_888D03A0(void *self);
+extern void *ts4_object_ctor_888D03A0(void *self);
 extern void *fn_888C80A0(void *self);
 extern void *fn_88617D88(void *self);
 extern void *lbl_880DB954[];

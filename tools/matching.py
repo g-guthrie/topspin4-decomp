@@ -41028,6 +41028,75 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_analysers_init_886BDB58": 360},
     },
+    {
+        "source": "src/xbox360/cx45_a.c",
+        "object": "cx45_a.obj",
+        "symbols": {
+            "ts4_upload_slot_const_88714680": 64,
+            "ts4_clear_finalize_88713DA8": 80,
+            "ts4_visit_entries_88708408": 156,
+            "ts4_ctor_named_887104B8": 92,
+            "ts4_set_mode_words_88714280": 196,
+        },
+    },
+    {
+        "source": "src/xbox360/cx45_b.c",
+        "object": "cx45_b.obj",
+        "symbols": {
+            "ts4_setup_pages_887084A8": 184,
+            "ts4_all_records_ok_88717580": 208,
+            "ts4_notify_tables_8870DD10": 256,
+        },
+    },
+    {
+        "source": "src/xbox360/cx46_a.c",
+        "object": "cx46_a.obj",
+        "symbols": {
+            "ts4_gfx_set_state_2948_shift3_88738B58": 48,
+            "ts4_gfx_set_state_2948_low_88738B88": 84,
+            "ts4_refcount_release_88720B08": 104,
+            "ts4_ctor_avec_88724548": 100,
+            "ts4_ctor_two_avec_88731390": 124,
+            "ts4_ctor_cleared_88723AD0": 132,
+            "ts4_frame_end_8873B758": 140,
+            "ts4_rec134_all_idle_88736B28": 144,
+            "ts4_ctor_two_avec_base_88737BD0": 192,
+            "ts4_ctor_two_avec_base_88736C28": 204,
+            "ts4_pv_destroy_free_88721898": 196,
+            "ts4_resolve_entries_88724300": 200,
+            "ts4_resolve_ref_8872AF50": 220,
+            "ts4_resolve_ref_8872B030": 220,
+            "ts4_run_job_887212A8": 104,
+        },
+    },
+    {
+        "source": "src/xbox360/cx46_b.c",
+        "object": "cx46_b.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_rec14_vec_clear_8872E1D8": 108},
+    },
+    {
+        "source": "src/xbox360/sc2_ctor_b.c",
+        "object": "sc2_ctor_b.obj",
+        "symbols": {
+            "ts4_object_new_882159B0": 176,
+            "ts4_object_new_88218858": 208,
+            "ts4_object_new_88218928": 212,
+            "ts4_object_new_88218A00": 208,
+            "ts4_object_new_88218AD0": 204,
+            "ts4_object_ctor_888D03A0": 124,
+        },
+    },
+    {
+        "source": "src/xbox360/sc2_link.cpp",
+        "object": "sc2_link.obj",
+        "symbols": {
+            "ts4_create_linked_object_88154230": 200,
+            "ts4_create_linked_object_881542F8": 204,
+            "ts4_create_linked_object_88153120": 212,
+            "ts4_create_linked_object_88157F10": 204,
+        },
+    },
 )
 
 

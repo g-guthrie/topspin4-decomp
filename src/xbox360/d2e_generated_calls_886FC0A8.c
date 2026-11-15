@@ -104,7 +104,7 @@ ts4_word fn_881D4050();
 ts4_word ts4_call_seq_lbl_880E9660_881F41E8();
 ts4_word ts4_if_call_seq_u32_off8_88213D38();
 ts4_word ts4_destroy_ent270_range_88216460();
-ts4_word fn_88218AD0();
+ts4_word ts4_object_new_88218AD0();
 ts4_word ts4_loop_call_seq_u32_offc_88219E68();
 ts4_word ts4_if_call_seq_u32_off8_8821FD70();
 ts4_word ts4_vector_push_back_construct_88220060();

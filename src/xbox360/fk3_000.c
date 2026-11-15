@@ -98,7 +98,7 @@ ts4_word RtlInitAnsiString();
 ts4_word RtlLeaveCriticalSection();
 ts4_word fn_88150600();
 ts4_word ts4_guarded_update_88151560();
-ts4_word fn_88157F10();
+ts4_word ts4_create_linked_object_88157F10();
 ts4_word fn_88161540();
 ts4_word fn_88166108();
 ts4_word ts4_destroy_rec30_range_88166178();
@@ -6354,7 +6354,7 @@ ts4_word ts4_if_call_seq_u32_g_ts4_session_context_8899A5C8(ts4_word a0, ts4_wor
         t5 = *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)g_ts4_session_context)) + 60);
         t6 = *(ts4_word *)((char *)(ts4_word)(t5) + 716);
         if ((ts4_word)t6 != (ts4_word)((2583166976) | 51440) || (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t5) + 640)) != (ts4_word)((499777536) | 29317)) {
-            t9 = fn_88157F10((ts4_word)(*(ts4_word *)g_ts4_session_state), (ts4_word)((3662872576) | 783));
+            t9 = ts4_create_linked_object_88157F10((ts4_word)(*(ts4_word *)g_ts4_session_state), (ts4_word)((3662872576) | 783));
             t10 = *(ts4_word *)g_ts4_session_state;
             t11 = *(ts4_word *)((char *)(ts4_word)(t9) + 8);
             *(ts4_word *)((char *)(ts4_word)(t11) + 20) = (ts4_word)1;

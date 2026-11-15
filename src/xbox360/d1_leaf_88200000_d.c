@@ -7,7 +7,7 @@ extern int ts4_addr_fn_881F7958_88206B20(void *);
 extern int fn_882072F0(void *);
 extern int ts4_if_addr_fn_881F7958_8820B418(void *);
 extern int fn_8820CFB8(void *);
-extern int fn_8820F740(void *);
+extern int ts4_matrix_obj_ctor_8820F740(void *);
 extern int fn_8820FD80(void *);
 
 int ts4_forward_if_set_else_zero_88204A38(void *object)
@@ -53,7 +53,7 @@ int ts4_forward_if_set_else_zero_8820C690(void *object)
 int ts4_forward_if_set_else_zero_8820F558(void *object)
 {
     if (object != 0) {
-        return fn_8820F740(object);
+        return ts4_matrix_obj_ctor_8820F740(object);
     }
     return 0;
 }
