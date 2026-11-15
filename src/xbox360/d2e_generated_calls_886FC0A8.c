@@ -170,7 +170,7 @@ ts4_word ts4_mgr_any_slot_both_flags_887CFC48();
 ts4_word fn_887D0378();
 ts4_word fn_887D0C80();
 ts4_word fn_887D9A10();
-ts4_word fn_887E94F8();
+ts4_word ts4_flag_if_sub_ready_887E94F8();
 ts4_word fn_887EA048();
 ts4_word fn_887EDF40();
 ts4_word fn_887EFAE8();
@@ -388,7 +388,7 @@ ts4_word ts4_if_get_u32_off10_8879DEE8(ts4_word a0)
             *(volatile unsigned char *)((char *)(ts4_word)(a0) + 220) = (unsigned char)0;
             fn_88778BE8((ts4_word)a0, (ts4_word)14);
             ts4_tailcall_fn_88584548_8857AFE8((ts4_word)160);
-            t26 = fn_887E94F8((ts4_word)t15);
+            t26 = ts4_flag_if_sub_ready_887E94F8((ts4_word)t15);
             p27 = (ts4_word)t26;
         }
         p28 = (ts4_word)p27;

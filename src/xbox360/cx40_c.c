@@ -24,7 +24,7 @@ char *ts4_find_entry_887EA1E0(char *self, u32 *key, int b)
     return 0;
 }
 
-extern void *fn_887E1C50(void *);
+extern void *ts4_record_value_887E1C50(void *);
 extern void *fn_887D73C0(void *);
 extern u32 ts4_if_call_seq_u32_off0_887D3C88(void *, void *);
 /* 0x887E2BE0: switch the current state hash at +0x4c (0 means re-run the current one). */
@@ -37,7 +37,7 @@ void ts4_set_state_887E2BE0(char *self, u32 h)
         h = v;
     }
     if (v == 0x1DCA7285u) {
-        fn_887E1C50(self);
+        ts4_record_value_887E1C50(self);
     } else if (v == 0x04C901D9u) {
         *(u32 *)(self + 0x4c) = 0x04C901D9u;
         fn_887D73C0(self);

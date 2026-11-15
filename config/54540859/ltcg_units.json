@@ -1355,5 +1355,34 @@
    "ts4_dispatch_by_hash_887F8870": 176,
    "ts4_dispatch_by_hash_887F8330": 136
   }
+ },
+ {
+  "source": "src/xbox360/cx40_ltcg_d.c",
+  "object": "cx40_ltcg_d.obj",
+  "context": [
+   "src/xbox360/cx40_ctx_e.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [
+   "ts4_find_in_range_887E9720"
+  ],
+  "symbols": {
+   "ts4_range_has_either_887E9860": 144
+  }
+ },
+ {
+  "source": "src/xbox360/cx41_l1.c",
+  "object": "cx41_l1.obj",
+  "context": [
+   "src/xbox360/cx41_ctx_get_u32.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_set_value_b0_888FBC50": 80,
+   "ts4_add_value_b0_888FBBF0": 92
+  }
  }
 ]

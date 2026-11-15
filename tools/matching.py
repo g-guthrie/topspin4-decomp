@@ -40680,6 +40680,65 @@ MATCHING_UNITS = (
             "ts4_worker_ctor_887EB298": 176,
         },
     },
+    {
+        "source": "src/xbox360/cx40_e.c",
+        "object": "cx40_e.obj",
+        "symbols": {
+            "ts4_notify_if_set_887F7890": 96,
+            "ts4_flag_if_sub_ready_887E94F8": 112,
+            "ts4_refresh_if_sub_ready_887EF2D8": 128,
+            "ts4_slots_all_ok_887D90D8": 132,
+            "ts4_slots_all_ok_887DF390": 132,
+            "ts4_select_entry_887F1F68": 148,
+            "ts4_record_value_887E1C50": 160,
+            "ts4_vec_contains_887E9C10": 176,
+            "ts4_key_known_887EA5C8": 128,
+        },
+    },
+    {
+        "source": "src/xbox360/cx40_f.c",
+        "object": "cx40_f.obj",
+        "symbols": {
+            "ts4_range_has_887E97E8": 120,
+            "ts4_range_remove_887E98F0": 176,
+        },
+    },
+    {
+        "source": "src/xbox360/cx40_g.c",
+        "object": "cx40_g.obj",
+        "symbols": {"ts4_broadcast_unless_paused_887FFC20": 152},
+    },
+    {
+        "source": "src/xbox360/cx41_a.c",
+        "object": "cx41_a.obj",
+        "symbols": {
+            "ts4_clear_byte_vec_888DC898": 52,
+            "ts4_clear_e5c_vec_888EF4F8": 116,
+            "ts4_clear_f4_vec_888F2430": 120,
+            "ts4_init_four_subobjs_888EEB68": 68,
+            "ts4_init_slot_888D8110": 88,
+            "ts4_init_table_obj_888DF4E0": 164,
+            "ts4_set_flag_e5_and_reset_888F8110": 68,
+            "ts4_set_slot_pair_888F0650": 196,
+            "ts4_sync_slot_pairs_888F0588": 200,
+        },
+    },
+    {
+        "source": "src/xbox360/cx41_b.c",
+        "object": "cx41_b.obj",
+        "symbols": {"ts4_visit_rel_table_888DB010": 148},
+    },
+    {
+        "source": "src/xbox360/cx41_c.c",
+        "object": "cx41_c.obj",
+        "symbols": {"ts4_init_slot_callbacks_888FB838": 232},
+    },
+    {
+        "source": "src/xbox360/cx41_d.c",
+        "object": "cx41_d.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_advance_selection_888F6390": 200},
+    },
 )
 
 

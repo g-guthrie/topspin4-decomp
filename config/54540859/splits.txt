@@ -47806,3 +47806,71 @@ src/xbox360/cx40_ltcg_b.c:
 src/xbox360/cx40_ltcg_c.c:
 	.text       start:0x887F8330 end:0x887F83B8
 	.text       start:0x887F8870 end:0x887F8920
+
+src/xbox360/cx40_e.c:
+	.pdata      start:0x881297F0 end:0x881297F8
+	.pdata      start:0x88129A60 end:0x88129A68
+	.pdata      start:0x88129AD8 end:0x88129AE0
+	.pdata      start:0x88129CF0 end:0x88129CF8
+	.pdata      start:0x88129D70 end:0x88129D78
+	.pdata      start:0x8812A018 end:0x8812A020
+	.pdata      start:0x8812A140 end:0x8812A148
+	.pdata      start:0x8812A2A0 end:0x8812A2A8
+	.text       start:0x887D90D8 end:0x887D915C
+	.text       start:0x887DF390 end:0x887DF414
+	.text       start:0x887E1C50 end:0x887E1CF0
+	.text       start:0x887E94F8 end:0x887E9568
+	.text       start:0x887E9C10 end:0x887E9CC0
+	.text       start:0x887EA5C8 end:0x887EA648
+	.text       start:0x887EF2D8 end:0x887EF358
+	.text       start:0x887F1F68 end:0x887F1FFC
+	.text       start:0x887F7890 end:0x887F78F0
+
+src/xbox360/cx40_f.c:
+	.pdata      start:0x88129D10 end:0x88129D18
+	.pdata      start:0x88129D20 end:0x88129D28
+	.text       start:0x887E97E8 end:0x887E9860
+	.text       start:0x887E98F0 end:0x887E99A0
+
+src/xbox360/cx40_g.c:
+	.pdata      start:0x8812A698 end:0x8812A6A0
+	.text       start:0x887FFC20 end:0x887FFCB8
+
+src/xbox360/cx40_ltcg_d.c:
+	.pdata      start:0x88129D18 end:0x88129D20
+	.text       start:0x887E9860 end:0x887E98F0
+
+src/xbox360/cx41_a.c:
+	.pdata      start:0x8812F690 end:0x8812F698
+	.pdata      start:0x8812FAC8 end:0x8812FAD0
+	.pdata      start:0x8812FAE8 end:0x8812FAF0
+	.pdata      start:0x8812FB18 end:0x8812FB20
+	.pdata      start:0x8812FB20 end:0x8812FB28
+	.pdata      start:0x8812FBE8 end:0x8812FBF0
+	.pdata      start:0x8812FD08 end:0x8812FD10
+	.text       start:0x888D8110 end:0x888D8168
+	.text       start:0x888DC898 end:0x888DC8CC
+	.text       start:0x888DF4E0 end:0x888DF584
+	.text       start:0x888EEB68 end:0x888EEBAC
+	.text       start:0x888EF4F8 end:0x888EF56C
+	.text       start:0x888F0588 end:0x888F0714
+	.text       start:0x888F2430 end:0x888F24A8
+	.text       start:0x888F8110 end:0x888F8154
+
+src/xbox360/cx41_b.c:
+	.pdata      start:0x8812F450 end:0x8812F458
+	.text       start:0x888DB010 end:0x888DB0A4
+
+src/xbox360/cx41_c.c:
+	.pdata      start:0x8812FD88 end:0x8812FD90
+	.text       start:0x888FB838 end:0x888FB920
+
+src/xbox360/cx41_d.c:
+	.pdata      start:0x8812FCB8 end:0x8812FCC0
+	.text       start:0x888F6390 end:0x888F6458
+
+src/xbox360/cx41_l1.c:
+	.pdata      start:0x8812FDB0 end:0x8812FDB8
+	.pdata      start:0x8812FDB8 end:0x8812FDC0
+	.text       start:0x888FBBF0 end:0x888FBC4C
+	.text       start:0x888FBC50 end:0x888FBCA0

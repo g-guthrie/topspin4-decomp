@@ -164,7 +164,7 @@ ts4_word fn_887E6A50();
 ts4_word fn_887E72E0();
 ts4_word fn_887EC7A0();
 ts4_word fn_887EEA00();
-ts4_word fn_887EF2D8();
+ts4_word ts4_refresh_if_sub_ready_887EF2D8();
 ts4_word fn_887F0CA0();
 ts4_word fn_887F4698();
 ts4_word fn_887FC678();
@@ -1518,7 +1518,7 @@ ts4_word ts4_loop_get_u32_lbl_88D45A10_887EF420(ts4_word a0, ts4_word a1, ts4_wo
     }
     p10 = (ts4_word)p8;
     if ((int)p7 == 2) {
-        t9 = fn_887EF2D8((ts4_word)t1);
+        t9 = ts4_refresh_if_sub_ready_887EF2D8((ts4_word)t1);
         p10 = (ts4_word)t9;
     }
     return p10;

@@ -10,7 +10,7 @@ extern void *lbl_88D45B0C, *lbl_88D459E0, *lbl_88D45A60, *lbl_88D45960, *lbl_88D
 extern void *g_ts4_online_context;
 extern void ts4_loop_get_u32_off1c_88931FE0(void *, ts4_script_u32 *);
 extern ts4_script_u8 fn_88865388(void *, int, int, ts4_script_u8 *);
-extern ts4_script_u32 fn_887EA5C8(void *, int);
+extern ts4_script_u32 ts4_key_known_887EA5C8(void *, int);
 extern void ts4_if_get_u32_off1c_886570B8(void *, ts4_script_u32);
 extern void fn_888D0838(void *, ts4_script_u32);
 extern void fn_889A5200(void *, int, int, int);
