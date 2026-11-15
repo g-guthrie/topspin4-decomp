@@ -547,3 +547,11 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
 - Float multiply operand order (`fmuls`/`fmadds` with the two factors swapped): dead-local pads and declaration order do
   nothing here. Write the factors as inline sub-expressions (macros such as `#define DX (b.v[0] - a.v[0])`) instead of
   named float locals; `me_segment_intersect_xz_88670178.c` went from 4 off to a match that way.
+
+### Near misses parked at b92 (drafts in work/army/ME/near on the cloud session)
+
+- 0x886C8678 (10 off): two 16-byte struct copies; target computes `out + 0x10` into an unused register and stores the second copy high half first.
+- 0x886C6AE0 (37 off): keyframe sampler; target keeps `frac` in the conversion stack slot and adds the base index before shifting.
+- 0x886E2348 (plain): everything matches except the target keeps `layer + 0x30` in a saved register before adding 0x58.
+- 0x886A0A48 (14 off), 0x88640810 (7 off), 0x8867B260 (22 off): store or load scheduling only; structure is right.
+- LTCG tip confirmed: when a caller keeps values in r6/r7 across a call, add the callee's source file as `--context` (0x886C7B60 matched this way).

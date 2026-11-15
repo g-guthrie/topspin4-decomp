@@ -2012,5 +2012,21 @@
   "symbols": {
    "ts4_is_near_mirrored_x_8866BEE0": 208
   }
+ },
+ {
+  "source": "src/xbox360/me_anim_record_within_window_886C7B60.c",
+  "object": "me_anim_record_within_window_886C7B60.obj",
+  "context": [
+   "src/xbox360/w7a_a.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_anim_record_within_window_886C7B60": 196
+  }
  }
 ]
