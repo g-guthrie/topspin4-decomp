@@ -30872,3 +30872,6 @@ ts4_clip_ratio_excess_886CBBD8 = .text:0x886CBBD8; // type:function size:0x58
 ts4_clamp_to_range_offset_886CAE50 = .text:0x886CAE50; // type:function size:0x70
 ts4_matrix_rotate_x_8864EE78 = .text:0x8864EE78; // type:function size:0xD8
 ts4_anim_frames_to_event_886CD488 = .text:0x886CD488; // type:function size:0xD4
+ts4_mover_clamp_speed_half_vel_88670C20 = .text:0x88670C20; // type:function size:0xA8
+ts4_polar_offset_xz_8867D9A0 = .text:0x8867D9A0; // type:function size:0x8C
+ts4_mover_scale_velocity_xz_8867D7C8 = .text:0x8867D7C8; // type:function size:0xB4

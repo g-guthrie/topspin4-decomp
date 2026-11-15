@@ -46134,3 +46134,14 @@ src/xbox360/w5c_f.c:
 src/xbox360/w5c_g.cpp:
 	.pdata      start:0x88124C68 end:0x88124C70
 	.text       start:0x886CD488 end:0x886CD55C
+
+src/xbox360/vx1_clamp_speed_half_vel.c:
+	.text       start:0x88670C20 end:0x88670CC8
+
+src/xbox360/vx1_polar_offset_xz.c:
+	.pdata      start:0x88123A50 end:0x88123A58
+	.text       start:0x8867D9A0 end:0x8867DA2C
+
+src/xbox360/vx1_scale_velocity_xz.c:
+	.pdata      start:0x88123A38 end:0x88123A40
+	.text       start:0x8867D7C8 end:0x8867D87C

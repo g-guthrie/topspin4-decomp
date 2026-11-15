@@ -207,3 +207,25 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   - A callee with an unused parameter must be defined in context with `flags(/Ob1):`, or the extra argument is emitted.
   - Call callees by their current symbols.txt name. An invented `ts4_` name for an unmatched callee passes fn_check with
     a RENAME note but fails the LTCG build ("unapplied renames").
+
+## Vector (VMX128) code (from VX1; full notes in docs/agents/near-misses/VX1.md)
+- Include `src/xbox360/vx1_vector.h` instead of `ts4_vector.h` in new vector sources: its `__vector4` is 16-byte
+  aligned and `passinreg`, so vector struct copies come out as `ld/ld/std/std` like the game (the old header's type is
+  4-byte aligned and gives four `lwz/stw` pairs). It also declares the intrinsics `extern "C"` (needed for .cpp),
+  adds `__vcmpeqfpR` and `__stvewx`, and has lane helpers `vx1_set_x/y/z/w`, `vx1_replicate`, `vx1_vec_set_*`.
+- Register choice follows the source, not a flag: temporaries go v63 downward, vectors live across a call v127 downward.
+  v0-v13 appear only around instructions with no VMX128 form: 3-input `__vmaddfp` and a `__vspltw` feeding it.
+- `vor128 vD,vS,vS` copies are late-forwarded loads (the vector form of the clrrwi rule): change a vector member through
+  an inline helper taking a pointer to it (`vx1_vec_set_x(&s->vel, x)`). A direct `s->vel = set_x(s->vel, x)` gives none.
+- Lane ops are the xnamath bodies: setter `__vrlimi(v, __lvlx(&x, 0), mask, rot)`, splat `__vspltw(__lvlx(&x, 0), 0)`,
+  lane read `.v[i]` (stack store + `lfs`), dot-product extract `__stvewx`.
+- Loop unroll: `for (i = n - 1; 0 <= i; i--)` (constant on the left) is NOT unrolled and gives `subic.; mtctr; bdnz`;
+  `i >= 0` is unrolled 4x.
+- The float table select inside a loop needs a fresh local in the helper (`float r = ...; return r;`); `best = c ? f : best`
+  gives a branch.
+- A constant addressed from another constant (`li r5,0x4d0; lvlx128 v62,rZero,r5`): one file-scope
+  `static const struct { float zero; unsigned gap[N]; float half; }`. Two separately used vector constants must be
+  `extern` under their symbols.txt names.
+- Use the LTCG route with `src/xbox360/pp1_pool_primer.c` as last context and `/Oc`. Worked examples:
+  src/xbox360/vx1_scale_velocity_xz.c, vx1_clamp_speed_half_vel.c, vx1_polar_offset_xz.c.
+- 2,025 unmatched vector functions (1.5 MB) in the image; 422 (295 KB) in the gameplay range.

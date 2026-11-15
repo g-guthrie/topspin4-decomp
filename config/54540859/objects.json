@@ -6360,6 +6360,18 @@
       "src/xbox360/w5c_g.cpp": {
         "status": "Matching",
         "source": "xbox360/w5c_g.cpp"
+      },
+      "src/xbox360/vx1_clamp_speed_half_vel.c": {
+        "status": "Matching",
+        "source": "xbox360/vx1_clamp_speed_half_vel.c"
+      },
+      "src/xbox360/vx1_polar_offset_xz.c": {
+        "status": "Matching",
+        "source": "xbox360/vx1_polar_offset_xz.c"
+      },
+      "src/xbox360/vx1_scale_velocity_xz.c": {
+        "status": "Matching",
+        "source": "xbox360/vx1_scale_velocity_xz.c"
       }
     }
   }
