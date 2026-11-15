@@ -8068,6 +8068,14 @@
       "src/xbox360/me_find_and_notify_88658968.cpp": {
         "status": "Matching",
         "source": "xbox360/me_find_and_notify_88658968.cpp"
+      },
+      "src/xbox360/me_is_near_mirrored_x_8866BEE0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_is_near_mirrored_x_8866BEE0.c"
+      },
+      "src/xbox360/me_write_mirrored_vec_886AB438.c": {
+        "status": "Matching",
+        "source": "xbox360/me_write_mirrored_vec_886AB438.c"
       }
     }
   }

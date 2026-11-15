@@ -41822,6 +41822,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_find_and_notify_88658968": 204},
     },
+    {
+        "source": "src/xbox360/me_write_mirrored_vec_886AB438.c",
+        "object": "me_write_mirrored_vec_886AB438.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_write_mirrored_vec_886AB438": 200},
+    },
 )
 
 

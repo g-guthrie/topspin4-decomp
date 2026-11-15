@@ -1997,5 +1997,20 @@
   "symbols": {
    "ts4_offset_886CC4B8": 164
   }
+ },
+ {
+  "source": "src/xbox360/me_is_near_mirrored_x_8866BEE0.c",
+  "object": "me_is_near_mirrored_x_8866BEE0.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_is_near_mirrored_x_8866BEE0": 208
+  }
  }
 ]

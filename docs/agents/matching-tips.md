@@ -535,3 +535,12 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
 - Float arguments consume GPR slots: `f(obj, float, float, out)` passes `out` in r6.
 - Functions no agent has tried go fast by hand (5 of 9 tried at b89 matched in one to three runs); the long-open
   near misses are almost all instruction-scheduling cases and do not.
+
+## Open near misses from the hand pass (b90), drafts in work/army/ME/near/ (not committed)
+
+- 0x889C2940 (2 off): two byte stores after the call come out in the other order whatever the statement order or types.
+- 0x886C4D10 (3 off): target keeps `child + 8` in a saved register before the first call; ours recomputes it after.
+- 0x889C29E8 (11 off, order only): bisection loop; the stack vector load sits one slot late in the target.
+- 0x886707C8 (12 off, registers only): three keys copied to a stack array and two of them also kept in saved registers.
+- 0x889C0C70 (25 off, registers only): switch on the ball mode hash; structure exact with a `bool` helper for the test.
+- 0x886AD1F0, 0x886C5DB0, 0x8866CFA8: store placed before a compare/call in the target, after it in ours.

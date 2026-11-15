@@ -32124,3 +32124,5 @@ ts4_destroy_two_subs_88671A98 = .text:0x88671A98; // type:function size:0x78
 ts4_copy_vec_fill_hashes_88672878 = .text:0x88672878; // type:function size:0xBC
 ts4_lookup_scaled_vec_88649828 = .text:0x88649828; // type:function size:0xC8
 ts4_find_and_notify_88658968 = .text:0x88658968; // type:function size:0xCC
+ts4_is_near_mirrored_x_8866BEE0 = .text:0x8866BEE0; // type:function size:0xD0
+ts4_write_mirrored_vec_886AB438 = .text:0x886AB438; // type:function size:0xC8
