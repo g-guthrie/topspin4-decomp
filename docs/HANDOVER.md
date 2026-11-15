@@ -35,7 +35,7 @@ Standing owner decisions:
 | Data-only patch set | Cancelled by the owner, who is applying data changes to their own copy locally. A nearly complete draft (grouped patch files and an apply script) was removed from the tree; it is in history at commit `38e12fd` (`tuning/retune-v0/`, `tools/apply_retune.py`) if wanted. | `docs/data-patching.md` |
 | Native build | All three modules translate and compile. A scripted, headless run boots through the logos and title screen, reaches the practice ground (court, net, ball machine and player drawn; the player renders as a black silhouette) and then the main menu (scene S4MainMenu). No match yet. The earlier black frames were a host render-target problem on the software renderer, fixed by running with `--render_target_path_vulkan=fsi`. | `docs/recomp-feasibility.md`, `docs/recomp-build.md`, `tools/recomp/` |
 | Renderer and front end | Mapped for the port. | `docs/renderer-map.md` (frame order, hand-over, ranked causes of black frames, checks C1-C9), `docs/frontend-map.md` (waits before the menu, how a match starts, pointer chains to ball and players) |
-| Byte-matching | 30,437 functions, 2,937,704 of 10,154,036 bytes (28.93%), build b46. The local agent owns it outside the gameplay and ball ranges. | `docs/decomp-remaining.md`, `docs/ltcg-route.md`, `docs/agents/matching-tips.md`, `docs/agents/near-misses/` |
+| Byte-matching | 30,697 functions, 2,974,852 of 10,154,036 bytes (29.30%), build b49. The local agent owns it outside the gameplay and ball ranges. | `docs/decomp-remaining.md`, `docs/ltcg-route.md`, `docs/agents/matching-tips.md`, `docs/agents/near-misses/` |
 | Equivalence tier | Checker built and validated. | `docs/equivalence-tier.md` (section 9 = status of the gameplay functions the retune must modify) |
 
 ## 3. What to do first on the owner's machine
@@ -69,8 +69,9 @@ Shot type scales the grade's effect: flat 100%, topspin 80%, slice and lob 50%.
 
 Open at handover: in the final simulation run the slicer is narrowly the best style and heavy
 topspin the weakest (first adjustment to try, untested: slice share of the grade effect from 50%
-toward 60-70%, topspin from 80% to 90%); the serve specialist holds about 80% against a 90% target; the two functions that matter most for the code changes, grade selection `fn_886629C8` and
-the timing value `fn_8867DF68`, have no usable C yet; whether the grade is known before the swing
+toward 60-70%, topspin from 80% to 90%); the serve specialist holds about 80% against a 90% target; grade selection `fn_886629C8` now has C proven equivalent, but the timing value `fn_8867DF68` (where the
+window scale goes) is typed C that is unverified until a trace comparison runs on the native build
+(plan in `docs/agents/near-misses/RT1.failed.md`); whether the grade is known before the swing
 commits is unconfirmed.
 
 ## 5. What needs code, and how it will be done
