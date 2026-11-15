@@ -54,7 +54,7 @@ extern void *ts4_member_field_addr_8883B388(void *, int);
 extern void ts4_destroy_owned_object(void *);
 extern void fn_88150600(void *, void *);
 extern void *g_ts4_tsu_notification_object;
-extern void fn_887E2BE0(void *, ts4_script_u32);
+extern void ts4_set_state_887E2BE0(void *, ts4_script_u32);
 
 struct G4C { ts4_script_u8 pad[0x4c]; ts4_script_u32 f4c; ts4_script_u32 b50; ts4_script_u32 e54; };
 struct S1D { ts4_script_u8 pad[0x1d]; ts4_script_u8 f; };

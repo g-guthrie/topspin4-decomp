@@ -20,7 +20,7 @@ typedef struct Ts4Object { void *vtable; } Ts4Object;
 extern void * lbl_88D45B38;
 extern void * ts4_node_dispatch_with_target_88613268(void *, int, int, int, int);
 extern void * ts4_init_singleton_888CB730(void *);
-extern void * fn_887EB298(void *);
+extern void * ts4_worker_ctor_887EB298(void *);
 extern void * fn_88629B60(void *);
 extern void * fn_888DE430(void *);
 extern void * fn_887EE810(void *);
@@ -252,7 +252,7 @@ void * ts4_allocate_object_in_global_heap_and_construct_88183B38(void)
 void * ts4_allocate_object_in_global_heap_and_construct_881BA3D0(void)
 {
     void *p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 108, 4, 0, 0);
-    if (p) return fn_887EB298(p);
+    if (p) return ts4_worker_ctor_887EB298(p);
     return 0;
 }
 
