@@ -190,5 +190,21 @@
   "symbols": {
    "ts4_obj_reset_8883CD50": 40
   }
+ },
+ {
+  "source": "src/xbox360/w2a_ltcg_a.c",
+  "object": "w2a_ltcg_a.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/fam3_msg_dtor.cpp",
+   "flags(/Ob1):src/xbox360/d2e_registry_dispatch_888860A0.c",
+   "src/xbox360/ga5_a.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_pool_dispatch_889C0910": 44,
+   "ts4_set_rec_by_keys_886C84B8": 52
+  }
  }
 ]

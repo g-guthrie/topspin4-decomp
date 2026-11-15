@@ -8,7 +8,7 @@ void fn_886D9070(void *self);
 void fn_886E5178(void *self);
 void ga6_flush_subsystem_886DAF38(void *self);
 void fn_886CDFD8(void *self);
-void fn_88649678(void *obj, ts4_word index, void *rec);
+void ts4_step_array_elem_88649678(void *obj, ts4_word index, void *rec);
 void fn_886DBF40(void *a, ts4_word b, void *c, ts4_word d, int e, ts4_word f);
 void fn_886E7270(void *self);
 void fn_886E7798(void *self);
@@ -47,7 +47,7 @@ void ga6_update_chain_886E5378(struct Ga6Updater *self)
     ga6_flush_subsystem_886DAF38(self);
     fn_886CDFD8(self);
     if (*(ts4_word *)(self->effect_rec + 0xA0) != 0 && self->effect)
-        fn_88649678(self->effect, self->owner->counter + 1, self->effect_rec + 0x70);
+        ts4_step_array_elem_88649678(self->effect, self->owner->counter + 1, self->effect_rec + 0x70);
 }
 
 /* Per-record loop: forward each 0x98-byte entry of the pending list to fn_886DBF40, then mark all entries consumed. */

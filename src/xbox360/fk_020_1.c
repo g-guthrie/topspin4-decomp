@@ -76,7 +76,7 @@ ts4_word fn_8867C418();
 ts4_word ga3_release_all_pooled_8867DB30();
 ts4_word ga3_update_sub_controller_8867DEF0();
 ts4_word fn_8867DF68();
-ts4_word fn_8867E968();
+ts4_word ts4_call_seq_u32_off4_8867E968();
 ts4_word fn_8867F290();
 ts4_word fn_88689068();
 ts4_word ts4_shot_request_8868F178();
