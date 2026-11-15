@@ -191,7 +191,7 @@ extern void ts4_object_dtor_886CF858(Ts4Object *object);
 extern void ts4_object_dtor_886CEF70(Ts4Object *object);
 extern void ga4_owner_four_dtor_886A0478(Ts4Object *object);
 extern void fn_886B14E0(Ts4Object *object);
-extern void fn_88690AA0(Ts4Object *object);
+extern void ts4_destruct_object_88690AA0(Ts4Object *object);
 extern void fn_8869BBD0(Ts4Object *object);
 extern void ga4_multipart_dtor_886A3A38(Ts4Object *object);
 extern void fn_886985B0(Ts4Object *object);
@@ -466,7 +466,7 @@ TS4_DTOR(ts4_dtor_wrapper_88262CA8, ts4_object_dtor_886CF858, ts4_tsu_cleanup_en
 TS4_DTOR(ts4_dtor_wrapper_88262D40, ts4_object_dtor_886CEF70, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x88262D40 */
 TS4_DTOR(ts4_dtor_wrapper_88269F60, ga4_owner_four_dtor_886A0478, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x88269F60 */
 TS4_DTOR(ts4_dtor_wrapper_8826A100, fn_886B14E0, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x8826A100 */
-TS4_DTOR(ts4_dtor_wrapper_8826A150, fn_88690AA0, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x8826A150 */
+TS4_DTOR(ts4_dtor_wrapper_8826A150, ts4_destruct_object_88690AA0, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x8826A150 */
 TS4_DTOR(ts4_dtor_wrapper_8826A5F8, fn_8869BBD0, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x8826A5F8 */
 TS4_DTOR(ts4_dtor_wrapper_8826A6B8, ga4_multipart_dtor_886A3A38, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x8826A6B8 */
 TS4_DTOR(ts4_dtor_wrapper_8826A708, fn_886985B0, ts4_tsu_cleanup_end) /* Swing_DLL.xex 0x8826A708 */

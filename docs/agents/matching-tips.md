@@ -408,3 +408,14 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   `if (..) return fail(s);` twice); the copies are tail-merged at the first site. Not universal (0x886D16F8).
 - Worked examples: src/xbox360/sc1_a.c, sc1_ltcg_a.c. Open: a call-argument `addi`/`mr` one slot early or late
   (0x8864C170, 0x886D48F8); float stores interleaved with a sub-object's stores (0x886A3AC8).
+- Scheduling, extensions (SC2; notes in docs/agents/near-misses/SC2.md):
+  - A block-local pointer to ONE member, used once (`{ u32 *p = &h->f10; *p = K; }`), keeps that store in source order
+    relative to accesses through `h`, with no `addi` emitted. (Corrects SC1: only an inline helper's single-use pointer
+    folds onto the parent.) It does not work for a vtable store.
+  - Under LTCG a global whose address is never taken in the file does not alias pointer accesses, so its loads and
+    stores move freely; on the plain route they stay ordered. If a global access keeps its place among the stores in an
+    LTCG target, take its address somewhere in the file (`void **head = &g; cur = *head; ... *head = s;`). A function
+    whose global store must stay ordered may match on the plain route only.
+  - Constructor called as `n ? obj_ctor(n) : 0` after an alloc fixes the `mr`/vtable order.
+  - Refuted: changing the type of an address-taken stack local does not change its ordering against stores through a
+    parameter (0x886CDED0, 0x88640810).

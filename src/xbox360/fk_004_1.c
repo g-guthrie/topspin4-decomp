@@ -133,7 +133,7 @@ ts4_word fn_88647608();
 ts4_word ts4_ctor_range_8864F5B0();
 ts4_word ts4_call_seq_lbl_880F5878_88652260();
 ts4_word ts4_call_seq_fn_88617D88_88658910();
-ts4_word fn_88658E40();
+ts4_word ts4_construct_manager_88658E40();
 ts4_word ts4_call_seq_fn_88617D88_8867BA58();
 ts4_word fn_8867C870();
 ts4_word ts4_call_seq_fn_88617D88_88681410();

@@ -31772,3 +31772,6 @@ ts4_load_columns_889A7788 = .text:0x889A7788; // type:function size:0x90
 ts4_send_empty_889B2F08 = .text:0x889B2F08; // type:function size:0xA0
 ts4_make_by_key_889BD910 = .text:0x889BD910; // type:function size:0x9C
 ts4_renumber_889A4888 = .text:0x889A4888; // type:function size:0x84
+ts4_set_event_ids_88677C38 = .text:0x88677C38; // type:function size:0xA4
+ts4_construct_manager_88658E40 = .text:0x88658E40; // type:function size:0x98
+ts4_destruct_object_88690AA0 = .text:0x88690AA0; // type:function size:0xA4

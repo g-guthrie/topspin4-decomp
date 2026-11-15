@@ -40878,6 +40878,15 @@ MATCHING_UNITS = (
         "object": "cx43_l.obj",
         "symbols": {"ts4_renumber_889A4888": 132},
     },
+    {
+        "source": "src/xbox360/sc2_a.c",
+        "object": "sc2_a.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_set_event_ids_88677C38": 164,
+            "ts4_construct_manager_88658E40": 152,
+        },
+    },
 )
 
 

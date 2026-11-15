@@ -47984,3 +47984,13 @@ src/xbox360/cx43_k.c:
 src/xbox360/cx43_l.c:
 	.pdata      start:0x88133308 end:0x88133310
 	.text       start:0x889A4888 end:0x889A490C
+
+src/xbox360/sc2_a.c:
+	.pdata      start:0x88123180 end:0x88123188
+	.pdata      start:0x88123858 end:0x88123860
+	.text       start:0x88658E40 end:0x88658ED8
+	.text       start:0x88677C38 end:0x88677CDC
+
+src/xbox360/sc2_ltcg_a.c:
+	.pdata      start:0x88123F40 end:0x88123F48
+	.text       start:0x88690AA0 end:0x88690B44

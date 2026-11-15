@@ -1413,5 +1413,20 @@
    "ts4_lookup_by_index_889A5510": 132,
    "ts4_show_label_889B3128": 140
   }
+ },
+ {
+  "source": "src/xbox360/sc2_ltcg_a.c",
+  "object": "sc2_ltcg_a.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_destruct_object_88690AA0": 164
+  }
  }
 ]
