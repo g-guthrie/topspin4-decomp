@@ -1443,5 +1443,18 @@
   "symbols": {
    "ts4_init_886AD030": 244
   }
+ },
+ {
+  "source": "src/xbox360/cx44_ltcg_a.c",
+  "object": "cx44_ltcg_a.obj",
+  "context": [
+   "src/xbox360/cx44_ctx_hex.c"
+  ],
+  "flags": [],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_combine_nibbles_886ED168": 64
+  }
  }
 ]

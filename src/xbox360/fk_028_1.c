@@ -166,7 +166,7 @@ ts4_word fn_889A17C0();
 ts4_word ts4_call_seq_fn_889375D8_889A3EF8();
 ts4_word fn_889A4A28();
 ts4_word fn_889A4E50();
-ts4_word fn_889A4FD0();
+ts4_word ts4_send_cfg_message_889A4FD0();
 ts4_word fn_889A7620();
 ts4_word fn_889A7818();
 ts4_word fn_889A7D38();

@@ -1,5 +1,5 @@
 /* Family LG1: builder that creates two keyed entries (region 0x886DAD28). Each entry is allocated by
- * fn_88265498, appended to a pointer vector (std::vector layout {first, last, end}; fn_8826B718 is the
+ * ts4_obj3c_new_88265498, appended to a pointer vector (std::vector layout {first, last, end}; fn_8826B718 is the
  * grow-and-insert path), tagged with a kind hash by fn_886CF6B0, then seven 8-byte slots of the entry
  * are resolved by key hash through fn_886C8750 and stamped with that key. Finally a span described by
  * self-relative data at owner->source+0x14 is attached with fn_886D9B98. Hash meanings are unknown. */
@@ -54,7 +54,7 @@ typedef struct lg1_builder {
 } lg1_builder;
 
 extern "C" {
-lg1_entry *fn_88265498(void);
+lg1_entry *ts4_obj3c_new_88265498(void);
 void fn_8826B718(lg1_ptr_vector *vector, void **where, lg1_entry **value, int count, int flag);
 void fn_886CF6B0(lg1_entry *entry, unsigned int kind);
 void fn_886C8750(lg1_builder *builder, lg1_key *key, lg1_key_slot *slot);
@@ -73,7 +73,7 @@ LG1_INLINE void lg1_resolve_slot(lg1_builder *builder, lg1_entry *entry, int ind
 
 LG1_INLINE void lg1_add_entry(lg1_builder *builder, unsigned int kind)
 {
-    lg1_entry *entry = fn_88265498();
+    lg1_entry *entry = ts4_obj3c_new_88265498();
     lg1_ptr_vector *v = &builder->entries;
     int count;
     {

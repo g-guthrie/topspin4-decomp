@@ -124,7 +124,7 @@ ts4_word fn_88622888();
 ts4_word ts4_call_seq_fn_8861B128_88622BF0();
 ts4_word ts4_service_ctor_vec_88622D18();
 ts4_word fn_88623C60();
-ts4_word fn_88626638();
+ts4_word ts4_object_ctor_88626638();
 ts4_word fn_8862A190();
 ts4_word fn_88636A70();
 ts4_word fn_886391E0();

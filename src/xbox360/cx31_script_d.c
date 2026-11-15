@@ -117,7 +117,7 @@ extern void *lbl_88D45B38;
 extern HdlN *fn_88614938(void *a, u32 b);
 extern u32 ts4_parse_type_flags_88778558(const char *s);
 extern void *ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 align, u32 tag, u32 pool);
-extern VN *fn_88782260(void *mem, u32 b);
+extern VN *ts4_object_ctor_88782260(void *mem, u32 b);
 
 /* 0x88784CC8 */
 void ts4_cx31_spawn_node_88784CC8(Own2c *self, u32 a, u32 b)
@@ -131,7 +131,7 @@ void ts4_cx31_spawn_node_88784CC8(Own2c *self, u32 a, u32 b)
         if (t && strlen(t)) flags = ts4_parse_type_flags_88778558(t);
         else flags = 0;
         mem = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 0x654, 4, 0, 2);
-        if (mem) n = fn_88782260(mem, b);
+        if (mem) n = ts4_object_ctor_88782260(mem, b);
         else n = 0;
         n->f20 = a;
         n->f24 = *(u32 *)(self->f2c + 0xc);

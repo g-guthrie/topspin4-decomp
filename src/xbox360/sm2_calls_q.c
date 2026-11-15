@@ -3,7 +3,7 @@ extern double fn_8841DFD0(void *p);
 extern void fn_8858BE70(void *p);
 extern void fn_8858C0C8(void *p);
 extern void fn_88406238();
-extern int fn_886EBCE8(int v);
+extern int ts4_hex_digit_value_886EBCE8(int v);
 extern void ts4_node_dispatch_8860DCF8(void *self, int a, int b, int c);
 extern void ts4_swing_anim_register_node_types_886D75B8(const char *names);
 extern void fn_881B9148(void *p);

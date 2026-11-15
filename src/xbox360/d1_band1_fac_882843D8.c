@@ -13,7 +13,7 @@ extern void *fn_88622888(void *self);
 extern void *fn_8862A190(void *self);
 extern void *fn_88626840(void *self);
 extern void *fn_886214A0(void *self);
-extern void *fn_88626638(void *self);
+extern void *ts4_object_ctor_88626638(void *self);
 extern void *ts4_singleton_service_ctor_88621250(void *self);
 extern void *ts4_call_seq_fn_886197F0_88621028(void *self);
 extern void *ts4_call_seq_fn_886197F0_88620C10(void *self);

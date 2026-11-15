@@ -292,7 +292,7 @@ ts4_word fn_88999060();
 ts4_word fn_88999D10();
 ts4_word fn_8899AFD0();
 ts4_word fn_8899FB48();
-ts4_word fn_889A44C0();
+ts4_word ts4_send_flag_message_889A44C0();
 ts4_word fn_889A4590();
 ts4_word fn_889B7A08();
 ts4_word fn_889C0AE0();
@@ -3336,7 +3336,7 @@ ts4_word ts4_if_call_seq_lbl_880D245C_889A41F0(ts4_word a0, ts4_word a1, ts4_wor
     return t11;
 }
 
-/* Swing_DLL.xex 0x889A4668: if_get u8@0x42c, fn_889A44C0, fn_889A4590 */
+/* Swing_DLL.xex 0x889A4668: if_get u8@0x42c, ts4_send_flag_message_889A44C0, fn_889A4590 */
 ts4_word ts4_if_get_u8_off42c_889A4668(ts4_word a0, ts4_word a1)
 {
     unsigned char t1;
@@ -3345,7 +3345,7 @@ ts4_word ts4_if_get_u8_off42c_889A4668(ts4_word a0, ts4_word a1)
     if ((ts4_word)t1 != 0) {
         return fn_889A4590((ts4_word)a0, (ts4_word)a1);
     }
-    return fn_889A44C0((ts4_word)a0, (ts4_word)a1);
+    return ts4_send_flag_message_889A44C0((ts4_word)a0, (ts4_word)a1);
 }
 
 /* Swing_DLL.xex 0x889A4910: get u32@0x8, u32@0xc, fn_8899FB48 */

@@ -11,7 +11,7 @@ extern void fn_88719D50(void *r);
 extern void ts4_ptrvec_add_fin_88222B50(void *r, int id);
 extern void fn_8825FC78(void *e);
 extern void ts4_pool_rel_b0_88223890(void *p, int id);
-extern void *fn_886F1900(Obj *o);
+extern void *ts4_teardown_886F1900(Obj *o);
 
 void *ts4_release_ids_8874B9B8(Obj *o)
 {
@@ -32,5 +32,5 @@ void *ts4_release_ids_8874B9B8(Obj *o)
         o->id1 = -1;
     }
     o->id2 = -1;
-    return fn_886F1900(o);
+    return ts4_teardown_886F1900(o);
 }
