@@ -46036,3 +46036,15 @@ src/xbox360/w2c_misc.c:
 	.text       start:0x8865E940 end:0x8865E980
 	.text       start:0x88673860 end:0x886738CC
 	.text       start:0x889C0998 end:0x889C09C4
+
+src/xbox360/op1_clear_records.c:
+	.text       start:0x88668D70 end:0x88668DF8
+
+src/xbox360/op1_rel_side_flags.c:
+	.text       start:0x8866A608 end:0x8866A670
+	.text       start:0x8866A8C8 end:0x8866A930
+	.text       start:0x8866ABD0 end:0x8866AC38
+	.text       start:0x8866AF38 end:0x8866AFA0
+
+src/xbox360/op1_value_at_least.c:
+	.text       start:0x8865B658 end:0x8865B6A0

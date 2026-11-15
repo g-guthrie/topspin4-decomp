@@ -10,7 +10,7 @@
  *  - ts4_loop_get_u32_off8_8866E448 (sync per-player active flag) - differs only by lwzx operand order
  *    (original: lwzx r11,r10,r11 = index,base; MSVC emits base,index for every source form tried).
  *  - fn_88669040 (consume one-shot requests) - NOT matchable by fn_check: the original keeps r3/r5
- *    live across the calls to fn_88668DF8/fn_88668D70, i.e. those callees use a custom register
+ *    live across the calls to fn_88668DF8/ts4_clear_records_88668D70, i.e. those callees use a custom register
  *    convention (link-time code generation); the plain /O2 compiler spills instead.
  */
 #include "gp0_types.h"
@@ -106,7 +106,7 @@ void sync_player_active_flag_8866E448(struct Gp0Instance *inst)
 void consume_pending_requests_88669040(struct X *o)
 {
     if (o->b1c == 1) { o->b1c = 0; fn_88668DF8(o); }
-    if (o->b1d == 1) { o->b1d = 0; fn_88668D70(o); }
+    if (o->b1d == 1) { o->b1d = 0; ts4_clear_records_88668D70(o); }
     if (o->b1e == 1) { o->b1e = 0; o->b37c = 1; }
 }
 */

@@ -155,7 +155,7 @@ extern float lbl_8814B440;      /* 0.0f */
 
 int fn_8865B3B0(struct Ts4Cond *self);
 int fn_8865B570(struct Ts4Cond *self);
-int fn_8865B658(struct Ts4Cond *self);
+int ts4_value_at_least_8865B658(struct Ts4Cond *self);
 int fn_8865B6C0(struct Ts4Cond *self);
 
 /* The side's row in the table holds an empty self-relative reference. */
@@ -259,7 +259,7 @@ int ts4_cond_test_88665010(struct Ts4Cond *self)
     case 0xB1F46C7A:
     case 0xBC659B93:
     case 0xD2CD5B31:
-        result = fn_8865B658(self);
+        result = ts4_value_at_least_8865B658(self);
         break;
     case 0xD6F6A94E:
         {

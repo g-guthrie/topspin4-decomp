@@ -138,3 +138,13 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   `lwzu`/`stwu` `bdnz` loop; `mtctr`+`bdz` switch chains.
 - Sources must also pass the host check (`cc -std=c11 -Wall -Wextra -Werror -fsyntax-only`): guard pointer-to-int casts
   and `__forceinline` behind `_MSC_VER` macros that expand to the same tokens under MSVC.
+
+## Operand order of indexed add / lwzx / lfsx (from OP1; full notes in docs/agents/near-misses/OP1.md)
+- The (base, offset) vs (offset, base) order of a commutative op does not follow the source expression. It follows the
+  function-local symbol number of the local the operand is built from, when that local holds a computed address
+  (`h = &t->hdr`, `e = h + i*K + h->rel`). Numbering is by first assignment in statement order, parameters first; only
+  referenced locals count. The order flips when the base local is number 7, 15, 23, ... (about period 8).
+- Fix: make the base a named local and change how many referenced locals are assigned before it (split pointer chains
+  into named locals, or give each repeated access its own block-scoped locals). `python3 tools/operand_order_pad.py SRC
+  FUNC name=0xADDR 9` tries 0-9 dead locals and prints the diff count for each, to find the count to aim for.
+- Not covered: both operands loaded straight off a parameter, or a strength-reduced induction temp.

@@ -6260,6 +6260,18 @@
       "src/xbox360/w2c_misc.c": {
         "status": "Matching",
         "source": "xbox360/w2c_misc.c"
+      },
+      "src/xbox360/op1_clear_records.c": {
+        "status": "Matching",
+        "source": "xbox360/op1_clear_records.c"
+      },
+      "src/xbox360/op1_rel_side_flags.c": {
+        "status": "Matching",
+        "source": "xbox360/op1_rel_side_flags.c"
+      },
+      "src/xbox360/op1_value_at_least.c": {
+        "status": "Matching",
+        "source": "xbox360/op1_value_at_least.c"
       }
     }
   }

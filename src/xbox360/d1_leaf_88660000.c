@@ -3,7 +3,7 @@
  * describe that behaviour and end in the function address. */
 
 extern void fn_88668650(void *);
-extern void fn_88668D70(void *);
+extern void ts4_clear_records_88668D70(void *);
 extern void fn_88668DF8(void *);
 extern void fn_8890DDA8(void *);
 
