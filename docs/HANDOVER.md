@@ -30,7 +30,7 @@ Standing owner decisions:
 | Gameplay understanding | Done as far as code reading goes. About 24 checks need the running game. | `docs/gameplay/GAMEPLAY.md`, `TUNING.md`, `OPEN.md` (section 11 = runtime checks R1-R24), `symbols.md` |
 | Retune design | Structure fixed. Numbers tuned by simulation; a balance re-run was in progress at handover. Nothing is implemented in the game. | `docs/design/retune-systems.md` (authority for structure), `retune-spec.md` (numbers), `retune-baseline.md` (measured retail) |
 | Retune plan for the owner | Published page, revision 2 with later edits; the page source is committed. The design notes above are the record where they differ. | `docs/design/retune-plan.html` |
-| Data-only patch set | In progress at handover: `tuning/retune-v0/` and `tools/apply_retune.py`. Lets the owner try the data half of the retune on the original game in the emulator. | `tuning/retune-v0/README.md` when present; `docs/data-patching.md` |
+| Data-only patch set | Cancelled by the owner, who is applying data changes to their own copy locally. A nearly complete draft (grouped patch files and an apply script) was removed from the tree; it is in history at commit `38e12fd` (`tuning/retune-v0/`, `tools/apply_retune.py`) if wanted. | `docs/data-patching.md` |
 | Native build | All three modules translate and compile. A scripted, headless run boots through the logos and title screen, reaches the practice ground (court, net, ball machine and player drawn; the player renders as a black silhouette) and then the main menu (scene S4MainMenu). No match yet. The earlier black frames were a host render-target problem on the software renderer, fixed by running with `--render_target_path_vulkan=fsi`. | `docs/recomp-feasibility.md`, `docs/recomp-build.md`, `tools/recomp/` |
 | Renderer and front end | Mapped for the port. | `docs/renderer-map.md` (frame order, hand-over, ranked causes of black frames, checks C1-C9), `docs/frontend-map.md` (waits before the menu, how a match starts, pointer chains to ball and players) |
 | Byte-matching | 30,437 functions, 2,937,704 of 10,154,036 bytes (28.93%), build b46. The local agent owns it outside the gameplay and ball ranges. | `docs/decomp-remaining.md`, `docs/ltcg-route.md`, `docs/agents/matching-tips.md`, `docs/agents/near-misses/` |
@@ -50,9 +50,7 @@ Standing owner decisions:
 2. **Reach a match.** After START the game is on the practice ground (engine state 4 there is normal,
    not a hang). START again opens the main menu. `docs/frontend-map.md` gives the pad script to an
    exhibition match and an untested direct call. Gate each press on the scene-name watch.
-3. **Try the data-only retune in the emulator** with `tools/apply_retune.py` on the owner's own copy.
-   Not yet verified by anyone: that the game accepts a rebuilt archive, the layout signature word, and
-   which archive wins when the title update and the disc both carry a member. Check those first.
+3. (Data changes on the original game are being done by the owner locally; nothing to do here.)
 4. **Run the runtime checks** in `docs/gameplay/OPEN.md` section 11 and write the results there.
 
 ## 4. The retune, in one paragraph
