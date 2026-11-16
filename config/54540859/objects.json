@@ -8168,6 +8168,30 @@
       "src/xbox360/me_two_event_ticks_remaining_886CD1E8.c": {
         "status": "Matching",
         "source": "xbox360/me_two_event_ticks_remaining_886CD1E8.c"
+      },
+      "src/xbox360/me_bind_tracker_source_886D7D68.c": {
+        "status": "Matching",
+        "source": "xbox360/me_bind_tracker_source_886D7D68.c"
+      },
+      "src/xbox360/me_current_clip_key_886C7CD8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_current_clip_key_886C7CD8.c"
+      },
+      "src/xbox360/me_remove_and_destroy_entry_8864A3B0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_remove_and_destroy_entry_8864A3B0.c"
+      },
+      "src/xbox360/me_remove_and_release_entry_8864AE08.c": {
+        "status": "Matching",
+        "source": "xbox360/me_remove_and_release_entry_8864AE08.c"
+      },
+      "src/xbox360/me_reset_rally_tracker_886799D0.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_reset_rally_tracker_886799D0.cpp"
+      },
+      "src/xbox360/me_set_handle_and_link_targets_889C28F0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_set_handle_and_link_targets_889C28F0.c"
       }
     }
   }

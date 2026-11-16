@@ -41960,6 +41960,42 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_two_event_ticks_remaining_886CD1E8": 244},
     },
+    {
+        "source": "src/xbox360/me_bind_tracker_source_886D7D68.c",
+        "object": "me_bind_tracker_source_886D7D68.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_bind_tracker_source_886D7D68": 80},
+    },
+    {
+        "source": "src/xbox360/me_current_clip_key_886C7CD8.c",
+        "object": "me_current_clip_key_886C7CD8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_current_clip_key_886C7CD8": 128},
+    },
+    {
+        "source": "src/xbox360/me_remove_and_destroy_entry_8864A3B0.c",
+        "object": "me_remove_and_destroy_entry_8864A3B0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_remove_and_destroy_entry_8864A3B0": 308},
+    },
+    {
+        "source": "src/xbox360/me_remove_and_release_entry_8864AE08.c",
+        "object": "me_remove_and_release_entry_8864AE08.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_remove_and_release_entry_8864AE08": 284},
+    },
+    {
+        "source": "src/xbox360/me_reset_rally_tracker_886799D0.cpp",
+        "object": "me_reset_rally_tracker_886799D0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_reset_rally_tracker_886799D0": 332},
+    },
+    {
+        "source": "src/xbox360/me_set_handle_and_link_targets_889C28F0.c",
+        "object": "me_set_handle_and_link_targets_889C28F0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_set_handle_and_link_targets_889C28F0": 80},
+    },
 )
 
 

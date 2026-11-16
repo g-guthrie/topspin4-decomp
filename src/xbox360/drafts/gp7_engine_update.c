@@ -213,7 +213,7 @@ float swing_anim_busy_ticks_886CD3C8(struct Ctrl *ctrl)
  *     - warped time = layer_time_warp(...) at that event, root motion sampled with fn_88644CE8(time) and rotated by the
  *       player facing (sin/cos via fn_881BD4B8) -> predicted racket position relative to the player;
  *     - compared against the swing target that gameplay left in the player state (planner+0x150 = AnimIface*, set by
- *       fn_886D7D68 from the request object +0x14): vec4 at state+0x3c0 (target position, cm), time window floats
+ *       ts4_bind_tracker_source_886D7D68 from the request object +0x14): vec4 at state+0x3c0 (target position, cm), time window floats
  *       state+0x3d0 / +0x3d4, tolerances +0x3d8 / +0x3dc, flag byte +0x3e0, current layer index state+0x390, and a row table
  *       at state+0x38c (0x30-byte rows, one per candidate layer, with float lists at row+0x18) -- scaled by the float at
  *       (P+0x3cc)->+0x55c (? world scale). Candidates outside the window or tolerance are skipped; the best (smallest

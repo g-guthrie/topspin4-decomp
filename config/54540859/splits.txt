@@ -48998,3 +48998,25 @@ src/xbox360/me_min_cost_until_zero_886AC7E0.c:
 src/xbox360/me_two_event_ticks_remaining_886CD1E8.c:
 	.pdata      start:0x88124C50 end:0x88124C58
 	.text       start:0x886CD1E8 end:0x886CD2DC
+
+src/xbox360/me_bind_tracker_source_886D7D68.c:
+	.text       start:0x886D7D68 end:0x886D7DB8
+
+src/xbox360/me_current_clip_key_886C7CD8.c:
+	.text       start:0x886C7CD8 end:0x886C7D58
+
+src/xbox360/me_remove_and_destroy_entry_8864A3B0.c:
+	.pdata      start:0x88122B28 end:0x88122B30
+	.text       start:0x8864A3B0 end:0x8864A4E4
+
+src/xbox360/me_remove_and_release_entry_8864AE08.c:
+	.pdata      start:0x88122B78 end:0x88122B80
+	.text       start:0x8864AE08 end:0x8864AF24
+
+src/xbox360/me_reset_rally_tracker_886799D0.cpp:
+	.pdata      start:0x881238E8 end:0x881238F0
+	.text       start:0x886799D0 end:0x88679B1C
+
+src/xbox360/me_set_handle_and_link_targets_889C28F0.c:
+	.pdata      start:0x88133D88 end:0x88133D90
+	.text       start:0x889C28F0 end:0x889C2940
