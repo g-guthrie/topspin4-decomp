@@ -8140,6 +8140,22 @@
       "src/xbox360/me_resolve_table_items_886DCDC0.c": {
         "status": "Matching",
         "source": "xbox360/me_resolve_table_items_886DCDC0.c"
+      },
+      "src/xbox360/me_entry_step_limit_reached_8866AAF8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_entry_step_limit_reached_8866AAF8.c"
+      },
+      "src/xbox360/me_append_value_pairs_886D2A08.c": {
+        "status": "Matching",
+        "source": "xbox360/me_append_value_pairs_886D2A08.c"
+      },
+      "src/xbox360/me_advance_sequence_886A76F8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_advance_sequence_886A76F8.c"
+      },
+      "src/xbox360/me_selected_variant_886A0EC8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_selected_variant_886A0EC8.c"
       }
     }
   }

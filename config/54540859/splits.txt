@@ -48971,3 +48971,18 @@ src/xbox360/me_span_handle_for_entry_886C84F0.c:
 src/xbox360/me_resolve_table_items_886DCDC0.c:
 	.pdata      start:0x88125118 end:0x88125120
 	.text       start:0x886DCDC0 end:0x886DCE78
+
+src/xbox360/me_entry_step_limit_reached_8866AAF8.c:
+	.text       start:0x8866AAF8 end:0x8866ABD0
+
+src/xbox360/me_append_value_pairs_886D2A08.c:
+	.pdata      start:0x88124E40 end:0x88124E48
+	.text       start:0x886D2A08 end:0x886D2AF0
+
+src/xbox360/me_advance_sequence_886A76F8.c:
+	.pdata      start:0x881244F8 end:0x88124500
+	.text       start:0x886A76F8 end:0x886A77E8
+
+src/xbox360/me_selected_variant_886A0EC8.c:
+	.pdata      start:0x88124318 end:0x88124320
+	.text       start:0x886A0EC8 end:0x886A0FC0

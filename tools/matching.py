@@ -41918,6 +41918,30 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_resolve_table_items_886DCDC0": 184},
     },
+    {
+        "source": "src/xbox360/me_entry_step_limit_reached_8866AAF8.c",
+        "object": "me_entry_step_limit_reached_8866AAF8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_entry_step_limit_reached_8866AAF8": 216},
+    },
+    {
+        "source": "src/xbox360/me_append_value_pairs_886D2A08.c",
+        "object": "me_append_value_pairs_886D2A08.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_append_value_pairs_886D2A08": 232},
+    },
+    {
+        "source": "src/xbox360/me_advance_sequence_886A76F8.c",
+        "object": "me_advance_sequence_886A76F8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_advance_sequence_886A76F8": 240},
+    },
+    {
+        "source": "src/xbox360/me_selected_variant_886A0EC8.c",
+        "object": "me_selected_variant_886A0EC8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_selected_variant_886A0EC8": 248},
+    },
 )
 
 

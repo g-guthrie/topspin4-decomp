@@ -32142,3 +32142,7 @@ ts4_reset_tracker_88668EE8 = .text:0x88668EE8; // type:function size:0xDC
 ts4_min_cost_over_ids_886AC928 = .text:0x886AC928; // type:function size:0xB0
 ts4_span_handle_for_entry_886C84F0 = .text:0x886C84F0; // type:function size:0xCC
 ts4_resolve_table_items_886DCDC0 = .text:0x886DCDC0; // type:function size:0xB8
+ts4_entry_step_limit_reached_8866AAF8 = .text:0x8866AAF8; // type:function size:0xD8
+ts4_append_value_pairs_886D2A08 = .text:0x886D2A08; // type:function size:0xE8
+ts4_advance_sequence_886A76F8 = .text:0x886A76F8; // type:function size:0xF0
+ts4_selected_variant_886A0EC8 = .text:0x886A0EC8; // type:function size:0xF8
