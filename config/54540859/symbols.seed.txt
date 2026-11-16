@@ -32161,3 +32161,5 @@ ts4_entry_index_by_key_886C8750 = .text:0x886C8750; // type:function size:0x64
 ts4_entry_slot_for_id_886602F0 = .text:0x886602F0; // type:function size:0x44
 ts4_entry_sub_key_bit_886C87B8 = .text:0x886C87B8; // type:function size:0xC0
 ts4_latch_swing_readiness_886B0380 = .text:0x886B0380; // type:function size:0x90
+ts4_play_cue_variant_886D7430 = .text:0x886D7430; // type:function size:0xD4
+ts4_refresh_reaction_target_886A3868 = .text:0x886A3868; // type:function size:0x140

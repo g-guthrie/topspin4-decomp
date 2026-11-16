@@ -8216,6 +8216,14 @@
       "src/xbox360/me_latch_swing_readiness_886B0380.c": {
         "status": "Matching",
         "source": "xbox360/me_latch_swing_readiness_886B0380.c"
+      },
+      "src/xbox360/me_play_cue_variant_886D7430.c": {
+        "status": "Matching",
+        "source": "xbox360/me_play_cue_variant_886D7430.c"
+      },
+      "src/xbox360/me_refresh_reaction_target_886A3868.c": {
+        "status": "Matching",
+        "source": "xbox360/me_refresh_reaction_target_886A3868.c"
       }
     }
   }

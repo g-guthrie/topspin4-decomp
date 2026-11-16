@@ -42032,6 +42032,18 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_latch_swing_readiness_886B0380": 144},
     },
+    {
+        "source": "src/xbox360/me_play_cue_variant_886D7430.c",
+        "object": "me_play_cue_variant_886D7430.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_play_cue_variant_886D7430": 212},
+    },
+    {
+        "source": "src/xbox360/me_refresh_reaction_target_886A3868.c",
+        "object": "me_refresh_reaction_target_886A3868.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_refresh_reaction_target_886A3868": 320},
+    },
 )
 
 

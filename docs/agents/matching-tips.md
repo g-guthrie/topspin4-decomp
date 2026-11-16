@@ -649,3 +649,11 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
 - `new` + `push_back` returning the new record (0x8864AF28): keep the record in a register and declare a stack copy
   `t` assigned right after construction (`t = s;` before the field stores); fast path stores `s` and `return s;`,
   slow path `fn_88174A38(v, v->last, &t); return t;` (separate returns give the duplicated epilogue).
+
+## Found at b101 (agent B)
+- Early `li r3,0` + `beqlr`/`bgelr`: one result local `T r = 0; if (count) { ...; r = call(); } return r;` — early returns/tail calls don't give it (0x886A0188).
+- Result in saved reg across a call (`li r29,0` … `mr r3,r29`): `found = 0; e = call(); if (e) { ...; found = 1; } return found;` (0x886C8750, 0x886C87B8, 0x886D7430).
+- `clrrwi` copy + load hoisted above first store: `__restrict` out-pointer, re-read pointer via inline accessor (0x886C7CD8).
+- Vector `begin` reloaded via `addi rX,base,K` instead of shared with size(): index through `vec_at(&v, i)` (0x886CD1E8).
+- `(char*)e - (char*)tbl - tbl->offset` order: direct expression gives `(e-t)-off`; reading `off` into a local first gives `(e-off)-t`.
+- Field load kept after an earlier store: block-local member pointer for the store `{ float *sp = &l->span; *sp = ...; }`.
