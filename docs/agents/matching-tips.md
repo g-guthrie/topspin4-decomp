@@ -624,3 +624,16 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
   order; when one branch's order looks rotated, write both branches identically (0x88668EE8).
 - Callees that do not touch r3 can be chained (`c(b(a(o)))`) when the target never reloads the object
   between the calls.
+
+## Found at b98
+- A search loop compiled as `srawi. rN,rN,4; mtctr; lwzu x4; bdnz` followed by `cmpwi 1/2/3` remainder tests is
+  source-level unrolled `find` (random-access form): `for (trip = (last - first) >> 2; trip > 0; --trip) { 4x
+  if (*first == v) return first; ++first; }` then `switch (last - first) { case 3: ... case 2: ... case 1: ... ++first;
+  default: return last; }` (falls through). A plain loop is never unrolled into this shape. Example draft
+  src/xbox360/drafts/me_8864AE08_nearmiss.c; 12 unmatched functions use it (e.g. 0x8864A3B0, 0x8864A5E8, 0x886E1850).
+- Load order `last` before `first` around an inline find: pass `o->vec.first, o->vec.last` through the owner, not
+  through a `Vec *v = &o->vec` local (0x8864AE08 matched this way).
+- Vector `erase(v, p)` whose copy re-reads `v->last` after an inline find (no CSE): read the field through a
+  volatile-qualified view only inside erase, e.g. `copy(p + 1, ((VVec *)v)->last, p); --v->last;`.
+- A virtual call `o->vt->fn(o, x)` normally loads the vtable before the argument; the target order (argument first)
+  was not reproduced (0x88677190).

@@ -2,11 +2,11 @@
  * RT2: swing-category row walk (Top Spin 4, Xbox 360, Swing_DLL.xex).
  * fn_886AFDF8 walks one class list of the swing-category rules (PT+0x4D8 + 0x48*mode + 0xC*class),
  * writes the first row whose condition holds to SwingCategory (S+0x360) and asks the animation
- * system for a clip (fn_886AC7E0). See docs/gameplay/controls-and-shot-selection.md section 18.3.
+ * system for a clip (ts4_min_cost_until_zero_886AC7E0). See docs/gameplay/controls-and-shot-selection.md section 18.3.
  *
  * EQUIVALENT, not byte-matched (plain and LTCG routes: 0x3B8 vs 0x3AC bytes, the loop is rotated differently and
  * the registers differ). Evidence: work/equiv/rt2_886AFDF8.json (719 valid trials, 100% blocks, --flags /Oc /fp:precise).
- * Callees fn_88697E98 (condition switch) and fn_886AC7E0 (clip query) keep placeholder names.
+ * Callees fn_88697E98 (condition switch) and ts4_min_cost_until_zero_886AC7E0 (clip query) keep placeholder names.
  */
 #include "../d1g_types.h"
 
@@ -125,7 +125,7 @@ static void rt2_set_category(struct Rt2SwingSelection *sel, ts4_u32 value)
 D1G_EXTERN_C extern const float lbl_8814B910; /* 0.5f */
 D1G_EXTERN_C ts4_bool ts4_rally_active_8866D930(struct Rt2WalkController *pc);
 D1G_EXTERN_C ts4_bool fn_88697E98(struct Rt2WalkRequest *self, struct Rt2CategoryRow *row);
-D1G_EXTERN_C int fn_886AC7E0(struct Rt2WalkController *pc, int deferred, int frames);
+D1G_EXTERN_C int ts4_min_cost_until_zero_886AC7E0(struct Rt2WalkController *pc, int deferred, int frames);
 
 /* Walk one class list: for each row whose condition holds, write it to SwingCategory and query a
    clip (now, or deferred until the racket event); stop at the first row whose query started a clip.
@@ -185,10 +185,10 @@ D1G_EXTERN_C ts4_bool ts4_swing_category_walk_886AFDF8(struct Rt2WalkRequest *se
                             now = 1;
                     }
                     if (!autoswing || now) {
-                        r = fn_886AC7E0(self->pc, 0, 3);
+                        r = ts4_min_cost_until_zero_886AC7E0(self->pc, 0, 3);
                         if (it->alt_value != 0 && r == -1) {
                             rt2_set_category(sel, it->alt_value);
-                            r = fn_886AC7E0(self->pc, 0, 3);
+                            r = ts4_min_cost_until_zero_886AC7E0(self->pc, 0, 3);
                         }
                     } else {
                         struct Rt2WalkTuning *pt = self->pc->tuning;
@@ -196,13 +196,13 @@ D1G_EXTERN_C ts4_bool ts4_swing_category_walk_886AFDF8(struct Rt2WalkRequest *se
                         ts4_u8 bd2 = self->pc->state->flag_bd2;
                         int window = inside ? pt->window_inside_out : (bd2 ? pt->window_bd2 : pt->window_default);
                         int limit;
-                        r = fn_886AC7E0(self->pc, 1, window);
+                        r = ts4_min_cost_until_zero_886AC7E0(self->pc, 1, window);
                         if (r > 0) {
                             limit = inside ? pt->limit_inside_out : (bd2 ? pt->limit_bd2 : pt->limit_default);
                             due = due || r < limit;
                         } else if (it->alt_value != 0 && r == -1) {
                             rt2_set_category(sel, it->alt_value);
-                            r = fn_886AC7E0(self->pc, 1, window);
+                            r = ts4_min_cost_until_zero_886AC7E0(self->pc, 1, window);
                             if (r > 0) {
                                 limit = inside ? pt->limit_inside_out : (bd2 ? pt->limit_bd2 : pt->limit_default);
                                 due = due || r < limit;

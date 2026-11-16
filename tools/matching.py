@@ -41942,6 +41942,24 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_selected_variant_886A0EC8": 248},
     },
+    {
+        "source": "src/xbox360/me_drain_pending_commands_886964C0.c",
+        "object": "me_drain_pending_commands_886964C0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_drain_pending_commands_886964C0": 284},
+    },
+    {
+        "source": "src/xbox360/me_min_cost_until_zero_886AC7E0.c",
+        "object": "me_min_cost_until_zero_886AC7E0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_min_cost_until_zero_886AC7E0": 328},
+    },
+    {
+        "source": "src/xbox360/me_two_event_ticks_remaining_886CD1E8.c",
+        "object": "me_two_event_ticks_remaining_886CD1E8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_two_event_ticks_remaining_886CD1E8": 244},
+    },
 )
 
 

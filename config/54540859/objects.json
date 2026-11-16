@@ -8156,6 +8156,18 @@
       "src/xbox360/me_selected_variant_886A0EC8.c": {
         "status": "Matching",
         "source": "xbox360/me_selected_variant_886A0EC8.c"
+      },
+      "src/xbox360/me_drain_pending_commands_886964C0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_drain_pending_commands_886964C0.c"
+      },
+      "src/xbox360/me_min_cost_until_zero_886AC7E0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_min_cost_until_zero_886AC7E0.c"
+      },
+      "src/xbox360/me_two_event_ticks_remaining_886CD1E8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_two_event_ticks_remaining_886CD1E8.c"
       }
     }
   }

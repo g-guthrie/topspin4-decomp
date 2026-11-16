@@ -23,7 +23,7 @@ ts4_bool fn_8866D930(struct Rt1PlayerCtxW *pc);
 /* SwingCategory_Condition: evaluates row->condition. */
 ts4_bool fn_88697E98(struct Rt1SwingRequest *self, const struct Rt1CategoryRow *row);
 /* SwingClip_QueryLevels: -1 no clip, 0 started, > 0 frames to the racket event (deferred). */
-int fn_886AC7E0(struct Rt1PlayerCtxW *pc, int deferred, int window);
+int ts4_min_cost_until_zero_886AC7E0(struct Rt1PlayerCtxW *pc, int deferred, int window);
 
 /* AI reaction delay elapsed: frames since the opponent's launch beyond SwingReactionTime, and > 1. */
 static RT1_INLINE ts4_bool rt1_reaction_elapsed(const struct Rt1PlayerCtxW *pc)
@@ -80,20 +80,20 @@ ts4_bool ts4_swing_category_walk_886AFDF8(struct Rt1SwingRequest *self, const st
                 ts4_u8 inside_out = p->state->is_inside_out;
                 ts4_u8 wide = p->state->flag_bd2;
                 int window = rt1_window(p->tuning, inside_out, wide)->window;
-                n = fn_886AC7E0(p, 1, window);
+                n = ts4_min_cost_until_zero_886AC7E0(p, 1, window);
                 if (n > 0) {
                     due = due || n < rt1_window(p->tuning, inside_out, wide)->limit;
                 } else if (row->alt != 0 && n == -1) {
                     s->swing_category = row->alt;
-                    n = fn_886AC7E0(self->pc, 1, window);
+                    n = ts4_min_cost_until_zero_886AC7E0(self->pc, 1, window);
                     if (n > 0)
                         due = due || n < rt1_window(p->tuning, inside_out, wide)->limit;
                 }
             } else {
-                n = fn_886AC7E0(self->pc, 0, 3);
+                n = ts4_min_cost_until_zero_886AC7E0(self->pc, 0, 3);
                 if (row->alt != 0 && n == -1) {
                     s->swing_category = row->alt;
-                    n = fn_886AC7E0(self->pc, 0, 3);
+                    n = ts4_min_cost_until_zero_886AC7E0(self->pc, 0, 3);
                 }
             }
             started = n == 0;
