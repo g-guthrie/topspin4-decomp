@@ -664,3 +664,9 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
 - Sum of two inline values in the wrong add order: wrap in an inline `total(o)` calling a per-side helper (0x88665FB8).
 - Moving a loop into an inline helper taking `&o->pl->flags` can give the target's register choice (0x8866F9F0).
 - Vtable-vs-argument load order around a vcall is not consistent across targets (0x8865CBD8 loads vtable first).
+
+### Found at 886C44C0: empty-loop early branch into the "zero" arm of a later if/else
+When the game's `beq` for an empty range (begin == end) jumps straight past the sum loop to the
+`x = 0` arm (skipping the `sum == 0` compare), write it explicitly: `c = b; if (c == e) goto z;`
+then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } else ...`. Plain
+`if (b == e) goto z; for (c = b; ...)` mis-schedules the `mr` for `c`; the `c = b` must precede the test.

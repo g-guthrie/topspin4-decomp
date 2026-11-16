@@ -17,7 +17,7 @@ static __forceinline int eindex(Rel *t, Entry *e) { return e - ebegin(t); }
 static __forceinline int eindex2(Rel *t, Entry *e) { Entry *b = ebegin(t); return e - b; }
 static __forceinline unsigned int eindex3(Rel *t, Entry *e) { return (unsigned int)(e - ebegin(t)); }
 static __forceinline int eindex4(Rel *t, Entry *e) { int d = (char *)e - (char *)ebegin(t); return d / 0x8c; }
-unsigned char ts4_entry_pair_bit_set_886CD580(Obj *o, int a, int b)
+unsigned char f(Obj *o, int a, int b)
 {
     int column;
     unsigned int mask;

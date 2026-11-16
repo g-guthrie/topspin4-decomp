@@ -8264,6 +8264,10 @@
       "src/xbox360/me_set_celebration_anims_886870C8.c": {
         "status": "Matching",
         "source": "xbox360/me_set_celebration_anims_886870C8.c"
+      },
+      "src/xbox360/me_886C44C0_cand_normalize_shares.c": {
+        "status": "Matching",
+        "source": "xbox360/me_886C44C0_cand_normalize_shares.c"
       }
     }
   }

@@ -6,7 +6,7 @@ typedef struct Rel { int offset; } Rel;
 void fn_886DBF40(void *slot, void *rec, void *defs, unsigned int style, int marker, unsigned int value);
 typedef struct Rec { char p[0xc]; } Rec;
 typedef struct Two { Rec first; Rec second; } Two;
-void ts4_update_pair_links_886C4C60(void *slot, Rel *pair, void *defs, unsigned int style, int marker, unsigned int value)
+void f(void *slot, Rel *pair, void *defs, unsigned int style, int marker, unsigned int value)
 {
     Two *t = (Two *)((char *)pair + pair->offset);
     Rec *s = &t->second;

@@ -42104,6 +42104,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_set_celebration_anims_886870C8": 248},
     },
+    {
+        "source": "src/xbox360/me_886C44C0_cand_normalize_shares.c",
+        "object": "me_886C44C0_cand_normalize_shares.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_cand_normalize_shares": 124},
+    },
 )
 
 
