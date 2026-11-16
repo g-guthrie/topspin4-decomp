@@ -657,3 +657,10 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
 - Vector `begin` reloaded via `addi rX,base,K` instead of shared with size(): index through `vec_at(&v, i)` (0x886CD1E8).
 - `(char*)e - (char*)tbl - tbl->offset` order: direct expression gives `(e-t)-off`; reading `off` into a local first gives `(e-off)-t`.
 - Field load kept after an earlier store: block-local member pointer for the store `{ float *sp = &l->span; *sp = ...; }`.
+
+## Found at b103 (agent A2)
+- Restrict per-element pointer (`T *__restrict s`) turns on the 4x-unrolled loop over a self-relative float table (0x8865BD98).
+- Owner pointer fields reloaded at every use: declare both fields `T *volatile` (0x8866DF60).
+- Sum of two inline values in the wrong add order: wrap in an inline `total(o)` calling a per-side helper (0x88665FB8).
+- Moving a loop into an inline helper taking `&o->pl->flags` can give the target's register choice (0x8866F9F0).
+- Vtable-vs-argument load order around a vcall is not consistent across targets (0x8865CBD8 loads vtable first).

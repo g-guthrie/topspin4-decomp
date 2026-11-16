@@ -42044,6 +42044,66 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_refresh_reaction_target_886A3868": 320},
     },
+    {
+        "source": "src/xbox360/me_release_all_entries_88662320.c",
+        "object": "me_release_all_entries_88662320.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_release_all_entries_88662320": 108},
+    },
+    {
+        "source": "src/xbox360/me_reset_shot_records_88674D58.c",
+        "object": "me_reset_shot_records_88674D58.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_reset_shot_records_88674D58": 164},
+    },
+    {
+        "source": "src/xbox360/me_update_input_latches_88687528.cpp",
+        "object": "me_update_input_latches_88687528.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_update_input_latches_88687528": 172},
+    },
+    {
+        "source": "src/xbox360/me_pick_state_from_sides_886777B8.c",
+        "object": "me_pick_state_from_sides_886777B8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_pick_state_from_sides_886777B8": 180},
+    },
+    {
+        "source": "src/xbox360/me_phase_timer_flags_8866FB60.c",
+        "object": "me_phase_timer_flags_8866FB60.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_phase_timer_flags_8866FB60": 180},
+    },
+    {
+        "source": "src/xbox360/me_rally_can_advance_88665FB8.c",
+        "object": "me_rally_can_advance_88665FB8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_rally_can_advance_88665FB8": 188},
+    },
+    {
+        "source": "src/xbox360/me_clear_stat_values_8865BD98.c",
+        "object": "me_clear_stat_values_8865BD98.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_clear_stat_values_8865BD98": 208},
+    },
+    {
+        "source": "src/xbox360/me_commit_frame_8866F9F0.cpp",
+        "object": "me_commit_frame_8866F9F0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_commit_frame_8866F9F0": 240},
+    },
+    {
+        "source": "src/xbox360/me_classify_court_zone_8866DF60.c",
+        "object": "me_classify_court_zone_8866DF60.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_classify_court_zone_8866DF60": 248},
+    },
+    {
+        "source": "src/xbox360/me_set_celebration_anims_886870C8.c",
+        "object": "me_set_celebration_anims_886870C8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_set_celebration_anims_886870C8": 248},
+    },
 )
 
 
