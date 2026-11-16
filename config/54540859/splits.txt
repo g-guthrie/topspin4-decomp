@@ -49086,3 +49086,14 @@ src/xbox360/me_set_celebration_anims_886870C8.c:
 
 src/xbox360/me_886C44C0_cand_normalize_shares.c:
 	.text       start:0x886C44C0 end:0x886C453C
+
+src/xbox360/me_886D1490_layer_recompute_tick_window.c:
+	.pdata      start:0x88124DD8 end:0x88124DE0
+	.text       start:0x886D1490 end:0x886D1574
+
+src/xbox360/me_ts4_mat_pretranslate_by_body.c:
+	.text       start:0x886633E8 end:0x886634DC
+
+src/xbox360/me_ts4_mgr_shutdown.c:
+	.pdata      start:0x881230D8 end:0x881230E0
+	.text       start:0x88657DA8 end:0x88657EB4

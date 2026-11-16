@@ -8268,6 +8268,18 @@
       "src/xbox360/me_886C44C0_cand_normalize_shares.c": {
         "status": "Matching",
         "source": "xbox360/me_886C44C0_cand_normalize_shares.c"
+      },
+      "src/xbox360/me_886D1490_layer_recompute_tick_window.c": {
+        "status": "Matching",
+        "source": "xbox360/me_886D1490_layer_recompute_tick_window.c"
+      },
+      "src/xbox360/me_ts4_mat_pretranslate_by_body.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_mat_pretranslate_by_body.c"
+      },
+      "src/xbox360/me_ts4_mgr_shutdown.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_mgr_shutdown.c"
       }
     }
   }

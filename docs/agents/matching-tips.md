@@ -670,3 +670,11 @@ When the game's `beq` for an empty range (begin == end) jumps straight past the 
 `x = 0` arm (skipping the `sum == 0` compare), write it explicitly: `c = b; if (c == e) goto z;`
 then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } else ...`. Plain
 `if (b == e) goto z; for (c = b; ...)` mis-schedules the `mr` for `c`; the `c = b` must precede the test.
+
+### Found at 886D1490: pointer-indexed neighbouring fields fix load order; inline helper fixes fmuls operands
+- `float *w = &l->w_start; w[2] = (w[1] - w[0]) * k;` loaded w_end before w_start and kept the
+  later parent-pointer load after the store (with `l->span =` the parent load was hoisted above it).
+  The same rewrite also fixed a later `fmadds` operand swap.
+- A commutative `fmuls` whose operand order ignored source order and local temporaries took the
+  game's order once one factor came from an inline helper: `static __inline float ratio_m1(Layer *l, float one)
+  { return l->inner->desc->time_ratio - one; }`.

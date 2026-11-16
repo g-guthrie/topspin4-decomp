@@ -2028,5 +2028,20 @@
   "symbols": {
    "ts4_anim_record_within_window_886C7B60": 196
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_mat_pretranslate_by_body.c",
+  "object": "me_ts4_mat_pretranslate_by_body.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_mat_pretranslate_by_body_886633E8": 244
+  }
  }
 ]

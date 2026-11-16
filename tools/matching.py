@@ -42110,6 +42110,18 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_cand_normalize_shares": 124},
     },
+    {
+        "source": "src/xbox360/me_886D1490_layer_recompute_tick_window.c",
+        "object": "me_886D1490_layer_recompute_tick_window.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_layer_recompute_tick_window": 228},
+    },
+    {
+        "source": "src/xbox360/me_ts4_mgr_shutdown.c",
+        "object": "me_ts4_mgr_shutdown.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_mgr_shutdown_88657DA8": 268},
+    },
 )
 
 
