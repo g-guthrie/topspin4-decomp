@@ -41996,6 +41996,42 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_set_handle_and_link_targets_889C28F0": 80},
     },
+    {
+        "source": "src/xbox360/me_append_new_state_8864AF28.c",
+        "object": "me_append_new_state_8864AF28.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_append_new_state_8864AF28": 188},
+    },
+    {
+        "source": "src/xbox360/me_dispatch_queued_entry_886A0188.c",
+        "object": "me_dispatch_queued_entry_886A0188.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_dispatch_queued_entry_886A0188": 296},
+    },
+    {
+        "source": "src/xbox360/me_entry_index_by_key_886C8750.c",
+        "object": "me_entry_index_by_key_886C8750.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_entry_index_by_key_886C8750": 100},
+    },
+    {
+        "source": "src/xbox360/me_entry_slot_for_id_886602F0.c",
+        "object": "me_entry_slot_for_id_886602F0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_entry_slot_for_id_886602F0": 68},
+    },
+    {
+        "source": "src/xbox360/me_entry_sub_key_bit_886C87B8.c",
+        "object": "me_entry_sub_key_bit_886C87B8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_entry_sub_key_bit_886C87B8": 192},
+    },
+    {
+        "source": "src/xbox360/me_latch_swing_readiness_886B0380.c",
+        "object": "me_latch_swing_readiness_886B0380.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_latch_swing_readiness_886B0380": 144},
+    },
 )
 
 

@@ -16,12 +16,12 @@ struct Ga4SlotRing {
     ts4_u8 slots[10][0x41C]; /* +0x34 */
 };
 
-extern void fn_886A0188(void *slot);
+extern void ts4_dispatch_queued_entry_886A0188(void *slot);
 
 /* Pass the most recently added slot of the ring to the slot handler. Swing_DLL.xex 0x886A75D0 */
 void ga4_ring_newest_slot_886A75D0(struct Ga4SlotRing *ring)
 {
-    fn_886A0188(ring->slots[(ring->head + ring->count - 1) % 10]);
+    ts4_dispatch_queued_entry_886A0188(ring->slots[(ring->head + ring->count - 1) % 10]);
 }
 
 /* ------------------------------------------------------------------ */

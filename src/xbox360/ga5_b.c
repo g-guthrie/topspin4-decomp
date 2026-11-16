@@ -2,14 +2,14 @@
  * Swing_DLL.xex sha256 dfa71292f75a649773c280de7bc2688e6e47e473aba397c248fb4204c45fac44.
  * Field names are roles read from machine code; offsets are in the comments. */
 
-extern void fn_886C8750(void *clip, void *key, void *slot);
+extern void ts4_entry_index_by_key_886C8750(void *clip, void *key, void *slot);
 
-/* Swing_DLL.xex 0x886C9A68: fill the 8-byte entry `index` of the table at *self through fn_886C8750, then store
+/* Swing_DLL.xex 0x886C9A68: fill the 8-byte entry `index` of the table at *self through ts4_entry_index_by_key_886C8750, then store
  * the key word *key into the entry's second word (+4). */
 void ts4_fill_table_entry_886C9A68(char **self, void *clip, int index, int *key)
 {
     int *entry = (int *)(*self + index * 8);
-    fn_886C8750(clip, key, entry);
+    ts4_entry_index_by_key_886C8750(clip, key, entry);
     entry[1] = *key;
 }
 

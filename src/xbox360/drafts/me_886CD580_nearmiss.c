@@ -11,7 +11,7 @@ typedef struct Node { char p[4]; Node2 *n; } Node;
 typedef struct Ctx { char p[0x18]; Src *src; char p2[0x8c - 0x1c]; Node **nodes; } Ctx;
 typedef struct List { char p[0x5c]; void *begin; void *end; } List;
 typedef struct Obj { char p[0x28]; Ctx *ctx; List *list; } Obj;
-void fn_886C87B8(Src *src, int *a, int *b, int *column, unsigned int *mask);
+void ts4_entry_sub_key_bit_886C87B8(Src *src, int *a, int *b, int *column, unsigned int *mask);
 static __forceinline Entry *ebegin(Rel *t) { Entry *r = 0; int off = t->offset; if (off != -1) r = (Entry *)((char *)t + off); return r; }
 static __forceinline int eindex(Rel *t, Entry *e) { return e - ebegin(t); }
 static __forceinline int eindex2(Rel *t, Entry *e) { Entry *b = ebegin(t); return e - b; }
@@ -29,7 +29,7 @@ unsigned char ts4_entry_pair_bit_set_886CD580(Obj *o, int a, int b)
     int idx;
     if (o->list->begin != o->list->end) {
     e = o->ctx->nodes[0]->n->entry;
-    fn_886C87B8(o->ctx->src, &a, &b, &column, &mask);
+    ts4_entry_sub_key_bit_886C87B8(o->ctx->src, &a, &b, &column, &mask);
     d = o->ctx->src->data;
     { int *bo = &d->bits_offset; Rel *t = &d->entries; bits = (unsigned int *)(*bo + (char *)bo);
     stride = d->stride;

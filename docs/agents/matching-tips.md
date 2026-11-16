@@ -637,3 +637,15 @@ function: write `0.0f` as a literal, not as `g_ts4_event_value` (an extern reloa
   volatile-qualified view only inside erase, e.g. `copy(p + 1, ((VVec *)v)->last, p); --v->last;`.
 - A virtual call `o->vt->fn(o, x)` normally loads the vtable before the argument; the target order (argument first)
   was not reproduced (0x88677190).
+- Strength-reduced loop pointer follows the most-referenced field: reading `e->hash` in every `if` of an else-if
+  chain (instead of caching it) counts as several references and picks the target's base (0x886964C0).
+- Loop-invariant `extern float` stored in a loop but loaded once: declare the loop pointer `T *__restrict p`; a
+  `float z = g;` before the loop hoists the load above the empty check instead (0x886799D0).
+- Dead `mr` copy of a self-relative offset: a non-volatile offset read by two separate inline `at(t, i)` calls with
+  no store between (CSE leaves the copy); write `at(&c->score->sides, i)` at each use, not a cached local
+  (0x886688F0, 0x8866A7C0, 0x8866B460, 0x8866ADC0 - placement still off in some).
+- Index stride `i * sizeof(T)` (unsigned) instead of `i * 0x40` flipped one site's add operand order (0x88668310).
+- `#pragma fp_contract(off)` splits `fmadds` into `fmuls`/`fadds`.
+- `new` + `push_back` returning the new record (0x8864AF28): keep the record in a register and declare a stack copy
+  `t` assigned right after construction (`t = s;` before the field stores); fast path stores `s` and `return s;`,
+  slow path `fn_88174A38(v, v->last, &t); return t;` (separate returns give the duplicated epilogue).
