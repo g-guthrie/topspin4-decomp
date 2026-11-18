@@ -744,3 +744,6 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   the insert plus `kZero` for the compare gives 9 relocations instead of 7.
 - A float local declared with its initializer (`float z = p->v[2];`) is loaded earlier than the same read written as a
   later assignment. On 88672130 this changed the diff from 11 to 6 off.
+- Hash constant chosen by a condition and stored once (0x88676AF0, 48 -> 6 off): write `if (c) b->f = K1; else
+  b->f = K2;`. The `?:` form (and a local assigned in if/else) loads both halves into one register (`lis r11; ori r11`);
+  the target's `lis r11; ori r9,r11` needs the two-store form.
