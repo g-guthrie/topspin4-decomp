@@ -1,6 +1,6 @@
 /*
  * RT2: swing-category row walk (Top Spin 4, Xbox 360, Swing_DLL.xex).
- * fn_886AFDF8 walks one class list of the swing-category rules (PT+0x4D8 + 0x48*mode + 0xC*class),
+ * ts4_swing_category_walk_886AFDF8 walks one class list of the swing-category rules (PT+0x4D8 + 0x48*mode + 0xC*class),
  * writes the first row whose condition holds to SwingCategory (S+0x360) and asks the animation
  * system for a clip (ts4_min_cost_until_zero_886AC7E0). See docs/gameplay/controls-and-shot-selection.md section 18.3.
  *

@@ -8280,6 +8280,10 @@
       "src/xbox360/me_ts4_mgr_shutdown.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_mgr_shutdown.c"
+      },
+      "src/xbox360/me_ts4_swing_category_walk_886AFDF8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_swing_category_walk_886AFDF8.c"
       }
     }
   }

@@ -2043,5 +2043,20 @@
   "symbols": {
    "ts4_mat_pretranslate_by_body_886633E8": 244
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_swing_category_walk_886AFDF8.c",
+  "object": "me_ts4_swing_category_walk_886AFDF8.obj",
+  "context": [
+   "src/xbox360/ltcg_ctx_rally_active_8866D930.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_swing_category_walk_886AFDF8": 940
+  }
  }
 ]

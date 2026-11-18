@@ -240,7 +240,7 @@ static RT1_INLINE ts4_u8 rt1_is_return_of_serve(const struct Ts4PlayerController
     return 0;
 }
 
-/* ---- Swing-category walk (fn_886AFDF8; controls-and-shot-selection.md s17, s18.3) ---- */
+/* ---- Swing-category walk (ts4_swing_category_walk_886AFDF8; controls-and-shot-selection.md s17, s18.3) ---- */
 
 /* SwingSelectionCategory row (0x14 bytes, PlayerTuning +0x4D8 lists). */
 struct Rt1CategoryRow {

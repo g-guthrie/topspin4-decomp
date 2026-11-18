@@ -176,6 +176,10 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   stop flag is `do { if (row == end) break; ...; row++; } while (!found);`. A member pointer that the target
   keeps (`addi rX,st,0x358`) alongside absolute-offset stores off `st`: take `sel = &self->pc->state->sel` and
   derive `st` from `sel` by subtraction, then write the first field through `sel`.
+- A hoisted float constant addressed directly (`lis; lfs f31,-0x46f0`), outside g_ts4_script_constants: write
+  it as a literal (`x > 0.5f`) and run LTCG WITHOUT pp1_pool_primer.c, or it lands deep in the primed pool and
+  needs an `addi`. An extern const local gives the wrong schedule; an extern read in the loop is not hoisted
+  (0x886AFDF8 matched this way, spec work/specs/ME/me_ts4_swing_category_walk_886AFDF8.json).
 - Worked examples: src/xbox360/cl1_clrrwi_reload.c. 1,508 unmatched functions in the image contain this pattern.
 - clrrwi refinements (W4): pass the expression to the inline helper at each call site (`lempty(in->list)` then
   `lback(in->list)`), not a named local; a local caching the first accessor result turns the copy back into an `lwz`.
@@ -690,3 +694,13 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
 - A commutative `fmuls` whose operand order ignored source order and local temporaries took the
   game's order once one factor came from an inline helper: `static __inline float ratio_m1(Layer *l, float one)
   { return l->inner->desc->time_ratio - one; }`.
+
+### Found at 886CD3C8 (ME, partial: 37 -> 29 off, draft src/xbox360/drafts/me_886CD3C8_nearmiss.cpp)
+- The FP1 select recipe (named `static const float kZero`, `max(zero, busy)` helper, default float model) and an
+  inline `ldesc(layer) { return layer->inner->desc; }` used INSIDE the float expression (no `desc` local) together give
+  the `clrrwi` copy of `layer->inner`, the `fmadds` and the xori-free mfcr/fsel select on the LTCG route. A `desc` local
+  (even initialised from the helper) loses the `clrrwi`.
+- Still open: target compares `fneg(busy)` against the zero already in f1 (the call argument from `g_ts4_event_value`);
+  we emit `fsubs zero-busy` + a separate kZero load. `zero = kZero` or a static `g_ts4_event_value` makes it worse.
+- Register-numbering residues that did not move with any rule (≈25-45 variants each): 0x88695C48 (r9/r10 after two
+  graph calls), 0x8866A1C8 (win/lose address reassociation: `(rel+base)+24w` and `(rel-24w)+base+24`).

@@ -38,7 +38,7 @@ D1G_EXTERN_C void ts4_shot_request_repress_88698538(struct Ts4SwingRequest *self
 #define TS4_CLASS_VOLLEY_POWER    0xBFB9D8C0u
 #define TS4_CLASS_SMASH           0x7EB30F90u
 
-D1G_EXTERN_C ts4_bool fn_886AFDF8(struct Ts4SwingRequest *self, struct Ts4CategoryList *list);
+D1G_EXTERN_C ts4_bool ts4_swing_category_walk_886AFDF8(struct Ts4SwingRequest *self, struct Ts4CategoryList *list);
 
 /* Pick the swing-category rule list of the current swing class (S+0x35C) inside one mode's six class
    lists and walk it; false for an unknown class. Swing_DLL.xex 0x886B01A8 */
@@ -48,22 +48,22 @@ D1G_EXTERN_C ts4_bool ts4_swing_category_by_class_886B01A8(struct Ts4SwingReques
     ts4_bool found = 0;
     switch (self->pc->state->swing_class) {
     case TS4_CLASS_FLAT_POWER:
-        found = fn_886AFDF8(self, &lists[0]);
+        found = ts4_swing_category_walk_886AFDF8(self, &lists[0]);
         break;
     case TS4_CLASS_FLAT_FINESSE:
-        found = fn_886AFDF8(self, &lists[1]);
+        found = ts4_swing_category_walk_886AFDF8(self, &lists[1]);
         break;
     case TS4_CLASS_SLICE:
-        found = fn_886AFDF8(self, &lists[2]);
+        found = ts4_swing_category_walk_886AFDF8(self, &lists[2]);
         break;
     case TS4_CLASS_VOLLEY_STANDARD:
-        found = fn_886AFDF8(self, &lists[3]);
+        found = ts4_swing_category_walk_886AFDF8(self, &lists[3]);
         break;
     case TS4_CLASS_VOLLEY_POWER:
-        found = fn_886AFDF8(self, &lists[4]);
+        found = ts4_swing_category_walk_886AFDF8(self, &lists[4]);
         break;
     case TS4_CLASS_SMASH:
-        found = fn_886AFDF8(self, &lists[5]);
+        found = ts4_swing_category_walk_886AFDF8(self, &lists[5]);
         break;
     }
     return found;
