@@ -157,7 +157,7 @@ ts4_word fn_8865C578();
 ts4_word ts4_registry_release_8866DD78();
 ts4_word ts4_graph_set_find_8866F028();
 ts4_word fn_88674BC8();
-ts4_word fn_88674ED0();
+ts4_word ts4_scoring_reset_88674ED0();
 ts4_word fn_88676898();
 ts4_word fn_886A4F28();
 ts4_word ts4_tick_selection_886A5C00();
@@ -2440,7 +2440,7 @@ void ts4_if_get_u32_off4_88677058(ts4_word a0)
         t21 = ts4_select_pair_const_8865C790((ts4_word)a0);
         t22 = fn_8865C578((ts4_word)t21);
         fn_88676898((ts4_word)t22);
-        fn_88674ED0((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 76)));
+        ts4_scoring_reset_88674ED0((ts4_word)(*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 4))) + 76)));
         ((ts4_word (*)(ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 0))) + 56))))((ts4_word)a0);
         ((ts4_word (*)(ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 0))) + 28))))((ts4_word)a0);
     } else {

@@ -2104,5 +2104,20 @@
   "symbols": {
    "ts4_vec_with_offset_8867A908": 104
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_scoring_reset_88674ED0.c",
+  "object": "me_ts4_scoring_reset_88674ED0.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_scoring_reset_88674ED0": 512
+  }
  }
 ]

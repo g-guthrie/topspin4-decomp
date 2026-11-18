@@ -108,7 +108,7 @@ ts4_word fn_88669C30();
 ts4_word fn_8866BDD8();
 ts4_word ts4_registry_release_8866DD78();
 ts4_word ts4_find_scheduled_frame_8866E250();
-ts4_word fn_88674ED0();
+ts4_word ts4_scoring_reset_88674ED0();
 ts4_word fn_888860A0();
 ts4_word fn_8890DDA8();
 ts4_word ts4_vec16_clear_8890E088();

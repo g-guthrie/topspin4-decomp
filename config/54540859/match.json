@@ -33949,15 +33949,16 @@
     {"source":"src/xbox360/me_ts4_range_lookup_881899D8.c","symbol":"ts4_range_lookup_881899D8","text_range":"0x881899D8-0x88189AAC","matched_code_bytes":212,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_next_hitter_planned_frame_8865EF98.c","symbol":"ts4_next_hitter_planned_frame_8865EF98","text_range":"0x8865EF98-0x8865F030","pdata_range":"0x881232D8-0x881232E0","matched_code_bytes":152,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_vec_with_offset_8867A908.c","symbol":"ts4_vec_with_offset_8867A908","text_range":"0x8867A908-0x8867A970","pdata_range":"0x88123930-0x88123938","matched_code_bytes":104,"function_match_percent":100.0},
-    {"source":"src/xbox360/me_ts4_scoring_add_game_88676960.c","symbol":"ts4_scoring_add_game_88676960","text_range":"0x88676960-0x88676AEC","pdata_range":"0x88123808-0x88123810","matched_code_bytes":396,"function_match_percent":100.0}
+    {"source":"src/xbox360/me_ts4_scoring_add_game_88676960.c","symbol":"ts4_scoring_add_game_88676960","text_range":"0x88676960-0x88676AEC","pdata_range":"0x88123808-0x88123810","matched_code_bytes":396,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_scoring_reset_88674ED0.c","symbol":"ts4_scoring_reset_88674ED0","text_range":"0x88674ED0-0x886750D0","matched_code_bytes":512,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 3195796,
+  "matched_code_bytes": 3196308,
   "module_total_code_bytes": 10154036,
-  "module_matched_code_percent": 31.47316,
+  "module_matched_code_percent": 31.478203,
   "module_total_functions": 46736,
-  "module_matched_functions": 32110,
-  "module_matched_functions_percent": 68.70506,
-  "module_total_units": 23763,
-  "module_complete_units": 2071,
-  "note": "The canonical whole-module report verifies all thirty-two thousand one hundred ten functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 32111,
+  "module_matched_functions_percent": 68.70721,
+  "module_total_units": 23765,
+  "module_complete_units": 2072,
+  "note": "The canonical whole-module report verifies all thirty-two thousand one hundred eleven functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

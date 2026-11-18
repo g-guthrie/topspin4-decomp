@@ -49119,3 +49119,6 @@ src/xbox360/me_ts4_next_hitter_planned_frame_8865EF98.c:
 src/xbox360/me_ts4_scoring_add_game_88676960.c:
 	.pdata      start:0x88123808 end:0x88123810
 	.text       start:0x88676960 end:0x88676AEC
+
+src/xbox360/me_ts4_scoring_reset_88674ED0.c:
+	.text       start:0x88674ED0 end:0x886750D0

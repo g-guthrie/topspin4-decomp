@@ -1,6 +1,6 @@
 # Matching build
 
-The first two thousand seventy-one matching measurement units reproduce all 3,195,796 code bytes across thirty-two thousand one hundred ten functions exactly.
+The first two thousand seventy-two matching measurement units reproduce all 3,196,308 code bytes across thirty-two thousand one hundred eleven functions exactly.
 
 ## Local prerequisites
 
@@ -29,7 +29,7 @@ The command verifies the XEX hash, runs Jeff, compiles all source units, generat
 
 ## Measurement boundary
 
-The match is 3,195,796 of 10,154,036 Swing code bytes (`31.47316000%`) and thirty-two thousand one hundred ten of 46,736 objdiff functions (`68.7050600%`). The decomp-framework report has two thousand seventy-one complete-source units among 23763 total units.
+The match is 3,196,308 of 10,154,036 Swing code bytes (`31.47820300%`) and thirty-two thousand one hundred eleven of 46,736 objdiff functions (`68.7072100%`). The decomp-framework report has two thousand seventy-two complete-source units among 23765 total units.
 
 Where a function has an accompanying eight-byte `.pdata` range, it is also a
 100% relocation-aware objdiff match. Leaf functions without an exception record
