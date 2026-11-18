@@ -734,3 +734,8 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
 - Out-parameter store scheduled after an `addi` the target puts before it (0x8865EF98, 2 -> 0 off): store through a
   block-local restrict pointer, `{ int *__restrict fp = frame_out; *fp = -1; }`. `__restrict` on the parameter, a plain
   block-local pointer or an inline store helper do not move it.
+- Pool constant values (ME, 88672130): every `lfs off(r11)` from the 0x880D0F70 base can be read off the
+  `/* +0xNNN */` comments in `src/xbox360/pp1_pool_primer.c` (e.g. +0x4C 3.0f, +0x2EC 100000.0f, +0x494 -100000.0f,
+  +0x368 double 57.29577951). Writing those literals took 88672130 from 132 off to 11 off; an extern array gave a different reloc.
+- A 16-byte struct of four floats passed by value arrives in two GPRs that are spilled with `std r5,0x20(r1); std r6,0x28(r1)`
+  and read back with `lfs` (88672130).

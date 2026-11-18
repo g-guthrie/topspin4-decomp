@@ -32182,3 +32182,4 @@ ts4_rng_range_8861E598 = .text:0x8861E598; // type:function size:0xB0
 ts4_range_lookup_881899D8 = .text:0x881899D8; // type:function size:0xD4
 ts4_vec_with_offset_8867A908 = .text:0x8867A908; // type:function size:0x68
 ts4_next_hitter_planned_frame_8865EF98 = .text:0x8865EF98; // type:function size:0x98
+ts4_scoring_add_game_88676960 = .text:0x88676960; // type:function size:0x18C

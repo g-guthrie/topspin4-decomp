@@ -8300,6 +8300,10 @@
       "src/xbox360/me_ts4_next_hitter_planned_frame_8865EF98.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_next_hitter_planned_frame_8865EF98.c"
+      },
+      "src/xbox360/me_ts4_scoring_add_game_88676960.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_scoring_add_game_88676960.c"
       }
     }
   }
