@@ -1,3 +1,5 @@
+/* agentB 2026-11-18 pass 2: still 5 off (plain and LTCG). Clamp spellings: >3 or int index 6; && form, ternary min, 4<=i 5;
+ * result-variable forms 58-59; early return or ternary on busy, flattened slot: 54-55 (0xE4-0xE8). */
 /* agentA2 (b120 real-virtuals pass): C++ with the vtable callees as real virtuals (correct slots) gives the same 5 off;
    tried up to 8 variants (inline members, guard object, zero/hash locals, early-return spellings). Still 5 off. */
 /* NEAR MISS 0x88656378: 5 off, block order of the final clamp (target falls through to "4" and

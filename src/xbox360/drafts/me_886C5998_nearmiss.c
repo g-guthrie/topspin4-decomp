@@ -1,3 +1,5 @@
+/* agentB 2026-11-18 pass 2: still 6 off (plain and LTCG). Unnamed channel, t-first, key local (u16/int/unsigned), block-local channel,
+ * Range/KeyTable locals, explicit (k*2+k)*8 and (k+k*2)*8 byte index with pads 0-9: always 6. */
 /* NEAR MISS (6 instructions): register numbering of the channel pointer (r11 in the game, r7 here)
  * and the key*3 add operand order. Tried named locals for keys/base/key pointer and operand_order_pad. */
 /* 0x886C5998: samples a channel: interpolates the keyed range [lo, hi] of the channel's current key
