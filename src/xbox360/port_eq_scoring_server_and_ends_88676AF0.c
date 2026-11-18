@@ -1,9 +1,10 @@
-/* NEAR MISS fn_88676AF0 StdScoring_UpdateServerAndEnds (ME, 2026-11-18), fn_check /Oc: 6 instructions off, size matches.
- * fn_equiv --flags /Oc --seed 1 --trials 1500: EQUIVALENT (997 valid of 1390, 16/16 blocks).
- * Remaining: three commutative add operand orders (players base+rel at +0x3C; the loop tail set-entry address
- * at +0x1FC; the merge of the two unrolled-loop accumulators r31+r30 at +0x22C, same residue as 0x88669F30).
- * Key steps: side pointers taken before the rotation stores, rules kept in a local for the loop, court stored
- * from an if/else (the ?: form is 48 off). ~45 variants. */
+/* NEAR MISS fn_88676AF0 StdScoring_UpdateServerAndEnds (ME, 2026-11-18), fn_check /Oc: 1 instruction off (+0x22C),
+ * size matches. fn_equiv --flags /Oc --seed 1 --trials 1500: EQUIVALENT (16/16 blocks).
+ * Operand-order sites 1 and 2 fixed with the period-8 numbering rule: 4 function-scope pads + named players base
+ * local p, and 1 block pad in the set loop. Remaining: the merge add r11,r31,r30 of the two accumulators the
+ * compiler creates when unrolling the set loop (ours r30,r31). A 16x10 joint pad sweep, block pads around the loop,
+ * late-assigned pads and accumulator forms (named block temp, pointer accumulator) never flip it: the
+ * compiler-temp case the rule does not cover (same as 0x88669F30). */
 /*
  * ME: StdScoring_UpdateServerAndEnds (0x88676AF0). From the games played (0x88669F30), the
  * tie-break serve counter and the points of the current game it sets the server, the serving
@@ -64,7 +65,7 @@ static struct Ts4ServeFlowView *ts4_flow(struct Rt1Scoring *self) { return (stru
 
 /* Swing_DLL.xex 0x88676AF0 */
 void ts4_scoring_update_server_and_ends_88676AF0(struct Rt1Scoring *self)
-{
+{ int op1_pad0 = 0; int op1_pad1 = 0; int op1_pad2 = 0; int op1_pad3 = 0;
     struct Ts4ServeBlock *b;
     struct Rt1ScoreState *s;
     struct Rt1RulesInfo *rules;
@@ -75,7 +76,10 @@ void ts4_scoring_update_server_and_ends_88676AF0(struct Rt1Scoring *self)
     b = &((struct Ts4ServeB44View *)self->owner->b44)->serve;
     games = fn_88669F30(self);
     s = &self->rules->score;
-    points = ts4_score_players(s)[1].points + ts4_score_players(s)[0].points;
+    {
+        struct Rt1ScorePlayer *p = ts4_score_players(s);
+        points = p[1].points + p[0].points;
+    }
     if (points % 2 == 0)
         b->court = TS4_COURT_DEUCE;
     else
@@ -91,6 +95,7 @@ void ts4_scoring_update_server_and_ends_88676AF0(struct Rt1Scoring *self)
     played = 0;
     rules = self->rules;
     for (set = 0; set <= rules->score.cur_set; set++) {
+        int op2_pad0 = 0;
         int g = ts4_set_at(ts4_score_player(&rules->score, 0), set)->games +
                 ts4_set_at(ts4_score_player(&rules->score, 1), set)->games;
         played += g % 2 + g / 2;

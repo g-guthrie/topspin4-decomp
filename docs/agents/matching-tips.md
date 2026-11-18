@@ -751,3 +751,8 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   `x == K`, `x == Ku`, an `(int)` cast and a static const all give `lis; ori; subf`.
 - A vector whose address goes to a callee (`if_get(&v)`) stays in memory for the rest of the function. Copy it into a
   second local after the call (`q = set_y0(qm)`) to keep it in a register; this cut 0x34 bytes on 88671B10.
+- Period-8 pads measured (ME): fixed two of three add-order sites in 0x88676AF0 (4 function pads + named players base,
+  1 pad in the loop block; 6 -> 1 off). NOT fixed by any pad count (16x10 joint sweep, block pads, late-assigned pads,
+  named/pointer accumulators): the merge add of the two accumulators MSVC creates when it unrolls a sum loop
+  (0x88676AF0 +0x22C, 0x88669F30). Pads have no effect on 0x88695C48 (r9/r10 numbering after calls) and only move
+  0x8866A1C8 from 10 to 9 (its win/lose residue is association, not operand order).
