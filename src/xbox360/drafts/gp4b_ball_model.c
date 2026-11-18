@@ -72,7 +72,7 @@ static uint32_t be32(const uint8_t *p) { return ((uint32_t)p[0] << 24) | ((uint3
 static int32_t bei32(const uint8_t *p) { return (int32_t)be32(p); }
 static float bef32(const uint8_t *p) { uint32_t u = be32(p); float f; memcpy(&f, &u, 4); return f; }
 
-/* fn_881899D8: curve of 16-byte keys {x0, x1, y0, y1}; header {i32 first_key_offset (-1 = none), i32 count}.
+/* ts4_range_lookup_881899D8: curve of 16-byte keys {x0, x1, y0, y1}; header {i32 first_key_offset (-1 = none), i32 count}.
  * Picks the LAST key with x0 <= x (the first key if none) and returns y0 + clamp((x-x0)/(x1-x0), 0, 1) * (y1-y0). */
 static float curve16_eval(float x, const uint8_t *c)
 {

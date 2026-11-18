@@ -17,7 +17,7 @@
 extern const float g_ts4_event_value;         /* 0.0f */
 extern const float g_ts4_script_constants[];  /* +0: 1.0f */
 
-float fn_8861E598(struct Rt1RandomGen *rng, float lo, float hi);
+float ts4_rng_range_8861E598(struct Rt1RandomGen *rng, float lo, float hi);
 void ts4_loop_call_seq_u32_off2c_8890E988(void *analysers);
 
 /* EvaluateList entry: control graphs of one ResolutionConfig. */
@@ -78,7 +78,7 @@ void ts4_aiming_state_evaluate_88695C48(struct Rt1ShotContextE *sc)
     if (sc->pc->is_human || !sc->pc->state->is_serving)
         ts4_loop_call_seq_u32_off2c_8890E988(eval->aiming_graphs);
     if (!sc->pc->state->is_serving) {
-        sc->pc->state->random = fn_8861E598(&sc->pc->match->rng_owner->rng, g_ts4_event_value, g_ts4_script_constants[0]);
+        sc->pc->state->random = ts4_rng_range_8861E598(&sc->pc->match->rng_owner->rng, g_ts4_event_value, g_ts4_script_constants[0]);
         if (sc->pc->is_human) {
             ts4_loop_call_seq_u32_off2c_8890E988(sc->pc->final_efficiency_graphs);
             final_efficiency = sc->pc->state->final_efficiency;

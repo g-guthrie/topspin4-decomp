@@ -13,7 +13,7 @@ struct Ts4Table2DRow {
 };
 
 extern const float lbl_8814B440; /* 0.0f */
-float fn_881899D8(float x, struct Ts4Table2DRow *curve);
+float ts4_range_lookup_881899D8(float x, struct Ts4Table2DRow *curve);
 
 /* Sign bit of a float, read from its high half-word (true when negative). */
 #define D1G_FLOAT_SIGN(f) (((unsigned short *)&(f))[0] >> 15)
@@ -40,8 +40,8 @@ float ts4_table2d_eval_8826D278(struct Ts4RelArray *table, float x, float y)
         it++;
     } while (it != end);
     if (lo != it && it != end) {
-        float a = fn_881899D8(y, lo);
-        float b = fn_881899D8(y, it);
+        float a = ts4_range_lookup_881899D8(y, lo);
+        float b = ts4_range_lookup_881899D8(y, it);
         float d = x - lo->key;
         float span = it->key - lo->key;
         if (d <= lbl_8814B440)
@@ -50,5 +50,5 @@ float ts4_table2d_eval_8826D278(struct Ts4RelArray *table, float x, float y)
             return b;
         return (b - a) * (d / span) + a;
     }
-    return fn_881899D8(y, lo);
+    return ts4_range_lookup_881899D8(y, lo);
 }

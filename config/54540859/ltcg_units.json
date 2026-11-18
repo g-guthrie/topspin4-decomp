@@ -2058,5 +2058,35 @@
   "symbols": {
    "ts4_swing_category_walk_886AFDF8": 940
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_rng_range_8861E598.c",
+  "object": "me_ts4_rng_range_8861E598.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_rng_range_8861E598": 176
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_range_lookup_881899D8.c",
+  "object": "me_ts4_range_lookup_881899D8.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_range_lookup_881899D8": 212
+  }
  }
 ]

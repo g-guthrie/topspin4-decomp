@@ -104,7 +104,7 @@ extern double sqrt(double);
 #include <math.h>
 #endif
 
-float fn_8861E598(void *rng, float lo, float hi);
+float ts4_rng_range_8861E598(void *rng, float lo, float hi);
 void ts4_loop_call_seq_u32_off2c_8890E988(void *analyser);
 void ts4_if_get_8865E730(__vector4 *v, unsigned int side_tag);
 void fn_8866E318(Rt4Rules *rules, int point_end, float *bounds);
@@ -133,8 +133,8 @@ unsigned int *ts4_shot_outcome_roll_886807C0(unsigned int *out_mode, void *let_a
     p = s->error_prob + s->error_added;
     p = p < 0.0f ? 0.0f : p;
     p = 1.0f - p < 0.0f ? 1.0f : p;
-    roll1 = fn_8861E598((char *)pc->world + 0xB4, zero, one);
-    roll2 = fn_8861E598((char *)pc->world + 0xB4, zero, one);
+    roll1 = ts4_rng_range_8861E598((char *)pc->world + 0xB4, zero, one);
+    roll2 = ts4_rng_range_8861E598((char *)pc->world + 0xB4, zero, one);
     if (pc->is_human == 0 && point_end) {
         Rt4DebugCfg *d = pc->cfg_root->dbg;
         p = d->point_end_error_prob;
@@ -143,7 +143,7 @@ unsigned int *ts4_shot_outcome_roll_886807C0(unsigned int *out_mode, void *let_a
     }
     ts4_loop_call_seq_u32_off2c_8890E988(let_analyser);
     let_prob = pc->state->let_prob;
-    roll3 = fn_8861E598((char *)pc->world + 0xB4, zero, one);
+    roll3 = ts4_rng_range_8861E598((char *)pc->world + 0xB4, zero, one);
 
     G = 0;
     if (pc->rules->dbg->net_let_enabled && !pc->rules->match->let_flag_b && pc->rules->match->let_flag_a)
@@ -228,7 +228,7 @@ unsigned int *ts4_shot_outcome_roll_886807C0(unsigned int *out_mode, void *let_a
                     pt.v[2] = z;
                     regrade = 0;
                 } else {
-                    float r = fn_8861E598((char *)pc->world + 0xB4, (float)sqrt(minv), g_ts4_script_constants[0x364 / 4]);
+                    float r = ts4_rng_range_8861E598((char *)pc->world + 0xB4, (float)sqrt(minv), g_ts4_script_constants[0x364 / 4]);
                     float dx = best.v[0] - orig.v[0], dz = best.v[2] - orig.v[2];
                     float len = (float)sqrt(dx * dx + dz * dz);
                     if (len != zero) { dx = dx / len; dz = dz / len; }

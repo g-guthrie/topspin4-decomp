@@ -87,7 +87,7 @@ double fabs(double);
 #ifdef _MSC_VER
 #pragma intrinsic(fabs)
 #endif
-float fn_881899D8(float x, const void *curve);
+float ts4_range_lookup_881899D8(float x, const void *curve);
 
 #ifdef _MSC_VER
 #define RT1_FORCEINLINE static __forceinline
@@ -198,8 +198,8 @@ void ts4_timing_state_update_8867DF68(struct Rt1Controller *self)
         tb->base_frame = frames;
         {
             float f = (float)frames;
-            float worst = fn_881899D8(f, curve);
-            float best = fn_881899D8(f, curve + 0xc);
+            float worst = ts4_range_lookup_881899D8(f, curve);
+            float best = ts4_range_lookup_881899D8(f, curve + 0xc);
             tb->timing_value = worst + (best - worst) * tb->timing_ability;
         }
     }

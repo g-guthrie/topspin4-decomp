@@ -23,7 +23,7 @@ extern const float g_ts4_script_constants[];  /* +0 1.0, +0xE8 pi/2, +0x1E0 5.0,
 #define RT1_K(off) g_ts4_script_constants[(off) / 4]
 
 double fn_88564BF8(double y, double x);       /* atan2 */
-float fn_881899D8(float x, const struct Rt1RangeList *list);
+float ts4_range_lookup_881899D8(float x, const struct Rt1RangeList *list);
 void fn_8817B608(float *angle);               /* wrap to [-pi, pi) */
 void fn_8864F7B8(__vector4 *v, const __vector4 *axis, float angle); /* rotate v about axis */
 void fn_889C0DC0(struct Rt1Ball *ball, ts4_bool keep);
@@ -91,10 +91,10 @@ void ts4_ball_bounce_response_889C1C80(struct Rt1Ball *ball, struct Rt1Vec4 *vel
     if (theta > RT1_K(0xE8))
         theta = lbl_880C88DC - theta;
     spin_a = spin[0];
-    loss = fn_881899D8(spin_a, &tmpl->speed_loss);
-    decay = fn_881899D8(spin_a, &tmpl->spin_decay);
-    yaw = fn_881899D8(spin[1], &tmpl->yaw_kick);
-    delta = fn_881899D8(theta, &tmpl->out_angle) - theta;
+    loss = ts4_range_lookup_881899D8(spin_a, &tmpl->speed_loss);
+    decay = ts4_range_lookup_881899D8(spin_a, &tmpl->spin_decay);
+    yaw = ts4_range_lookup_881899D8(spin[1], &tmpl->yaw_kick);
+    delta = ts4_range_lookup_881899D8(theta, &tmpl->out_angle) - theta;
     weight = spin_a * RT1_K(0x1E0);
     fzero = g_ts4_event_value;
     weight = (weight < fzero) ? -weight : weight;

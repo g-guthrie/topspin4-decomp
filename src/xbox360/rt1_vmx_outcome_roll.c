@@ -37,7 +37,7 @@ extern const float g_ts4_script_constants[];  /* +0 1.0, +0x38 -1.0, +0x2AC 0.1,
 #define RT1_K(off) g_ts4_script_constants[(off) / 4]
 
 void fn_8866E318(struct Rt1MatchO *match, ts4_bool serve, struct Rt1CourtBounds *out);
-float fn_8861E598(struct Rt1RandomGen *rng, float lo, float hi);
+float ts4_rng_range_8861E598(struct Rt1RandomGen *rng, float lo, float hi);
 void ts4_loop_call_seq_u32_off2c_8890E988(void *analysers);
 void fn_88671B10(struct Rt1ShotPlan *plan, struct Rt1PlayerCtxO *pc, ts4_u8 *open, ts4_u8 *may_out);
 /* Moves a point inside the bounds to 3 cm outside the nearest line. */
@@ -117,8 +117,8 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
     zero = kZero;
     one = 1.0f;
     p = rt1_clamp(pc->state->fault_probability + pc->state->error_bonus, zero, one);
-    roll1 = fn_8861E598(&pc->world->rng, zero, one);
-    roll2 = fn_8861E598(&pc->world->rng, zero, one);
+    roll1 = ts4_rng_range_8861E598(&pc->world->rng, zero, one);
+    roll2 = ts4_rng_range_8861E598(&pc->world->rng, zero, one);
     if (!pc->is_human && serve) {
         const struct Rt1AIRecordO *rec = pc->ai->record;
         struct Rt1PlayerStateO *ps = pc->state;
@@ -128,7 +128,7 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
     }
     ts4_loop_call_seq_u32_off2c_8890E988(let_analysers);
     let_p = pc->state->let_probability;
-    roll3 = fn_8861E598(&pc->world->rng, zero, one);
+    roll3 = ts4_rng_range_8861E598(&pc->world->rng, zero, one);
 
     gate = pc->match->debug->net_let_outcomes && !pc->match->flow->flag_329 && pc->match->flow->flag_328;
     let = gate && (roll3 < let_p || pc->state->force_let);
@@ -204,7 +204,7 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
                     tgt = rt1_set_z(tgt, rt1_clamp(tgt.v[2], bounds.z_min, bounds.z_max));
                     goto done;
                 } else {
-                    float dist = fn_8861E598(&pc->world->rng, (float)sqrt(d), 200.0f);
+                    float dist = ts4_rng_range_8861E598(&pc->world->rng, (float)sqrt(d), 200.0f);
                     float t = dist;
                     __vector4 moved = __vmaddfp(rt1_normalize3(__vsubfp(best, aim)), __vspltw(__lvlx(&t, 0), 0), aim);
                     *(__vector4 *)&tmp = moved;

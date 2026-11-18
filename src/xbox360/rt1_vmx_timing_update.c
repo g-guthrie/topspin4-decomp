@@ -29,7 +29,7 @@ void ts4_if_get_8865E730(__vector4 *v, ts4_u32 side_tag);
 ts4_bool fn_881896F8(const struct Rt1Line *a, const struct Rt1Line *b, __vector4 *point, float *t1, float *t2);
 /* RangeCurve_Eval: clamped ramp over a {InStart, InStop, OutStart, OutStop} list. x is in f1,
  * so the list pointer is the second GPR argument (r4). */
-float fn_881899D8(float x, const struct Rt1RangeList *list);
+float ts4_range_lookup_881899D8(float x, const struct Rt1RangeList *list);
 #ifdef _MSC_VER
 double fabs(double x);
 #pragma intrinsic(fabs)
@@ -129,8 +129,8 @@ void ts4_timing_state_update_8867DF68(struct Rt1SubController *self)
         }
         timing->base_frame = frames;
         f = (float)frames;
-        worst = fn_881899D8(f, &curves->worst);
-        timing->value = (fn_881899D8(f, &curves->best) - worst) * timing->ability + worst;
+        worst = ts4_range_lookup_881899D8(f, &curves->worst);
+        timing->value = (ts4_range_lookup_881899D8(f, &curves->best) - worst) * timing->ability + worst;
     }
 
     pc = self->pc;

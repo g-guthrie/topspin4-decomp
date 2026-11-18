@@ -25,7 +25,7 @@ typedef unsigned char u8;
 #pragma intrinsic(fabs, __vcmpeqfpR)
 #endif
 
-/* One shot-template curve header (curve16: self-relative array of 16-byte keys), evaluated by fn_881899D8. */
+/* One shot-template curve header (curve16: self-relative array of 16-byte keys), evaluated by ts4_range_lookup_881899D8. */
 struct Rt5Curve { int rel; int count; unsigned int unk; };
 
 /* Shot template row as read by the bounce: the four bounce curves. */
@@ -65,7 +65,7 @@ extern __vector4 lbl_880FC6B0;      /* (0, 0, 1, 0) default axis */
 double fn_88564BF8(double y, double x);
 double fabs(double x);
 __vector4 __vcmpeqfpR(__vector4 a, __vector4 b, unsigned int *cr6);
-float fn_881899D8(float x, const struct Rt5Curve *curve);
+float ts4_range_lookup_881899D8(float x, const struct Rt5Curve *curve);
 void fn_8817B608(float *angle);
 void fn_8864F7B8(__vector4 *v, const __vector4 *axis, float angle);
 void fn_889C0DC0(struct Rt5Ball *ball, int arg);
@@ -131,10 +131,10 @@ void ts4_ball_bounce_response_889C1C80(struct Rt5Ball *ball, __vector4 *v)
     if (theta > g_ts4_script_constants[0xE8 / 4])
         theta = lbl_880C88DC - theta;
     spin_a = spin[0];
-    loss = fn_881899D8(spin_a, &tpl->speed_loss);
-    decay = fn_881899D8(spin_a, &tpl->spin_decay);
-    yaw = fn_881899D8(spin[1], &tpl->yaw_kick);
-    out = fn_881899D8(theta, &tpl->out_angle);
+    loss = ts4_range_lookup_881899D8(spin_a, &tpl->speed_loss);
+    decay = ts4_range_lookup_881899D8(spin_a, &tpl->spin_decay);
+    yaw = ts4_range_lookup_881899D8(spin[1], &tpl->yaw_kick);
+    out = ts4_range_lookup_881899D8(theta, &tpl->out_angle);
     wrapped = out - theta;
     weight = spin_a * g_ts4_script_constants[0x1E0 / 4];
     weight = (weight < g_ts4_event_value) ? -weight : weight;

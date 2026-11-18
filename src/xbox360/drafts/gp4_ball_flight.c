@@ -49,7 +49,7 @@ static const float POOL_HALF_PI = 1.5707964f;        /* pool+0xE8 */
 static const float POOL_PI = 3.1415927f;             /* lbl_880C88DC */
 
 typedef struct Gp4Curve Gp4Curve;
-float gp4_curve16_eval(float x, const Gp4Curve *c);  /* fn_881899D8 */
+float gp4_curve16_eval(float x, const Gp4Curve *c);  /* ts4_range_lookup_881899D8 */
 float gp4_curve20_eval(float x, const Gp4Curve *c);  /* fn_8817A688 */
 void  gp4_rotate_about_axis(float v[4], const float axis[4], float angle); /* fn_8864F7B8: v = R(axis, angle) v */
 float gp4_wrap_angle(float a);                       /* fn_8817B608: wraps into (-pi, pi] */
@@ -233,7 +233,7 @@ void gp4_spin_accel(void *B, int use_endpoints)
 }
 
 /* ---- fn_889C1C80 [H structure]: ground bounce response. v = incoming velocity (local frame, m/s); outgoing velocity written back in v.
- * Template row curves (each a 16-byte-key piecewise linear table, fn_881899D8):
+ * Template row curves (each a 16-byte-key piecewise linear table, ts4_range_lookup_881899D8):
  *   tpl+0x40  speed loss as function of spin_a        (v *= 1 - c40(spin_a))
  *   tpl+0x58  outgoing elevation angle as function of incoming elevation angle theta
  *   tpl+0x64  yaw kick (radians) as function of spin_b

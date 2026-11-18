@@ -49101,3 +49101,9 @@ src/xbox360/me_ts4_mgr_shutdown.c:
 src/xbox360/me_ts4_swing_category_walk_886AFDF8.c:
 	.pdata      start:0x88124708 end:0x88124710
 	.text       start:0x886AFDF8 end:0x886B01A4
+
+src/xbox360/me_ts4_rng_range_8861E598.c:
+	.text       start:0x8861E598 end:0x8861E648
+
+src/xbox360/me_ts4_range_lookup_881899D8.c:
+	.text       start:0x881899D8 end:0x88189AAC

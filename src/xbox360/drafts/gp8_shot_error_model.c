@@ -53,10 +53,10 @@ typedef struct Gp8PlayerStateView {
     float let_aim_cm;         /* +0x754 net-plane aim height for a Let outcome (cm), reset per shot from cfg+0x138 */
 } Gp8PlayerStateView;
 
-/* ------------------------------------------------------------------ RNG (fn_8861E598, rng state at world->rng+0xB4) */
+/* ------------------------------------------------------------------ RNG (ts4_rng_range_8861E598, rng state at world->rng+0xB4) */
 typedef struct Gp8Rng { uint32_t s1, s2; } Gp8Rng;   /* +4 / +8 of the 0xB4 block */
 
-/* fn_8861E598(rng, lo, hi): one xorshift-like + LCG draw, result lo + u * (hi - lo), u in [0,1] (clamped). */
+/* ts4_rng_range_8861E598(rng, lo, hi): one xorshift-like + LCG draw, result lo + u * (hi - lo), u in [0,1] (clamped). */
 static float gp8_rng_range(Gp8Rng *r, float lo, float hi)
 {
     uint32_t t = (r->s1 >> 15) ^ r->s1;

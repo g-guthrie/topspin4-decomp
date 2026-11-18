@@ -177,7 +177,7 @@ struct Rt1BallLink {                       /* PlayerController +0xB4 */
     ts4_u8 pad_00[0x88];
     struct Rt1BallPredictor *predictor;    /* +0x88 */
 };
-/* Ramp list {InStart, InStop, OutStart, OutStop}[] evaluated by fn_881899D8 (12-byte header). */
+/* Ramp list {InStart, InStop, OutStart, OutStop}[] evaluated by ts4_range_lookup_881899D8 (12-byte header). */
 struct Rt1RangeList {
     int rel;
     int count;
@@ -347,7 +347,7 @@ __declspec(align(16))
 struct Rt1Vec4 {
     float x, y, z, w;
 };
-struct Rt1RandomGen {                      /* world +0xB4 (fn_8861E598) */
+struct Rt1RandomGen {                      /* world +0xB4 (ts4_rng_range_8861E598) */
     ts4_u32 pad_00;
     ts4_u32 s1;                            /* +0x04 */
     ts4_u32 s2;                            /* +0x08 */
@@ -442,7 +442,7 @@ struct Rt1ShotPlan {
 
 /* ---- Ball bounce response (fn_889C1C80; ball-physics.md s6, gp4b.md) ---- */
 
-/* curve16 ramp list of a shot template (12-byte header, evaluated by fn_881899D8). */
+/* curve16 ramp list of a shot template (12-byte header, evaluated by ts4_range_lookup_881899D8). */
 struct Rt1BallTemplate {                   /* ball +0x24 */
     ts4_u8 pad_00[0x40];
     struct Rt1RangeList speed_loss;        /* +0x40 c40(spin_a): v *= 1 - loss */

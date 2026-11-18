@@ -44,8 +44,8 @@ typedef unsigned int   gp4_u32;
 #define GP4_HASH_STATE_PAUSE     0x165BBDE9u /* "Pause": game state in which fn_8887E5F8 does not step Havok */
 
 /* ---------------------------------------------------------------------------------------------
- * Piecewise-linear curve key blocks used by the shot template (fn_881899D8 and fn_8817A688).
- * fn_881899D8(x, curve): curve = { i32 first_key_off (-1 = none); i32 key_count; ... } keys are 16 bytes
+ * Piecewise-linear curve key blocks used by the shot template (ts4_range_lookup_881899D8 and fn_8817A688).
+ * ts4_range_lookup_881899D8(x, curve): curve = { i32 first_key_off (-1 = none); i32 key_count; ... } keys are 16 bytes
  *    { x_a, x_b, y_a, y_b }:  y = y_a + clamp((x - x_a)/(x_b - x_a), 0, 1) * (y_b - y_a)
  *    picking the LAST key with x_a <= x (first key if none).
  * fn_8817A688(x, curve): keys are 20 bytes { x_a, x_b?, y_a, slope, ... } :

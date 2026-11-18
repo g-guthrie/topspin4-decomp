@@ -31,7 +31,7 @@ struct Gp2ReachTuning {
     unsigned char pad58[0xb8 - 0x58];
     float side_line_threshold; /* +0xb8 fn_8868BD80 */
     unsigned char padbc[0xcc - 0xbc];
-    /* +0xcc: piecewise-linear table (fn_881899D8): |t| -> number of preceding volley samples to cap */
+    /* +0xcc: piecewise-linear table (ts4_range_lookup_881899D8): |t| -> number of preceding volley samples to cap */
     unsigned char padcc[0xd8 - 0xcc];
     float lateral_half_width;  /* +0xd8 fn_8869B178: |sample.x| < this */
     unsigned char padd8[0xf4 - 0xdc];
@@ -158,7 +158,7 @@ static void gp2_evaluate_side(
 
     /* Post pass: the last volley sample at index k caps the cost of up to n preceding volley samples,
        n = (int)table_T+0xcc(|t|), t = intersection parameter of the player->ball ray with the volley line
-       (fn_881896F8 then fn_881899D8). Stops at the first non-volley sample. */
+       (fn_881896F8 then ts4_range_lookup_881899D8). Stops at the first non-volley sample. */
     if (last_volley != -1) {
         int n = 0;                                /* ? from fn_881896F8 + table; exact t not recovered */
         int j;

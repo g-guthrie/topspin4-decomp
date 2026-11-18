@@ -38,7 +38,7 @@ struct Rt3ShotContext {
 };
 
 void ts4_loop_call_seq_u32_off2c_8890E988(void *graph);
-float fn_8861E598(void *rng, float a, float b);
+float ts4_rng_range_8861E598(void *rng, float a, float b);
 
 /* Swing_DLL.xex 0x88695C48: run the shot class aiming graph, then QuadEfficiency = FinalEfficiency */
 void ts4_aiming_evaluate_88695C48(struct Rt3ShotContext *self)
@@ -50,7 +50,7 @@ void ts4_aiming_evaluate_88695C48(struct Rt3ShotContext *self)
             ts4_loop_call_seq_u32_off2c_8890E988(entry->graph);
         if (self->hitter->aim->is_serving == 0) {
             self->hitter->aim->random =
-                fn_8861E598(self->hitter->pad48->rng->rng, g_ts4_event_value, g_ts4_script_constants[0]);
+                ts4_rng_range_8861E598(self->hitter->pad48->rng->rng, g_ts4_event_value, g_ts4_script_constants[0]);
             if (self->hitter->is_human != 0) {
                 ts4_loop_call_seq_u32_off2c_8890E988(self->hitter->graph_human);
             } else {

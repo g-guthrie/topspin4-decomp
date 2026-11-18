@@ -18,8 +18,8 @@ static float __fres(float x) { return 1.0f / x; }
 extern float lbl_8814B440;
 /* Float 3.0-style constant used in one select. */
 extern float lbl_8814B45C;
-/* Returns the float of fn_8861E598 (called with a sub-object and two constants). */
-extern float fn_8861E598(void *obj, float a, float b);
+/* Returns the float of ts4_rng_range_8861E598 (called with a sub-object and two constants). */
+extern float ts4_rng_range_8861E598(void *obj, float a, float b);
 
 #define FP(p, o) (*(float *)((char *)(p) + (o)))
 #define IP(p, o) (*(int *)((char *)(p) + (o)))
@@ -84,10 +84,10 @@ void ts4_set_hashes_and_const0_8866CD58(void *o)
     FP(PP(PP(o, 0x1c), 0x78), 0x41c) = K[0];
 }
 
-/* Swing_DLL.xex 0x8867EB38: return whether fn_8861E598(sub-object+0xb4, 0, const0) is below x. */
+/* Swing_DLL.xex 0x8867EB38: return whether ts4_rng_range_8861E598(sub-object+0xb4, 0, const0) is below x. */
 unsigned char ts4_lookup_below_8867EB38(void *o, float x)
 {
-    return fn_8861E598((char *)PP(PP(o, 4), 0x44) + 0xb4, lbl_8814B440, K[0]) < x;
+    return ts4_rng_range_8861E598((char *)PP(PP(o, 4), 0x44) + 0xb4, lbl_8814B440, K[0]) < x;
 }
 
 /* Swing_DLL.xex 0x886EC4B8: pack a vec3 scaled by pool constant 73 into three 10-bit fields (z high, y, x low). */

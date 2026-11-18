@@ -279,6 +279,12 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
     `lis/addi` base like the target (an extern array is CSE'd to one base). Clamp as nested
     `(a - b >= kZero)` max/min helpers gives the mfcr/lfsx/fsel table selects.
 
+  - `fmadds` operand order of a lerp `u * d + lo` (0x8861E598, 0x881899D8): put the difference in a named local
+    declared BEFORE the other float locals (`float d = hi - lo;` / `float dy = y1 - y0; float u;`); the same
+    expression inline or with `d` declared later swaps the multiplicands. A file-scope `static const kZero = 0.0f`
+    compiles to the same BINKCONS zero the target loads (reloc accepted), so clamps written as nested
+    `(a - b >= kZero)` max/min helpers match directly.
+
 ## Vector address form and matrix helpers (from AF1; full notes in docs/agents/near-misses/AF1.md)
 - Address form is fixed when the address is CSE'd: `base+K` used twice or more gives `addi rT,base,K; lvx128 v,r0,rT`;
   used once it gives `li rK,K; lvx128 v,base,rK`, with the `li` register shared by every base using K once. Indexing

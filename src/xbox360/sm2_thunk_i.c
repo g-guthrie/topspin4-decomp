@@ -11,7 +11,7 @@ extern void fn_886DEDD8(void *a, int b, float x, float y);
 extern void ts4_walk_clamped_886DFA60(float f, void *a, int b, int c, int d);
 extern void fn_885459F8(void *a, void *b);
 extern void fn_886CF1E0(void *a, int b, int c, int d);
-extern void fn_8861E598(void *a, float x, float y);
+extern void ts4_rng_range_8861E598(void *a, float x, float y);
 extern void fn_885BDF38(int a, int b, int c, int d);
 extern void fn_885651F8(void *a);
 extern void fn_884E0220(void *a);

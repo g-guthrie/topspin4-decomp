@@ -31,6 +31,7 @@ struct Rt2LetClockPtr {
 struct Rt2LetMatch {
     RT2_PAD(pad_00, 0x28);
     struct Rt2LetOwner *owner;        /* +0x28 */
+    RT2_PAD(pad_2c, 4);
     struct Rt2LetClockPtr *clock;     /* +0x30 */
 };
 struct Rt2BehaviourEntry {

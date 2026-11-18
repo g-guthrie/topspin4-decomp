@@ -9,15 +9,15 @@ typedef struct Curves { char p[0x3f8]; char lead[0xc]; char radius[0xc]; } Curve
 typedef struct State { char p[0x8e0]; __vector4 pos; } State;
 typedef struct Pc { char p[0x2c]; Curves *f2c; char p2[0x74 - 0x30]; State *f74; } Pc;
 typedef struct Obj { char p[0x10]; Pc *pc; __vector4 *target; char p2[0x68 - 0x18]; float x; float radius; } Obj;
-float fn_881899D8(float x, const void *list);
+float ts4_range_lookup_881899D8(float x, const void *list);
 void fn_8867A908(Pc *pc, __vector4 *out, float frames);
 static __inline float dot3(__vector4 d) { __vector4 t = __vmsum3fp(d, d); return t.v[0]; }
 __vector4 *ts4_position_or_lookahead_8868CB18(__vector4 *out, Obj *o)
 {
     Pc *pc = o->pc;
     float x = o->x;
-    float lead = fn_881899D8(x, pc->f2c->lead);
-    float r = fn_881899D8(x, pc->f2c->radius);
+    float lead = ts4_range_lookup_881899D8(x, pc->f2c->lead);
+    float r = ts4_range_lookup_881899D8(x, pc->f2c->radius);
     __vector4 pos;
     __vector4 d;
     o->radius = r;

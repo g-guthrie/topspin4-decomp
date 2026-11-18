@@ -7,11 +7,11 @@
 
 /* 0x886811A0: call the random-float helper with the same value for both bounds. */
 typedef struct W7a811A0 { unsigned char pad[8]; float *p8; void *c; } W7a811A0;
-float fn_8861E598(void *c, float a, float b);
+float ts4_rng_range_8861E598(void *c, float a, float b);
 static __inline float *w7a_gp811A0(W7a811A0 *s) { return s->p8; }
 float ts4_call_float_same_args_886811A0(W7a811A0 *s)
 {
-    return fn_8861E598(s->c, *w7a_gp811A0(s), *w7a_gp811A0(s));
+    return ts4_rng_range_8861E598(s->c, *w7a_gp811A0(s), *w7a_gp811A0(s));
 }
 
 /* 0x886C4878: is x inside [first->lo, last->hi] of a non-empty pointer range. */

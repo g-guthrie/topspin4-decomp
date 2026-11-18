@@ -8284,6 +8284,14 @@
       "src/xbox360/me_ts4_swing_category_walk_886AFDF8.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_swing_category_walk_886AFDF8.c"
+      },
+      "src/xbox360/me_ts4_rng_range_8861E598.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_rng_range_8861E598.c"
+      },
+      "src/xbox360/me_ts4_range_lookup_881899D8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_range_lookup_881899D8.c"
       }
     }
   }

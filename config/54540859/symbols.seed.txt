@@ -32178,3 +32178,5 @@ ts4_layer_recompute_tick_window = .text:0x886D1490; // type:function size:0xE4
 ts4_mat_pretranslate_by_body_886633E8 = .text:0x886633E8; // type:function size:0xF4
 ts4_mgr_shutdown_88657DA8 = .text:0x88657DA8; // type:function size:0x10C
 ts4_swing_category_walk_886AFDF8 = .text:0x886AFDF8; // type:function size:0x3AC
+ts4_rng_range_8861E598 = .text:0x8861E598; // type:function size:0xB0
+ts4_range_lookup_881899D8 = .text:0x881899D8; // type:function size:0xD4

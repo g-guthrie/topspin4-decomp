@@ -35,7 +35,7 @@ void gp2_write_selection_score(
 )
 {
     (void)brain_f; (void)player_state_5d9; (void)volley_flag_table; (void)player_state_bd5;
-    /* side_offset = min(record0.side_offset, record1.side_offset); curve = fn_881899D8(tuning+0x188, side_offset);
+    /* side_offset = min(record0.side_offset, record1.side_offset); curve = ts4_range_lookup_881899D8(tuning+0x188, side_offset);
        curve_total = curve + side_offset   -> query->side_offset (+0x24) */
     for (int w = 0; w < record->windows.count; w++) {
         struct Gp2ReachWindow *win = (struct Gp2ReachWindow *)((char *)&record->windows + record->windows.offset) + w;
@@ -124,7 +124,7 @@ int gp2_try_commit(
     /* On the first change after a reset (brain+0x29c == 0) a hit-quality grade is rolled:
        analyser inputs (PlayerState+0xf30..0xf3c):
          0xf3c = |player_xz - committed_sample_xz|      (distance to the ball spot, cm)
-         0xf30 = random in [0,1)                         (fn_8861E598, per-player RNG)
+         0xf30 = random in [0,1)                         (ts4_rng_range_8861E598, per-player RNG)
          0xf34 = ball+0x68                               (ball state value, ? speed)
          0xf38 = (float)(clock.tick - ball_event.tick)   (ticks since the last ball event)
        output 0xf68 (analyser at brain+0x19c). Grades written to PlayerState+0x3a0 / +0x3a4:
