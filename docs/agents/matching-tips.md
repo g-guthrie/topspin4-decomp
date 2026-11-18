@@ -739,3 +739,8 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   +0x368 double 57.29577951). Writing those literals took 88672130 from 132 off to 11 off; an extern array gave a different reloc.
 - A 16-byte struct of four floats passed by value arrives in two GPRs that are spilled with `std r5,0x20(r1); std r6,0x28(r1)`
   and read back with `lfs` (88672130).
+- Zero shared by a lane insert and a compare (ME, 88662738): when the target takes both `lvlx` (y = 0) and the fsel
+  compare from the same zero symbol, use one `static const float kZero` for both (`__lvlx(&kZero, 0)`). An extern zero for
+  the insert plus `kZero` for the compare gives 9 relocations instead of 7.
+- A float local declared with its initializer (`float z = p->v[2];`) is loaded earlier than the same read written as a
+  later assignment. On 88672130 this changed the diff from 11 to 6 off.
