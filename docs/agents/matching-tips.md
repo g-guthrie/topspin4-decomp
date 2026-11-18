@@ -274,6 +274,11 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   - A {begin,end} list inside a larger object whose address the target keeps (`addi r31,pred,0x5A0`): view it as
     `struct List *l = (struct List *)&pred->begin;` and test through an inline `empty(l)` (0x8867DF68, 193 -> 169).
 
+  - Size gaps from constants (0x886807C0, 0x7A8 -> 0x900 = target size): on LTCG with the pool primer, write
+    g_ts4_script_constants entries as LITERALS with the pool's exact values; each use then gets its own
+    `lis/addi` base like the target (an extern array is CSE'd to one base). Clamp as nested
+    `(a - b >= kZero)` max/min helpers gives the mfcr/lfsx/fsel table selects.
+
 ## Vector address form and matrix helpers (from AF1; full notes in docs/agents/near-misses/AF1.md)
 - Address form is fixed when the address is CSE'd: `base+K` used twice or more gives `addi rT,base,K; lvx128 v,r0,rT`;
   used once it gives `li rK,K; lvx128 v,base,rK`, with the `li` register shared by every base using K once. Indexing

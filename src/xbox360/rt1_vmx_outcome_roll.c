@@ -55,10 +55,12 @@ double sqrt(double x);
 #endif
 
 /* x clamped to [lo, hi] with the game's two float selects. */
+static const float kZero = 0.0f;
+static RT1_INLINE float rt1_max(float a, float b) { return (a - b >= kZero) ? a : b; }
+static RT1_INLINE float rt1_min(float a, float b) { return (a - b >= kZero) ? b : a; }
 static RT1_INLINE float rt1_clamp(float x, float lo, float hi)
 {
-    x = (x - lo < 0.0f) ? lo : x;
-    return (x - hi < 0.0f) ? x : hi;
+    return rt1_min(rt1_max(x, lo), hi);
 }
 
 /* Replace the x (mask 8) or z (mask 2) component of v with a float. */
@@ -85,6 +87,16 @@ static RT1_INLINE __vector4 rt1_normalize3(__vector4 v)
     return __vsel(__vmulfp(v, r), len_sq, is_zero);
 }
 
+/*
+ * 2026-11-18 (ME): LTCG + pp1_pool_primer.c, /Oc: same size 0x900, 548 off (was 0x7A8, 568 off).
+ * Semantic notes (no VMX checker): the script constants are written as literals with the pool's exact
+ * values (1.0, -1.0, 0.1, 200, 75, -75, 40000) so they land in the primed pool at their original
+ * offsets; the zero is a file-scope `kZero = 0.0f` instead of the extern g_ts4_event_value (also 0.0f);
+ * the clamp is max-then-min written as `(a - b >= kZero)` selects, which equals the old
+ * `(x - lo < 0) ? lo : x` / `(x - hi < 0) ? x : hi` for all ordered inputs (fsel in both);
+ * zero/one are read after fn_8866E318. Remaining: the target keeps the zero in f31 from
+ * g_ts4_event_value and compares against it (we rematerialise kZero), one more FPR / one fewer GPR.
+ */
 /* Swing_DLL.xex 0x886807C0 */
 ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1ShotPlan *plan,
                                    __vector4 *target, struct Rt1PlayerCtxO *pc, ts4_bool forced)
@@ -93,8 +105,7 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
     ts4_u32 side_tag = pc->team->state->side_tag;
     ts4_bool serve = pc->match->flow->state == RT1_MATCH_STATE_SERVE;
     struct Rt1CourtBounds bounds;
-    const float zero = g_ts4_event_value;
-    const float one = RT1_K(0);
+    float zero, one;
     float p, roll1, roll2, roll3, let_p;
     ts4_bool gate, let, error, net, off, to_net, to_out, to_in;
     ts4_u8 open, may_out;
@@ -103,6 +114,8 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
     ts4_u32 outcome;
 
     fn_8866E318(pc->match, serve, &bounds);
+    zero = kZero;
+    one = 1.0f;
     p = rt1_clamp(pc->state->fault_probability + pc->state->error_bonus, zero, one);
     roll1 = fn_8861E598(&pc->world->rng, zero, one);
     roll2 = fn_8861E598(&pc->world->rng, zero, one);
@@ -137,7 +150,7 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
 
     tgt = *target;
     aim = tgt;
-    min_depth = RT1_K(0x604);
+    min_depth = 75.0f;
     *out = 0;
 
     if (to_in) {
@@ -155,7 +168,7 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
             if (!off) {
                 /* Aimed inside: re-aim with the out efficiency, then push past the nearest line. */
                 struct Rt1PlayerStateO *ps = pc->state;
-                float lim = RT1_K(0x2AC);
+                float lim = 0.1f;
                 ps->quad_efficiency = ps->out_efficiency + one;
                 if (fabs(pc->state->stick_x) < lim && fabs(pc->state->stick_y) < lim) {
                     pc->state->stick_x = zero;
@@ -177,12 +190,12 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
                 d2 = (c2.v[0] - aim.v[0]) * (c2.v[0] - aim.v[0]) + (c2.v[2] - aim.v[2]) * (c2.v[2] - aim.v[2]);
                 d1 = (c1.v[0] - aim.v[0]) * (c1.v[0] - aim.v[0]) + (c1.v[2] - aim.v[2]) * (c1.v[2] - aim.v[2]);
                 d3 = (c3.v[0] - aim.v[0]) * (c3.v[0] - aim.v[0]) + (c3.v[2] - aim.v[2]) * (c3.v[2] - aim.v[2]);
-                d = RT1_K(0x38);
+                d = -1.0f;
                 best = aim;
                 if (d2 < d1 && d2 < d3) { d = d2; best = c2; }
                 if (d1 < d2 && d1 < d3) { d = d1; best = c1; }
                 if (d3 < d1 && d3 < d2) { d = d3; best = c3; }
-                if (d > RT1_K(0x614)) {
+                if (d > 40000.0f) {
                     /* More than 200 cm from the court: the shot is played In after all. */
                     float lim = -bounds.x_max;
                     tgt = aim;
@@ -191,7 +204,7 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
                     tgt = rt1_set_z(tgt, rt1_clamp(tgt.v[2], bounds.z_min, bounds.z_max));
                     goto done;
                 } else {
-                    float dist = fn_8861E598(&pc->world->rng, (float)sqrt(d), RT1_K(0x364));
+                    float dist = fn_8861E598(&pc->world->rng, (float)sqrt(d), 200.0f);
                     float t = dist;
                     __vector4 moved = __vmaddfp(rt1_normalize3(__vsubfp(best, aim)), __vspltw(__lvlx(&t, 0), 0), aim);
                     *(__vector4 *)&tmp = moved;
@@ -208,9 +221,9 @@ ts4_u32 *ts4_outcome_roll_886807C0(ts4_u32 *out, void *let_analysers, struct Rt1
 
 done:
     if (tgt.v[0] > zero && tgt.v[0] < min_depth)
-        tgt = rt1_set_x(tgt, RT1_K(0x604));
-    if (tgt.v[0] < zero && tgt.v[0] > RT1_K(0x610))
-        tgt = rt1_set_x(tgt, RT1_K(0x610));
+        tgt = rt1_set_x(tgt, 75.0f);
+    if (tgt.v[0] < zero && tgt.v[0] > -75.0f)
+        tgt = rt1_set_x(tgt, -75.0f);
     plan->target = tgt;
     *target = tgt;
     plan->outcome = outcome;
