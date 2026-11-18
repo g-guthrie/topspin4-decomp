@@ -42182,6 +42182,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_sphere_contains_point_8864FC70": 240},
     },
+    {
+        "source": "src/xbox360/me_ts4_ctl_release.cpp",
+        "object": "me_ts4_ctl_release.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_ctl_release_8868F318": 360},
+    },
 )
 
 

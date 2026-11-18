@@ -49167,3 +49167,7 @@ src/xbox360/me_ts4_owner_bind_children.cpp:
 src/xbox360/me_ts4_sphere_contains_point.c:
 	.pdata      start:0x88122D80 end:0x88122D88
 	.text       start:0x8864FC70 end:0x8864FD60
+
+src/xbox360/me_ts4_ctl_release.cpp:
+	.pdata      start:0x88123EC8 end:0x88123ED0
+	.text       start:0x8868F318 end:0x8868F480

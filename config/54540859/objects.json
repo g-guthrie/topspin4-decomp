@@ -8356,6 +8356,10 @@
       "src/xbox360/me_ts4_sphere_contains_point.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_sphere_contains_point.c"
+      },
+      "src/xbox360/me_ts4_ctl_release.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ctl_release.cpp"
       }
     }
   }
