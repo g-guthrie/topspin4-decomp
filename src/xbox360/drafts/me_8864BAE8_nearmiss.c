@@ -1,3 +1,4 @@
+/* agentA2 2026-11-18: still 2: value pointer local (2), copy of value (3), volatile lock load (2), o->lock re-read (16). */
 /* NEAR MISS 0x8864BAE8: 2 off, the parameter spill (stw r4,0x8c(r1)) is scheduled before the lock load;
  * target has it after. Open rule in matching-tips (parameter spill vs load). Sibling 0x8864BBB0 differs only in offsets
  * (lock at 0x24, list at 0xc). */

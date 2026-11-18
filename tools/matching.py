@@ -42224,6 +42224,18 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_mode_exit_886875D8": 308},
     },
+    {
+        "source": "src/xbox360/me_ts4_append_group_bindings_886CB3A8.c",
+        "object": "me_ts4_append_group_bindings_886CB3A8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_append_group_bindings_886CB3A8": 280},
+    },
+    {
+        "source": "src/xbox360/me_ts4_pose_subtract_8865A6B8.c",
+        "object": "me_ts4_pose_subtract_8865A6B8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_pose_subtract_8865A6B8": 76},
+    },
 )
 
 

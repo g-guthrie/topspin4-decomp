@@ -1,3 +1,4 @@
+/* agentA2 2026-11-18: still 2: single local offset read (drops volatile) goes to 37 off; two copies of the local also 37. */
 /* NEAR MISS (2 instructions): target reads sides->offset once and copies it (mr r5,r9) where this
  * source issues a second volatile load. */
 /* 0x8866A7C0: decides whether the side at `idx` has a decisive lead in the current scoring unit.

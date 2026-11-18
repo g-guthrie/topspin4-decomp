@@ -1,3 +1,5 @@
+/* agentB 2026-11-18 pass 2: still 5 off (plain and LTCG). Pads 0-18 (7, 15 give 6), column-first, block temps for column/index/row,
+ * volatile column read, declaration swap column/mask, eindex2/eindex4, byte-difference index: all 5. */
 /* NEAR MISS 0x886CD580: 5 off, register swap between entry index and column. */
 /* 0x886CD580 (hand match): whether the current entry has the bit for the given pair set in the data
  * block's bit table (row = entry index * stride + column, tested against the pair's mask). False when

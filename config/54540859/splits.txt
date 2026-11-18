@@ -49202,3 +49202,10 @@ src/xbox360/me_ts4_owner_teardown_88647438.cpp:
 src/xbox360/me_ts4_mode_exit_886875D8.cpp:
 	.pdata      start:0x88123CF8 end:0x88123D00
 	.text       start:0x886875D8 end:0x8868770C
+
+src/xbox360/me_ts4_append_group_bindings_886CB3A8.c:
+	.pdata      start:0x88124BC0 end:0x88124BC8
+	.text       start:0x886CB3A8 end:0x886CB4C0
+
+src/xbox360/me_ts4_pose_subtract_8865A6B8.c:
+	.text       start:0x8865A6B8 end:0x8865A704

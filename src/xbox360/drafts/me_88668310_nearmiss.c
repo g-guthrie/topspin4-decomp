@@ -1,3 +1,4 @@
+/* agentA2 2026-11-18: skipped: commutative index-add operand order (tips: not covered when loaded off params); still 2. */
 /* NEAR MISS (2 instructions): commutative operand order of two index adds (side won, receiver run)
  * is swapped. An unsigned (sizeof) side stride fixed a third site. */
 /* 0x88668310: records a point won by the current server. Skipped while a replay or challenge is

@@ -1,3 +1,4 @@
+/* agentA2 2026-11-18: skipped: operand order with both operands loaded off a parameter (tips: not covered); still 1. */
 /* NEAR MISS (1 instruction): `add r3,r11,r10` (pos + data) is emitted as (data, pos); no source
  * form, helper or pad count flips it (operands loaded straight off the parameter). */
 /* 0x88655310: writes `n` bytes into a circular byte buffer at the write cursor, wrapping to the

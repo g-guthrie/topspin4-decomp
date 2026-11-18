@@ -1,3 +1,4 @@
+/* agentA2 2026-11-18: skipped: operand order, operand_order_pad 0..9 already tried; still 3. */
 /* NEAR MISS (3 instructions): the slot-entry address add has its operands (and the r8/r9 pair)
  * swapped. Tried named table local, helper, expression orders and operand_order_pad 0..9. */
 /* 0x886A5C88: posts the player's role cue for the current rally slot: 0x13F624D9 (mode 0) when the

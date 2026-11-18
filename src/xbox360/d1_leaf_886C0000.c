@@ -4,10 +4,10 @@
 
 extern void ts4_on_clip_message_886C71C8(void *);
 extern void ts4_data_condition_eval_886C9F08(void *);
-extern void fn_886CB3A8(void *);
+extern void ts4_append_group_bindings_886CB3A8(void *);
 extern void ts4_object_finalize(void *);
 
 void ts4_forward_adjusted_30_886CDFD0(char *object)
 {
-    fn_886CB3A8(object + 0x30);
+    ts4_append_group_bindings_886CB3A8(object + 0x30);
 }

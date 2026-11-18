@@ -1,3 +1,4 @@
+/* agentA2 2026-11-18: still 3 best: block cam local, rig before anchor; chained g->rig->cam forms 4. */
 /* NEAR MISS (3 instructions): the reloaded camera pointer is allocated to r4 instead of r11. */
 /* 0x88661D28 / 0x886624C8: points the scene's camera target at the current court anchor and clears its
  * pending shot slot; the second variant also selects the named camera preset. */

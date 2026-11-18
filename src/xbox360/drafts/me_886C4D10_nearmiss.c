@@ -1,3 +1,4 @@
+/* agentA2 2026-11-18: still 3: named it2=it+1 before first call (3), volatile it2 (21). */
 /* NEAR MISS draft (not built, not counted). See docs/agents/matching-tips.md, "Near misses parked". */
 typedef unsigned int u32;
 typedef struct Acc { u32 f0; float f4; } Acc;

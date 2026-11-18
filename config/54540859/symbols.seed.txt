@@ -32205,3 +32205,5 @@ ts4_court_res_bind = .text:0x886CDED0; // type:function size:0x100
 ts4_controller_activate = .text:0x886B83B0; // type:function size:0xB8
 ts4_owner_teardown_88647438 = .text:0x88647438; // type:function size:0x170
 ts4_mode_exit_886875D8 = .text:0x886875D8; // type:function size:0x134
+ts4_append_group_bindings_886CB3A8 = .text:0x886CB3A8; // type:function size:0x118
+ts4_pose_subtract_8865A6B8 = .text:0x8865A6B8; // type:function size:0x4C

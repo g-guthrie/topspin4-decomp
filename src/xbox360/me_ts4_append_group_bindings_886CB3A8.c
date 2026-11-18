@@ -1,8 +1,7 @@
-/* NEAR MISS (2 instructions): memcpy argument setup emits `addi r4,r1,0x50` before `li r5,0x10`;
- * the game has the size first. Tried literal/sizeof size, by-value/by-pointer helper, dst forms, C++. */
 /* 0x886CB3A8: for every group in the source description and every id listed in that group, appends a
  * 16-byte binding {group tag, id, weight = event default, active = 0} to the owner's fixed-capacity
- * binding array, dropping entries once the array is full. */
+ * binding array, dropping entries once the array is full. Matched by naming the memcpy size and source
+ * in locals first (puts `li r5,0x10` before `addi r4`). */
 void *memcpy(void *dst, const void *src, unsigned long n);
 typedef struct IdList { int offset; int count; } IdList;
 typedef struct Group { IdList ids; char p[0xc - 8]; unsigned int tag; } Group;
@@ -17,8 +16,8 @@ static __forceinline Group *groups_begin(Groups *t) { Group *r = 0; int off = t-
 static __forceinline Group *groups_end(Groups *t) { Group *r = 0; int off = t->offset; if (off != -1) r = (Group *)((char *)t + (t->count * sizeof(Group) + off)); return r; }
 static __forceinline unsigned int *ids_begin(IdList *t) { unsigned int *r = 0; if (t->offset != -1) r = (unsigned int *)((char *)t + t->offset); return r; }
 static __forceinline unsigned int *ids_end(IdList *t) { unsigned int *r = 0; if (t->offset != -1) r = (unsigned int *)((char *)t + (t->count * 4 + t->offset)); return r; }
-static __forceinline void push(Bindings *b, const Binding *v) { if (b->count < b->capacity) { memcpy((char *)b + (b->count * sizeof(Binding) + b->offset), (const void *)v, sizeof(Binding)); b->count++; } }
-void f(Owner *o)
+static __forceinline void push(Bindings *b, const Binding *v) { if (b->count < b->capacity) { { unsigned long n = sizeof(Binding); const void *s = v; memcpy((char *)b + (b->count * sizeof(Binding) + b->offset), s, n); } b->count++; } }
+void ts4_append_group_bindings_886CB3A8(Owner *o)
 {
     Groups *gs = &o->src->desc->groups;
     Group *g, *ge;

@@ -1,3 +1,5 @@
+/* agentB 2026-11-18 pass 2: still 5 off (plain and LTCG). Non-volatile offset (25 off, 0x134), shared/copied offset local (28),
+ * volatile first + at() second (19), C++ reference accessors (19-25): none reproduce the dead mr r6,r9. */
 /* NEAR MISS (5 instructions): target reads sides->offset once and keeps a dead copy (mr r6,r9);
  * this source issues a second volatile load instead. Same pattern as 0x8866A7C0. */
 /* 0x8866B460: decides whether the side at `idx` wins the current unit once its pending point is

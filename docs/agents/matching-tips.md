@@ -769,3 +769,11 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   member (correct slot via placeholder virtuals) and calling it through an inline member fixed both 0x886CDED0 (9 off:
   result stores kept ahead of the next ref load) and 0x886B83B0 (2 off: `li r6,1` placement). Try this first on any
   near miss whose residue sits around a `->vt->` call.
+
+## Call argument setup order: name the arguments in a block (agentA2, 2026-11-18)
+- When a call's argument registers are set up in the wrong order (e.g. `addi r4,r1,X` before `li r5,0x10` for
+  memcpy), put the call in a block and name the late argument(s) in locals first:
+  `{ unsigned long n = sizeof(T); const void *s = v; memcpy(dst, s, n); }` fixed 0x886CB3A8 (2 off to match).
+  It did not help the `li r6,0` case in 0x886AC9D8.
+- Vector load order inside `a = a - b` (b loaded first): read `a` into a local and read `b` through a volatile cast,
+  `{ __vector4 x = o->v; o->v = __vsubfp(x, *(volatile __vector4 *)&d->v); }`, fixed 0x8865A6B8 (3 off to match).

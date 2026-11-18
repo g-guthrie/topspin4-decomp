@@ -1,3 +1,4 @@
+/* agentA2 2026-11-18: still 2 best; for-loop early return (36), int settled (34), comma init (15), bool C++ (6), int i<600 (3), constant inline (39). */
 /* NEAR MISS (2 instructions): the two zero initialisations (loop count r30, settled flag r11) are
  * emitted in the opposite order. Tried every declaration/assignment order of the three locals. */
 /* 0x886AB1A8: steps the ball simulation until the ball's vertical speed drops under the settle
