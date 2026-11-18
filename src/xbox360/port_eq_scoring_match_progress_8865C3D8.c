@@ -2,7 +2,7 @@
  * Remaining: which of the three players_rel loads (first lwz / clrrwi copy / second lwz) feeds sets_won[0],
  * sets_won[1] and points[1]; ~400 orderings of the load statements (hill-climb) and &players[i] forms all stop at 11.
  * fn_equiv --flags /Oc --seed 1: EQUIVALENT (71 valid of 239, 9/9 blocks); per-player (self,i) accessors also stop at 11. */
-#include "../rt1_scoring.h"
+#include "rt1_scoring.h"
 
 static struct Rt1ScorePlayer *ts4_score_player(struct Rt1ScoreState *s, int i)
 {

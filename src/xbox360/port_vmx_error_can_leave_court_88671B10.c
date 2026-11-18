@@ -6,7 +6,7 @@
    (two arc edges at reach and max reach, plus a forward point) against the court target box. */
 typedef unsigned char ts4_u8;
 typedef unsigned int ts4_u32;
-#include "../ts4_vector.h"
+#include "ts4_vector.h"
 #ifdef _MSC_VER
 #pragma intrinsic(__vrlimi, __vmaddfp, __vsubfp, __vmulfp, __vnmsubfp, __vpermwi, __vspltw)
 #endif

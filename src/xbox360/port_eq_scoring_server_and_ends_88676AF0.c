@@ -11,7 +11,7 @@
  * every odd number of games, counted as ceil(games/2) per set plus the tie-break end changes);
  * flags ends_changed when side 0's end differs from before.
  */
-#include "../rt1_scoring.h"
+#include "rt1_scoring.h"
 
 #define TS4_COURT_DEUCE 0x23BAED9Eu
 #define TS4_COURT_AD    0xD826E563u
