@@ -1,3 +1,5 @@
+/* agentA2 (b120 real-virtuals pass): C++ with the vtable callees as real virtuals (correct slots) gives the same 5 off;
+   tried up to 8 variants (inline members, guard object, zero/hash locals, early-return spellings). Still 5 off. */
 /* NEAR MISS 0x88656378: 5 off, block order of the final clamp (target falls through to "4" and
  * branches to "i"); invariant over ternary/if/early-return spellings. */
 /* 0x88656378 (hand match): slot index (0-3) of the entry with the given key in the source's entry

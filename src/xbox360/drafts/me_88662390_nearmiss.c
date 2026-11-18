@@ -1,3 +1,4 @@
+/* C++ retry (agentB, 2026-11-18): Impl as a class with real virtuals (create slot 1, init slot 2): still 10 off, same r27-r31 naming residue; make() inline, desc local copies, reference/pointer to the registry global: 10-47. */
 /* 0x88662390 (draft, 10 instructions off, all callee-saved register naming: the target keeps the
  * registry pointer in r31, the descriptor in r29, the address base in r28). */
 /* 0x88662390 (draft): binds the object to a descriptor: creates the fixed-kind helper and the

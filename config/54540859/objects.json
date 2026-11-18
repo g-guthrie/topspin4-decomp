@@ -8384,6 +8384,14 @@
       "src/xbox360/me_ts4_controller_activate_886B83B0.cpp": {
         "status": "Matching",
         "source": "xbox360/me_ts4_controller_activate_886B83B0.cpp"
+      },
+      "src/xbox360/me_ts4_owner_teardown_88647438.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_owner_teardown_88647438.cpp"
+      },
+      "src/xbox360/me_ts4_mode_exit_886875D8.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_mode_exit_886875D8.cpp"
       }
     }
   }

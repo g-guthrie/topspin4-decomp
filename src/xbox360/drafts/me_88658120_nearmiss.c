@@ -1,3 +1,5 @@
+/* agentA2 (b120 real-virtuals pass): C++ with the vtable callees as real virtuals (correct slots) gives the same 7 off;
+   tried up to 8 variants (inline members, guard object, zero/hash locals, early-return spellings). Still 7 off. */
 /* NEAR MISS (7 off: register numbering only; target keeps r10 for the 12 and uses r9/r8/r7 for
  * the vtable slot and hash, ours reuses r10). Tried helper/locals/if-guard/types.
  * 0x88658120: change the object's enabled flag; on a real change, broadcast

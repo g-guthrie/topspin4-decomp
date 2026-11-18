@@ -49194,3 +49194,11 @@ src/xbox360/me_ts4_court_res_bind_886CDED0.cpp:
 src/xbox360/me_ts4_controller_activate_886B83B0.cpp:
 	.pdata      start:0x88124858 end:0x88124860
 	.text       start:0x886B83B0 end:0x886B8468
+
+src/xbox360/me_ts4_owner_teardown_88647438.cpp:
+	.pdata      start:0x88122A08 end:0x88122A10
+	.text       start:0x88647438 end:0x886475A8
+
+src/xbox360/me_ts4_mode_exit_886875D8.cpp:
+	.pdata      start:0x88123CF8 end:0x88123D00
+	.text       start:0x886875D8 end:0x8868770C

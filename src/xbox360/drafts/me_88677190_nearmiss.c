@@ -1,3 +1,4 @@
+/* C++ retry (agentB, 2026-11-18): server_for as a real virtual (slot 8) called through an inline member fixes residue (1), but the build is 48 off (size 0x1E0 vs 0x1EC: `0 % n` still folded); count/mod/zero-local variants all 48. C kept (46). */
 /* NEAR MISS 0x88677190: 46 off. Open: (1) the virtual call's argument (ctx->match) is loaded before the
  * vtable in the target; (2) the target keeps `0 % n` unfolded with each branch duplicating the two slot
  * stores; (3) `clrrwi r8,r9,0` on the incremented counter. Sibling 0x886775C8 has the same shape. */
