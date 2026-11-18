@@ -268,6 +268,12 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
     LTCG-inlined extern getter all fold it into the field offsets; only a `volatile` copy of the pointer keeps it
     (161 -> 100 off, but adds a stack store). Open.
 
+  - abs as an mfcr/lfsx table select (0x889C1C80, open): on the LTCG route only the `(a - b >= kZero) ? a : b` shape
+    if-converts; `(w >= kZero) ? w : -w`, `k_sign[w < z] * w`, a select helper and a `neg` local all stay branches,
+    and a TU-defined zero gives a bare `fsel`. The target compares w directly against the extern zero.
+  - A {begin,end} list inside a larger object whose address the target keeps (`addi r31,pred,0x5A0`): view it as
+    `struct List *l = (struct List *)&pred->begin;` and test through an inline `empty(l)` (0x8867DF68, 193 -> 169).
+
 ## Vector address form and matrix helpers (from AF1; full notes in docs/agents/near-misses/AF1.md)
 - Address form is fixed when the address is CSE'd: `base+K` used twice or more gives `addi rT,base,K; lvx128 v,r0,rT`;
   used once it gives `li rK,K; lvx128 v,base,rK`, with the `li` register shared by every base using K once. Indexing

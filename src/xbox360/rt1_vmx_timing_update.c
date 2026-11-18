@@ -48,6 +48,11 @@ static RT1_INLINE __vector4 rt1_normalize3(__vector4 v, __vector4 half, __vector
     return __vsel(__vmulfp(v, r), len_sq, is_zero);
 }
 
+/* The predictor sample list (+0x5A0) seen as its own {begin, end} pair: the target keeps a pointer to it
+   (addi r31,pred,0x5A0). LTCG + pp1_pool_primer.c: 169 off (was 193). */
+struct Rt1SampleList { struct Rt1BallSample *begin, *end; };
+static RT1_INLINE int rt1_sl_empty(const struct Rt1SampleList *l) { return l->begin == l->end; }
+
 /* Swing_DLL.xex 0x8867DF68 */
 void ts4_timing_state_update_8867DF68(struct Rt1SubController *self)
 {
@@ -55,16 +60,17 @@ void ts4_timing_state_update_8867DF68(struct Rt1SubController *self)
     const struct Rt1TimingCurves *curves;
     struct Rt1TimingState *timing;
     struct Rt1BallPredictor *pred;
+    const struct Rt1SampleList *sl;
 
     curves = &pc->tuning->volley;
     if (!pc->state->is_volley)
         curves = &pc->tuning->baseline;
-    pc = self->pc;
-    timing = &pc->state->timing;
-    pred = pc->ball->predictor;
+    timing = &self->pc->state->timing;
+    pred = self->pc->ball->predictor;
+    sl = (const struct Rt1SampleList *)&pred->samples;
     timing->base_frame = 600;
 
-    if (pred->samples == pred->samples_end) {
+    if (rt1_sl_empty(sl)) {
         timing->value = g_ts4_script_constants[0x38 / 4];
     } else {
         struct Rt1PlayerCtxView *p = self->pc;
@@ -108,12 +114,12 @@ void ts4_timing_state_update_8867DF68(struct Rt1SubController *self)
         ref_x = (float)fabs(ref.v[0]);
 
         last = 0;
-        if (pred->samples != pred->samples_end)
-            last = pred->samples_end - 1;
+        if (!rt1_sl_empty(sl))
+            last = sl->end - 1;
         frames = last->tick - p->match->flow->frame;
         s = 0;
-        if (pred->samples != pred->samples_end)
-            s = pred->samples;
+        if (!rt1_sl_empty(sl))
+            s = sl->begin;
         for (; s != last; s++) {
             tmp = ref_x - (float)fabs(s->pos[0]);
             if (*(unsigned short *)&tmp & 0x8000) {
