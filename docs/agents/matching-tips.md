@@ -716,3 +716,7 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   we emit `fsubs zero-busy` + a separate kZero load. `zero = kZero` or a static `g_ts4_event_value` makes it worse.
 - Register-numbering residues that did not move with any rule (≈25-45 variants each): 0x88695C48 (r9/r10 after two
   graph calls), 0x8866A1C8 (win/lose address reassociation: `(rel+base)+24w` and `(rel-24w)+base+24`).
+- (886CD3C8, update) Writing the select as an explicit `__fself(g_ts4_script_constants[26 + (-busy < zero)], zero, busy)`
+  (intrinsic declared as in d9t_list_scale_8847AAF8.c) gets the target's `fneg; fcmpu -busy,f1` against the call's
+  zero and the exact size (29 -> 22 off). The index then comes out as `li 1; blt; li 0; slwi`, not mfcr/rlwinm/or;
+  eight index spellings (`!(x >= z)`, `z > x`, pointer-offset form...) all compile the same. Primer in or out: same.
