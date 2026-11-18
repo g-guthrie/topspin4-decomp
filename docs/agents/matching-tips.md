@@ -759,3 +759,6 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
 - A 16-byte struct copy emitted as `ld; ld; std; std` (ME, 881896F8): give the struct two 8-byte members
   (`struct { __int64 lo, hi; }` or two doubles) and read it as a vector through a cast. A `float v[4]` member copies with
   four `lwz`/`stw`. This took 881896F8 from 77 off to 63.
+- Field increment whose following owner/vtable loads the target keeps AFTER the store (0x8865C818, 20 -> 14 off):
+  increment through a plain block-local pointer, `{ int *pc = &self->count; (*pc)++; }` (or an inline `inc(int *)`).
+  `self->count++`, `__restrict` and an inline taking `self` let the loads move above the store.
