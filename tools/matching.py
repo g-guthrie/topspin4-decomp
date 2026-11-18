@@ -42134,6 +42134,24 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_scoring_add_game_88676960": 396},
     },
+    {
+        "source": "src/xbox360/me_ts4_node_last_top_ancestor_886C3B20.c",
+        "object": "me_ts4_node_last_top_ancestor_886C3B20.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_node_last_top_ancestor": 196},
+    },
+    {
+        "source": "src/xbox360/me_ts4_player_select_entry_886CEA10.c",
+        "object": "me_ts4_player_select_entry_886CEA10.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_player_select_entry": 180},
+    },
+    {
+        "source": "src/xbox360/me_ts4_ground_segment_hit.c",
+        "object": "me_ts4_ground_segment_hit.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_ground_segment_hit_886937F0": 236},
+    },
 )
 
 

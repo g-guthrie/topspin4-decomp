@@ -49126,3 +49126,14 @@ src/xbox360/me_ts4_scoring_reset_88674ED0.c:
 src/xbox360/me_ts4_pair_list_reset_886C5DB0.c:
 	.pdata      start:0x88124A20 end:0x88124A28
 	.text       start:0x886C5DB0 end:0x886C5E14
+
+src/xbox360/me_ts4_node_last_top_ancestor_886C3B20.c:
+	.text       start:0x886C3B20 end:0x886C3BE4
+
+src/xbox360/me_ts4_player_select_entry_886CEA10.c:
+	.pdata      start:0x88124CE8 end:0x88124CF0
+	.text       start:0x886CEA10 end:0x886CEAC4
+
+src/xbox360/me_ts4_ground_segment_hit.c:
+	.pdata      start:0x88124010 end:0x88124018
+	.text       start:0x886937F0 end:0x886938DC
