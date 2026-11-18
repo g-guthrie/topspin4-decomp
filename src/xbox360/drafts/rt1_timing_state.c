@@ -80,7 +80,7 @@ struct Rt1Controller {
 extern float g_ts4_script_constants[];  /* .rdata pool 0x880D0F70; +0x38 = -1.0f */
 extern float lbl_8814B440[];            /* 0.0f */
 
-void fn_8867A908(struct Rt1Ctx *ctx, __vector4 *out, float ticks_ahead);
+void ts4_vec_with_offset_8867A908(struct Rt1Ctx *ctx, __vector4 *out, float ticks_ahead);
 void ts4_if_get_8865E730(__vector4 *v, unsigned int side_tag);
 int fn_881896F8(const struct Rt1Line *a, const void *b, __vector4 *pt, float *t1, float *t2);
 double fabs(double);
@@ -157,7 +157,7 @@ void ts4_timing_state_update_8867DF68(struct Rt1Controller *self)
         side.w = zero;
         side.x = -g->v28;
         side.z = g->v20;
-        fn_8867A908(ctx, &look, zero);
+        ts4_vec_with_offset_8867A908(ctx, &look, zero);
         ts4_if_get_8865E730(&look, *(unsigned int *)(ctx->link->owner + 0xb0));
         line.d = rt1_normalize3(*(__vector4 *)&side);
         line.p = look;

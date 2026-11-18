@@ -731,3 +731,6 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   (intrinsic declared as in d9t_list_scale_8847AAF8.c) gets the target's `fneg; fcmpu -busy,f1` against the call's
   zero and the exact size (29 -> 22 off). The index then comes out as `li 1; blt; li 0; slwi`, not mfcr/rlwinm/or;
   eight index spellings (`!(x >= z)`, `z > x`, pointer-offset form...) all compile the same. Primer in or out: same.
+- Out-parameter store scheduled after an `addi` the target puts before it (0x8865EF98, 2 -> 0 off): store through a
+  block-local restrict pointer, `{ int *__restrict fp = frame_out; *fp = -1; }`. `__restrict` on the parameter, a plain
+  block-local pointer or an inline store helper do not move it.

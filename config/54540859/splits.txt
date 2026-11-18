@@ -49107,3 +49107,11 @@ src/xbox360/me_ts4_rng_range_8861E598.c:
 
 src/xbox360/me_ts4_range_lookup_881899D8.c:
 	.text       start:0x881899D8 end:0x88189AAC
+
+src/xbox360/me_ts4_vec_with_offset_8867A908.c:
+	.pdata      start:0x88123930 end:0x88123938
+	.text       start:0x8867A908 end:0x8867A970
+
+src/xbox360/me_ts4_next_hitter_planned_frame_8865EF98.c:
+	.pdata      start:0x881232D8 end:0x881232E0
+	.text       start:0x8865EF98 end:0x8865F030

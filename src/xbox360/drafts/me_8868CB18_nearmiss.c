@@ -10,7 +10,7 @@ typedef struct State { char p[0x8e0]; __vector4 pos; } State;
 typedef struct Pc { char p[0x2c]; Curves *f2c; char p2[0x74 - 0x30]; State *f74; } Pc;
 typedef struct Obj { char p[0x10]; Pc *pc; __vector4 *target; char p2[0x68 - 0x18]; float x; float radius; } Obj;
 float ts4_range_lookup_881899D8(float x, const void *list);
-void fn_8867A908(Pc *pc, __vector4 *out, float frames);
+void ts4_vec_with_offset_8867A908(Pc *pc, __vector4 *out, float frames);
 static __inline float dot3(__vector4 d) { __vector4 t = __vmsum3fp(d, d); return t.v[0]; }
 __vector4 *ts4_position_or_lookahead_8868CB18(__vector4 *out, Obj *o)
 {
@@ -26,7 +26,7 @@ __vector4 *ts4_position_or_lookahead_8868CB18(__vector4 *out, Obj *o)
         d = __vsubfp(st->pos, *o->target);
         pos = st->pos;
         if (r * r < dot3(d)) {
-            fn_8867A908(pc, &pos, lead);
+            ts4_vec_with_offset_8867A908(pc, &pos, lead);
             *out = pos;
             return out;
         }

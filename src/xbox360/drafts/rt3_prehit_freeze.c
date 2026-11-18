@@ -42,7 +42,7 @@ struct Rt3Freeze {
     struct Rt3ClockHolder *clocks;    /* 0x1c */
 };
 
-unsigned char fn_8865EF98(struct Rt3World *world, unsigned *planned_frame);
+unsigned char ts4_next_hitter_planned_frame_8865EF98(struct Rt3World *world, unsigned *planned_frame);
 
 /* Swing_DLL.xex 0x8866F740: pre-hit freeze (rs_prehit_freeze): for the last cfg+0xA88 frames before the opponent's hit the
  * recovering player keeps the direction/power latched at window start; releasing the stick early stops him. */
@@ -62,7 +62,7 @@ void ts4_prehit_freeze_update_8866F740(struct Rt3Freeze *self)
     if (ctx->world->mode->mode == 2) {
         struct Rt3Match *match = (struct Rt3Match *)ctx->world->match;
         if (match->next_hitter != *(void **)((char *)ctx->team + 0x28)) {
-            if (fn_8865EF98(ctx->world, &planned))
+            if (ts4_next_hitter_planned_frame_8865EF98(ctx->world, &planned))
                 ctx->move->freeze_active = (unsigned)(planned - match->clock) < ctx->cfg0->cfg->freeze_window;
         }
     }
@@ -95,7 +95,7 @@ void ts4_prehit_freeze_update_8866F740(struct Rt3Freeze *self)
         return;
     } else {
         struct Rt3World *world = ctx->world;
-        unsigned char ok = fn_8865EF98(world, &planned);
+        unsigned char ok = ts4_next_hitter_planned_frame_8865EF98(world, &planned);
         unsigned char forever = 1;
         unsigned frames_to_hit;
         if (!ok) {

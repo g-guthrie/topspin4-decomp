@@ -19,7 +19,7 @@
 extern const float g_ts4_event_value;         /* 0.0f */
 extern const float g_ts4_script_constants[];  /* +0x2AC: 0.1f */
 
-ts4_bool fn_8865EF98(struct Rt1MatchView *match, int *frame_out);
+ts4_bool ts4_next_hitter_planned_frame_8865EF98(struct Rt1MatchView *match, int *frame_out);
 
 /* Move pair {LocalDirection, Power}. */
 struct Rt1Move {
@@ -97,7 +97,7 @@ void ts4_mover_prehit_freeze_8866F740(struct Rt1Mover *self)
     pc = self->pc;
     if (pc->match->mode->kind == 2) {
         struct Rt1MatchFlowM *flow = pc->match->flow;
-        if ((ts4_u32)flow->hitter_team != (ts4_u32)pc->team->team && fn_8865EF98((struct Rt1MatchView *)pc->match, &frame))
+        if ((ts4_u32)flow->hitter_team != (ts4_u32)pc->team->team && ts4_next_hitter_planned_frame_8865EF98((struct Rt1MatchView *)pc->match, &frame))
             pc->state->move.frozen = (ts4_u32)(frame - flow->frame) < pc->world->settings->hit_lead_frames;
     }
 
@@ -122,7 +122,7 @@ void ts4_mover_prehit_freeze_8866F740(struct Rt1Mover *self)
         }
         {
             struct Rt1MatchM *match = self->pc->match;
-            ts4_bool planned = fn_8865EF98((struct Rt1MatchView *)match, &frame);
+            ts4_bool planned = ts4_next_hitter_planned_frame_8865EF98((struct Rt1MatchView *)match, &frame);
             ts4_bool known = 1;
             int hit;
             if (!planned) {

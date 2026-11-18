@@ -127,7 +127,7 @@ struct MatchFrameState {               /* instance->u30 */
  *     +0xD0,+0xD1,+0xD2,+0xD4 (relative to flags+0x90) and flags->+0x218.
  *  B. If (match->328 || match->329) && match->310 > 1 && flags->+0x78 (reset request):
  *     reset player0 (and player of team 1 when inst->u78 == 2): fn_8867AC60(player) computes the
- *     current ball-relative values (fn_8867A908) and sets player->state->+0x3F0..+0x3F4 flags
+ *     current ball-relative values (ts4_vec_with_offset_8867A908) and sets player->state->+0x3F0..+0x3F4 flags
  *     (thresholds from g_ts4_script_constants) - then state hashes 0xC1DF4081/0xAAC53E41 (+0x304),
  *     0xB388F633/0xD6FE8128 (+0x2FC), 0x87B1920F (+0x318), clears +0x2E8..+0x2F8 request bytes,
  *     match->318 = 0x85E3E155 and flags->+0x78 = 0.

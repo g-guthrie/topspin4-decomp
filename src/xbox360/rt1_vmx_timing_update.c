@@ -21,8 +21,8 @@
 extern const float g_ts4_event_value;           /* 0.0f */
 extern const float g_ts4_script_constants[]; /* +0x38: -1.0f */
 
-/* Look-ahead position of the player after `frames` frames (fn_8867A908). */
-void fn_8867A908(struct Rt1PlayerCtxView *pc, __vector4 *out, float frames);
+/* Look-ahead position of the player after `frames` frames (ts4_vec_with_offset_8867A908). */
+void ts4_vec_with_offset_8867A908(struct Rt1PlayerCtxView *pc, __vector4 *out, float frames);
 /* Court_MirrorBySide: mirror x and z for the far side tag. */
 void ts4_if_get_8865E730(__vector4 *v, ts4_u32 side_tag);
 /* Line2_Intersect: x-z intersection of two lines; false when parallel. */
@@ -90,7 +90,7 @@ void ts4_timing_state_update_8867DF68(struct Rt1SubController *self)
         side.v[3] = g_ts4_event_value;
         side.v[2] = p->body->line.dir.v[0];
         side.v[0] = -p->body->line.dir.v[2];
-        fn_8867A908(p, &pos, g_ts4_event_value);
+        ts4_vec_with_offset_8867A908(p, &pos, g_ts4_event_value);
         ts4_if_get_8865E730(&pos, p->team->state->side_tag);
 
         zero = __vspltisw(0);

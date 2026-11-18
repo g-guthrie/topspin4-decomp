@@ -89,7 +89,7 @@ extern float g_ts4_event_value;               /* 0.0f */
 void ts4_if_get_u32_off4c_8865EC70(void *out, Ts4Ctx *ctx);
 double fn_88564BF8(float x, float z);
 void fn_8817B608(float *angle);
-unsigned char fn_8865EF98(Ts4Team *team, int *out);
+unsigned char ts4_next_hitter_planned_frame_8865EF98(Ts4Team *team, int *out);
 void fn_8868C218(Ts4Controller *c, int mode);
 
 static float ts4_repo_at_net_x(Ts4RepoSettings *r)
@@ -148,7 +148,7 @@ void ts4_repositioning_human_mode_8869B928(Ts4Controller *c)
             }
             if (c->mode != old_mode && c->mode == 2) {
                 Ts4Team *team = ctx->team;
-                if (fn_8865EF98(team, (int *)pb)) {
+                if (ts4_next_hitter_planned_frame_8865EF98(team, (int *)pb)) {
                     if (*(unsigned int *)pb - team->clock->hit_frame < ctx->world->cfg->refuse_frames)
                         c->mode = old_mode;
                 }

@@ -24,7 +24,7 @@ __vector4 *ts4_if_get_u32_off4c_8865EC70(__vector4 *out, struct Rt1PlayerCtxR *p
 double fn_88564BF8(double y, double x);       /* atan2 */
 void fn_8817B608(float *angle);               /* wrap to [-pi, pi) */
 /* Match_NextHitterPlannedFrame. */
-ts4_bool fn_8865EF98(struct Rt1MatchR *match, int *frame_out);
+ts4_bool ts4_next_hitter_planned_frame_8865EF98(struct Rt1MatchR *match, int *frame_out);
 /* Repositioning_BehaviorFlags. */
 void fn_8868C218(struct Rt1Repositioning *r, int mode);
 
@@ -82,7 +82,7 @@ void ts4_repositioning_human_mode_8869B928(struct Rt1Repositioning *r)
             }
             if (r->mode != prev && r->mode == 2) {
                 struct Rt1MatchR *match = pc->match;
-                if (fn_8865EF98(match, &frame) &&
+                if (ts4_next_hitter_planned_frame_8865EF98(match, &frame) &&
                     (ts4_u32)(frame - match->flow->frame) < pc->world->settings->hit_lead_frames)
                     r->mode = prev;
             }

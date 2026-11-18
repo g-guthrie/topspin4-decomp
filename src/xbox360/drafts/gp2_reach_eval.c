@@ -66,7 +66,7 @@ static void gp2_evaluate_side(
     float anim_busy_ticks,               /* ts4_anim_busy_frames_886CD3C8(PlayerCtx->swing_anim) */
     const struct Gp2BallPrediction *prediction,
     float (*run_turn_time)(void *ctx, Gp2Vec3 delta),     /* fn_88564BF8 atan2 + ts4_table2d_eval_8826D278 table */
-    Gp2Vec3 (*predict_pos)(void *ctx, float ticks),       /* fn_8867A908 */
+    Gp2Vec3 (*predict_pos)(void *ctx, float ticks),       /* ts4_vec_with_offset_8867A908 */
     int prefer_left_flag                 /* PlayerState+0xbd2 */
 )
 {

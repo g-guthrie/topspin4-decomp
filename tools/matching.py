@@ -42122,6 +42122,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_mgr_shutdown_88657DA8": 268},
     },
+    {
+        "source": "src/xbox360/me_ts4_next_hitter_planned_frame_8865EF98.c",
+        "object": "me_ts4_next_hitter_planned_frame_8865EF98.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_next_hitter_planned_frame_8865EF98": 152},
+    },
 )
 
 

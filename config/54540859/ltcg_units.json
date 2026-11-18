@@ -2088,5 +2088,21 @@
   "symbols": {
    "ts4_range_lookup_881899D8": 212
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_vec_with_offset_8867A908.c",
+  "object": "me_ts4_vec_with_offset_8867A908.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/w6b_ctx_a7c0.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_vec_with_offset_8867A908": 104
+  }
  }
 ]

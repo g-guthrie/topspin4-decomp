@@ -8292,6 +8292,14 @@
       "src/xbox360/me_ts4_range_lookup_881899D8.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_range_lookup_881899D8.c"
+      },
+      "src/xbox360/me_ts4_vec_with_offset_8867A908.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vec_with_offset_8867A908.c"
+      },
+      "src/xbox360/me_ts4_next_hitter_planned_frame_8865EF98.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_next_hitter_planned_frame_8865EF98.c"
       }
     }
   }
