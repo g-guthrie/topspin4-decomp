@@ -49182,3 +49182,7 @@ src/xbox360/me_ts4_host_reset_886A6B68.c:
 src/xbox360/me_ts4_player_bind_copy_88668A58.c:
 	.pdata      start:0x88123498 end:0x881234A0
 	.text       start:0x88668A58 end:0x88668BF8
+
+src/xbox360/me_ts4_match_state_teardown_886B0F18.c:
+	.pdata      start:0x88124730 end:0x88124738
+	.text       start:0x886B0F18 end:0x886B1264

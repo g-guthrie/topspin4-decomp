@@ -32200,3 +32200,4 @@ ts4_ctl_release_8868F318 = .text:0x8868F318; // type:function size:0x168
 fn_886DEBF0 = .text:0x886DEBF0; // type:function size:0x84
 ts4_host_reset_886A6B68 = .text:0x886A6B68; // type:function size:0x190
 ts4_player_bind_copy = .text:0x88668A58; // type:function size:0x1A0
+ts4_match_state_teardown_886B0F18 = .text:0x886B0F18; // type:function size:0x34C
