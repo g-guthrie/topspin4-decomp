@@ -8328,6 +8328,14 @@
       "src/xbox360/me_ts4_retreat_update.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_retreat_update.c"
+      },
+      "src/xbox360/me_ts4_actor_phase_dispatch_886B80B8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_actor_phase_dispatch_886B80B8.c"
+      },
+      "src/xbox360/me_ts4_service_ref_init_886D8EF8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_service_ref_init_886D8EF8.c"
       }
     }
   }

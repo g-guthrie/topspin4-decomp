@@ -42152,6 +42152,18 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_ground_segment_hit_886937F0": 236},
     },
+    {
+        "source": "src/xbox360/me_ts4_actor_phase_dispatch_886B80B8.c",
+        "object": "me_ts4_actor_phase_dispatch_886B80B8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_actor_phase_dispatch": 292},
+    },
+    {
+        "source": "src/xbox360/me_ts4_service_ref_init_886D8EF8.c",
+        "object": "me_ts4_service_ref_init_886D8EF8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_service_ref_init": 228},
+    },
 )
 
 
