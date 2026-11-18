@@ -2119,5 +2119,21 @@
   "symbols": {
    "ts4_scoring_reset_88674ED0": 512
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_pair_list_reset_886C5DB0.c",
+  "object": "me_ts4_pair_list_reset_886C5DB0.obj",
+  "context": [
+   "src/xbox360/w7c_a.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_pair_list_reset_886C5DB0": 100
+  }
  }
 ]

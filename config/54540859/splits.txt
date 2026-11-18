@@ -49122,3 +49122,7 @@ src/xbox360/me_ts4_scoring_add_game_88676960.c:
 
 src/xbox360/me_ts4_scoring_reset_88674ED0.c:
 	.text       start:0x88674ED0 end:0x886750D0
+
+src/xbox360/me_ts4_pair_list_reset_886C5DB0.c:
+	.pdata      start:0x88124A20 end:0x88124A28
+	.text       start:0x886C5DB0 end:0x886C5E14
