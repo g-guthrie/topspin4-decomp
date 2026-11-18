@@ -262,6 +262,12 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
     TransformCoord chain (v7/v13 vs v13/v11), `vor128` copy of a constant stored to two members, `vmaddfp128` with the
     addend as destination, bdz/bdnz switch chains.
 
+  - XMVector3NotEqual materialised as `mfocrf; extrwi 1,24; cmplwi 1; beq` (0x889C1C80): an inline `Equal` returning
+    ts4_bool `(cr & 0x80) == 0x80`, tested `eq(...) != 1`. Returning int (or NotEqual directly) gives a CR branch or `nor`.
+  - A sub-struct pointer kept as `addi r31,base,0x9B0` (0x8869B928): accessor helpers, `__restrict`, pointer casts and an
+    LTCG-inlined extern getter all fold it into the field offsets; only a `volatile` copy of the pointer keeps it
+    (161 -> 100 off, but adds a stack store). Open.
+
 ## Vector address form and matrix helpers (from AF1; full notes in docs/agents/near-misses/AF1.md)
 - Address form is fixed when the address is CSE'd: `base+K` used twice or more gives `addi rT,base,K; lvx128 v,r0,rT`;
   used once it gives `li rK,K; lvx128 v,base,rK`, with the `li` register shared by every base using K once. Indexing

@@ -45,12 +45,13 @@ static RT1_INLINE __vector4 rt1_normalize3(__vector4 v, __vector4 half, __vector
     return __vsel(__vmulfp(v, r), len_sq, is_zero);
 }
 
-/* XMVector3NotEqual: some of x, y, z differ (vcmpeqfp. on the xyzx permutation, CR6 not "all"). */
-static RT1_INLINE ts4_bool rt1_not_equal3(__vector4 v, __vector4 w)
+/* XMVector3Equal: x, y, z all equal (vcmpeqfp. on the xyzx permutation, CR6 "all"). Callers test `!= 1`,
+   which keeps the extrwi + cmplwi 1 of the target (LTCG route: 94 off, was 162). */
+static RT1_INLINE ts4_bool rt1_equal3(__vector4 v, __vector4 w)
 {
     unsigned int cr;
     __vcmpeqfpR(__vpermwi(v, 24), __vpermwi(w, 24), &cr);
-    return (cr & 0x80) != 0x80;
+    return (cr & 0x80) == 0x80;
 }
 
 /* Swing_DLL.xex 0x889C1C80 */
@@ -74,7 +75,7 @@ void ts4_ball_bounce_response_889C1C80(struct Rt1Ball *ball, struct Rt1Vec4 *vel
     axis = lbl_880FC6B0;
     spin = ball->spin;
 
-    if (rt1_not_equal3(v, zero) && rt1_not_equal3(up, zero)) {
+    if (rt1_equal3(v, zero) != 1 && rt1_equal3(up, zero) != 1) {
         __vector4 half = __vcfsx(__vspltisw(1), 1);
         struct Rt1Vec4 copy = *vel;
         __vector4 dot = __vmsum3fp(rt1_normalize3(*(__vector4 *)&copy, half, zero), rt1_normalize3(up, half, zero));
