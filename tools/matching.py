@@ -42164,6 +42164,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_service_ref_init": 228},
     },
+    {
+        "source": "src/xbox360/me_ts4_key_table_init_886A06B0.c",
+        "object": "me_ts4_key_table_init_886A06B0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_key_table_init": 360},
+    },
 )
 
 

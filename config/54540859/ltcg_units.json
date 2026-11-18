@@ -2150,5 +2150,36 @@
   "symbols": {
    "ts4_retreat_update_88663208": 288
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_load_tagged_resource.c",
+  "object": "me_ts4_load_tagged_resource.obj",
+  "context": [
+   "src/xbox360/cw1_ctx_format_text.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_load_tagged_resource_88658A38": 344
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_follow_sync.c",
+  "object": "me_ts4_follow_sync.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_follow_sync_88649D10": 328
+  }
  }
 ]

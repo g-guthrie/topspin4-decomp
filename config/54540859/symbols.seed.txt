@@ -32191,3 +32191,6 @@ ts4_ground_segment_hit_886937F0 = .text:0x886937F0; // type:function size:0xEC
 ts4_retreat_update_88663208 = .text:0x88663208; // type:function size:0x120
 ts4_actor_phase_dispatch = .text:0x886B80B8; // type:function size:0x124
 ts4_service_ref_init = .text:0x886D8EF8; // type:function size:0xE4
+ts4_key_table_init = .text:0x886A06B0; // type:function size:0x168
+ts4_load_tagged_resource_88658A38 = .text:0x88658A38; // type:function size:0x158
+ts4_follow_sync_88649D10 = .text:0x88649D10; // type:function size:0x148

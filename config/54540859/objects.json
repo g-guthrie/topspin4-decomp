@@ -8336,6 +8336,18 @@
       "src/xbox360/me_ts4_service_ref_init_886D8EF8.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_service_ref_init_886D8EF8.c"
+      },
+      "src/xbox360/me_ts4_key_table_init_886A06B0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_key_table_init_886A06B0.c"
+      },
+      "src/xbox360/me_ts4_load_tagged_resource.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_load_tagged_resource.c"
+      },
+      "src/xbox360/me_ts4_follow_sync.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_follow_sync.c"
       }
     }
   }

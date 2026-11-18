@@ -49147,3 +49147,15 @@ src/xbox360/me_ts4_actor_phase_dispatch_886B80B8.c:
 src/xbox360/me_ts4_service_ref_init_886D8EF8.c:
 	.pdata      start:0x88124FD8 end:0x88124FE0
 	.text       start:0x886D8EF8 end:0x886D8FDC
+
+src/xbox360/me_ts4_key_table_init_886A06B0.c:
+	.pdata      start:0x881242F0 end:0x881242F8
+	.text       start:0x886A06B0 end:0x886A0818
+
+src/xbox360/me_ts4_load_tagged_resource.c:
+	.pdata      start:0x88123158 end:0x88123160
+	.text       start:0x88658A38 end:0x88658B90
+
+src/xbox360/me_ts4_follow_sync.c:
+	.pdata      start:0x88122AF0 end:0x88122AF8
+	.text       start:0x88649D10 end:0x88649E58
