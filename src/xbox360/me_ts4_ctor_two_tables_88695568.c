@@ -1,6 +1,6 @@
-/* NEAR MISS (7 off: lis/li/addi constant materialization order at the top; stores all match).
- * Tried base-init helper, vtable local, symbol types. 0x88695568: constructor; header words cleared, two embedded 0x44-byte tables
- * (own vtable, four words, twelve-word body) zeroed, then the count and the flag. */
+/* 0x88695568: constructor. Installs the vtable, clears the header words, initialises two embedded 0x44-byte
+ * tables (their own vtable, four words and a twelve-word body, all zero), then clears the count and the flag.
+ * The first two header zeros are stored through block-local pointers so that the vtable store is scheduled first. */
 typedef struct Quad { int w[4]; } Quad;
 typedef struct Sub { void *vt; int a[4]; union { int b[12]; Quad q[3]; }; } Sub;
 typedef struct Self { void *vt; int count; int f8, fc, f10, f14, f18, f1c; Sub s20; Sub s64; unsigned char flag; } Self;
@@ -12,8 +12,8 @@ static __inline void sub_init(Sub *p) { p->vt = lbl_880D7600; arr_init(p->b); p-
 Self *ts4_ctor_two_tables_88695568(Self *s)
 {
     s->vt = lbl_880F4608;
-    s->f8 = 0;
-    s->fc = 0;
+    { int *p = &s->f8; *p = 0; }
+    { int *p = &s->fc; *p = 0; }
     s->f10 = 0;
     s->f14 = 0;
     s->f18 = 0;

@@ -8400,6 +8400,10 @@
       "src/xbox360/me_ts4_pose_subtract_8865A6B8.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_pose_subtract_8865A6B8.c"
+      },
+      "src/xbox360/me_ts4_ctor_two_tables_88695568.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ctor_two_tables_88695568.c"
       }
     }
   }

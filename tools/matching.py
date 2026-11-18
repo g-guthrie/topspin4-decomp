@@ -42236,6 +42236,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_pose_subtract_8865A6B8": 76},
     },
+    {
+        "source": "src/xbox360/me_ts4_ctor_two_tables_88695568.c",
+        "object": "me_ts4_ctor_two_tables_88695568.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_ctor_two_tables_88695568": 212},
+    },
 )
 
 

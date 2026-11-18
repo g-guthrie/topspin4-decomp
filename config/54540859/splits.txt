@@ -49209,3 +49209,6 @@ src/xbox360/me_ts4_append_group_bindings_886CB3A8.c:
 
 src/xbox360/me_ts4_pose_subtract_8865A6B8.c:
 	.text       start:0x8865A6B8 end:0x8865A704
+
+src/xbox360/me_ts4_ctor_two_tables_88695568.c:
+	.text       start:0x88695568 end:0x8869563C
