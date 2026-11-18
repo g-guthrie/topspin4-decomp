@@ -32194,3 +32194,5 @@ ts4_service_ref_init = .text:0x886D8EF8; // type:function size:0xE4
 ts4_key_table_init = .text:0x886A06B0; // type:function size:0x168
 ts4_load_tagged_resource_88658A38 = .text:0x88658A38; // type:function size:0x158
 ts4_follow_sync_88649D10 = .text:0x88649D10; // type:function size:0x148
+ts4_owner_bind_children = .text:0x886BBD20; // type:function size:0x184
+ts4_sphere_contains_point_8864FC70 = .text:0x8864FC70; // type:function size:0xF0

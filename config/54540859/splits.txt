@@ -49159,3 +49159,11 @@ src/xbox360/me_ts4_load_tagged_resource.c:
 src/xbox360/me_ts4_follow_sync.c:
 	.pdata      start:0x88122AF0 end:0x88122AF8
 	.text       start:0x88649D10 end:0x88649E58
+
+src/xbox360/me_ts4_owner_bind_children.cpp:
+	.pdata      start:0x881248A8 end:0x881248B0
+	.text       start:0x886BBD20 end:0x886BBEA4
+
+src/xbox360/me_ts4_sphere_contains_point.c:
+	.pdata      start:0x88122D80 end:0x88122D88
+	.text       start:0x8864FC70 end:0x8864FD60

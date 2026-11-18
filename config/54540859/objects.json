@@ -8348,6 +8348,14 @@
       "src/xbox360/me_ts4_follow_sync.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_follow_sync.c"
+      },
+      "src/xbox360/me_ts4_owner_bind_children.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_owner_bind_children.cpp"
+      },
+      "src/xbox360/me_ts4_sphere_contains_point.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_sphere_contains_point.c"
       }
     }
   }

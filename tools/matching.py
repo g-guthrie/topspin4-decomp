@@ -42170,6 +42170,18 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_key_table_init": 360},
     },
+    {
+        "source": "src/xbox360/me_ts4_owner_bind_children.cpp",
+        "object": "me_ts4_owner_bind_children.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_owner_bind_children": 388},
+    },
+    {
+        "source": "src/xbox360/me_ts4_sphere_contains_point.c",
+        "object": "me_ts4_sphere_contains_point.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_sphere_contains_point_8864FC70": 240},
+    },
 )
 
 
