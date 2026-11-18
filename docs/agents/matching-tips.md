@@ -164,6 +164,10 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
 - Inside an inline body only the first load off the parameter becomes the copy, so the level that gets the copy tells
   you which pointer the helper took. The same expression written twice, or a local pointer used twice, gives no copy.
   Float fields give `fmr`. No flag is involved; 64-bit casts, `& 0xffffffff`, `/Oc`, `/fp:precise`, LTCG make no difference.
+- Struct copy chains `a = b; c = a;` emitted as `lwz; stw; lwz; clrrwi; stw; <reload base>; stw copy; lwz a.2nd; stw`
+  (0x8866F740): use an inline word-copy helper `copy(dst, src) { *(u32*)&dst->x = *(u32*)&src->x; *(u32*)&dst->y = ...; }`
+  called twice, `copy(&m->a, &m->b); copy(&self->pc->state->c, &m->a);`. dst/src may alias, which keeps the source
+  order and the reload of the second word; float fields must be copied as words or you get lfs/stfs.
 - Worked examples: src/xbox360/cl1_clrrwi_reload.c. 1,508 unmatched functions in the image contain this pattern.
 - clrrwi refinements (W4): pass the expression to the inline helper at each call site (`lempty(in->list)` then
   `lback(in->list)`), not a named local; a local caching the first accessor result turns the copy back into an `lwz`.
