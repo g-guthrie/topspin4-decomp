@@ -8324,6 +8324,10 @@
       "src/xbox360/me_ts4_ground_segment_hit.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_ground_segment_hit.c"
+      },
+      "src/xbox360/me_ts4_retreat_update.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_retreat_update.c"
       }
     }
   }

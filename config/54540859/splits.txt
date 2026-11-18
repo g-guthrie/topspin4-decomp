@@ -49137,3 +49137,6 @@ src/xbox360/me_ts4_player_select_entry_886CEA10.c:
 src/xbox360/me_ts4_ground_segment_hit.c:
 	.pdata      start:0x88124010 end:0x88124018
 	.text       start:0x886937F0 end:0x886938DC
+
+src/xbox360/me_ts4_retreat_update.c:
+	.text       start:0x88663208 end:0x88663328

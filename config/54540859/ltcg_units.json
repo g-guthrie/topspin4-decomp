@@ -2135,5 +2135,20 @@
   "symbols": {
    "ts4_pair_list_reset_886C5DB0": 100
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_retreat_update.c",
+  "object": "me_ts4_retreat_update.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_retreat_update_88663208": 288
+  }
  }
 ]
