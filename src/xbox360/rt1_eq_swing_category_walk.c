@@ -15,6 +15,8 @@
  * work/specs/RT1/rt1_eq_swing_category_walk.equiv.json). Not byte-matched: the original keeps the
  * list pointer in r4 across fn_8866D930 (LTCG: that callee never writes r4), so register
  * allocation differs from +0x1C on; a byte match needs the LTCG route with fn_8866D930 in context.
+ * 2026-11-18: the LTCG form in src/xbox360/drafts/me_886AFDF8_nearmiss.c (context rt2_rally_active.c) is
+ * 3 instructions off (one lfs scheduled early); see its header for the source shape.
  */
 #include "rt1_types.h"
 

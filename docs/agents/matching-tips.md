@@ -168,6 +168,14 @@ the LTCG route") before using it. docs/ltcg-ranges.json says which address range
   (0x8866F740): use an inline word-copy helper `copy(dst, src) { *(u32*)&dst->x = *(u32*)&src->x; *(u32*)&dst->y = ...; }`
   called twice, `copy(&m->a, &m->b); copy(&self->pc->state->c, &m->a);`. dst/src may alias, which keeps the source
   order and the reload of the second word; float fields must be copied as words or you get lfs/stfs.
+- A field load the target repeats after an inlined helper already read it (e.g. `pc->match` in a later block, 0x8866F740):
+  write the later read through the owner, `self->pc->match`, not via the cached `pc`; it is CSE'd back to the same base
+  register, but the field load itself is no longer merged with the inline's load.
+- Row walks over a self-relative array (0x886AFDF8, 3 off): iterate the row pointer, not a pointer to a
+  member; MSVC makes the `row+4` induction variable itself. A top test plus a bottom `beq` back on the
+  stop flag is `do { if (row == end) break; ...; row++; } while (!found);`. A member pointer that the target
+  keeps (`addi rX,st,0x358`) alongside absolute-offset stores off `st`: take `sel = &self->pc->state->sel` and
+  derive `st` from `sel` by subtraction, then write the first field through `sel`.
 - Worked examples: src/xbox360/cl1_clrrwi_reload.c. 1,508 unmatched functions in the image contain this pattern.
 - clrrwi refinements (W4): pass the expression to the inline helper at each call site (`lempty(in->list)` then
   `lback(in->list)`), not a named local; a local caching the first accessor result turns the copy back into an `lwz`.

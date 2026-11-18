@@ -9,7 +9,10 @@
  * player for the rest of the window; otherwise the latched move is forced.
  *
  * Verdict: EQUIVALENT (tools/fn_equiv.py; work/specs/RT1/rt1_eq_prehit_freeze.equiv.json). Not
- * byte-matched: the original copies the latched direction through `clrrwi rX,rY,0` (open idiom).
+ * byte-matched. 51 instructions off (2026-11-18, fn_check /Oc, TS4_MATCHING_DIR=work/matching-b105,
+ * same size 0x2B0): self/pc get r31/r30 (target r30/r31); both move copies load both words before
+ * storing (target stores the first word before loading the second and places the clrrwi later);
+ * the zero constant load in the return-of-serve path is scheduled before the stb.
  */
 #include "rt1_types.h"
 
@@ -74,6 +77,14 @@ struct Rt1Mover {                          /* locomotion mover */
     struct Rt1PlanLink *link;              /* +0x1C */
 };
 
+/* Bitwise move copy (field by field, as words). */
+/* Bitwise move copy (both words at once). */
+struct Rt1MoveWords { ts4_u32 dir; ts4_u32 power; };
+static __inline void rt1_move_copy(struct Rt1Move *dst, const struct Rt1Move *src)
+{
+    *(struct Rt1MoveWords *)dst = *(const struct Rt1MoveWords *)src;
+}
+
 /* Swing_DLL.xex 0x8866F740 */
 void ts4_mover_prehit_freeze_8866F740(struct Rt1Mover *self)
 {
@@ -86,58 +97,59 @@ void ts4_mover_prehit_freeze_8866F740(struct Rt1Mover *self)
     pc = self->pc;
     if (pc->match->mode->kind == 2) {
         struct Rt1MatchFlowM *flow = pc->match->flow;
-        if (flow->hitter_team != pc->team->team && fn_8865EF98((struct Rt1MatchView *)pc->match, &frame))
+        if ((ts4_u32)flow->hitter_team != (ts4_u32)pc->team->team && fn_8865EF98((struct Rt1MatchView *)pc->match, &frame))
             pc->state->move.frozen = (ts4_u32)(frame - flow->frame) < pc->world->settings->hit_lead_frames;
     }
 
     pc = self->pc;
     s = pc->state;
-    if (!s->move.frozen) {
+    if (s->move.frozen) {
+        if (rt1_is_return_of_serve((const struct Ts4PlayerController *)pc)) {
+            float zero = g_ts4_event_value;
+            self->latched = 1;
+            pc->state->move.latched.power = zero;
+            self->pc->state->move.stick.power = zero;
+            self->pc->state->move.required.power = zero;
+            return;
+        }
+        if (!self->latched) {
+            struct Rt1MoveBlock *m;
+            self->latched = 1;
+            m = &pc->state->move;
+            rt1_move_copy(&m->required, &m->stick);
+            rt1_move_copy(&self->pc->state->move.latched, &m->required);
+            return;
+        }
+        {
+            struct Rt1MatchM *match = self->pc->match;
+            ts4_bool planned = fn_8865EF98((struct Rt1MatchView *)match, &frame);
+            ts4_bool known = 1;
+            int hit;
+            if (!planned) {
+                int own = self->link->plan->frames_to_hit;
+                hit = match->flow->frame + own;
+                known = own != 0x7FFFFFFF;
+            } else {
+                hit = frame;
+            }
+            if (pc->world->settings->release_frames < (ts4_u32)(hit - match->flow->frame) && (planned || known)) {
+                float lim = g_ts4_script_constants[0x2AC / 4];
+                if (s->move.required.power < lim && s->move.latched.power > lim)
+                    self->released = 1;
+            }
+        }
+        s = pc->state;
+        if (self->released) {
+            float zero = g_ts4_event_value;
+            s->move.required.power = zero;
+            self->pc->state->move.stick.power = zero;
+            self->pc->state->move.latched.power = zero;
+        } else {
+            rt1_move_copy(&s->move.stick, &s->move.latched);
+            rt1_move_copy(&self->pc->state->move.required, &s->move.stick);
+        }
+    } else {
         self->released = 0;
         self->latched = 0;
-        return;
-    }
-    if (rt1_is_return_of_serve((const struct Ts4PlayerController *)pc)) {
-        float zero = g_ts4_event_value;
-        self->latched = 1;
-        pc->state->move.latched.power = zero;
-        self->pc->state->move.stick.power = zero;
-        self->pc->state->move.required.power = zero;
-        return;
-    }
-    if (!self->latched) {
-        struct Rt1MoveBlock *m = &pc->state->move;
-        self->latched = 1;
-        m->required = m->stick;
-        self->pc->state->move.latched = m->required;
-        return;
-    }
-    {
-        struct Rt1MatchM *match = pc->match;
-        ts4_bool planned = fn_8865EF98((struct Rt1MatchView *)match, &frame);
-        ts4_bool known = 1;
-        int hit;
-        if (!planned) {
-            int own = self->link->plan->frames_to_hit;
-            hit = match->flow->frame + own;
-            known = own != 0x7FFFFFFF;
-        } else {
-            hit = frame;
-        }
-        if (pc->world->settings->release_frames < (ts4_u32)(hit - match->flow->frame) && (planned || known)) {
-            float lim = g_ts4_script_constants[0x2AC / 4];
-            if (s->move.required.power < lim && s->move.latched.power > lim)
-                self->released = 1;
-        }
-    }
-    s = pc->state;
-    if (self->released) {
-        float zero = g_ts4_event_value;
-        s->move.required.power = zero;
-        self->pc->state->move.stick.power = zero;
-        self->pc->state->move.latched.power = zero;
-    } else {
-        s->move.stick = s->move.latched;
-        self->pc->state->move.required = s->move.stick;
     }
 }
