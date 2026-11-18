@@ -756,3 +756,6 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   named/pointer accumulators): the merge add of the two accumulators MSVC creates when it unrolls a sum loop
   (0x88676AF0 +0x22C, 0x88669F30). Pads have no effect on 0x88695C48 (r9/r10 numbering after calls) and only move
   0x8866A1C8 from 10 to 9 (its win/lose residue is association, not operand order).
+- A 16-byte struct copy emitted as `ld; ld; std; std` (ME, 881896F8): give the struct two 8-byte members
+  (`struct { __int64 lo, hi; }` or two doubles) and read it as a vector through a cast. A `float v[4]` member copies with
+  four `lwz`/`stw`. This took 881896F8 from 77 off to 63.
