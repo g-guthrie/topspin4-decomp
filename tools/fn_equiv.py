@@ -1654,6 +1654,16 @@ def code_consts(func: Func):
             v = w & 0xFFFF
             v = sext(v, 16) if op == 11 else v
             out.update({v - 1, v, v + 1})
+    # 32-bit constants built by `lis rX,hi` + `ori rX,rX,lo` (hash keys compared with cmplw):
+    # without them, hash switches reach only their default path
+    prev = {}
+    for _, ins in func.code_words():
+        w = ins.word
+        op = w >> 26
+        if op == 15 and ((w >> 16) & 31) == 0:
+            prev[(w >> 21) & 31] = (w & 0xFFFF) << 16
+        elif op == 24 and ((w >> 21) & 31) in prev:
+            out.add(prev[(w >> 21) & 31] | (w & 0xFFFF))
     # switch case values: a jump table of n entries indexed by (x - bias) is reached by x in
     # bias .. bias+n-1 (the bias is the `addi rX, rY, -bias` shortly before the bctr)
     for i, tgts in func.tables.items():

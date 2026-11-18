@@ -559,3 +559,13 @@ checked by `fn_equiv.py`. Corrections found on the way: `fn_881899D8` takes `(fl
 (x in f1, list in r4); the swing walk increments ctrl+0x40 when TimingBaseFrame < 30; 0x029EAAF4
 is the serve state, not "point end".
 
+
+### 9.2 Hash-key seeding (2026-11-18)
+
+`code_consts()` in `tools/fn_equiv.py` now also seeds the 32-bit constants a function builds with
+`lis`/`ori` pairs. Before this, functions that switch on hash keys loaded from memory reached only their
+default path and came back UNCHECKED. Example: fn_88697E98 (behaviour condition evaluator, 18 hash
+cases) went from 28% to 99% block coverage (82/83, seed 1, 3000 trials, 2688 valid) and came back
+EQUIVALENT; the run caught one real decoding error in the draft. Earlier verdicts are unaffected:
+extra seed values only add trial inputs. RT1's `work/army/RT1/fn_equiv_hashes.py` did the same as a
+wrapper.
