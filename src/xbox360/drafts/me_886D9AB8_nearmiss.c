@@ -1,3 +1,4 @@
+/* agentA2 2026-11-18: still 1 off (stwx r9,r30 order) on /Oc and LTCG; tried i[base], byte-offset casts on load/store, block-local Range* for the store, while/i++ store, int/ushort indices, countdown loop (21 off), dead pad before store. */
 /* 0x886D9AB8 (draft, 1 instruction off: the write-back is `stwx r8,r9,r30` in the target, index-first in ours): one level of the recursive table build: gathers the entries of the range,
  * processes and splits them into runs, then recurses into each produced sub-range at the next level. */
 typedef struct Range { unsigned short first; unsigned short last; } Range;

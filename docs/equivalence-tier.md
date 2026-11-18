@@ -578,6 +578,7 @@ evidence in `work/equiv/`, which is not tracked):
 | `fn_886B01A8` SwingCategory_ClassList (row 4) | `d1g_shotreq.cpp` | 3000 | EQUIVALENT, 1083 valid | 14/14 blocks (57%) |
 | `fn_8866A1C8` serve rules OnPointEnd (row 12) | `rt1_eq_serve_point_end.c` | 3000 | EQUIVALENT, 1803 valid | 38/40, 95% (75-82%) |
 | `fn_88669878` serve bookkeeping (row 13) | `rt1_serve_flags.c` | 400 | EQUIVALENT, 282 valid | 32/34, 94% (82%) |
+| `fn_88676DB0` StdScoring_AddPoint (point won, AddGame, stats update) | `port_eq_scoring_point_won_88676DB0.c` | 3000 (1214 run) | EQUIVALENT, 57 valid | 15/15 blocks, 100% (not checked before) |
 
 With these, every non-VMX row of the table has C proven EQUIVALENT or byte-matched. Status on 2026-11-18:
 byte-matched rows 2 (`fn_886AFDF8`), 3, 4, 6 and 13; VMX rows 5, 8, 9, 14 remain unverifiable by
