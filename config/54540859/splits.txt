@@ -49171,3 +49171,14 @@ src/xbox360/me_ts4_sphere_contains_point.c:
 src/xbox360/me_ts4_ctl_release.cpp:
 	.pdata      start:0x88123EC8 end:0x88123ED0
 	.text       start:0x8868F318 end:0x8868F480
+
+src/xbox360/me_ts4_slot_transfer_dispatch_886DEBF0.cpp:
+	.text       start:0x886DEBF0 end:0x886DEC74
+
+src/xbox360/me_ts4_host_reset_886A6B68.c:
+	.pdata      start:0x881244A0 end:0x881244A8
+	.text       start:0x886A6B68 end:0x886A6CF8
+
+src/xbox360/me_ts4_player_bind_copy_88668A58.c:
+	.pdata      start:0x88123498 end:0x881234A0
+	.text       start:0x88668A58 end:0x88668BF8

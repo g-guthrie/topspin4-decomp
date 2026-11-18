@@ -42188,6 +42188,18 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_ctl_release_8868F318": 360},
     },
+    {
+        "source": "src/xbox360/me_ts4_slot_transfer_dispatch_886DEBF0.cpp",
+        "object": "me_ts4_slot_transfer_dispatch_886DEBF0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_886DEBF0": 132},
+    },
+    {
+        "source": "src/xbox360/me_ts4_player_bind_copy_88668A58.c",
+        "object": "me_ts4_player_bind_copy_88668A58.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_player_bind_copy": 416},
+    },
 )
 
 

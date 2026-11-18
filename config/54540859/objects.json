@@ -8360,6 +8360,18 @@
       "src/xbox360/me_ts4_ctl_release.cpp": {
         "status": "Matching",
         "source": "xbox360/me_ts4_ctl_release.cpp"
+      },
+      "src/xbox360/me_ts4_slot_transfer_dispatch_886DEBF0.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_slot_transfer_dispatch_886DEBF0.cpp"
+      },
+      "src/xbox360/me_ts4_host_reset_886A6B68.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_host_reset_886A6B68.c"
+      },
+      "src/xbox360/me_ts4_player_bind_copy_88668A58.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_player_bind_copy_88668A58.c"
       }
     }
   }

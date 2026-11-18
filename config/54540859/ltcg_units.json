@@ -2181,5 +2181,20 @@
   "symbols": {
    "ts4_follow_sync_88649D10": 328
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_host_reset_886A6B68.c",
+  "object": "me_ts4_host_reset_886A6B68.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_host_reset_886A6B68": 400
+  }
  }
 ]
