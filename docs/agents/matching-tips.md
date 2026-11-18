@@ -762,3 +762,10 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
 - Field increment whose following owner/vtable loads the target keeps AFTER the store (0x8865C818, 20 -> 14 off):
   increment through a plain block-local pointer, `{ int *pc = &self->count; (*pc)++; }` (or an inline `inc(int *)`).
   `self->count++`, `__restrict` and an inline taking `self` let the loads move above the store.
+
+## Found at b120: real C++ virtuals instead of hand-made vtables
+- A virtual call written in C as a function pointer in a struct (`o->vt->fn(o, ...)`) lets MSVC hoist later loads
+  above the call's result store, and it schedules argument setup differently. Writing the callee as a real C++ virtual
+  member (correct slot via placeholder virtuals) and calling it through an inline member fixed both 0x886CDED0 (9 off:
+  result stores kept ahead of the next ref load) and 0x886B83B0 (2 off: `li r6,1` placement). Try this first on any
+  near miss whose residue sits around a `->vt->` call.

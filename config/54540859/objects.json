@@ -8376,6 +8376,14 @@
       "src/xbox360/me_ts4_match_state_teardown_886B0F18.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_match_state_teardown_886B0F18.c"
+      },
+      "src/xbox360/me_ts4_court_res_bind_886CDED0.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_court_res_bind_886CDED0.cpp"
+      },
+      "src/xbox360/me_ts4_controller_activate_886B83B0.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_controller_activate_886B83B0.cpp"
       }
     }
   }

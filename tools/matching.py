@@ -42206,6 +42206,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_match_state_teardown_886B0F18": 844},
     },
+    {
+        "source": "src/xbox360/me_ts4_court_res_bind_886CDED0.cpp",
+        "object": "me_ts4_court_res_bind_886CDED0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_court_res_bind": 256},
+    },
 )
 
 

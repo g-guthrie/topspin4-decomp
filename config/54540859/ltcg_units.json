@@ -2196,5 +2196,23 @@
   "symbols": {
    "ts4_host_reset_886A6B68": 400
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_controller_activate_886B83B0.cpp",
+  "object": "me_ts4_controller_activate_886B83B0.obj",
+  "context": [
+   "src/xbox360/ga5_a.c",
+   "src/xbox360/w10a_b.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc",
+   "/Ob1"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_controller_activate": 184
+  }
  }
 ]
