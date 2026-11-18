@@ -747,3 +747,7 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
 - Hash constant chosen by a condition and stored once (0x88676AF0, 48 -> 6 off): write `if (c) b->f = K1; else
   b->f = K2;`. The `?:` form (and a local assigned in if/else) loads both halves into one register (`lis r11; ori r11`);
   the target's `lis r11; ori r9,r11` needs the two-store form.
+- Hash equality emitted as `subis rX,rY,hi; addi rX,rX,lo; cntlzw; extrwi` (ME, 88671B10): write `(x - 0x029EAAF4) == 0`.
+  `x == K`, `x == Ku`, an `(int)` cast and a static const all give `lis; ori; subf`.
+- A vector whose address goes to a callee (`if_get(&v)`) stays in memory for the rest of the function. Copy it into a
+  second local after the call (`q = set_y0(qm)`) to keep it in a register; this cut 0x34 bytes on 88671B10.

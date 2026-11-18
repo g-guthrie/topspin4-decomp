@@ -1,7 +1,8 @@
-/* NEAR MISS fn_88671B10 error-can-leave-court reach fan: size 0x664 vs target 0x620 (386 off), 21 relocs (same layout),
- * LTCG + pp1_pool_primer.c, /Oc. Behaviour fully decoded (see body). Remaining: the target keeps more vectors live in
- * registers (v43..v63, saved with __savevmx) where we spill to the stack, the q+dir*r madds use vmaddfp into the q copy
- * (ours vmaddcfp), and the 0x029EAAF4 test is emitted as subis/addi rather than lis/ori/subf. */
+/* NEAR MISS fn_88671B10 error-can-leave-court reach fan: size 0x62C vs target 0x620 (361 off), 21 relocs (same layout),
+ * LTCG + pp1_pool_primer.c, /Oc. Was 0x664: the state test written as (x - 0x029EAAF4) == 0 gives the target subis/addi;
+ * a separate qm local for the if_get/address-taken copy keeps q in a register (v127) like the target.
+ * Remaining: the q + dir*r points still compile to vor(splat)+vmaddcfp where the target copies q and uses vmaddfp;
+ * frame 0x170 vs 0x190 and __savegprlr_26/__savefpr_27 vs _25/_25 (the target keeps kZero in f31 and pc in r7). */
 /* Swing_DLL.xex 0x88671B10: can an error on this shot leave the court? Tests the reach fan of the player
    (two arc edges at reach and max reach, plus a forward point) against the court target box. */
 typedef unsigned char ts4_u8;
@@ -59,11 +60,11 @@ void ts4_error_can_leave_court_88671B10(const __vector4 *pos, struct Ts4RfPC *pc
 {
     struct Ts4CourtBounds bd;
     struct Ts4RfState *st;
-    __vector4 q, dir_lo, dir_hi, c0, c1, c2, c3, p_lo_max, p_lo_reach, p_hi_max, p_hi_reach, p_fwd;
+    __vector4 qm, q, dir_lo, dir_hi, c0, c1, c2, c3, p_lo_max, p_lo_reach, p_hi_max, p_hi_reach, p_fwd;
     __vector4 v_max, v_reach;
     float reach, reach_sq, rmax, rmax_sq, a_lo, a_hi, d0, d1, d2, d3;
     ts4_u8 set1, set2, all5;
-    ts4_u8 point_end = pc->match->flow->state == 0x029EAAF4;
+    ts4_u8 point_end = (pc->match->flow->state - 0x029EAAF4) == 0;
     if (point_end) {
         *b51 = 1;
         *b50 = 1;
@@ -73,30 +74,30 @@ void ts4_error_can_leave_court_88671B10(const __vector4 *pos, struct Ts4RfPC *pc
     reach = st->reach_max;
     reach_sq = reach * reach;
     ts4_court_bounds_8866E318(pc->match, point_end, &bd);
-    q = *pos;
-    ts4_if_get_8865E730(&q, pc->link->court->style);
+    qm = *pos;
+    ts4_if_get_8865E730(&qm, pc->link->court->style);
     rmax = rf_max(st->reach_max, st->reach_min);
     a_lo = pc->anim->arc_lo * 0.01745329238474369f;
     a_hi = pc->anim->arc_hi * 0.01745329238474369f;
-    q = rf_set_y0(q);
+    q = rf_set_y0(qm);
     dir_lo = rf_xz(fn_8817B500(a_lo), fn_8817B3F8(a_lo));
     v_max = rf_splat(rmax);
     v_reach = rf_splat(reach);
-    p_lo_max = __vmaddfp(dir_lo, v_max, q);
-    p_lo_reach = __vmaddfp(dir_lo, v_reach, q);
+    p_lo_max = __vmaddfp(v_max, dir_lo, q);
+    p_lo_reach = __vmaddfp(v_reach, dir_lo, q);
     dir_hi = rf_xz(fn_8817B500(a_hi), fn_8817B3F8(a_hi));
     c0 = rf_xz(100.0f, bd.z_max);
     c1 = rf_xz(100.0f, bd.z_min);
     c2 = rf_xz(bd.x_max, bd.z_min);
     c3 = rf_xz(bd.x_max, bd.z_max);
-    p_hi_max = __vmaddfp(dir_hi, v_max, q);
-    p_hi_reach = __vmaddfp(dir_hi, v_reach, q);
-    p_fwd = __vmaddfp(*(const __vector4 *)lbl_880FC690, v_max, q);
+    p_hi_max = __vmaddfp(v_max, dir_hi, q);
+    p_hi_reach = __vmaddfp(v_reach, dir_hi, q);
+    p_fwd = __vmaddfp(v_max, *(const __vector4 *)lbl_880FC690, q);
     rmax_sq = rmax * rmax;
-    d0 = rf_dist_sq(&q, &c0);
-    d1 = rf_dist_sq(&q, &c1);
-    d2 = rf_dist_sq(&q, &c2);
-    d3 = rf_dist_sq(&q, &c3);
+    d0 = rf_dist_sq(&qm, &c0);
+    d1 = rf_dist_sq(&qm, &c1);
+    d2 = rf_dist_sq(&qm, &c2);
+    d3 = rf_dist_sq(&qm, &c3);
     {
         ts4_u8 far_edge = (d1 > rmax_sq && d0 > rmax_sq) ? 1 : 0;
         ts4_u8 near_in = (d2 < reach_sq && d3 < reach_sq) ? 1 : 0;
