@@ -130,7 +130,7 @@ ts4_word ts4_addr_lbl_8803A308_88449008();
 ts4_word fn_88450A70();
 ts4_word fn_88466A58();
 ts4_word fn_88466A78();
-ts4_word fn_88467690();
+ts4_word ts4_find_key_select_88467690();
 ts4_word fn_884676D8();
 ts4_word fn_88467720();
 ts4_word ts4_call_seq_fn_88466AB0_88467768();
@@ -173,7 +173,7 @@ ts4_word fn_884F38B0();
 ts4_word fn_884F3A70();
 ts4_word fn_884FAAE0();
 ts4_word fn_884FD878();
-ts4_word fn_88523EE8();
+ts4_word ts4_find_key_select_c_88523EE8();
 ts4_word fn_88523F28();
 ts4_word fn_88523F70();
 ts4_word ts4_call_seq_fn_88531FF8_88524038();
@@ -575,7 +575,7 @@ ts4_word ts4_if_get_u8_off84_88454368(ts4_word a0)
     return fn_8852CB30((ts4_word)(a0 + 48));
 }
 
-/* Swing_DLL.xex 0x88454380: if_get u8@0x84, fn_88467690 */
+/* Swing_DLL.xex 0x88454380: if_get u8@0x84, ts4_find_key_select_88467690 */
 ts4_word ts4_if_get_u8_off84_88454380(ts4_word a0)
 {
     unsigned char t1;
@@ -584,7 +584,7 @@ ts4_word ts4_if_get_u8_off84_88454380(ts4_word a0)
     if ((ts4_word)t1 == 0) {
         return a0;
     }
-    return fn_88467690((ts4_word)a0);
+    return ts4_find_key_select_88467690((ts4_word)a0);
 }
 
 /* Swing_DLL.xex 0x88454398: if_get u8@0x84, fn_884676D8 */
@@ -2907,7 +2907,7 @@ ts4_word ts4_if_get_u8_offb_88521B90(ts4_word a0, ts4_word a1, ts4_word a2, ts4_
     return fn_8852DD38((ts4_word)(a1 + 16), (ts4_word)a4, (ts4_word)a2, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)(t1 & 0x20), (ts4_word)t1);
 }
 
-/* Swing_DLL.xex 0x88521BC0: if_get u8@0xb, fn_88523EE8 */
+/* Swing_DLL.xex 0x88521BC0: if_get u8@0xb, ts4_find_key_select_c_88523EE8 */
 ts4_word ts4_if_get_u8_offb_88521BC0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6)
 {
     unsigned char t1;
@@ -2916,7 +2916,7 @@ ts4_word ts4_if_get_u8_offb_88521BC0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_
     if ((ts4_word)(t1 & 0x20) == 0) {
         return a0;
     }
-    return fn_88523EE8((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)a6, (ts4_word)(t1 & 0x20));
+    return ts4_find_key_select_c_88523EE8((ts4_word)a0, (ts4_word)a1, (ts4_word)a2, (ts4_word)a3, (ts4_word)a4, (ts4_word)a5, (ts4_word)a6, (ts4_word)(t1 & 0x20));
 }
 
 /* Swing_DLL.xex 0x88521BD8: if_get u8@0xb, fn_88523F28 */

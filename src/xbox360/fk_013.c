@@ -167,7 +167,7 @@ ts4_word ts4_call_seq_fn_884FD970_884F90D8();
 ts4_word ts4_call_seq_fn_884FD970_884F9108();
 ts4_word fn_884FD878();
 ts4_word fn_884FD910();
-ts4_word fn_884FD970();
+ts4_word ts4_zero_float_blocks8_884FD970();
 ts4_word fn_885127C0();
 ts4_word fn_88520B88();
 ts4_word fn_88520CE8();

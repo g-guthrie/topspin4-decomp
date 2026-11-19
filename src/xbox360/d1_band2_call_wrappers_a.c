@@ -124,7 +124,7 @@ ts4_uptr ts4_call_seq_fn_884FD970_884F90D8(ts4_uptr);
 ts4_uptr ts4_call_seq_fn_884FD970_884F9108(ts4_uptr);
 ts4_uptr fn_884FD910(ts4_uptr);
 ts4_uptr ts4_if_call_seq_u32_lbl_88D275C0_884FD928(ts4_uptr);
-ts4_uptr fn_884FD970(ts4_uptr, ts4_uptr);
+ts4_uptr ts4_zero_float_blocks8_884FD970(ts4_uptr, ts4_uptr);
 ts4_uptr fn_885068E8(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_885219D0(ts4_uptr);
 extern char fn_88521A98[];

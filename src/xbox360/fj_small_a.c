@@ -221,7 +221,7 @@ extern u32 fn_884A1328(char *);
 extern u32 fn_884A14F8(char *);
 extern u32 fn_884AA7D8(char *);
 extern u32 fn_884B1008(char *);
-extern u32 fn_8859F380(char *);
+extern u32 ts4_table_1_8_8859F380(char *);
 extern u32 fn_8885EDD8(char *);
 extern void ts4_if_atomic_interlocked_dec_885949C0(char *);
 extern char * fn_88801428(int);
@@ -2969,7 +2969,7 @@ char * ts4_second_arg_plus_16_88521A90(int a, char *b)
 /* Swing_DLL.xex 0x8859FFD8 */
 u32 ts4_forward_field60_8859FFD8(char *a)
 {
-    return fn_8859F380(LP(a, 60));
+    return ts4_table_1_8_8859F380(LP(a, 60));
 }
 
 /* Swing_DLL.xex 0x888622C0 */

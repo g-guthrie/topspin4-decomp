@@ -51524,3 +51524,48 @@ src/xbox360/me_ts4_write_strings_and_kids_883DCD98.c:
 src/xbox360/me_ts4_write_tables_883EA0A0.c:
 	.pdata      start:0x88115630 end:0x88115638
 	.text       start:0x883EA0A0 end:0x883EA1F4
+
+src/xbox360/me_ts4_clear_u16_slot_88522300.c:
+	.text       start:0x88522300 end:0x8852233C
+
+src/xbox360/me_ts4_count_state_1_8830BC78.c:
+	.text       start:0x8830BC78 end:0x8830BCD0
+
+src/xbox360/me_ts4_count_state_2_8830BCD0.c:
+	.text       start:0x8830BCD0 end:0x8830BD28
+
+src/xbox360/me_ts4_find_key_select_88467690.c:
+	.text       start:0x88467690 end:0x884676D4
+
+src/xbox360/me_ts4_find_key_select_c_88523EE8.c:
+	.text       start:0x88523EE8 end:0x88523F28
+
+src/xbox360/me_ts4_first_not_free_885E75E0.c:
+	.text       start:0x885E75E0 end:0x885E761C
+
+src/xbox360/me_ts4_init_basis_3x4_88636EA8.c:
+	.text       start:0x88636EA8 end:0x88636EEC
+
+src/xbox360/me_ts4_init_xform_block_883347C0.c:
+	.text       start:0x883347C0 end:0x8833481C
+
+src/xbox360/me_ts4_next_not_free_885E7660.c:
+	.text       start:0x885E7660 end:0x885E769C
+
+src/xbox360/me_ts4_reset_abc_44_54_88277978.c:
+	.text       start:0x88277978 end:0x8827799C
+
+src/xbox360/me_ts4_reset_abc_44_882744F0.c:
+	.text       start:0x882744F0 end:0x88274510
+
+src/xbox360/me_ts4_reset_abc_set54_88275858.c:
+	.text       start:0x88275858 end:0x88275880
+
+src/xbox360/me_ts4_table_1_8_8859F380.c:
+	.text       start:0x8859F380 end:0x8859F3B0
+
+src/xbox360/me_ts4_take_from_pool_883EEFA0.c:
+	.text       start:0x883EEFA0 end:0x883EEFE0
+
+src/xbox360/me_ts4_zero_float_blocks8_884FD970.c:
+	.text       start:0x884FD970 end:0x884FD9B0

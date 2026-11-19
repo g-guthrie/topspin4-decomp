@@ -3153,6 +3153,39 @@
     ],
     "src/xbox360/me_ts4_write_tables_883EA0A0.c": [
       "/O1"
+    ],
+    "src/xbox360/me_ts4_clear_u16_slot_88522300.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_count_state_1_8830BC78.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_count_state_2_8830BCD0.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_find_key_select_88467690.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_find_key_select_c_88523EE8.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_first_not_free_885E75E0.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_init_xform_block_883347C0.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_next_not_free_885E7660.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_table_1_8_8859F380.c": [
+      "/Os"
+    ],
+    "src/xbox360/me_ts4_take_from_pool_883EEFA0.c": [
+      "/Os"
+    ],
+    "src/xbox360/me_ts4_zero_float_blocks8_884FD970.c": [
+      "/Os"
     ]
   },
   "jeff_version": "0.3.5 with patches/jeff-v0.3.5-topspin4.patch",
@@ -36352,15 +36385,30 @@
     {"source":"src/xbox360/me_ts4_visit_nodes_883D1FB0.c","symbol":"fn_883D1FB0","text_range":"0x883D1FB0-0x883D2108","pdata_range":"0x88114CA8-0x88114CB0","matched_code_bytes":344,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_write_sound_node_883E2978.c","symbol":"fn_883E2978","text_range":"0x883E2978-0x883E2AC8","pdata_range":"0x88115140-0x88115148","matched_code_bytes":336,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_write_strings_and_kids_883DCD98.c","symbol":"fn_883DCD98","text_range":"0x883DCD98-0x883DCEE0","pdata_range":"0x88114F58-0x88114F60","matched_code_bytes":328,"function_match_percent":100.0},
-    {"source":"src/xbox360/me_ts4_write_tables_883EA0A0.c","symbol":"fn_883EA0A0","text_range":"0x883EA0A0-0x883EA1F4","pdata_range":"0x88115630-0x88115638","matched_code_bytes":340,"function_match_percent":100.0}
+    {"source":"src/xbox360/me_ts4_write_tables_883EA0A0.c","symbol":"fn_883EA0A0","text_range":"0x883EA0A0-0x883EA1F4","pdata_range":"0x88115630-0x88115638","matched_code_bytes":340,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_clear_u16_slot_88522300.c","symbol":"ts4_clear_u16_slot_88522300","text_range":"0x88522300-0x8852233C","matched_code_bytes":60,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_count_state_1_8830BC78.c","symbol":"ts4_count_state_1_8830BC78","text_range":"0x8830BC78-0x8830BCD0","matched_code_bytes":88,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_count_state_2_8830BCD0.c","symbol":"ts4_count_state_2_8830BCD0","text_range":"0x8830BCD0-0x8830BD28","matched_code_bytes":88,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_find_key_select_88467690.c","symbol":"ts4_find_key_select_88467690","text_range":"0x88467690-0x884676D4","matched_code_bytes":68,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_find_key_select_c_88523EE8.c","symbol":"ts4_find_key_select_c_88523EE8","text_range":"0x88523EE8-0x88523F28","matched_code_bytes":64,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_first_not_free_885E75E0.c","symbol":"ts4_first_not_free_885E75E0","text_range":"0x885E75E0-0x885E761C","matched_code_bytes":60,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_init_xform_block_883347C0.c","symbol":"ts4_init_xform_block_883347C0","text_range":"0x883347C0-0x8833481C","matched_code_bytes":92,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_next_not_free_885E7660.c","symbol":"ts4_next_not_free_885E7660","text_range":"0x885E7660-0x885E769C","matched_code_bytes":60,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_table_1_8_8859F380.c","symbol":"ts4_table_1_8_8859F380","text_range":"0x8859F380-0x8859F3B0","matched_code_bytes":48,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_take_from_pool_883EEFA0.c","symbol":"ts4_take_from_pool_883EEFA0","text_range":"0x883EEFA0-0x883EEFE0","matched_code_bytes":64,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_zero_float_blocks8_884FD970.c","symbol":"ts4_zero_float_blocks8_884FD970","text_range":"0x884FD970-0x884FD9B0","matched_code_bytes":64,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_init_basis_3x4_88636EA8.c","symbol":"ts4_init_basis_3x4_88636EA8","text_range":"0x88636EA8-0x88636EEC","matched_code_bytes":68,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_reset_abc_44_54_88277978.c","symbol":"ts4_reset_abc_44_54_88277978","text_range":"0x88277978-0x8827799C","matched_code_bytes":36,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_reset_abc_44_882744F0.c","symbol":"ts4_reset_abc_44_882744F0","text_range":"0x882744F0-0x88274510","matched_code_bytes":32,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_reset_abc_set54_88275858.c","symbol":"ts4_reset_abc_set54_88275858","text_range":"0x88275858-0x88275880","matched_code_bytes":40,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 3331924,
+  "matched_code_bytes": 3332856,
   "module_total_code_bytes": 10154036,
-  "module_matched_code_percent": 32.81379,
+  "module_matched_code_percent": 32.82297,
   "module_total_functions": 46736,
-  "module_matched_functions": 32731,
-  "module_matched_functions_percent": 70.033806,
-  "module_total_units": 24742,
-  "module_complete_units": 2691,
-  "note": "The canonical whole-module report verifies all thirty-two thousand seven hundred thirty-one functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 32746,
+  "module_matched_functions_percent": 70.0659,
+  "module_total_units": 24763,
+  "module_complete_units": 2706,
+  "note": "The canonical whole-module report verifies all thirty-two thousand seven hundred forty-six functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

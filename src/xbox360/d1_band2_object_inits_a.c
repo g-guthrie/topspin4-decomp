@@ -47,7 +47,7 @@ void fn_88522B30(void);
 void ts4_if_call_seq_fn_88468338_88522B80(void);
 void fn_88522BC0(void);
 void fn_88522C48(void);
-void fn_88523EE8(void);
+void ts4_find_key_select_c_88523EE8(void);
 void fn_88523F28(void);
 void fn_88523F70(void);
 void fn_88523FC0(void);
@@ -262,7 +262,7 @@ void ts4_init_object_885246A0(char *o)
     *(void **)(o + 0x2c) = fn_88524258;
     *(void **)(o + 0x28) = fn_88524128;
     *(void **)(o + 0x8) = fn_88523FC0;
-    *(void **)(o + 0xc) = fn_88523EE8;
+    *(void **)(o + 0xc) = ts4_find_key_select_c_88523EE8;
     *(void **)(o + 0x10) = fn_88523F28;
     *(void **)(o + 0x14) = fn_88523F70;
     *(void **)(o + 0x4) = ts4_call_seq_fn_88531FF8_88524038;

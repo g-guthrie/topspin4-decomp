@@ -1054,8 +1054,8 @@ ts4_word fn_884DA650();
 ts4_word fn_884E30B8();
 ts4_word fn_88510C48();
 ts4_word fn_88552158();
-ts4_word fn_885E75E0();
-ts4_word fn_885E7660();
+ts4_word ts4_first_not_free_885E75E0();
+ts4_word ts4_next_not_free_885E7660();
 ts4_word fn_885E76A0();
 ts4_word ts4_call_885ED0A8_884D3B60();
 ts4_word ts4_call_seq_fn_884235C0_885EB618();
@@ -1215,7 +1215,7 @@ ts4_word ts4_get_u32_offc_884D3518();
 ts4_word ts4_get_u8_off0_884CEB40();
 ts4_word ts4_if_call_seq_fn_88423730_884CF190();
 ts4_word ts4_if_get_fn_884C5458_884D3E08();
-extern char fn_88522300[];
+extern char ts4_clear_u16_slot_88522300[];
 extern char fn_88522340[];
 extern char fn_885223F0[];
 extern char fn_88522460[];
@@ -3027,7 +3027,7 @@ ts4_word ts4_if_get_u32_off78_884CB388(ts4_word a0, ts4_word a1, ts4_word a2, ts
     return t30;
 }
 
-/* Swing_DLL.xex 0x884D4C48: loop_call_seq fn_885E75E0, fn_885E76A0, ts4_get_u32_off8_885E7620, ts4_get_u32_off8_885E7640, fn_885E76C0, fn_885E76C0 */
+/* Swing_DLL.xex 0x884D4C48: loop_call_seq ts4_first_not_free_885E75E0, fn_885E76A0, ts4_get_u32_off8_885E7620, ts4_get_u32_off8_885E7640, fn_885E76C0, fn_885E76C0 */
 static ts4_word ts4_loop_call_seq_fn_885E75E0_884D4C48(ts4_word a0, ts4_word a1)
 {
     ts4_word p14;
@@ -3042,7 +3042,7 @@ static ts4_word ts4_loop_call_seq_fn_885E75E0_884D4C48(ts4_word a0, ts4_word a1)
     ts4_word t10;
     signed char t11;
 
-    t1 = fn_885E75E0((ts4_word)a1);
+    t1 = ts4_first_not_free_885E75E0((ts4_word)a1);
     t2 = fn_885E76A0((ts4_word)(ts4_word)&loc50[0], (ts4_word)a1, (ts4_word)t1);
     t3 = *(signed char *)((char *)loc50 + 0);
     p14 = (ts4_word)t2;
