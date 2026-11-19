@@ -1734,3 +1734,6 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   `const char *p = (const char *)src + off; data = (char *)p + 4; raw = 1; res->size = *(const unsigned *)p;`.
 - 882C73D8 is still 2 off (`li r3,0` against `stw res,0(out)`). These had no effect: a pointer-local store on `*out`, `return 0` against `r = 0`,
   `long`, /Os /O2 /Ob0 /Ob1, a D3DX-style `goto fail` with or without an `if (res)` cleanup (that one is larger), and a `goto ok` that skips the tag test.
+- 883FA998 (/O1 queue, a stream reader): the body matches except for two byte-swap cases (mode 0/1) that the target keeps apart with different
+  OR orders and a shared tail store. MSVC merges identical unsigned swaps in all 24x24 macro operand orders. An `int` view
+  splits the cases but gives `srawi`. Draft: drafts/me_883FA998_nearmiss.c (36 off).
