@@ -421,12 +421,20 @@ def setup(toolchain: Path) -> None:
     print(f"toolchain ready in {toolchain}")
 
 
+def is_cxx_function(name: str) -> bool:
+    """MSVC decorated names: '?name@scope@@' followed by '3'/'2' (static data) or a ??_ special
+    name (vtables, RTTI) are data; other decorated names are functions."""
+    if not name.startswith("?") or name.startswith("??_"):
+        return False
+    return "@@" in name and name.split("@@", 1)[1][:1] not in ("2", "3")
+
+
 def stub_source(names: list[str], code_names: set[str]) -> tuple[str, dict[str, str]]:
     lines, alias = ["int _fltused;"], {}
     for i, name in enumerate(names):
         stub = f"lt1stub_{i}"
         alias[stub] = name
-        if name in code_names or CODE_HELPERS.match(name):
+        if name in code_names or CODE_HELPERS.match(name) or is_cxx_function(name):
             lines.append(f"void {stub}(void) {{ }}")
         else:
             lines.append(f"int {stub}[4] = {{ {i + 1} }};")
@@ -446,7 +454,9 @@ def parse_context(entry: str) -> tuple[str, list[str], Path]:
             return mode, own, Path(entry)
 
 
-UNRESOLVED = re.compile(r"unresolved external symbol (\S+)")
+# C++ externals are reported demangled with the decorated name in parentheses:
+#   unresolved external symbol "public: void __cdecl A::f(void)" (?f@A@@QAAXXZ)
+UNRESOLVED = re.compile(r'unresolved external symbol (?:"[^"]*" \((\S+?)\)|(\S+))')
 
 
 def build(primary: Path, contexts: list[str], flags: list[str], includes: list[str],
@@ -471,8 +481,8 @@ def build(primary: Path, contexts: list[str], flags: list[str], includes: list[s
     base_cmd = [str(wibo), str(link), *LINK_FLAGS, *[f"/INCLUDE:{n}" for n in includes]]
     # Pass 1: discover externals.
     first = run(base_cmd + ["/FORCE:UNRESOLVED", "/out:probe.dll", *objects], workdir)
-    unresolved = sorted({m.group(1) for m in UNRESOLVED.finditer(first.stdout + first.stderr)
-                         if not m.group(1).startswith("__imp_")})
+    unresolved = sorted({m.group(1) or m.group(2) for m in UNRESOLVED.finditer(first.stdout + first.stderr)
+                         if not (m.group(1) or m.group(2)).startswith("__imp_")})
     if code_names is None:
         code_names = {e[0] for e in load_symbols() if e[1] == ".text"}
     stub_c, alias = stub_source(unresolved, code_names)

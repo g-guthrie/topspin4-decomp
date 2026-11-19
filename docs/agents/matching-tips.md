@@ -2824,3 +2824,28 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
     should come after `addi r3,r31,0x5c` (mr r11,r3).
   - 888E9898: rel-table walk with ts4_hash_service_str_888C8370; reached 24 off, then I stopped.
 - Skipped: 8866BAE0/886A37D0 (open clrrwi cases), 886C80C0 (VMX), 888C1368 (64-bit ld/std).
+
+## agAX (b195): renderer queue lines 134-150 (8 matches, 2 drafts)
+- **Two-vector find with `li r3,0` hoisted to entry, `beqlr` on the second empty test, and one `mr r3,rX; blr` per loop**
+  (8876D210, 8876D2C0): `R *r = 0;` and in each loop `{ r = it; goto done; }`, then `done: return r;`. Use separate counters
+  (`i`, `j`), `n = vsize(&m->v)` once per loop, and `vat(&m->v, i)` inline accessors, which give the clrrwi copy of begin.
+  Writing `return it;` in the loop drops the early `li r3,0`.
+- **A size test with no clrrwi but later loop uses with clrrwi** (88772988): read the pointer into a local only for the null
+  and size tests (`S *s = o->set; if (s) { n = s->last - s->first; ...`) and write `o->set->...` in the loop body.
+- **`addi rX,rY,0` before `subic/subfe` on an inline memcmp result** (8877B1F0): `r = 0 != memcmp(a, b, 100);` with
+  `#pragma intrinsic(memcmp)`. `!= 0`, a `?:`, int temporaries and wrapper helpers all drop the copy.
+- **Float compare against a key time reloaded via r6 instead of r11** (886F34D0): load it into a block-scoped
+  `float kt = k->time;` first. `0.0f` can be written as a literal; the checker accepts the `__real@` constant for the image label.
+  An `extern float lbl_...` changes the schedule (10 off).
+- **Typed self-relative entry search where `li r3,0` sits only on the id-mismatch path** (88779CC0, 88779D78): write
+  `if (e->type == K) { r = base(e); if (id == r->id) break; r = 0; }` and `return r;`.
+- Plain `chk` does not compare callee names, so get the real names from a deliberately failing variant before saving.
+- Drafts:
+  - 887311F8 (.cpp): the identical code with stub callees under LTCG, ctx `flags(/Ob1):src/xbox360/cx44_b.c`. The real callee
+    is a C++ member, and the LTCG link cannot stub it: the `UNRESOLVED` regex in fn_check_ltcg.py captures `"public:` from
+    the demangled message, and fam6_w_cpp_000.cpp as context needs `__imp_VdGlobal*`.
+  - 88760D00 (1 off: `add` operand order on `&o->first[i]`, 0x8c elements).
+- Dropped:
+  - 88728C48 (6 off: r29/r30 swap between param and global plus one add order; pads do not help);
+  - 887728C8 (7 off: a pure r30/r31 swap; sibling of 88772988 at 0.80).
+- Skipped for rldicr or struct-by-value: 88700ED8, 8871A280, 88716F18, 88722CA8, 8875A358, 8877CA50. Skipped as VMX: 88756720.
