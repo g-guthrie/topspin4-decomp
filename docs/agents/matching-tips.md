@@ -2741,3 +2741,28 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   (the local-static hash table; the `li r9,1` result is hoisted before the loop, 13 off), 88778A40 (the two vcall tails are merged),
   8876D0F0 (stores a double 0.0 from g_ts4_script_constants+0x58 and the LTCG scratch pool does not land there), 88771D80 (23 off).
   Skipped: 886F7110 (bit tricks), 886EC9B0/886F5D10 (vector packing), 886F39F0 (the LTCG callee fn_886F38F0 has no source).
+
+## agAT (b193/b194): gameplay queue lines 134-162 (5 matches, 1 draft)
+- **Constructors that keep dead base vtable stores** (8887A3E8: `stw` base vtables at +8/+0xc, then derived vtables
+  overwrite them): build a real C++ constructor in a .cpp file whose inline base constructors store
+  `extern "C" char lbl_X[]` into a plain `const void *vt` member. Do not use `virtual`: real vtables relocate as `??_7...`,
+  which fn_check rejects against `lbl_` targets. The spec key is the mangled ctor name (`??0Name@@QAA@PAX@Z`).
+  symbols.txt already holds mangled names. Placement-new wrappers add a null check, so don't use them.
+- **A self-relative table write with a hashed bool** (889170B8): if a header-field store must stay before the `d->rel`
+  load, store it through a pointer local (`unsigned int *p = &d->bk; if (b == 0) *p = H0; else *p = H1;`).
+  Hoist the two value hashes into locals `t`/`f` and use if/else stores. A ternary gives the wrong `lis` register.
+- Vector-of-12-byte loops (88880AF8): use `size()`/`at(i)`/`clear()` static inlines on `&o->vec`. They give the target's
+  vector base in r29 and the byte offset in r30. A raw `n`/`off` loop swaps the registers.
+- A rel-table row search (888C2AA0) and a 28-byte entry flag set (888F0798) matched first try with `(char *)b + *b` row math.
+- Draft 888C5C00 (2 off): LTCG with `flags(/Ob1):src/xbox360/pr2_signin.c` (ts4_pad_record_find_88614938 keeps f1/f2 live).
+  Only the `fmuls` operand order differs (target f2,f0). No operand order, helper, or /Ox build fixed it.
+- Open or dropped:
+  - 888795F8 (17 off): LTCG with the fn_881643D0 ctx gives the right lwzx shape, but the callee's free r5 is used where the target saves r31.
+  - 886B7A60: the 0x8c offset is recomputed after the call, 15 off.
+  - 888C5D80: -1 is kept in r25 across the loop, 30 off.
+  - 886B14E0 (dtor of 886B1578's object, 25 off): vtable stores must stay ahead of the buffer loads; pointer-local stores and LTCG don't help, so try real C++ dtors next.
+  - 888B1960: the float copy keeps load/store order and an early global load; 31 off in plain and LTCG builds.
+- Skipped:
+  - 886D0808: LTCG passes cr6 to a callee that has no source.
+  - 886D5028 and 886B1578: the callee keeps r4 or r3-r6 live, and it has no source.
+  - 8864E310 (VMX), 8865DAC0 (jump table), 888DFA40/888E7278 (64-bit packing), 887F8EE8.
