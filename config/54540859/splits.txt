@@ -49226,3 +49226,12 @@ src/xbox360/me_ts4_court_side_anchor_8866DA58.c:
 
 src/xbox360/me_ts4_verlet_integrate_886E6F30.c:
 	.text       start:0x886E6F30 end:0x886E6F9C
+
+src/xbox360/me_ts4_ctor_publish_instance_887DA1E8.c:
+	.text       start:0x887DA1E8 end:0x887DA2B8
+
+src/xbox360/me_ts4_ctor_sentinel_records_8846D5E0.c:
+	.text       start:0x8846D5E0 end:0x8846D6CC
+
+src/xbox360/me_ts4_ctor_three_tables_88271158.c:
+	.text       start:0x88271158 end:0x88271230

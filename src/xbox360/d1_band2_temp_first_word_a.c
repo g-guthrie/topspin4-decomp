@@ -16,7 +16,7 @@ void fn_88468998(void *result, int arg);
 void fn_88469758(void *result, int arg);
 void fn_88469898(void *result, int arg);
 void fn_88469AB8(void *result, int arg);
-void fn_8846D5E0(void *result, int arg);
+void ts4_ctor_sentinel_records_8846D5E0(void *result, int arg);
 void fn_884748C0(void *result, int arg);
 void fn_88475A78(void *result, int arg);
 void fn_88478CE8(void *result, int arg);
@@ -201,7 +201,7 @@ unsigned int ts4_construct_temp_first_word_88469E40(void)
 unsigned int ts4_construct_temp_first_word_8846A040(void)
 {
     struct { unsigned int first; char rest[780]; } temp;
-    fn_8846D5E0(&temp, 0);
+    ts4_ctor_sentinel_records_8846D5E0(&temp, 0);
     return temp.first;
 }
 

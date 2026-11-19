@@ -32212,3 +32212,6 @@ ts4_probe_depth_offset_886925A8 = .text:0x886925A8; // type:function size:0xC8
 ts4_accumulate_field_sources_886498F0 = .text:0x886498F0; // type:function size:0x1A0
 ts4_court_side_anchor_8866DA58 = .text:0x8866DA58; // type:function size:0x1BC
 ts4_verlet_integrate_886E6F30 = .text:0x886E6F30; // type:function size:0x6C
+ts4_ctor_publish_instance_887DA1E8 = .text:0x887DA1E8; // type:function size:0xD0
+ts4_ctor_sentinel_records_8846D5E0 = .text:0x8846D5E0; // type:function size:0xEC
+ts4_ctor_three_tables_88271158 = .text:0x88271158; // type:function size:0xD8

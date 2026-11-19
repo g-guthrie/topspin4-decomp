@@ -74,7 +74,7 @@ extern void fn_88469AB8(unsigned *, int);
 extern void ts4_hk_finish_loaded_object_88469E10(void);
 extern void ts4_hk_finish_loaded_object_8846A010(void);
 extern void ts4_hk_finish_loaded_object_8846A070(void);
-extern void fn_8846D5E0(unsigned *, int);
+extern void ts4_ctor_sentinel_records_8846D5E0(unsigned *, int);
 extern void fn_884748C0(unsigned *, int);
 extern void ts4_if_addr_lbl_88086ED0_88475A78(unsigned *, int);
 extern void ts4_call_seq_lbl_88086FCC_88478CE8(unsigned *, int);
@@ -277,7 +277,7 @@ void ts4_init_vtbl_slot_88AF8D30(void)
 {
     unsigned local[196];
 
-    fn_8846D5E0(local, 0);
+    ts4_ctor_sentinel_records_8846D5E0(local, 0);
     lbl_88D24FA0.vtbl = lbl_88045430;
     lbl_88D24FA0.destroy = (void *)ts4_hk_finish_loaded_object_8846A010;
     lbl_88D24FA0.thunk = (void *)ts4_vcall0_thunk_8846A028;

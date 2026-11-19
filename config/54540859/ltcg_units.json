@@ -2232,5 +2232,20 @@
   "symbols": {
    "ts4_accumulate_field_sources_886498F0": 416
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_ctor_three_tables_88271158.c",
+  "object": "me_ts4_ctor_three_tables_88271158.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_ctor_three_tables_88271158": 216
+  }
  }
 ]

@@ -1,3 +1,4 @@
+/* agD round 2: still 26 plain and LTCG. vt local inside the t block, block-local Quad pointer in sub2_init, p3 local, Sub2 extended over the vectors with t-pointer stores (82-89): no gain. */
 /* NEAR MISS fn_8869CDF0 constructor (agentA2-agD 2026-11-19): 75 -> 26 off, plain /Oc. A block-local `Sub2 *t = &s->t` opened before sub_init(&s->s[3]) moves the s[2] dead addi early like the target.
  * Remaining: lis for lbl_880D75FC still after addi 0x100 (target: before), and the tail li 0x160.. / addi 0x144 come
  * earlier than the target (target keeps the 0x144 dead addi late, among the f28 stores). Tried vt locals at 6 positions,

@@ -856,3 +856,38 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   (`ts4_handle_forward0_886107F8`), not fn_88610798. The byte diff did not show it.
 - Stack slots of block temporaries (0x88650430): brute force over all 2880 declaration orders of the two blocks did not
   move it (9 off). Declaration order inside a block does not decide slot assignment there.
+
+## Round 2 (agD, 2026-11-19): constructor siblings of 0x88695568
+- Try the LTCG route when a plain build will not hoist a global float load above struct stores (0x88271158): plain
+  /Oc keeps `lfs g_ts4_event_value` after every store, because the global might alias `*s`. LTCG knows it does not, and
+  matched at once (plain was 18 off). Declaring the extern `const` did not help on the plain route.
+- Duplicate zero stores the target keeps (0x887DA1E8 clears eight words twice): do the second clear through
+  `quad_init((Quad *)&o->w[0]); quad_init((Quad *)&o->w[4]);`. Plain stores are merged by dead-store elimination, a
+  loop stays a loop, and `Quad *q = (Quad *)o->w;` adds a dead `addi` for `&o->w`.
+- Records with a head word stored last (`v[0..2]` then `h`) give the target's 1,2,3,0 store order inside each 16-byte group.
+- Typed record helpers beat raw index stores: 0x8846D5E0 matched from `rec_init(Rec *)` = (0, 0, 0x80000000) on named
+  record arrays. The raw `((int *)s)[i]` version was 10 off.
+- 0x886B4D00 (81 -> 10 on LTCG): a zero-initialised member as a tiny type whose ctor stores through a block-local
+  pointer (`struct ZInt { int v; ZInt() { int *p = &v; *p = 0; } }`) lets the base vtable store go first. A float or
+  vector member stored through a block-local pointer (`{ __vector4 *p = &v; *p = __vspltisw(0); }`) keeps its store at
+  its source position instead of being hoisted.
+- Owner reloaded after float stores into self (0x88682B58, matched): the target keeps `addi r30,self,0x1c` and reloads
+  `lwz r3,0(r30)` after `stfs` to self+0x20..0x28. Take `Own **po = &s->o;` at the top and use `(*po)->...` for
+  every owner access. With plain `s->o` MSVC CSEs `&o->pl` across the stores. An inline `store3(V3 *d, v)` helper
+  gives the reload, but leaves a dead `addi` for `d`.
+- Vector to float3 through the stack (`vspltw` x3, `stvewx` x3 into a V3 temp, then `lfs`/`stfs`): writing
+  `t` fields as `d.x = t.x; d.y = t.y; d.z = t.z;` gives the target's x, z, y store order. A struct copy `*d = t`
+  gives lwz/stw.
+- A bool the target computes as `li 1` on the fail paths and `li 0` at the end of a chain of `&&` tests (0x8865D3C0,
+  0x8868C660): write the negated `||` form, `if (a == -1 || a == b || !flag) x = 1; else x = 0;`. The `&&` form with
+  `x = 1; if (...) x = 0;` if-converts the last test into `subfe`/`and`.
+- A local `__vector4 tmp` passed to a getter, with an int-to-float conversion later in the same block, takes its own
+  stack slot (frame 0xc0 instead of 0xb0). Put the call in its own `{ __vector4 tmp; i = f(&tmp...); }` block so the
+  conversion reuses the slot.
+- Hoisted float constants from g_ts4_script_constants on the LTCG route: write them as literals with the pool
+  values (`-0.01f`, `0.01f`) so they share the pool base register (0x88691C40, 4 instructions fewer).
+- Open (0x88691C40): the target holds the select zero (g_ts4_event_value) in a nonvolatile FPR across calls and copies
+  it into a second local. A static kZero is rematerialised (f2, reloaded after calls). Comparing against the extern or
+  a local turns the selects into branches.
+- Open (0x8865D3C0): two element addresses from one self-relative header, (i*24 + rel) + h and (h - i*24) + rel, with
+  an `mr` copy of rel. Every source form tried gives the normal form (rel - i*24) + h.

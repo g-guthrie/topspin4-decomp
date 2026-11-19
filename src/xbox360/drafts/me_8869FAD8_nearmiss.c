@@ -1,3 +1,4 @@
+/* agD round 2: still 58 plain. LTCG with eight statement orders (z/avg/g[4]/w/tail): 113-119. */
 /* NEAR MISS 0x8869FAD8 shot-stats ctor (agD 2026-11-19): 58 off plain /Oc (LTCG worse, ~115). Five counter groups (vtable 0x880D7600, four totals and a 12-word history), 24 float averages (zero; [17] = g_ts4_script_constants[0], 1.0), four reset words and two tail words.
  * All nine dead addis appear. Reading z between g[3] and g[4] and storing avg[17] last gave 129 -> 58. Remaining: the target
  * interleaves the g[4] init with the avg stores (z in f0, 1.0 in f13 loaded mid-way); ours does g[4] first and is 4 bytes longer. */
