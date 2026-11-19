@@ -1608,13 +1608,20 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   `me_advance_sequence_886A76F8.c` from `fn_8890FD00` to `fn_88400000` still gives
   `MATCH ... size 0xf0`, with only a `RENAME fn_8890FD00 -> fn_88400000` line. Treat any RENAME of an
   address-named symbol as a wrong callee.
-- `tools/audit_callees.py --build work/matching-b163` reads each rebuilt object listed in
-  `MATCHING_UNITS` and `ltcg_units.json`. For every REL24/REL14 relocation in a matched function, it compares
-  the relocation symbol with the original branch target at the same offset. The symbol is resolved by full
-  name in symbols.txt, else by its 8-hex suffix, else by its base name. The original target comes from
-  `work/army/VX1/textdis.pkl`. It exits 1 on a mismatch.
-- Result on b163: 2785 objects, 32822 functions, 48690 branch relocations, **0 mismatches**. All 7657
-  unresolved relocations are `__savegprlr_*`/`__restgprlr_*`/`__savefpr_*`/`__restfpr_*` helpers. It
-  catches the injected wrong callee above (rc=1). Data relocations (lbl_, ADDR32/REFHI/REFLO) are not
-  audited yet.
-- Run it after each full build; it takes about 2 s.
+- `tools/audit_callees.py --build work/matching-b163` reads each rebuilt plain-unit object (`MATCHING_UNITS`).
+  For every REL24/REL14 relocation in a matched function, it compares the relocation symbol with the original
+  branch target at the same offset. The symbol is resolved by full name in symbols.txt, else by its 8-hex
+  suffix, else by its base name. The original target comes from `work/army/VX1/textdis.pkl`. It exits 1 on a
+  mismatch. b163 result: 2613 objects, 32569 functions, 48174 branch relocations, **0 mismatches**. The 7534
+  unresolved relocations are all save/restore-register helpers. It catches the injected wrong callee (rc=1).
+- `tools/audit_datarefs.py --build work/matching-b163` does the same for REFHI/REFLO data references. For
+  REFLO it expects `(S + signext(field)) & 0xFFFF` to equal the original low 16 bits (the `subi` form is
+  negated). For REFHI it expects `ha(S + lo)` to equal the original `lis` immediate. Pooled `__real@`/`$LN`
+  literals are not resolved. b163 result: 2613 objects, 109196 hi/lo relocations, **0 mismatches**, 478
+  unresolved. Renaming `lbl_88D45B38` to `lbl_88D46000` in `me_append_new_state_8864AF28.c` still gives
+  fn_check MATCH plus a RENAME line, but the audit reports the REFLO (rc=1). ADDR32 words in data sections
+  are not checked yet.
+- LTCG units (172 in `ltcg_units.json`) are skipped by both scripts. `tools/ltcg_route.py` writes their
+  rebuilt object as the split target object with the verified code patched in, so its relocations carry the
+  original names. `build_units` already fails a unit with any rename, so wrong names cannot pass that route.
+- Run both after each full build; each takes about 2 s.

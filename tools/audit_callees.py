@@ -5,8 +5,9 @@ objdiff (and tools/fn_check.py) mask relocated fields and treat a relocation
 whose symbol name differs from the target's as a rename, so a source that
 calls the wrong fn_XXXXXXXX still reports MATCH. This script closes the gap.
 
-For every function in tools/matching.py MATCHING_UNITS and
-config/54540859/ltcg_units.json it reads the rebuilt object from the
+For every function in tools/matching.py MATCHING_UNITS (LTCG units are
+skipped: tools/ltcg_route.py rebuilds them from the split target object, so
+their relocations carry the original names, and it fails on renames) it reads the rebuilt object from the
 matching build (work/matching-bNNN/rebuilt/<object>), and for each REL24 or
 REL14 relocation in the function compares:
   * the relocation symbol, resolved to an address by its 8-hex suffix
@@ -32,11 +33,9 @@ BRANCH = re.compile(r"(b|bl|bc\w*|b[a-z]+)\s+(?:cr\d,\s*)?(-?0x[0-9a-f]+) ->")
 def load_units():
     spec = importlib.util.spec_from_file_location("matching", ROOT / "tools/matching.py")
     m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
-    units = list(m.MATCHING_UNITS)
-    p = ROOT / "config/54540859/ltcg_units.json"
-    if p.exists():
-        units += json.loads(p.read_text())
-    return units
+    # LTCG units are skipped: tools/ltcg_route.py writes their rebuilt object as the
+    # split target object (original relocation names), and the route fails on renames.
+    return list(m.MATCHING_UNITS)
 
 
 def main():
