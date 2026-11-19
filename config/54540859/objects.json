@@ -8464,6 +8464,14 @@
       "src/xbox360/me_ts4_blowfish_decrypt_88604AD0.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_blowfish_decrypt_88604AD0.c"
+      },
+      "src/xbox360/me_ts4_vector16_realloc_insert_8817A2A0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector16_realloc_insert_8817A2A0.c"
+      },
+      "src/xbox360/me_ts4_set_keyed_value_8890F260.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_set_keyed_value_8890F260.c"
       }
     }
   }

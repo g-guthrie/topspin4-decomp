@@ -42317,6 +42317,18 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_blowfish_decrypt_88604AD0": 444},
     },
+    {
+        "source": "src/xbox360/me_ts4_vector16_realloc_insert_8817A2A0.c",
+        "object": "me_ts4_vector16_realloc_insert_8817A2A0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_8817A2A0": 412},
+    },
+    {
+        "source": "src/xbox360/me_ts4_set_keyed_value_8890F260.c",
+        "object": "me_ts4_set_keyed_value_8890F260.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_8890F260": 272},
+    },
 )
 
 

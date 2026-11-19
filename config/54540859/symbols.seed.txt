@@ -32224,3 +32224,5 @@ fn_88600CD0 = .text:0x88600CD0; // type:function size:0x9C
 fn_88179AF0 = .text:0x88179AF0; // type:function size:0x58
 fn_8860BAB8 = .text:0x8860BAB8; // type:function size:0x78
 ts4_blowfish_decrypt_88604AD0 = .text:0x88604AD0; // type:function size:0x1BC
+fn_8817A2A0 = .text:0x8817A2A0; // type:function size:0x19C
+fn_8890F260 = .text:0x8890F260; // type:function size:0x110

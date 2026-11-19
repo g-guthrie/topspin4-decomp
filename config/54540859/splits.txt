@@ -49265,3 +49265,11 @@ src/xbox360/me_ts4_rng_range_inclusive_8860BAB8.c:
 src/xbox360/me_ts4_blowfish_decrypt_88604AD0.c:
 	.pdata      start:0x88120BF0 end:0x88120BF8
 	.text       start:0x88604AD0 end:0x88604C8C
+
+src/xbox360/me_ts4_vector16_realloc_insert_8817A2A0.c:
+	.pdata      start:0x88108860 end:0x88108868
+	.text       start:0x8817A2A0 end:0x8817A43C
+
+src/xbox360/me_ts4_set_keyed_value_8890F260.c:
+	.pdata      start:0x88130290 end:0x88130298
+	.text       start:0x8890F260 end:0x8890F370

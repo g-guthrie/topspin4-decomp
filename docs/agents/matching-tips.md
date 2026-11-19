@@ -948,3 +948,19 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - 0x886176F0 is a clock seed for the Rng {seed, x, lcg} used by 0x8860BAB8: the callee 0x88885388 widens a
   SYSTEMTIME into 8 ints (year, month, dow, day, hour, minute, second, ms). 2 off: the target computes `&t` before
   the first zero store; nothing tried moved it.
+
+## agJ round 2 (2026-11-19): STL vector<16-byte> chain
+- Vector reallocating insert (0x8817A2A0) matched first try with the Dinkumware pieces as tiny inlines:
+  `ucopy(first, last, dest)` (`for (; first != last; ++dest, ++first) if (dest) *dest = *first; return dest;`),
+  `ufill(dest, n, val)` (`for (; n; --n, ++dest) ...`), a single-copy fast path for n == 1, and a pointer-returning
+  `umax(&size, &n)` for std::max. Open-coded loops put dest in a nonvolatile and miss the `dest + delta` source form.
+- Unrolled std::find (0x8890F260): trip count = n >> 2 with four compares per pass, then
+  `switch (last - first) { case 3: ... case 2: ... case 1: ...; case 0: default: return last; }` with fallthrough.
+  Matches on the plain route; LTCG lays it out differently.
+- `resize(size() + 1, T())` then write back() (0x8890ED60): the erase branch has to stay even though it is dead.
+  Write it as `if (n < size) erase-copy else _Insert_n(end, n - size, &tmp)`; the target has no separate equality test.
+- Diff counts from fn_check balloon after a single inserted instruction. To see the real residue, align the
+  register-normalised mnemonics (difflib over `re.sub(r'r\d+','r',...)`); see agJ/al.py in the scratchpad. 0x88178D10
+  reports 143 differing but only 7 target instructions are really off.
+- Open (0x88178D10 _Insert_n): copy_backward has to come out as `lwzu/stwu -0x10` pre-decrement. Every C form tried gives
+  `subi; lwz 0`. The fill loops in the target load the copied value straight from the stack slot.

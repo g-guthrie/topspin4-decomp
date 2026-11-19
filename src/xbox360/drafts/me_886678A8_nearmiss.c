@@ -8,7 +8,7 @@
  * (self-relative array at stats+0x5C, stride 0x134, counters +0xBC..+0xD0; bucket names inferred).
  * Dead locals op1_pad* and q0_0 only steer MSVC's operand numbering (docs/agents/matching-tips.md, agG).
  */
-#include "/home/user/topspin4-decomp/src/xbox360/rt1_scoring.h"
+#include "../rt1_scoring.h"
 
 #define TS4_COURT_DEUCE 0x23BAED9Eu
 #define TS4_COURT_AD    0xD826E563u
