@@ -46217,6 +46217,90 @@ MATCHING_UNITS = (
         "extra_flags": ["/O1"],
         "symbols": {"fn_883CBB30": 152},
     },
+    {
+        "source": "src/xbox360/me_ts4_call_handler_or_break_8856D2C0.c",
+        "object": "me_ts4_call_handler_or_break_8856D2C0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_8856D2C0": 52},
+    },
+    {
+        "source": "src/xbox360/me_ts4_call_owner_obj_slot19_888386C0.c",
+        "object": "me_ts4_call_owner_obj_slot19_888386C0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_888386C0": 48},
+    },
+    {
+        "source": "src/xbox360/me_ts4_check_items_at_end_883F45F0.c",
+        "object": "me_ts4_check_items_at_end_883F45F0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883F45F0": 432},
+    },
+    {
+        "source": "src/xbox360/me_ts4_convert_surface_882D0F38.c",
+        "object": "me_ts4_convert_surface_882D0F38.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_convert_surface_882D0F38": 420},
+    },
+    {
+        "source": "src/xbox360/me_ts4_create_refobj_882DD5F0.c",
+        "object": "me_ts4_create_refobj_882DD5F0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_create_refobj_882DD5F0": 204},
+    },
+    {
+        "source": "src/xbox360/me_ts4_entry_mode_is_zero_8859AD10.c",
+        "object": "me_ts4_entry_mode_is_zero_8859AD10.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_8859AD10": 68},
+    },
+    {
+        "source": "src/xbox360/me_ts4_fill_byte_map_88446198.c",
+        "object": "me_ts4_fill_byte_map_88446198.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_88446198": 64},
+    },
+    {
+        "source": "src/xbox360/me_ts4_find_by_path_883D7F20.c",
+        "object": "me_ts4_find_by_path_883D7F20.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883D7F20": 448},
+    },
+    {
+        "source": "src/xbox360/me_ts4_load_surface_882C5EA8.c",
+        "object": "me_ts4_load_surface_882C5EA8.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_load_surface_882C5EA8": 288},
+    },
+    {
+        "source": "src/xbox360/me_ts4_load_surface_alt_882C5FC8.c",
+        "object": "me_ts4_load_surface_alt_882C5FC8.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_load_surface_alt_882C5FC8": 304},
+    },
+    {
+        "source": "src/xbox360/me_ts4_ring_index_888C2C38.c",
+        "object": "me_ts4_ring_index_888C2C38.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_888C2C38": 68},
+    },
+    {
+        "source": "src/xbox360/me_ts4_shared_cell_array_dtor_884A7430.cpp",
+        "object": "me_ts4_shared_cell_array_dtor_884A7430.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_884A7430": 184},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vec_at_checked_88879168.c",
+        "object": "me_ts4_vec_at_checked_88879168.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_88879168": 52},
+    },
+    {
+        "source": "src/xbox360/me_ts4_visit_list_items_883F2730.c",
+        "object": "me_ts4_visit_list_items_883F2730.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883F2730": 72},
+    },
 )
 
 
@@ -46261,8 +46345,22 @@ def write_jeff_config(
         f"symbols: {json.dumps(str(symbols))}\n"
         f"splits: {json.dumps(str(splits))}\n"
         "write_asm: false\n"
-        f"{options}",
+        f"{options}"
+        f"{block_relocations_yaml()}",
         encoding="utf-8",
+    )
+
+
+def block_relocations_yaml() -> str:
+    """Targets that are constants, not addresses (config/<ver>/block_relocations.json)."""
+    path = ROOT / "config" / VERSION / "block_relocations.json"
+    if not path.is_file():
+        return ""
+    targets = json.loads(path.read_text())["targets"]
+    if not targets:
+        return ""
+    return "block_relocations:\n" + "".join(
+        f"  - target: {json.dumps(target)}\n" for target in targets
     )
 
 

@@ -2631,5 +2631,20 @@
   "symbols": {
    "ts4_set_flag_reset_v4_88481F60": 80
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_get_list_records_882DDD58.c",
+  "object": "me_ts4_get_list_records_882DDD58.obj",
+  "context": [
+   "src/xbox360/fk2_o1_000.c"
+  ],
+  "flags": [
+   "/O1"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_get_list_records_882DDD58": 208
+  }
  }
 ]

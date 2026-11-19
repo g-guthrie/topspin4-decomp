@@ -1652,3 +1652,28 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   (888AF448 7 off with that). The remaining diff is the target's add-then-select merge before one shared load; every
   C/C++ form tail-duplicates the load. 884C19A0: a chain of .rdata factors needs `/fp:precise` to keep the source order
   (1 fmuls operand swap left, draft).
+
+## agAC (b163): the 0x8876086C false relocation is fixed in config (5 matches)
+- Cause: 0x8876086C is the D3D HRESULT `D3DERR_INVALIDCALL` (`MAKE_D3DHRESULT(2156)` = 0x88760000 | 0x86C). The facility code
+  0x876 makes it look like an address inside .text: it falls at fn_887607E0+0x8C (fn_887607E0 is 0x887607E0-0x88760BA0). Jeff's
+  analysis takes every `lis/ori` pair that lands in a section as a pointer, so the split target carried REFHI/REFLO to
+  fn_887607E0 where the compiler emits a plain constant. In the b163 split, every REFHI/REFLO to fn_887607E0 (14 objects in
+  0x882B27AC-0x882E1F88, the D3DX-style texture helpers) is this constant. The real references (a REL24 call from 0x88761C3C
+  and the .pdata entry) are branch or ADDR32 relocations and are kept. Other D3DERR values in these functions are odd
+  (0x88760B59) or otherwise unaligned for code, and Jeff already drops those.
+- Fix: `config/54540859/block_relocations.json` lists relocation targets that are constants. `tools/matching.py`
+  (`write_jeff_config`) writes it into the Jeff config as `block_relocations: - target: ".text:0x8876086C"`, which Jeff
+  already supports (`obj.blocked_relocation_targets`, checked in `analysis/tracker.rs`). If another HRESULT-shaped constant
+  shows up as a relocation, add its address there rather than writing the constant as a function address in source.
+- Build before and after with no new units: 32825 and 32825, with the same set of matched functions (compared per function in
+  report.json). With the 5 new units integrated: 32830, and audit_callees and audit_datarefs both report 0 mismatches.
+- Matches: 882DD5F0, 882C5EA8, 882C5FC8, 882D0F38 (/O1 plain) and 882DDD58 (/O1 LTCG + fk2_o1_000.c, agT's draft unchanged).
+  - 882C5EA8/882C5FC8: a stack loader object with ctor/dtor calls. Write the dtor call before every `return` (C++ scope-exit
+    style), and `fl = 1; if (src == dst) fl = 0x10001;`. The frame layout depends on local sizes: the 882AA058 descriptor must be
+    0x48 bytes. At 0x40 it is placed before the 0x60 Info block in 882C5FC8.
+  - 882D0F38: the S_OK block must come before the E_FAIL block. Flat gotos, `if (!(a||b||..)) goto fail`, do/while+break and a
+    ternary all give E_FAIL first. What works is nesting:
+    `if (c->in && (c->out = make(out)) != 0) { r = seq(); if (r < 0) goto done; if (a>=0 || ... ) { r = 0; goto done; } } r = E_FAIL; done:`.
+- Left open (drafts): 882C73D8 (2 off: `li r3,0` and `stw res,0(out)` are in the opposite order, on plain and LTCG; I tried
+  r/hr locals, volatile, a comma expression, gotos and a Detach-style clear), and 882E21B8 (66 off: the target puts the else path
+  (fn_882DD1B8) and the 0x88760B59 return after the epilogue; source order, gotos and inverted tests did not move it).

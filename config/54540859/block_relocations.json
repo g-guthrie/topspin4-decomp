@@ -1,0 +1,4 @@
+{
+  "comment": "Constants that the analyser would otherwise turn into relocations because they fall inside .text. Each entry is written to the Jeff config as block_relocations (target). 0x8876086C is the D3D HRESULT D3DERR_INVALIDCALL (MAKE_D3DHRESULT(2156) = 0x88760000 | 0x86C); it lands inside fn_887607E0 (0x887607E0-0x88760BA0) at +0x8C. Every REFHI/REFLO to fn_887607E0 in the b163 split comes from a lis/ori of this constant in the D3D wrappers at 0x882B-0x882E; no real code reference has an offset.",
+  "targets": [".text:0x8876086C"]
+}

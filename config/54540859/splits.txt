@@ -51849,3 +51849,57 @@ src/xbox360/me_ts4_visit_kids_then_sink14_883C75D0.c:
 src/xbox360/me_ts4_visit_kids_unless_grp_sink24_883CBB30.c:
 	.pdata      start:0x88114AD0 end:0x88114AD8
 	.text       start:0x883CBB30 end:0x883CBBC8
+
+src/xbox360/me_ts4_call_handler_or_break_8856D2C0.c:
+	.text       start:0x8856D2C0 end:0x8856D2F4
+
+src/xbox360/me_ts4_call_owner_obj_slot19_888386C0.c:
+	.text       start:0x888386C0 end:0x888386F0
+
+src/xbox360/me_ts4_check_items_at_end_883F45F0.c:
+	.pdata      start:0x881159D0 end:0x881159D8
+	.text       start:0x883F45F0 end:0x883F47A0
+
+src/xbox360/me_ts4_convert_surface_882D0F38.c:
+	.pdata      start:0x88110FE0 end:0x88110FE8
+	.text       start:0x882D0F38 end:0x882D10DC
+
+src/xbox360/me_ts4_create_refobj_882DD5F0.c:
+	.pdata      start:0x881112E8 end:0x881112F0
+	.text       start:0x882DD5F0 end:0x882DD6BC
+
+src/xbox360/me_ts4_entry_mode_is_zero_8859AD10.c:
+	.text       start:0x8859AD10 end:0x8859AD54
+
+src/xbox360/me_ts4_fill_byte_map_88446198.c:
+	.text       start:0x88446198 end:0x884461D8
+
+src/xbox360/me_ts4_find_by_path_883D7F20.c:
+	.pdata      start:0x88114E00 end:0x88114E08
+	.text       start:0x883D7F20 end:0x883D80E0
+
+src/xbox360/me_ts4_get_list_records_882DDD58.c:
+	.pdata      start:0x88111328 end:0x88111330
+	.text       start:0x882DDD58 end:0x882DDE28
+
+src/xbox360/me_ts4_load_surface_882C5EA8.c:
+	.pdata      start:0x88110DA8 end:0x88110DB0
+	.text       start:0x882C5EA8 end:0x882C5FC8
+
+src/xbox360/me_ts4_load_surface_alt_882C5FC8.c:
+	.pdata      start:0x88110DB0 end:0x88110DB8
+	.text       start:0x882C5FC8 end:0x882C60F8
+
+src/xbox360/me_ts4_ring_index_888C2C38.c:
+	.text       start:0x888C2C38 end:0x888C2C7C
+
+src/xbox360/me_ts4_shared_cell_array_dtor_884A7430.cpp:
+	.pdata      start:0x88119EB8 end:0x88119EC0
+	.text       start:0x884A7430 end:0x884A74E8
+
+src/xbox360/me_ts4_vec_at_checked_88879168.c:
+	.text       start:0x88879168 end:0x8887919C
+
+src/xbox360/me_ts4_visit_list_items_883F2730.c:
+	.pdata      start:0x88115938 end:0x88115940
+	.text       start:0x883F2730 end:0x883F2778
