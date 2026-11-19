@@ -32215,3 +32215,4 @@ ts4_verlet_integrate_886E6F30 = .text:0x886E6F30; // type:function size:0x6C
 ts4_ctor_publish_instance_887DA1E8 = .text:0x887DA1E8; // type:function size:0xD0
 ts4_ctor_sentinel_records_8846D5E0 = .text:0x8846D5E0; // type:function size:0xEC
 ts4_ctor_three_tables_88271158 = .text:0x88271158; // type:function size:0xD8
+ts4_reset_aim_target_88682B58 = .text:0x88682B58; // type:function size:0x268

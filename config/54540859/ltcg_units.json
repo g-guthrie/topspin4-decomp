@@ -2247,5 +2247,22 @@
   "symbols": {
    "ts4_ctor_three_tables_88271158": 216
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_reset_aim_target_88682B58.c",
+  "object": "me_ts4_reset_aim_target_88682B58.obj",
+  "context": [
+   "src/xbox360/me_ts4_rng_range_8861E598.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc",
+   "/Ob1"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_reset_aim_target_88682B58": 616
+  }
  }
 ]

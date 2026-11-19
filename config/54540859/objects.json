@@ -8432,6 +8432,10 @@
       "src/xbox360/me_ts4_ctor_three_tables_88271158.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_ctor_three_tables_88271158.c"
+      },
+      "src/xbox360/me_ts4_reset_aim_target_88682B58.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_reset_aim_target_88682B58.c"
       }
     }
   }

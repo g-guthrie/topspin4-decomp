@@ -49235,3 +49235,7 @@ src/xbox360/me_ts4_ctor_sentinel_records_8846D5E0.c:
 
 src/xbox360/me_ts4_ctor_three_tables_88271158.c:
 	.text       start:0x88271158 end:0x88271230
+
+src/xbox360/me_ts4_reset_aim_target_88682B58.c:
+	.pdata      start:0x88123C20 end:0x88123C28
+	.text       start:0x88682B58 end:0x88682DC0

@@ -34050,15 +34050,16 @@
     {"source":"src/xbox360/me_ts4_accumulate_field_sources_886498F0.c","symbol":"ts4_accumulate_field_sources_886498F0","text_range":"0x886498F0-0x88649A90","pdata_range":"0x88122AC8-0x88122AD0","matched_code_bytes":416,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_ctor_publish_instance_887DA1E8.c","symbol":"ts4_ctor_publish_instance_887DA1E8","text_range":"0x887DA1E8-0x887DA2B8","matched_code_bytes":208,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_ctor_sentinel_records_8846D5E0.c","symbol":"ts4_ctor_sentinel_records_8846D5E0","text_range":"0x8846D5E0-0x8846D6CC","matched_code_bytes":236,"function_match_percent":100.0},
-    {"source":"src/xbox360/me_ts4_ctor_three_tables_88271158.c","symbol":"ts4_ctor_three_tables_88271158","text_range":"0x88271158-0x88271230","matched_code_bytes":216,"function_match_percent":100.0}
+    {"source":"src/xbox360/me_ts4_ctor_three_tables_88271158.c","symbol":"ts4_ctor_three_tables_88271158","text_range":"0x88271158-0x88271230","matched_code_bytes":216,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_reset_aim_target_88682B58.c","symbol":"ts4_reset_aim_target_88682B58","text_range":"0x88682B58-0x88682DC0","pdata_range":"0x88123C20-0x88123C28","matched_code_bytes":616,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 3205152,
+  "matched_code_bytes": 3205768,
   "module_total_code_bytes": 10154036,
-  "module_matched_code_percent": 31.5653,
+  "module_matched_code_percent": 31.571367,
   "module_total_functions": 46736,
-  "module_matched_functions": 32142,
-  "module_matched_functions_percent": 68.77354,
+  "module_matched_functions": 32143,
+  "module_matched_functions_percent": 68.77568,
   "module_total_units": 23814,
-  "module_complete_units": 2103,
-  "note": "The canonical whole-module report verifies all thirty-two thousand one hundred forty-two functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_complete_units": 2104,
+  "note": "The canonical whole-module report verifies all thirty-two thousand one hundred forty-three functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }
