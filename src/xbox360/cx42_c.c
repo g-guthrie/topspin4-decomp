@@ -27,13 +27,13 @@ void ts4_cx42_copy_block_8899DC40(u8 *o, u32 *src)
         W(o, 8) = W(o, 8) + 1;
     }
 }
-extern int fn_8857A878(void *p);
+extern int ts4_overlapped_status_8857A878(void *p);
 u32 ts4_cx42_poll_88995638(u8 *o, u32 unused, int *out)
 {
     u32 *p = (u32 *)(o + 0x30);
     int i;
     if (p[0] != 0x3e5) {
-        int r = fn_8857A878(p);
+        int r = ts4_overlapped_status_8857A878(p);
         if (r != 0) *out = r;
         for (i = 0; i < 7; i++) p[i] = 0;
         return 1;

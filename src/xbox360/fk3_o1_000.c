@@ -55,7 +55,7 @@ ts4_word fn_88563230();
 ts4_word ts4_set_thread_priority_8857B3C8();
 ts4_word fn_8857B598();
 ts4_word fn_8857C8C8();
-ts4_word fn_885846A0();
+ts4_word ts4_ms_to_nt_relative_timeout_885846A0();
 ts4_word ts4_if_atomic_interlocked_dec_88593BB0();
 ts4_word ts4_pool16_init_885B5E38();
 ts4_word ts4_pool_free_885B72F0();
@@ -386,14 +386,14 @@ ts4_word ts4_addr_lbl_88C31510_8856F558(ts4_word a0)
     return RtlLeaveCriticalSection((ts4_word)(*(ts4_word *)((char *)(ts4_word)((a0 << 3)) + (ts4_word)lbl_88C31510)));
 }
 
-/* Swing_DLL.xex 0x88582F30: loop_call_seq fn_885846A0, NtWaitForSingleObjectEx, ts4_record_status */
+/* Swing_DLL.xex 0x88582F30: loop_call_seq ts4_ms_to_nt_relative_timeout_885846A0, NtWaitForSingleObjectEx, ts4_record_status */
 ts4_word ts4_loop_call_seq_fn_885846A0_88582F30(ts4_word a0, ts4_word a1, int a2)
 {
     ts4_word loc50[2];
     ts4_word t1;
     int t2;
 
-    t1 = fn_885846A0((ts4_word)(ts4_word)&loc50[0], (ts4_word)a1);
+    t1 = ts4_ms_to_nt_relative_timeout_885846A0((ts4_word)(ts4_word)&loc50[0], (ts4_word)a1);
     do {
         t2 = NtWaitForSingleObjectEx((ts4_word)a0, (ts4_word)1, (ts4_word)(a2 & 0xff), (ts4_word)t1);
         if ((int)t2 < 0) {

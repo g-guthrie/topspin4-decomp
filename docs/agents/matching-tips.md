@@ -1547,3 +1547,56 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   - 883CA2A0 (15 off): needs LTCG with 883C9520 in context, because f11 survives the call. The level and the jitter
     swap f30/f31.
   - 883C8D58 (69 off): the shape of the busy pre-scan loop.
+
+## agW (2026-11-19, b159/b160): whole-binary sweep, 6-21 instructions (40 matches)
+- Candidate list: agU's cands.py/filt.py rebuilt against the b159 report, with agT todo3 and the agU open list excluded
+  (scratchpad agW/c3.txt, 683 left). I worked smallest first through about 21 instructions. work/matching-b159 was deleted
+  during the run, so the last third was checked against b160, and all 40 were re-verified on b160 (agW/ver.py).
+- Flags: 27 /Oc and 13 /Os. Routes: 36 match on plain and LTCG, and 4 match on LTCG only (881CC958, 8840B570, 88481F60, 8847DB48).
+  None uses volatile.
+- **The checker does not compare names for unnamed callees.** A wrong `fn_XXXXXXXX` still reports MATCH. Work out every
+  `b`/`bl` target from the address (agW/d.py prints them with symbols.txt names). I fixed two wrong names this way: 8857A8A0
+  calls fn_88583188, and 8827D750 calls fn_88568A40.
+- **/Os also works outside 0x885.** 882DE5F8 (vcall then memcpy) and 882C3950 (table scan) matched only on /Os, as did
+  8856E7E0/8856E7B8 (frexp/ldexp-style exponent read/write through `*(unsigned short *)&x`), 88574C30 (`_unlock_fh`),
+  885846A0, 8857A720/8857A8A0, 885E5600, 88569800 and 8856D820. If /Oc is 1-6 off in register naming or branch layout, run /Os next.
+- **Tail call followed by a dead `blr`** (`b fn; blr`, with the return value preloaded before the test): write
+  `int r = K; if (cond) r = fn(...); return r;` (8857A720, 8827D750). `if (!cond) return K; return fn(...);` lays out differently.
+- **Hoist the index init above the count test** (88941C68, 881EE208): `if (r) { unsigned i = 0; if (r->n) for (; i < r->n; i++) ... }`
+  gives the target's `li r7,0` before `cmplwi n`. Declaring `i` inside the for moves it below the test.
+- **lwzx operand order through a vector struct pointer** (886CE120): `Vec *v = &g->items; v->first[i]` gives
+  `lwzx r11,r30,r11`. `g->first[i]`, `i[g->first]` and an `at()` inline all gave the swapped operands. The same change did
+  not fix 88464D78 (draft).
+- A float clamp whose two arms share one `fmr` (88335BA8): `if (x < lo) x = lo; else if (x > hi) x = hi;`. The low branch
+  jumps to the `fmr` with f0 still holding lo.
+- `float` passed in a GPR slot (8840B9B0 family): a vcall wrapper that clobbers r4 with the function pointer has a float
+  second parameter. Floats use f1 but still take a GPR position.
+- A `long long` callee parameter shows up as `extsw` on the forwarded int (8836CE00). For `(signed char)c` to be
+  extended after the extsw, the wrapper parameter must be `int`.
+- Grouping changes fmuls order (884C0CF8): `(a * d * c * b * x) * K` matches; without the parentheses, K is multiplied first.
+- 2x2 inverse 8898E050 (4 off, no draft): the four `x * inv` products come out as `inv * x` whatever the operand order,
+  local declaration order or route.
+- Near misses (drafts): 88464D78 (1 off, lwzx order), 886EDDF8 (1 off, cmplw operand order in a two-key find),
+  884C9AC8 (2 off, r10/r11 naming; the clrrwi copy comes from calling a `&o->slots[i]` accessor twice), 884390B8 and
+  884A5F20 (2 off, `mr r3` and `subi r4` swapped after a vcall), 889A4930 (2 off, register naming in the global chain).
+- Open: the self-relative (-1 = null) offset family 888AF298/888AF448/88838808 (3-9 off), 884218C8/88421918 (case
+  conversion with `extsb` before the store; the same class as 884213B0), 884C1A48 (stores through r3 and returns it, which looks like a C++
+  struct return), and 888C00A0/8890C618 (vec4 store plus a dirty-bit `srd`).
+
+### agZ (b161): index/base order of `lwzx` in loops that call (9 matches)
+- Rule: in a loop that makes a call (the offset `i*4` is strength-reduced into a callee-saved register and the base is
+  re-read every iteration), the operand order follows how the LAST source access to the element writes its base:
+  - base written as a chain expression (`t->kids->items[i]`) gives `lwzx rD, rBASE, rOFF`;
+  - base read into a named local inside the loop (`Node **it = t->kids->items; ... it[i]`) gives `lwzx rD, rOFF, rBASE`.
+  When a test and a use are CSE'd into one load, the use (the later access) decides: chain test + `it[i]` use is
+  index-first; `it[i]` test + chain use, or chain test + `Node *c = chain[i]`, is base-first. A use after a call is a
+  separate load, so give each call its own block-scoped `it` (883D87A0, 883D9CA0). The local must be re-read inside
+  the loop; hoisting it out of the loop drops the reload.
+- Typical fixes: `if (n->list->items[i]) { Node **it = n->list->items; r = f(it[i]); ... }`; table finds
+  `for (...) { Pair *p = t->items; if (cmp(p[i].name, key) == 0) return t->items[i].value; }` (/Oc).
+- Measured in a harness (scratchpad agZ/h.py, /O1 and /Oc): index type, `i[a]`, `*(a+i)`, byte offsets, pads (dead,
+  CSE, volatile, 0-8) and C++ `operator[]` make no difference; only the local vs the chain does.
+- Not covered: leaf loops without calls (88614900 ctr loop, 88329478 no loop): the base local has no effect there. 883EA1F8
+  (`add` for a 12-byte stride, then `lwz 8`): the loop-body base local, pads 0-9 and element locals all leave it 1 off.
+- Matched: 883C75D0, 883CBB30, 883C9380, 883D3738, 883D86A0, 883D87A0, 883D9CA0 (/O1 and /Os), 885EEB50, 8841EA48,
+  884DAF90 (/Oc).

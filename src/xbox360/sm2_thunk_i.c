@@ -17,7 +17,7 @@ extern void fn_885651F8(void *a);
 extern void fn_884E0220(void *a);
 extern void fn_886E75E8(void *a);
 extern void RtlLeaveCriticalSection(void *cs);
-extern void fn_886CE120(void);
+extern void ts4_append_all_group_bindings_886CE120(void);
 extern void *ts4_forward_88421460(void *a, int b, int c);
 extern void fn_886D0EB0(void *a);
 extern void fn_886DBF40(void *a, void *b, int c, int d, int e, int f);
@@ -60,7 +60,7 @@ void ts4_leave_critical_section_8846AA70(char *p)
         RtlLeaveCriticalSection(q);
     }
 }
-void ts4_call_if_global_886D29F0(void) { if (lbl_88D45AF4) fn_886CE120(); }
+void ts4_call_if_global_886D29F0(void) { if (lbl_88D45AF4) ts4_append_all_group_bindings_886CE120(); }
 void *ts4_forward_if_nonnull_88478620(int a, int b, void *c, int d) { void *r = c; (void)a; (void)b; if (r) r = ts4_forward_88421460(r, 0, d); return r; }
 void ts4_set_vtable_call_886D48E0(char *p) { *(char **)p = lbl_880F3794; fn_886D0EB0(p + 0x30); }
 void ts4_call_with_first_word_shift_886DC090(char *p, int b, int c, int d, int e) { fn_886DBF40(p, *(void **)p, c, b, d, e); }

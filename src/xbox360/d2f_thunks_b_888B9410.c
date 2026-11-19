@@ -312,7 +312,7 @@ ts4_word fn_882882A0();
 ts4_word fn_8841F080();
 ts4_word fn_88563470();
 ts4_word fn_885651F8();
-ts4_word fn_8857A720();
+ts4_word ts4_call_if_state1_8857A720();
 ts4_word ts4_if_call_seq_u32_off4_8857A748();
 ts4_word fn_8857A798();
 ts4_word fn_88608590();

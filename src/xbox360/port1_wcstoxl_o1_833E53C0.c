@@ -7,7 +7,7 @@
 #define FL_OVERFLOW 4
 #define FL_READDIGIT 8
 
-extern int fn_88569800(unsigned short c, int type);
+extern int ts4_ctype_table_test_88569800(unsigned short c, int type);
 extern int ts4_if_fn_88578BE0(unsigned short c);
 extern int *ts4_if_call_seq_fn_8856CD88_88567ED8(void);
 extern void fn_8856D2C0(void);
@@ -36,7 +36,7 @@ unsigned long ts4_wcstoxl_88575668(const unsigned short *nptr, const unsigned sh
     c = *nptr;
     number = 0;
     p = nptr + 1;
-    while (fn_88569800(c, 8) != 0)
+    while (ts4_ctype_table_test_88569800(c, 8) != 0)
         c = *p++;
     if (c == '-') {
         flags |= FL_NEG;

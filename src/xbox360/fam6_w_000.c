@@ -112,7 +112,7 @@ ts4_word fn_884F0660();
 ts4_word fn_884F18D0();
 ts4_word fn_885635D0(ts4_word, ts4_word, ...);
 ts4_word fn_885646F8();
-ts4_word fn_8857A878();
+ts4_word ts4_overlapped_status_8857A878();
 ts4_word fn_8857AFF0();
 ts4_word fn_885EB698();
 ts4_word fn_88605620();
@@ -655,7 +655,7 @@ void ts4_if_get_u32_off10_885EB780(ts4_word a0, ts4_word a1, ts4_word a2, ts4_wo
     return;
 }
 
-/* Swing_DLL.xex 0x88605860: if_call_seq u8@0x4f, u32@0xe8, u32@0xe8, u8@0x4f, fn_8857A878, u32@0xd4 */
+/* Swing_DLL.xex 0x88605860: if_call_seq u8@0x4f, u32@0xe8, u32@0xe8, u8@0x4f, ts4_overlapped_status_8857A878, u32@0xd4 */
 ts4_word ts4_if_call_seq_u8_off4f_88605860(ts4_word a0)
 {
     ts4_word t321;
@@ -708,7 +708,7 @@ ts4_word ts4_if_call_seq_u8_off4f_88605860(ts4_word a0)
         t3 = *(ts4_word *)((char *)(ts4_word)(a0) + 232);
         if ((ts4_word)t3 != 997) {
             *(unsigned char *)((char *)(ts4_word)(a0) + 79) = (unsigned char)0;
-            t4 = fn_8857A878((ts4_word)(a0 + 232));
+            t4 = ts4_overlapped_status_8857A878((ts4_word)(a0 + 232));
             if (t4) {
                 ts4_registry_dispatch_888860A0((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 4)));
                 *(ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)0;

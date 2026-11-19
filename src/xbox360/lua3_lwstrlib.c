@@ -299,7 +299,7 @@ LUA2_FORCEINLINE int optint_(lua_State *L, int narg, double def)
     return (int)(isnoneornil(L, narg) ? def : ts4_lua_opt_number_default_8882EA98(L, narg));
 }
 
-extern int fn_88569800(u16 c, int type); /* iswctype; 4 = _DIGIT */
+extern int ts4_ctype_table_test_88569800(u16 c, int type); /* iswctype; 4 = _DIGIT */
 extern int lua3_wcheck_capture_8882FAD0(WMatchState *ms, u16 l); /* check_capture */
 extern void lua3_wpush_onecapture_8882F7D8(WMatchState *ms, int i); /* push_onecapture */
 extern void lib3_luaL_addvalue_8882E3E8(WBuffer *B);
@@ -326,7 +326,7 @@ void lua3_wadd_s_8882FD10(WMatchState *ms, WBuffer *b, const u16 *s, const u16 *
                 wputchar(b, news[i]);
             else {
                 i++; /* skip ESC */
-                if (!fn_88569800(news[i], 4))
+                if (!ts4_ctype_table_test_88569800(news[i], 4))
                     wputchar(b, news[i]);
                 else {
                     int level = lua3_wcheck_capture_8882FAD0(ms, news[i]);
@@ -468,17 +468,17 @@ LUA2_LOCAL const u16 *lua3_wscanformat_8882F698(lua_State *L, const u16 *strfrmt
         if (!lua3_wcschr_flags_8882EE50((u16)c)) break;
         p++;
     }
-    if (fn_88569800(*p, 4)) p++; /* skip width */
-    if (fn_88569800(*p, 4)) p++; /* (2 digits at most) */
+    if (ts4_ctype_table_test_88569800(*p, 4)) p++; /* skip width */
+    if (ts4_ctype_table_test_88569800(*p, 4)) p++; /* (2 digits at most) */
     if (*p == '.') {
         u32 c;
         p++;
         c = *p;
         *hasprecision = 1;
-        if (fn_88569800((u16)c, 4)) p++; /* skip precision */
-        if (fn_88569800(*p, 4)) p++;     /* (2 digits at most) */
+        if (ts4_ctype_table_test_88569800((u16)c, 4)) p++; /* skip precision */
+        if (ts4_ctype_table_test_88569800(*p, 4)) p++;     /* (2 digits at most) */
     }
-    if (fn_88569800(*p, 4)) lib3_luaL_error_8882E5F0(L, lbl_880E1B88);
+    if (ts4_ctype_table_test_88569800(*p, 4)) lib3_luaL_error_8882E5F0(L, lbl_880E1B88);
     if (p - strfrmt + 2 > MAX_FORMAT) lib3_luaL_error_8882E5F0(L, lbl_880E1BB8);
     form[0] = '%';
     lib3_lua_wstrncpy_8882EDF0(form + 1, strfrmt, p - strfrmt + 1);
@@ -537,7 +537,7 @@ int lua3_wstr_format_888319E0(WBuffer *b, lua_State *L)
             u16 buff[MAX_ITEM];   /* to store the formatted item */
             char buff8[MAX_ITEM];
             hasprecision = 0;
-            if (fn_88569800(*strfrmt, 4) && *(strfrmt + 1) == '$')
+            if (ts4_ctype_table_test_88569800(*strfrmt, 4) && *(strfrmt + 1) == '$')
                 lib3_luaL_error_8882E5F0(L, lbl_880E1BD4);
             arg++;
             strfrmt = lua3_wscanformat_8882F698(L, strfrmt, form, &hasprecision);
@@ -630,7 +630,7 @@ int lua3_wstr_format_888319E0(WBuffer *b, lua_State *L)
 extern int ts4_if_fn_88567730(int c);                                  /* tolower */
 extern const unsigned short *ts4_get_u32_lbl_88C311F4_88567FC8(void); /* _pctype */
 #define c_isdigit(c) (ts4_get_u32_lbl_88C311F4_88567FC8()[c] & 0x4)
-#define w_isdigit(c) fn_88569800((c), 4)
+#define w_isdigit(c) ts4_ctype_table_test_88569800((c), 4)
 #define w_isxalpha(c) ((c) >= 'a' && (c) <= 'f')
 
 /* Decode C escapes (\a \b \f \n \r \t \v, \xHH or \xHHHH when arg 2 is non-zero, \ddd) in a wide string. */

@@ -69,14 +69,14 @@ void ts4_remove_containing_88960EE8(Cx39AO *o, const char *name)
 }
 
 /* ---- work/cx39/keep_apply.c ---- */
-extern void *fn_88941C68(void *self, u32 key);
+extern void *ts4_rel_table_find16_88941C68(void *self, u32 key);
 extern void fn_88946348(void *self, void *o, u32 z, u32 v);
 extern u8 fn_88978060(void *self, u32 a);
 typedef struct Cx39BG { u8 pad[0x27c]; u32 w27c; } Cx39BG;
 extern Cx39BG *lbl_88D45B1C;
 u8 ts4_apply_named_8897D490(void *self, u32 key, u32 a, u8 flag)
 {
-    void *o = fn_88941C68(self, key);
+    void *o = ts4_rel_table_find16_88941C68(self, key);
     if (o != 0) {
         fn_88946348(self, o, 0, lbl_88D45B1C->w27c);
         {
@@ -478,7 +478,7 @@ void ts4_release_owner_88960FB8(Cx39MOwn *self)
 typedef struct Cx39NE28 { u8 pad[0xc]; u32 w0c; u8 pad2[0x28 - 0x10]; } Cx39NE28;
 typedef struct Cx39NV28 { Cx39NE28 *begin; Cx39NE28 *end; } Cx39NV28;
 typedef struct Cx39NT { u8 pad[0x6c]; int key; u8 pad2[0xe0 - 0x70]; Cx39NV28 v; u8 tail[0x100 - 0xe8]; } Cx39NT;
-extern void *fn_88941C68(void *self, u32 key);
+extern void *ts4_rel_table_find16_88941C68(void *self, u32 key);
 extern void ts4_call_seq_fn_8816D1A8_88160340(Cx39NT *t);
 extern void ts4_apply_two_889537F0(void *self, Cx39NT *t);
 extern void ts4_cw2_vec28_clear_88160E20(void *v);
@@ -486,7 +486,7 @@ extern void ts4_if_call_seq_u32_offe4_88160438(Cx39NT *t);
 u8 ts4_count_active_88965BE0(void *self, int key)
 {
     int n = 0;
-    if (key != -1 && fn_88941C68(self, key) != 0) {
+    if (key != -1 && ts4_rel_table_find16_88941C68(self, key) != 0) {
         Cx39NT t;
         Cx39NE28 *p;
         ts4_call_seq_fn_8816D1A8_88160340(&t);

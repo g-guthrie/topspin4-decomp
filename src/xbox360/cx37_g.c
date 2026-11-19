@@ -213,12 +213,12 @@ typedef struct Cx37Rec { int off; u32 key; } Cx37Rec;
 typedef struct Cx37Grp { int off; u32 n; u32 w8, wc; } Cx37Grp;
 typedef struct Cx37Root { int off; u32 n; } Cx37Root;
 typedef struct Cx37Arg6c { u8 pad[0x6c]; u32 w6c; } Cx37Arg6c;
-extern void *fn_88941C68(void *self, u32 key);
+extern void *ts4_rel_table_find16_88941C68(void *self, u32 key);
 extern void fn_889440D0(void *self, u32 v);
 /* 0x88946EA0: walk the two-level record table for the key pair and hand each match to fn_889440D0 */
 void ts4_walk_records_88946EA0(void *self, Cx37Arg6c *a)
 {
-    Cx37Root *r = fn_88941C68(self, a->w6c);
+    Cx37Root *r = ts4_rel_table_find16_88941C68(self, a->w6c);
     u32 i;
     u32 j;
     int op1_pad0 = 0;
@@ -393,7 +393,7 @@ extern void fn_88953570(void *self, Cx37Arg6c *a, void *p);
 void ts4_apply_two_889537F0(Cx37Own24 *o, Cx37Arg6c *a)
 {
     if (a) {
-        void *k = fn_88941C68(o, a->w6c);
+        void *k = ts4_rel_table_find16_88941C68(o, a->w6c);
         char *q;
         char *p = o->w24;
         if (p)

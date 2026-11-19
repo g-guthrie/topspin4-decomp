@@ -23,7 +23,7 @@ extern char lbl_88C32048[];
 ts4_word XexLoadImage();
 ts4_word fn_882A9128();
 ts4_word fn_8856CD88();
-ts4_word fn_8856D820();
+ts4_word ts4_lookup_pair_table_22_8856D820();
 ts4_word fn_8857C8C8();
 ts4_word ts4_if_call_seq_RtlInitUnicodeString_88582BD0();
 ts4_word ts4_if_call_seq_u32_off20_8858CCD8();

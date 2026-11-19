@@ -101,7 +101,7 @@ int lua3_wcheck_capture_8882FAD0(WMatchState *ms, int l)
     return l;
 }
 
-extern int fn_88569800(int c, int mask); /* iswctype */
+extern int ts4_ctype_table_test_88569800(int c, int mask); /* iswctype */
 extern int lib3_lua_checkstack_88822028(lua_State *L, int size);
 extern const u16 lbl_880E1B7C[]; /* L"-+ #0" (FLAGS) */
 extern char lbl_880E1B88[];      /* "invalid format (width or precision too long)" */
@@ -125,7 +125,7 @@ LUA2_LOCAL void lib3_lua_wstrncpy_8882EDF0(u16 *dst, const u16 *src, u32 n)
 
 #define L_ESC '%'
 #define MAX_FORMAT 20
-#define wisdigit(c) fn_88569800((c), 4)
+#define wisdigit(c) ts4_ctype_table_test_88569800((c), 4)
 
 /* wcschr(FLAGS, c) != NULL */
 LUA2_FORCEINLINE int isflag(u16 c)
@@ -273,7 +273,7 @@ init: /* using goto's to optimize tail recursion */
     case ')': /* end capture */
         return ts4_if_call_seq_fn_8882FA70_8882FCA8(ms, s, p + 1);
     case '%':
-        if (fn_88569800(*(p + 1), 4)) { /* capture? */
+        if (ts4_ctype_table_test_88569800(*(p + 1), 4)) { /* capture? */
             s = lua3_wmatch_capture_8882FBD8(ms, s, *(p + 1));
             if (s == 0) return 0;
             p += 2;

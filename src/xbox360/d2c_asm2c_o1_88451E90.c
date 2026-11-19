@@ -151,7 +151,7 @@ ts4_word fn_88566B48();
 ts4_word ts4_if_call_seq_fn_8856CD88_88567ED8();
 ts4_word fn_8856CD88();
 ts4_word fn_8856D2C0();
-ts4_word fn_8856D820();
+ts4_word ts4_lookup_pair_table_22_8856D820();
 ts4_word ts4_if_call_seq_fn_8856D820_8856D868();
 ts4_word fn_8856F7D8();
 ts4_word fn_88574618();

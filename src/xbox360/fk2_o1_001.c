@@ -191,7 +191,7 @@ ts4_word ts4_if_call_seq_fn_8856CD88_88567ED8();
 ts4_word memset();
 ts4_word fn_8856CD88();
 ts4_word fn_8856D2C0();
-ts4_word fn_8856D820();
+ts4_word ts4_lookup_pair_table_22_8856D820();
 ts4_word ts4_addr_lbl_88C31510_8856F558();
 ts4_word fn_8856F7D8();
 ts4_word fn_88574618();
@@ -2261,14 +2261,14 @@ ts4_word ts4_if_call_seq_fn_8856CD88_8856CE60(void)
     return t1;
 }
 
-/* Swing_DLL.xex 0x8856D868: if_call_seq fn_8856D820, ts4_if_call_seq_RtlInitUnicodeString_88582BD0 */
+/* Swing_DLL.xex 0x8856D868: if_call_seq ts4_lookup_pair_table_22_8856D820, ts4_if_call_seq_RtlInitUnicodeString_88582BD0 */
 ts4_word ts4_if_call_seq_fn_8856D820_8856D868(ts4_word a0)
 {
     ts4_word p3;
     ts4_word t1;
     ts4_word t2;
 
-    t1 = fn_8856D820((ts4_word)a0);
+    t1 = ts4_lookup_pair_table_22_8856D820((ts4_word)a0);
     p3 = (ts4_word)t1;
     if ((ts4_word)t1 != 0) {
         t2 = ts4_if_call_seq_RtlInitUnicodeString_88582BD0((ts4_word)t1);
@@ -2277,7 +2277,7 @@ ts4_word ts4_if_call_seq_fn_8856D820_8856D868(ts4_word a0)
     return p3;
 }
 
-/* Swing_DLL.xex 0x8856D898: if_call_seq fn_8856D820, ts4_if_call_seq_RtlInitUnicodeString_88582BD0, fn_8856D820, ts4_if_call_seq_RtlInitUnicodeString_88582BD0 */
+/* Swing_DLL.xex 0x8856D898: if_call_seq ts4_lookup_pair_table_22_8856D820, ts4_if_call_seq_RtlInitUnicodeString_88582BD0, ts4_lookup_pair_table_22_8856D820, ts4_if_call_seq_RtlInitUnicodeString_88582BD0 */
 ts4_word ts4_if_call_seq_fn_8856D820_8856D898(void)
 {
     ts4_word p6;
@@ -2285,11 +2285,11 @@ ts4_word ts4_if_call_seq_fn_8856D820_8856D898(void)
     ts4_word t4;
     ts4_word t5;
 
-    t1 = fn_8856D820((ts4_word)252);
+    t1 = ts4_lookup_pair_table_22_8856D820((ts4_word)252);
     if ((ts4_word)t1 != 0) {
         ts4_if_call_seq_RtlInitUnicodeString_88582BD0((ts4_word)t1);
     }
-    t4 = fn_8856D820((ts4_word)255);
+    t4 = ts4_lookup_pair_table_22_8856D820((ts4_word)255);
     p6 = (ts4_word)t4;
     if ((ts4_word)t4 != 0) {
         t5 = ts4_if_call_seq_RtlInitUnicodeString_88582BD0((ts4_word)t4);

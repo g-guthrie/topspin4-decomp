@@ -3,7 +3,7 @@
 
 typedef unsigned short lib3_wchar;
 
-extern int fn_88569800(int c, int mask);
+extern int ts4_ctype_table_test_88569800(int c, int mask);
 extern lib3_wchar ts4_if_fn_885677C0(int c);
 
 #ifdef _MSC_VER
@@ -17,19 +17,19 @@ LIB3_FORCEINLINE int lib3_wmatch_class(int c, int cl)
 {
     int res;
     switch (ts4_if_fn_885677C0(cl)) {
-    case 'a': res = fn_88569800(c, 0x103); break;
-    case 'c': res = fn_88569800(c, 0x20); break;
-    case 'd': res = fn_88569800(c, 0x4); break;
-    case 'l': res = fn_88569800(c, 0x2); break;
-    case 'p': res = fn_88569800(c, 0x10); break;
-    case 's': res = fn_88569800(c, 0x8); break;
-    case 'u': res = fn_88569800(c, 0x1); break;
-    case 'w': res = fn_88569800(c, 0x107); break;
-    case 'x': res = fn_88569800(c, 0x80); break;
+    case 'a': res = ts4_ctype_table_test_88569800(c, 0x103); break;
+    case 'c': res = ts4_ctype_table_test_88569800(c, 0x20); break;
+    case 'd': res = ts4_ctype_table_test_88569800(c, 0x4); break;
+    case 'l': res = ts4_ctype_table_test_88569800(c, 0x2); break;
+    case 'p': res = ts4_ctype_table_test_88569800(c, 0x10); break;
+    case 's': res = ts4_ctype_table_test_88569800(c, 0x8); break;
+    case 'u': res = ts4_ctype_table_test_88569800(c, 0x1); break;
+    case 'w': res = ts4_ctype_table_test_88569800(c, 0x107); break;
+    case 'x': res = ts4_ctype_table_test_88569800(c, 0x80); break;
     case 'z': res = ((lib3_wchar)c == 0); break;
     default: return ((lib3_wchar)cl == (lib3_wchar)c);
     }
-    if (fn_88569800(cl, 0x2)) return res;
+    if (ts4_ctype_table_test_88569800(cl, 0x2)) return res;
     return !res;
 }
 

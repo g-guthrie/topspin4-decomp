@@ -67,8 +67,8 @@ ts4_word fn_883C6460();
 ts4_word fn_883CB4A0();
 ts4_word fn_883CB4F0();
 ts4_word fn_8857A1E0();
-ts4_word fn_8857A720();
-ts4_word fn_8857A8A0();
+ts4_word ts4_call_if_state1_8857A720();
+ts4_word ts4_call_if_state1_8857A8A0();
 ts4_word ts4_slots_run_88606788();
 ts4_word fn_88608590();
 ts4_word fn_88609F90();
@@ -1709,7 +1709,7 @@ ts4_word ts4_fn_88639A18(void)
     return 0;
 }
 
-/* Swing_DLL.xex 0x88639AE8: call_seq u32@0x0, u32@0x28, fn_8857A8A0, u32@0x0 */
+/* Swing_DLL.xex 0x88639AE8: call_seq u32@0x0, u32@0x28, ts4_call_if_state1_8857A8A0, u32@0x0 */
 ts4_word ts4_call_seq_u32_off0_88639AE8(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4)
 {
     ts4_word loc50[1];
@@ -1721,13 +1721,13 @@ ts4_word ts4_call_seq_u32_off0_88639AE8(ts4_word a0, ts4_word a1, ts4_word a2, t
     t1 = *(ts4_word *)((char *)(ts4_word)(a2) + 0);
     t2 = *(ts4_word *)((char *)(ts4_word)(a0) + 40);
     loc50[0] = (ts4_word)t1;
-    t3 = fn_8857A8A0((ts4_word)t2, (ts4_word)a1, (ts4_word)(ts4_word)&loc50[0], (ts4_word)a3, (ts4_word)a4);
+    t3 = ts4_call_if_state1_8857A8A0((ts4_word)t2, (ts4_word)a1, (ts4_word)(ts4_word)&loc50[0], (ts4_word)a3, (ts4_word)a4);
     t4 = loc50[0];
     *(ts4_word *)((char *)(ts4_word)(a2) + 0) = (ts4_word)t4;
     return t3;
 }
 
-/* Swing_DLL.xex 0x88639B30: call_seq u32@0x0, u32@0x24, fn_8857A720, u32@0x0 */
+/* Swing_DLL.xex 0x88639B30: call_seq u32@0x0, u32@0x24, ts4_call_if_state1_8857A720, u32@0x0 */
 ts4_word ts4_call_seq_u32_off0_88639B30(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4)
 {
     ts4_word loc50[1];
@@ -1739,7 +1739,7 @@ ts4_word ts4_call_seq_u32_off0_88639B30(ts4_word a0, ts4_word a1, ts4_word a2, t
     t1 = *(ts4_word *)((char *)(ts4_word)(a2) + 0);
     t2 = *(ts4_word *)((char *)(ts4_word)(a0) + 36);
     loc50[0] = (ts4_word)t1;
-    t3 = fn_8857A720((ts4_word)t2, (ts4_word)a1, (ts4_word)(ts4_word)&loc50[0], (ts4_word)a3, (ts4_word)a4);
+    t3 = ts4_call_if_state1_8857A720((ts4_word)t2, (ts4_word)a1, (ts4_word)(ts4_word)&loc50[0], (ts4_word)a3, (ts4_word)a4);
     t4 = loc50[0];
     *(ts4_word *)((char *)(ts4_word)(a2) + 0) = (ts4_word)t4;
     return t3;
