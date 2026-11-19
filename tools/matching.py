@@ -42371,6 +42371,60 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_vector_realloc_insert_88280CA8": 436},
     },
+    {
+        "source": "src/xbox360/me_ts4_vector_realloc_insert_88283980.c",
+        "object": "me_ts4_vector_realloc_insert_88283980.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_vector_realloc_insert_88283980": 348},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector_realloc_insert_88188BA0.c",
+        "object": "me_ts4_vector_realloc_insert_88188BA0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_vector_realloc_insert_88188BA0": 336},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector_realloc_insert_88266C70.c",
+        "object": "me_ts4_vector_realloc_insert_88266C70.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_vector_realloc_insert_88266C70": 336},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector_realloc_insert_88283158.c",
+        "object": "me_ts4_vector_realloc_insert_88283158.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_vector_realloc_insert_88283158": 376},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector_realloc_insert_88216CF8.c",
+        "object": "me_ts4_vector_realloc_insert_88216CF8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_vector_realloc_insert_88216CF8": 392},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector_realloc_insert_88216E80.c",
+        "object": "me_ts4_vector_realloc_insert_88216E80.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_vector_realloc_insert_88216E80": 392},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector_realloc_insert_8826E018.c",
+        "object": "me_ts4_vector_realloc_insert_8826E018.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_vector_realloc_insert_8826E018": 376},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector_realloc_insert_882835C8.c",
+        "object": "me_ts4_vector_realloc_insert_882835C8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_vector_realloc_insert_882835C8": 364},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector_realloc_insert_88182540.c",
+        "object": "me_ts4_vector_realloc_insert_88182540.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_vector_realloc_insert_88182540": 364},
+    },
 )
 
 
