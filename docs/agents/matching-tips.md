@@ -2319,3 +2319,4 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   - Drafts: me_881BC130_nearmiss.c (3 off, r9/r10 swap between the first byte copy and &t->sub).
     The drafts me_8827FFB8, me_8815CFA8 and me_8815D388 are now matched with the end-slot string/vector init, so
     those three draft files can be removed at integration.
+- (agAH r6) If the config symbol for an address is not fn_XXXXXXXX, name the function with that existing symbol (for example ts4_profile_internal_is_available at 88936EB8).
