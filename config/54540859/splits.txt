@@ -49575,3 +49575,55 @@ src/xbox360/me_ts4_publish_mode_888C8B30.c:
 src/xbox360/me_ts4_reset_handle_flags_887D5788.c:
 	.pdata      start:0x88129700 end:0x88129708
 	.text       start:0x887D5788 end:0x887D58DC
+
+src/xbox360/me_ts4_vector_realloc_insert_88216A00.c:
+	.pdata      start:0x8810D170 end:0x8810D178
+	.text       start:0x88216A00 end:0x88216B88
+
+src/xbox360/me_ts4_vector_realloc_insert_881A96A0.c:
+	.pdata      start:0x8810A338 end:0x8810A340
+	.text       start:0x881A96A0 end:0x881A9828
+
+src/xbox360/me_ts4_vector_realloc_insert_88234C48.c:
+	.pdata      start:0x8810DFB0 end:0x8810DFB8
+	.text       start:0x88234C48 end:0x88234DA4
+
+src/xbox360/me_ts4_vector_realloc_insert_88227608.c:
+	.pdata      start:0x8810DA70 end:0x8810DA78
+	.text       start:0x88227608 end:0x88227790
+
+src/xbox360/me_ts4_vector_realloc_insert_88227480.c:
+	.pdata      start:0x8810DA68 end:0x8810DA70
+	.text       start:0x88227480 end:0x88227608
+
+src/xbox360/me_ts4_vector_realloc_insert_88171148.c:
+	.pdata      start:0x881081F8 end:0x88108200
+	.text       start:0x88171148 end:0x881712CC
+
+src/xbox360/me_ts4_vector_realloc_insert_88213F70.c:
+	.pdata      start:0x8810CFE8 end:0x8810CFF0
+	.text       start:0x88213F70 end:0x882140EC
+
+src/xbox360/me_ts4_vector_realloc_insert_8815BF58.c:
+	.pdata      start:0x881073C0 end:0x881073C8
+	.text       start:0x8815BF58 end:0x8815C0B0
+
+src/xbox360/me_ts4_vector_realloc_insert_88266B10.c:
+	.pdata      start:0x8810EB38 end:0x8810EB40
+	.text       start:0x88266B10 end:0x88266C6C
+
+src/xbox360/me_ts4_vector_realloc_insert_882832D0.c:
+	.pdata      start:0x8810FB40 end:0x8810FB48
+	.text       start:0x882832D0 end:0x8828348C
+
+src/xbox360/me_ts4_vector_realloc_insert_881B9EA0.c:
+	.pdata      start:0x8810AD58 end:0x8810AD60
+	.text       start:0x881B9EA0 end:0x881BA05C
+
+src/xbox360/me_ts4_ctor_mode_owner_888682F0.c:
+	.pdata      start:0x8812D1B8 end:0x8812D1C0
+	.text       start:0x888682F0 end:0x888683EC
+
+src/xbox360/me_ts4_make_float_handle_889475A8.c:
+	.pdata      start:0x88131A88 end:0x88131A90
+	.text       start:0x889475A8 end:0x889476E8

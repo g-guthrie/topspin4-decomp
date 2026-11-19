@@ -8784,6 +8784,58 @@
       "src/xbox360/me_ts4_reset_handle_flags_887D5788.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_reset_handle_flags_887D5788.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_88216A00.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_88216A00.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_881A96A0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_881A96A0.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_88234C48.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_88234C48.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_88227608.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_88227608.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_88227480.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_88227480.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_88171148.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_88171148.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_88213F70.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_88213F70.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_8815BF58.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_8815BF58.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_88266B10.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_88266B10.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_882832D0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_882832D0.c"
+      },
+      "src/xbox360/me_ts4_vector_realloc_insert_881B9EA0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vector_realloc_insert_881B9EA0.c"
+      },
+      "src/xbox360/me_ts4_ctor_mode_owner_888682F0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ctor_mode_owner_888682F0.c"
+      },
+      "src/xbox360/me_ts4_make_float_handle_889475A8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_make_float_handle_889475A8.c"
       }
     }
   }

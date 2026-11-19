@@ -1036,3 +1036,21 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   operand order, with no source form found yet. Drafts are in src/xbox360/drafts/.
 - Before a long run, check that the build dir v.py uses still exists (`ls -dt work/matching-b1* | head`). The dirs
   rotate, and fn_check then fails with FileNotFoundError in load_symbols.
+
+## agL round 3 (2026-11-19)
+- vector operator= inline-copy variants (881A6BF0 12-byte, 881AA1A8 40-byte) matched first try on both routes with
+  the 881A7A20 asm2c source. Replace `memcpy(d, s, N)` with `*(Item *)d = *(Item *)s` and give Item `int w[N/4]`;
+  a `char b[N]` Item compiles back to memcpy. Generator: scratchpad agL/gen2.py (`inline` mode).
+- Hidden-pointer return of an 8-byte value (`std` through r3, args shifted to r4/r5; 884AD868): a C struct is returned
+  in r3. Make it a C++ struct with a constructor (`Val8() : v(0) {}`) and `return Val8();` on the miss path.
+- Name/key-lookup loops: the index-first `lwzx` came out naturally in 88427878 (a leaf with the key at offset 0) and
+  884EB4B0 (C++, count hoisted, vcall on the element). It did not in 885EEB50/8841EA48/884DAF90/8847AF38/88265E30, which
+  call a function on the element. A hoisted count plus a by-value key are not enough on their own.
+- Self-relative find with `*key` loaded before the call each iteration (88265E30/88265938/881BBC00): `u32 k = *key;`
+  inside the loop, then `if (*get(r) == k)`. 1 off is left (add operand order).
+- Counted inlined copy (881B7FB0, 8816E038, 882867E0, 88218E08, 8817AC40): the target recomputes `(last-first)/S`
+  inside the copy. MSVC CSEs it with the earlier size in every form tried: typed pointer diff, unsigned diff, a C++
+  iterator wrapper with operator-, and LTCG. Still open.
+- 8890EE68 (keyed Val3 get): a C++ `struct Val3` with a 3-arg ctor and
+  `const Val3 &r = (it == end) ? Val3(0, 0xfffff, 0) : it->v; return r;` gets within 3 real ops. The `li r7,0` hoisted to
+  entry is still missing. Source: scratchpad agL/c8890EE68_best.cpp.
