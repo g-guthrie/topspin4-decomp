@@ -42857,6 +42857,60 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_make_float_handle_889475A8": 320},
     },
+    {
+        "source": "src/xbox360/me_ts4_push_op0_8849A7F0.c",
+        "object": "me_ts4_push_op0_8849A7F0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_8849A7F0": 108},
+    },
+    {
+        "source": "src/xbox360/me_ts4_singleton_dtor_bufs_889561F8.c",
+        "object": "me_ts4_singleton_dtor_bufs_889561F8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_889561F8": 104},
+    },
+    {
+        "source": "src/xbox360/me_ts4_find_item_index_by_vid_884EB4B0.cpp",
+        "object": "me_ts4_find_item_index_by_vid_884EB4B0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_884EB4B0": 112},
+    },
+    {
+        "source": "src/xbox360/me_ts4_select_key_if_listed_8883EC28.c",
+        "object": "me_ts4_select_key_if_listed_8883EC28.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_8883EC28": 76},
+    },
+    {
+        "source": "src/xbox360/me_ts4_lookup_value_by_key_88427878.c",
+        "object": "me_ts4_lookup_value_by_key_88427878.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_88427878": 84},
+    },
+    {
+        "source": "src/xbox360/me_ts4_lookup_val8_by_key_884AD868.cpp",
+        "object": "me_ts4_lookup_val8_by_key_884AD868.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_884AD868": 84},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector12_assign_881A6BF0.c",
+        "object": "me_ts4_vector12_assign_881A6BF0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_881A6BF0": 396},
+    },
+    {
+        "source": "src/xbox360/me_ts4_vector40_assign_881AA1A8.c",
+        "object": "me_ts4_vector40_assign_881AA1A8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_881AA1A8": 404},
+    },
+    {
+        "source": "src/xbox360/me_ts4_grid_shared_dtor_88452650.cpp",
+        "object": "me_ts4_grid_shared_dtor_88452650.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_88452650": 204},
+    },
 )
 
 
