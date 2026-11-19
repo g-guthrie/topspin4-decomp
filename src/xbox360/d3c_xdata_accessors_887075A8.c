@@ -131,12 +131,12 @@ static void ts4_if_call_seq_ts4_handle_forward_88150770_88734000(Ts4Handle16 han
 
 /* Resolve the xdata view (type hash 0xfe11d138), invoke its slot 0x14 and forward the result. */
 typedef u32 (*Ts4XdataInvokeFn)(Ts4XdataTarget *, Ts4XdataRefV *, u32, u32);
-extern void fn_88761508(u32 value);
+extern void ts4_scene_activate_named_88761508(u32 value);
 static void ts4_if_get_ts4_handle_forward_88150770_88762578(Ts4Handle16 handle)
 {
     u32 hash = 0xfe11d138;
     Ts4XdataRefV r;
     fn_88150770((Ts4XdataRef *)&r, &handle, &hash);
-    if (!ts4_xdata_refv_invalid(&r)) fn_88761508(((Ts4XdataInvokeFn)r.target->vtbl[0x50 / 4])(r.target, &r, r.offset, 1));
+    if (!ts4_xdata_refv_invalid(&r)) ts4_scene_activate_named_88761508(((Ts4XdataInvokeFn)r.target->vtbl[0x50 / 4])(r.target, &r, r.offset, 1));
 }
 

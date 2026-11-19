@@ -19,7 +19,7 @@ extern void *fn_8888D278(void *self);
 extern void *ts4_call_seq_fn_88617D88_88887AD8(void *self);
 extern void *fn_88889240(void *self);
 extern void *fn_88888C80(void *self);
-extern void *fn_88887FA0(void *self);
+extern void *ts4_mgr_bound_ctor_88887FA0(void *self);
 extern void *lbl_880DF40C[];
 extern void *fn_88886608(void *self);
 extern void *fn_88636DC8(void *self);

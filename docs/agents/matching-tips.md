@@ -2617,3 +2617,33 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   - 888CB9D0 (18 off): a nested self-relative lookup. The index adds come before the base add.
 - 88884488, 88884C88 and 88884618 call XAM wrappers (8857Bxxx). 887F4C18-887F4EC8, 887F4FA0 and 886C6660 are
   this-return constructors. Skip all of these.
+
+## agAP (b190): renderer small sweep (4 matches, 1 draft)
+- `lwz; addi rX,rX,0; subic; subfe` (a pointer-not-null bool) is `return 0 != o->ptr;` (886EFA08), the
+  `!=` counterpart of the `0 == p` rule at line 116.
+- A 64-bit `rldicl/rldimi/clrrwi/or` shuffle that reverses four u16 lanes matches the plain mask form
+  `((x>>48)&0xffff)|((x>>16)&0xffff0000)|((x<<16)&0xffff00000000)|(x<<48)` on a `unsigned __int64` (886EB1D8).
+  The swap-halves-then-swap-pairs forms do not.
+- Cubic Hermite evaluation `(float t, const Hermite *h)` (886EB298): fmsubs/fnmsubs come from writing
+  `p0*c - p1*c + m1 + m0` and `p1*k - p0*k - m0*c - m1` literally, with `a*t3 + b*t2 + m0*t + p0`. It matched first try.
+- Field-init block with a dead `addi rX,rB,0x40` and an `mr r4,r9` copy of 0xFFFFF (886EEBC0): clear the int array with a
+  `for (i = 0; i < 4; i++)` loop (pointer locals and inlines drop the addi). The last range is stored lo, extra, hi.
+- Open: 88778CD0 (3 off, register numbers of a `flag == 0` byte test, draft); 886F3588/886F35B8 (6 off, the
+  self-relative pair: the target loads `d->state` before `s->data`); 886F26B0 (LTCG vector+field init, 7 off with
+  random store orders); 88703D18 (6 off: the target sets the 0xF5DD52E9 hash in r4 before the registry null test;
+  inline, local and C++ forms all put it after); 886EFAC0 (ring cursor; the target reloads idx/ring after the `cur` store);
+  886F5838 (14 off, r10/r11 swap in a keyed 30-entry lookup returning a Range).
+
+### agAO round 2 additions
+- Xbox 360 ABI: a float argument also consumes a GPR slot. In `(R*, const float *x, float t)`, x arrives in r4 and t in f1 (8890F008).
+- With LTCG, a callee given in ctx gets inlined. Prefix it as `flags(/Ob1):src/...c` to keep the `bl` (88660470).
+- A small result struct that the target zeroes word by word (`li r11,0; stw` x N) wants explicit field-by-field zero stores, not `= {0}` or memset (888CCEE0).
+- Float range check `t >= lo && t <= hi` written as a static inline helper gives the target's `li 1/0; clrlwi` bool tail.
+
+### agAP (b190) round 2 addendum
+- `if (e != find(begin, e, &key))` (end on the left) gives `cmplw r31,r3`. Flip the operands if the target shows the opposite order.
+- In constructors with an inline AVec init (handle tmp, then a `ts4_if_call_seq_u32_lbl_88D45B38_88255AA0` call on `&tmp` and on `&v->ctx`), copy the avec_init pattern from src/xbox360/cw16_core_b.c. It matches under plain /Oc (88721CB0, 887261D0).
+- A mangled member callee (`?name@ts4_obj_ADDR@@QAAXXZ`) needs a `.cpp` file that declares `struct ts4_obj_ADDR { void name(); };` and an `extern "C"` wrapper for the function.
+- In countdown loops, the order of the for-init (`p = base, i = N` versus `i = N, p = base`) sets the order of the `addi`/`li` instructions. Try both.
+- Paired -1 field stores: give one field `unsigned` 0xFFFFFFFF and the other `int` -1 to get the target's register reuse. This confirms agAL's rule (8873B6E8, 887482D8).
+- Dropped (more than 4 off): 88747E58 (overlapping u64/u32 stores), 886F31F8, 886EE6E0, 88771258, 88718210, 8877DDC0 (the target reloads `*self` once after the call).

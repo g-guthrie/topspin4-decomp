@@ -2996,5 +2996,20 @@
   "symbols": {
    "ts4_key_register_886FA908": 160
   }
+ },
+ {
+  "source": "src/xbox360/me_mgr_bound_ctor_88887FA0.c",
+  "object": "me_mgr_bound_ctor_88887FA0.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_mgr_bound_ctor_88887FA0": 96
+  }
  }
 ]

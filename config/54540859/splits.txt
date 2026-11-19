@@ -54632,3 +54632,32 @@ src/xbox360/me_ts4_scene_activate_named_88701118.c:
 src/xbox360/me_ts4_text_to_upper_88779C30.c:
 	.pdata      start:0x88127840 end:0x88127848
 	.text       start:0x88779C30 end:0x88779CC0
+
+src/xbox360/me_mgr_bound_ctor_88887FA0.c:
+	.pdata      start:0x8812DC78 end:0x8812DC80
+	.text       start:0x88887FA0 end:0x88888000
+
+src/xbox360/me_ts4_gate_allows_zero_count_888C1C80.c:
+	.text       start:0x888C1C80 end:0x888C1CA0
+
+src/xbox360/me_ts4_has_handle_886EFA08.c:
+	.text       start:0x886EFA08 end:0x886EFA1C
+
+src/xbox360/me_ts4_hermite_eval_886EB298.c:
+	.text       start:0x886EB298 end:0x886EB2F8
+
+src/xbox360/me_ts4_pend_layer_any_886F3B08.c:
+	.text       start:0x886F3B08 end:0x886F3B94
+
+src/xbox360/me_ts4_reset_tracker_886EEBC0.c:
+	.text       start:0x886EEBC0 end:0x886EEC24
+
+src/xbox360/me_ts4_reverse_u16x4_886EB1D8.c:
+	.text       start:0x886EB1D8 end:0x886EB208
+
+src/xbox360/me_ts4_scene_activate_named_88761508.c:
+	.pdata      start:0x88127308 end:0x88127310
+	.text       start:0x88761508 end:0x887615A4
+
+src/xbox360/me_ts4_set_enabled_mode_888C63B8.c:
+	.text       start:0x888C63B8 end:0x888C63E4
