@@ -128,12 +128,12 @@ void ts4_free_owned_block_8837BA88(void ***self)
 }
 
 /* Swing_DLL.xex 0x882630A0 */
-void fn_88263A88(void *self, void *pos);
+void ts4_vector_grow_append_88263A88(void *self, void *pos);
 /* push back one slot (grow when full), zero it and return its address */
 int *ts4_vector_push_slot_882630A0(char *self)
 {
     if (*(char **)(self + 4) == *(char **)(self + 8))
-        fn_88263A88(self, *(char **)(self + 4));
+        ts4_vector_grow_append_88263A88(self, *(char **)(self + 4));
     if (*(int **)(self + 4) != 0)
         **(int **)(self + 4) = 0;
     *(char **)(self + 4) += 4;

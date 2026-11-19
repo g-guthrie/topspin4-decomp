@@ -78,7 +78,7 @@ ts4_word fn_8821FBC8();
 ts4_word fn_88220690();
 ts4_word fn_882266F8();
 ts4_word fn_882267F0();
-ts4_word fn_882280B0();
+ts4_word ts4_vector_emplace_back_882280B0();
 ts4_word fn_8822A3D8();
 ts4_word fn_8822AD70();
 ts4_word fn_8822C1C8();

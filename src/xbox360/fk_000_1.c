@@ -84,7 +84,7 @@ ts4_word fn_8816C6B0();
 ts4_word fn_8816D1A8();
 ts4_word fn_8816DFB8();
 ts4_word ts4_object_ctor_88173C00();
-ts4_word fn_8817EB80();
+ts4_word ts4_vector_grow_append_8817EB80();
 ts4_word ts4_loop_call_seq_u32_offc_8817F860();
 ts4_word fn_881A6A00();
 ts4_word ts4_tailcall_NetDll_ioctlsocket_884F0268();

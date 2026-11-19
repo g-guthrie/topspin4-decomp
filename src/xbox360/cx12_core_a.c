@@ -137,12 +137,12 @@ CX12_REL(ts4_pool_rel_a0_88223088, 0xa0)
 CX12_REL(ts4_pool_rel_120_88223240, 0x120)
 
 typedef struct Cx12VA0 { u32 p0; Cx12A0 *end; u32 p8; Cx12A0 *cap; } Cx12VA0;
-extern void fn_88228AF8(void *, void *);
+extern void ts4_vector_grow_append_88228AF8(void *, void *);
 extern void ts4_ctor_88747F68(void *);
 Cx12A0 *ts4_a0_push_default_882245F0(Cx12VA0 *v)
 {
     Cx12A0 *e = v->end;
-    if (e == v->cap) fn_88228AF8(v, e);
+    if (e == v->cap) ts4_vector_grow_append_88228AF8(v, e);
     if (v->end != 0) ts4_ctor_88747F68(v->end);
     v->end++;
     return v->end - 1;
