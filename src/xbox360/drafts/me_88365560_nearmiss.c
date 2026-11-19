@@ -1,8 +1,9 @@
 /* Swing_DLL.xex 0x88365560: MOD-style vibrato step: waveform (sine table lbl_88B3A48C, ramp, square, CRT rand) by waveCtl & 3,
  * out->vibrato = +/-(depth * wave) >> 7, position advances by speed and wraps at 0x20. agAE: /Oc.
- * NEAR MISS (1 instruction): the target has one more `clrlwi r11,r11,24` at the join after the ramp case (both paths). These
- * did not add it: the ramp inline returning int/u16, explicit (u8) casts, ~v, and the ramp written inline in the case. A ternary
- * moves the clrlwi before the branch (24 off). Siblings 88361168 (same, `>> 7 << 2`) and 88368958 (tremolo, out +0x1DC, clamps 0..0x40) share the template. */
+ * NEAR MISS (register-only, 5 lines): an `int` return type on vib_wave (with the ramp inline still u8) produces the
+ * target`s join clrlwi. Left: the position-advance add/extsb takes r9/r7 in the target and r7/r6 here. These made no difference:
+ * the advance as an inline, `= a + b` forms, the ternary or signed-test negate, and an unsigned speed. 88365328 (`>> 7 << 2`) is also
+ * exactly 5 off with this template. */
 typedef struct Ptd { char pad[0x60]; unsigned int holdrand; } Ptd;
 extern Ptd *lbl_88B3302C;
 extern const unsigned char lbl_88B3A48C[32];
@@ -22,7 +23,7 @@ static __inline unsigned char ramp_down(unsigned char pos, signed char raw)
     if (raw < 0) v = 0xff - v;
     return v;
 }
-static __inline unsigned char vib_wave(Channel *c)
+static __inline int vib_wave(Channel *c)
 {
     unsigned char pos = c->vibPos & 0x1f;
     switch (c->waveCtl & 3) {

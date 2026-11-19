@@ -1868,3 +1868,38 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   (`>>7<<2`), 88368958, 88361248, 88359EA0 and 88359FB0 (tremolo/pan variants, out +0x1DC/+0x264, clamped 0..0x40).
 - Unsolved: 8836E420 (vtable submit loop, 6 off from argument-load scheduling), 883F1888 (index-or-first-flagged lookup, the shared LINK
   tail), 88353138 (PCM sign/endian fix, register order), 883E50B0 (a C++ move with a stack temporary), 8838B5F8 (tree insert, not attempted).
+
+### agAE round 3 (b173): 10 matches
+- **Try plain /O2, the base flags with no /Oc, as well.** 883C00E0 (kiss_fft `kf_factor`) matches only there: /Oc drops the `twi`
+  divide-overflow traps and /O1 rotates the `while (n % p)` loop. The spec uses `"flags": ["/O2"]`. The kiss_fft code near 883C0xxx probably
+  needs it too. `floor((float)sqrt((double)n))` with `#pragma intrinsic(sqrt)` gives `fcfid; fsqrts; bl floor`.
+- **Plugin-descriptor initialisers (memset of a static block, then stores of label and thunk addresses)** can be generated:
+  scratchpad agAE/pd.py builds the C from the target's lis/addi/li/stw sequence (the descriptor is a `unsigned int w[N]` array, the thunks
+  are cast to `unsigned int`), and pdt.py greedily swaps adjacent stores until it matches. The source order is the target's store order
+  with two adjacent pairs swapped. Matched: 88360D38, 883687E8, 8836B2E8, 883651A0, 88373888, 88382FB0 (0xAC bytes).
+- Vibrato family (88365560, 88365328, ...): **declaring the wave inline as `int` rather than `unsigned char`** produces the missing join
+  `clrlwi`. They are still 5 lines off, all registers (r9/r7 against r7/r6 in the position advance). The draft has been updated.
+- 883E2390 (timer-tree member with an int key argument) is 4 off: the key and the sentinel get swapped callee-saved registers. 883DA348 (item at index
+  through an indirect list `g->list->items`) matched on /O1. The direct-list sibling 883F9B68 is 13 off because head->next gets CSE'd.
+- 88330A18 (sibling of 88330968: reserve sizes per cache slot, two ternary maxes) /Oc.
+
+### agAF round 2 (b173): 11 matches
+- `return 0 == flag;` (not `!flag` or `flag == 0`) gives the `addi rX,rX,0` before `cntlzw` in a bool return (88606108; agAB's
+  8859AD10 rule holds outside bitfields too).
+- A `switch` on a byte field compares with `cmplwi`; copy it into an `int` local first to get `cmpwi` (8854D7F8). A `(int)` cast
+  in the switch does not help.
+- Locked call returning `ok ? 0 : E_OUTOFMEMORY` (subic/subfe/and after the unlock): compute the HRESULT into a local before the
+  unlock call, on /O1 (88595218, 885A63C8).
+- Bounds-checked vector element update with end-first size loads and a `clrrwi` copy of begin: inline `vsize(&t->v)` and
+  `vat(&t->v, i)` helpers on an embedded `{begin, end}` (88838500).
+- Lexicographic float compare through an out byte: each early true is its own `{ *out = 1; return; }` (8855A9C0).
+- Binary halving on 4-byte entries `while (last - first > 16) { mid = first + ((last - first) >> 1); ... }` gives the
+  `clrrwi 2`/`srawi 3` pair with no `addze` (885450F0).
+- Float returns with .rdata 1.0/0.0/-1.0 labels match as literals (884C0E78).
+- Open, three times in this sweep: the target keeps a 32-bit hash constant in a callee-saved register across a call or loop
+  (88772BA8 r29, 88718210 r30). A plain or const local, an inline wrapper, /O1, /Os and LTCG all re-materialise it with lis/ori.
+- Open, argument-register order before a call (target sets the earlier argument first): 88439050/884A5EB8 (C and C++, base cast),
+  887CCB00 (vcall `destroy(o, 1)`; draft .cpp), 887A1A80 (`memcpy(d, s, 12)` with `#pragma function(memcpy)`, inline wrapper,
+  C++). 8816B1C8/88890E30 need a `clrrwi r3` copy of the lbl_88D45B38 registry; identity inlines and casts don't produce it.
+  88662510/88662458: only the order of `lwz t->ctx` vs the INT_MAX `lis` differs. 883C9BD8/883C9F98 and 885928D8/88592878:
+  no new progress.
