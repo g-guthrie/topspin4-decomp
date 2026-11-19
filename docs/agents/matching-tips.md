@@ -818,3 +818,21 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   fixed the zero/up/splat numbering, 24 -> 11 off. On 0x889C1C80 volatile reads of both up and axis: 94 -> 91.
 - No effect: 0x88671B10 (q + dir*r madds), 0x8864E790 (vupkd3d vs r1 copy), 0x8868CB18, 0x88662738, 0x8867DF68
   (residue there is GPR/scalar, not vector).
+
+## Agent C notes (ME gameplay range, 2026-11-19; no matches, observations only)
+- Dead vector stores the target keeps (0x886805E0: a normalized vector stored to 0x70(r1) and never read): put the
+  locals in one stack struct (`struct { __vector4 pos, n1, a; } L;`) and pass two members' addresses to the call.
+  Separate locals let MSVC drop the store, and the normalize with it. The target also keeps `a.x = a.x` self-copies.
+  An in-place helper `flat(o, i)` that reads `i->v[0]` through `*(volatile float *)` reproduces those, with o == i.
+- Union/struct copies of a `__vector4` wrapper come out as `ld/std` pairs. Use plain `__vector4` locals.
+- `vx1_replicate(field)` loads straight from the field. The target's `lfs; stfs 0x54(r1); lvlx` comes from a block
+  local: `{ float k = cfg->fd78; ... __vspltw(__lvlx(&k, 0), 0) ... }`.
+- Pointer loads the target repeats with no store in between (0x886787D8 reloads `s->f154->f74` before every use
+  but keeps `s->f154`): declaring the member `Out *volatile f74;` reproduces the reload pattern exactly. Plain locals,
+  inline accessors and block scoping do not. This is unconfirmed as the original source, so treat it as a diagnostic
+  for now.
+- Bool locals the target zero-extends only at the test (`li 1/li 0`, then `clrlwi; cmplwi` at the use): `unsigned char`
+  locals or C++ `bool` both gave an early `clrlwi` copy, and `int` locals gave `cmpwi`. `unsigned` locals came closest
+  (0x886787D8, 56 off). Still open.
+- Loop-invariant float constants hoisted into f28-f31 (f31 = highest index): declare block locals in reverse order
+  inside `if (lo < i) { float k5 = .., k4 = .., k3 = .., k2 = ..; for (...) }`, so the loads land after the guard.
