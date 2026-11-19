@@ -1790,3 +1790,27 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   but the f0/f13 roles stay swapped (0x883DF940, 0x883CA750; open).
 - Data labels: run a check after every match that names a `lbl_`: the address is in symbols.txt and the target has
   `lis ha(addr)` plus the matching low half. objdiff MATCH does not compare relocation targets.
+
+## agAE (b169): medium sweep from agAD's r5 list (14 matches, 1 draft)
+- **/O1 first for list walkers and small leaf finds.** 882DDA00, 883E4F58, 883D3C60, 883D2348, 883D3D10, 883FD5C0, 883F1340,
+  883DBBA0 and 882CDCD8 all matched on /O1 after /Oc was 20-35 off. /Oc matches: 88378F68, 88323BA0, 8830B840, 88384918, 88322EB0.
+- **The `l ? (T *)((char *)l - 4) : 0` result of an inline "nth" helper:** when every failure path shares one `li r11,0`
+  block, write the helper's tail as `if (l) return (T *)((char *)l - 4); return 0;`. The ternary goes branchless
+  (`subfic; subfe; and`) (883D2348). Write the countdown to the index as `for (; index > 0; index--)` (mtctr + bdnz).
+- **Rotated find loop, where the body tests the bound and the bottom tests the sentinel:** `for (k = head->next; k != head; k = k->next, i++) if (i >= idx) break;`
+  followed by `if (k == head) return err;` (883FD5C0).
+- **Two induction registers swapped (count and walk pointer):** move the walk pointer into a fresh block-local
+  (`{ Node **q = p; for (i = n; i > 0; i--, q++) ... }`). That flips the allocation order (883DBBA0, 7 off to 0).
+- **A byte-compare loop on `cmpw` (signed) pointers with `subf.` is the memcmp intrinsic**: `#pragma intrinsic(memcmp)` +
+  `memcmp(a, b, 16)`. Hand-written loops give cmplw or get unrolled (8836E4D0).
+- **Pixel box filters (882CDCD8):** use separate row pointers `p`/`n` (`n = src + pitch`) and recompute rowEnd in the row loop
+  (`rowEnd = src + width*4` inside the loop). The increment order in the for header decides the order of the bottom adds: `dst += dstPitch, src += 2*pitch`.
+  Lane sums need `unsigned` (`(unsigned)(x) & mask`), or `>>` becomes srawi.
+- **Flag set/clear inline:** `if (!v) f |= 2; else f &= ~2u;` gives the target's `ori` preload and then conditional `rlwinm` (88384918).
+  The ternary and the explicit-local forms are worse.
+- **A hoisted `li r3,0` ahead of `if (outCount)` stores**: write `if (!outCount) return 0; *outCount = n; return 0;` (88322EB0).
+- Unsolved: 8836F5C8 (bswap: OR-chain order 11 off. The macro operand order has no effect, and an inline swap drops the intermediate store),
+  88329C00 (strstr: the target iterates the haystack pointer), 88359B78 (fader: `rotlwi`/`clrrwi` copies not reproduced),
+  882CDE48/882CDF48 (16-bit box filters: body matches, prologue load order h/pitch and src/dst does not), 883A3000 (pool alloc:
+  the target folds the +0x10 `used` offset into the loop pointer), 88385498 (sibling of 88384A00: 8 off in the scheduling of the second copy), 88329A88
+  (atoi from the right: the target keeps two saved registers, std/ld rather than savegprlr).

@@ -1,5 +1,5 @@
-/* 0x885AA050: calls virtual slot 5 with 0 on the object of the i-th item of the singly linked list at +0x2C (count +0x34); sibling 885AA168 calls slot 3. */
-/* Near miss (agAB, /Oc): 2 off, the vtable slot is loaded into r10 where the target reuses r11. The C++ virtual form gives the same. */
+/* 0x885AA050: calls virtual slot 5 with 0 on the object of the i-th item of the singly linked list at +0x2C (count +0x34); sibling 0x885AA168 calls slot 3. */
+/* Matched on /O1 (agAF). The agAB /Oc draft unchanged; /O1 reuses r11 for the vtable slot. */
 typedef struct O O;
 typedef struct OVt { void *f[5]; int (*f5)(O *o, int a); } OVt;
 struct O { OVt *vt; };
