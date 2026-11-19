@@ -3135,5 +3135,37 @@
   "symbols": {
    "fn_886F5FB0": 148
   }
+ },
+ {
+  "source": "src/xbox360/me_recset_vec_find_or_trim_887311F8.cpp",
+  "object": "me_recset_vec_find_or_trim_887311F8.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/cx44_b.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "recset_vec_find_or_trim_887311F8": 172
+  }
+ },
+ {
+  "source": "src/xbox360/me_table_kind_for_886F75E0.c",
+  "object": "me_table_kind_for_886F75E0.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/me_ts4_hash_to_kind_886ED8E0.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_table_kind_for_886F75E0": 188
+  }
  }
 ]

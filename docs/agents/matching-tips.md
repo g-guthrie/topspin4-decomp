@@ -2870,3 +2870,53 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - Draft 8877C3E8 (2 off): the loads of `0x2c4` and `0x2c0` come out in the wrong order before the find call.
 - Skipped: 886F1488 (its callee is VMX with no source), 88713F18 and 886F51C0 (struct-by-value), 88725290, 887205F0 and 88745F58
   (constructors and destructors with member calls), 8877B418 (VMX), 8871C598 (VMX).
+
+## agBA (b196): gameplay queue lines 219-250 (1 match, 2 drafts)
+- **Vector find returning a field of the hit, with `last` loaded before `first`** (88657C70, matched plain /Oc): an inline
+  `find()` with `Ent **end = o->last;` before the `for (it = o->first; it != end; it++)` loop, `return *it` / `return 0`.
+  An out-param id that the target spills to the stack (`stw r5,0x50(r1)` plus `mr r8,r5`) is a local copy `u32 k = id;`
+  whose address goes to the lookup. Without the copy the parameter's home slot is used (36 off).
+- **A self-relative 4-byte table walk calling a hash helper that keeps r5-r9 live** (887FAA48) needs LTCG with
+  `flags(/Ob1):src/xbox360/cx39_ctx_hash.c`. Write the hash tests as a `switch` (not if/else) to get the branch-out store
+  blocks, and read `t->n` twice (`if (t->n > 0) { int n = t->n; ...`) for the `mr r5,r11` copy. Still 1 off on the
+  `add` operand order of `t->rel + i*4`; no ordering, helper, or cast changed it (draft).
+- Vector find + vcall + erase (88912118): preset `int r = 0;` with `break` gives the single exit and the early
+  `li r3,0`; `Vec *v = &m->v` gives the r30 erase argument. Still 1 off on `cmplw` operand order for `*b == o->b` (draft).
+- **Destructors whose vtable stores must stay ahead of the member loads (886B14E0):** in a real C++ class the code matches
+  exactly, but the checker rejects compiler vtables (`??_7X@@6B@` cannot be renamed to `lbl_`). In C, write the vtable
+  stores explicitly and free through `static void rel(void **pp) { if (*pp) F(*pp); }`. That keeps `stw vt; lwz p`.
+  The inline array-destroy loop then comes out right, except that `addi r30,this,0x294c` (the end of the array, which is
+  also `&o->p294c`) is CSE'd above the first free. That leaves it 8 off, so it was dropped.
+- 888C93E8 (an init with mixed int/float zero stores): sub-struct `static` init helpers taking `float z` fix most of the
+  interleave (6 off). Reading the float global inside the first helper fixes the float order but moves a `lis`
+  (4 off). Dropped.
+- Dropped/skipped:
+  - 8888D278: ctor with a base call and member stores, 6 off. The `lis`/`li r10,1` schedule is the same in C and C++.
+  - 888B8D98: dtor with a singleton clear, 8 off in C and C++.
+  - 886D5F78: LTCG, but ga6_o.c declares the 2nd param of ga6_pair_accepts_886D0CE0 as `void *unused`. The target passes a
+    float in f1, so LTCG drops it. This needs a fix to that prototype by its owner.
+  - 886A1628: the LTCG callee fn_886643F8 has no source.
+  - 8865C308: hash-flag predicate, 40 off.
+  - 888FBA90/888FBB40: strings.
+  - 888E89D8/888E4CA0/888CC218: 64-bit packing.
+  - 888B8578/88692670: VMX.
+  - 886DC7A8: clrrwi.
+
+## agBB (b196): renderer queue lines 167-240 plus the never-attempted list (4 matches, 1 draft)
+- **Thread restart with a 25-slot handle table** (886F54D8): a plain `for (s = tbl; s != tbl + 25; s++) if (h == s->handle) { clear; break; }`
+  gives the target's `mr r11,r10` / `addi r9,r10,end` loop exactly. Taking `int *g = &global;` once gives the `subi r31` base used later.
+- **Erase-all as a one-line inline** (88709D98): the dead `addi r31,o,0x80` before the clear call comes from
+  `static void vclear(V *v) { v->last = copy(v->last, v->last, v->first); }` called as `vclear(&o->v)`. Writing the call inline drops it.
+- **Packed 10:10:10 unpack** (886F8518): compute all three products into locals, then do the stores. Storing each product directly
+  reloads the scale constant after every `stfs`; a separate `float s` local adds an `fmr`.
+- **A bool result kept in r3 and tested via `clrlwi r9,r3,24`** (886F0090): write `if (cond) ok = 1; else ok = 0;`, or
+  `ok = (unsigned char)(a && b);`. Plain `ok = a && b;` builds it in r9 and copies it to r3.
+- Draft 886F58A0 (1 extra instruction): a pointer-vector add with a free-slot search. Pushing by `&item` makes the compiler reload `item` after the slot store.
+- Dropped:
+  - 88701050/88700F88 (0.91 siblings): byte-buffer push with a grow-by-0x400 loop. The target reloads `size` on every iteration and has a `clrrwi` copy of the new cap; 39+ off in 6 forms.
+  - 8876D498: quadratic root. The target computes `fsqrts` twice (no CSE) and MSVC CSEs `__fsqrts`.
+  - 887312A8: find-or-append; the target keeps `first` and a byte offset as separate registers. 5 forms tried.
+  - 88752130: the frame is 0xb0, not 0x80, and a smart-pointer dtor class did not inline.
+  - 88728A48: 6 off, a pure r29/r30 swap between the global and the index.
+- Skipped: 886F7CD8, 887074E0, 887726F0 and most 2xx-byte entries (struct-by-value `std r3/r4`); 886F9F00 (VMX); 8873AFF0 (lbl_88D45B38
+  dtor family); 886FBBF8 (the target tests a stale register); 887000D8 (bitfield packing from incoming r5-r10); the ctors 88721F10, 8872A910 and 8872E248 were not attempted.

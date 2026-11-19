@@ -54930,3 +54930,65 @@ src/xbox360/me_ts4_swing_obj_ctor_888DE430.cpp:
 src/xbox360/me_view_sync_visibility_886ECC38.c:
 	.pdata      start:0x881254D0 end:0x881254D8
 	.text       start:0x886ECC38 end:0x886ECCE0
+
+src/xbox360/me_anim_key_reached_886F34D0.c:
+	.pdata      start:0x88125708 end:0x88125710
+	.text       start:0x886F34D0 end:0x886F3584
+
+src/xbox360/me_erase_owner_entries_88709D98.c:
+	.pdata      start:0x88125E48 end:0x88125E50
+	.text       start:0x88709D98 end:0x88709E6C
+
+src/xbox360/me_keyed_entry_dispatch_88657C70.c:
+	.pdata      start:0x881230C8 end:0x881230D0
+	.text       start:0x88657C70 end:0x88657D20
+
+src/xbox360/me_recset_vec_find_or_trim_887311F8.cpp:
+	.pdata      start:0x88126958 end:0x88126960
+	.text       start:0x887311F8 end:0x887312A4
+
+src/xbox360/me_relobj_find_by_id_70f060e8_88779CC0.c:
+	.pdata      start:0x88127848 end:0x88127850
+	.text       start:0x88779CC0 end:0x88779D74
+
+src/xbox360/me_relobj_find_by_id_a3521606_88779D78.c:
+	.pdata      start:0x88127850 end:0x88127858
+	.text       start:0x88779D78 end:0x88779E2C
+
+src/xbox360/me_restart_worker_thread_886F54D8.c:
+	.pdata      start:0x88125770 end:0x88125778
+	.text       start:0x886F54D8 end:0x886F55A4
+
+src/xbox360/me_script_is_leap_year_8877BA30.c:
+	.text       start:0x8877BA30 end:0x8877BAEC
+
+src/xbox360/me_script_list_has_id_8877C4A8.c:
+	.text       start:0x8877C4A8 end:0x8877C560
+
+src/xbox360/me_svc_blocks_differ_8877B1F0.c:
+	.pdata      start:0x881278C0 end:0x881278C8
+	.text       start:0x8877B1F0 end:0x8877B2A0
+
+src/xbox360/me_table_kind_for_886F75E0.c:
+	.pdata      start:0x88125820 end:0x88125828
+	.text       start:0x886F75E0 end:0x886F769C
+
+src/xbox360/me_table_lookup_886F76A0.c:
+	.text       start:0x886F76A0 end:0x886F7738
+
+src/xbox360/me_ts4_gen_select_index_888C2B40.c:
+	.pdata      start:0x8812EA48 end:0x8812EA50
+	.text       start:0x888C2B40 end:0x888C2BE4
+
+src/xbox360/me_ts4_reltab_fill_records_888D5298.c:
+	.text       start:0x888D5298 end:0x888D533C
+
+src/xbox360/me_ts4_state_commit_next_888F56E0.c:
+	.pdata      start:0x8812FC80 end:0x8812FC88
+	.text       start:0x888F56E0 end:0x888F5784
+
+src/xbox360/me_unpack_dec3n_886F8518.c:
+	.text       start:0x886F8518 end:0x886F85B0
+
+src/xbox360/me_update_window_fraction_886F0090.c:
+	.text       start:0x886F0090 end:0x886F0134

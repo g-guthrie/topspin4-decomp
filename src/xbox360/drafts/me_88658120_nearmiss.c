@@ -10,7 +10,7 @@ typedef struct Event { int type; unsigned int name; int value; } Event;
 struct Obj;
 typedef struct ObjVt { char p[0x4c]; int (*get_id)(struct Obj *o); } ObjVt;
 typedef struct Obj { ObjVt *vt; char p[0x1c]; unsigned char enabled; } Obj;
-int fn_88657C70(Obj *o, Event *ev, void *skip);
+int ts4_keyed_entry_dispatch_88657C70(Obj *o, Event *ev, void *skip);
 void ts4_set_enabled_notify_88658120(Obj *o, unsigned char on)
 {
     Event ev;
@@ -24,6 +24,6 @@ void ts4_set_enabled_notify_88658120(Obj *o, unsigned char on)
         ev.value = o->vt->get_id(o);
         ev.name = 0xB528F04C;
     }
-    fn_88657C70(o, &ev, 0);
+    ts4_keyed_entry_dispatch_88657C70(o, &ev, 0);
     o->enabled = on;
 }

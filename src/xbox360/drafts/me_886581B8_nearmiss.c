@@ -11,7 +11,7 @@ typedef struct Entry { char p[8]; Timer *timer; } Entry;
 struct Obj;
 typedef struct ObjVt { char p[0x4c]; int (*get_id)(struct Obj *o); } ObjVt;
 typedef struct Obj { ObjVt *vt; char p[0x20]; Lock lock; char q[0x1c]; Entry **begin; Entry **end; } Obj;
-int fn_88657C70(Obj *o, Event *ev, void *skip);
+int ts4_keyed_entry_dispatch_88657C70(Obj *o, Event *ev, void *skip);
 
 /* 0x886581B8: under the object's lock, clear every entry's timer and broadcast event 0x487850EA. */
 void ts4_reset_timers_notify_886581B8(Obj *o)
@@ -30,6 +30,6 @@ void ts4_reset_timers_notify_886581B8(Obj *o)
     ev.type = 12;
     ev.value = o->vt->get_id(o);
     ev.name = 0x487850EA;
-    fn_88657C70(o, &ev, 0);
+    ts4_keyed_entry_dispatch_88657C70(o, &ev, 0);
     lk->vt->unlock(lk);
 }
