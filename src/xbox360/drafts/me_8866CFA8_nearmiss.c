@@ -1,3 +1,4 @@
+/* agP 2026-11-19: pointer-local vt/lim1/n0-n1 stores and heap-global load: 14-15 both routes; target copies s to r31 before the field stores. */
 /* NEAR MISS (14 lines: prologue scheduling only; target does `mr r31,r3` and `lis r3,heap` before
  * the header stores, which then go through r31). Everything after the call matches.
  * 0x8866CFA8: constructor; both blend limits take the script default, the two

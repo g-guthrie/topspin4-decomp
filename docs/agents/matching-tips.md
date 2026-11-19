@@ -1141,3 +1141,29 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   /Ob1 or no /Oc. The IR order does not matter, so it looks like register choice (target r4, ours r5).
 - Zero result kept in r31 across a call (889A0BE8): `int result = 0; ... if (h) result = h->value; return result;`.
 - 888CF290/888D0150 dead `li r11,0`: `ok` flags, an early-return helper and a value-folded ready() all make it worse (6-24 off).
+- The /O1 region: unmatched functions between about 0x882C0000 and 0x883F0000 with `cmpwi r3,0x0` (cr0) after a call are
+  mostly /O1 units that return error codes (883E86A0, 883E86F8, 883E8398, 883E8410, 883E8B28, 883E9170, 883E9758, 883E8EB8,
+  883FB528, 883FB620, 883FDB00, 882DDC08, 883E9BC8). The usual shape is `int r = f(...); if (r) return r;`. A scan of
+  textdis.pkl for small unmatched functions containing `cmp[l]wi rN,` (no cr6) below 0x88400000 found about 85. Free calls
+  that pass a file/line pair use `lbl_88B3302C->heap` and `lbl_88039A20` with the line as an immediate. Not solved:
+  /O1 rotates `for` loops (a jump to the bottom test) where 883E6308 tests at the top, and /O2 gives the right loop with cr6.
+- Helper for this pass: scratchpad agN/r3.py `go(addr, name, src, h1, h2, fls=...)`. It loops over flag sets, fills in
+  callee names from reloc/RENAME feedback, checks LTCG and saves (spec + done list) on a match.
+- An inline member constructor that zeroes a field and then copies every field (`stw 0,4(d)` followed by a full
+  copy; 881BA060) needs the copy written field by field after `d->b = 0;`. A struct assignment drops the dead store.
+- A find helper with a default (`if (!o) return s->def; return o;`, 8816D220) keeps the target's duplicated return
+  tails. `if (o) return o; return s->def;` and `o ? o : def` merge them.
+
+## agP (2026-11-19, b146): pointer-local stores, second pass over scheduling drafts (4 matches)
+- The pointer-local store does not have to be the store right before the misplaced load. Put it on the store that
+  the target emits just before the load: 886BBC38 (body weight stores in both if/else arms), 886E2578 (the last
+  list field, `{ void **pc = &pl->capacity; *pc = 0; }`), 88677AC0 (court stores in both arms; 8 off -> match),
+  88683BF0 (the n4c store in a zeroing block, so the float zero loads after 0x40-0x4C; LTCG only, plain 23).
+  Try each store in the block around the residue, one at a time. It costs about a minute per candidate.
+- Doing the store through the pointer on the store right before the misplaced load often does nothing, or it
+  grows the size (88677AC0 b->server: +8 bytes).
+- No effect, so do not retry the trick on: a constant li/lis on the wrong side of a store (88151088, the 8822AFE8
+  family), a parameter spill (8864BAE8), a zero register choice (88640810, r10 vs r11), or a missing early `mr r31,r3`
+  in constructors (8866CFA8, 886D48F8).
+- matching-b146 still names 0x8814B440 `lbl_8814B440` on the plain route, but symbols.txt calls it `g_ts4_event_value`.
+  With the symbols.txt name, the plain check fails only by that relocation name, and LTCG matches.

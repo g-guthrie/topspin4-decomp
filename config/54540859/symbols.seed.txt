@@ -32456,3 +32456,7 @@ fn_88889240 = .text:0x88889240; // type:function size:0x68
 fn_888885F8 = .text:0x888885F8; // type:function size:0x6C
 fn_88995400 = .text:0x88995400; // type:function size:0x70
 fn_887D0970 = .text:0x887D0970; // type:function size:0x68
+ts4_serve_scoring_update_server_and_ends_88677AC0 = .text:0x88677AC0; // type:function size:0x174
+ts4_shot_analysers_bind = .text:0x886BBC38; // type:function size:0xE4
+ts4_event_weights_ctor_886E2578 = .text:0x886E2578; // type:function size:0x3C
+ts4_rally_tracker_reset_88683BF0 = .text:0x88683BF0; // type:function size:0x184

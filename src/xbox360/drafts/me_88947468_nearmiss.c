@@ -1,3 +1,4 @@
+/* agP 2026-11-19: 8822AFE8 constant family; pointer-local stores not applicable, still 2. */
 /* NEAR MISS 0x88947468, 2 instructions off on plain /Oc and LTCG (checked against work/matching-b134). Model: me_ts4_make_flagged_handle_88950190.c.
  * Only difference: the target schedules `mr r30,r4` (save of value) before `li r8,5`; ours swaps the two.
  * Tried: five set before k1 (6 off), after key (2), late (69), declaration order, block-scoped five, one-member struct. */

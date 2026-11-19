@@ -9392,6 +9392,22 @@
       "src/xbox360/me_ts4_lookup_hash_value_or_default_887D0970.cpp": {
         "status": "Matching",
         "source": "xbox360/me_ts4_lookup_hash_value_or_default_887D0970.cpp"
+      },
+      "src/xbox360/me_ts4_serve_scoring_update_server_and_ends_88677AC0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_serve_scoring_update_server_and_ends_88677AC0.c"
+      },
+      "src/xbox360/me_ts4_shot_analysers_bind_886BBC38.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_shot_analysers_bind_886BBC38.c"
+      },
+      "src/xbox360/me_ts4_event_weights_ctor_886E2578.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_event_weights_ctor_886E2578.c"
+      },
+      "src/xbox360/me_ts4_rally_tracker_reset_88683BF0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_rally_tracker_reset_88683BF0.c"
       }
     }
   }

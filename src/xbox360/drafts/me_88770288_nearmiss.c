@@ -1,3 +1,4 @@
+/* agP 2026-11-19: 8822AFE8 constant family (tips agO r3); not retried beyond pointer-local value store, still 2. */
 /* NEAR MISS (agO round 2, 2026-11-19): 2 off on plain and LTCG (/Oc): lwz of +0x48 is scheduled before lis 0x8118 instead of after.
  * Same residue as 888E1FC0/887011A8 (value passed by address to 8822AFE8). */
 /* Swing_DLL.xex 0x88770288: unless the handle at +0x3c is null or lbl_88D45B1C->+0x274 is set, forwards it by hash 0x4177D348,

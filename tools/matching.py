@@ -43661,6 +43661,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"fn_88995400": 112},
     },
+    {
+        "source": "src/xbox360/me_ts4_serve_scoring_update_server_and_ends_88677AC0.c",
+        "object": "me_ts4_serve_scoring_update_server_and_ends_88677AC0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_serve_scoring_update_server_and_ends_88677AC0": 372},
+    },
 )
 
 

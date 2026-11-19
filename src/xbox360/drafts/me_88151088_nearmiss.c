@@ -1,3 +1,4 @@
+/* agP 2026-11-19: pointer-local hash/header stores and a pointer-local w[] base do not move the lis (still 2 off both routes). */
 /* NEAR MISS 0x88151088 (fn_88151088), 2 instructions off on both plain /Oc and LTCG routes (work/army/ME/v.py chk, matching-b133).
  * Only difference: the target schedules `lis r8,0xdfa2` before the first `stw r11,0x0(r3)`; ours puts it after.
  * Tried: hash via const local, one-member id struct, header words through a helper or local pointer, b7c moved. */

@@ -2384,5 +2384,50 @@
   "symbols": {
    "fn_887D0970": 104
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_shot_analysers_bind_886BBC38.c",
+  "object": "me_ts4_shot_analysers_bind_886BBC38.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_shot_analysers_bind": 228
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_event_weights_ctor_886E2578.c",
+  "object": "me_ts4_event_weights_ctor_886E2578.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_event_weights_ctor_886E2578": 60
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_rally_tracker_reset_88683BF0.c",
+  "object": "me_ts4_rally_tracker_reset_88683BF0.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_rally_tracker_reset_88683BF0": 388
+  }
  }
 ]

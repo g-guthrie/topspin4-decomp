@@ -50171,3 +50171,17 @@ src/xbox360/me_ts4_ctor_hash_counter_88995400.c:
 src/xbox360/me_ts4_lookup_hash_value_or_default_887D0970.cpp:
 	.pdata      start:0x88129548 end:0x88129550
 	.text       start:0x887D0970 end:0x887D09D8
+
+src/xbox360/me_ts4_serve_scoring_update_server_and_ends_88677AC0.c:
+	.text       start:0x88677AC0 end:0x88677C34
+
+src/xbox360/me_ts4_shot_analysers_bind_886BBC38.c:
+	.pdata      start:0x881248A0 end:0x881248A8
+	.text       start:0x886BBC38 end:0x886BBD1C
+
+src/xbox360/me_ts4_event_weights_ctor_886E2578.c:
+	.text       start:0x886E2578 end:0x886E25B4
+
+src/xbox360/me_ts4_rally_tracker_reset_88683BF0.c:
+	.pdata      start:0x88123C60 end:0x88123C68
+	.text       start:0x88683BF0 end:0x88683D74
