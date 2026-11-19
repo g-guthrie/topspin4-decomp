@@ -3022,3 +3022,31 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   a by-value C++ vector with a dtor does not make the callee destroy it on Xbox (the caller destroys it). Dropped.
 - Skipped as too large or ctor-heavy: 8875B170 (factory with allocator switch), 88727248 (0x10d0 frame), 8877BCE8, 88759A20, 88725D58, 887270F0,
   8873C9A0, 8874EC80, 8871ABB0.
+
+## agBK
+
+- LTCG `bool` returns: when the target ends a branch with `li r11,1` / `clrlwi r3,r11,24` and its false paths jump into a
+  shared `li r11,0`, write each branch as one `return a && b && (c || d);` expression, not `if (...) return 1;`.
+  This took 88714F10 from 41 off to MATCH (ltcg=True, ctx=['src/xbox360/d3c_find_typed_entry_887818A0.c']).
+  A caller that keeps r4/r5 live across a `bl` with no save is LTCG.
+- 887322A8 (vertex decl, 2 off) did not move with any of these: a pointer local set early or mid-init, a u16 zero
+  local, /Ob1, /Os, /Ox, the vector and array in one local struct (33 off), or reordered element inits (24-38 off).
+  e[1] `off` before `stream` gives 3 off. Treat it as an /Oc scheduler quirk and stop retrying.
+- 88719D50 `lwzx` order (1 off): `i[p]`, `i + p`, `(u32)p + i*4`, and an inline-free `p[i]` all give the same diff.
+  A separate byte-offset counter makes it worse (6 off).
+- 8876D770 (switch via a bdzf chain with tail calls to fn_8876D560): case bodies must be laid out in target block order
+  (0,3,5,6,4,1,2). A `+0x24` load is hoisted only when you load it into a local first. It stayed 14 off on the
+  self-relative table address `(r + b*24) + r->off`, which reassociates every way I tried.
+
+## agBJ (b199): gameplay queue lines 417-438 (5 matches, 0 drafts)
+- **Unused-looking register in a vcall = a 7th argument** (887FCC80): a find loop whose result lands in r9 and is then "dead" is really the 7th arg (r9) of the vcall. Give the virtual a 7th parameter; MSVC deletes the loop otherwise. Loading `name`, `key` and `args` into locals before the dispatch call gives the target's load order; `int n = d->n; for (i < n)` gives the `subic.` countdown.
+- **A 4-byte value spilled to the stack (`addi r11,r1,0x50; stw; lwz r5,0(r11)`) and passed by value** (888EC458): a one-word C++ struct with a constructor (no copy ctor), initialised from a ternary of temporaries: `Hash k = c ? Hash(A) : Hash(B);`. Adding a user copy ctor passes it by address; `&k`, `const u32 &` and the C struct forms all fold it into r5.
+- **Hidden-pointer one-word return** (887EC1A8): `struct Ref { Ent *e; Ref(Ent*x):e(x){} };`, returned from an `extern "C"` .cpp function, matched first try. Slot handles here are `(gen<<14)|idx` into 0x14-byte slots (see me_ts4_handle_is_valid_887E9D78.c).
+- **XamShowKeyboardUI wrapper** (88885D30): a `switch` with only cases 1,6,7,9 (plus a default of 0) gives the `subi 1; cmplwi 8; mtctr; bdzf` chain as plain C. Find the argument order from the r8/r9/r10 registers.
+- **Gate-then-dispatch** (8886A0A0): `goto have;` after each alternative lookup gives the shared `cmplwi r3,0` tail. `ts4_hash_lookup_null_*` take no arguments.
+- **Float flag stores** (8867AC60, 12 off, dropped): `u8 a = v.x > c[..]; x = v.x;` gets the first compare right. The `!a` store being scheduled after the next fcmpu, and the load order hi/lo/z, did not move.
+- Dropped:
+  - 887EC968: slot alloc, 4 off. o and the 0x14 constant swap r28/r29, and the `stwx` operand order.
+  - 888DA5A8: reset, 11 off. r6 vs r11 for the reloaded `o->x28`.
+  - 888DD008: 19 off. The target loads `tmp.first` straight into r25; C and a C++ dtor class both add an `mr`.
+- Skipped: 887EE4B0, 88888F90, 8888D930, 888C9850 (ctors/this-return); 887FE8B0, 888687D8, 888EE390 (rldicr); 88644AE0, 886C5E18, 8864E4B0 (VMX); 8886F8B0 (strings); 888C5C90 (not attempted).
