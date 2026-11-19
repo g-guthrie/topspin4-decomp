@@ -2983,3 +2983,22 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - 88723E38 (format-text names hashed into 12-byte keys): the target frame is 0x30 bytes larger than any form tried (by-value return, out-pointer, C++ ctor). Dropped at 19 off.
 - 88771EA8: the self-relative entry `(char*)t + t->rel + i*0x14` is recomputed with `rel` reloaded at every use. This is the same open problem as in agBE. Dropped.
 - 88774260 is 3 off (draft): the target does `li r3,0; lwz r30,st.p; mr r4,r30`, and MSVC always loads r4 first.
+
+## agBH (b198/b199): gameplay queue lines 390-416, plus 424/427/463/466 (8 matches, 0 drafts)
+- **Self-relative table walks** (88867A40): `ebegin`/`eend` helpers written as `e = 0; if (rel != -1) e = ...` give the shape. `end != e` (end first) and `last != it` give the target's `cmplw` operand order. Use `ts4_memset`, not `memset`.
+- **A non-POD 8-byte return through a hidden pointer** (`addi r3,r1,0x50` before the call, then `lwz` from r3) is C++: give the struct a constructor and call it from an `extern "C"` function in a .cpp file. A plain C struct comes back in r3 as `std`. For an `A&&!B || C&&!D` predicate with one exit (`li r3,1`/`li r3,0`), write `int r; if (...) r = 1; else r = 0; return r;`. Returning `bool` adds a frame slot per temporary (888C1060).
+- `any = item->vcall() || any;` gives the `clrlwi`/`li 0`/`li 1` accumulate (887F7588). A `u32 n = last - first; for (i = 0; i < n; i++)` loop gives the `srawi.` + countdown.
+- **Field-wise record copies** (11 `lwz`/`stw` pairs plus `lbz`/`stb`) come from an inline copy helper that assigns each field. A struct assignment becomes `memcpy` (888D51B0).
+- If an unconditional-looking store is skipped by a branch, it belongs inside the `if` (887F8E00: `if (active) { *v = 1.0f; o->b2c = 0; }`). `lbl_8814B440` is 1.0f, and `g_ts4_script_constants[0]` is at 0x880D0F70.
+- A vector find whose loop reloads `last` each pass: write an inline `find()` with `it != m->last` in the condition and `return *it` / `return 0` (888C9F58).
+- An unsigned compare against a send length means the length was `sizeof(x)` (8864D828, `cmplwi r3,2`).
+- Dropped:
+  - 888CB3F0: 4 off; the else-branch `slot_at` add order did not move in 6 forms.
+  - 888E73B0: 25+ off; the target re-compares the id after a failed test.
+  - 8864D828: the fail block tail-merges into the second check; 5 forms.
+  - 88668DF8: 5 off; the dead `addi r11,r3,0x360` and the `[0]` add order.
+  - 888871D0: 11 off, register numbering only (`lis r9` vs `r11` for the global).
+  - 887F13B8: ctor store scheduling, 23 off.
+  - 8888AB30: the string/`lis` order and an `o->x30` reload; 26 off.
+- The agBF near misses 88879C48 (a local copy of `o->p10`) and 888ED7E0 (an int, bool or reordered `p3_set`) did not move.
+- Skipped: 888688C8, 88869008, 888E3C90 (rldicr); 8864C170 (std); 887F1E18 (clrrwi); 888B19F8, 886C4190, 88917EE0 (VMX).
