@@ -49261,3 +49261,7 @@ src/xbox360/me_ts4_make_hashed_ref_88179AF0.cpp:
 
 src/xbox360/me_ts4_rng_range_inclusive_8860BAB8.c:
 	.text       start:0x8860BAB8 end:0x8860BB30
+
+src/xbox360/me_ts4_blowfish_decrypt_88604AD0.c:
+	.pdata      start:0x88120BF0 end:0x88120BF8
+	.text       start:0x88604AD0 end:0x88604C8C

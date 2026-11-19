@@ -8460,6 +8460,10 @@
       "src/xbox360/me_ts4_rng_range_inclusive_8860BAB8.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_rng_range_inclusive_8860BAB8.c"
+      },
+      "src/xbox360/me_ts4_blowfish_decrypt_88604AD0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_blowfish_decrypt_88604AD0.c"
       }
     }
   }

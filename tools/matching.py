@@ -42311,6 +42311,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"fn_8860BAB8": 120},
     },
+    {
+        "source": "src/xbox360/me_ts4_blowfish_decrypt_88604AD0.c",
+        "object": "me_ts4_blowfish_decrypt_88604AD0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_blowfish_decrypt_88604AD0": 444},
+    },
 )
 
 
