@@ -10,7 +10,7 @@ typedef struct Ts4Parent8 { int pad[2]; void *child; } Ts4Parent8;
         return 0; \
     }
 extern int fn_883FC7B0(void *);
-extern int fn_883FBDC0(void *);
+extern int ts4_session_reset_883FBDC0(void *);
 extern int ts4_get_u32_off80_883FB590(void *);
 extern int ts4_get_u32_off80_883FB598(void *);
 extern int ts4_set_flag_on_entries_883FB5A0(void *);
@@ -21,7 +21,7 @@ extern int ts4_get_u32_off80_883FB618(void *);
 /* Swing_DLL.xex 0x883E40C0 */
 FWD_CHILD(ts4_forward_to_child_nonzero_883E40C0, fn_883FC7B0)
 /* Swing_DLL.xex 0x883E41F0 */
-FWD_CHILD(ts4_forward_to_child_nonzero_883E41F0, fn_883FBDC0)
+FWD_CHILD(ts4_forward_to_child_nonzero_883E41F0, ts4_session_reset_883FBDC0)
 /* Swing_DLL.xex 0x883E4228 */
 FWD_CHILD(ts4_forward_to_child_nonzero_883E4228, ts4_get_u32_off80_883FB590)
 /* Swing_DLL.xex 0x883E4260 */

@@ -142,7 +142,7 @@ ts4_word fn_881AB108();
 ts4_word fn_881B19A0();
 ts4_word fn_881B9148();
 ts4_word ts4_if_atomic_interlocked_dec_88288530();
-ts4_word fn_882908C0();
+ts4_word ts4_resource_from_blob_882908C0();
 ts4_word fn_88290C68();
 ts4_word fn_882C7288();
 ts4_word ts4_forward_to_fn_8841B5E0();

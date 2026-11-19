@@ -60,7 +60,7 @@ ts4_word fn_883C03D8();
 ts4_word lb3_celt_kiss_fft_stride_883C1EB8();
 ts4_word lb3_celt_kiss_ifft_stride_883C1FD0();
 ts4_word fn_883C72E0();
-ts4_word fn_883C8F98();
+ts4_word ts4_set_pan_clamped_883C8F98();
 ts4_word fn_883CA4F0();
 ts4_word fn_883CE7E0();
 ts4_word ts4_hash_bytes_883D1D68();

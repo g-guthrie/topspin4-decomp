@@ -50809,3 +50809,119 @@ src/xbox360/me_ts4_track_find_time_in_range_883CEBB8.c:
 src/xbox360/me_ts4_track_seek_time_in_range_883CF7F0.c:
 	.pdata      start:0x88114BB8 end:0x88114BC0
 	.text       start:0x883CF7F0 end:0x883CF860
+
+src/xbox360/me_ts4_apply_levels_883F1A68.c:
+	.pdata      start:0x881158D8 end:0x881158E0
+	.text       start:0x883F1A68 end:0x883F1BB4
+
+src/xbox360/me_ts4_bank_unload_883EBC90.c:
+	.pdata      start:0x881156F8 end:0x88115700
+	.text       start:0x883EBC90 end:0x883EBDBC
+
+src/xbox360/me_ts4_bind_by_key_883E39A8.cpp:
+	.pdata      start:0x881151A8 end:0x881151B0
+	.text       start:0x883E39A8 end:0x883E3A8C
+
+src/xbox360/me_ts4_blob_cache_refresh_8828E7D8.c:
+	.pdata      start:0x88110178 end:0x88110180
+	.text       start:0x8828E7D8 end:0x8828E8A4
+
+src/xbox360/me_ts4_blob_cache_refresh_8828E8A8.c:
+	.pdata      start:0x88110180 end:0x88110188
+	.text       start:0x8828E8A8 end:0x8828E974
+
+src/xbox360/me_ts4_child_gain_value_883F2960.c:
+	.pdata      start:0x88115950 end:0x88115958
+	.text       start:0x883F2960 end:0x883F2A30
+
+src/xbox360/me_ts4_effective_gain_883CC968.c:
+	.pdata      start:0x88114B20 end:0x88114B28
+	.text       start:0x883CC968 end:0x883CCA48
+
+src/xbox360/me_ts4_entry_table_release_883FB3E8.c:
+	.pdata      start:0x88115BB8 end:0x88115BC0
+	.text       start:0x883FB3E8 end:0x883FB4B4
+
+src/xbox360/me_ts4_io_worker_run_883DEB98.c:
+	.pdata      start:0x88114FE0 end:0x88114FE8
+	.text       start:0x883DEB98 end:0x883DECEC
+
+src/xbox360/me_ts4_item_set_destroy_883DB808.c:
+	.pdata      start:0x88114EC8 end:0x88114ED0
+	.text       start:0x883DB808 end:0x883DB8F0
+
+src/xbox360/me_ts4_load_name_table_883D1378.c:
+	.pdata      start:0x88114C60 end:0x88114C68
+	.text       start:0x883D1378 end:0x883D1484
+
+src/xbox360/me_ts4_msg_bind_slot_883F8460.cpp:
+	.pdata      start:0x88115A90 end:0x88115A98
+	.text       start:0x883F8460 end:0x883F8550
+
+src/xbox360/me_ts4_node_attach_apply_883CF350.c:
+	.pdata      start:0x88114B88 end:0x88114B90
+	.text       start:0x883CF350 end:0x883CF42C
+
+src/xbox360/me_ts4_node_attach_apply_883FE980.c:
+	.pdata      start:0x88115D38 end:0x88115D40
+	.text       start:0x883FE980 end:0x883FEA54
+
+src/xbox360/me_ts4_pose_reset_883CF1A0.c:
+	.pdata      start:0x88114B78 end:0x88114B80
+	.text       start:0x883CF1A0 end:0x883CF294
+
+src/xbox360/me_ts4_post_or_flush_883E84A8.cpp:
+	.pdata      start:0x881154F8 end:0x88115500
+	.text       start:0x883E84A8 end:0x883E8594
+
+src/xbox360/me_ts4_random_interval_scaled_883E06A0.c:
+	.pdata      start:0x88115080 end:0x88115088
+	.text       start:0x883E06A0 end:0x883E0778
+
+src/xbox360/me_ts4_release_child_arrays_882DDC70.c:
+	.pdata      start:0x88111320 end:0x88111328
+	.text       start:0x882DDC70 end:0x882DDD54
+
+src/xbox360/me_ts4_resource_from_blob_882908C0.c:
+	.pdata      start:0x881101C8 end:0x881101D0
+	.text       start:0x882908C0 end:0x882909B0
+
+src/xbox360/me_ts4_ring_alloc_88296B58.c:
+	.pdata      start:0x88110358 end:0x88110360
+	.text       start:0x88296B58 end:0x88296C94
+
+src/xbox360/me_ts4_session_reset_883FBDC0.c:
+	.pdata      start:0x88115C30 end:0x88115C38
+	.text       start:0x883FBDC0 end:0x883FBEAC
+
+src/xbox360/me_ts4_set_active_flag_883CA810.c:
+	.pdata      start:0x88114A28 end:0x88114A30
+	.text       start:0x883CA810 end:0x883CA8F0
+
+src/xbox360/me_ts4_set_pan_clamped_883C8F98.c:
+	.pdata      start:0x881149C0 end:0x881149C8
+	.text       start:0x883C8F98 end:0x883C9090
+
+src/xbox360/me_ts4_stop_all_groups_883F0528.c:
+	.pdata      start:0x88115880 end:0x88115888
+	.text       start:0x883F0528 end:0x883F0680
+
+src/xbox360/me_ts4_stop_current_883E2C90.c:
+	.pdata      start:0x88115160 end:0x88115168
+	.text       start:0x883E2C90 end:0x883E2D94
+
+src/xbox360/me_ts4_stop_node_tree_883F6760.c:
+	.pdata      start:0x88115A28 end:0x88115A30
+	.text       start:0x883F6760 end:0x883F6884
+
+src/xbox360/me_ts4_timer_chain_rearm_883E1CE0.c:
+	.pdata      start:0x881150F0 end:0x881150F8
+	.text       start:0x883E1CE0 end:0x883E1DD0
+
+src/xbox360/me_ts4_voice_slots_init_882A6150.c:
+	.pdata      start:0x881106A0 end:0x881106A8
+	.text       start:0x882A6150 end:0x882A6250
+
+src/xbox360/me_ts4_worker_shutdown_883DECF0.c:
+	.pdata      start:0x88114FE8 end:0x88114FF0
+	.text       start:0x883DECF0 end:0x883DEDD0

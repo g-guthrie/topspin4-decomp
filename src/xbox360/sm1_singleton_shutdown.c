@@ -25,7 +25,7 @@ extern int ts4_release_buf_and_res_883E9758(void *);
 extern void *lbl_88CAC9C4;
 extern int fn_883EA1F8(void *);
 extern void *lbl_88CAC9C0;
-extern int fn_883EBC90(void *);
+extern int ts4_bank_unload_883EBC90(void *);
 
 /* Swing_DLL.xex 0x883E8B98 */
 SINGLETON_SHUTDOWN(ts4_singleton_shutdown_883E8B98, lbl_88CAC9AC, ts4_release_res_883E8B28, lbl_88B3302C, lbl_88039A20, fn_88315F10, 0x431)
@@ -40,4 +40,4 @@ SINGLETON_SHUTDOWN(ts4_singleton_shutdown_883E9880, lbl_88CAC9BC, ts4_release_bu
 /* Swing_DLL.xex 0x883EA470 */
 SINGLETON_SHUTDOWN(ts4_singleton_shutdown_883EA470, lbl_88CAC9C4, fn_883EA1F8, lbl_88B3302C, lbl_88039A20, fn_88315F10, 0xa79)
 /* Swing_DLL.xex 0x883EBDC0 */
-SINGLETON_SHUTDOWN(ts4_singleton_shutdown_883EBDC0, lbl_88CAC9C0, fn_883EBC90, lbl_88B3302C, lbl_88039A20, fn_88315F10, 0x926)
+SINGLETON_SHUTDOWN(ts4_singleton_shutdown_883EBDC0, lbl_88CAC9C0, ts4_bank_unload_883EBC90, lbl_88B3302C, lbl_88039A20, fn_88315F10, 0x926)

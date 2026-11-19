@@ -1266,3 +1266,41 @@ Same bytes, and the relocations now carry the target names. No tool change neede
     the not-found second seek shared by both directions). Tried nested if/else, gotos and a `lo` local: 47-50 off.
   - 883D0C18 (callee of 883D2620): the target counts with `mtctr idx` and checks `n == head` before `idx > 0`. A plain
     `while (n != head && i--)` loop is 11 off. /O1, /Oc, /O2, /Os and LTCG did not give the ctr loop.
+
+## agS (2026-11-19, b150): /O1 cr0 scan, non-volatile group from 51 instructions (29 matches)
+- Re-filtered agQ/scan2.txt against b150 (scratchpad agS/filt.py): 70 non-volatile candidates were left. I worked them in
+  order from 51 to 86 instructions, plus siblings 883CF350 and 8828E8A8. All 29 matches are /O1 on the plain route, and
+  5 of them miss on LTCG (883F2960, 883CC968, 883FBDC0, 883CF1A0, 883C8F98). The three C++ ones
+  (883E39A8, 883E84A8, 883F8460) need real `virtual` methods because the target loads the method before the arguments.
+- **fmuls operand swap fixed by a float literal** (883F2960): `tmp * lbl_88039DD4` gave `fmuls f1,f0,f13` in either source
+  order. `tmp * 5.020597f` gives the target's `fmuls f1,f13,f0`, and the checker accepts it because the label holds the same
+  bytes. Read the label's value with `fn_check.target_data('lbl_X')` (TS4_MATCHING_DIR set) and print the shortest float
+  that round-trips. This may also fix agQ's 883DF888 (both fmuls swapped). It is still on the blocker list, so I did not try it.
+  Counter case (883FB2E0): two literals in a row (`* 0.016666668f * 0.25f`) are folded into one constant under the default
+  fp model, so keep externs there.
+- **A pointer-chain select that reloads the field** (883F1A68): `(o->own ? o->own->sys : 0) ? (...)->src : o->src` is CSE'd.
+  The target reloads +0xAC for the second use, and an inline accessor called twice does that:
+  `static Sys *obj_sys(Obj *o) { return o->own ? o->own->sys : 0; }`.
+- Edge-triggered flag tests (883CA810): `if ((f & B) && !on) ...; else if (!(f & B) && on) ...` reproduces the target reusing
+  the masked flag in a second `cmplwi`. Nested if/else forms give a different layout.
+- `extrwi.` vs `rlwinm.` on a word flag (883CC388): `if ((unsigned char)((t->flags >> 17) & 1))` gives `extrwi.`. A plain
+  shift-and-mask, a bitfield or `== 1` gives `rlwinm.`. (agQ's halfword case 883C7278 may be worth one try with this.)
+- `cmpwi cr6` on a call result instead of cr0 (883FBDC0): the call sits in an inline helper that does its own
+  `if (r) return r; return 0;`, and the caller tests the helper's result again.
+- Two early `return 0x21` tests written separately (`if (!a) return X; if (!a->b) return X;`) keep the target's shared
+  `li r3,X` block above the chain walk (883FE980). With `||` the returns merge at the end.
+- Header-size read before an inline zeroing (882908C0): `unsigned h = b->hdr; void *d = init(res); copy(d, b, h);`.
+  The target loads `hdr` before the five `std` zero stores. Passing `b->hdr` as an argument loads it after them.
+- Inner list loop with a prefetched next (883D1240, 2 off): `for (l = first; (cur = l) != end; ) { l = l->next; ... }` gives
+  the target's rotation with `mr r11,r31` in the bottom test.
+- Signatures found from register use: fn_883DE760 takes 5 arguments (r5 holds the buffer that was null-tested), and
+  ts4_call_cb_883C7220 is `void (o, int, int, int)` (see d9ob_call_cb_883C7220.c). I fixed the 883E2C90 prototype to match and
+  re-checked it on both routes. Before you declare a callee, grep src/ for an existing prototype.
+- Near misses (drafts): 883E3F20 (2 off, swapped lwz destinations r10/r11 in an add loop), 883CC388 (2 off, `stb` of the
+  out-flag scheduled before `mr r3,r31`), 883D1240 (2 off, see above), 883EA1F8 (1 off, `add r10,r30,r10` for t->blocks[i];
+  every indexing form gives the reverse order).
+- Open, more than 3 off: 883F9B68 and 883DA348 (count-then-index list helpers; MSVC CSEs `head->next` across the count loop and the
+  target does not. A `size()` inline helper does not help), 883F6FA0 (12 off, an int64 stamp read through a union; the stack slots of
+  `now` and the temporary are swapped), 88290C68 (sibling of 882908C0; r30/r31 swapped between `b` and `res`), 883F2158 (12 off,
+  register assignment only, nested list walks), 883CE7E0 (singleton creator; one register too many), 8828FA98, 883FB2E0, and 88296908 (the
+  `mr r1,r1` / `mr r31,r31` / `mr r2,r2` spin hints have no intrinsic in this compiler setup).
