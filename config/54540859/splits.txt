@@ -49563,3 +49563,15 @@ src/xbox360/me_ts4_pop_depth_push_op17_8849A688.c:
 src/xbox360/me_ts4_pool_node16_new_8825B800.c:
 	.pdata      start:0x8810E530 end:0x8810E538
 	.text       start:0x8825B800 end:0x8825B868
+
+src/xbox360/me_ts4_make_pair_handle_8894C820.c:
+	.pdata      start:0x88131C40 end:0x88131C48
+	.text       start:0x8894C820 end:0x8894C928
+
+src/xbox360/me_ts4_publish_mode_888C8B30.c:
+	.pdata      start:0x8812ECB8 end:0x8812ECC0
+	.text       start:0x888C8B30 end:0x888C8C9C
+
+src/xbox360/me_ts4_reset_handle_flags_887D5788.c:
+	.pdata      start:0x88129700 end:0x88129708
+	.text       start:0x887D5788 end:0x887D58DC

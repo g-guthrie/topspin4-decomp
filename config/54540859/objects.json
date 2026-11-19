@@ -8772,6 +8772,18 @@
       "src/xbox360/me_ts4_pool_node16_new_8825B800.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_pool_node16_new_8825B800.c"
+      },
+      "src/xbox360/me_ts4_make_pair_handle_8894C820.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_make_pair_handle_8894C820.c"
+      },
+      "src/xbox360/me_ts4_publish_mode_888C8B30.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_publish_mode_888C8B30.c"
+      },
+      "src/xbox360/me_ts4_reset_handle_flags_887D5788.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_reset_handle_flags_887D5788.c"
       }
     }
   }

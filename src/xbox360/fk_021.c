@@ -135,7 +135,7 @@ ts4_word ts4_clear_script_prop_B1CA7E98_888C8190();
 ts4_word ts4_clear_script_prop_DB0366CE_888C8230();
 ts4_word ts4_clear_script_prop_052C33A9_888C82D0();
 ts4_word ts4_clear_script_prop_3D814F55_888C87D8();
-ts4_word fn_888C8B30();
+ts4_word ts4_publish_mode_888C8B30();
 ts4_word fn_888C9178();
 ts4_word fn_888CB4D0();
 ts4_word fn_888D0838();
@@ -1978,10 +1978,10 @@ ts4_word ts4_call_seq_u32_lbl_88D45954_887832C0(void)
     return 0;
 }
 
-/* Swing_DLL.xex 0x887832F0: call_seq u32@lbl_88D45954, fn_888C8B30 */
+/* Swing_DLL.xex 0x887832F0: call_seq u32@lbl_88D45954, ts4_publish_mode_888C8B30 */
 ts4_word ts4_call_seq_u32_lbl_88D45954_887832F0(void)
 {
-    fn_888C8B30((ts4_word)(*(ts4_word *)lbl_88D45954));
+    ts4_publish_mode_888C8B30((ts4_word)(*(ts4_word *)lbl_88D45954));
     return 0;
 }
 

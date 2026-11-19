@@ -1023,3 +1023,16 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - A constructor that keeps `this` in r31 unused and stores through the base-ctor result (885E5E40): a C++ ctor gives
   the right prologue but stores through r31 (16 off). Plain C stores through r3 but drops the r31 save (27 off).
 - File-static singleton instances (8861DCF8): the plain route matches. LTCG folds the static into a pp1_pool symbol.
+- Vector realloc-insert variants (agM round 2):
+  - When the old range is destroyed by an inline per-item loop (`lwz r29,4(v); lwz r30,0(v); cmplw; bl dtor; addi`),
+    use a static inline `destroy_range` that calls the one-item destructor in a loop. A range-destroy prototype swaps
+    r25 and r26.
+  - A 5th `unsigned char at_end` parameter (`mr rX,r7` ... `clrlwi`) skips the tail copy (`if (!at_end) d = ucopy(...)`).
+  - Allocator member at +8 (`addi r6,v,8` before the newcap test, then `lwz r3,0(r6)`): use an `Alloc *a = &v->alloc;`
+    local and an inline `allocate(a, n)`.
+  - Items of plain floats or vectors copied field by field: use a `copy2` helper. A struct assignment gives lwz/stw, or
+    a single lvx.
+- Several {name,value} table searches (885EEB50, 8841EA48, 884DAF90) are 1 instruction off: the `lwzx rD,rOff,rBase`
+  operand order, with no source form found yet. Drafts are in src/xbox360/drafts/.
+- Before a long run, check that the build dir v.py uses still exists (`ls -dt work/matching-b1* | head`). The dirs
+  rotate, and fn_check then fails with FileNotFoundError in load_symbols.

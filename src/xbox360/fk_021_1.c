@@ -136,7 +136,7 @@ ts4_word ts4_clear_script_prop_B1CA7E98_888C8190();
 ts4_word ts4_clear_script_prop_DB0366CE_888C8230();
 ts4_word ts4_clear_script_prop_052C33A9_888C82D0();
 ts4_word ts4_clear_script_prop_3D814F55_888C87D8();
-ts4_word fn_888C8B30();
+ts4_word ts4_publish_mode_888C8B30();
 ts4_word fn_888C9178();
 ts4_word fn_888CB4D0();
 ts4_word fn_888D0838();

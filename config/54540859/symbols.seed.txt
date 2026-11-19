@@ -32301,3 +32301,6 @@ fn_884994C8 = .text:0x884994C8; // type:function size:0x80
 fn_88477DC8 = .text:0x88477DC8; // type:function size:0x80
 fn_8849A688 = .text:0x8849A688; // type:function size:0x78
 fn_8825B800 = .text:0x8825B800; // type:function size:0x68
+ts4_make_pair_handle_8894C820 = .text:0x8894C820; // type:function size:0x108
+ts4_publish_mode_888C8B30 = .text:0x888C8B30; // type:function size:0x16C
+ts4_reset_handle_flags_887D5788 = .text:0x887D5788; // type:function size:0x154
