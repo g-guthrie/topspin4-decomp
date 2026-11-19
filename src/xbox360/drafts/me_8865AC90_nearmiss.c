@@ -1,3 +1,4 @@
+/* agentA2 (2026-11-18 tips pass): volatile read of half_width or of the zero, block-local restrict store of *dx, z read into a local, decl reorders: best stays 7 off (plain and LTCG). Residue: f12/f13 for zero vs width and the lfs z placed before the *dx store. */
 /* NEAR MISS (7 instructions): f12/f13 swapped between the half-width and the zero constant. */
 /* 0x8865AC90: measures how far a point lies outside a court box: the lateral excess of |x| over the
  * half-width, and the depth excess past the far line (positive z) or the near line (negative z). */

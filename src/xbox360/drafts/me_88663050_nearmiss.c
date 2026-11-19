@@ -1,3 +1,4 @@
+/* agentA2 (2026-11-18 tips pass): named active index, named rel offset, volatile active, match local, operand swap: still 4 off; MSVC reassociates (i*320+off)+t to (i*320+t)+off. */
 /* NEAR MISS (4 off: ctx->active / ctx->match load order and the offset add placement).
  * 0x88663050: bind the controller's cached pointers into the shared game data
  * (two sub-blocks of the court record, the rules block) and reset the active player's

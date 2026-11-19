@@ -777,3 +777,9 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   It did not help the `li r6,0` case in 0x886AC9D8.
 - Vector load order inside `a = a - b` (b loaded first): read `a` into a local and read `b` through a volatile cast,
   `{ __vector4 x = o->v; o->v = __vsubfp(x, *(volatile __vector4 *)&d->v); }`, fixed 0x8865A6B8 (3 off to match).
+- Vector register numbering of a constant loaded for an inline (agentA2, 2026-11-18): when the target gives a loaded
+  vector its own fresh register (v61) while ours reuses one (v63), read it through a volatile cast,
+  `{ __vector4 ax = *(volatile __vector4 *)&lbl_880FC6B0; probe.dir = normalize3(ax); }`. Fixed 0x886925A8 (7 off to
+  match, plain and LTCG). It did not move the row-load numbering of 0x8864EAB8 or the matrix of 0x886634E0.
+- A volatile read of one float of a stack pair (`s = *(volatile float *)&sc.s`) fixed the reload/fmuls order of
+  0x88644C58 (8 -> 7 off); a named `int r = *rel` inside a relative-array helper took 0x8866A930/0x8866AC38 from 9 to 8.

@@ -1,3 +1,4 @@
+/* agentA2 (2026-11-18 tips pass): block-local pointer zero store in ref_init, named call arguments in a block, volatile/pointer read of lbl_88D45290: still 7 off (plain and LTCG); target loads the manager address before li 0. */
 /* NEAR MISS 0x88640810: 7 off, the zero store of the handle and the manager load are scheduled differently
  * (target: lis; mr; li 0; addi; addi; stw; lwz). Declaration order and a Ref struct did not change it. */
 /* 0x88640810 (hand match): looks up the resource named by the descriptor through the global resource

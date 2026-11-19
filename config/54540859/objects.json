@@ -8404,6 +8404,10 @@
       "src/xbox360/me_ts4_ctor_two_tables_88695568.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_ctor_two_tables_88695568.c"
+      },
+      "src/xbox360/me_ts4_probe_depth_offset_886925A8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_probe_depth_offset_886925A8.c"
       }
     }
   }

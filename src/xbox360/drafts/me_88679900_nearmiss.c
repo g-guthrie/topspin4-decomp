@@ -1,3 +1,4 @@
+/* agentA2 (2026-11-18 tips pass): volatile reads of out->v[0] / v[2], named call args, named lane values: still 8 off (plain and LTCG); stack-slot sharing residue unchanged. */
 /* NEAR MISS (8 off: the two lane-insert temporaries share the sine/cosine stack slots instead
  * of a separate slot at 0x58, which also flips two load orders). Tried struct/explicit temp forms.
  * 0x88679900: ground-plane heading vector: write {len, 0, 0, 0} to out, then

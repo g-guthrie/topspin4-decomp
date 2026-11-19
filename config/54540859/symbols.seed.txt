@@ -32208,3 +32208,4 @@ ts4_mode_exit_886875D8 = .text:0x886875D8; // type:function size:0x134
 ts4_append_group_bindings_886CB3A8 = .text:0x886CB3A8; // type:function size:0x118
 ts4_pose_subtract_8865A6B8 = .text:0x8865A6B8; // type:function size:0x4C
 ts4_ctor_two_tables_88695568 = .text:0x88695568; // type:function size:0xD4
+ts4_probe_depth_offset_886925A8 = .text:0x886925A8; // type:function size:0xC8

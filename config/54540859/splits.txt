@@ -49212,3 +49212,7 @@ src/xbox360/me_ts4_pose_subtract_8865A6B8.c:
 
 src/xbox360/me_ts4_ctor_two_tables_88695568.c:
 	.text       start:0x88695568 end:0x8869563C
+
+src/xbox360/me_ts4_probe_depth_offset_886925A8.c:
+	.pdata      start:0x88123FB8 end:0x88123FC0
+	.text       start:0x886925A8 end:0x88692670

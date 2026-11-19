@@ -1,3 +1,4 @@
+/* agentA2 (2026-11-18 tips pass): see the .c draft: arg-naming, block-local zero store and volatile manager read leave 7 off. */
 /* NEAR MISS draft (not built, not counted). See docs/agents/matching-tips.md, "Near misses parked". */
 struct Scene;
 extern "C" { void ts4_if_atomic_interlocked_dec_881876D0(Scene *p);

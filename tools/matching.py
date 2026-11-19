@@ -42242,6 +42242,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_ctor_two_tables_88695568": 212},
     },
+    {
+        "source": "src/xbox360/me_ts4_probe_depth_offset_886925A8.c",
+        "object": "me_ts4_probe_depth_offset_886925A8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_probe_depth_offset_886925A8": 200},
+    },
 )
 
 

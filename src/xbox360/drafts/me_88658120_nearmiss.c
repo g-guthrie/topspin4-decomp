@@ -1,3 +1,4 @@
+/* agentA2 (2026-11-18 tips pass): block-local pointer store of ev.type, volatile vtable read, named call args, named 12: still 7 off (plain and LTCG). */
 /* agentA2 (b120 real-virtuals pass): C++ with the vtable callees as real virtuals (correct slots) gives the same 7 off;
    tried up to 8 variants (inline members, guard object, zero/hash locals, early-return spellings). Still 7 off. */
 /* NEAR MISS (7 off: register numbering only; target keeps r10 for the 12 and uses r9/r8/r7 for
