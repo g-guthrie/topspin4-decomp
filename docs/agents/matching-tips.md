@@ -1972,3 +1972,17 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   884D9110 (format string at 0x88084480 has no symbol); 88944980 (fn_889426C8 gets an unset r4, probably an unused float slot).
 - Family: 8826C388, 8826C400, 8826C478, 8826C4F0, 8826CC60, 8826CCD8, 8826D010, 8826D7F0, 8826D868, 8826D8E0 and 8826D958 share one
   template (self-relative table find through a key getter, with 0 kept in r24 and t in r29, frame 0xa0). C forms are 22+ off on /Oc, /O1 and LTCG.
+
+### agAG round 2 (b175): no matches, 1 draft
+- 8826C388 family: the key getter is `ts4_fn_88273620` (fk_004.c, `return a0 + 12`). The target hoists t->offset, t->count and *key into
+  callee-saved registers across that call, and keeps the `i*16` offset (r31) apart from the base offset (r28). With the loads written as
+  locals before the loop, MSVC strength-reduces to a single pointer (27 off). With them inside the loop they are reloaded every pass (20 off).
+  LTCG with fk_004.c as context inlines the getter (29 off), and `__declspec(noinline)` on the prototype does not stop that. The next thing to try:
+  LTCG with a context file that holds a non-inlinable getter.
+- **Find, then remove: the find reads `r->arr.count`/`r->arr.data` directly and the remove goes through a separate `Arr *a = &r->arr`**.
+  That is agAD's CSE-by-operand rule again: the target hoists the count in the find loop and reloads it for the remove. This took 88475BF8
+  (remove by key, 16-byte slots, the 8-byte value returned through a hidden `Value *out`) from 35 to 1 off. Draft:
+  drafts/me_88475BF8_nearmiss.c (the shift-loop `add` operand order). 8843B300 and 884A9E38 (pointer-array remove plus refcount
+  release) look like the same shape, but `a` folds back into h+0x30 (34 off).
+- Open: 884926F8 (extent accumulate, 24 off: the target loads all of v[1..3] before the short adds), 884BDB38 (header byte swap:
+  the dead `addi rX,+3` copies come from a lo/hi pointer swap inline, 27 off on /O1).
