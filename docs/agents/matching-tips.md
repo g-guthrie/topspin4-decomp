@@ -2279,3 +2279,43 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   - 88166C58/88161F58/88166938 (vector copy ctor): 4 off, `mr r29,r3` scheduled before the first load.
   - 88233DA0 (uninit copy, six words then two strings): the target picks the +0x18 base; 10 off.
   - 88178378 (two vector clears + frees): the 96-byte struct copy becomes a memcpy call; member loops give ldx.
+
+## agAH round 5 (b180)
+- To get `li r3,0` at the top of a search loop and a single `mr r3,rX; blr` exit, keep a `found = 0` variable and `break` out of the loop; plain `return s` inside the loop does not do it (8861A370).
+- If the loop end is loaded before the begin pointer (`lwz +0x18` before `+0x14`), read end into a local first and compare `end != it` (8825DFE0).
+- A u8 predicate whose return tails are each `li r11,K; clrlwi r3,r11,24`: compute an `int r` in an inline helper and `return (unsigned char)r`. Returning the condition directly merges the tails (88936EB8).
+- In `base[i].field[j]`, write `Bank *b = &m->banks[i];` to get the `add r9,r9,r11` operand order (885C3A58).
+- When a field is reloaded in the else branch, write `r->table->x` at every use. A local `t = r->table` lets the compiler reuse the earlier load (8843CEB8).
+- When a float constant stays in a register (f31 across a call, or one register for two compares), read it into a local first: `float step = lbl;` (8832B1D8) or `float unset = lbl;` (88483540).
+- Float arguments take GPR slots in the Xbox 360 ABI. For example, (seed, lo, hi, out) puts out in r6. Pointer arguments after a float appear in the registers that follow (88557450, 8843F3F8).
+- `fctidz` + `stfiwx` comes from a float-to-unsigned-int conversion; `fctiwz` comes from float-to-int (8828DFB0 is still open because of LTCG scheduling).
+- Some r4new2 entries have truncated listings in textdis.pkl, ending without blr or b (883D2400, 8858E758, 8859D010, 887E9A38). Check the size in symbols.txt before trying one.
+- **Round 2 (b181), copy-constructor family (31 more matches):** 88166C58 88161F58 88166938 881B6A80 881B6E00 88213EB8
+  88216620 88166BC0 88166428 88181878 88286F38 88166728 88179D88 8817A108 8827FFB8 88624FE8 8879CBE8 881A8D88 8815BD90
+  8815BCA8 88181910 88171088 881BC210 88158A98 88282FC8 881A7188 88163300 88159C88 88286558
+  8815CFA8 8815D388.
+  - **End-slot zero store:** the vector copy constructor / ctor-then-reserve needs the end zero store written through a
+    pointer: `T **end_slot = &v->end; v->first = 0; v->last = 0; *end_slot = 0;`. This one change fixed the old
+    "4 off, mr r29 scheduled late" copy ctors (88166C58 family), the "reserve folded because first is known 0" ctors
+    (88286F38, 88624FE8) and the 8827FFB8 draft (+0x804/+0x808 order). Plain member stores are right for some members
+    (88166BC0 needs end-slot, 88163300 does not), so try both.
+  - Shape: `n = src->last - src->first; zero (end-slot); p = n != 0 ? alloc(&v->end, n) : 0; v->first = p; v->last = p;
+    v->end = p + n; v->last = ucopy(src->first, src->last, v->first);`. Put it in an inline that takes `(Vec *v,
+    const Vec *src)`, so an aggregate's source base gets its own `src+K` register (88181878, 88171088).
+    Generators: agAJ/gencc.py (plain vector), agAJ/genagg.py (aggregate: member copies + vector part).
+  - Variants: `p = 0; if (n != 0) p = alloc(..)` when the target sets r3 = 0 before the test (88166728, 88181910);
+    `v->last = p; v->first = p;` when the target stores +0 before +4 but ours comes out reversed (88282FC8, 881A7188);
+    a `__forceinline` copy inline when the same vector type is copied twice (88179D88); `if (last == first) return dest;`
+    in the memmove ucopy for the cmplw order (88216620).
+  - Allocator-handle vectors `{first; last; alloc; end}` (88162768, 88235D80, 882400F8, 88255C08; alloc constructed by
+    88255AA0, allocated with fn_88613570(v->alloc, .., &v->alloc)): 88162768 is 12 off (r27/r28 swap between the zero
+    and &v->alloc) with `def` temp + zero + init + `p = 0; if (n)`.
+  - String concat (88163300, 88159C88): compute the combined length before the zero stores; the append inline reads
+    `s->last` before `s->p`. 8822C0F8 (string + char) is 5 off on the same `size + max(size, 1)` add order as 8815C0B0.
+  - Open: ts4_assign_formatted_text 88152D58 / 881599B8 (char* ctor). The fam3 `char_copy_range` helper with an early
+    return gives the duplicated tail, but only when the zero stores sit in the same inline, which then puts them after
+    the strlen loop (31-37 off). 88179F80 (96-byte u64 element copied with ldu/stdu, ours gives memcpy or ldx, 59 off).
+    88181BF0 (text + six words + two 5-word blocks + four words, 41 off). 8827A130 (copy via reserve + resize + copy, 61 off).
+  - Drafts: me_881BC130_nearmiss.c (3 off, r9/r10 swap between the first byte copy and &t->sub).
+    The drafts me_8827FFB8, me_8815CFA8 and me_8815D388 are now matched with the end-slot string/vector init, so
+    those three draft files can be removed at integration.
