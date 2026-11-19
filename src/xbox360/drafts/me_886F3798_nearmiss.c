@@ -1,4 +1,4 @@
-/* near miss 886F3798 (14 off: module/element register numbering r9<->r10; second loop form). Also LTCG context for me_ts4_bind_attach_886FCB48. */
+/* near miss 886F3798 (14 off as written; 11 off with `u32 ia = s->id_a;` read before the module local and `id == (*it)->id`). Also LTCG context for me_ts4_bind_attach_886FCB48. */
 typedef unsigned int u32;
 typedef struct Ts4BindItem { char pad[4]; u32 id; } Ts4BindItem;
 typedef struct Ts4BindModule { char pad[0x64]; Ts4BindItem **first; Ts4BindItem **last; } Ts4BindModule;
@@ -11,7 +11,7 @@ static __forceinline Ts4BindItem *ts4_bind_find(Ts4BindModule *m, u32 id)
     for (; it != last; ++it) if (id == (*it)->id) return *it;
     return 0;
 }
-void ts4_bind_set_source_886F3798(Ts4Bind *o, Ts4BindSrc *s)
+void fn_886F3798(Ts4Bind *o, Ts4BindSrc *s)
 {
     Ts4BindModule *m;
     u32 id;

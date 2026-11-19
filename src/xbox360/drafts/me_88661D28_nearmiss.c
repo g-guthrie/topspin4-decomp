@@ -1,3 +1,4 @@
+/* agAM: OBSOLETE, matched as src/xbox360/me_copy_link_value_88661D28.c (sub-struct address passed to the store inline). */
 /* 88661D28 near miss (3 off, plain/LTCG, all /O levels): the reloaded x pointer gets r4 where the target reuses r11 (same r11/r10 family as 88662510). */
 typedef struct { char p[0x410]; int a; char q[0x42c-0x414]; int b; char r[0x544-0x430]; int c; } X;
 typedef struct { char p[0x28]; X *x; } H;

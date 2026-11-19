@@ -1400,21 +1400,6 @@ ts4_word ts4_get_u32_off28_88659BA0(ts4_word a0)
     return (*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 40))) + 0));
 }
 
-/* Swing_DLL.xex 0x88659C24: set u8@0x2, u32@0x20, u8@0x3, u32@0x20, u8@0x4 */
-void ts4_set_u8_off2_88659C24(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
-{
-    (void)a1;
-    (void)a2;
-    (void)a3;
-    (void)a4;
-    (void)a5;
-    (void)a6;
-    *(unsigned char *)((char *)(ts4_word)(a7) + 2) = (unsigned char)0;
-    *(unsigned char *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 32))) + 3) = (unsigned char)0;
-    *(unsigned char *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 32))) + 4) = (unsigned char)1;
-    return;
-}
-
 /* Swing_DLL.xex 0x88659C48: if_get u32@0x20, u8@0x4, u32@0x28, u32@0x8, u8@0x3, u32@0x28 */
 void ts4_if_get_u32_off20_88659C48(ts4_word a0)
 {

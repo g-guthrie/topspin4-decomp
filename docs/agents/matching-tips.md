@@ -2519,7 +2519,7 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
     - 887F1F00 belongs to the self-relative (-1 = null) family. It is missing the target's no-op `clrrwi r10,r10,0`.
     - 888D93B8 and 888D9498 forward 4-byte structs by value. The target spills them to the stack and repacks them with `rldicr 32`.
 
-## agAN (b185): renderer small sweep (7 matches, 1 draft)
+## agAN (b185/b186): renderer small sweep (12 matches, 1 draft)
 - **LTCG caller of an unmatched callee:** a correct but not byte-exact callee definition in `--context` is enough when
   the caller only depends on which argument registers the callee leaves intact. 886FCB48 reuses r3/r4 after
   `bl fn_886F3798` and matches with drafts/me_886F3798_nearmiss.c as context. The callee stays a 14-off draft.
@@ -2539,3 +2539,38 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - Open: 88703DC8 (12 off) loads end/begin into r8/r7 and copies them to r3/r4 with `mr`; tried locals, a vector by value,
   and an inline sort wrapper. 886ED6D8 (14 off) is a 7-bit bitfield countdown; the target reuses the loaded byte register as the
   rlwimi base where ours adds `mr`.
+
+## agAM (b185): gameplay sweep, the r11/r10 base-register family
+- **Base pointer in r11 vs r10 / reloaded pointer gets a fresh register (the 88662xxx family) is solved by a sub-struct
+  address.** When the target reuses the dying base register (e.g. `lwz r11,0x74(r10); lwz r11,0x98(r11)`, or a reload
+  `lwz r11,0x28(r8)` followed by stores through r11) and ours picks r7/r4/r9, put the accessed fields in a sub-struct and
+  pass its ADDRESS: `FrameRef *t = &p->ctx->state->contact; if (!frame_unset(t) && t->frame - ...)` (88662458, 88662510),
+  `set_pair(&h->x->pair, v)` (88661D28, 886624C8), `clear_flags(&s->g->f->block)` (8865C1F0, 886690B0),
+  `clear_quad(&s->g->p->quad)` (8866D218, LTCG). Inline helpers taking the plain object pointer, locals, declaration
+  order and every /O level do not change it.
+- 8865C1F0 symptom of the same family: the zero constant takes r11 and the base r9/r10 (target: base r11, zero r10).
+- 88662458 is the "swing now" test from docs/gameplay (contact frame state+0x98 valid and <= clock + PlayerTuning+0x740).
+- Open: 8864E640 (Vec3 += three float args) keeps load/add/store per component and `fadds f13,f1,f0` (arg first). Plain
+  field `+=` reorders (7 off); a `float *p` per component keeps the order but the add operands come out `f0,f1` (3 off).
+  888C72E8 (1 off): `return s->b || s->d == s->a;` gets the loads right but `cmplw r11,r10`.
+- 88644738 draft: a dead `addi r3,r3,4` (address of the sub-struct used by the ramp branch) is not reproduced by an inline
+  on `&s->r`, a C++ member function, or a base-class `this` adjust. Everything else matches.
+- Before writing a draft, check `src/xbox360/drafts/` and git for an existing one: integration commits drafts as they appear,
+  and several gameplay addresses (8864E640, 88644738) already had annotated drafts from earlier agents.
+- Cursor-step family 886FC938/886FC990/886FCA90/886FCAE8 (b186): read `s->st->pos` directly at each use, with no local.
+  That gives the `clrrwi r9,r9,0` copy before the inc/dec and the reload after the store. The forward variant needs the
+  early-return guard `if (limit <= 0 || limit <= pos) return 0;`. The backward variant needs `if (pos > 0) { ...; return 1; }
+  return 0;`, because an early return there puts the `li r3,0; blr` first.
+- The order of the declarations in `T *p = v->first, *e = v->last;` sets the load order. Declare `e` first when the target loads +4 before +0 (886EC548).
+- Open: 886F9020 (12 off) loads its 1.0f-like constant as `addi r8,(g_ts4_script_constants+0xF70); lfs f13,0x38(r8)`.
+  Neither `g_ts4_script_constants[1002]`, a sub-array cast, nor a literal (it goes to the pool) reproduces the 0xF70 base. 886EEBC0
+  (23 off) resets display render-target bindings. The target keeps a dead `addi r9,r11,0x40` and an `mr r4,r9` copy of 0xFFFFF for the last store.
+- Retried with fresh forms in b186, no match: 886F3798 is best at 11 off, with `u32 ia = s->id_a;` before the module
+  local and `id == (*it)->id` (scratch form in the draft note). 88703DC8 stays at 12 off; iterator structs, a vector by value, and
+  inline wrappers all failed.
+
+### agAM round 3 (b187)
+- The sub-struct rule worked on its first try at 88917340. Pattern: `lwz r11,X(r11)` followed by three stores through r11, where ours moved the pointer to r6. Fix: group the stored fields into a sub-struct and pass `&g->req->ev` to a static setter.
+- 8865FFF8 went from 12 off to 1 off with a `float *bl=&holder->target->blend` pointer plus an ease inline under fp_contract(off). The remaining fadds operand order resisted `+=`, temporaries and an add inline.
+- When the target swaps float registers (8865AC90) or vector registers (88650B80), the sub-struct rule does not help: it only fixes reuse of a GPR base register.
+- Sweep tip: filter gameplay.txt to 60-240 bytes and grep the disassembly for two or more `lwz r11, X(r11)`. Note that column 2 of gameplay.txt is the size in bytes, not instructions.

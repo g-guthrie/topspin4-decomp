@@ -9981,7 +9981,6 @@ src/xbox360/fk_019.c:
 	.text       start:0x88659B80 end:0x88659B8C
 	.text       start:0x88659B90 end:0x88659B9C
 	.text       start:0x88659BA0 end:0x88659BAC
-	.text       start:0x88659C24 end:0x88659C44
 	.text       start:0x88659C48 end:0x88659CB0
 	.text       start:0x88659D00 end:0x88659D0C
 	.text       start:0x88659D38 end:0x88659D64
@@ -54513,3 +54512,60 @@ src/xbox360/me_ts4_variant_storage_size_881C7E10.c:
 src/xbox360/me_ts4_voices_release_contexts_88592800.c:
 	.pdata      start:0x8811DE30 end:0x8811DE38
 	.text       start:0x88592800 end:0x88592878
+
+src/xbox360/me_clear_flag_block_8865C1F0.c:
+	.text       start:0x8865C1F0 end:0x8865C22C
+
+src/xbox360/me_clear_flag_block_detach_886690B0.c:
+	.text       start:0x886690B0 end:0x886690F0
+
+src/xbox360/me_reset_quad_8866D218.c:
+	.text       start:0x8866D218 end:0x8866D244
+
+src/xbox360/me_ts4_bind_attach_886FCB48.c:
+	.pdata      start:0x88125A28 end:0x88125A30
+	.text       start:0x886FCB48 end:0x886FCB88
+
+src/xbox360/me_ts4_ent32_vec_clear_88707630.c:
+	.pdata      start:0x88125D70 end:0x88125D78
+	.text       start:0x88707630 end:0x88707684
+
+src/xbox360/me_ts4_item_pull_pos_886F5DA0.c:
+	.text       start:0x886F5DA0 end:0x886F5DEC
+
+src/xbox360/me_ts4_layer_select_frame_886F3C28.c:
+	.text       start:0x886F3C28 end:0x886F3C7C
+
+src/xbox360/me_ts4_res_req_dispatch_88737DF8.c:
+	.text       start:0x88737DF8 end:0x88737E4C
+
+src/xbox360/me_ts4_set_onehot_flags_from_mode_88659BB0.c:
+	.text       start:0x88659BB0 end:0x88659C44
+
+src/xbox360/me_ts4_set_view_count_886ECAE0.c:
+	.text       start:0x886ECAE0 end:0x886ECB38
+
+src/xbox360/me_ts4_unpack_color_table_886EB188.c:
+	.text       start:0x886EB188 end:0x886EB1D4
+
+src/xbox360/me_copy_link_value_88661D28.c:
+	.text       start:0x88661D28 end:0x88661D58
+
+src/xbox360/me_copy_link_value_set_hash_886624C8.c:
+	.text       start:0x886624C8 end:0x8866250C
+
+src/xbox360/me_swing_now_88662458.c:
+	.text       start:0x88662458 end:0x886624C4
+
+src/xbox360/me_swing_now_b_88662510.c:
+	.text       start:0x88662510 end:0x88662578
+
+src/xbox360/me_ts4_pos_records_to_float3_886EC548.c:
+	.text       start:0x886EC548 end:0x886EC5A8
+
+src/xbox360/me_ts4_step_cursor_886FC938.c:
+	.text       start:0x886FC938 end:0x886FC990
+	.text       start:0x886FCA90 end:0x886FCB48
+
+src/xbox360/me_ts4_step_forward_886FC990.c:
+	.text       start:0x886FC990 end:0x886FC9F0
