@@ -891,3 +891,9 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   a local turns the selects into branches.
 - Open (0x8865D3C0): two element addresses from one self-relative header, (i*24 + rel) + h and (h - i*24) + rel, with
   an `mr` copy of rel. Every source form tried gives the normal form (rel - i*24) + h.
+
+## agE notes (2026-11-19)
+- 0x8866B1C8 (12 off, draft): an inline bool helper that reads `c->pend` once, followed by a caller that reads
+  `c->pend->x` again with no store in between, while `c` itself stays cached. Only `Pend *volatile pend;` gave the
+  reload (94 -> 12 off). Passing `Pend *` or `Ctx *` to a non-volatile helper, /Ob1 and non-forceinline did not.
+  This is the same diagnostic as Agent C's 0x886787D8.
