@@ -2174,3 +2174,49 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - A branchy bool in r11 (`li r11,1; beq +8; li r11,0; clrlwi; cmplwi`) is an inline written `if (cond) return 1; return 0;`
   returning unsigned char; `return p ? *p == 1 : 0;` gives subi/cntlzw instead (88911668). A vtable pointer loaded after
   a call, with the object loaded before it: keep the call result in its own local (`desc = ...; m->vt->f(m, desc + 0xc, 1);`, 888C2E58).
+
+## agAH round 4 (b178)
+- **Pool-buffer family (TLS allocator, kind 0x17).** Many destructors, deleting destructors and copy helpers share one
+  buffer shape `{T *data; int count; int capFlags;}`: bit 31 of capFlags = storage not owned, bit 30 = kept flag,
+  bits 0-29 = capacity. The free that matches every member is an inline helper:
+  `if ((b->capFlags & (int)0x80000000) == 0) { unsigned cap = b->capFlags & 0x3FFFFFFF; void *alloc =
+  KeTlsGetValue(lbl_88CACF08); fn_8841A590(alloc, b->data, cap * sizeof(T), 0x17); }`.
+  - The capacity word must be a signed int and the mask cast to int; unsigned gives cmplwi instead of cmpwi.
+  - The masked capacity goes in a local before the KeTlsGetValue call; the element size is in `cap * sizeof(T)`.
+  - Matched with element sizes 1, 2, 4, 8, 12, 16, 20, 36, 40, 48, 56, 80 and 112:
+    884DC9B0, 884E1FE8, 88555608, 88486090, 887F4698, 8841C2B8, 88520CE8, 88437790, 88437BB0, 884BF008,
+    884BF468, 884384B8, 88489B98, 884A8D60, 88541FB0 and 88492D88.
+  - The u16 variant `{data; u16 count; u16 capFlags}` has bit 15 = not owned, mask 0x3FFF, and gives clrrwi 15 +
+    cmplwi (885E94D8, 885E9568).
+- **Deleting destructors in this family:** the inlined body, then the d1_band2 tail
+  `if (flags & 1) { alloc = KeTlsGetValue(...); fn_8841A590(alloc, o, o->size /*u16 at +4*/, kind); } return o;`
+  (884BF398, 884DA3F0, 884DCAE0, 884BF220, 884CCAB0, 8844E450, 884863C0).
+- **Pooled variants** return the header to a per-thread free list. Use the `list_full`/`list_push` helpers from
+  me_ts4_release_buf_and_pool_obj_8841C428.c. The list sits at pool +0x38 + 8*kind, and the overflow path is
+  `fn_8841A3F8(pool, kind, obj)`. Add `&& o != 0` to the flags test when the target has `cmplwi r31,0`.
+  Examples: 884A2100, 884C4FA8, 8841DA58, 8841ABD8, 8849B2F8, 884AD988, 88520DD8, 885F2390, 8841AAC8.
+- **Regrow (8841C5E8, 8841C678, 885E94D8, 885E9568) and assign (8847B028, 884A74E8, 88473EB0, 88560A90).**
+  - Fetch each KeTlsGetValue into its own local before the alloc or free call; an inline argument swaps
+    `li r4` and `li r5`.
+  - The assign copy loop must use the locals `n = src->count; d = dst->data; dst->count = n; s = src->data;`
+    and then `d[i] = s[i]`. `*d++ = *s++` gives lwzu/stwu instead.
+  - A lone static assign helper is not inlined (88560A90), so mark it __forceinline.
+- **A secondary base whose fields are reset in the destructor** (vtable at +8, link at +0xc, 885EBBC8): make it an
+  embedded struct with its own inline dtor helper. Plain field stores in the outer function get reordered.
+- **Comparing against zero:** `0 < x` (constant on the left) gives `subfc; eqv; srwi; addze; clrlwi 31`, while
+  `x > 0` gives `neg; andc; srwi` (8826ACB8). `result = 0 != find(...)` keeps the `addi rX,rY,0` copy (88995358).
+- **Memmove loops:** a `while (n--)` loop with separate d/s pointers gives the mtctr/bdnz loops. An index loop or
+  `for (; n; n--)` gives subic./bne (88329998).
+- **Store order around a helper:** copying through a small field-copy helper keeps the 64-bit flag `ld/ori/std`
+  after the float stores (886F7198). Open-coded stores let the compiler hoist the ld.
+- **Byte swap:** two calls of a byte-swap helper per word match 88432BE0. Open-coded temporaries give a different
+  store order.
+- **Open: the `stwx r10, r11, r9` fill order** (88423C28 is 1 off; 88423E28 and 88423C28 are drafts). It is not fixed
+  by any index form or by 0-8 operand_order_pad locals. The constant-count fill in 88423CE0 does match.
+- **Open: register or operand order only:** 88472A88 (fmuls operands), 88611440, 883CB860, 8848C0A0 (r30/r31 swap),
+  8847E770 (v0 vs v63 element copy, the v0-v13 issue), 882759C8, 885EAB70, 886C4CB8, 88413538 (constant loads
+  hoisted and shared), 88605438/88608590 (CRC32 crc/char register swap).
+- (agAH r4) An embedded list read through a local pointer (`KeyList *keys = &c->registry->keys;`) fixes the reload order in loops over owner->sub->list (884EDB18).
+- (agAH r4) When a null test at the call site is followed by passing the same expression to a helper, the compiler emits a clrrwi copy; keep both uses of the expression (884812E0).
+- (agAH r4) Writing the element expression twice instead of caching it in a local flips the lwzx operand order; pick whichever form the target shows (88408D58).
+- (agAH r4) Null-checked base casts inside a loop (`cmplwi; addi r4; bne; li r4,0` per call): write each as a small __forceinline helper with `if (o) return &p->field; return 0;`. A ternary at the call site, or `l = 0; if (o) l = ...`, is if-converted and hoisted out of the loop (884AA078).
