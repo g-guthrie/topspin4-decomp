@@ -49216,3 +49216,13 @@ src/xbox360/me_ts4_ctor_two_tables_88695568.c:
 src/xbox360/me_ts4_probe_depth_offset_886925A8.c:
 	.pdata      start:0x88123FB8 end:0x88123FC0
 	.text       start:0x886925A8 end:0x88692670
+
+src/xbox360/me_ts4_accumulate_field_sources_886498F0.c:
+	.pdata      start:0x88122AC8 end:0x88122AD0
+	.text       start:0x886498F0 end:0x88649A90
+
+src/xbox360/me_ts4_court_side_anchor_8866DA58.c:
+	.text       start:0x8866DA58 end:0x8866DC14
+
+src/xbox360/me_ts4_verlet_integrate_886E6F30.c:
+	.text       start:0x886E6F30 end:0x886E6F9C

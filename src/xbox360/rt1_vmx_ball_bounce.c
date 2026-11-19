@@ -46,7 +46,7 @@ static RT1_INLINE __vector4 rt1_normalize3(__vector4 v, __vector4 half, __vector
 }
 
 /* XMVector3Equal: x, y, z all equal (vcmpeqfp. on the xyzx permutation, CR6 "all"). Callers test `!= 1`,
-   which keeps the extrwi + cmplwi 1 of the target (LTCG route: 94 off, was 162). */
+   which keeps the extrwi + cmplwi 1 of the target (LTCG route: was 162; 91 off with volatile reads of up/axis, 2026-11-19; open: abs mfcr/lfsx select, ld/std arc copies). */
 static RT1_INLINE ts4_bool rt1_equal3(__vector4 v, __vector4 w)
 {
     unsigned int cr;
@@ -69,10 +69,10 @@ void ts4_ball_bounce_response_889C1C80(struct Rt1Ball *ball, struct Rt1Vec4 *vel
         v = __vrlimi(v, __lvlx(&y, 0), 4, 3);
     }
     zero = __vspltisw(0);
-    up = lbl_88001AF0;
+    up = *(volatile __vector4 *)&lbl_88001AF0;   /* volatile reads: own vector registers like the target */
     *(__vector4 *)vel = v;
     tmpl = ball->tmpl;
-    axis = lbl_880FC6B0;
+    axis = *(volatile __vector4 *)&lbl_880FC6B0;
     spin = ball->spin;
 
     if (rt1_equal3(v, zero) != 1 && rt1_equal3(up, zero) != 1) {

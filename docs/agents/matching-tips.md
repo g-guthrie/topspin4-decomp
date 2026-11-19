@@ -783,3 +783,38 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   match, plain and LTCG). It did not move the row-load numbering of 0x8864EAB8 or the matrix of 0x886634E0.
 - A volatile read of one float of a stack pair (`s = *(volatile float *)&sc.s`) fixed the reload/fmuls order of
   0x88644C58 (8 -> 7 off); a named `int r = *rel` inside a relative-array helper took 0x8866A930/0x8866AC38 from 9 to 8.
+
+## Agent B resume (ME, 2026-11-19)
+- A vector returned from several branches (0x8866DA58): assign every branch to ONE `__vector4 v` local and end with
+  `r.v = v; return r;`. Per-branch `r.v = ...; return r;` gives each branch its own vector register (v61, v60, ...); the
+  single local gives the target's shared v63 and the same tail duplication.
+- Negating a lane before `__lvlx(&z)` (0x8866DA58): `z = o.v.v[2]; if (c) z = -z;` stores z both before and after
+  the branch, because z's address is taken. Compute it in a block temp, `{ float t = o.v.v[2]; if (c) t = -t; z = t; }`,
+  to get the target's `lfs; beq; fneg; stfs`.
+- Conditional pointer offset (0x8866DA58, 10 -> 1 off): `if (c) p = base + 0x40; else p = base;` rather than
+  `p = base; if (c) p += 0x40;`. This moved the base load after the compared field load and fixed the register numbering
+  for the whole prologue. The last instruction was `subf` operand order on a hash compare, fixed by `(K == x)`.
+- Scalar field read after a vector lane update of a struct member (0x886498F0): use the VX1 in-place helpers,
+  `vx1_vec_set_z((Vx1Vec *)&self->acc, vx1_vec_z((Vx1Vec *)&self->acc) * k);`. A hand-written lvlx/vrlimi lets the next
+  `self->f60` load move above the vector store.
+- LTCG with the real callees as context plus `/Oc /Ob1` (0x886498F0) keeps the callees out of line, while LTCG still
+  knows their register use (vectors kept in v62/v63 across the calls, no v127 save). Without /Ob1 they inline.
+- Stack slot layout (0x88650430, 34 -> 9 off): putting each xdata lookup's temporaries (hash words, forward handle, ref)
+  in its own `{ }` block lets MSVC reuse the slots as the target does. The remaining 9 are slot choices that
+  declaration order, k[3] arrays and inline helpers did not change.
+- Dead `addi` of two sub-object addresses (0x886902E8): pass both to inline helpers used at two sites
+  (`sync_pose(cur, aux)` early and `save_pose(c, cur, aux)` at the end). One plain local pointer each is not enough.
+- Note for parallel agents: the shared scratchpad holds other agents' files with short names (a.c, c.py). Use your own
+  subdirectory, and do not run `chk()` with an address another agent is working on: `chk()` overwrites `work/army/ME/t_<ADDR>.c`.
+
+## Volatile vector reads, second sweep (agentA2, 2026-11-19)
+- Two vor128 copies of one loaded vector (one stored, one used as the vmaddfp addend), 0x886E6F30 (17 off to match):
+  read the field again instead of reusing the saved local, `x = p->pos; d = p->pos - p->prev; p->prev = x;
+  p->pos = madd(damp, d, p->pos);`. The element address `(off + base)` came from reading the array base into a
+  local first (`T *pts = s->points; p = &pts[i];`); `&s->points[i]`, `&i[s->points]` and byte-offset casts give `base + off`.
+- A constant vector stored to two members where the target copies it with vor128 (0x8867DA30): read the second
+  store through a volatile cast, `out.vel.v = *(volatile __vector4 *)&lbl_880FC650;`. Size fixed, 30 -> 15 off.
+- A global constant passed into an inlined cross product (0x889C0DC0): `ts4_cross3(n, *(volatile __vector4 *)&lbl_88001AF0)`
+  fixed the zero/up/splat numbering, 24 -> 11 off. On 0x889C1C80 volatile reads of both up and axis: 94 -> 91.
+- No effect: 0x88671B10 (q + dir*r madds), 0x8864E790 (vupkd3d vs r1 copy), 0x8868CB18, 0x88662738, 0x8867DF68
+  (residue there is GPR/scalar, not vector).
