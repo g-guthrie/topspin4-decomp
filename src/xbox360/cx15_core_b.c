@@ -116,7 +116,7 @@ typedef struct S2EFF8 {
     u8 pad254[0x28]; const void *f27c_pad; const void *f280_pad; const void *f284; u8 pad288[0x24]; void *f2ac; u8 pad2b0[0x10]; void *f2c0;
 } S2EFF8;
 
-extern void *fn_8816D220(void *reg, u32 key);
+extern void *ts4_find_by_key_or_default_8816D220(void *reg, u32 key);
 extern void fn_881705B0(void *p, u32 n);
 extern char lbl_880F8C1C[];
 extern void *lbl_88D45B20;

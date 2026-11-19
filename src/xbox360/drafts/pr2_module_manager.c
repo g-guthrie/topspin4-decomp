@@ -199,7 +199,7 @@ extern void fn_88633680(ModuleDesc *d);
 extern void *ts4_find_service(u32 id);
 extern H16 *ts4_handle_forward_88610A48(H16 *out, void *in, u32 *key);
 extern u32 *ts4_handle_release_881506A0(void *out, H16 *in);
-extern VObj *fn_8816D220(u32 registry, u32 key);
+extern VObj *ts4_find_by_key_or_default_8816D220(u32 registry, u32 key);
 extern void ts4_loop_call_seq_u32_offc_8860BD70(LoadCtx *c);
 extern void ts4_tsu_cleanup_end(LoadCtx *c);
 extern void ts4_owner_remove_flagged_items_88612998(void *o);
@@ -451,7 +451,7 @@ void ts4_module_manager_update_886345E0(ModuleManager *m)
             ts4_handle_forward_88610A48(&hb, ts4_handle_forward_88610A48(&ha, &h, &k1), &k2);
             reg = lbl_88D45B20.registry;
             key = ts4_handle_release_881506A0(&s58, &hb);
-            obj = fn_8816D220(reg, *key);
+            obj = ts4_find_by_key_or_default_8816D220(reg, *key);
             m->current = obj != 0 ? obj->vt->slot1(obj) : 0;
             m->ctx->module = m->current;
             m->ctx->module_handle = *(Tri *)&hb;

@@ -42,7 +42,7 @@ typedef struct Cx36SessVt { void **vt; } Cx36SessVt;
 extern Cx36SessVt *g_ts4_session_context;
 typedef struct Cx36HVec { u32 *first; u32 *last; u32 pad; u32 *cap; } Cx36HVec;
 typedef struct Cx36HOwner { u8 pad[0x10]; Cx36HVec v; } Cx36HOwner;
-extern void fn_8816DD48(Cx36HVec *v, u32 *pos, u32 *val);
+extern void ts4_vector_grow_append_scalar4_8816DD48(Cx36HVec *v, u32 *pos, u32 *val);
 typedef u32 (*Cx36GetFn)(Cx36SessVt *s);
 u32 ts4_push_session_handle_88932BC0(Cx36HOwner *o)
 {
@@ -55,7 +55,7 @@ u32 ts4_push_session_handle_88932BC0(Cx36HOwner *o)
         v->last++;
         return h;
     }
-    fn_8816DD48(v, v->last, &tmp);
+    ts4_vector_grow_append_scalar4_8816DD48(v, v->last, &tmp);
     return tmp;
 }
 

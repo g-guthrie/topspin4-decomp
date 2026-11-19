@@ -12,14 +12,14 @@ struct Impl { ImplVt *vt; };
 typedef struct Desc { unsigned int kind; char p[0x14 - 4]; volatile int payload_offset; } Desc;
 typedef struct Obj { void *f0; Desc *desc; Impl *helper; Impl *impl; void *payload; } Obj;
 extern void *lbl_88D45B20;
-Impl *fn_8816D220(void *registry, unsigned int kind);
+Impl *ts4_find_by_key_or_default_8816D220(void *registry, unsigned int kind);
 static __forceinline void *rel_ptr(volatile int *p) { if (*p == -1) return 0; return (char *)p + *p; }
 static __forceinline void *rel_ptr2(volatile int *p) { void *r; if (*p == -1) r = 0; else r = (char *)p + *p; return r; }
 typedef struct Registry Registry;
-static __forceinline Impl *lookup(Registry *r, unsigned int kind) { return fn_8816D220(r, kind); }
+static __forceinline Impl *lookup(Registry *r, unsigned int kind) { return ts4_find_by_key_or_default_8816D220(r, kind); }
 static __forceinline Impl *make(unsigned int kind)
 {
-    Impl *f = fn_8816D220(lbl_88D45B20, kind);
+    Impl *f = ts4_find_by_key_or_default_8816D220(lbl_88D45B20, kind);
     if (f != 0)
         f = f->vt->create(f);
     return f;
@@ -30,13 +30,13 @@ void ts4_bind_descriptor_88662390(Obj *o, Desc *d, void *arg)
     Impl *i;
     o->desc = d;
     reg = lbl_88D45B20;
-    i = fn_8816D220(reg, 0x9BD3657E);
+    i = ts4_find_by_key_or_default_8816D220(reg, 0x9BD3657E);
     if (i != 0) {
         i = i->vt->create(i);
         reg = lbl_88D45B20;
     }
     o->helper = i;
-    i = fn_8816D220(reg, d->kind);
+    i = ts4_find_by_key_or_default_8816D220(reg, d->kind);
     if (i != 0)
         i = i->vt->create(i);
     o->impl = i;

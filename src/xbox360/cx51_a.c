@@ -240,7 +240,7 @@ void ts4_post_message_889387F0(void *self, u32 a, u32 b, u16 *c)
 typedef struct Cx51Sess { void **vt; } Cx51Sess;
 typedef struct Cx51PtrVec { u32 w0; u32 **last; u32 w8; u32 **cap; } Cx51PtrVec;
 typedef u32 *(*Cx51MkFn)(Cx51Sess *);
-extern void fn_8816DD48(Cx51PtrVec *v, u32 **where, u32 **val);
+extern void ts4_vector_grow_append_scalar4_8816DD48(Cx51PtrVec *v, u32 **where, u32 **val);
 /* 0x889332B8: use the given child (or create one through slot 0x64 of the session), link it to its parent and append it to the vector at +4 */
 u32 *ts4_adopt_child_889332B8(u8 *self, u32 *x)
 {
@@ -258,7 +258,7 @@ u32 *ts4_adopt_child_889332B8(u8 *self, u32 *x)
         if (last) *last = r;
         v->last = v->last + 1;
     } else
-        fn_8816DD48(v, last, &x);
+        ts4_vector_grow_append_scalar4_8816DD48(v, last, &x);
     return r;
 }
 /* 0x88934AC8: use the given child (or create one through slot 0x5c of the session) and append it to the vector at +0x18 */
@@ -277,6 +277,6 @@ u32 *ts4_add_child_88934AC8(u8 *self, u32 *x)
         if (last) *last = r;
         v->last = v->last + 1;
     } else
-        fn_8816DD48(v, last, &x);
+        ts4_vector_grow_append_scalar4_8816DD48(v, last, &x);
     return r;
 }

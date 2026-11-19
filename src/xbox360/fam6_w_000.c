@@ -93,7 +93,7 @@ ts4_word fn_88169350();
 ts4_word fn_8816CAA0();
 float ts4_if_get_u32_off0_8816CCE0();
 ts4_word fn_8816D1A8();
-ts4_word fn_8816D220();
+ts4_word ts4_find_by_key_or_default_8816D220();
 ts4_word fn_881ABB20();
 ts4_word fn_881AD260();
 ts4_word fn_881B19A0();
@@ -2386,7 +2386,7 @@ ts4_word ts4_if_get_u32_off54_88855060(ts4_word a0, ts4_word a1, ts4_word a2, ts
     return a0;
 }
 
-/* Swing_DLL.xex 0x88885C18: if_get u32@lbl_88D45B1C, u32@lbl_88D45B20, fn_8816D220, u32@0x0, u32@0x4, vcall */
+/* Swing_DLL.xex 0x88885C18: if_get u32@lbl_88D45B1C, u32@lbl_88D45B20, ts4_find_by_key_or_default_8816D220, u32@0x0, u32@0x4, vcall */
 void ts4_if_get_u32_lbl_88D45B1C_88885C18(void)
 {
     ts4_word t129;
@@ -2403,7 +2403,7 @@ void ts4_if_get_u32_lbl_88D45B1C_88885C18(void)
     ts4_word t29;
 
     t1 = *(ts4_word *)lbl_88D45B1C;
-    t3 = fn_8816D220((ts4_word)(*(volatile ts4_word *)lbl_88D45B20), (ts4_word)((1868562432) | 62886));
+    t3 = ts4_find_by_key_or_default_8816D220((ts4_word)(*(volatile ts4_word *)lbl_88D45B20), (ts4_word)((1868562432) | 62886));
     p7 = (ts4_word)t3;
     if ((ts4_word)t3 != 0) {
         t129 = (*(ts4_word *)((char *)(ts4_word)(t3) + 0));
@@ -2413,7 +2413,7 @@ void ts4_if_get_u32_lbl_88D45B1C_88885C18(void)
     if ((ts4_word)p7 != 0) {
         ((ts4_word (*)(ts4_word, ts4_word, ts4_word, ts4_word, ts4_word, ts4_word))((*(volatile ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(p7) + 0))) + 40))))((ts4_word)p7, (ts4_word)1, (ts4_word)2048, (ts4_word)4, (ts4_word)((0) | 32768), (ts4_word)((0) | 32768));
     }
-    t13 = fn_8816D220((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)((1233649664) | 13377));
+    t13 = ts4_find_by_key_or_default_8816D220((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)((1233649664) | 13377));
     if ((ts4_word)t13 == 0) {
         p18 = (ts4_word)0;
     } else {
@@ -2422,7 +2422,7 @@ void ts4_if_get_u32_lbl_88D45B1C_88885C18(void)
     }
     t19 = *(ts4_word *)lbl_88D45B20;
     *(volatile unsigned char *)((char *)(ts4_word)(p18) + 40) = (unsigned char)0;
-    t20 = fn_8816D220((ts4_word)t19, (ts4_word)((2994536448) | 21324));
+    t20 = ts4_find_by_key_or_default_8816D220((ts4_word)t19, (ts4_word)((2994536448) | 21324));
     if ((ts4_word)t20 == 0) {
         p25 = (ts4_word)0;
     } else {

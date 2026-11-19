@@ -16,7 +16,7 @@ static __forceinline Item *item_at(Rel *t, int index) { int off = t->offset; ret
 static __forceinline Item *item_at2(Rel *t, int index) { return (Item *)((char *)t + (index * 8 + t->offset)); }
 void fn_882642E0(Vec *v, int n);
 void fn_88648998(Named *n, const char *name);
-void fn_881784B0(Vec *v, Pair *at, Pair *value);
+void ts4_vector_grow_append_881784B0(Vec *v, Pair *at, Pair *value);
 void ts4_append_value_pairs_886D2A08(Obj *o, Src *src)
 {
     int n = src->count;
@@ -39,7 +39,7 @@ void ts4_append_value_pairs_886D2A08(Obj *o, Src *src)
                 *v->end = p;
             v->end++;
         } else {
-            fn_881784B0(v, v->end, &p);
+            ts4_vector_grow_append_881784B0(v, v->end, &p);
         }
     }
 }

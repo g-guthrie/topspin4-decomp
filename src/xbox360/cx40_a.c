@@ -74,7 +74,7 @@ Cx40B *ts4_init_mode_record_887EA830(Cx40B *self, u8 m)
 }
 
 typedef struct Cx40PVv { u32 *first, *last, *cap; } Cx40PVv;
-extern void fn_88174A38(Cx40PVv *, u32 *, u32 *);
+extern void ts4_vector_grow_append_scalar4_88174A38(Cx40PVv *, u32 *, u32 *);
 /* 0x887F81B0: push one u32 onto the vector at +0x3c. */
 void ts4_u32_vec_push_887F81B0(char *self, u32 val)
 {
@@ -84,7 +84,7 @@ void ts4_u32_vec_push_887F81B0(char *self, u32 val)
         if (last) *last = val;
         v->last++;
     } else {
-        fn_88174A38(v, last, &val);
+        ts4_vector_grow_append_scalar4_88174A38(v, last, &val);
     }
 }
 

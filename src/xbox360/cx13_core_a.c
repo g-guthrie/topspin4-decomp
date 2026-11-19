@@ -409,7 +409,7 @@ typedef struct NObj NObj;
 typedef struct NObjVt { void *s0; NObj *(*get)(NObj *); void *s2[2]; void (*f10)(NObj *, NH12); } NObjVt;
 struct NObj { const NObjVt *vt; };
 extern void ts4_handle_release_881506A0(u32 *out, NH12 *h);
-extern NObj *fn_8816D220(void *reg, u32 key);
+extern NObj *ts4_find_by_key_or_default_8816D220(void *reg, u32 key);
 extern void *lbl_88D45B20;
 extern void ts4_vector_push_back_u32_882802A0(void *self, NObj *o);
 
@@ -419,7 +419,7 @@ NObj *ts4_create_object_from_handle_88617C68(void *self, NH12 h)
     u32 tmp;
     NObj *o;
     ts4_handle_release_881506A0(&tmp, &h);
-    o = fn_8816D220(lbl_88D45B20, tmp);
+    o = ts4_find_by_key_or_default_8816D220(lbl_88D45B20, tmp);
     if (o != 0) {
         o = o->vt->get(o);
         if (o != 0) {

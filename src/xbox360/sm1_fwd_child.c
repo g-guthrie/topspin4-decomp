@@ -13,7 +13,7 @@ extern int fn_883FC7B0(void *);
 extern int fn_883FBDC0(void *);
 extern int ts4_get_u32_off80_883FB590(void *);
 extern int ts4_get_u32_off80_883FB598(void *);
-extern int fn_883FB5A0(void *);
+extern int ts4_set_flag_on_entries_883FB5A0(void *);
 extern int ts4_if_get_u8_off1c_883DF9F0(void *);
 extern int ts4_get_u32_off80_883FB610(void *);
 extern int ts4_get_u32_off80_883FB618(void *);
@@ -27,7 +27,7 @@ FWD_CHILD(ts4_forward_to_child_nonzero_883E4228, ts4_get_u32_off80_883FB590)
 /* Swing_DLL.xex 0x883E4260 */
 FWD_CHILD(ts4_forward_to_child_nonzero_883E4260, ts4_get_u32_off80_883FB598)
 /* Swing_DLL.xex 0x883E4328 */
-FWD_CHILD(ts4_forward_to_child_nonzero_883E4328, fn_883FB5A0)
+FWD_CHILD(ts4_forward_to_child_nonzero_883E4328, ts4_set_flag_on_entries_883FB5A0)
 /* Swing_DLL.xex 0x883E4360 */
 FWD_CHILD(ts4_forward_to_child_nonzero_883E4360, ts4_if_get_u8_off1c_883DF9F0)
 /* Swing_DLL.xex 0x883E4398 */

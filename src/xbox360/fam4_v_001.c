@@ -82,7 +82,7 @@ ts4_word fn_8815D480();
 ts4_word fn_8816C2F0();
 ts4_word fn_8816CAA0();
 ts4_word fn_88171F50();
-ts4_word fn_88174A38();
+ts4_word ts4_vector_grow_append_scalar4_88174A38();
 ts4_word ts4_if_call_seq_u32_off24_8817BDD8();
 ts4_word ts4_if_call_seq_u32_off8_8817E578();
 ts4_word ts4_if_call_seq_fn_8892EE88_8817F5E0();
@@ -2599,7 +2599,7 @@ void ts4_loop_call_seq_u32_off0_889448D8(ts4_word a0, ts4_word a1)
                     }
                     *(ts4_word *)((char *)(ts4_word)(a1) + 4) = (ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 4)) + 4);
                 } else {
-                    fn_88174A38((ts4_word)a1, (ts4_word)t9, (ts4_word)(ts4_word)&loc50[0]);
+                    ts4_vector_grow_append_scalar4_88174A38((ts4_word)a1, (ts4_word)t9, (ts4_word)(ts4_word)&loc50[0]);
                 }
             }
             t14 = ts4_offset_array_end8_8815E4D0((ts4_word)a0);

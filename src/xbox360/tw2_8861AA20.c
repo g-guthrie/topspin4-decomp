@@ -13,7 +13,7 @@ extern void *fn_887D02A8(void *, int, int, int, int, int);
 extern u32 fn_8857B6D8(u32, u32, u32, u32);
 typedef struct Cx40B { u8 a, b; u8 pad[2]; u32 c, d; } Cx40B;
 typedef struct Cx40PVv { u32 *first, *last, *cap; } Cx40PVv;
-extern void fn_88174A38(Cx40PVv *, u32 *, u32 *);
+extern void ts4_vector_grow_append_scalar4_88174A38(Cx40PVv *, u32 *, u32 *);
 
 /* 0x8861AA20: push one u32 onto the vector at +0x3c. */
 void ts4_u32_vec_push_8861AA20(char *self, u32 val)
@@ -24,6 +24,6 @@ void ts4_u32_vec_push_8861AA20(char *self, u32 val)
         if (last) *last = val;
         v->last++;
     } else {
-        fn_88174A38(v, last, &val);
+        ts4_vector_grow_append_scalar4_88174A38(v, last, &val);
     }
 }

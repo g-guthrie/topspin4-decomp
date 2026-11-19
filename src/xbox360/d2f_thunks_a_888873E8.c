@@ -142,7 +142,7 @@ ts4_word ts4_handle_release_881506A0();
 ts4_word fn_881609C8();
 ts4_word fn_88161620();
 ts4_word ts4_init_range_and_run_service_opt_88164F60();
-ts4_word fn_8816D220();
+ts4_word ts4_find_by_key_or_default_8816D220();
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_8816DFB8();
 ts4_word ts4_dc34_erase_88178AA8();
 ts4_word fn_8817E150();

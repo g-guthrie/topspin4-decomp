@@ -22,7 +22,7 @@ u32 ts4_if_call_seq_u32_lbl_88D45B38_881B5F58(void);
 u32 ts4_if_call_seq_u32_lbl_88D45B38_881B64E0(void);
 u32 ts4_if_call_seq_u32_lbl_88D45B38_881B6330(void);
 extern Handler *lbl_88D45B20;
-Handler *fn_8816D220(Handler *owner, u32 hash);
+Handler *ts4_find_by_key_or_default_8816D220(Handler *owner, u32 hash);
 
 /* Dispatches a 32-bit name hash to one of 20 handler functions; unknown
    hashes fall back to the default handler object's virtual slot 1.
@@ -52,7 +52,7 @@ u32 ts4_dispatch_by_name_hash_887FC940(u32 hash)
     case 0xD86CD997: return ts4_if_call_seq_u32_lbl_88D45B38_881B64E0();
     case 0xFA9A6031: return ts4_if_call_seq_u32_lbl_88D45B38_881B6330();
     default:
-        fallback = fn_8816D220(lbl_88D45B20, hash);
+        fallback = ts4_find_by_key_or_default_8816D220(lbl_88D45B20, hash);
         if (fallback == 0) {
             return 0;
         }

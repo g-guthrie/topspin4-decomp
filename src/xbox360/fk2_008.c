@@ -202,7 +202,7 @@ ts4_word fn_88164AE8();
 ts4_word fn_88164BE0();
 ts4_word fn_88164F60();
 ts4_word fn_8816D1A8();
-ts4_word fn_8816D220();
+ts4_word ts4_find_by_key_or_default_8816D220();
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_8816DFB8();
 ts4_word fn_8817C5D8();
 ts4_word fn_881898E8();
@@ -885,7 +885,7 @@ ts4_word ts4_get_u32_off0_88924D40(ts4_word a0, ts4_word a1, ts4_word a2, ts4_wo
     return t7;
 }
 
-/* Swing_DLL.xex 0x889271D8: if_get u32@0xc, u32@lbl_88D45B20, fn_8816D220, u32@0x0, u32@0x4, vcall */
+/* Swing_DLL.xex 0x889271D8: if_get u32@0xc, u32@lbl_88D45B20, ts4_find_by_key_or_default_8816D220, u32@0x0, u32@0x4, vcall */
 ts4_word ts4_if_get_u32_offc_889271D8(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word p8;
@@ -896,7 +896,7 @@ ts4_word ts4_if_get_u32_offc_889271D8(ts4_word a0, ts4_word a1, ts4_word a2)
 
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 12);
     if ((ts4_word)t1 == 0) {
-        t3 = fn_8816D220((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)((1193148416) | 37738));
+        t3 = ts4_find_by_key_or_default_8816D220((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)((1193148416) | 37738));
         if ((ts4_word)t3 == 0) {
             p8 = (ts4_word)0;
         } else {
@@ -915,7 +915,7 @@ ts4_word ts4_if_get_u32_offc_889271D8(ts4_word a0, ts4_word a1, ts4_word a2)
     return 1;
 }
 
-/* Swing_DLL.xex 0x88929040: if_get u32@0xc, u32@lbl_88D45B20, fn_8816D220, u32@0x0, u32@0x4, vcall */
+/* Swing_DLL.xex 0x88929040: if_get u32@0xc, u32@lbl_88D45B20, ts4_find_by_key_or_default_8816D220, u32@0x0, u32@0x4, vcall */
 ts4_word ts4_if_get_u32_offc_88929040(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3)
 {
     ts4_word p8;
@@ -927,7 +927,7 @@ ts4_word ts4_if_get_u32_offc_88929040(ts4_word a0, ts4_word a1, ts4_word a2, ts4
 
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 12);
     if ((ts4_word)t1 == 0) {
-        t3 = fn_8816D220((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)((1193148416) | 37738));
+        t3 = ts4_find_by_key_or_default_8816D220((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)((1193148416) | 37738));
         if ((ts4_word)t3 == 0) {
             p8 = (ts4_word)0;
         } else {

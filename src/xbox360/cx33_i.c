@@ -4,7 +4,7 @@ typedef unsigned int u32;
 typedef struct I5Key { u32 w0; int w4; u32 w8; u32 wc; } I5Key;
 typedef struct I5Vec { I5Key **first; I5Key **last; I5Key **cap; } I5Vec;
 typedef struct I5Hub { u8 pad[0x14]; I5Vec v; } I5Hub;
-extern void fn_88174A38(I5Vec *v, I5Key **pos, I5Key **val);
+extern void ts4_vector_grow_append_scalar4_88174A38(I5Vec *v, I5Key **pos, I5Key **val);
 int ts4_hub_add_unique_889121C0(I5Hub *h, I5Key *k)
 {
     I5Vec *v = &h->v;
@@ -20,7 +20,7 @@ int ts4_hub_add_unique_889121C0(I5Hub *h, I5Key *k)
             *v->last = k;
         v->last++;
     } else {
-        fn_88174A38(v, v->last, &k);
+        ts4_vector_grow_append_scalar4_88174A38(v, v->last, &k);
     }
     return 1;
 }

@@ -520,7 +520,7 @@ struct Ga1ElementVector {
     struct Ga1Element1C *end;
     struct Ga1Element1C *capacity_end;
 };
-extern void fn_882788C0(struct Ga1ElementVector *vec, struct Ga1Element1C *at);
+extern void ts4_vector_grow_append_882788C0(struct Ga1ElementVector *vec, struct Ga1Element1C *at);
 extern void *ts4_memset(void *dst, int value, ts4_u32 size);
 
 /* Grows the vector when full, zero-constructs one element at the end and returns it.
@@ -530,7 +530,7 @@ struct Ga1Element1C *ts4_element_vector_emplace_zeroed_88646318(struct Ga1Elemen
     struct Ga1Element1C *end = vec->end;
     struct Ga1Element1C *e;
     if (end == vec->capacity_end)
-        fn_882788C0(vec, end);
+        ts4_vector_grow_append_882788C0(vec, end);
     e = vec->end;
     if (e != 0) {
         e->head = 0;

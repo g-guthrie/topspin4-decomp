@@ -82,7 +82,7 @@ ts4_word fn_883EAA98();
 ts4_word fn_883EAAE8();
 ts4_word fn_883EB180();
 ts4_word fn_883EEC60();
-ts4_word fn_883FB620();
+ts4_word ts4_any_entry_flag_883FB620();
 ts4_word ts4_set_u32_off98_883FB6A0();
 ts4_word fn_883FCCC0();
 ts4_word ts4_tailcall_NetDll_closesocket_884F0258();

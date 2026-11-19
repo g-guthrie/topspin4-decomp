@@ -302,7 +302,7 @@ const char *fn_88214C20(const char *b, const char *e, const char *ch);
 void ts4_sbuf_ctor_88180008(void *s, const char *src);
 void ts4_fixed_string_append_8816CF48(void *s, const char *b, const char *e);
 void ts4_byte_string_assign_8816D090(void *dst, void *src);
-Pr3Factory *fn_8816D220(void *reg, u32 key);
+Pr3Factory *ts4_find_by_key_or_default_8816D220(void *reg, u32 key);
 
 PR3_INL u8 pr3_streq(const char *a, const char *b) { return 0 == strcmp(a, b); }
 
@@ -326,8 +326,8 @@ Pr3Fs *ts4_archive_create_for_path_88623190(const char *path, Pr3Fs *fs)
     }
     {
         Pr3Factory *f;
-        if (packed) { f = fn_8816D220(lbl_88D45B20, 0x9DE0A0F2); if (f == 0) return 0; }
-        else { f = fn_8816D220(lbl_88D45B20, 0x53780DC7); if (f == 0) return 0; }
+        if (packed) { f = ts4_find_by_key_or_default_8816D220(lbl_88D45B20, 0x9DE0A0F2); if (f == 0) return 0; }
+        else { f = ts4_find_by_key_or_default_8816D220(lbl_88D45B20, 0x53780DC7); if (f == 0) return 0; }
         return f->vt->create(f);
     }
 }

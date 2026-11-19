@@ -8,12 +8,12 @@ extern char lbl_8803964C[];
 extern char lbl_88B3302C[];
 extern char lbl_88D3CAF4[];
 ts4_word fn_88315F10();
-int fn_883FB528();
+int ts4_clear_flag_entries_883FB528();
 int ts4_if_call_seq_fn_883FB3E8_883FB4B8();
 
 /* Swing_DLL.xex 0x883E40F8: free the buffer at +0x10 (fn_88315F10: heap,
    block, source-file string, line 454), then, if there is a handle at +0x8,
-   try fn_883FB528 and ts4_if_call_seq_fn_883FB3E8_883FB4B8 on it in turn and
+   try ts4_clear_flag_entries_883FB528 and ts4_if_call_seq_fn_883FB3E8_883FB4B8 on it in turn and
    return the first non-zero result.  When both return 0 the handle is
    cleared.  Returns 0 when there is no handle. */
 int ts4_release_buffer_and_handle_883E40F8(ts4_word a0)
@@ -28,7 +28,7 @@ int ts4_release_buffer_and_handle_883E40F8(ts4_word a0)
     }
     if (*(ts4_word *)(a0 + 8) == 0)
         return 0;
-    r = fn_883FB528(*(ts4_word *)(a0 + 8));
+    r = ts4_clear_flag_entries_883FB528(*(ts4_word *)(a0 + 8));
     if (r != 0)
         return r;
     r = ts4_if_call_seq_fn_883FB3E8_883FB4B8(*(ts4_word *)(a0 + 8));

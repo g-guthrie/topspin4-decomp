@@ -37,7 +37,7 @@ typedef struct Cx33PVec { u32 w0; u32 *last; u32 *cap; } Cx33PVec;
 typedef struct Cx33Item { void **vt; } Cx33Item;
 typedef int (*Cx33SizeFn)(Cx33Item *);
 typedef struct Cx33Hub2 { u8 pad[0x20]; int total; u32 pad24; Cx33PVec vec; } Cx33Hub2;
-extern void fn_88174A38(Cx33PVec *vec, u32 *pos, u32 *val);
+extern void ts4_vector_grow_append_scalar4_88174A38(Cx33PVec *vec, u32 *pos, u32 *val);
 
 #ifdef _MSC_VER
 #define CX33_INL static __forceinline
@@ -51,7 +51,7 @@ CX33_INL void cx33_push(Cx33PVec *v, u32 val)
             *v->last = val;
         v->last++;
     } else {
-        fn_88174A38(v, v->last, &val);
+        ts4_vector_grow_append_scalar4_88174A38(v, v->last, &val);
     }
 }
 

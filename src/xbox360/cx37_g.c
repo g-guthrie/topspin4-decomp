@@ -240,7 +240,7 @@ void ts4_walk_records_88946EA0(void *self, Cx37Arg6c *a)
 
 #if 0 /* near miss, not byte-identical */
 typedef struct Cx37PVec { u32 w0; u32 *last; u32 *cap; } Cx37PVec;
-extern void fn_88174A38(Cx37PVec *vec, u32 *pos, u32 *val);
+extern void ts4_vector_grow_append_scalar4_88174A38(Cx37PVec *vec, u32 *pos, u32 *val);
 CX37_INL void cx37_push(Cx37PVec *v, u32 *val)
 {
     if (v->last != v->cap) {
@@ -248,7 +248,7 @@ CX37_INL void cx37_push(Cx37PVec *v, u32 *val)
             *v->last = *val;
         v->last++;
     } else {
-        fn_88174A38(v, v->last, val);
+        ts4_vector_grow_append_scalar4_88174A38(v, v->last, val);
     }
 }
 CX37_INL void cx37_push2(Cx37PVec *v, Cx37Grp *g, u32 *pg)
@@ -258,7 +258,7 @@ CX37_INL void cx37_push2(Cx37PVec *v, Cx37Grp *g, u32 *pg)
             *v->last = (u32)(unsigned long)g;
         v->last++;
     } else {
-        fn_88174A38(v, v->last, pg);
+        ts4_vector_grow_append_scalar4_88174A38(v, v->last, pg);
     }
 }
 typedef struct Cx37Hub { u8 pad[0x20]; void *w20; } Cx37Hub;

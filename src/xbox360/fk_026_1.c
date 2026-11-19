@@ -40,7 +40,7 @@ extern char lbl_88D45B1C[];
 extern char lbl_88D45B20[];
 extern char lbl_88D45B38[];
 ts4_word RtlLeaveCriticalSection();
-ts4_word fn_8816D220();
+ts4_word ts4_find_by_key_or_default_8816D220();
 ts4_word fn_881717A0();
 ts4_word fn_881898E8();
 ts4_word fn_881B9148();

@@ -160,7 +160,7 @@ ts4_word ts4_if_call_seq_u32_off24_883BD9D8();
 ts4_word aud1_decode_packed_entry_number_883BE648();
 ts4_word ts4_if_get_u32_off3c_883CF0A8();
 ts4_word fn_883FBC58();
-ts4_word fn_883FDB00();
+ts4_word ts4_list_apply_until_error_883FDB00();
 ts4_word fn_88408D58();
 ts4_word fn_8840EE78();
 ts4_word fn_8841A328();
@@ -2622,11 +2622,11 @@ ts4_word ts4_if_get_u32_off9c_883EE628(ts4_word a0)
     return 36;
 }
 
-/* Swing_DLL.xex 0x883F2C90: get u32@0x18, fn_883FDB00 */
+/* Swing_DLL.xex 0x883F2C90: get u32@0x18, ts4_list_apply_until_error_883FDB00 */
 ts4_word ts4_get_u32_off18_883F2C90(ts4_word a0, ts4_word a1)
 {
     (void)a0;
-    return fn_883FDB00((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 24)));
+    return ts4_list_apply_until_error_883FDB00((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 24)));
 }
 
 /* Swing_DLL.xex 0x883F3238: addr lbl_88039DD8, u32@0x4, u32@0x0, u32@0xc, u32@0x10, u32@0x14 */

@@ -18,8 +18,8 @@ void fn_8830E3B8(void *, int);
 void fn_8830E6C8(void *, int);
 void fn_88324DB0(void *, int);
 void fn_883250D8(void *, int);
-void fn_88325260(void *, int);
-void fn_883252E8(void *, int);
+void ts4_items_call_first_error_88325260(void *, int);
+void ts4_items_call_first_error_883252E8(void *, int);
 void fn_88325810(void *, int);
 void fn_88326520(void *, int);
 void fn_88326BF8(void *, int);
@@ -86,10 +86,10 @@ LOOKUP_THEN_FORWARD(ts4_lookup_then_forward_88316FB0, fn_88322CA8, fn_88326520)
 LOOKUP_THEN_FORWARD(ts4_lookup_then_forward_883172D0, fn_88322CA8, fn_88324DB0)
 
 /* Swing_DLL.xex 0x883173D8 */
-LOOKUP_THEN_FORWARD(ts4_lookup_then_forward_883173D8, fn_88322CA8, fn_88325260)
+LOOKUP_THEN_FORWARD(ts4_lookup_then_forward_883173D8, fn_88322CA8, ts4_items_call_first_error_88325260)
 
 /* Swing_DLL.xex 0x88317420 */
-LOOKUP_THEN_FORWARD(ts4_lookup_then_forward_88317420, fn_88322CA8, fn_883252E8)
+LOOKUP_THEN_FORWARD(ts4_lookup_then_forward_88317420, fn_88322CA8, ts4_items_call_first_error_883252E8)
 
 /* Swing_DLL.xex 0x88317468 */
 LOOKUP_THEN_FORWARD(ts4_lookup_then_forward_88317468, fn_88322CA8, fn_88326BF8)

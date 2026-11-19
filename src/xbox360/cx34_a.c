@@ -291,7 +291,7 @@ void ts4_ptr_vec_add_unique_888AE990(char *self, u32 key)
 extern char *lbl_88D45B1C;
 extern char *lbl_88D45964;
 extern float lbl_880C960C;
-extern void fn_88174A38(void *vec, void *where, void *val);
+extern void ts4_vector_grow_append_scalar4_88174A38(void *vec, void *where, void *val);
 extern void fn_881705B0(void *vec, int n);
 extern void ts4_object_finalize(void *);
 extern u32 fn_88608590(u32 a, u32 b);
@@ -361,7 +361,7 @@ void ts4_push_back_1c_888AF650(char *self, u32 v)
         if (end) *end = v;
         CX34_PTR(vec, 4) = CX34_PTR(vec, 4) + 4;
     } else {
-        fn_88174A38(vec, end, &v);
+        ts4_vector_grow_append_scalar4_88174A38(vec, end, &v);
     }
 }
 

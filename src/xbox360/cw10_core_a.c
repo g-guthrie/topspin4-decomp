@@ -177,13 +177,13 @@ Cw10E10 *ts4_vec10_erase_88213CC8(Cw10V10 *v, Cw10E10 *pos)
     return pos;
 }
 
-/* 0x88220B00: append a zeroed 0x20-byte element (last word = 1), growing through fn_88227B38 when full; returns the new element */
-extern void fn_88227B38(void *v, void *end);
+/* 0x88220B00: append a zeroed 0x20-byte element (last word = 1), growing through ts4_vector_grow_append_88227B38 when full; returns the new element */
+extern void ts4_vector_grow_append_88227B38(void *v, void *end);
 typedef struct Cw10Elem20 { u32 w[7]; u32 flag; } Cw10Elem20;
 typedef struct Cw10Vec20 { u32 pad; Cw10Elem20 *end; u32 pad2; Cw10Elem20 *cap; } Cw10Vec20;
 Cw10Elem20 *ts4_vec20_emplace_88220B00(Cw10Vec20 *v)
 {
-    if (v->end == v->cap) fn_88227B38(v, v->end);
+    if (v->end == v->cap) ts4_vector_grow_append_88227B38(v, v->end);
     if (v->end) {
         Cw10Elem20 *e = v->end;
         e->w[0] = 0;
