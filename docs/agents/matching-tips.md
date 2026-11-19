@@ -2972,3 +2972,14 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - A shared tail `stw` where one branch loads its destination pointer early (886782D0): compute the condition into a `u8`, then take `X74 *d = p->x74;`, then `if (c) h=A; else h=B; d->h=h; return;` inside that branch. LTCG with `flags(/Ob1):src/xbox360/fk5_001.c` is required.
 - `g_ts4_script_constants` is `extern float g_ts4_script_constants[];` and is indexed (for example `[0x3c]`).
 - A dead end, 8887E030 (12 off): every block schedules `lwz` before `addi r3,0x1c`, and C, C++ virtual, MI and LTCG forms all failed. Skip similar shapes.
+
+## agBG (b198): renderer queue lines 341-385 plus 88774260 (4 matches, 1 draft)
+- Loop over `[begin,end)` with `end` held in a register: declare both in one line, `Item **it = s->begin, **end = s->end;`, with `for (; it != end; ...)`. Declaring `end` alone and assigning `it` in the for-init reverses the two loads (886EFDB0).
+- If a `n <= 0` check is shared between an if-path and an else-path, so the max(n,1) path jumps straight to it, write `if (n > 0) { i = 0; do {...} while (++i < n); }` after the if/else. A plain `for` or a check inside the else does not match (886F2520).
+- Hoisting a float constant (`float zero = lbl;`) gives the target's order: constant load first, field second.
+- Symbols at .rdata 0x880D0F70 are `g_ts4_script_constants[]`. If the checker reports a reloc-name-only FAIL with 0 differing instructions, rename the symbol; look it up with `grep "= .rdata:0x..." config/54540859/symbols.txt`.
+- Inline `push_back` with a field reload after the store (`stw x,0(p); lwz end; addi; stw`): load `e = v->end` once into a function-scope local, use `e` for the find, the null test and the grow call, and write `v->end++` (88744728). The lookup helper `if (p != mp->end) return p->idx; return -1;` with `PairVec *mp = &sk->map` got the target's find/compare/-1 shape.
+- 12-byte local struct pushed into a vector (887322A8/887323F8, D3DVERTEXELEMENT9 decl builder): still 35 off. The target loads all three words before storing and doesn't reload `end`, which no helper/temp/.cpp placement-new form reproduced. A 0x20-byte vector (with allocator words) fixed the frame layout.
+- 88723E38 (format-text names hashed into 12-byte keys): the target frame is 0x30 bytes larger than any form tried (by-value return, out-pointer, C++ ctor). Dropped at 19 off.
+- 88771EA8: the self-relative entry `(char*)t + t->rel + i*0x14` is recomputed with `rel` reloaded at every use. This is the same open problem as in agBE. Dropped.
+- 88774260 is 3 off (draft): the target does `li r3,0; lwz r30,st.p; mr r4,r30`, and MSVC always loads r4 first.
