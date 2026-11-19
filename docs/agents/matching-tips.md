@@ -1007,3 +1007,19 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   value. In .cpp, wrap the externs in extern "C".
 - Fill/ctor functions where plain gives a different store order often match on LTCG (88800758, 885C8A18).
 - work/matching-b133 was removed while this pass was running. If fn_check crashes in load_symbols, the matching dir is gone.
+
+## agL round 2 (2026-11-19)
+- A target that reloads a field the compiler would CSE (`lwz` again after a loop): read the field through a
+  different base expression at each site. For example, the loop bound is `o->vec.last` while the erase uses `v->last`
+  with `v = &o->vec` (886393F0). Another case is `lbl_X->sentinel` beside `l->sentinel` with `l = lbl_X` (88309D38).
+  MSVC only CSEs loads with the same base symbol.
+- A null check that survives a dereference (888C2FD8): the find helper must `return *i` from inside the loop and
+  `return 0` after it. The `r = o; break;` form lets MSVC prove non-null and drop the caller's `if (o)`.
+- Capacity word with a top "no free" bit and `clrlwi r,r,2` as size (884DB7D8): declare it as an MSB-first bitfield
+  `int nofree : 1; unsigned bf : 1; unsigned cap : 30;`. The signed 1-bit field gives `clrrwi; cmpwi`. 8 off left (r29/r30 swap).
+- An extra `mr r11,r3` before `lwz r3,0(r3)` for `alloc(o->pool, ..., o)` (8825B800): read the pool into a local first.
+- vector operator= swap (881A84E8, 88162CC8): a named `e8 = a0 + 8` local fixes the registers (8 -> 6). The 6 left
+  are the order of the two capacity/size divides, and no statement permutation or pad changes it.
+- A constructor that keeps `this` in r31 unused and stores through the base-ctor result (885E5E40): a C++ ctor gives
+  the right prologue but stores through r31 (16 off). Plain C stores through r3 but drops the r31 save (27 off).
+- File-static singleton instances (8861DCF8): the plain route matches. LTCG folds the static into a pp1_pool symbol.

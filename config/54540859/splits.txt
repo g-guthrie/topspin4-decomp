@@ -49512,3 +49512,54 @@ src/xbox360/me_ts4_make_flagged_handle_889506E8.c:
 src/xbox360/me_ts4_clear_three_flags_8877E908.c:
 	.pdata      start:0x88127AD8 end:0x88127AE0
 	.text       start:0x8877E908 end:0x8877EA4C
+
+src/xbox360/me_ts4_set_global_vec3_886ED0B0.c:
+	.text       start:0x886ED0B0 end:0x886ED0DC
+
+src/xbox360/me_ts4_set_global_vec3_886ED080.c:
+	.text       start:0x886ED080 end:0x886ED0AC
+
+src/xbox360/me_ts4_find_owner_record_by_key_888C2FD8.c:
+	.text       start:0x888C2FD8 end:0x888C3024
+
+src/xbox360/me_ts4_owner_find_record8_by_key_881AC7D0.c:
+	.text       start:0x881AC7D0 end:0x881AC824
+
+src/xbox360/me_ts4_owner_vec24_remove_key_886393F0.c:
+	.pdata      start:0x881225D8 end:0x881225E0
+	.text       start:0x886393F0 end:0x8863947C
+
+src/xbox360/me_ts4_find_global_list_item_by_key_88309D38.c:
+	.text       start:0x88309D38 end:0x88309DB8
+
+src/xbox360/me_ts4_vec12_clear_8825FE68.c:
+	.pdata      start:0x8810E790 end:0x8810E798
+	.text       start:0x8825FE68 end:0x8825FEC4
+
+src/xbox360/me_ts4_singleton_dtor_buf_8861DCF8.c:
+	.pdata      start:0x88121A08 end:0x88121A10
+	.text       start:0x8861DCF8 end:0x8861DD58
+
+src/xbox360/me_ts4_release_slot_object_8830EBC0.c:
+	.pdata      start:0x881121D8 end:0x881121E0
+	.text       start:0x8830EBC0 end:0x8830EC08
+
+src/xbox360/me_ts4_push_op11_set_flag_88499548.c:
+	.pdata      start:0x88119988 end:0x88119990
+	.text       start:0x88499548 end:0x884995C8
+
+src/xbox360/me_ts4_push_op10_set_flag_884994C8.c:
+	.pdata      start:0x88119980 end:0x88119988
+	.text       start:0x884994C8 end:0x88499548
+
+src/xbox360/me_ts4_list_append_unless_known_88477DC8.c:
+	.pdata      start:0x88118E20 end:0x88118E28
+	.text       start:0x88477DC8 end:0x88477E48
+
+src/xbox360/me_ts4_pop_depth_push_op17_8849A688.c:
+	.pdata      start:0x88119A00 end:0x88119A08
+	.text       start:0x8849A688 end:0x8849A700
+
+src/xbox360/me_ts4_pool_node16_new_8825B800.c:
+	.pdata      start:0x8810E530 end:0x8810E538
+	.text       start:0x8825B800 end:0x8825B868
