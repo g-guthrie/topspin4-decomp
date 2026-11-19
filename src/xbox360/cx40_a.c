@@ -112,7 +112,7 @@ void ts4_mgr_refresh_887D9970(char *self, u8 flag)
     }
 }
 
-extern void fn_888DC7F8(void *, int, u32, u32, int);
+extern void ts4_slot_flush_888DC7F8(void *, int, u32, u32, int);
 /* 0x887DB548: apply slot idx (or all four when idx == -1) of the table at +0xa8+0x1c0 if its flag byte is set. */
 #ifdef _MSC_VER
 __declspec(noinline)
@@ -132,7 +132,7 @@ void ts4_slot_apply_887DB548(char *self, u32 flag, int idx)
             u32 a;
             if ((u8)flag != 0) a = *(u32 *)(self + 0x64);
             else a = 0;
-            fn_888DC7F8(*(void **)(self + 0xac), idx, flag, a, -1);
+            ts4_slot_flush_888DC7F8(*(void **)(self + 0xac), idx, flag, a, -1);
         }
     }
 }

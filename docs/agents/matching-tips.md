@@ -2849,3 +2849,11 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   - 88728C48 (6 off: r29/r30 swap between param and global plus one add order; pads do not help);
   - 887728C8 (7 off: a pure r30/r31 swap; sibling of 88772988 at 0.80).
 - Skipped for rldicr or struct-by-value: 88700ED8, 8871A280, 88716F18, 88722CA8, 8875A358, 8877CA50. Skipped as VMX: 88756720.
+
+## agAY
+- An `empty()` inline on a sub-struct vector (`v->first == v->last`) forces a fresh reload of `last` after a loop (888CA680).
+- Preset `u8 r = 0;` with a single exit gives the early `li r3,0`/`li r31,0` result register (888C2B40, 88866A00).
+- Fixed 5-word arrays copied as a struct assignment (`typedef struct {u32 a[5];} Arr5`) give the ctr copy loop (886C4AF0).
+- An inline `src_at()` that copies the base pointer fixes the add operand order for `base + i*size` (888D5298).
+- Writing `*o->next == *o->cur` directly in the test, not through locals, fixes the load order (888F56E0).
+- Get the names of data labels from the checker's RENAME lines; textdis offset-to-address mapping is unreliable.

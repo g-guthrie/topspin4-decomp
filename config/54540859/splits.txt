@@ -54876,3 +54876,57 @@ src/xbox360/me_ts4_settings_write_889170B8.c:
 src/xbox360/me_u32vec_remove_locked_88779428.c:
 	.pdata      start:0x881277F8 end:0x88127800
 	.text       start:0x88779428 end:0x887794CC
+
+src/xbox360/me_ritem_lists_find_by_key18_8876D2C0.c:
+	.text       start:0x8876D2C0 end:0x8876D36C
+
+src/xbox360/me_ritem_lists_find_by_key20_8876D210.c:
+	.text       start:0x8876D210 end:0x8876D2BC
+
+src/xbox360/me_rnode_set_update_matching_88772988.c:
+	.pdata      start:0x88127620 end:0x88127628
+	.text       start:0x88772988 end:0x88772A34
+
+src/xbox360/me_ts4_block_reset_888DA698.c:
+	.pdata      start:0x8812F420 end:0x8812F428
+	.text       start:0x888DA698 end:0x888DA738
+
+src/xbox360/me_ts4_keytab_step_lookup_88866A00.c:
+	.text       start:0x88866A00 end:0x88866AA0
+
+src/xbox360/me_ts4_oscillator_step_888C24B0.c:
+	.text       start:0x888C24B0 end:0x888C254C
+
+src/xbox360/me_ts4_rec_mode_tag_888CB4D0.cpp:
+	.pdata      start:0x8812EE10 end:0x8812EE18
+	.text       start:0x888CB4D0 end:0x888CB568
+
+src/xbox360/me_ts4_record_copy_886C4AF0.c:
+	.text       start:0x886C4AF0 end:0x886C4B8C
+
+src/xbox360/me_ts4_reg_ctor_8887A3E8.cpp:
+	.pdata      start:0x8812D780 end:0x8812D788
+	.text       start:0x8887A3E8 end:0x8887A478
+
+src/xbox360/me_ts4_slot_flush_888DC7F8.c:
+	.pdata      start:0x8812F4D8 end:0x8812F4E0
+	.text       start:0x888DC7F8 end:0x888DC898
+
+src/xbox360/me_ts4_slots_flush_all_888DCD98.c:
+	.pdata      start:0x8812F520 end:0x8812F528
+	.text       start:0x888DCD98 end:0x888DCE38
+
+src/xbox360/me_ts4_slotset_has_pending_888CA680.c:
+	.text       start:0x888CA680 end:0x888CA71C
+
+src/xbox360/me_ts4_swing_obj_ctor_888DDF98.cpp:
+	.pdata      start:0x8812F5B8 end:0x8812F5C0
+	.text       start:0x888DDF98 end:0x888DE02C
+
+src/xbox360/me_ts4_swing_obj_ctor_888DE430.cpp:
+	.pdata      start:0x8812F5F8 end:0x8812F600
+	.text       start:0x888DE430 end:0x888DE4C8
+
+src/xbox360/me_view_sync_visibility_886ECC38.c:
+	.pdata      start:0x881254D0 end:0x881254D8
+	.text       start:0x886ECC38 end:0x886ECCE0

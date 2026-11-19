@@ -121,7 +121,7 @@ ts4_word fn_888D3648();
 ts4_word ts4_if_call_seq_u32_off15c_888D73B0();
 ts4_word ts4_if_call_seq_fn_888C39A0_888D8078();
 ts4_word fn_888DA428();
-ts4_word fn_888DA698();
+ts4_word ts4_block_reset_888DA698();
 ts4_word fn_888DA850();
 ts4_word fn_888DDA80();
 ts4_word ts4_loop_call_seq_u32_off20_888DF008();

@@ -14456,6 +14456,66 @@
       "src/xbox360/me_u32vec_remove_locked_88779428.c": {
         "status": "Matching",
         "source": "xbox360/me_u32vec_remove_locked_88779428.c"
+      },
+      "src/xbox360/me_ritem_lists_find_by_key18_8876D2C0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ritem_lists_find_by_key18_8876D2C0.c"
+      },
+      "src/xbox360/me_ritem_lists_find_by_key20_8876D210.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ritem_lists_find_by_key20_8876D210.c"
+      },
+      "src/xbox360/me_rnode_set_update_matching_88772988.c": {
+        "status": "Matching",
+        "source": "xbox360/me_rnode_set_update_matching_88772988.c"
+      },
+      "src/xbox360/me_ts4_block_reset_888DA698.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_block_reset_888DA698.c"
+      },
+      "src/xbox360/me_ts4_keytab_step_lookup_88866A00.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_keytab_step_lookup_88866A00.c"
+      },
+      "src/xbox360/me_ts4_oscillator_step_888C24B0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_oscillator_step_888C24B0.c"
+      },
+      "src/xbox360/me_ts4_rec_mode_tag_888CB4D0.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_rec_mode_tag_888CB4D0.cpp"
+      },
+      "src/xbox360/me_ts4_record_copy_886C4AF0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_record_copy_886C4AF0.c"
+      },
+      "src/xbox360/me_ts4_reg_ctor_8887A3E8.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_reg_ctor_8887A3E8.cpp"
+      },
+      "src/xbox360/me_ts4_slot_flush_888DC7F8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_slot_flush_888DC7F8.c"
+      },
+      "src/xbox360/me_ts4_slots_flush_all_888DCD98.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_slots_flush_all_888DCD98.c"
+      },
+      "src/xbox360/me_ts4_slotset_has_pending_888CA680.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_slotset_has_pending_888CA680.c"
+      },
+      "src/xbox360/me_ts4_swing_obj_ctor_888DDF98.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_swing_obj_ctor_888DDF98.cpp"
+      },
+      "src/xbox360/me_ts4_swing_obj_ctor_888DE430.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_swing_obj_ctor_888DE430.cpp"
+      },
+      "src/xbox360/me_view_sync_visibility_886ECC38.c": {
+        "status": "Matching",
+        "source": "xbox360/me_view_sync_visibility_886ECC38.c"
       }
     }
   }

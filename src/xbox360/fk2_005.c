@@ -227,8 +227,8 @@ ts4_word fn_88758018();
 ts4_word ts4_loop_call_seq_u32_off10_8875A070();
 ts4_word fn_8875EB68();
 ts4_word ts4_if_call_seq_fn_88734098_8876CE68();
-ts4_word fn_8876D210();
-ts4_word fn_8876D2C0();
+ts4_word ritem_lists_find_by_key20_8876D210();
+ts4_word ritem_lists_find_by_key18_8876D2C0();
 ts4_word fn_8876D560();
 ts4_word fn_88773A18();
 ts4_word fn_88778208();
@@ -3355,7 +3355,7 @@ ts4_word ts4_call_seq_u32_lbl_88D45AD4_8876CEE8(void)
     return t2;
 }
 
-/* Swing_DLL.xex 0x8876D370: if_get u32@0x10, u32@0x0, fn_8876D2C0, u32@0x0, u32@0x18, vcall */
+/* Swing_DLL.xex 0x8876D370: if_get u32@0x10, u32@0x0, ritem_lists_find_by_key18_8876D2C0, u32@0x0, u32@0x18, vcall */
 ts4_word ts4_if_get_u32_off10_8876D370(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p7;
@@ -3373,7 +3373,7 @@ ts4_word ts4_if_get_u32_off10_8876D370(ts4_word a0, ts4_word a1, ts4_word a2, ts
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 16);
     p8 = (ts4_word)t1;
     if ((ts4_word)t1 != 0) {
-        t3 = fn_8876D2C0((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+        t3 = ritem_lists_find_by_key18_8876D2C0((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
         p7 = (ts4_word)t3;
         if ((ts4_word)t3 != 0) {
             t6 = ((ts4_word (*)(ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t3) + 0))) + 24))))((ts4_word)t3);
@@ -3384,7 +3384,7 @@ ts4_word ts4_if_get_u32_off10_8876D370(ts4_word a0, ts4_word a1, ts4_word a2, ts
     return p8;
 }
 
-/* Swing_DLL.xex 0x8876D3B8: if_get u32@0x10, u32@0x0, fn_8876D2C0, u32@0x0, u32@0x14, vcall */
+/* Swing_DLL.xex 0x8876D3B8: if_get u32@0x10, u32@0x0, ritem_lists_find_by_key18_8876D2C0, u32@0x0, u32@0x14, vcall */
 ts4_word ts4_if_get_u32_off10_8876D3B8(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p7;
@@ -3402,7 +3402,7 @@ ts4_word ts4_if_get_u32_off10_8876D3B8(ts4_word a0, ts4_word a1, ts4_word a2, ts
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 16);
     p8 = (ts4_word)t1;
     if ((ts4_word)t1 != 0) {
-        t3 = fn_8876D2C0((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+        t3 = ritem_lists_find_by_key18_8876D2C0((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
         p7 = (ts4_word)t3;
         if ((ts4_word)t3 != 0) {
             t6 = ((ts4_word (*)(ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t3) + 0))) + 20))))((ts4_word)t3);
@@ -3413,7 +3413,7 @@ ts4_word ts4_if_get_u32_off10_8876D3B8(ts4_word a0, ts4_word a1, ts4_word a2, ts
     return p8;
 }
 
-/* Swing_DLL.xex 0x8876D400: if_get u32@0x10, u32@0x0, fn_8876D2C0, u32@0x0, u32@0x10, u32@0x1c */
+/* Swing_DLL.xex 0x8876D400: if_get u32@0x10, u32@0x0, ritem_lists_find_by_key18_8876D2C0, u32@0x0, u32@0x10, u32@0x1c */
 ts4_word ts4_if_get_u32_off10_8876D400(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word p10;
@@ -3434,7 +3434,7 @@ ts4_word ts4_if_get_u32_off10_8876D400(ts4_word a0, ts4_word a1, ts4_word a2, ts
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 16);
     p11 = (ts4_word)t1;
     if ((ts4_word)t1 != 0) {
-        t3 = fn_8876D2C0((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+        t3 = ritem_lists_find_by_key18_8876D2C0((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
         p10 = (ts4_word)t3;
         if ((ts4_word)t3 != 0) {
             t4 = *(ts4_word *)((char *)(ts4_word)(t3) + 0);
@@ -3709,7 +3709,7 @@ ts4_word ts4_if_call_seq_lbl_880EFE08_88773AB8(ts4_word a0)
     return t13;
 }
 
-/* Swing_DLL.xex 0x88774408: if_call_seq u32@0x10, u32@0x0, fn_8876D210, u8@0x15, fn_88773A18 */
+/* Swing_DLL.xex 0x88774408: if_call_seq u32@0x10, u32@0x0, ritem_lists_find_by_key20_8876D210, u8@0x15, fn_88773A18 */
 ts4_word ts4_if_call_seq_u32_off10_88774408(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word t1;
@@ -3724,7 +3724,7 @@ ts4_word ts4_if_call_seq_u32_off10_88774408(ts4_word a0, ts4_word a1, ts4_word a
     (void)a7;
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 16);
     if ((ts4_word)t1 != 0) {
-        t3 = fn_8876D210((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+        t3 = ritem_lists_find_by_key20_8876D210((ts4_word)t1, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
         if ((ts4_word)t3 != 0) {
             *(unsigned char *)((char *)(ts4_word)(t3) + 21) = (unsigned char)0;
         }
