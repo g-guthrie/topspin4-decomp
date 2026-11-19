@@ -927,3 +927,24 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
 declare the guard and table as file-scope externs with the target's names (`extern "C" unsigned lbl_88D4AAF8;`,
 `extern "C" T lbl_88D4AAD8[4];`) and write the init guard by hand: `g = guard; if (!(g & 1)) { guard = g | 1; init...; }`.
 Same bytes, and the relocations now carry the target names. No tool change needed.
+
+## agJ notes (2026-11-19): bottom-up callees of the blocked gameplay functions
+- Caller keeps an argument register live across a `bl` with no reload (0x88604E50: `stwx ..., r3` after
+  `bl fn_88604C90` with ctx never copied to a nonvolatile): the callee is in the same compilation unit and
+  MSVC knows it does not clobber r3. Put the callee's definition in the same file (both functions in one spec);
+  it matched on both routes at once. A prototype-only build moves ctx into r30 (frame and saves differ).
+- Blowfish encrypt (0x88604C90): the target's 4x4 unrolled round loop needs an `int` counter (Kocher's `short i`
+  is not unrolled) and a `__forceinline` F. Compute both final halves into locals before the two stores.
+- Shared-tail switch (0x88600CD0, `cmpwi; b common_blt` per case): write each case as
+  `case k: if (minor >= N) return 0; break;` with the final check after the switch. A table of limits per case
+  (`n = N; break;` then one compare) or an inline predicate gives a single compare or branchless code instead.
+- Branch to a shared `li r3,0; blr` after a failed vcall (0x88600D88): `if (o && !o->vt->f(...)) { release(o); o = 0; }
+  return o;` The nested-if-with-early-return form duplicates the epilogue.
+- Hash argument to a vcall (0x88179AF0): passing a constructed `Hash(0x...)` by const reference
+  plus computing the other operand into a local first gave the target's `lis/ori` placement.
+- Open (0x8899F760, heap-scope helper): the target materialises the hash 0x45450AE7 into r30 before the first call
+  and the scope frame is 0x90 (r28-r31). Every C and C++ form tried (inline helper, ctor with by-value or
+  const-ref hash, local variable) rematerialises it just before `fn_88618998`.
+- 0x886176F0 is a clock seed for the Rng {seed, x, lcg} used by 0x8860BAB8: the callee 0x88885388 widens a
+  SYSTEMTIME into 8 ints (year, month, dow, day, hour, minute, second, ms). 2 off: the target computes `&t` before
+  the first zero store; nothing tried moved it.

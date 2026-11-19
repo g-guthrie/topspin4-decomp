@@ -1,3 +1,4 @@
+/* agH (2026-11-19): 19 -> 6 off (plain and LTCG). 4 dead-local pads at the top (period 8: 12 also gives 6); block position of the pads does not matter. Left: r6/r7 swap and add operand order (w*24 + rel) in the winner/loser item stores; 5 item() helper forms, w/l order, steps local, items()+i tried. */
 /* NEAR MISS 0x8865C920 (agentA2, C++ real virtuals): 27 -> 19 off, plain /Oc (LTCG same). server_for/finish/restart_*
    are real virtuals (slots 8/7/16/14). Residue only in the final winner/loser item stores: target loads limits->steps
    before the item math and keeps a dead mr of the item offset. Tried 8 variants (items() array helper, ctx local, order). */
@@ -24,7 +25,7 @@ static __forceinline unsigned char foreign5(Ctx *c, State *s, int index) { unsig
 static __forceinline Item *items(Items *t) { return (Item *)((char *)t + t->offset); }
 static __forceinline Item *item(Items *t, int i) { return (Item *)((char *)t + (i * 0x18 + t->offset)); }
 extern "C" void ts4_end_point_8865C920(Obj *o)
-{
+{ int op1_pad0 = 0, op1_pad1 = 0, op1_pad2 = 0, op1_pad3 = 0;
     int server;
     unsigned char special;
     if (o->ctx->state->frozen)

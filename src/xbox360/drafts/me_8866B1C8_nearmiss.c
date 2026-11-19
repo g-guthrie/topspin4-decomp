@@ -1,3 +1,4 @@
+/* agH (2026-11-19): 6 final-block forms (itemA/itemB/itemD mixes, Vt local, <= form) x pads 0-7 x both routes: stays 10 off. fn_equiv seed 1: DIFFERENT only on a dead scratch register at the recompute vcall (r9 0xac770695 vs 0), 1 valid of 12 trials; not a behaviour change but not a pass. Still relies on the volatile pend member. */
 /* UPDATE 2026-11-19: 10 off (was 12). 3 dead-local pads at the top (OP1 symbol-numbering rule) fix items[i] add order; item0 via itemA(...,0). Left: item0 add operand order (target add r6,r10,r11) and vtable-slot load after the side stw. Still needs the volatile pend member. */
 /* near-miss: 12 off (0x8866B1C8). Needs `Pend *volatile pend` in Ctx to reproduce the ctx->pend reloads
  * (diagnostic, unconfirmed as original). Remaining: operand order of the add for items[i] (i*24+off vs off+i*24)
