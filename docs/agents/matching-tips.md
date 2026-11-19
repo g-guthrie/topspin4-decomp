@@ -1124,3 +1124,20 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Still open: the constant passed by address to ts4_get_u32_off0_8822AFE8 is scheduled one slot off (888E1FC0, 887011A8, 88770288,
   886FC638). A C++ const-ref wrapper and moving the assignment do not help. 888CF290/888D0150 are missing only a dead
   `li r11,0` before the value test.
+- **`cmpwi rX,0` / `cmplwi rX,0` on cr0 (no `cr6`) before a branch means the unit was built /O1 (or /Os), not /Oc.**
+  883FB5A0 (2 off on /Oc) and 883E8AE0 matched once the flags were switched to `/O1`, on both routes. Try `flags=['/O1']`
+  in v.chk whenever cr0 compares show up. 65+ specs already use /O1. /O1 did not help the add-order or operator=
+  1-off groups.
+
+## agO round 3 (2026-11-19, b145): pointer-local stores fix scheduling (6 matches)
+- When MSVC hoists a load above a store to the same object (or reorders two stores to different fields), do the store or
+  load through a block-local pointer: `{ Item **pe = &v->end; *pe = f(*pe, *pe, v->begin); }` (88721B58),
+  `{ void **pb = &self->buf364; destroy(*pb); }` (887CC0B0, 888885F8), `{ void **pv = &s->vt; *pv = lbl; }` (88889240),
+  `{ unsigned *ph = &self->hash; *ph = 0xA0BDE62E; }` (88995400). MSVC stops disambiguating by base+offset for
+  that access. This needs no volatile and holds on both routes. Try it before any volatile read.
+- It did not fix the constant passed by address to ts4_get_u32_off0_8822AFE8 (888E1FC0/887011A8/88770288/886FC638). The li of the
+  constant is still scheduled on the wrong side of the previous stb or `li r6,0`. Tried: function-top, block, before/after the
+  key, const, int, a {key, value} struct or array, a comma expression inside the call args, a pointer-local store, and
+  /Ob1 or no /Oc. The IR order does not matter, so it looks like register choice (target r4, ours r5).
+- Zero result kept in r31 across a call (889A0BE8): `int result = 0; ... if (h) result = h->value; return result;`.
+- 888CF290/888D0150 dead `li r11,0`: `ok` flags, an early-return helper and a value-folded ready() all make it worse (6-24 off).

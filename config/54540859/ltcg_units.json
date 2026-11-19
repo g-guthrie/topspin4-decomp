@@ -2369,5 +2369,20 @@
   "symbols": {
    "fn_88636DC8": 104
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_lookup_hash_value_or_default_887D0970.cpp",
+  "object": "me_ts4_lookup_hash_value_or_default_887D0970.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "fn_887D0970": 104
+  }
  }
 ]
