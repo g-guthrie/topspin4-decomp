@@ -14336,6 +14336,62 @@
       "src/xbox360/me_ts4_vec_heading_886F2F38.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_vec_heading_886F2F38.c"
+      },
+      "src/xbox360/me_anim_bone_remap_8876E380.c": {
+        "status": "Matching",
+        "source": "xbox360/me_anim_bone_remap_8876E380.c"
+      },
+      "src/xbox360/me_ts4_ctor_two_vec_owner_8872CD50.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ctor_two_vec_owner_8872CD50.c"
+      },
+      "src/xbox360/me_ts4_dtor_bytevec_owner_8872F300.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_dtor_bytevec_owner_8872F300.c"
+      },
+      "src/xbox360/me_ts4_dtor_bytevec_owner_88737B40.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_dtor_bytevec_owner_88737B40.c"
+      },
+      "src/xbox360/me_ts4_mod_open_888CE028.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_mod_open_888CE028.cpp"
+      },
+      "src/xbox360/me_ts4_prune_dead_887ECA58.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_prune_dead_887ECA58.c"
+      },
+      "src/xbox360/me_ts4_remove_by_key_887ED8C8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_remove_by_key_887ED8C8.c"
+      },
+      "src/xbox360/me_ts4_resolve_slots_8890DCC8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_resolve_slots_8890DCC8.c"
+      },
+      "src/xbox360/me_ts4_scaled_xform_8887A5B8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_scaled_xform_8887A5B8.c"
+      },
+      "src/xbox360/me_ts4_slot_reset_888C99E0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_slot_reset_888C99E0.c"
+      },
+      "src/xbox360/me_ts4_snd_start_8887CA38.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_snd_start_8887CA38.c"
+      },
+      "src/xbox360/me_ts4_u32vec_remove_all_88879AA8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_u32vec_remove_all_88879AA8.c"
+      },
+      "src/xbox360/me_ts4_u32vec_remove_all_88879B28.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_u32vec_remove_all_88879B28.c"
+      },
+      "src/xbox360/me_vec16_tidy_free_8873EFC0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_vec16_tidy_free_8873EFC0.c"
       }
     }
   }

@@ -2718,3 +2718,26 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   `fmr`), 888D82E0 (rel-table binary search; the target keeps t/rel in r30/r31, 34 off in every form). Skipped:
   888D6608 (callee keeps r4 live, LTCG without source), 888D6A30, 888DA428, 888DC298, 88916F48 (vector), 887F8710, 88879098/
   888791E8 (string format), 8887EB10, 888C3198.
+
+## agAS (b192): renderer queue lines 61-88 (9 matches, 4 drafts)
+- **Vector field copy with loads in reverse order** (`lfs 0x38; lfs 0x34; lfs 0x30; stfs x,y,z`, 8877D578): write it as an
+  inline `vec3_set(out, it->pos.x, it->pos.y, it->pos.z)`. A struct assignment gives `lwz/stw` word copies instead.
+- **Tidy with the inlined element copy** (8873EFC0, 16-byte elements copied as `stw a` then a 12-byte sub-struct): give the
+  element `{u32 a; Rest12 r;}` and copy `d->a = s->a; d->r = s->r;`. When the target loads `begin` for the free test *before*
+  the `end` store, compute the copy result into a local, read `b = v->begin`, then store `v->end = e`.
+- The 8872F300/88737B40 dtor family (vt; `ts4_object_finalize(&o->vec)`; free buffer via lbl_88D45B38 or fn_885651F8; base vt;
+  member dtor) matches in plain /Oc with a `bytevec_tidy` static inline. Look for more siblings with vt 0x880F21xx / base 0x880F34xx.
+- Two AVecs back to back (8872CD50) match with the plain `avec_init` inline called twice. One AVec at 0x80 followed by a null
+  handle (88723BE0) matched with the agAP round 3 block form plus `h.a = 0; h.c = 0; h.b = 0xFFFFF;`.
+- A vcall wrapper whose target has a single exit and `li r3,0` set before the first test (886F5FB0) matched on LTCG
+  `ctx=[]` with `void *r = 0; if (...) { ...; r = call(); if (r) o->f = r; } return r;`. Plain /Oc is 2 off (r5 home store order).
+- A 12-byte `memcpy` into a `__vector4` local must stay a call: add `#pragma function(memcpy)` (886F0278) and `#include "vx1_vector.h"`.
+- ori constants are zero-extended: `lis 0x6f80; ori 0xa671` is 0x6F80A671. Do not apply the addi sign fix to ori.
+- Self-relative add order in a remap loop (8876E380) was fixed by block-scoped `u32 *s = src->first; u32 *d = o->out.first;`
+  inside the loop body (the OP1 local count), which `tools/operand_order_pad.py` had confirmed with 2 pads.
+- Drafts: 886F0278 (2 off: the target loads lbl_88D45AD4 before the slwi of the index); 88720B70/88720E48 (3 off:
+  singleton-clearing dtor, the lis pair and vt/global store order, the same family as agAQ 88888C80).
+- Dropped: 8876DCB8 (the target reloads the self-relative offset for the second key test; inline accessors CSE it), 886F0440
+  (the local-static hash table; the `li r9,1` result is hoisted before the loop, 13 off), 88778A40 (the two vcall tails are merged),
+  8876D0F0 (stores a double 0.0 from g_ts4_script_constants+0x58 and the LTCG scratch pool does not land there), 88771D80 (23 off).
+  Skipped: 886F7110 (bit tricks), 886EC9B0/886F5D10 (vector packing), 886F39F0 (the LTCG callee fn_886F38F0 has no source).

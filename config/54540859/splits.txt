@@ -54759,3 +54759,57 @@ src/xbox360/me_ts4_split_range_aligned64_886EC7C8.c:
 src/xbox360/me_ts4_vec_heading_886F2F38.c:
 	.pdata      start:0x881256E0 end:0x881256E8
 	.text       start:0x886F2F38 end:0x886F2FB8
+
+src/xbox360/me_anim_bone_remap_8876E380.c:
+	.pdata      start:0x88127488 end:0x88127490
+	.text       start:0x8876E380 end:0x8876E404
+
+src/xbox360/me_ts4_ctor_two_vec_owner_8872CD50.c:
+	.pdata      start:0x88126898 end:0x881268A0
+	.text       start:0x8872CD50 end:0x8872CDDC
+
+src/xbox360/me_ts4_dtor_bytevec_owner_8872F300.c:
+	.pdata      start:0x88126920 end:0x88126928
+	.text       start:0x8872F300 end:0x8872F38C
+
+src/xbox360/me_ts4_dtor_bytevec_owner_88737B40.c:
+	.pdata      start:0x88126B08 end:0x88126B10
+	.text       start:0x88737B40 end:0x88737BCC
+
+src/xbox360/me_ts4_mod_open_888CE028.cpp:
+	.pdata      start:0x8812EF70 end:0x8812EF78
+	.text       start:0x888CE028 end:0x888CE0B0
+
+src/xbox360/me_ts4_prune_dead_887ECA58.c:
+	.pdata      start:0x88129EE0 end:0x88129EE8
+	.text       start:0x887ECA58 end:0x887ECAE0
+
+src/xbox360/me_ts4_remove_by_key_887ED8C8.c:
+	.pdata      start:0x88129F78 end:0x88129F80
+	.text       start:0x887ED8C8 end:0x887ED954
+
+src/xbox360/me_ts4_resolve_slots_8890DCC8.c:
+	.text       start:0x8890DCC8 end:0x8890DD4C
+
+src/xbox360/me_ts4_scaled_xform_8887A5B8.c:
+	.pdata      start:0x8812D798 end:0x8812D7A0
+	.text       start:0x8887A5B8 end:0x8887A63C
+
+src/xbox360/me_ts4_slot_reset_888C99E0.c:
+	.pdata      start:0x8812ED18 end:0x8812ED20
+	.text       start:0x888C99E0 end:0x888C9A68
+
+src/xbox360/me_ts4_snd_start_8887CA38.c:
+	.pdata      start:0x8812D830 end:0x8812D838
+	.text       start:0x8887CA38 end:0x8887CAC0
+
+src/xbox360/me_ts4_u32vec_remove_all_88879AA8.c:
+	.pdata      start:0x8812D728 end:0x8812D730
+	.text       start:0x88879AA8 end:0x88879B28
+
+src/xbox360/me_ts4_u32vec_remove_all_88879B28.c:
+	.pdata      start:0x8812D730 end:0x8812D738
+	.text       start:0x88879B28 end:0x88879BA8
+
+src/xbox360/me_vec16_tidy_free_8873EFC0.c:
+	.text       start:0x8873EFC0 end:0x8873F048
