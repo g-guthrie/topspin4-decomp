@@ -10156,6 +10156,94 @@
       "src/xbox360/me_ts4_worker_shutdown_883DECF0.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_worker_shutdown_883DECF0.c"
+      },
+      "src/xbox360/me_ts4_apply_to_children_then_def_883EF360.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_apply_to_children_then_def_883EF360.c"
+      },
+      "src/xbox360/me_ts4_bind_pair_slots_883DD070.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_bind_pair_slots_883DD070.c"
+      },
+      "src/xbox360/me_ts4_buf_reserve_words_882911D0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_buf_reserve_words_882911D0.c"
+      },
+      "src/xbox360/me_ts4_detach_items_for_key_883D0AD0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_detach_items_for_key_883D0AD0.c"
+      },
+      "src/xbox360/me_ts4_find_child_by_name_883F17F8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_find_child_by_name_883F17F8.c"
+      },
+      "src/xbox360/me_ts4_find_named_in_set_883DEE80.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_find_named_in_set_883DEE80.c"
+      },
+      "src/xbox360/me_ts4_find_named_index_883D0B68.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_find_named_index_883D0B68.c"
+      },
+      "src/xbox360/me_ts4_find_named_item_883D3B68.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_find_named_item_883D3B68.c"
+      },
+      "src/xbox360/me_ts4_group_has_type_883F2A98.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_group_has_type_883F2A98.c"
+      },
+      "src/xbox360/me_ts4_handle_ready_flag_883E18E8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_handle_ready_flag_883E18E8.c"
+      },
+      "src/xbox360/me_ts4_longest_in_tree_883E1C08.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_longest_in_tree_883E1C08.c"
+      },
+      "src/xbox360/me_ts4_longest_pending_883FD9A8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_longest_pending_883FD9A8.c"
+      },
+      "src/xbox360/me_ts4_lookup_and_query_883D4900.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_lookup_and_query_883D4900.c"
+      },
+      "src/xbox360/me_ts4_lookup_or_create_handle_882E2570.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_lookup_or_create_handle_882E2570.c"
+      },
+      "src/xbox360/me_ts4_notify_all_node_children_883F9DD0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_notify_all_node_children_883F9DD0.c"
+      },
+      "src/xbox360/me_ts4_open_with_size_hint_883FF850.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_open_with_size_hint_883FF850.c"
+      },
+      "src/xbox360/me_ts4_query_pair_883E1980.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_query_pair_883E1980.c"
+      },
+      "src/xbox360/me_ts4_read_header_words_883E7828.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_read_header_words_883E7828.c"
+      },
+      "src/xbox360/me_ts4_select_via_vtable_883D1F30.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_select_via_vtable_883D1F30.c"
+      },
+      "src/xbox360/me_ts4_smallest_pending_in_tree_883E2ED0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_smallest_pending_in_tree_883E2ED0.c"
+      },
+      "src/xbox360/me_ts4_vsnprintf_hr_882C74C8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vsnprintf_hr_882C74C8.c"
+      },
+      "src/xbox360/me_ts4_write_elements_883FEDE8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_write_elements_883FEDE8.c"
       }
     }
   }

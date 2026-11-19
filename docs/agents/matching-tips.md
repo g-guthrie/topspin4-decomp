@@ -1304,3 +1304,44 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   `now` and the temporary are swapped), 88290C68 (sibling of 882908C0; r30/r31 swapped between `b` and `res`), 883F2158 (12 off,
   register assignment only, nested list walks), 883CE7E0 (singleton creator; one register too many), 8828FA98, 883FB2E0, and 88296908 (the
   `mr r1,r1` / `mr r31,r31` / `mr r2,r2` spin hints have no intrinsic in this compiler setup).
+- agT round 2 (b151, plain-route /O1 group from the rescan): 22 matches. Patterns that helped:
+  - Shared `~x` tails in handle APIs (882E2570): put both results in the out variable (`out = g(); ... return ~out;`). A
+    separate `r` local or early returns lays the blocks out differently.
+  - An 8-byte zeroed pair kept as `std` (883E1980): use a union with an unsigned 64-bit member and write `p.q = 0`.
+  - `if (r) return r;` kept before `return 0` (883D4900): write the check inside each branch of the if/else.
+  - Byte swap with `lbz` of byte 0 (883E7828): `(w << 24) | ((w << 8) & 0xff0000) | ((w >> 8) & 0xff00) | ((u8 *)&field)[0]`.
+  - `and.` operand order inside a bool helper (883FF850): pass the struct (`helper(info)`, reading `i->mask & lbl`), not the
+    loaded mask value.
+  - Nested child loops with `clrrwi` before the call (883F9DD0): `int n = k->n; Obj **items = k->items;` locals, then
+    `if (items[j]) items[j]->vt->f(items[j], x)`.
+  - A parent climb kept as temp-then-assign (883E1C08/883E2ED0): `p = t->parent; q = p->parent; while (q) { p = q; q = q->parent; } root = p;`.
+  - An unused first parameter needs `(void)self;` for the host check.
+- Near misses in round 2 (drafts/me_<ADDR>_nearmiss.c): 883C75D0 and 883CBB30 (1-2 off, `lwzx` operand order on a
+  strength-reduced i*4 index into a re-read `kids->items`; operand_order_pad 0-12 did not change it); 883E5E80 (6 off,
+  u64 register choice); 883E5CE0 (20 off, null-object branch placed at the end); 883D8970 (5 off, two parameter
+  registers swapped); 883DB8F0 (16 off, register renumbering); 883DE6A8 (17 off, target re-copies r3-r6 from saved
+  registers before the else-branch call).
+
+### agS round 2 (b152): blockers retried, 87-110 instructions (5 matches)
+- 883DF888 matches once all four multiplier labels are float literals (0.25f, 0.020833334f, 0.041666668f, 4.0f). With only
+  the `* 4.0f` literal, the other fmuls stays swapped. So when an fmuls swap appears, replace every labelled multiplier in
+  the function, not just the one in the diff. The old draft drafts/me_883DF888_nearmiss.c is superseded and can be removed.
+- 883C7278 (halfword flag, `extrwi.`) is still 1 off. On a `lhz` value, the `(unsigned char)` cast gives `srwi; clrlwi.` instead of
+  `extrwi.`. A u16 bitfield, `!!`, `!= 0`, a helper and an `(unsigned int)` widening all give `rlwinm.`. So the 883CC388 trick works only on
+  word fields.
+- 88290C68 is still open (r30/r31 swap between `b` and `res`). Statement order, declaration order, const, `== 0`, folding memcpy into
+  the call and C++ all give the same assignment.
+- New matches: 883DF888, 883FCE80 (seven-way compare with `fabs(x - a) < 1e-05` as a macro and a `switch`; matched first
+  try), 883CC1F0, 883F1640, 883D03C8.
+- Store order inside a zeroing block (883F1640): MSVC emitted the stores in a different order from the source. Moving the
+  `sth` to the top of the block in source fixed it. Try each store first.
+- A local list head (`Link *h = &t->own->lst->items;`) gives the extra non-volatile register that the target keeps for the
+  loop end (883D03C8). Re-reading `&t->own->lst->items` in the loop test uses one register less.
+- A call made after both arms of an if/else (883D03C8: the fade arm also calls ts4_flag_all) should be written once after the
+  if/else. The target's `b` jumps into the shared `mr r3,r29; bl`.
+- Open: 8829B288 and 8828FA98 share an inlined "render targets equal" check plus a `use_viewport` uchar helper. In 8829B288
+  the bitfield store (`rlwimi`) and the store order match, but the inner chain's `li 1` is threaded past the double
+  `clrlwi`; `__forceinline` helpers and `?:` forms did not fix it. Also open: 882D1FB8 (4 off, lbzx base/offset order on a byte
+  palette; every indexing form gives the reverse order), 882A4F50 (the compiler reorders the state switch), 883ED130 (2-bit mode
+  bitfield written from `mode == 3`: the target re-extracts with cntlzw/extrwi and inserts 2 bits), 883DF678 (the target reloads
+  `*pv` for the virtual call after testing it), 883E5610 (stack slots), 883CC4A8 (not tried).
