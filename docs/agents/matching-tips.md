@@ -1600,3 +1600,21 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   (`add` for a 12-byte stride, then `lwz 8`): the loop-body base local, pads 0-9 and element locals all leave it 1 off.
 - Matched: 883C75D0, 883CBB30, 883C9380, 883D3738, 883D86A0, 883D87A0, 883D9CA0 (/O1 and /Os), 885EEB50, 8841EA48,
   884DAF90 (/Oc).
+
+## agAA (b163): callee audit
+
+- The gap is real. `tools/fn_check.py` (and the objdiff report) mask relocated fields and treat a relocation
+  symbol whose name differs from the target's as a rename. Changing the only callee in
+  `me_advance_sequence_886A76F8.c` from `fn_8890FD00` to `fn_88400000` still gives
+  `MATCH ... size 0xf0`, with only a `RENAME fn_8890FD00 -> fn_88400000` line. Treat any RENAME of an
+  address-named symbol as a wrong callee.
+- `tools/audit_callees.py --build work/matching-b163` reads each rebuilt object listed in
+  `MATCHING_UNITS` and `ltcg_units.json`. For every REL24/REL14 relocation in a matched function, it compares
+  the relocation symbol with the original branch target at the same offset. The symbol is resolved by full
+  name in symbols.txt, else by its 8-hex suffix, else by its base name. The original target comes from
+  `work/army/VX1/textdis.pkl`. It exits 1 on a mismatch.
+- Result on b163: 2785 objects, 32822 functions, 48690 branch relocations, **0 mismatches**. All 7657
+  unresolved relocations are `__savegprlr_*`/`__restgprlr_*`/`__savefpr_*`/`__restfpr_*` helpers. It
+  catches the injected wrong callee above (rc=1). Data relocations (lbl_, ADDR32/REFHI/REFLO) are not
+  audited yet.
+- Run it after each full build; it takes about 2 s.
