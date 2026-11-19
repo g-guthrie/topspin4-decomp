@@ -67,7 +67,7 @@ Elem_881B4740 *ts4_vector_erase_range_881B4740(Vec_881B4740 *v, Elem_881B4740 *f
 
 typedef struct Elem_881B47A8 { u8 bytes[12]; } Elem_881B47A8;
 typedef struct Vec_881B47A8 { u32 pad; Elem_881B47A8 *end; } Vec_881B47A8;
-extern void fn_881B7FB0(Elem_881B47A8 *dst, Elem_881B47A8 *src);
+extern void ts4_vec12_assign_881B7FB0(Elem_881B47A8 *dst, Elem_881B47A8 *src);
 extern void ts4_loop_call_seq_u32_off4_881B6840(Elem_881B47A8 *first, Elem_881B47A8 *last);
 
 /* Erases [first, last): shifts the tail down element by element, destroys the leftovers and shrinks the vector. */
@@ -77,7 +77,7 @@ Elem_881B47A8 *ts4_vector_erase_range_881B47A8(Vec_881B47A8 *v, Elem_881B47A8 *f
     int n = v->end - last;
     if (n > 0) {
         do {
-            fn_881B7FB0(d, (Elem_881B47A8 *)((char *)d + ((char *)last - (char *)first)));
+            ts4_vec12_assign_881B7FB0(d, (Elem_881B47A8 *)((char *)d + ((char *)last - (char *)first)));
             ++d;
         } while (--n > 0);
     }

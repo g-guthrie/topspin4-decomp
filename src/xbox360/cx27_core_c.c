@@ -81,7 +81,7 @@ void ts4_vec5c_clear_88213E28(Cx27V5c *v)
 
 typedef struct Cx27E40 { u32 id; u32 f4; u8 body[0x34]; u8 f3c; u8 pad[3]; } Cx27E40;
 typedef struct Cx27V40 { Cx27E40 *begin; Cx27E40 *end; } Cx27V40;
-extern void fn_88218E08(void *dst, void *src);
+extern void ts4_vec56_assign_88218E08(void *dst, void *src);
 extern void fn_88150600(void *dst, void *src);
 extern void ts4_counted_ptr_assign_881C38D0(void *dst, void *src);
 extern void fn_88218FE0(void *dst, void *src);
@@ -99,7 +99,7 @@ void ts4_vec40_clear_88213C08(Cx27V40 *v)
     while (n > 0) {
         p->id = s->id;
         p->f4 = s->f4;
-        fn_88218E08(p->body, s->body);
+        ts4_vec56_assign_88218E08(p->body, s->body);
         fn_88150600(p->body + 0xc, s->body + 0xc);
         fn_88150600(p->body + 0x18, s->body + 0x18);
         ts4_counted_ptr_assign_881C38D0(p->body + 0x24, s->body + 0x24);

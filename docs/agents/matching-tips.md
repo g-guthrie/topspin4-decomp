@@ -1686,3 +1686,34 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - An `extern` float stored in a loop is not hoisted; a `0.0f` literal is (88397970, /Oc).
 - A ternary pick of a struct pointer passed straight to a call: put the pick in an inline helper with an early
   return (8875E080/8875E0C8).
+
+## agAD (b164): counted-copy size reuse solved (5 matches)
+- **Rule: MSVC CSEs expressions by source operand, not by loaded value.** In vector operator= the size must be
+  `unsigned n = l - rhs->first;` (locals `f = rhs->first`, `l = rhs->last` loaded first), and the shrink-branch copy must be
+  `copy(f, rhs->last, self->first)` and the overlap copy `copy(f, rhs->first + (self->last - self->first), self->first)`.
+  Then the target's second `subf; divw.` and the unfolded `mulli; subf; add; divw.` count both appear. Writing the same
+  pointer as a local in one place and as `rhs->x` in another is what stops the CSE. The loads still merge into one register.
+- Counted copy loop: `for (n = l - f; 0 < n; --n, ++f, ++d) assign(d, f);` (`++f` before `++d`, which fixes the swapped addi pair).
+- Grow-branch uninitialised copy, where the target iterates over the source and tests `add. r3, delta, f`: write it open, with its own
+  loop variable, so that `d` is derived:
+  `{ const Item *s; for (s = f; s != l; ++s) { Item *d = (Item *)(((char *)nb - (char *)f) + (char *)s); if (d) cons(d, s); } }`.
+  The inline `ucopy(f, l, nb)` makes d the induction variable, which costs an extra saved register and moves the whole frame. Keep the inline ucopy
+  for the third branch (`ucopy(rhs->first + size, rhs->last, self->last)`).
+- Matched: 88218E08 (56-byte item), 881B7FB0 (12-byte, range-destroy call `fn(first,last)`), 8816E038 (12-byte, the construct takes
+  `s->w[0]`), 881AE140 (44-byte POD: `*d = *s` memcpy and an out-of-line assign `fn_881AF6E8(f, l, d)`, no destroy). All /Oc plain.
+  Generator: scratchpad agAD/gen.py `build(addr)` (it picks the callees from textdis and symbols.txt, and detects a range destroy and a
+  word-arg construct). scan.py runs it over the family.
+- Left: drafts/me_882867E0_nearmiss.c (20-byte item, out-of-line ucopy, 67 off). The shrink-branch copy loop gets a +0x10 IV
+  offset (addi/subi r4) where the target indexes f directly. Its third-branch copy does use the offset, so the two copies are scheduled differently.
+- 8822AFE8 constant group (888E1FC0, 887011A8, 88770288, 886FC638): 8822AFE8 is `void f(Handle *h, const u32 *value)`.
+  It loads h->f0 and h->f4 and calls vtable slot 10 with (obj, h, f4, 4), then stores `*value` to the returned pointer. The prototype is
+  right, so the r4/r5 difference is not an argument-order problem. These had no effect: by-value inline helpers (`put_u32(p, 4)`, which moves
+  the store after the call), C++ `const u32 &` temporaries for both the key and the value, the count argument as u8/short/int/
+  pointer/u64 or a variable, comma expressions in any argument position, the value in an escaped array with the keys, an
+  early `u32 *pv = &v`, and the flags /Ou /Ot /Ox /O2 /Oi- /Oy- /GS- /Gy /fp:strict. Declaration and statement order do change the result
+  (887011A8 goes from 3 to 7 off) but never reach 0.
+- (fourth run, b165) A count-guarded pointer walk with the base loaded after the guard, `i = 0; if (n > 0) { p = base;
+  for (; i < n; i++, p++) ... }`, matched 883C6E90. A countdown ctr loop with a decrementing offset is `while (i) { i--; ...
+  a[i] ... }` (88411FE8). Pointer-vector finds want the end hoisted into a local and compared `end != it`, with an `r = 0`
+  result and `break` (88803198). A handle re-test after the find (clrrwi copy) is an inline release helper on `&o->sub`
+  (8883DD48). `!=` vs `==` operand order on cmplw/subf follows the written order: `owner->root == top` (883E2E78).
