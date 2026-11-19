@@ -53923,3 +53923,44 @@ src/xbox360/me_ts4_text_rec20_uninit_copy_88286558.c:
 src/xbox360/me_ts4_u32_store_vec_copy_construct_88235D80.c:
 	.pdata      start:0x8810E078 end:0x8810E080
 	.text       start:0x88235D80 end:0x88235E3C
+
+src/xbox360/me_ts4_binding_attach_883E5D68.cpp:
+	.pdata      start:0x88115370 end:0x88115378
+	.text       start:0x883E5D68 end:0x883E5DB4
+
+src/xbox360/me_ts4_buffer_size_if_enabled_88478BA8.c:
+	.text       start:0x88478BA8 end:0x88478BE0
+
+src/xbox360/me_ts4_holder_handle_valid_884A9798.cpp:
+	.pdata      start:0x88119F80 end:0x88119F88
+	.text       start:0x884A9798 end:0x884A97E0
+
+src/xbox360/me_ts4_node_forward_bounds_884BFA40.c:
+	.pdata      start:0x8811A748 end:0x8811A750
+	.text       start:0x884BFA40 end:0x884BFA88
+
+src/xbox360/me_ts4_once_init_state_88577860.c:
+	.text       start:0x88577860 end:0x8857788C
+
+src/xbox360/me_ts4_open_mode40_wrapper_88568C70.c:
+	.pdata      start:0x8811CE58 end:0x8811CE60
+	.text       start:0x88568C70 end:0x88568CB0
+
+src/xbox360/me_ts4_ptrvec_serialized_size_884EC018.c:
+	.pdata      start:0x8811B548 end:0x8811B550
+	.text       start:0x884EC018 end:0x884EC070
+
+src/xbox360/me_ts4_set_reduced_ratio_885AE020.c:
+	.text       start:0x885AE020 end:0x885AE070
+
+src/xbox360/me_ts4_status_is_c0_8857AFB0.c:
+	.pdata      start:0x8811D4B8 end:0x8811D4C0
+	.text       start:0x8857AFB0 end:0x8857AFE8
+
+src/xbox360/me_ts4_stream_read_count_8836CDB0.c:
+	.pdata      start:0x881137C8 end:0x881137D0
+	.text       start:0x8836CDB0 end:0x8836CE00
+
+src/xbox360/me_ts4_xmsg_5800e_call_884F1738.c:
+	.pdata      start:0x8811B790 end:0x8811B798
+	.text       start:0x884F1738 end:0x884F1780

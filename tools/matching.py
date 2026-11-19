@@ -49601,6 +49601,72 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"fn_88235D80": 188},
     },
+    {
+        "source": "src/xbox360/me_ts4_binding_attach_883E5D68.cpp",
+        "object": "me_ts4_binding_attach_883E5D68.obj",
+        "extra_flags": ["/Oc", "/Os"],
+        "symbols": {"fn_883E5D68": 76},
+    },
+    {
+        "source": "src/xbox360/me_ts4_buffer_size_if_enabled_88478BA8.c",
+        "object": "me_ts4_buffer_size_if_enabled_88478BA8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_88478BA8": 56},
+    },
+    {
+        "source": "src/xbox360/me_ts4_holder_handle_valid_884A9798.cpp",
+        "object": "me_ts4_holder_handle_valid_884A9798.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_884A9798": 72},
+    },
+    {
+        "source": "src/xbox360/me_ts4_node_forward_bounds_884BFA40.c",
+        "object": "me_ts4_node_forward_bounds_884BFA40.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_884BFA40": 72},
+    },
+    {
+        "source": "src/xbox360/me_ts4_once_init_state_88577860.c",
+        "object": "me_ts4_once_init_state_88577860.obj",
+        "extra_flags": ["/Oc", "/Os"],
+        "symbols": {"fn_88577860": 44},
+    },
+    {
+        "source": "src/xbox360/me_ts4_open_mode40_wrapper_88568C70.c",
+        "object": "me_ts4_open_mode40_wrapper_88568C70.obj",
+        "extra_flags": ["/Oc", "/Os"],
+        "symbols": {"fn_88568C70": 64},
+    },
+    {
+        "source": "src/xbox360/me_ts4_ptrvec_serialized_size_884EC018.c",
+        "object": "me_ts4_ptrvec_serialized_size_884EC018.obj",
+        "extra_flags": ["/Oc", "/Os"],
+        "symbols": {"fn_884EC018": 88},
+    },
+    {
+        "source": "src/xbox360/me_ts4_set_reduced_ratio_885AE020.c",
+        "object": "me_ts4_set_reduced_ratio_885AE020.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_885AE020": 80},
+    },
+    {
+        "source": "src/xbox360/me_ts4_status_is_c0_8857AFB0.c",
+        "object": "me_ts4_status_is_c0_8857AFB0.obj",
+        "extra_flags": ["/Oc", "/Os"],
+        "symbols": {"fn_8857AFB0": 56},
+    },
+    {
+        "source": "src/xbox360/me_ts4_stream_read_count_8836CDB0.c",
+        "object": "me_ts4_stream_read_count_8836CDB0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_8836CDB0": 80},
+    },
+    {
+        "source": "src/xbox360/me_ts4_xmsg_5800e_call_884F1738.c",
+        "object": "me_ts4_xmsg_5800e_call_884F1738.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_884F1738": 72},
+    },
 )
 
 
