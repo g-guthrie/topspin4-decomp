@@ -2919,5 +2919,82 @@
   "symbols": {
    "ts4_hash_post_B59A4AFD_88868B48": 108
   }
+ },
+ {
+  "source": "src/xbox360/me_current_teardown_88621468.c",
+  "object": "me_current_teardown_88621468.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_current_teardown_88621468": 52
+  }
+ },
+ {
+  "source": "src/xbox360/me_current_teardown_88887F68.c",
+  "object": "me_current_teardown_88887F68.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_current_teardown_88887F68": 52
+  }
+ },
+ {
+  "source": "src/xbox360/me_timed_tree_reset_888C2C80.c",
+  "object": "me_timed_tree_reset_888C2C80.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_timed_tree_reset_888C2C80": 72
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_key_module_add_unique_886F62B8.c",
+  "object": "me_ts4_key_module_add_unique_886F62B8.obj",
+  "context": [
+   "src/xbox360/cx44_a.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_key_module_add_unique_886F62B8": 144
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_key_register_886FA908.c",
+  "object": "me_ts4_key_register_886FA908.obj",
+  "context": [
+   "src/xbox360/cx44_a.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_key_register_886FA908": 160
+  }
  }
 ]

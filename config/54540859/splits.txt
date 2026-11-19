@@ -54588,3 +54588,47 @@ src/xbox360/me_mode_ready_888EE7E8.c:
 src/xbox360/me_ts4_rmod_b_ctor_887245B0.c:
 	.pdata      start:0x88126690 end:0x88126698
 	.text       start:0x887245B0 end:0x8872461C
+
+src/xbox360/me_current_teardown_88621468.c:
+	.text       start:0x88621468 end:0x8862149C
+
+src/xbox360/me_current_teardown_88887F68.c:
+	.text       start:0x88887F68 end:0x88887F9C
+
+src/xbox360/me_handle_holder_ctor_8887CAD0.c:
+	.pdata      start:0x8812D838 end:0x8812D840
+	.text       start:0x8887CAD0 end:0x8887CB28
+
+src/xbox360/me_rec34_set_value_checked_8890DAA8.c:
+	.text       start:0x8890DAA8 end:0x8890DAE4
+
+src/xbox360/me_timed_tree_reset_888C2C80.c:
+	.text       start:0x888C2C80 end:0x888C2CC8
+
+src/xbox360/me_ts4_anim_key_lerp_8876D6E8.c:
+	.text       start:0x8876D6E8 end:0x8876D770
+
+src/xbox360/me_ts4_draw_owner_set_pass_8877A170.cpp:
+	.text       start:0x8877A170 end:0x8877A1F8
+
+src/xbox360/me_ts4_key_module_add_unique_886F62B8.c:
+	.pdata      start:0x881257E0 end:0x881257E8
+	.text       start:0x886F62B8 end:0x886F6348
+
+src/xbox360/me_ts4_key_register_886FA908.c:
+	.pdata      start:0x88125948 end:0x88125950
+	.text       start:0x886FA908 end:0x886FA9A8
+
+src/xbox360/me_ts4_layer_src_ids_c_886F1798.cpp:
+	.pdata      start:0x88125640 end:0x88125648
+	.pdata      start:0x88125648 end:0x88125650
+	.pdata      start:0x88125650 end:0x88125658
+	.text       start:0x886F1798 end:0x886F1900
+
+src/xbox360/me_ts4_scene_activate_named_88701118.c:
+	.pdata      start:0x88125BF0 end:0x88125BF8
+	.text       start:0x88701118 end:0x887011A8
+
+src/xbox360/me_ts4_text_to_upper_88779C30.c:
+	.pdata      start:0x88127840 end:0x88127848
+	.text       start:0x88779C30 end:0x88779CC0

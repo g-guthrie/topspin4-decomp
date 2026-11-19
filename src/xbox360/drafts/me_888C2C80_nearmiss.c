@@ -5,7 +5,7 @@ typedef struct E { char p[0x54]; unsigned char on; char p55[0x74 - 0x55]; float 
 typedef struct N { E e; E *begin; E *end; } N;
 typedef struct T { char p[0x1c]; N *n; } T;
 extern float g_ts4_event_value;
-void fn_888C2C80(T *t)
+void ts4_timed_tree_reset_888C2C80(T *t)
 {
     N *n = t->n;
     E *e, *end;

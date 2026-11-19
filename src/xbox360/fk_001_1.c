@@ -138,7 +138,7 @@ ts4_word fn_888417A8();
 ts4_word ts4_call_seq_fn_88617D88_88855F10();
 ts4_word fn_88878F30();
 ts4_word fn_8887A350();
-ts4_word fn_8887CAD0();
+ts4_word ts4_handle_holder_ctor_8887CAD0();
 ts4_word fn_8887DBF8();
 ts4_word fn_8887EE60();
 ts4_word fn_888860A0();

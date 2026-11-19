@@ -26,7 +26,7 @@ extern void *fn_88636DC8(void *self);
 extern void *lbl_880DF490[];
 extern void *lbl_880DF940[];
 extern void *fn_8887EE60(void *self);
-extern void *fn_8887CAD0(void *self);
+extern void *ts4_handle_holder_ctor_8887CAD0(void *self);
 extern void *fn_8887DBF8(void *self);
 extern void *fn_88878F30(void *self);
 

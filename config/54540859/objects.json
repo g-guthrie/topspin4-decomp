@@ -14152,6 +14152,54 @@
       "src/xbox360/me_ts4_rmod_b_ctor_887245B0.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_rmod_b_ctor_887245B0.c"
+      },
+      "src/xbox360/me_current_teardown_88621468.c": {
+        "status": "Matching",
+        "source": "xbox360/me_current_teardown_88621468.c"
+      },
+      "src/xbox360/me_current_teardown_88887F68.c": {
+        "status": "Matching",
+        "source": "xbox360/me_current_teardown_88887F68.c"
+      },
+      "src/xbox360/me_handle_holder_ctor_8887CAD0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_handle_holder_ctor_8887CAD0.c"
+      },
+      "src/xbox360/me_rec34_set_value_checked_8890DAA8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_rec34_set_value_checked_8890DAA8.c"
+      },
+      "src/xbox360/me_timed_tree_reset_888C2C80.c": {
+        "status": "Matching",
+        "source": "xbox360/me_timed_tree_reset_888C2C80.c"
+      },
+      "src/xbox360/me_ts4_anim_key_lerp_8876D6E8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_anim_key_lerp_8876D6E8.c"
+      },
+      "src/xbox360/me_ts4_draw_owner_set_pass_8877A170.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_draw_owner_set_pass_8877A170.cpp"
+      },
+      "src/xbox360/me_ts4_key_module_add_unique_886F62B8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_key_module_add_unique_886F62B8.c"
+      },
+      "src/xbox360/me_ts4_key_register_886FA908.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_key_register_886FA908.c"
+      },
+      "src/xbox360/me_ts4_layer_src_ids_c_886F1798.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_layer_src_ids_c_886F1798.cpp"
+      },
+      "src/xbox360/me_ts4_scene_activate_named_88701118.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_scene_activate_named_88701118.c"
+      },
+      "src/xbox360/me_ts4_text_to_upper_88779C30.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_text_to_upper_88779C30.c"
       }
     }
   }

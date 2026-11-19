@@ -50591,6 +50591,52 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_rmod_b_ctor_887245B0": 108},
     },
+    {
+        "source": "src/xbox360/me_handle_holder_ctor_8887CAD0.c",
+        "object": "me_handle_holder_ctor_8887CAD0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_handle_holder_ctor_8887CAD0": 88},
+    },
+    {
+        "source": "src/xbox360/me_rec34_set_value_checked_8890DAA8.c",
+        "object": "me_rec34_set_value_checked_8890DAA8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_rec34_set_value_checked_8890DAA8": 60},
+    },
+    {
+        "source": "src/xbox360/me_ts4_anim_key_lerp_8876D6E8.c",
+        "object": "me_ts4_anim_key_lerp_8876D6E8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_anim_key_lerp_8876D6E8": 136},
+    },
+    {
+        "source": "src/xbox360/me_ts4_draw_owner_set_pass_8877A170.cpp",
+        "object": "me_ts4_draw_owner_set_pass_8877A170.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_draw_owner_set_pass_8877A170": 136},
+    },
+    {
+        "source": "src/xbox360/me_ts4_layer_src_ids_c_886F1798.cpp",
+        "object": "me_ts4_layer_src_ids_c_886F1798.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {
+            "ts4_layer_src_a_id_886F1798": 120,
+            "ts4_layer_src_b_id_886F1810": 120,
+            "ts4_layer_src_c_id_886F1888": 120,
+        },
+    },
+    {
+        "source": "src/xbox360/me_ts4_scene_activate_named_88701118.c",
+        "object": "me_ts4_scene_activate_named_88701118.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_scene_activate_named_88701118": 144},
+    },
+    {
+        "source": "src/xbox360/me_ts4_text_to_upper_88779C30.c",
+        "object": "me_ts4_text_to_upper_88779C30.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_text_to_upper_88779C30": 144},
+    },
 )
 
 

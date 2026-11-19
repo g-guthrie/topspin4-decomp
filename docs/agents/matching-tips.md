@@ -2581,3 +2581,19 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 
 - agAN: 887245B0 (two id-slot inits {0,0xFFFFF,0}) matched only once the slot init was a `static __inline` helper called twice; writing the stores inline put them in the wrong order.
 - agAN: 886F1798/1810/1888 (getters that return a struct by value through a vcall) matched only as C++. In C, the by-value form was 23 off and the pointer-to-result form (`T *f(T *out, L *l)`, vcall `get_id(out, s)`) was 11 off. Dropped because C is required.
+- agAN: Inline vector push_back (`if (last != end) { if (last) *last = v; ++last; } else grow(vec, last, &v);`) matched with the not-full branch first and the value copied to a local `u32 k = key` before the test. The vector at +0x54 is {first, last, reserved, end}, with end at +0xc (886F62B8, 886FA908).
+- agAN: When a caller keeps values in volatile registers (r8, r9) across a `bl`, it is LTCG. Pass the callee's source file as context: `ltcg=True, ctx=['src/xbox360/cx44_a.c']` matched 886F62B8 and 886FA908.
+- agAN: For a find-then-check (`for (p = t->first; p != t->last; p++) ...; if (p == t->last) return -1;`), re-read `t->last` inside a static __inline helper. Caching first/last in locals swapped the load order (88701118).
+- agAN: The stack temp in a ternary (`subi r11,r1,0x10; stw; lwz`) comes from a C++ class ternary, `c ? Key(a) : Key(b)` with a user ctor. Use an extern "C" free function in a .cpp file. A `cmpwi` on a pointer test needs `(int)p != 0` (8877A170).
+- agAN: If a callee reads f1 that the caller never sets, it takes a float parameter the caller passes through. Check the callee before writing the prototype (886F39F0 -> fn_886F38F0(slot, float)).
+
+### agAM round 5 (b188/b189)
+- When a constructor sets the null handle {0,0xFFFFF,0} on a member, take a Ts4Handle12 *h=&o->handle and store in the order a, c, b. This is the sub-struct rule again; it matched 8887CAD0.
+- A constructor chain with the intermediate vtable inlined (base ctor, mid vtable, field, final vtable) matches on the LTCG route only. Write both vtable stores literally (88887FA0).
+- A vector count used in a bounds check: `count(&o->vec)`, an inline that takes the {begin,end} sub-struct, gives the target's `mr r8,r11` copy of begin (8890DAA8).
+- A ctor wrapper that stores the vtable through the base ctor's return value r3 while saving r31 (887F4C18 family) looks like C++ `this` return semantics. I did not reproduce it in plain C.
+- agAN: Several boolean OR chains matched in plain C with `a || b || c` returned as unsigned char. A sub-chain from another object went in a static __inline helper (886F3B08).
+
+## agAM round 6
+- "This-return" constructors (target stores via the base ctor's returned r3 while still saving r31; 887F4C18, 888B48C0, 886C6660) did not reproduce from plain C or an extern "C" .cpp form (best 5-12 off). Skip them.
+- A __vector4 out-param call (8865EC70) cannot be rewritten as a struct return-by-value. That form grows the function by 0x18-0x28; keep the explicit out pointer.
