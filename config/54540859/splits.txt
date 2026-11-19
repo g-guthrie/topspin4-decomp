@@ -51903,3 +51903,39 @@ src/xbox360/me_ts4_vec_at_checked_88879168.c:
 src/xbox360/me_ts4_visit_list_items_883F2730.c:
 	.pdata      start:0x88115938 end:0x88115940
 	.text       start:0x883F2730 end:0x883F2778
+
+src/xbox360/me_ts4_apply_if_value_changed_884AFFE0.c:
+	.text       start:0x884AFFE0 end:0x884B002C
+
+src/xbox360/me_ts4_buffer_size_for_entries_8859AB40.c:
+	.text       start:0x8859AB40 end:0x8859AB84
+
+src/xbox360/me_ts4_build_bitcount_table_8858E8A8.c:
+	.text       start:0x8858E8A8 end:0x8858E8F0
+
+src/xbox360/me_ts4_check_current_slot_887D9A10.c:
+	.text       start:0x887D9A10 end:0x887D9A58
+
+src/xbox360/me_ts4_clear_floats_then_update_88397970.c:
+	.text       start:0x88397970 end:0x883979B8
+
+src/xbox360/me_ts4_dispatch_callback_88320138.c:
+	.text       start:0x88320138 end:0x88320180
+
+src/xbox360/me_ts4_last_entry_target_8883B2B8.c:
+	.text       start:0x8883B2B8 end:0x8883B304
+
+src/xbox360/me_ts4_pick_node_call_8875E080.c:
+	.text       start:0x8875E080 end:0x8875E0C8
+
+src/xbox360/me_ts4_pick_node_call_8875E0C8.c:
+	.text       start:0x8875E0C8 end:0x8875E110
+
+src/xbox360/me_ts4_ring_index_strided_888C2BE8.c:
+	.text       start:0x888C2BE8 end:0x888C2C34
+
+src/xbox360/me_ts4_slot_active_mask_884F7D80.c:
+	.text       start:0x884F7D80 end:0x884F7DCC
+
+src/xbox360/me_ts4_table_entry_at_88838808.c:
+	.text       start:0x88838808 end:0x88838838

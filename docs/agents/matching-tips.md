@@ -1677,3 +1677,12 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Left open (drafts): 882C73D8 (2 off: `li r3,0` and `stw res,0(out)` are in the opposite order, on plain and LTCG; I tried
   r/hr locals, volatile, a comma expression, gotos and a Detach-style clear), and 882E21B8 (66 off: the target puts the else path
   (fn_882DD1B8) and the 0x88760B59 return after the epilogue; source order, gotos and inverted tests did not move it).
+- (third run) Self-relative (-1 = null) resolves: write the inline helper as `p = 0; if (off != -1) p = base + off;
+  return p;` (li 0 before the test), not a ternary or early return. This matched 8883B2B8 and 88838808; the element
+  address goes inside the helper as `(char *)t + (i * stride + t->off)` with the caller's `r = 0; if (i < n) r = at(t, i);`.
+  888AF298/888AF448 stay open (5 off) because the target computes the add before the -1 test.
+- A 2-bit field tested with `extrwi rX,rX,2,10; addi 0; cntlzw` is a bitfield after 10 bits, read in each branch, and
+  `0 == m` (8859AD10, /O1).
+- An `extern` float stored in a loop is not hoisted; a `0.0f` literal is (88397970, /Oc).
+- A ternary pick of a struct pointer passed straight to a call: put the pick in an inline helper with an early
+  return (8875E080/8875E0C8).
