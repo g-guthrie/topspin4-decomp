@@ -1345,3 +1345,10 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   palette; every indexing form gives the reverse order), 882A4F50 (the compiler reorders the state switch), 883ED130 (2-bit mode
   bitfield written from `mode == 3`: the target re-extracts with cntlzw/extrwi and inserts 2 bits), 883DF678 (the target reloads
   `*pv` for the virtual call after testing it), 883E5610 (stack slots), 883CC4A8 (not tried).
+
+## agS round 3 (b154): no new matches
+- 883CC4A8: the if/else arms that use bus are tail-merged, and the target puts the else block late. I could not reproduce that layout from source order.
+- 883DC840: lbl_88B3B4B4 is addressed through a reloc plus an addi base. The candidate's address materialization differs, and the stream is off by one.
+- 882D1FB8: the base/offset order of lbzx did not change with `4*i`, a shift, a 2-D array cast or const.
+- 883C72E0: the candidate puts the `+= 0xffff` constant in a callee-saved register (`ori r30, r10, 0xffff`), which costs an extra save of r29. The rewrites I tried for the u16 decrement all stayed 133 off.
+- 883CAEC8: the int handle field gets a `clrrwi` and a materialized `!= 0` in the target. It is still 69 off.
