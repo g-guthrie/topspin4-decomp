@@ -52998,3 +52998,112 @@ src/xbox360/me_ts4_vector_vec4pair_resize_88262ED8.c:
 src/xbox360/me_ts4_write_tagged_string_record_884EB3C8.c:
 	.pdata      start:0x8811B4C0 end:0x8811B4C8
 	.text       start:0x884EB3C8 end:0x884EB44C
+
+src/xbox360/me_ts4_binding_rebind_88911668.c:
+	.pdata      start:0x88130310 end:0x88130318
+	.text       start:0x88911668 end:0x889117B4
+
+src/xbox360/me_ts4_bufpair_free_884DC9B0.c:
+	.pdata      start:0x8811B0D0 end:0x8811B0D8
+	.text       start:0x884DC9B0 end:0x884DCA24
+
+src/xbox360/me_ts4_elem4_buf_free_member_88555608.c:
+	.pdata      start:0x8811C908 end:0x8811C910
+	.text       start:0x88555608 end:0x88555664
+
+src/xbox360/me_ts4_elem_buf_pair_free_884E1FE8.c:
+	.pdata      start:0x8811B280 end:0x8811B288
+	.text       start:0x884E1FE8 end:0x884E2060
+
+src/xbox360/me_ts4_frame_fill_881A98F0.c:
+	.text       start:0x881A98F0 end:0x881A9968
+
+src/xbox360/me_ts4_hosts_return_to_pool_886A6E98.c:
+	.pdata      start:0x881244C0 end:0x881244C8
+	.text       start:0x886A6E98 end:0x886A6F78
+
+src/xbox360/me_ts4_index_free_884D50C8.c:
+	.pdata      start:0x8811AE30 end:0x8811AE38
+	.text       start:0x884D50C8 end:0x884D512C
+
+src/xbox360/me_ts4_item_append_slots_88227978.c:
+	.pdata      start:0x8810DA88 end:0x8810DA90
+	.text       start:0x88227978 end:0x88227A58
+
+src/xbox360/me_ts4_last_valid_slot_8840B1C0.c:
+	.text       start:0x8840B1C0 end:0x8840B234
+
+src/xbox360/me_ts4_nodes_release_all_886DAFA0.c:
+	.pdata      start:0x88125070 end:0x88125078
+	.text       start:0x886DAFA0 end:0x886DB054
+
+src/xbox360/me_ts4_objs_bindings_release_886EDCB8.c:
+	.pdata      start:0x88125538 end:0x88125540
+	.text       start:0x886EDCB8 end:0x886EDDF4
+
+src/xbox360/me_ts4_objvec_delete_and_clear_887F7170.c:
+	.pdata      start:0x8812A268 end:0x8812A270
+	.text       start:0x887F7170 end:0x887F7248
+
+src/xbox360/me_ts4_objvec_delete_and_finalize_887FC7C8.c:
+	.pdata      start:0x8812A558 end:0x8812A560
+	.text       start:0x887FC7C8 end:0x887FC8A0
+
+src/xbox360/me_ts4_objvec_shutdown_delete_88800550.c:
+	.pdata      start:0x8812A6C0 end:0x8812A6C8
+	.text       start:0x88800550 end:0x888005FC
+
+src/xbox360/me_ts4_objvec_shutdown_delete_counted_887F72B8.c:
+	.pdata      start:0x8812A278 end:0x8812A280
+	.text       start:0x887F72B8 end:0x887F7364
+
+src/xbox360/me_ts4_objvec_shutdown_delete_indexed_88803090.c:
+	.pdata      start:0x8812A808 end:0x8812A810
+	.text       start:0x88803090 end:0x8880313C
+
+src/xbox360/me_ts4_owner_clear_entries_children_886F33C8.c:
+	.pdata      start:0x88125700 end:0x88125708
+	.text       start:0x886F33C8 end:0x886F34D0
+
+src/xbox360/me_ts4_owner_release_all_88912E70.c:
+	.pdata      start:0x881303B0 end:0x881303B8
+	.text       start:0x88912E70 end:0x88912F7C
+
+src/xbox360/me_ts4_owner_reset_children_88804058.c:
+	.pdata      start:0x8812A8C8 end:0x8812A8D0
+	.text       start:0x88804058 end:0x8880415C
+
+src/xbox360/me_ts4_owner_stop_release_88935D10.c:
+	.pdata      start:0x88131118 end:0x88131120
+	.text       start:0x88935D10 end:0x88935DF4
+
+src/xbox360/me_ts4_owner_teardown_887F2C48.c:
+	.pdata      start:0x8812A178 end:0x8812A180
+	.text       start:0x887F2C48 end:0x887F2D48
+
+src/xbox360/me_ts4_quad_shutdown_886099A8.c:
+	.pdata      start:0x88120E80 end:0x88120E88
+	.text       start:0x886099A8 end:0x88609AB4
+
+src/xbox360/me_ts4_release_owned_slots_8825B918.c:
+	.pdata      start:0x8810E548 end:0x8810E550
+	.text       start:0x8825B918 end:0x8825BA10
+
+src/xbox360/me_ts4_set_limit_by_index_88343470.c:
+	.text       start:0x88343470 end:0x883434E8
+
+src/xbox360/me_ts4_slots_reset_887EFFD8.c:
+	.pdata      start:0x8812A088 end:0x8812A090
+	.text       start:0x887EFFD8 end:0x887F00A8
+
+src/xbox360/me_ts4_store_owner_reset_8825E4F0.c:
+	.pdata      start:0x8810E6C8 end:0x8810E6D0
+	.text       start:0x8825E4F0 end:0x8825E5F4
+
+src/xbox360/me_ts4_unnamed_reset_8890DDA8.c:
+	.pdata      start:0x881301D8 end:0x881301E0
+	.text       start:0x8890DDA8 end:0x8890DE88
+
+src/xbox360/me_ts4_voice_owner_stop_888C2E58.c:
+	.pdata      start:0x8812EA60 end:0x8812EA68
+	.text       start:0x888C2E58 end:0x888C2F90

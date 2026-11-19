@@ -2130,3 +2130,47 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 
 ### Integration note (b178)
 `tools/audit_callees.py` caught `me_ts4_stream_reset_88624F68.c` calling fn_8827FAB0 where the target calls fn_882800B0; objdiff had reported MATCH. Run both audits after every full build.
+
+## agAI round 2 (b177): vector resize/clear/teardown templates (/Oc)
+
+- **Dinkumware resize**: `if (n < size) v->last = copy(v->last, v->last, v->first + n); else _Insert_n(v, v->last, n - size, &val);`
+  (88280428 family). A default value whose type has a no-op constructor is passed uninitialised. A value-initialised default
+  is `memset` with `#pragma intrinsic(memset)` (std/stw through the pointer). Member-wise element assignment gives the
+  unrolled field copy; struct assignment `*dest = *first` gives a word loop (5 words: `li 5; mtctr; lwzu/stwu`) or ldu/std
+  for 8-byte elements. A 16-byte uninitialised allocator/param block (`struct { int unused[4]; }`) sets a 0xA0 frame (88227978).
+- **Use one inline size() helper** for both size computations (8890ED60). For counted loops, hoist it: `unsigned i, n = size(v);
+  for (i = 0; i != n; i++)` gives `srawi.; beq; mtctr`.
+- **cw4 clear `cmplw r4,r4`**: forceinline `copy_bytes` = no store on the equal path, or the `lwz r11; mr r3,r11` form with
+  a store on both paths. Plain `static __inline` = `bne; stw first; b` (equal path stores first). Pick per target.
+- **Load order and register swap of vector bounds (fixed 9 functions)**: read `end` through the owner and `begin`
+  through the vector local: `ObjVec *v = &o->objs; Obj **it, **end = o->objs.last; for (it = v->first; it != end; it++)`.
+  This gives the target's last-before-first loads and the v/global register assignment (888FF550, 889310A0, 8861EDB8,
+  886DAFA0, 88800550...). If the loop end is re-read every iteration: `for (it = v->first; it != o->objs.last; it++)`.
+  The cmplw operand order: `end != it` vs `it != end`. Does not work when the vector is at offset 0 (8862BA88 draft).
+- **Indexed slot loops**: `o->objs.first[i]` (through the owner) vs `v->first[i]` swaps the stwx/lwzx operands
+  (8876D180, 887F72B8 want the owner form; 88803090 wants v). Re-read the slot after a call: `p = v->first[i];` again.
+- **Reverse loops**: `Obj *p = *(it - 1); ...; it--;` gives `lwz -4(r11); subi r31,r11,4; ... mr r11,r31` (8860B888, 886A6E98);
+  `*--it` gives lwzu. A hoisted `slot = last - 1` with the old slot compared: `for (;;) { body(slot); { T *cur = slot; slot--;
+  if (cur == first) break; } }` (8861EDB8).
+- **Dead `addi rX,r3,off` after zero stores** = a fully unrolled inline zero loop over a sub-struct:
+  `static __inline void sub_clear(Sub *s) { int i; for (i = 0; i < 5; i++) s->w[i] = 0; }` (887CDC40, 887CF290).
+- `0 == (s->a + 0)` keeps the target's `addi r11,r11,0; cntlzw` (88624EE0; matches the `0 == p` note above).
+- Signed `cmpwi` tests of pointer-like fields: declare the field `int` (88728350, 8825DE40), or `(int)p != 0` when the same
+  field is also tested unsigned later (887F2C48).
+- A field tested in the caller and then reloaded through `r4 = &o->field`: test `o->hub.hub` in the caller, do the work in an
+  inline taking `&o->hub` (88912E70).
+- Hand-written `delete[]` with a count prefix: `int *hdr = (int *)arr - 1; int i = *hdr; Elem *e = arr + i;
+  while (--i >= 0) { e--; elem_destroy(e); } free(hdr);` (8825DE40).
+- Counted copy loops: `for (n = last - first; 0 < n; --n, ++first, ++dest)`; the increment order sets the order of the two addi.
+- Open: 885F99E0 field-unpacker family (10 functions) stays 5 off, one sth scheduled differently (tried LTCG, /O1, /O2, /Os,
+  /Oy-, all 64 step orders, type changes, out-first args, void* buffers). 88702BF0/88703788 (signed cmpw of vector bounds;
+  int casts reproduce cmpw, not the operand order, draft 3 off). 8866FDD0 (3 off, agentA2 draft kept). 886262D8 (member
+  pointer induction `r9 = g+0x18` across the group loop). 887D96E0 (explicit clear plus inline delete clear: the
+  second clear's `clrrwi` reload). 88941780 (global flag stores scheduled around the clear, 7 off). 88233678
+  (`clrrwi r3,r11,0` on the global allocator argument). 8816C030 (two-element ctor loop: our zero stores fold the clear).
+  886BEBC8/8826AE38 family (this/n callee-saved swap, 18 off).
+- lwzx/stwx operand order in counted slot loops also follows the index type: signed `int i, n` gives base-first
+  (`lwzx r31,r11,r29`), unsigned gives index-first (8825B918). Try the signedness before rewriting the access path.
+- A branchy bool in r11 (`li r11,1; beq +8; li r11,0; clrlwi; cmplwi`) is an inline written `if (cond) return 1; return 0;`
+  returning unsigned char; `return p ? *p == 1 : 0;` gives subi/cntlzw instead (88911668). A vtable pointer loaded after
+  a call, with the object loaded before it: keep the call result in its own local (`desc = ...; m->vt->f(m, desc + 0xc, 1);`, 888C2E58).
