@@ -1,5 +1,5 @@
-/* Swing_DLL.xex 0x8815D388: uninitialized_fill_n over 48-byte entries {Mat key, string name, string value, flag}.
- * /Oc near miss, 2 off: the zero stores of the second string (+0x20) are scheduled end-first. Sibling of 8815CAD0/8815D230 (matched). */
+/* Swing_DLL.xex 0x8815D388: uninitialized_fill_n over 48-byte entries {matrix key (88159180), name string, value string, flag}.
+ * /Oc. String init stores end through a pointer to the end slot (plain stores schedule the second string's zeros end-first). */
 typedef struct Str { char *first; char *last; char *end; } Str;
 typedef struct FVec { float *first; float *last; float *end; } FVec;
 typedef struct Mat { unsigned int w; unsigned int h; FVec v; } Mat;
@@ -21,9 +21,10 @@ static __inline char *copy_chars(const char *first, const char *last, char *dest
 
 static __inline void str_init(Str *s)
 {
+    char **end_slot = &s->end;
     s->first = 0;
     s->last = 0;
-    s->end = 0;
+    *end_slot = 0;
 }
 
 static __inline void str_assign(Str *s, const Str *src)

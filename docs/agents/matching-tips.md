@@ -2290,10 +2290,11 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - Float arguments take GPR slots in the Xbox 360 ABI. For example, (seed, lo, hi, out) puts out in r6. Pointer arguments after a float appear in the registers that follow (88557450, 8843F3F8).
 - `fctidz` + `stfiwx` comes from a float-to-unsigned-int conversion; `fctiwz` comes from float-to-int (8828DFB0 is still open because of LTCG scheduling).
 - Some r4new2 entries have truncated listings in textdis.pkl, ending without blr or b (883D2400, 8858E758, 8859D010, 887E9A38). Check the size in symbols.txt before trying one.
-- **Round 2 (b181), copy-constructor family (31 more matches):** 88166C58 88161F58 88166938 881B6A80 881B6E00 88213EB8
+- **Round 2 (b181), copy-constructor family and teardowns (50 more matches):** 88166C58 88161F58 88166938 881B6A80 881B6E00 88213EB8
   88216620 88166BC0 88166428 88181878 88286F38 88166728 88179D88 8817A108 8827FFB8 88624FE8 8879CBE8 881A8D88 8815BD90
   8815BCA8 88181910 88171088 881BC210 88158A98 88282FC8 881A7188 88163300 88159C88 88286558
-  8815CFA8 8815D388.
+  8815CFA8 8815D388 8816C648 8816C258 8816C2F0 88178268 8827B778 8827B810 887DA2B8 88235D80 88162768 88255C08
+  88261188 88261360 88261450 8825EB00 88260C58 882400F8 88261530 882294A0 88258BF8.
   - **End-slot zero store:** the vector copy constructor / ctor-then-reserve needs the end zero store written through a
     pointer: `T **end_slot = &v->end; v->first = 0; v->last = 0; *end_slot = 0;`. This one change fixed the old
     "4 off, mr r29 scheduled late" copy ctors (88166C58 family), the "reserve folded because first is known 0" ctors
@@ -2307,16 +2308,52 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
     `v->last = p; v->first = p;` when the target stores +0 before +4 but ours comes out reversed (88282FC8, 881A7188);
     a `__forceinline` copy inline when the same vector type is copied twice (88179D88); `if (last == first) return dest;`
     in the memmove ucopy for the cmplw order (88216620).
-  - Allocator-handle vectors `{first; last; alloc; end}` (88162768, 88235D80, 882400F8, 88255C08; alloc constructed by
-    88255AA0, allocated with fn_88613570(v->alloc, .., &v->alloc)): 88162768 is 12 off (r27/r28 swap between the zero
-    and &v->alloc) with `def` temp + zero + init + `p = 0; if (n)`.
+  - **Store vectors** `{first; last; {alloc; end}}` (88235D80 and 10 siblings; alloc handle constructed by 88255AA0,
+    allocated with fn_88613570(alloc, n*size, align, &alloc)): the alloc handle and end are ONE struct, initialised by
+    an inline through its pointer: `store_init(S *s) { s->alloc = 0; init(&s->alloc); s->end = 0; }`. Copy ctor:
+    `def = 0; init(&def); n = size(src); v->first = 0; v->last = 0; store_init(&v->store); p = 0; if (n != 0) p =
+    alloc; first = last = p; store.end = p + n; last = ucopy(...)`. Separate `alloc`/`end` members are 2 off (the end
+    store moves after the n test). Generator: agAJ/genst.py (addr,size,pod|call:ADDR). Aggregates inline one member and
+    call the others (882400F8, 88261530). Open: 8872E248 (store vector + reserve(32), 27 off), 88220690/88222D28
+    (two store vectors + reserve).
   - String concat (88163300, 88159C88): compute the combined length before the zero stores; the append inline reads
     `s->last` before `s->p`. 8822C0F8 (string + char) is 5 off on the same `size + max(size, 1)` add order as 8815C0B0.
   - Open: ts4_assign_formatted_text 88152D58 / 881599B8 (char* ctor). The fam3 `char_copy_range` helper with an early
     return gives the duplicated tail, but only when the zero stores sit in the same inline, which then puts them after
     the strlen loop (31-37 off). 88179F80 (96-byte u64 element copied with ldu/stdu, ours gives memcpy or ldx, 59 off).
     88181BF0 (text + six words + two 5-word blocks + four words, 41 off). 8827A130 (copy via reserve + resize + copy, 61 off).
-  - Drafts: me_881BC130_nearmiss.c (3 off, r9/r10 swap between the first byte copy and &t->sub).
+  - **Reverse member-array destroy** (teardowns 8816C648, 8816C258, 8816C2F0): the `addi rB,this,END; addi rP,rB,K;
+    lwzu r3,-SIZE(rP)` loop is an inline `destroy_n(T *first, int count) { T *p = first + count; while (--count >= 0)
+    { --p; dtor(p); } }` called as `destroy_n(o->arr, N)`. An index loop or a hand pointer in the function body
+    folds END+K into one addi (10-16 off). Registry release (`find_range_owner` 8860D360, else `->fallback`) must take
+    the registry as an inline parameter, `release(lbl_88D45B38, p)`, for the `clrrwi r3,rX,0` copy.
+  - **Vector destructor = clear + tidy** (88178268, 8827B778, 8827B810, 887DA2B8): the `subf rX,rY,rY` count loops
+    are `erase(first, last)` = `v->last = copy(last, v->last, first)` with a counted copy `for (n = last - first;
+    0 < n; --n, ++first, ++dest) *dest = *first;` (or the memmove copy with `if (last == first) return dest;`).
+    Write `clear(Vec *v)` and `tidy(Vec *v) { if (v->first) free(v->first); }` as inlines taking the vector pointer;
+    a class destructor clears every member first, then tidies them in reverse. Read `v->last` before `v->first` in
+    clear when the second clear's loads come out swapped (8827B810). 887DA038 now differs only in the `srawi.` size test
+    (ours `clrrwi`+`cmpwi`) and the registers that follow (16 off). 887D96E0 (44 off) keeps a null test after a deref.
+  - Drafts: me_881BC130_nearmiss.c (3 off, r9/r10 swap between the first byte copy and &t->sub);
+    88258BF8 is now matched (rec160_store_vec_uninit_copy). When `mr r30,r3` and the `addi r31,r5,8` induction come out
+    in the wrong order, copy the loop pointer into a block-local first: `{ Rec160AVec *d = dest; if (d) copy(d, first); }`.
     The drafts me_8827FFB8, me_8815CFA8 and me_8815D388 are now matched with the end-slot string/vector init, so
     those three draft files can be removed at integration.
+  - Struct copy that loads all three words before any store, with the first store as `stwx` (887FD7A8): copy the source into
+    a local first (`Elem12 e = *tmp.first; b->out.first[i] = e;`). A plain `o[i] = *s` interleaves the loads and stores,
+    and a pointer `d = &o[i]` drops the `stwx`. Draft me_887FD7A8_nearmiss.c is 2 off: only the lwzx operand order differs.
+  - Open: 88259608 is emplace_back on a vector of store vectors. It grows with `size + max(size, 1)` and copies through
+    88258BF8; the new element is built as def-init, `first = last = 0`, store_init. It is 13 off with a `__forceinline`
+    grow, called as `if (v->last == v->store.end) grow(v, v->last);`. Re-reading `v->last` instead of caching it fixes
+    the `end`-before-`last` load order. What remains is a pure swap: `last` and the zero constant take r28/r27 the other way
+    round. Neither a separate copy-result variable nor `count` as a grow parameter changes it.
+    887DA038 is still 16 off; the target keeps `srawi.` for the `size() != 0` test.
 - (agAH r6) If the config symbol for an address is not fn_XXXXXXXX, name the function with that existing symbol (for example ts4_profile_internal_is_available at 88936EB8).
+
+### C++ float fabs (agAH, round 6)
+- C `(float)fabs(x)` on a float keeps an `frsp` after each `fabs`. If the target has `fabs` feeding `fsubs`/`fsel` with no `frsp`, compile as C++ with `inline float fabs(float x) { return (float)fabs((double)x); }`: the overload drops the rounding. A `bool` return then gives the `li r11,1` / `clrlwi r3,r11,24` tail (8854FDA8 draft).
+- `clrrwi rX,rX,0` (rlwinm 0,0,31) as a 64-bit argument comes from a `long long` value cast to `(unsigned int)`. An `unsigned int` parameter passed straight to a `long long` gives `rldicl rX,rX,0,32` instead (8836B5D0).
+- A 16-byte state restored with one struct assignment (`a->state = *h;`) gives the target `mr r9,r3` (dead copy) plus interleaved ld/std; two separate u64 stores do not (8841A710).
+- If a small function is 1-2 off only in the order of the final store and the `mr r3` (store first on /Oc, mr first in the target), try `/Os`. 883EEA70 matched with `/Oc /Os` and no source change.
+- A call through a vtable slot whose argument is loaded after the slot (`lwz r10,0(r3); lwz r10,0xc(r10); lwz r4,...`) is a C++ virtual call: the C function-pointer form loads the argument first. 883E5D68 matched as a .cpp free function calling `sink->Attach(...)` (with /Os).
+- A small result returned through a hidden pointer (`addi r3,r1,0x50; bl; lbz rX,0(r3)`) means the callee returns a C++ class with a non-trivial copy constructor: C structs of 4 or 8 bytes come back in registers. Declare the callee `extern "C"` (disable C4190) to keep the unmangled config name (884A9798).
