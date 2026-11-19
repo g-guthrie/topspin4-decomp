@@ -11,7 +11,7 @@ typedef struct Table { unsigned int count; Item *items; } Table;
 typedef struct Sect { int hdr[2]; Lookup *lookup; Table table; } Sect;
 extern Ctx *lbl_88B3302C;
 extern char *lbl_88CAC988;
-extern const char lbl_8803A020[];
+extern const char lbl_88039A20[];
 extern const void *lbl_880391A0[];
 int ts4_if_get_u32_off188_88319E00(void *stream, unsigned int *pos);
 int fn_883E7828(Hdr *h, void *stream, unsigned int version);
@@ -50,7 +50,7 @@ int fn_883EAF78(Sect *s, const Hdr *sect, void *stream, unsigned int version)
             t = nt;
             tp = &s->table;
             *tp = t;
-            l = (Lookup *)fn_88315C60(lbl_88B3302C->heap, 0x18, lbl_8803A020, 0x3fd, 0, 0);
+            l = (Lookup *)fn_88315C60(lbl_88B3302C->heap, 0x18, lbl_88039A20, 0x3fd, 0, 0);
             if (l) {
                 l->vt = lbl_880391A0;
                 l->a = 0;

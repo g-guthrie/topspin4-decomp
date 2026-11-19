@@ -1763,3 +1763,14 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   per call, /O1 (0x885CEFC8, 0x885CF028).
 - Self-relative holder compared with `cmpwi` (signed): the holder field is an int offset/address; resolve with a ternary
   `*(int *)o != -1 ? (R *)(*(int *)o + o) : 0` (0x888AF448).
+
+### agAD round 4 (b169): 1 match, 4 drafts
+- **Check every data label against the target's lis/addi.** 0x88040000 - 0x65E0 is 0x88039A20, not 0x8803A020. objdiff does not flag a wrong
+  data label, but the data-ref audit does.
+- 882B4340 (pixel-converter init, /O1) matched with nested success ifs: `c->src = f(src); if (c->src) { c->dst = f(dst); if (c->dst) {...
+  goto done;} } msg = lbl_88001B38; fail: trace(msg); ...`. A `mr. r4, r3` on a store means the value is also the next call's r4:
+  fn_882B6DB8 takes `(src, dst)`, not just `(src)`. The ten back-end tries are one `||` chain.
+- Drafts: 883E6D98 (8 off, prev and the stream-vtable local get swapped callee-saved registers; `u64 sz = size(); end = start + sz;` fixed
+  the add order), 88290D58 (state-block bind: logic matches, register allocation does not; the packet is a bitfield `{b0:1, b1:1, addr:30}`
+  with `addr = ptr >> 2`), 883ED860 (queue insert with inline list helpers; register order and a tail merge), 883DD338 (request post:
+  44 off; the shared unlock/return block is placed after the 0x25 path in the target).
