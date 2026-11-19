@@ -2033,3 +2033,46 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Unsolved: 888008B0/88800A28/88800B10 (they reuse r6 across a call, which points to LTCG with callee context), 88941B30 (std::map find, 9 off),
   884A0768 (the command walk biases its pointer by +4), 884DC9B0 (TLS free of two buffers), 884F7470 (the bool result keeps `li 1; beq; li 0`),
   88343470 (the clamp's subtraction is recomputed), 887E61A0, 88518EE8 (quaternion cosine, fmr copies), 88924250/881518D0 (from round 1).
+
+## agAI (b176): split fix for strpbrk, medium sweep from agAG/cand.txt (5 matches, 1 draft)
+- **Fixing a wrongly split function.** `tools/matching.py --fresh-analysis` copies `config/54540859/symbols.seed.txt` into
+  `<work-dir>/analysis/symbols.txt` and Jeff analyses from that seed, so the fix is one seed line with the full size.
+  `config/54540859/symbols.txt` is a committed snapshot read by the audit tools (audit_callees, audit_datarefs, decomp_survey);
+  update it to match by hand, as 90c1b60 did for the jump-table merges (8865DA28 grew to 0x94 and its tail pieces were deleted).
+  For 88563540: seed `fn_88563540 = .text:0x88563540; // type:function size:0x8C`, and in symbols.txt size 0x80 -> 0x8C with the
+  `fn_885635C0` (0xC) line deleted. The tail had no callers: no branch in the disassembly targets 0x885635C0 and nothing in src/
+  names it. Full build: 33041 functions, 3380172/10154028 bytes, the same as b176 (the 0xC tail was never matched, and both pieces
+  were already in the denominator). agAG's p3.c matches on /O1 against the fixed split. It fails against b176 until the next
+  integration build, which picks up the seed line.
+- Matched: 88563540 strpbrk (/O1, after the split fix), 885DA2D0 (/O1, 16-bit 2:3 upsampler), 888C7E58 (/Oc), 888C30F0 (/Oc), 888C3BE8 (/Oc).
+- **A dead `mr r5,r3` at entry, before a tail vcall,** means the function's own argument is passed through as the vcall's third
+  argument (888C7E58). The agAH self-relative begin/end inlines then matched as written.
+- **Pointer select with the second choice as the default** (`addi +0x4c; beq; addi +0x34`): write `flag == 0 ? &b : &a` (888C30F0).
+  Struct copies from a global that is re-read through the selected pointer, while the other target gets the register copy:
+  `Vec3 pos = *pp; ... a->pos = *pp; b->pos = pos;`.
+- **`if (k == A) h = X; else if (k == B) h = Y; set = 1;`**: MSVC duplicates the shared tail into the first arm and lets the second
+  fall into it (`bne` to the shared store). Writing `set = 1` in each arm gives `bnelr` (888C3BE8).
+- **Null guards compared with `cmpwi` (signed) on pointer fields:** pointers compare with `cmplwi`, so the target tested them as ints.
+  `(int)a == 0` reproduces it (888C3BE8). Look for a better type before reusing this.
+- **Final store after an inline that writes through `*o++`:** to keep the last store after the computation, write `*o++ = x; *o = last;`.
+  Writing `o[0]`/`o[1]` schedules the second store first (885DA2D0). Signed `/ 8192` gives the `srawi 13; addze` pair.
+- Draft: drafts/me_886EC0E0_nearmiss.c (font glyph lookup, 1 off: lhzx operand order on the final `ranges[i].first`; the `'_'` fallback
+  is a tail-recursive call that MSVC turns into the backward `b`).
+- Open, more than 3 off:
+  - 8859F4E8/88596910 (speaker mask): with `mask = 0; if (1 <= ch && ch <= 8) mask = tab[ch-1]; return mask;` the channel tail matches
+    (`li r3,0; bltlr; bgtlr`). The 0x166/0xFFFE `return ext.channel_mask` block always moves to the end. The target keeps it inline
+    after `bne` to the channel code. Tried a switch, else-if chains, an inverted test, a tag local and an inline default_mask helper.
+    The r10/r11 tag/pointer swap at entry is still there.
+  - 885C9D58 (Q30 smoother, 64-bit): 6 off. The target stores the `sradi 30` result raw, then `clrrwi r9,r9,0; extsw` for the
+    scale test. An `__int64 v` local gives everything else. `(int)`/`(unsigned)` casts, a `k = (int)v` local and inline mul helpers do not give the clrrwi.
+  - 885F99E0 family (885F9E08, 885FAE20, 885FB5E8, 88601270, 88601710, 88602E80, 88603208; probably 885FA8C0/885FAA38): field unpackers,
+    `if (left < sizeof f) return 0; f = *p; left -= ..; p += ..;` then `*size -= p - buf`. The code is all there, but the target has left in r11
+    and p in r10 (swapped in every form): inline read_u16 helpers, a Reader struct in either field order, macro and memcpy forms (memcpy gives byte copies).
+  - 8860A088 (20-bit index tree find): 31 off. A result local and the vsize/vat inlines give the shape, but begin is reloaded per pass where the target has a clrrwi copy.
+  - 88667C98: 41 off, only because `&s->shot` (`addi r9,r11,0x80`) is folded. The target materialises it before the active-byte test.
+  - 8876D210/8876D2C0 (find by id in two pointer vectors): the target preloads r3=0 and keeps a clrrwi copy of begin.
+    Seven forms (vsize/vat inlines, value vat, a find helper, n/begin locals) all reload begin. 43 off.
+  - 887CDDE8 family (887CDE98, 887CF6A0, ...; commentary triggers that return a hash through a hidden pointer): 35 off. Missing are
+    the `clrrwi` copy of the match pointer and the add order of the self-relative stats element (`(i*0x134 + off) + base`).
+  - 888D5298: the 0x2D-byte record copy becomes a memcpy call. The target copies 11 words and a byte inline.
+- Skipped: 885CF138 (lwarx), 885CF4F8, 885D4890, 885D9C48 (audio/codec state), 886094C8 (bitfield clamp), 888C5760.
