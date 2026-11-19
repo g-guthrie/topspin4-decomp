@@ -92,7 +92,7 @@ ts4_word fn_88199C90();
 ts4_word fn_8819A9D8();
 ts4_word ts4_string_assign_from_wide_8819B208();
 ts4_word ts4_if_call_seq_fn_8887A350_881A64D8();
-ts4_word fn_881A6A00();
+ts4_word ts4_owned_ptr_free_881A6A00();
 ts4_word fn_881AC6A0();
 ts4_word ts4_call_seq_fn_881AD7D8_881AC828();
 ts4_word ts4_if_call_seq_u32_off4_881AD7D8();

@@ -153,7 +153,7 @@ ts4_word ts4_loop_call_seq_u32_0x4_88181670();
 ts4_word ts4_rec_copy_88187900();
 ts4_word ts4_destroy_owned_range_88187AB8();
 ts4_word fn_881898E8();
-ts4_word fn_881A6A00();
+ts4_word ts4_owned_ptr_free_881A6A00();
 ts4_word fn_881B9148();
 ts4_word ts4_if_atomic_interlocked_dec_88288530();
 ts4_word ts4_resource_from_blob_882908C0();

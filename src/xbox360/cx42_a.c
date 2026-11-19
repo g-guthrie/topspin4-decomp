@@ -66,23 +66,23 @@ void ts4_cx42_init_889955F0(u8 *o)
     for (i = 0; i < 7; i++) p[i] = 0;
 }
 
-extern void fn_88152340(void *p);
-extern void fn_881522C8(void *p);
+extern void ts4_release_handle_and_10_buffers_88152340(void *p);
+extern void ts4_release_handle_and_5_buffers_881522C8(void *p);
 extern int ts4_if_get_u32_lbl_88C32048_8857A1E0(int h);
 extern void ts4_registry_dispatch_888860A0(u32 h);
 void ts4_runtime_process_record_family_98000(u8 *o)
 {
-    fn_88152340(o + 0x1c);
+    ts4_release_handle_and_10_buffers_88152340(o + 0x1c);
     if ((int)W(o, 0x620) != -1) { ts4_if_get_u32_lbl_88C32048_8857A1E0(W(o, 0x620)); W(o, 0x620) = -1; }
 }
 void ts4_runtime_process_record_family_98048(u8 *o)
 {
-    fn_88152340(o + 0x20);
+    ts4_release_handle_and_10_buffers_88152340(o + 0x20);
     if ((int)W(o, 0x624) != -1) { ts4_if_get_u32_lbl_88C32048_8857A1E0(W(o, 0x624)); W(o, 0x624) = -1; }
 }
 void ts4_runtime_process_record_family_98090(u8 *o)
 {
-    fn_881522C8(o + 0x1c);
+    ts4_release_handle_and_5_buffers_881522C8(o + 0x1c);
     if ((int)W(o, 0x328) != 0) { ts4_registry_dispatch_888860A0(W(o, 0x328)); W(o, 0x328) = 0; }
 }
 

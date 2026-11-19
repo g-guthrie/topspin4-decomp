@@ -329,7 +329,7 @@ u8 ts4_resolve_ref_8872B030(char *self, u8 reset)
 extern void fn_886F5390(void *p);
 extern void fn_8871C658(void *p, u32 a);
 extern void fn_886F51C0(void *p, void *self, u32 b, u32 c);
-extern void fn_88711998(void *p);
+extern void ts4_release_buffer_array_88711998(void *p);
 extern char *lbl_88D45B1C;
 /* 0x887212A8: run a job through a 0x330-byte stack object, defaulting the owner from the global */
 void ts4_run_job_887212A8(char *self, u32 a, u32 b, u32 c)
@@ -340,5 +340,5 @@ void ts4_run_job_887212A8(char *self, u32 a, u32 b, u32 c)
     fn_886F5390(obj);
     fn_8871C658(obj, a);
     fn_886F51C0(obj, self, b, c);
-    fn_88711998(obj);
+    ts4_release_buffer_array_88711998(obj);
 }

@@ -73,7 +73,7 @@ ts4_word ts4_small_string64_ctor_88163990();
 ts4_word fn_8816C930();
 ts4_word fn_8816CAA0();
 ts4_word fn_8816D1A8();
-ts4_word fn_881A6A00();
+ts4_word ts4_owned_ptr_free_881A6A00();
 ts4_word fn_881A7A20();
 ts4_word fn_881A7B98();
 ts4_word fn_881A7FF8();

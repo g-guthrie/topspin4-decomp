@@ -18,7 +18,7 @@ extern char lbl_880DCF20[];
 
 extern void RtlEnterCriticalSection(void *section);
 extern void RtlLeaveCriticalSection(void *section);
-extern void fn_8816B1C8(int first, int second, char flag);
+extern void ts4_release_handle_range_8816B1C8(int first, int second, char flag);
 extern void fn_8857A1E0(void *held);
 
 #if 0
@@ -33,7 +33,7 @@ void ts4_guarded_reset_88AFEF90(void)
 
     RtlEnterCriticalSection(lbl_88C6D960.critical_section);
     ts4_clear_flag(&flag);
-    fn_8816B1C8(lbl_88C6D960.first, lbl_88C6D960.second, flag);
+    ts4_release_handle_range_8816B1C8(lbl_88C6D960.first, lbl_88C6D960.second, flag);
     RtlLeaveCriticalSection(lbl_88C6D960.critical_section);
     lbl_88C6D960.vtable = lbl_880D19F0;
 }

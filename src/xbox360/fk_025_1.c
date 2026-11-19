@@ -75,7 +75,7 @@ ts4_word fn_88178C40();
 ts4_word ts4_dc14b_erase_8817E720();
 ts4_word ts4_destroy_ent16_range_881816D8();
 ts4_word fn_881882D0();
-ts4_word fn_881A6A00();
+ts4_word ts4_owned_ptr_free_881A6A00();
 ts4_word fn_881B9148();
 ts4_word ts4_if_atomic_interlocked_dec_88288530();
 ts4_word ts4_resource_from_blob_882908C0();

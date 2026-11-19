@@ -122,7 +122,7 @@ extern void fn_8874B668(void *passctx, u32 a, u32 b, u32 c);
 extern void fn_88750E30(Pr1State *st);
 extern void ts4_step_mod2_88750DD0(void *passctx);
 extern void ts4_select_slot_or_forward_887146C0(int layer, int slot, u32 arg);
-extern Pr1ListNode *fn_8815D480(Pr1ListNode *n);
+extern Pr1ListNode *ts4_rb_tree_increment_8815D480(Pr1ListNode *n);
 INL Pr1Pair *pr1_findp(Pr1HashTab *t, u32 h)
 {
     Pr1Pair *e = t->last;
@@ -251,7 +251,7 @@ void ts4_render_packet_loop_8875E4C8(Pr1PacketVec *pv, Pr1Extra *ext)
                 }
                 prev = pkt;
             }
-            if (phase == 0) node = fn_8815D480(node);
+            if (phase == 0) node = ts4_rb_tree_increment_8815D480(node);
             else it++;
             if (pkt->pass.tex_index == 0 && phase == -1) phase = 0;
             else if (phase == 0 && node == (Pr1ListNode *)list) phase = 1;

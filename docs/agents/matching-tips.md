@@ -2488,3 +2488,54 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   88400358 (38 off; the deque wrap index uses cr0 `subic.`), 88590B80 (14 off; r9/r10 swap), 887759B8 (frame 0x30 larger
   than ours; the temporaries are probably C++ ones). 8899DAF0/889A7180 (span16 users) still copy with interleaved loads; by-value,
   temp-copy and placement-new forms give the same 13 off.
+
+## agAL (b185): LTCG-list small sweep, then renderer (32 matches, 3 drafts)
+- Many entries in agAH's LTCG candidate list (r5l.txt) match on the plain route with ordinary source; try plain /Oc first.
+- **Two equal constants kept in two registers** (`li r11,-1; li r10,-1`): the fields have different types. An `unsigned int`
+  field set to `0xFFFFFFFF` next to `int` fields set to `-1` gets its own `li` (886EC460, 886EC980).
+- **Self-relative begin/end inlines: pass `&o->db->ents` to each inline call**, not a `RelTab *t` local. With the local, the
+  second inline reuses the first `off` load; the target reloads it (8883CA60).
+- **Registry release family** (find_range_owner 8860D360 + node_visit 8860DBC8): two inline forms exist.
+  (a) Registry as an inline parameter, `release(lbl_88D45B38, p)`, gives the `clrrwi r3,rX,0` copy (88995CB8, 887858B0, 8816B1C8).
+  (b) A registry read inside the inline after the key test, with int (cmpwi) handle fields, gives `mr r3,r30` and no copy
+  (881522C8, 88152340, 88711998). ts4_destroy_owned_object (88174B18) is the free form: registry, else CRT free fn_885651F8.
+- **Open in that family:** 8887EB10, 88AFEEB0, 8817F670, 881ADFD8 and 8815BB30 load the registry once before the loop and reload it only after node_visit,
+  never after fn_885651F8. Declaring `__declspec(noalias) void fn_885651F8(void *)` (CRT free) and reading the registry
+  before the `p` test hoists the load, but the reloads after visit are still missing (21 off).
+- Element read through an inline slot accessor at each use (`*vslot(v, i)`) gives the clrrwi copies of both `first` and the element (8876DEE0).
+- **A string walk that reads b at a's offset** (`lbzx` with b - a): keep one cursor p over a and read `b[p - a]` (88639D48). The same holds for a copy loop that stores
+  `out[s - p]` (88605FA0). A separate `n = value` local gives the leading `mr r10,r3`.
+- `return A || B || C;` as a u8 gives the `li r11,1 / li r11,0 / clrlwi` tail where if/return forms give `bltlr` (886603C0).
+- Float literal 0.5f in an LTCG range: matches on LTCG **without** pp1_pool_primer.c (__pool@_0 = lbl_8814B910); spec `"context": []` (88779248).
+- Vector `back()`/`pop_back()` inlines taking `&s->v` reproduce a dead `addi` of the member address and an early `last - 1` (886ED110).
+- ts4_hash_find_null_888689F8 takes **no arguments** (r3 is not set before calls to it); cx18_core_c.c declares an idx parameter.
+- Drafts: me_88942A90 (2 off, store order of a Vec3 copy), me_887965D8 (3 off, add association), me_886EBDA0 (3 off, fdivs/fsubs order).
+- agAK gameplay addendum (b185). The totals are now 35 matches and 4 drafts.
+  - 888C0528 (random integer in [0, n) from the generator in the game globals) matches only with the guard written as `if (n != 0) { ...; return x % n; } return 0;`. An early `return 0` puts the zero path first, with `bne` instead of `beq`.
+  - 88659BB0 cannot be matched in its current form. Its case 3 falls into the next symbol, ts4_set_u8_off2_88659C24, so the size in the config is short.
+  - Open items:
+    - 88662458 and 88662510 are 6 off. The base pointer gets r11 where the target has r10, both plain and LTCG.
+    - 888CAA98 is 4 off. The three-float colour store loads 0xF0 before g_ts4_event_value.
+    - 887F1F00 belongs to the self-relative (-1 = null) family. It is missing the target's no-op `clrrwi r10,r10,0`.
+    - 888D93B8 and 888D9498 forward 4-byte structs by value. The target spills them to the stack and repacks them with `rldicr 32`.
+
+## agAN (b185): renderer small sweep (7 matches, 1 draft)
+- **LTCG caller of an unmatched callee:** a correct but not byte-exact callee definition in `--context` is enough when
+  the caller only depends on which argument registers the callee leaves intact. 886FCB48 reuses r3/r4 after
+  `bl fn_886F3798` and matches with drafts/me_886F3798_nearmiss.c as context. The callee stays a 14-off draft.
+- **`int res = 0; if (A) res = f(x); else if (B) res = g(x); return res;`** gives the early `li r10,0` / final
+  `mr r3,r10`, with both calls as tail `b`. Early `return f(x)` forms lose the `li` (88737DF8). Write the guard as an
+  inline returning `u8` `A || B` to get the `li 1 / li 0 / clrlwi / cmplwi` shape.
+- A u16 vector read through `size()` and `at()` inlines that take `&l->frames` loads `last` before `first` and
+  reloads `first` for the element (886F3C28). Direct `l->frames_end - l->frames` CSEs the load.
+- Vector clear with a memcpy per 32-byte element: `v->last = copy(v->last, v->last, v->first)`. The element is
+  `unsigned char b[32]` (u32 or float arrays inline the copy). The loop is `for (n = last - first; n > 0; --n, ++first, ++dest)`,
+  and the increment order decides the order of the `addi` (88707630).
+- `__vsldoi` is not in vx1_vector.h. Declare it, with `#pragma intrinsic(__vsldoi)`, as w6a_types.h does.
+  D3DCOLOR unpack loop: `out[i] = __vmaddfp(scale, __vupkd3d(__vsldoi(v, v, 4), 0), bias)` with `v = __lvlx(&packed[i], 0)`
+  matches only on LTCG (ctx=[]) in the indexed `for (i = 0; i < 16; i++)` form (886EB188).
+- The float at 0x8814B440 is the config symbol `g_ts4_event_value`. Under LTCG, a reference to `lbl_8814B440` fails only on the
+  relocation name (886F5DA0).
+- Open: 88703DC8 (12 off) loads end/begin into r8/r7 and copies them to r3/r4 with `mr`; tried locals, a vector by value,
+  and an inline sort wrapper. 886ED6D8 (14 off) is a 7-bit bitfield countdown; the target reuses the loaded byte register as the
+  rlwimi base where ours adds `mr`.

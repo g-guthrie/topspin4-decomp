@@ -1,3 +1,3 @@
-/* NEAR MISS 0x888C72E8 (fn_888C72E8), /Oc: 1 off, cmplw operand order (target cmplw r10,r11). a == b, b == a, int/unsigned, early-return and local forms tried (agU 2026-11-19, work/army/ME/v.py chk, matching-b154). */
-typedef struct { char p[0x18]; unsigned a; unsigned busy; unsigned q; unsigned b; } S;
-unsigned char ts4_nearmiss_888C72E8(S *s) { return s->busy || s->b == s->a; }
+/* 888C72E8 near miss (1 off, plain and LTCG): loads 0x24 then 0x18 match, but cmplw operands come out r11,r10 (target r10,r11). */
+typedef unsigned char u8; typedef struct { char p[0x18]; void *a; void *b; void *c; void *d; } S;
+static int eq(void*a,void*d){return a==d;} u8 fn_888C72E8(S *s){ return s->b!=0 || eq(s->a,s->d); }

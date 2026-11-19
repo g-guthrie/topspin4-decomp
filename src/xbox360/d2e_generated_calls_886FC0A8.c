@@ -81,7 +81,7 @@ extern char ts4_ascii_lower_to_upper_88564790[];
 ts4_word RtlEnterCriticalSection();
 ts4_word ts4_loop_call_seq_u32_off0_88150378();
 ts4_word fn_88150600();
-ts4_word fn_8815D480();
+ts4_word ts4_rb_tree_increment_8815D480();
 ts4_word ts4_small_string256_ctor_88163B90();
 ts4_word fn_881643D0();
 ts4_word ts4_transform_chars_88165E80();

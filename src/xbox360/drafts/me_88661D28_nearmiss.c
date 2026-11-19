@@ -1,24 +1,9 @@
-/* agK 2026-11-19: top pads 0-7: all 3 (pad-insensitive). */
-/* agentA2 2026-11-18: still 3 best: block cam local, rig before anchor; chained g->rig->cam forms 4. */
-/* NEAR MISS (3 instructions): the reloaded camera pointer is allocated to r4 instead of r11. */
-/* 0x88661D28 / 0x886624C8: points the scene's camera target at the current court anchor and clears its
- * pending shot slot; the second variant also selects the named camera preset. */
-typedef struct Anchor Anchor;
-typedef struct Court { char p[0x28]; Anchor *anchor; } Court;
-typedef struct Venue { char p[0x5c]; Court *court; } Venue;
-typedef struct Cam { char p[0x410]; Anchor *follow; char p2[0x42c - 0x414]; int shot; char p3[0x544 - 0x430]; Anchor *target; } Cam;
-typedef struct Rig { char p[0x28]; Cam *cam; } Rig;
-typedef struct Hud { char p[0x9fc]; unsigned int preset; } Hud;
-typedef struct Game { char p[0x48]; Venue *venue; char p2[0x60 - 0x4c]; Rig *rig; char p3[0x74 - 0x64]; Hud *hud; } Game;
-typedef struct Ctl { int pad; Game *g; } Ctl;
-void ts4_aim_camera_at_anchor_88661D28(Ctl *c)
-{
-    Game *g = c->g;
-    Anchor *a = g->venue->court->anchor;
-    Rig *r = g->rig;
-    Cam *cam;
-    r->cam->target = a;
-    cam = r->cam;
-    cam->shot = -1;
-    cam->follow = a;
-}
+/* 88661D28 near miss (3 off, plain/LTCG, all /O levels): the reloaded x pointer gets r4 where the target reuses r11 (same r11/r10 family as 88662510). */
+typedef struct { char p[0x410]; int a; char q[0x42c-0x414]; int b; char r[0x544-0x430]; int c; } X;
+typedef struct { char p[0x28]; X *x; } H;
+typedef struct { char p[0x28]; int v; } K;
+typedef struct { char p[0x5c]; K *k; } J;
+typedef struct { char p[0x48]; J *j; char q[0x60-0x4c]; H *h; } G;
+typedef struct { int x; G *g; } S;
+static void set2(X *x,int v){ x->b=-1; x->a=v; }
+void fn_88661D28(S *s){ G *g=s->g; H *h=g->h; int v=g->j->k->v; h->x->c=v; set2(h->x,v); }
