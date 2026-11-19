@@ -1,57 +1,60 @@
-/* 0x883CA160: forwards a position (slot 34) to the playing mixer items owned by a group node, or to every child of a leaf list, then stores it at +0x74/+0x78. */
-/* Near miss /O1 (agV): 1 off, halfword flag test gives rlwinm. where the target has extrwi. (same class as 883C7278). */
+/* 0x883C7A00: stores an int at +0x3C on the node (redirected to its owner node when deep) and, when deep, propagates to the playing group items it owns (flag 0x80) or to every child of its list (non-deep recursion). */
+/* Matched on /O1 (agY). The +0x64 flag is a short; bit 0x20 is read as (unsigned char)(((unsigned)f >> 5) & 1) for the lhz extrwi. */
 #ifdef _MSC_VER
 #define PTR_INT(p) ((int)(p))
 #else
 #define PTR_INT(p) ((int)(long)(p))
 #endif
 typedef struct Node Node;
-typedef struct NodeVt { void *f[34]; int (*set_pos)(Node *n, int a, int b); } NodeVt;
 typedef struct Owner { Node *node; } Owner;
 typedef struct List { int count; Node **items; } List;
 typedef struct Mix { char pad[8]; int count; int pc; Node **items; } Mix;
 typedef struct Sub { char pad[0x38]; Mix *mix; } Sub;
 typedef struct Sys { char pad[0x30]; Sub *sub; } Sys;
 struct Node {
-    NodeVt *vt;
-    char pad0[0x28 - 4];
+    char pad0[0x28];
     Sys *sys;
-    char pad1[0x64 - 0x2c];
-    unsigned short flags;
-    char pad2[0x74 - 0x66];
-    int a, b;
-    char pad3[0xa8 - 0x7c];
+    char pad1[0x10];
+    int val;
+    char pad2[0x24];
+    short flags;
+    char pad3[0x42];
     List *list;
     Owner *owner;
 };
 
-int fn_883CA160(Node *n, int a, int b)
+static unsigned char is_grp(Node *n) { return (unsigned char)(((unsigned)n->flags >> 5) & 1); }
+
+int fn_883C7A00(Node *self, int v, unsigned char deep)
 {
     int i, r;
-    if (n->list) {
-        if (n->flags & 0x20) {
+    Node *n = self;
+    if (deep) {
+        if (n->owner ? n->owner->node : 0)
+            n = n->owner ? n->owner->node : 0;
+        n->val = v;
+        if (is_grp(n)) {
             Mix *m = n->sys->sub->mix;
             int cnt = m->count;
             Node **items = m->items;
             for (i = 0; i < cnt; i++) {
                 if (items[i] && (items[i]->owner ? items[i]->owner->node : 0) == n && (items[i]->flags & 0x80)) {
-                    r = items[i]->vt->set_pos(items[i], a, b);
+                    r = fn_883C7A00(items[i], v, 0);
                     if (r)
                         return r;
                 }
             }
         } else {
             for (i = 0; i < n->list->count; i++) {
-                Node **it = n->list->items;
-                if (PTR_INT(it) != 0 && it[i]) {
-                    r = it[i]->vt->set_pos(it[i], a, b);
+                if (PTR_INT(n->list->items) != 0 && n->list->items[i]) {
+                    r = fn_883C7A00(n->list->items[i], v, 0);
                     if (r)
                         return r;
                 }
             }
         }
+    } else {
+        n->val = v;
     }
-    n->a = a;
-    n->b = b;
     return 0;
 }

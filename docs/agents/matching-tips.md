@@ -1525,3 +1525,25 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Open, more than 3 off: 883D38C8 (handle builder; registers r9/r10 swapped for the owner select, and the index local kept in r31 across a
   conditional call), 883DF1A0 (voice steal; a u64 stamp is copied twice through the stack, `std; lwz; std; lwz`, and copy-propagation folds
   every struct-copy form I tried; the final `if (r) return r; return 0;` also folds).
+
+### agY (b160): the halfword `extrwi.` flag test is solved (17 matches)
+- Rule: declare the +0x64 halfword as `short` (not `unsigned short`) and test the bit as
+  `(unsigned char)(((unsigned)f >> 5) & 1)`, directly or in `static unsigned char is_grp(Node *n)`. This gives `lhz; extrwi. rX,rX,1,26`
+  on /O1 and /Os. Measured on 883C7278 (/O1 and /Os):
+  - `unsigned short` field: every form gives `rlwinm.` or `srwi; clrlwi.`. This includes `(unsigned char)((f>>5)&1)`, `(unsigned char)((f&0x20)>>5)`,
+    `(unsigned char)(((unsigned)f>>5)&1)`, `(char)`/`(signed char)` casts, `(unsigned short)`/`(short)` casts and `== 1`.
+  - `short` field: only the `(unsigned)` widening plus the `(unsigned char)` cast gives `extrwi.`. `(int)` widening, no widening, and
+    char/short casts give `clrlwi.` or `rlwinm.`.
+- Family 883C76F0..883CC7D0 (setters that redirect to the owner node when `deep`, then recurse into owned playing group items or
+  list children). These details were needed:
+  - Copy the parameter (`Node *n = self;`) so that n is in r28.
+  - Test the list child as `PTR_INT(n->list->items) != 0 && n->list->items[i]` and pass `n->list->items[i]`. That form gives the
+    `clrrwi r3,r10,0` and the cr6 compare. With an `it` local the compare is cr0 and the copy is missing.
+  - Use if/else with the deep arm first.
+  - 883C76F0 multiplies by the three unit labels. Write them as literals (0.25f, 0.020833334f, 0.041666668f) to fix the fmuls
+    operand order, as at 883DF888.
+- New drafts:
+  - 883C9380 (1 off): lwzx order, the 883C75D0 class.
+  - 883CA2A0 (15 off): needs LTCG with 883C9520 in context, because f11 survives the call. The level and the jitter
+    swap f30/f31.
+  - 883C8D58 (69 off): the shape of the busy pre-scan loop.
