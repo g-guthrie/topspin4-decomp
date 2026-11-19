@@ -1625,3 +1625,22 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   rebuilt object as the split target object with the verified code patched in, so its relocations carry the
   original names. `build_units` already fails a unit with any rename, so wrong names cannot pass that route.
 - Run both after each full build; each takes about 2 s.
+
+### agAB (b163): lwzx refinements, /O1 queue, small sweep (5 matches)
+- agZ's loop-body local only gives index-first `lwzx` when nothing else in the function pins the order. In destructors
+  that store the vtable first (884A7430, 8847AF38), a plain `it[i]` or `self->items[i]` both gave base-first. 884A7430
+  matched with a TEST through the local followed by an element local: `Shared **it = self->items; if (it[i]->live) {
+  Shared *s = it[i]; ... }`. 8847AF38 (element passed straight to a call, count re-read) stays 1 off: removing the
+  vtable store flips it to index-first, so the store, not the loop, decides there. Draft: drafts/me_8847AF38_nearmiss.c.
+- Two float constants compared after a call with the loads in the target's order (`lis` of 0.0 before 1.0, `lfs 0.0`
+  before the field): declare them as block locals AFTER the call, 1.0 first, `float one = K1; float z = K0;` (883F45F0).
+  Locals before the call, or 0.0 first, leave the lis or the lfs pair swapped.
+- `if (r == 0) all = 0; else if (r == 2) {...}` gives `bne; li; b`; the target's `beq` to the clear comes from
+  `if (r) { if (r == 2) {...} } else all = 0;` (883F45F0).
+- A pointer-walk scan `lwz base; lwz 0(p); addi p,4` with the count test before the base load: write `i = 0; if (cnt > 0)
+  { int *p = t->used; for (; i < cnt; i++, p++) if (*p) break; }` (883DD5E8). `for (...) if (t->used[i])` gives lwzx.
+- Vcall argument order (vtable load before an `*ids` reload): the C function-pointer form loads the argument first, a C++
+  virtual member call loads the vtable first (883DD5E8, now 1 off on a tail-merged return branch; draft .cpp).
+- `r = 0` + `if (p->o) r = p->o->vt->f(p->o, 0); return r;` with `P *p = s->p;` gives `li r3,0; beqlr; clrrwi r3` and a
+  dead `blr` after `bctr` (888386C0). A vector bounds-checked get through two inline helpers on `&s->v` (size and slot
+  address) gives the clrrwi copy of begin and an index-first lwzx (88879168).
