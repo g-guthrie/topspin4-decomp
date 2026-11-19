@@ -1452,3 +1452,46 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Open, more than 3 off: 883EAB38 (inline 0x14-byte ctor; the target materializes zero twice, `li r9,0` and `li r10,0`; a C++ base+derived
   ctor and pointer types did not change it), 882DD6C8 (register assignment of all 8 saved registers), 883F5598 (7 off, register naming in
   `bank->used = n*0x90 + base`), 883EE2E8 (store/lfs scheduling of an inline ctor with self-linked node).
+
+### agV round 2 (b157): 79-91 instructions (21 matches)
+- 21 /O1 plain-route matches. 18 also match on LTCG; 883E9C28, 883F14E8 and 883F90E0 are plain only. None uses volatile.
+- **A shared retire tail** (883DCC58): the error path `return 0x25` jumps into the unlink/relink code with r3 kept, and the normal path
+  returns the argument. Write the tail as a static helper `retire(e, ret)` and call it from both returns.
+- **A zero-initialised local array after an early return** (883D1B80): the target zeroes `int s[33]` only after the first read
+  succeeds. Put `{ int s[33] = { 0 }; ... }` in a block after the first `if (r) return r;`. At function scope the memset moves to the top.
+  The summed fields are emitted in reverse source order (target `s27+s25+...` = source `s[19] + ... + s[27]`).
+- **Owner-select with one owner load** (883F8550): `Node *o = t->node; Bank *bk = owner_node(o) ? owner_node(o)->bank : o->bank;`
+  The `o` local lets MSVC reuse the `+0xAC` load. Without it, the select re-reads `t->node`. 883F5598 (open) already had the local and is still off by registers.
+- **Duplicated vcall in both arms tail-merged** (883E5FB0, open): the target calls `m->vt->set(m)` in both arms and shares the
+  following `find` call, with the key loaded after the first call. if/else with a set local and inline-helper forms gave an extra saved
+  register or the opposite block order.
+- `x = j < lo || (state & 0x8000);` as an unsigned char gives the target's `li 0; beq; li 1` (883F6608). The `?:` chain gave `extrwi`.
+- A parameter used in only one arm keeps its incoming register there (883C7CC0): declare `Node *t = n;` at the top of the
+  function, so the `mr r30,r3` sits in the prologue, and use `n` itself in the arm that does not redirect.
+- Inline error tails (883E4C60): repeat `{ if (owned) free(owned); destroy(s); return r; }` at each failure and let MSVC
+  tail-merge them. gotos to shared labels lay the blocks out differently.
+- Path-lookup family: 883DF370, 883DA1C8 and 883F99F8 (with 883F8EC0/883D80E0 from round 1) need the vcall item in a local
+  (`Item *it = ITEM(n); return it->vt->f(it, ...)`) and the null-checked ITEM macro everywhere else.
+- Not matched: 883CA160 (1 off, draft) and siblings 883C7A00/883C7B60 have the halfword `extrwi.` flag test (the 883C7278 class).
+  8829DD30/8829DBD0 are GPU ring writers (sync/r13). 882E21B8 has the 0x8876086C relocation. 883D1DC0 (a local object with a vtable and two
+  function-pointer arguments) was not tried.
+
+### agU round 2 (b157): 15 matches; the 5 C++ accessors moved to drafts
+- The member-function accessors (8841ED80, 8841F0D8, 886EBA80, 88443518, 88605DA0) match only as real C++ members. As C
+  or as `extern "C"` C++, each one is 2-4 off: the base goes into r10 where the target uses r11. I tried a direct body, an
+  `extern "C"` wrapper around an inline member, a reference parameter, an index helper, `__restrict`, pads 0-4, LTCG, /O1
+  and /Ob1. The mangled name breaks C callers in the build, so they are now
+  drafts/me_<ADDR>_nearmiss.cpp, which hold the matching member body.
+- **/Os in the 0x885 range and on small helpers.** 8859F380 (a range-checked table read), 884FD970 (zeroing 8 floats per
+  pass) and 883EEFA0 (bump allocator; it was a 2-off /Oc draft) all matched on /Os alone. When a small function is 1-5 off
+  on /Oc with a branch-layout or move-order residue, try /Os before rewriting it.
+- **Floats initialised from `g_ts4_event_value` match on the LTCG route only** (882744F0, 88277978, 88275858, 88636EA8).
+  Use `extern float g_ts4_event_value; float z = g_ts4_event_value;` and store z. On the plain route the global is
+  reloaded for each store, or an extra `fmr` appears.
+- List items whose links point to +4 of each item: write `ITEM(l) ((l) ? (It *)((char *)(l) - 4) : 0)` and compare against
+  `&s->head` as an item (8830BC78/8830BCD0).
+- A table pointer computed once before a find loop (`Sub *sub = &o->sub;`) reproduces the target's early `addi r3,r4,X`
+  (88523EE8). Indexing through `o->sub` each time does not.
+- New near-miss draft: 88614900 (1 off, lwzx order). Open, 3 off: 884213B0/88421400 (per-character case helper; the `mr`
+  lands before the test), 88516E38 (fmuls operand order), and 885E3968/885E39B0/885E60F0 (an assert-style range check
+  with the failure branch placed first).
