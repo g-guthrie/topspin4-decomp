@@ -1,3 +1,4 @@
+/* agK 2026-11-19: top pads 0-7: all 3 (pad-insensitive). */
 /* agentA2 2026-11-18: still 3: named it2=it+1 before first call (3), volatile it2 (21). */
 /* NEAR MISS draft (not built, not counted). See docs/agents/matching-tips.md, "Near misses parked". */
 typedef unsigned int u32;

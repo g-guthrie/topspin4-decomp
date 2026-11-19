@@ -1,3 +1,4 @@
+/* agK 2026-11-19: still ~10 aligned (best: member-wise fill `p->w[k] = tmp.w[k]` hoists the stack loads like the target but strength-reduces p to p+8). copy_backward as 4 pre-decremented int words gives lwzu/stwu -4 (worse); `(--dest)->w[0] = (--last)->w[0]` and do/while{*--d=*--s}while(--k) give subi + lwz 0; do/while gets the target's subic. counter. C++ same. */
 /* NEAR MISS 0x88178D10 (plain /Oc and LTCG, matching-b129). fn_check reports 143 differing because the code shifts;
  * after register-normalised alignment only 7 target / 10 candidate instructions differ.
  * Behaviour: std::vector<16-byte item>::_Insert_n(where, n, val). n == 0 does nothing. When the spare capacity is

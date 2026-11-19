@@ -1,3 +1,4 @@
+/* agK 2026-11-19: top pads 0-7: all 2 (pad-insensitive). */
 /* agentA2 2026-11-18: still 2: named pos/player pointer locals, block-local mode, pointer from getter result (3), getter nested in arg (17). */
 /* NEAR MISS (2 instructions off: `mr r4,r3` / `mr r31,r3` swapped, see matching-tips "no rule
  * found"). 0x8868E320: fetch the player's world position and hand it, with the current match

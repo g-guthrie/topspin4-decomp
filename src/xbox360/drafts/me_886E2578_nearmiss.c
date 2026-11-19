@@ -1,3 +1,4 @@
+/* agK 2026-11-19: top pads 0-7: all 2 (pad-insensitive; residue is scheduling). */
 /* agentA2 2026-11-18: still 2 (/Oc): restrict list (4), volatile list stores (10), shared zero local (10), weights_init helper / chained stores give 2 only on LTCG. */
 /* NEAR MISS (2 instructions): the game schedules the weight load after the second list store; this
  * source loads it one slot earlier. Tried all orders of the four store groups, local/param forms. */

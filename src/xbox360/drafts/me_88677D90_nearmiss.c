@@ -1,3 +1,4 @@
+/* agK 2026-11-19: LTCG joint sweep top pads 0-7 x override-block pads 0-7 (64 runs): best 19, unchanged. */
 /* near-miss (agH, 2026-11-19): 19 off on LTCG (context pp1_pool_primer.c), 27 off plain. Left: one add operand order in the player-points sum, (s + rel) vs (rel + s), and the r5/r7 swap for old_end that follows from it. Tried 72 accessor combinations x pads 0-7 and statement order. fn_equiv EQUIVALENT (seed 1: 1776 valid, 18/18 blocks; seed 3: 1443 valid, 18/18). */
 /*
  * 0x88677D90: tie-break UpdateServerAndEnds (serve rotation). n = points of player 1 + player 0 (score

@@ -1,3 +1,4 @@
+/* agK 2026-11-19: joint pad sweep top 0-7 x pat-helper 0-3 x sat-helper 0-3: best 2 (unchanged; (3,2,3) also 2). */
 /* agentA2 2026-11-18: skipped: commutative index-add operand order (tips: not covered when loaded off params); still 2. */
 /* NEAR MISS (2 instructions): commutative operand order of two index adds (side won, receiver run)
  * is swapped. An unsigned (sizeof) side stride fixed a third site. */

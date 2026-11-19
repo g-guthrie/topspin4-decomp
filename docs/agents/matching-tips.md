@@ -964,3 +964,17 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   reports 143 differing but only 7 target instructions are really off.
 - Open (0x88178D10 _Insert_n): copy_backward has to come out as `lwzu/stwu -0x10` pre-decrement. Every C form tried gives
   `subi; lwz 0`. The fill loops in the target load the copied value straight from the stack slot.
+
+## agK notes (2026-11-19): STL callees and the pad sweep, no new matches
+- Fill loop from a by-address local (0x88178D10): writing the fill member-wise (`p->w[k] = tmp.w[k]`) gives the target's
+  direct stack-slot loads hoisted above the loop. The struct-copy form `*p = tmp` gives `addi rX,r1,0x50` plus loads
+  inside the loop. But member-wise stores get strength-reduced to `p+8` with offsets -8..4, and the target has 0..0xc.
+- A copy loop written as `do { *--d = *--s; } while (--k);` behind a `k > 0` guard gives the target's `subic.` counter
+  where the for form gives `mtctr/bdnz`. It still emits `subi; lwz 0`, not `lwzu/stwu -0x10`. Copying the item as four
+  pre-decremented `int` words gives `lwzu/stwu -4` per word, which is worse.
+- Pad-insensitive drafts (top pads 0-7 do not change the count): 886AB1A8, 886E2578, 8868E320, 88661D28, 886C4D10,
+  8890ED60. Their residue is not OP1 numbering, so skip pad sweeps on them. 88668310 is pad-sensitive, but the joint
+  sweep (top 0-7 x 0-3 pads in each inline helper) only gets back to 2. 88677D90 LTCG (top x block, 64 runs) stays at 19.
+- Pad-sweep script with joint markers that works on both routes: scratchpad agK/js.py
+  (`js.py SRC NAME ADDR LTCG N1 MARK1 N2 MARK2 ...`). Drafts with `#include "../x.h"` need absolute include paths
+  when they are copied out of drafts/.

@@ -1,3 +1,4 @@
+/* agK 2026-11-19: still 3 aligned (both routes). Pads 0-7 at top: no change. Copy forms (separate count local, do/while, copy_n helper, dest+off return, index loop, pointer !=) all keep 3 or worse; the `mr` count copy looks tied to the same param-copy pattern as 0x88178D10. */
 /* NEAR MISS 0x8890ED60 (plain /Oc and LTCG, matching-b129): fn_check reports 52 differing (a 1-instruction shift);
  * aligned, 3 instructions differ: the target keeps a copy of the erase-copy count (`mr r10,r9`), and it places
  * `std r6,0xa8(r1)` after `mr r30,r4`.
