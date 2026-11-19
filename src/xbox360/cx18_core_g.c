@@ -277,7 +277,7 @@ CX18_RING_VISIT(ts4_ring_visit_88870968, ts4_loop_get_u32_off0_88870810)
 
 typedef struct Cx18Cls { u8 pad[0x1c]; void *f1c; } Cx18Cls;
 extern Cx18Cls *lbl_88D45A08;
-extern void fn_88867A40(void *ent);
+extern void ts4_slot_table_reset_88867A40(void *ent);
 extern void fn_888C7AF8(void *p);
 
 /* 0x88867F68: set the flag byte (+0x19) of the 0xb0-byte entry with this id; when it changed to nonzero hand the entry on, then notify the class object */
@@ -290,7 +290,7 @@ void ts4_tbl_set_entry_flag_88867F68(int id, u8 flag)
         if (id == *(int *)(e + 0xc)) {
             u8 old = e[0x19];
             e[0x19] = flag;
-            if (old != flag && flag != 0) fn_88867A40(e);
+            if (old != flag && flag != 0) ts4_slot_table_reset_88867A40(e);
             break;
         }
     }

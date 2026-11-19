@@ -94,7 +94,7 @@ typedef struct Cx18Tbl { int off; u32 count; } Cx18Tbl;
 typedef struct Cx18Mid { u8 pad[0x38]; Cx18Tbl *tbl; } Cx18Mid;
 typedef struct Cx18Svc { u8 pad[0x234]; Cx18Mid *mid; } Cx18Svc;
 extern Cx18Svc *lbl_88D45B1C;
-extern void fn_88867A40(void *ent);
+extern void ts4_slot_table_reset_88867A40(void *ent);
 
 /* 0x888657C8: how many entries have the flag byte at +0x19 equal to 1 */
 int ts4_tbl_count_flag1_888657C8(void)
@@ -117,7 +117,7 @@ void ts4_tbl_find_forward_88867F10(int id)
     for (i = 0; i < t->count; i++) {
         char *e = (char *)t + (i * 0xb0 + t->off);
         if (id == *(int *)(e + 0xc)) {
-            fn_88867A40(e);
+            ts4_slot_table_reset_88867A40(e);
             return;
         }
     }

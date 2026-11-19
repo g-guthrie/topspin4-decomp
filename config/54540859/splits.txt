@@ -55067,3 +55067,58 @@ src/xbox360/me_ts4_service_slots_reset_888CA5A8.c:
 src/xbox360/me_ts4_state_reset_buffers_888C6230.c:
 	.pdata      start:0x8812EB80 end:0x8812EB88
 	.text       start:0x888C6230 end:0x888C6308
+
+src/xbox360/me_render_ent_register_88708CE8.c:
+	.pdata      start:0x88125E10 end:0x88125E18
+	.text       start:0x88708CE8 end:0x88708E24
+
+src/xbox360/me_render_system_update_886F9DA8.c:
+	.pdata      start:0x88125920 end:0x88125928
+	.text       start:0x886F9DA8 end:0x886F9F00
+
+src/xbox360/me_skel_collect_bone_88744728.c:
+	.pdata      start:0x88126D08 end:0x88126D10
+	.text       start:0x88744728 end:0x88744874
+
+src/xbox360/me_ts4_bitsets_flag_pending_888C1060.cpp:
+	.pdata      start:0x8812E9B0 end:0x8812E9B8
+	.text       start:0x888C1060 end:0x888C1140
+
+src/xbox360/me_ts4_data_set_rec_pair_888D51B0.c:
+	.text       start:0x888D51B0 end:0x888D5298
+
+src/xbox360/me_ts4_group_items_set_state_888C9F58.c:
+	.pdata      start:0x8812ED48 end:0x8812ED50
+	.text       start:0x888C9F58 end:0x888CA040
+
+src/xbox360/me_ts4_handle_find_entry_887EC1A8.cpp:
+	.pdata      start:0x88129E90 end:0x88129E98
+	.text       start:0x887EC1A8 end:0x887EC298
+
+src/xbox360/me_ts4_handler_from_def_887FCC80.cpp:
+	.pdata      start:0x8812A578 end:0x8812A580
+	.text       start:0x887FCC80 end:0x887FCD6C
+
+src/xbox360/me_ts4_mem_alloc_typed_88884798.c:
+	.pdata      start:0x8812DA68 end:0x8812DA70
+	.text       start:0x88884798 end:0x8888487C
+
+src/xbox360/me_ts4_sim_items_tick_887F7588.c:
+	.pdata      start:0x8812A288 end:0x8812A290
+	.text       start:0x887F7588 end:0x887F766C
+
+src/xbox360/me_ts4_slot_table_reset_88867A40.c:
+	.pdata      start:0x8812D148 end:0x8812D150
+	.text       start:0x88867A40 end:0x88867B20
+
+src/xbox360/me_ts4_trigger_flag_update_887F8E00.c:
+	.pdata      start:0x8812A320 end:0x8812A328
+	.text       start:0x887F8E00 end:0x887F8EE8
+
+src/xbox360/me_xdata_string_enum_88704288.c:
+	.pdata      start:0x88125D38 end:0x88125D40
+	.text       start:0x88704288 end:0x887043D4
+
+src/xbox360/me_xdata_string_enum_887043D8.c:
+	.pdata      start:0x88125D40 end:0x88125D48
+	.text       start:0x887043D8 end:0x88704524

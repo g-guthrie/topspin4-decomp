@@ -162,7 +162,7 @@ void fn_887DD610(void);
 void ts4_loop_get_u32_off1c_887EA320(void);
 void fn_887F20D0(void);
 void ts4_type_register_887F48B8(void);
-void fn_887F7588(void);
+void ts4_sim_items_tick_887F7588(void);
 void ts4_call_seq_lbl_880E3588_88803A30(void);
 void fn_88807AF8(void);
 void lua2_luaC_callGCTM_8881B950(void);
@@ -372,7 +372,7 @@ TS4_FORWARD(887DF418, fn_887DD610)
 TS4_FORWARD(887EA550, ts4_loop_get_u32_off1c_887EA320)
 TS4_FORWARD(887F3430, fn_887F20D0)
 TS4_FORWARD(887F4C98, ts4_type_register_887F48B8)
-TS4_FORWARD(887F7670, fn_887F7588)
+TS4_FORWARD(887F7670, ts4_sim_items_tick_887F7588)
 TS4_FORWARD(88803D58, ts4_call_seq_lbl_880E3588_88803A30)
 TS4_FORWARD(88807BC8, fn_88807AF8)
 TS4_FORWARD(88807BD0, fn_88807AF8)
