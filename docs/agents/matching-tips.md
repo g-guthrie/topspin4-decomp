@@ -1903,3 +1903,72 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   C++). 8816B1C8/88890E30 need a `clrrwi r3` copy of the lbl_88D45B38 registry; identity inlines and casts don't produce it.
   88662510/88662458: only the order of `lwz t->ctx` vs the INT_MAX `lis` differs. 883C9BD8/883C9F98 and 885928D8/88592878:
   no new progress.
+
+## agAG (b174): medium sweep, 40-70 instructions (14 matches, 1 draft)
+- **The b174 report.json has no per-function fuzzy_match_percent for unmatched code** (only sections and matched functions carry it),
+  so the 85-100 band cannot be built from it. This sweep took unmatched `fn_` entries of 40-70 instructions, skipped drafts and
+  addresses already in this file, and ranked leaf integer functions first (no bl/bctrl/float ops). The previous agent's c1.py printed only the
+  last 3000 characters of the diff, so its `grep -c '^\*'` undercounts when the diff is early in the function. It now prints 20000. Check with `head -2` for `MATCH`.
+- Matched (/Oc unless noted): 88165650 (strcpy+3x strcat intrinsics), 881ABC10 (u32 find, 4x unrolled), 881AFD98/881AFE60
+  (list merge, inline _Splice), 882348F0/8816BA20 (string compare), 88258910/88269028 (insertion sort), 882694D0 (clears two vectors),
+  88280428 (vector resize), 88289770 (/O1, texture fetch dims), 883159F0 (bitmap free run), 8837D2D8 (plane rows), 88421120 (stricmp).
+- **std::string compare against a C string**: `n2 = strlen(p); n1 = last - first; r = memcmp(first, p, *min_ref(&n2, &n1));` with
+  `min_ref` returning `const int *` (`*a < *b ? a : b`). That gives the two stack slots and the `subi r9,r1,0x10` pick. Then
+  `if (r) return r; if (n1 < n2) return -1; return n2 < n1;`. The `== 0` wrapper (8816BA20) takes `const char *const *`.
+- **Dinkumware _Insertion_sort on 8-byte pairs** (88258910 desc, 88269028 asc): the else branch takes its **own** `Pair v = *next;`
+  (the target has a second `ld` and stack spill) and declares `next1 = next` there. The if branch is `copy_backward(first, next, next + 1)`
+  with a counted `*--dest = *--last` loop.
+- **std::list merge without a size field** (881AFD98/881AFE60): write `_Splice(where, first, last)` inline with the `where != last` guard.
+  The first branch is `if (first2->key < first1->key) { mid = first2->next; splice; first2 = mid; } else first1 = first1->next;`.
+  The two-key sibling 881AFCA0 is open: the target keeps two separate `subfc/eqv` tails for the major and minor compares, and the six pred forms tried all merge them.
+- **vector erase(begin, end) or resize-shrink of POD** keeps the counted copy loop even though the count is always zero:
+  `v->last = copy(v->last, v->last, v->first + n)` (the `subf r8,r11,r11`). Grep `subf r8, r11, r11` to find more. 88158BB8 and 88158C70
+  are already in cx21_core_b.c.
+- A loop whose first test is `count > 0` folded in (`cmpwi r6,0` before the bounds tests, with no separate branch) is `while (run < count && ...)`,
+  where run starts at 0. Declaration order decides the order of the `li` and `srawi` at the top (883159F0: `run` first).
+- Unsigned (`cmpwi` on `and`) vs int: a bit-mask local tested with `cmpwi` is `int` (883159F0).
+- Args narrowed with `extsh` at entry, followed by dead `mr` copies, are `int` parameters stored through `(short)` casts. `*cursor = *cursor + p->pitch`
+  gives the `add r10, pitch, cursor` operand order (8837D2D8).
+- Open:
+  - 88150940/881509F8/882736E8 (64-bit key hash `<=`/`==`): all the code matches, but the two operands' register sets are mirrored. Statement order, locals and `!`/swapped forms have no effect.
+  - 88168F08 (char) and 881AC348 (u16) std::search: the target keeps first1 in r3. 38 off.
+  - 88214C20 (char find) and 88165170 (u32 find): count-switch tail compare order. Draft drafts/me_88165170_nearmiss.c is 3 off. 881ABC10 has the same source and matches.
+  - 88286638/88286700 (64-bit bitfield struct copy): the target reloads src and keeps `mr` copies of each stored dword.
+  - 88322D80 (unlink three lists, relink into owner+0x2e8): 33 off. `head = q ? &o->queue.head : 0` (test on q, add from o) fixed the tail.
+    What is left is the register order of the shared 0/-1 constants and a `clrrwi` copy of `head->next`.
+  - 884021E0 (three flag-array scans into an out byte): the target keeps a shared zero in r6 (`mr` copies for every counter). /O1 /Os /Ox have no effect.
+  - 88421208 (strnicmp): only the prologue `mr r7,r4` and the increment order differ.
+  - 8843B300 (ptr-array remove plus release): the target hoists the count in the find loop but reloads it for the remove.
+
+## agAH (b174): small sweep, 15-40 instructions (20 matches, 1 draft)
+- Matched (/Oc unless noted): 887F7248, 887F7368, 887FB120, 88941E20, 882890A8 (/Os), 883D4890 (/O1), 88472AF0, 884D4BD8,
+  884BDD10, 884CDCC8, 88517488, 8854D9B0, 88592188 (/O1), 8863A780, 886ED8E0, 886ED7F0, 88942370, 88954A38, 8899CD48, 8831F560.
+- **Try /Os when a constant multiply or divide stays as `mulli`/`divw` with the constant in a register.** 882890A8 (EDRAM tile count,
+  `(w + 79) / 80 * 80`) matches only on /Os; /Oc strength-reduces the `* 80` into shifts and adds.
+- **Vector-of-children loops with index-first `lwzx`:** an inline `vsize(&o->v)` on an embedded `{begin, end}` in the count, then
+  `Item *it = o->v.begin[i]` in the body (887F7248, 887F7368, 887FB120). An explicit `Vec *v` local gives the same 1-off as a plain chain.
+- **`stbu` with offsets 7/8 and stride 8 is a struct-array field access, not a byte walk.** Read the stride off the update form: 884BDD10
+  byte-swaps the u16 at +2 of 8-byte entries, then a run of u16 words. Use `Entry { unsigned char b[8]; }` and `t->e[i].b[2]`; byte-pointer
+  loops never give the `subi base,1` start.
+- **Self-relative `{first, count}` tables** (8863A780, 88942370): inline `begin`/`end` as `Ent *e = 0; if (t->first != -1) e = ...; return e;`
+  (`li 0` preload, not a ternary), and write the loop test `end != e` when the target compares `cmplw end, e`. A found-result
+  local (`r = e; break;`) gives the `li r3,0` at the top. With a global table, call each inline on `&g->tab` directly; a `Tab *` local changes the layout.
+- **A redundant arm in a hash-to-enum chain** (886ED8E0): `r = 1; ... else if (h == B) r = 1;` is what makes the target's separate
+  `li r3,1; blr` block for B. A switch or a merged `||` drops it.
+- **Tail recursion folded into a loop with a jump into the middle** (88517488, bisection): the inline search must compute `mid` before the loop
+  and again at the bottom of each pass. Each branch then gets its own `add` and jumps to the `srawi`.
+- **Vtable-then-temporary order** (884CDCC8): `n->vt->set(n, make_temp(&v, src))` written inline loads the vtable before the temporary call in C.
+  Hoisting `vt` into a local adds frame.
+- `unsigned char ok = 0 != t->owner; if (!ok) return ok;` gives `addi; subic; subfe; clrlwi; cmplwi` for a bool guard (88941E20).
+- An inline owner accessor (`owner_of(t->items[i])`) loads the item straight into r4 for `f(item->owner, item)` tail calls (883D4890,
+  index sibling of 883D4900).
+- Hoisting both counts into locals turns nested copy loops into `subic.`/`mtctr` countdowns (8899CD48).
+- Draft: drafts/me_8848E4F8_nearmiss.c (1 off: the second of two reverse loops wants index-first lwzx; locals, embedded arrays, inline
+  accessors, block counters and C++ all give base-first).
+- Unsolved: 88924250 and 881518D0 (binary searches, 6 and 16 off, register naming only: the target's `addze` writes a fresh register);
+  88922F78 (5-hash type check plus self-relative u16, r10/r11 swapped); 8827DBF0 (vcall dispatch until handled, 9 off: params
+  get callee-saved registers one lower than the target); 881FB550 (the target keeps an unsimplified `subfe` bool on the first list test);
+  88748150 (C++ member loop, begin/end land in r4/r5); 888ADC60 (self-relative float update, the target reloads every field);
+  884D9110 (format string at 0x88084480 has no symbol); 88944980 (fn_889426C8 gets an unset r4, probably an unused float slot).
+- Family: 8826C388, 8826C400, 8826C478, 8826C4F0, 8826CC60, 8826CCD8, 8826D010, 8826D7F0, 8826D868, 8826D8E0 and 8826D958 share one
+  template (self-relative table find through a key getter, with 0 kept in r24 and t in r29, frame 0xa0). C forms are 22+ off on /Oc, /O1 and LTCG.
