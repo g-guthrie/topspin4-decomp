@@ -2220,3 +2220,62 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - (agAH r4) When a null test at the call site is followed by passing the same expression to a helper, the compiler emits a clrrwi copy; keep both uses of the expression (884812E0).
 - (agAH r4) Writing the element expression twice instead of caching it in a local flips the lwzx operand order; pick whichever form the target shows (88408D58).
 - (agAH r4) Null-checked base casts inside a loop (`cmplwi; addi r4; bne; li r4,0` per call): write each as a small __forceinline helper with `if (o) return &p->field; return 0;`. A ternary at the call site, or `l = 0; if (o) l = ...`, is if-converted and hoisted out of the loop (884AA078).
+
+## agAJ (b179): reserve/insert/uninit-copy/pool templates, medium sweep (55 matches, 5 drafts)
+- Matched (/Oc): 886CE860, 88870AC0, 88737A60, 8895B200, 8825FB30, 88255F90, 8825CC20, 88224330, 88224410, 8815CAD0,
+  8815D230, 882642E0, 88282A90, 881533E0, 881A7B98, 881AE298, 881AE450, 88278AC8, 88278BC0, 882828A0, 88163AD8,
+  881B29E8, 8827C2E8, 88215BF8, 881FB710, 88216198, 8827ABC0, 88163238, 88162E48, 881797D0, 881798E0, 881799F0,
+  88215F60, 88162F40, 881A6D80, 88265380, 8822A3D8, 886CF940, 881705B0, 8815DCE0, 8815DDC0, 8815DEA0, 8815DB40,
+  8815DC10, 88159870, 8815D160, 88264F28, 881A8AB0, 8817F8E8, 886CBA80, 8890EBB8, 886DFC80, 88166650, 881665D0, 8827C428.
+- **textdis.pkl branch targets:** the `-> 0x...` field in work/army/VX1/textdis.pkl is not a usable address. Compute the
+  target from the relative offset instead: `addr = func + 4*i + rel`. agAJ/dis.py and agAJ/scan.py do this (`bl 88562DC0`
+  regexes then work). With the raw field, callers of memmove looked like one function.
+- **objdiff does compare relocation names when the instructions match:** a callee declared `fn_88216528` where the symbol is
+  `ts4_e5c_ucopy_88216528` fails with `reloc +0x..: candidate fn_.. vs target ts4_..`. Take every callee and label name
+  from config/54540859/symbols.txt by address (the reserve generators do this). The float constant at 0x8814B440 must be
+  spelled `lbl_8814B440` (the b179 analysis names it that way, not g_ts4_event_value).
+- **vector reserve(n) family (24 matches).** Template is d1_big1_vector_reserve_family.c with a runtime count:
+  `first = v->first; if ((unsigned)(v->end - first) < n) { last = v->last; size = last - first; if (first != 0) {
+  buffer = n != 0 ? alloc(&v->end, n) : 0; src/dest copy loop; first = buffer; free(v->first); } else first = alloc..;
+  v->first = first; v->last = first + size; v->end = first + n; }`. Variants, each confirmed:
+  - element copy: `*dest = *src` for POD (word loop, `ldu/stdu` for `unsigned __int64` members, two `lhz/sth` for a
+    u16 pair); member-wise `dest->a = src->a; dest->b = src->b;` for __vector4 pairs (struct assignment gives ld/std);
+    a copy-ctor call `if (dest) copy(dest, src)`; `ts4_assign_formatted_text(dest, src->p)` for 12-byte text strings.
+  - an uninitialized-copy range call `ucopy(first, last, buffer)` plus a destroy step that re-reads `v->first, v->last`:
+    either a destroy range call or an inline loop calling the element dtor (`&first->body` when the call takes +K).
+    `first = buffer;` goes before or after the destroy step; try both (agAJ/gen3.py tries all four).
+  - memmove POD form: `size = v->last - v->first` (re-read, not `last - first`) keeps the memmove length as its own subf.
+  - allocator through the heap (`fn_88613570(lbl_88D45B38 ? fn_8860D250(lbl_88D45B38) : 0, n*sz, align, &v->end)`):
+    allocate and reserve must both be `__forceinline` (two expansions), see 886CBA80/8890EBB8/886DFC80.
+  Generators: agAJ/gen_res.py (POD/call copy), agAJ/gen3.py (ucopy + destroy), agAJ/mmres.py (memmove).
+- **Dinkumware vector::insert(where, val)** (88224330/88224410): construct at end or `construct(last, last-1); ++last;
+  copy_backward(where, last-2, last-1); assign(where, &tmp)`, else `_Insert_n(v, where, val, 1)` (val before count).
+- **Inline-buffer vector operator= (8825FB30, 88255F90, 8825CC20):** grow into the buffer, shrink copy, or split copy then
+  append; write the size test as `size(s) >= n` for the cmplw operand order.
+- **SGI node pool (lbl_88D49310 free lists, lock lbl_88D49350, lock acquire fn_8815E358):** declare the lock
+  `extern volatile int` (keeps the unlock store last and the 0 in a saved register). String dtor: null test inside a
+  `deallocate(p, n)` inline so `end - first` is computed before the test. allocate (8815D160): one result variable for
+  both the pop and the `_S_refill` path. Range destroyers 8815DB40..8815DEA0 differ only in layout.
+- **uninitialized_copy / fill_n of records with strings (8815CAD0, 8815D230, 88166650, 881665D0, 8827C428):** the read
+  order inside the string copy picks the induction base (`last = src->last; first = src->first;` gave first+0x14).
+  fill_n wants a separate iterator local (`Entry *p = dest; for (; count != 0; --count, ++p) ...; return p;`), which fixes
+  the parameter `mr` order.
+- A by-value handle tested by an inline (8895B200): two function-scope `Handle` locals (frame 0x90); a scoped local
+  shares the slot and gives 0x80.
+- `resize(v, n, val)` written as an inline that takes the default by value fixed the zero-store placement (886CE860);
+  an inline that owns an uninitialised default `T val;` gives the `addi r6,r1,0x50` with no store (88870AC0).
+- Drafts: me_8815CFA8 (3 off) and me_8815D388 (2 off): second string's zero stores scheduled end-first;
+  me_8827FFB8 (2 off): +0x804/+0x808 zero-store order (a `char *` clear helper and a vector-init inline already give
+  the reload of `first`); me_8815C0B0 and me_8815C708 (1 off): `add.` operand order of `size + max(size, n)`; C++ refs,
+  a size() inline and statement splits all give max first. Siblings 88279448/88283C60 have the same shape.
+- Open, more than 3 off:
+  - 8822AD70/8822BE48/8822D1D8 (constant reserve) and 8822C1C8/8825CB20 (runtime reserve) with the 886131F0/885651F8 free:
+    8822C1C8 is 6 off (register numbers of the final `p + size`/`p + n` adds); the constant ones keep the `v->alloc`
+    load hoisted above the null test (21 off).
+  - 88286F38, 881FB710-style ctors that zero the vector then reserve: ours folds the reserve because it knows first == 0;
+    the target reloads first (8827FFB8 shows a `char *` store in between blocks the forwarding).
+  - 8826B078/8826B188 (pool of n 0xAC-byte elements + slot vector): 18 off, only the pool/n callee-saved swap.
+  - 887DA038 (16 off): srawi. size test vs our clrrwi; 886106D0/88610620 (handle derive vcall): svc kept in r11 by the target.
+  - 88166C58/88161F58/88166938 (vector copy ctor): 4 off, `mr r29,r3` scheduled before the first load.
+  - 88233DA0 (uninit copy, six words then two strings): the target picks the +0x18 base; 10 off.
+  - 88178378 (two vector clears + frees): the 96-byte struct copy becomes a memcpy call; member loops give ldx.

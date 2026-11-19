@@ -33376,3 +33376,6 @@ fn_886DFC80 = .text:0x886DFC80; // type:function size:0x104
 fn_88264F28 = .text:0x88264F28; // type:function size:0xE8
 fn_8847B028 = .text:0x8847B028; // type:function size:0xBC
 fn_884EBC28 = .text:0x884EBC28; // type:function size:0x114
+fn_8827C428 = .text:0x8827C428; // type:function size:0x6C
+fn_881665D0 = .text:0x881665D0; // type:function size:0x7C
+fn_88166650 = .text:0x88166650; // type:function size:0xD8

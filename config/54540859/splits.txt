@@ -53605,3 +53605,15 @@ src/xbox360/me_ts4_viewer_get_shared_words_8847B028.c:
 src/xbox360/me_ts4_write_named_packet_884EBC28.c:
 	.pdata      start:0x8811B518 end:0x8811B520
 	.text       start:0x884EBC28 end:0x884EBD3C
+
+src/xbox360/me_ts4_text_rec24_uninit_copy_8827C428.c:
+	.pdata      start:0x8810F680 end:0x8810F688
+	.text       start:0x8827C428 end:0x8827C494
+
+src/xbox360/me_ts4_text_rec32_uninit_copy_881665D0.c:
+	.pdata      start:0x88107AE0 end:0x88107AE8
+	.text       start:0x881665D0 end:0x8816664C
+
+src/xbox360/me_ts4_text_record132_uninit_copy_88166650.c:
+	.pdata      start:0x88107AE8 end:0x88107AF0
+	.text       start:0x88166650 end:0x88166728

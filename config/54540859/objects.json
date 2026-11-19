@@ -13076,6 +13076,18 @@
       "src/xbox360/me_ts4_write_named_packet_884EBC28.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_write_named_packet_884EBC28.c"
+      },
+      "src/xbox360/me_ts4_text_rec24_uninit_copy_8827C428.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_text_rec24_uninit_copy_8827C428.c"
+      },
+      "src/xbox360/me_ts4_text_rec32_uninit_copy_881665D0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_text_rec32_uninit_copy_881665D0.c"
+      },
+      "src/xbox360/me_ts4_text_record132_uninit_copy_88166650.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_text_record132_uninit_copy_88166650.c"
       }
     }
   }
