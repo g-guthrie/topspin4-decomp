@@ -2954,3 +2954,11 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - 888D7230/888D72F0 (twins) stay 2 off: the target loads o->cur (0x130) before *id. Reordering, extra locals, LTCG and helpers didn't fix it. Drafts are in src/xbox360/drafts/.
 - If a function starts with `addic. rX,r3,OFF; beqlr`, it is a null-checked base-pointer conversion. Neither an MI static_cast form nor a C ternary reproduced it for 887F00A8 (54 off).
 - Pure register swaps (8886EC30, 88676898) did not respond to operand padding, LTCG or .cpp. Drop them quickly.
+
+## agBE
+- A pointer field declared `int` and cast at use gives `cmpwi` instead of `cmplwi` (8876CF38).
+- A helper that takes the ctx pointer, e.g. `is_new(Ctx *c, int id)`, makes MSVC reload `c->reg` at each use (88713C60).
+- In an inline selector helper (`if (!side) return ...>>7 &1; return ...>>6 &1;`), the branch order decides the beq/bne and extrwi order (88778F20).
+- Ctor store order: putting the count read after the +0x94 store in source helps. A base body doing `f20 = 0` puts that store before the vt store. Declaring the Range as `hi, lo, cur` matches the target's store order (886E9BC8, still 3 off).
+- Open problem: a self-relative array's end() reloads `rel` in the target, but MSVC CSEs it in every form tried (8870E8F0, 8870EA08, 886EFB28).
+- 88774260 (a register-allocation swap and a ternary branch flip) needs `fn_8876FBD0` as its base call; it was not finished.
