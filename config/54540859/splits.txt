@@ -51569,3 +51569,51 @@ src/xbox360/me_ts4_take_from_pool_883EEFA0.c:
 
 src/xbox360/me_ts4_zero_float_blocks8_884FD970.c:
 	.text       start:0x884FD970 end:0x884FD9B0
+
+src/xbox360/me_ts4_add_named_entry_883D4EB0.c:
+	.pdata      start:0x88114DD0 end:0x88114DD8
+	.text       start:0x883D4EB0 end:0x883D5020
+
+src/xbox360/me_ts4_add_to_named_set_883DFE20.c:
+	.pdata      start:0x88115068 end:0x88115070
+	.text       start:0x883DFE20 end:0x883DFF8C
+
+src/xbox360/me_ts4_copy_image_levels_882B1548.c:
+	.pdata      start:0x881109D0 end:0x881109D8
+	.text       start:0x882B1548 end:0x882B16D8
+
+src/xbox360/me_ts4_copy_image_levels_b_882CE298.c:
+	.pdata      start:0x88110F78 end:0x88110F80
+	.text       start:0x882CE298 end:0x882CE428
+
+src/xbox360/me_ts4_merge_named_tree_883DFF90.c:
+	.pdata      start:0x88115070 end:0x88115078
+	.text       start:0x883DFF90 end:0x883E011C
+
+src/xbox360/me_ts4_probe_voice_flags_883F75E8.c:
+	.pdata      start:0x88115A60 end:0x88115A68
+	.text       start:0x883F75E8 end:0x883F7784
+
+src/xbox360/me_ts4_read_name_table_883E7C98.c:
+	.pdata      start:0x88115498 end:0x881154A0
+	.text       start:0x883E7C98 end:0x883E7E08
+
+src/xbox360/me_ts4_release_item_883DBEF8.c:
+	.pdata      start:0x88114F08 end:0x88114F10
+	.text       start:0x883DBEF8 end:0x883DC070
+
+src/xbox360/me_ts4_release_items_883DDEB0.c:
+	.pdata      start:0x88114FB8 end:0x88114FC0
+	.text       start:0x883DDEB0 end:0x883DE024
+
+src/xbox360/me_ts4_ring_set_paused_883FFCF0.c:
+	.pdata      start:0x88115E18 end:0x88115E20
+	.text       start:0x883FFCF0 end:0x883FFE84
+
+src/xbox360/me_ts4_start_flagged_sounds_owner_883F0308.c:
+	.pdata      start:0x88115870 end:0x88115878
+	.text       start:0x883F0308 end:0x883F047C
+
+src/xbox360/me_ts4_write_sizes_883FA0A0.c:
+	.pdata      start:0x88115B30 end:0x88115B38
+	.text       start:0x883FA0A0 end:0x883FA240

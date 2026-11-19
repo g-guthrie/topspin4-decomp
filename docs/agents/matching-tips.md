@@ -1495,3 +1495,33 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - New near-miss draft: 88614900 (1 off, lwzx order). Open, 3 off: 884213B0/88421400 (per-character case helper; the `mr`
   lands before the test), 88516E38 (fmuls operand order), and 885E3968/885E39B0/885E60F0 (an assert-style range check
   with the failure branch placed first).
+
+### agX (2026-11-19, b159): /O1 cr0 queue (agT todo3), 90-106 instructions (12 matches)
+- 12 /O1 plain-route matches: 883DFE20, 883D4EB0, 883E7C98, 883DDEB0, 883F0308, 883DBEF8, 883DFF90, 882B1548, 882CE298
+  (sibling of 882B1548 at 1.00), 883FFCF0, 883F75E8 and 883FA0A0. 883DFE20 is plain only; check the others' headers for LTCG. None uses volatile.
+- **Inline ctor stores out of order: route one store through a pointer local** (agO trick). 883D4EB0: `{ int *pf = &e->fc; *pf = 0; }`
+  inside a static ctor fixed the `li r9,0` vs vtable `addi` order. 883DFE20: `{ T **o = &it->owner; *o = t; }` fixed an owner store
+  that was scheduled after the following list load. In the same function, the embedded list's self-link
+  `{ Link *l = &s->list; l->next = l; l->prev = l; }` written last put the stores at the end, and `1.0f`/`0.0f` literals were needed (agV rule).
+- **A signed ring-buffer wrap with a sign branch** (`add.; srawi; addze; bge; subfic; slwi; add` / `slwi; subf`, 883FFCF0): write a helper
+  `x < 0 ? x + (1 - x / 4) * 4 : x - x / 4 * 4`. `% 4` gives the branch-free form, and the `>= 0` order swaps the blocks.
+- **A duplicated probe block whose locals share stack slots** (883F75E8): write it as a macro with direct `return r;`. A static helper,
+  even `__forceinline`, adds a merged result test after each use.
+- A 64-bit position passed as two words via `std; lwz; lwz` (883E5900): use a union `{ u64 v; float f; int w[2]; }` and pass `w[0], w[1]`.
+  Two such locals give the two stack slots the target uses (0x58 and 0x60).
+- Optional object call with `clrrwi r3,r11,0` (883FA0A0): `if (t->ext) { r = t->ext->vt->write(t->ext, w); }`. A `W *e = t->ext` local
+  gives a plain `lwz r3`, and an accessor helper is still 1 off.
+- `memcmp(p, q, 0x400)` declared as `int memcmp(const void *, const void *, unsigned long)` is inlined to the byte loop with `cmpw` (882B1548).
+  `unsigned long` keeps the host syntax check quiet. Declaring `Img *b = p->b, *a = p->a;` (b first) fixed an `xor` operand order.
+- A copy loop that the target still guards with `cmplwi count,0` after an early `if (!count) return` (882AF4A8): move the loop into a
+  static helper. MSVC then does not carry the known count into it.
+- A word flag tested with `extrwi.` (883DBEF8) matched with the 883CC388 form `(unsigned char)((x >> n) & 1)`. The halfword +0x64 flag (bit 0x20)
+  in 883CC668, 883C7E10, 883C9090, 883C9208, 883C8340/84C0/8640/87C0/8950, 883CC7D0, 883C9380, 883C76F0, 883C8180, 883C7F88, 883CA2A0 and 883C8D58
+  is the open 883C7278 class, and I skipped those functions.
+- Skipped, not plain-route: 883E7028 calls fn_883E6D98 with no argument setup and relies on fn_883E5F30 keeping r3/r4 (LTCG register
+  knowledge). 882917C0/88291960 are D3D ring code (KeGetCurrentProcessType). 882D0F38 returns 0x8876086C (the false-relocation group).
+- Near misses (drafts): 882AF4A8 (1 off: `add r31,r26,r31` operand order on the loop pointer), 883D3738 (2 off: lwzx order, the 883C75D0 class),
+  883E5900 (2 off: 64-bit `x += d` operand order, on both routes).
+- Open, more than 3 off: 883D38C8 (handle builder; registers r9/r10 swapped for the owner select, and the index local kept in r31 across a
+  conditional call), 883DF1A0 (voice steal; a u64 stamp is copied twice through the stack, `std; lwz; std; lwz`, and copy-propagation folds
+  every struct-copy form I tried; the final `if (r) return r; return 0;` also folds).
