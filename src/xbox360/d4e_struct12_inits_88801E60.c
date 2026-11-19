@@ -16,7 +16,7 @@ extern void fn_88627EC0(void *self, Ts4Id12 id);
 extern void fn_88628D48(void *self, Ts4Id12 id);
 extern char *fn_88923530(u32 c, Ts4Id12 id, u32 key);
 extern void fn_88801428(u32 flag);
-extern void fn_888866E8(char *dst, u32 value);
+extern void ts4_arr8_init_888866E8(char *dst, u32 value);
 extern void fn_88888F90(void *self, char *record);
 extern void *lbl_88D459F8;
 
@@ -37,7 +37,7 @@ static void ts4_call_seq_fn_88627EC0_88888598(char *self, Ts4Id12 id)
     char *record;
     fn_88627EC0(self, id);
     record = fn_88923530(id.c, id, 0xA262959B);
-    fn_888866E8(self + 0x1c, *(u32 *)(record + 0x1c));
+    ts4_arr8_init_888866E8(self + 0x1c, *(u32 *)(record + 0x1c));
     *(u8 *)(self + 0x30) = 0;
 }
 

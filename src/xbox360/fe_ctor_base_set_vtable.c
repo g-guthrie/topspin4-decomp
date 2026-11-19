@@ -2,9 +2,9 @@
 typedef struct Ts4Object { void *vtable; } Ts4Object;
 extern void fn_88617D88(Ts4Object *object);
 extern void fn_8841B550(Ts4Object *object);
-extern void fn_88723B58(Ts4Object *object);
+extern void ts4_ctor_hashed_vec_singleton_88723B58(Ts4Object *object);
 extern void fn_88723BE0(Ts4Object *object);
-extern void fn_88723C70(Ts4Object *object);
+extern void ts4_ctor_hashed_vec_owner_88723C70(Ts4Object *object);
 extern void fn_8872CD50(Ts4Object *object);
 extern void fn_8873C048(Ts4Object *object);
 extern void fn_887EC668(Ts4Object *object);
@@ -61,9 +61,9 @@ TS4_CTOR(ts4_ctor_set_vtable_8861DB00, fn_88617D88, lbl_880F8D50) /* Swing_DLL.x
 TS4_CTOR(ts4_ctor_set_vtable_886F8CE0, fn_88617D88, lbl_880F3144) /* Swing_DLL.xex 0x886F8CE0 */
 TS4_CTOR(ts4_ctor_set_vtable_88702490, fn_88617D88, lbl_880F33E0) /* Swing_DLL.xex 0x88702490 */
 TS4_CTOR(ts4_ctor_set_vtable_88710478, fn_88617D88, lbl_880F28EC) /* Swing_DLL.xex 0x88710478 */
-TS4_CTOR(ts4_ctor_set_vtable_8872B9A8, fn_88723B58, lbl_880F2E18) /* Swing_DLL.xex 0x8872B9A8 */
+TS4_CTOR(ts4_ctor_set_vtable_8872B9A8, ts4_ctor_hashed_vec_singleton_88723B58, lbl_880F2E18) /* Swing_DLL.xex 0x8872B9A8 */
 TS4_CTOR(ts4_ctor_set_vtable_8872B9E8, fn_88723BE0, lbl_880F2DA8) /* Swing_DLL.xex 0x8872B9E8 */
-TS4_CTOR(ts4_ctor_set_vtable_8872BA28, fn_88723C70, lbl_880F2D38) /* Swing_DLL.xex 0x8872BA28 */
+TS4_CTOR(ts4_ctor_set_vtable_8872BA28, ts4_ctor_hashed_vec_owner_88723C70, lbl_880F2D38) /* Swing_DLL.xex 0x8872BA28 */
 TS4_CTOR(ts4_ctor_set_vtable_88732100, fn_8872CD50, lbl_880F3018) /* Swing_DLL.xex 0x88732100 */
 TS4_CTOR(ts4_ctor_set_vtable_8874AD88, fn_8873C048, lbl_880F2E88) /* Swing_DLL.xex 0x8874AD88 */
 TS4_CTOR(ts4_ctor_set_vtable_887C7E30, fn_88617D88, lbl_880EA60C) /* Swing_DLL.xex 0x887C7E30 */

@@ -10,13 +10,13 @@ struct Cx18Base1 { u8 pad[0xc]; void *f0c; };
 struct Cx18MObj : Cx18Base0, Cx18Base1 { u8 pad50[0x180 - 0x50]; int id180; };
 extern "C" {
 typedef struct Cx18Mgr { u8 pad0[0x20]; Cx18MObj **begin; Cx18MObj **end; } Cx18Mgr;
-extern u8 fn_88867310(int id);
+extern u8 ts4_pad_signed_in_not_flagged_88867310(int id);
 extern void fn_889254C8(void *obj, int flag);
 
 /* 0x88867D00: when the id is valid, find the object with that id and poke its second base if it holds a member */
 void ts4_mgr_poke_by_id_88867D00(Cx18Mgr *m, int id)
 {
-    if (fn_88867310(id)) {
+    if (ts4_pad_signed_in_not_flagged_88867310(id)) {
         Cx18MObj **e = m->end;
         Cx18MObj **it;
         Cx18MObj *found = 0;

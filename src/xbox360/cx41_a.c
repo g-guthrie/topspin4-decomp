@@ -72,7 +72,7 @@ extern char *fn_88185AE8(char *first, char *last, char *dst);
 extern void ts4_loop_call_seq_u32_off40_881815A8(char *first, char *last);
 extern char *ts4_copy_e5c_88185D08(char *first, char *last, char *dst);
 extern void fn_888EE920(void *p);
-extern void fn_888DF8E8(void *self, u32 f);
+extern void ts4_opt_set_flag_888DF8E8(void *self, u32 f);
 extern char lbl_880DBE94[];
 
 /* 0x888EEB68 */
@@ -119,7 +119,7 @@ void ts4_clear_e5c_vec_888EF4F8(char *self)
     p = ts4_copy_e5c_88185D08(v->end, v->end, v->begin);
     cx41_destroy_e5c(p, v->end);
     v->end = p;
-    fn_888DF8E8(self, 0);
+    ts4_opt_set_flag_888DF8E8(self, 0);
 }
 
 typedef struct Cx41Handle12 { u32 a, b, c; } Cx41Handle12;

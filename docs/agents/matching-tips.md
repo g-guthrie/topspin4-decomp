@@ -2672,3 +2672,49 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   gives the `addi r10,+0x2c; addi r10,4` but the scheduling stays off. Skipped: 8866C988 (fn_8866C8B8 has no source to give LTCG
   the r4 preservation), 888B7360 (tail call with a live cr6), 888C0818/888D9420/888B8F58 (vector or 64-bit float packing),
   88883CD0/888842F0 (XAM/CRT callees).
+
+### agAP (b190) round 3 addendum
+- Inline AVec init at a high offset (0x80): if the inline `avec_init(&s->items, 0)` keeps `v` in r29, write it out as follows. Store begin and end through `s->items`, then use a block-local `AVec *v = &s->items; v->ctx = 0; call(&v->ctx);`. This gives the target's `addi r11,r31,0x80; addi r3,r11,8` (88723C70).
+- A singleton ctor that ends with `lbl_X = s;` after `s->hash = K;`: plain /Oc swaps the last two stores. Write `lbl_X = s; s->hash = K;` and build with LTCG `ctx=[]` (88723B58). The same trick did not fix 88724CC0.
+- atan2 argument order: `lfs f2,0(r31); lfs f1,8(r31)` comes from `fn_88564BF8(v->z, v->x)`. The loads are emitted right to left.
+- For a range splitter whose zero constant lives in its own register, declare `max` first, compute `chunk`, then `off`, and store `end = off + sz` before `off += sz` (886EC7C8).
+- For a C++ struct-returning virtual call followed by an IsNull test (886EF330, 886EF3B8), the target frame is 0x70 and has a dead `li r10,0`. No form I tried reproduced it.
+
+## agAR (b192): gameplay queue lines 101-119 (3 matches, 4 drafts)
+- **A default return value that the target puts in r30 before the first call** (888C70F8: `lis/addi r30` before `bl`; at the
+  end `mr r3,r30`): write `const char *r = DEFAULT; ...; if (k < 6) r = table[k]; return r;`. An early `return table[k]`
+  drops the saved register.
+- An entry loop with a nested guarded table lookup and a default fallback matched first try in plain C (8890DCC8):
+  `if (e->idx >= t->n || (k = t->map[e->idx]) == -1) k = t->def; e->slot = &t->slots[k];`, with `end`, `begin` and the
+  global loaded into locals before the loop.
+- A transform fetch into a 64-byte stack struct, three `scale * t[i]` stores, then `memcpy(out, &m, 0x40)` matched first try (8887A5B8).
+- Two float constants that the target keeps in f31/f30 across three calls (88693FA8): `float hi = K0; float lo = K1;` locals
+  give the right loads, but MSVC loads them straight into f1/f2 and copies back (4 off). Inline helpers and loops do not fix it.
+- **The `li` of a non-zero constant scheduled one store later** (888FA078 `li r11,-1`, 888FD948 `li r8,1`, both after the first
+  zero store) stays 2 off in plain, LTCG and .cpp builds, whatever the store order or field types. These two are the same
+  sub-struct (`{0,0,0,0,0xFFFFF,0}` range init). Drafts are saved.
+- A remove-all over a u32 vector (88879AA8/88879B28, sibling 887ED8C8 at 0.96, 887ECA58 at 0.91) is 2 off: the else-branch
+  increments of `p` and `p+1` come out in the wrong order. Drafts are saved.
+- Self-relative row lookups (888C51D0): write `int *b = &t->rel; row = (Row *)((char *)b + (pl->row * 16 + *b));` to get the
+  target's add order. A hoisted `lfs` then needs a `lo` local, but r9/r10 stay swapped (11 off). Dropped.
+- Dropped: 888C1910 (the target does `neg base` before the float math; every form gives `add` then `neg`, 28 off), 886AD1F0 (the zero
+  stores are interleaved with the float compare, 9 off), 8886FE50/8886FED0 (index-0 self element plus a clrrwi array
+  lookup, 20+ off), 888C15A0 (64-bit bit-iterator copies), 886A80F0/886DC610/888E6C78 (not attempted).
+
+### agAR round 2 (lines 120-133: 7 matches, plus 2 earlier drafts promoted)
+- **Vector remove-if loops where the target bumps `p+1` before `p`** (88879AA8, 88879B28, 887ECA58, 887ED8C8): keep `n = p + 1`
+  as its own induction variable inside a guarded do-while, and pass both pointers to an inline erase on `&o->v`:
+  `p = o->v.begin; if (p != o->v.end) { n = p + 1; do { if (hit) erase_at(&o->v, p, n); else { n++; p++; } } while (p != o->v.end); }`
+  with `erase_at(v,p,n) { if (n != v->end) fn_88562DC0(p, n, (char*)v->end - (char*)n); v->end--; }`. A separate `Vec *v`
+  local swaps r28/r29. 88933D58 (the vec at +0 and an erase followed by a deleting-dtor vcall) is still 30 off: the target reloads `end`.
+- **A field reload after an unrelated store** (8887CA38: `lwz r3,0x10(r3)` again after `stw 0x58(r3)`): write that store
+  through a pointer local, `{ u32 *h = &o->hash; *h = K; }`. This is the same trick as agAQ's dead-store rule.
+- **Bounds-checked element access with `clrrwi` copies** (888C99E0) matched first try with `size()`/`at()` inlines per vector:
+  `if (i < svec_size(&o->v)) (*svec_at(&o->v, i))->x = 0;`.
+- **Vtable slot loaded before the argument `li`s** (888CE028): a C-struct vtable call schedules the `lwz` after the
+  args (4 off in C and .cpp builds). A real C++ class with `virtual` methods in a .cpp file matches. The C version had also hidden a wrong
+  callee: base-estimated callee addresses can be off by one function, so check the reloc name the checker prints.
+- Open: 888C4160 (pop-front loop matches; LTCG gets 4 off on r8/r11 in the trailing three-float store, plain /Oc adds an
+  `fmr`), 888D82E0 (rel-table binary search; the target keeps t/rel in r30/r31, 34 off in every form). Skipped:
+  888D6608 (callee keeps r4 live, LTCG without source), 888D6A30, 888DA428, 888DC298, 88916F48 (vector), 887F8710, 88879098/
+  888791E8 (string format), 8887EB10, 888C3198.

@@ -14288,6 +14288,54 @@
       "src/xbox360/me_ts4_window_and_range_contains_8890F008.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_window_and_range_contains_8890F008.c"
+      },
+      "src/xbox360/me_ts4_arr8_init_888866E8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_arr8_init_888866E8.c"
+      },
+      "src/xbox360/me_ts4_big_owner_dtor_887EE430.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_big_owner_dtor_887EE430.c"
+      },
+      "src/xbox360/me_ts4_ctor_hashed_vec_owner_88723C70.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ctor_hashed_vec_owner_88723C70.c"
+      },
+      "src/xbox360/me_ts4_ctor_hashed_vec_singleton_88723B58.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ctor_hashed_vec_singleton_88723B58.c"
+      },
+      "src/xbox360/me_ts4_ev_dispatch_kind_88879280.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ev_dispatch_kind_88879280.c"
+      },
+      "src/xbox360/me_ts4_hash_obj_ctor_888B0FF8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_hash_obj_ctor_888B0FF8.c"
+      },
+      "src/xbox360/me_ts4_kind_name_888C70F8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_kind_name_888C70F8.c"
+      },
+      "src/xbox360/me_ts4_opt_set_flag_888DF8E8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_opt_set_flag_888DF8E8.c"
+      },
+      "src/xbox360/me_ts4_pad_signed_in_not_flagged_88867310.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_pad_signed_in_not_flagged_88867310.c"
+      },
+      "src/xbox360/me_ts4_reset_obj_888F4E70.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_reset_obj_888F4E70.c"
+      },
+      "src/xbox360/me_ts4_split_range_aligned64_886EC7C8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_split_range_aligned64_886EC7C8.c"
+      },
+      "src/xbox360/me_ts4_vec_heading_886F2F38.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_vec_heading_886F2F38.c"
       }
     }
   }

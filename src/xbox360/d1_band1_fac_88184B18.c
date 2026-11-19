@@ -24,7 +24,7 @@ extern void *lbl_880DC680[];
 extern void *fn_888B9410(void *self);
 extern void *fn_888AF5C0(void *self);
 extern void *fn_888B1230(void *self);
-extern void *fn_888B0FF8(void *self);
+extern void *ts4_hash_obj_ctor_888B0FF8(void *self);
 extern void *fn_888B0CA8(void *self);
 
 void *ts4_create_object_88188DE0(void)
