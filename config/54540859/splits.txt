@@ -51013,3 +51013,23 @@ src/xbox360/me_ts4_vsnprintf_hr_882C74C8.c:
 src/xbox360/me_ts4_write_elements_883FEDE8.c:
 	.pdata      start:0x88115D50 end:0x88115D58
 	.text       start:0x883FEDE8 end:0x883FEE8C
+
+src/xbox360/me_ts4_rewind_groups_883F1640.cpp:
+	.pdata      start:0x881158B8 end:0x881158C0
+	.text       start:0x883F1640 end:0x883F17F4
+
+src/xbox360/me_ts4_set_gain_exp_883DF888.c:
+	.pdata      start:0x88115030 end:0x88115038
+	.text       start:0x883DF888 end:0x883DF940
+
+src/xbox360/me_ts4_set_position_883D03C8.c:
+	.pdata      start:0x88114BD0 end:0x88114BD8
+	.text       start:0x883D03C8 end:0x883D0580
+
+src/xbox360/me_ts4_tick_fade_delay_883CC1F0.cpp:
+	.pdata      start:0x88114AF8 end:0x88114B00
+	.text       start:0x883CC1F0 end:0x883CC388
+
+src/xbox360/me_ts4_value_condition_883FCE80.cpp:
+	.pdata      start:0x88115C80 end:0x88115C88
+	.text       start:0x883FCE80 end:0x883FD014

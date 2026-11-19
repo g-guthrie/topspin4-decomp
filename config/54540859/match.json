@@ -2748,6 +2748,21 @@
     ],
     "src/xbox360/me_ts4_write_elements_883FEDE8.c": [
       "/O1"
+    ],
+    "src/xbox360/me_ts4_rewind_groups_883F1640.cpp": [
+      "/O1"
+    ],
+    "src/xbox360/me_ts4_set_gain_exp_883DF888.c": [
+      "/O1"
+    ],
+    "src/xbox360/me_ts4_set_position_883D03C8.c": [
+      "/O1"
+    ],
+    "src/xbox360/me_ts4_tick_fade_delay_883CC1F0.cpp": [
+      "/O1"
+    ],
+    "src/xbox360/me_ts4_value_condition_883FCE80.cpp": [
+      "/O1"
     ]
   },
   "jeff_version": "0.3.5 with patches/jeff-v0.3.5-topspin4.patch",
@@ -35812,15 +35827,20 @@
     {"source":"src/xbox360/me_ts4_select_via_vtable_883D1F30.c","symbol":"ts4_select_via_vtable_883D1F30","text_range":"0x883D1F30-0x883D1FAC","pdata_range":"0x88114CA0-0x88114CA8","matched_code_bytes":124,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_smallest_pending_in_tree_883E2ED0.c","symbol":"ts4_smallest_pending_in_tree_883E2ED0","text_range":"0x883E2ED0-0x883E2FB0","pdata_range":"0x88115168-0x88115170","matched_code_bytes":224,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_vsnprintf_hr_882C74C8.c","symbol":"ts4_vsnprintf_hr_882C74C8","text_range":"0x882C74C8-0x882C7534","pdata_range":"0x88110DF0-0x88110DF8","matched_code_bytes":108,"function_match_percent":100.0},
-    {"source":"src/xbox360/me_ts4_write_elements_883FEDE8.c","symbol":"ts4_write_elements_883FEDE8","text_range":"0x883FEDE8-0x883FEE8C","pdata_range":"0x88115D50-0x88115D58","matched_code_bytes":164,"function_match_percent":100.0}
+    {"source":"src/xbox360/me_ts4_write_elements_883FEDE8.c","symbol":"ts4_write_elements_883FEDE8","text_range":"0x883FEDE8-0x883FEE8C","pdata_range":"0x88115D50-0x88115D58","matched_code_bytes":164,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_rewind_groups_883F1640.cpp","symbol":"ts4_rewind_groups_883F1640","text_range":"0x883F1640-0x883F17F4","pdata_range":"0x881158B8-0x881158C0","matched_code_bytes":436,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_set_gain_exp_883DF888.c","symbol":"ts4_set_gain_exp_883DF888","text_range":"0x883DF888-0x883DF940","pdata_range":"0x88115030-0x88115038","matched_code_bytes":184,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_set_position_883D03C8.c","symbol":"ts4_set_position_883D03C8","text_range":"0x883D03C8-0x883D0580","pdata_range":"0x88114BD0-0x88114BD8","matched_code_bytes":440,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_tick_fade_delay_883CC1F0.cpp","symbol":"ts4_tick_fade_delay_883CC1F0","text_range":"0x883CC1F0-0x883CC388","pdata_range":"0x88114AF8-0x88114B00","matched_code_bytes":408,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_value_condition_883FCE80.cpp","symbol":"ts4_value_condition_883FCE80","text_range":"0x883FCE80-0x883FD014","pdata_range":"0x88115C80-0x88115C88","matched_code_bytes":404,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 3306188,
+  "matched_code_bytes": 3308060,
   "module_total_code_bytes": 10154036,
-  "module_matched_code_percent": 32.560333,
+  "module_matched_code_percent": 32.57877,
   "module_total_functions": 46736,
-  "module_matched_functions": 32596,
-  "module_matched_functions_percent": 69.74495,
-  "module_total_units": 24529,
-  "module_complete_units": 2556,
-  "note": "The canonical whole-module report verifies all thirty-two thousand five hundred ninety-six functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 32601,
+  "module_matched_functions_percent": 69.755646,
+  "module_total_units": 24536,
+  "module_complete_units": 2561,
+  "note": "The canonical whole-module report verifies all thirty-two thousand six hundred one functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

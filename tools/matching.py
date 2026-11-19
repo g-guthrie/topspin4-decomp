@@ -44891,6 +44891,36 @@ MATCHING_UNITS = (
         "extra_flags": ["/O1"],
         "symbols": {"ts4_write_elements_883FEDE8": 164},
     },
+    {
+        "source": "src/xbox360/me_ts4_rewind_groups_883F1640.cpp",
+        "object": "me_ts4_rewind_groups_883F1640.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_rewind_groups_883F1640": 436},
+    },
+    {
+        "source": "src/xbox360/me_ts4_set_gain_exp_883DF888.c",
+        "object": "me_ts4_set_gain_exp_883DF888.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_set_gain_exp_883DF888": 184},
+    },
+    {
+        "source": "src/xbox360/me_ts4_set_position_883D03C8.c",
+        "object": "me_ts4_set_position_883D03C8.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_set_position_883D03C8": 440},
+    },
+    {
+        "source": "src/xbox360/me_ts4_tick_fade_delay_883CC1F0.cpp",
+        "object": "me_ts4_tick_fade_delay_883CC1F0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_tick_fade_delay_883CC1F0": 408},
+    },
+    {
+        "source": "src/xbox360/me_ts4_value_condition_883FCE80.cpp",
+        "object": "me_ts4_value_condition_883FCE80.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_value_condition_883FCE80": 404},
+    },
 )
 
 
