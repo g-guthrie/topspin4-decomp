@@ -994,3 +994,16 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Unresolved: `lwzx rD, rIV, rBASE` (index first) in name-lookup loops whose name is at entry offset 0
   (885EEB50, 8841EA48, 884DAF90, 884A7430: each 1 off). Ruled out: index forms, a forceinline at(), a wrapper struct, C++,
   pads, and /Os /O1 flags.
+
+## Added from agM (lookalike mining)
+- To get the stack round-trip `stw rX,0x50(r1); ... lwz r31,0(r11)` for a value picked by a condition, bind a C++ reference
+  to a conditional temporary: `const Id &pr = cond ? Id(A) : Id(B); u32 val = pr.v;` (Id = one-member struct with a
+  constructor). Plain `val = cond ? A : B`, a pointer read or a volatile read do not keep the store (888C8CA0).
+- With commutative float adds MSVC always loads the second operand first. To get the target's `lfs o; lfs d; fadds d+o`,
+  read `*a` through a volatile pointer: `float x = *(volatile float *)a; *a = *b + x;`. This relies on volatile (88661410).
+- Hash-service setter family (ts4_handle_forward_88610778 + ts4_init_range_and_run_service_opt_8816xxxx + vtable slot
+  10): the template is src/xbox360/me_ts4_set_handle_value_887D37F0.c. Put each temporary Out in its own block
+  (`{ Out o2; ... }`) so the slots are shared like the target's. For fn_8861CE00, pass the hash as a one-member struct by
+  value. In .cpp, wrap the externs in extern "C".
+- Fill/ctor functions where plain gives a different store order often match on LTCG (88800758, 885C8A18).
+- work/matching-b133 was removed while this pass was running. If fn_check crashes in load_symbols, the matching dir is gone.
