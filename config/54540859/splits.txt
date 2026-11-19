@@ -52271,3 +52271,55 @@ src/xbox360/me_ts4_voice_pitch_lfo_step_8835A848.c:
 src/xbox360/me_ts4_writer_flush_88331E10.c:
 	.pdata      start:0x88112D40 end:0x88112D48
 	.text       start:0x88331E10 end:0x88331EBC
+
+src/xbox360/me_ts4_arena_reset_marks_88346598.c:
+	.pdata      start:0x88113248 end:0x88113250
+	.text       start:0x88346598 end:0x88346664
+
+src/xbox360/me_ts4_cache_free_all_88330968.c:
+	.pdata      start:0x88112CC8 end:0x88112CD0
+	.text       start:0x88330968 end:0x88330A18
+
+src/xbox360/me_ts4_free_pair_buffers_88334648.c:
+	.pdata      start:0x88112E20 end:0x88112E28
+	.text       start:0x88334648 end:0x88334700
+
+src/xbox360/me_ts4_image_destroy_883FA8C8.c:
+	.pdata      start:0x88115B48 end:0x88115B50
+	.text       start:0x883FA8C8 end:0x883FA998
+
+src/xbox360/me_ts4_list_destroy_883290D0.c:
+	.pdata      start:0x88112AB8 end:0x88112AC0
+	.text       start:0x883290D0 end:0x88329184
+
+src/xbox360/me_ts4_loader_find_entry_88329D20.c:
+	.pdata      start:0x88112AF8 end:0x88112B00
+	.text       start:0x88329D20 end:0x88329DD4
+
+src/xbox360/me_ts4_pass_reserve_memory_8831D7E0.c:
+	.pdata      start:0x88112738 end:0x88112740
+	.text       start:0x8831D7E0 end:0x8831D89C
+
+src/xbox360/me_ts4_plugin_desc_init_88359310.c:
+	.pdata      start:0x88113598 end:0x881135A0
+	.text       start:0x88359310 end:0x883593E4
+
+src/xbox360/me_ts4_reserve_pair_buffers_88334700.c:
+	.pdata      start:0x88112E28 end:0x88112E30
+	.text       start:0x88334700 end:0x883347C0
+
+src/xbox360/me_ts4_reset_contexts_8839CA60.c:
+	.pdata      start:0x88114070 end:0x88114078
+	.text       start:0x8839CA60 end:0x8839CB1C
+
+src/xbox360/me_ts4_resolve_handle_88322CA8.c:
+	.pdata      start:0x88112958 end:0x88112960
+	.text       start:0x88322CA8 end:0x88322D80
+
+src/xbox360/me_ts4_shuffle_avoid_repeat_883E0960.c:
+	.pdata      start:0x88115090 end:0x88115098
+	.text       start:0x883E0960 end:0x883E0A34
+
+src/xbox360/me_ts4_timer_tree_apply3_883E24D8.c:
+	.pdata      start:0x88115118 end:0x88115120
+	.text       start:0x883E24D8 end:0x883E2598
