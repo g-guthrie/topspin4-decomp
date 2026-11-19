@@ -55122,3 +55122,19 @@ src/xbox360/me_xdata_string_enum_88704288.c:
 src/xbox360/me_xdata_string_enum_887043D8.c:
 	.pdata      start:0x88125D40 end:0x88125D48
 	.text       start:0x887043D8 end:0x88704524
+
+src/xbox360/me_pass_mat_drawable_88714F10.c:
+	.pdata      start:0x881260E8 end:0x881260F0
+	.text       start:0x88714F10 end:0x88715098
+
+src/xbox360/me_ts4_hash_gate_dispatch_8886A0A0.c:
+	.pdata      start:0x8812D2D8 end:0x8812D2E0
+	.text       start:0x8886A0A0 end:0x8886A190
+
+src/xbox360/me_ts4_show_keyboard_ui_88885D30.c:
+	.pdata      start:0x8812DB28 end:0x8812DB30
+	.text       start:0x88885D30 end:0x88885E20
+
+src/xbox360/me_ts4_store_listed_flag_888EC458.cpp:
+	.pdata      start:0x8812FA38 end:0x8812FA40
+	.text       start:0x888EC458 end:0x888EC548

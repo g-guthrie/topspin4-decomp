@@ -33786,3 +33786,7 @@ ts4_slot_table_reset_88867A40 = .text:0x88867A40; // type:function size:0xE0
 ts4_trigger_flag_update_887F8E00 = .text:0x887F8E00; // type:function size:0xE8
 fn_88704288 = .text:0x88704288; // type:function size:0x14C
 fn_887043D8 = .text:0x887043D8; // type:function size:0x14C
+ts4_pass_mat_drawable_88714F10 = .text:0x88714F10; // type:function size:0x188
+fn_8886A0A0 = .text:0x8886A0A0; // type:function size:0xF0
+fn_88885D30 = .text:0x88885D30; // type:function size:0xF0
+fn_888EC458 = .text:0x888EC458; // type:function size:0xF0

@@ -14720,6 +14720,22 @@
       "src/xbox360/me_xdata_string_enum_887043D8.c": {
         "status": "Matching",
         "source": "xbox360/me_xdata_string_enum_887043D8.c"
+      },
+      "src/xbox360/me_pass_mat_drawable_88714F10.c": {
+        "status": "Matching",
+        "source": "xbox360/me_pass_mat_drawable_88714F10.c"
+      },
+      "src/xbox360/me_ts4_hash_gate_dispatch_8886A0A0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_hash_gate_dispatch_8886A0A0.c"
+      },
+      "src/xbox360/me_ts4_show_keyboard_ui_88885D30.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_show_keyboard_ui_88885D30.c"
+      },
+      "src/xbox360/me_ts4_store_listed_flag_888EC458.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_store_listed_flag_888EC458.cpp"
       }
     }
   }

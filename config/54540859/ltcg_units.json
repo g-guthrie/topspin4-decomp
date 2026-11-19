@@ -3183,5 +3183,21 @@
   "symbols": {
    "ts4_select_approach_hash_886782D0": 224
   }
+ },
+ {
+  "source": "src/xbox360/me_pass_mat_drawable_88714F10.c",
+  "object": "me_pass_mat_drawable_88714F10.obj",
+  "context": [
+   "src/xbox360/d3c_find_typed_entry_887818A0.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_pass_mat_drawable_88714F10": 392
+  }
  }
 ]

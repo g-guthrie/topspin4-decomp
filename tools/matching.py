@@ -51345,6 +51345,24 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"fn_887043D8": 332},
     },
+    {
+        "source": "src/xbox360/me_ts4_hash_gate_dispatch_8886A0A0.c",
+        "object": "me_ts4_hash_gate_dispatch_8886A0A0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_8886A0A0": 240},
+    },
+    {
+        "source": "src/xbox360/me_ts4_show_keyboard_ui_88885D30.c",
+        "object": "me_ts4_show_keyboard_ui_88885D30.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_88885D30": 240},
+    },
+    {
+        "source": "src/xbox360/me_ts4_store_listed_flag_888EC458.cpp",
+        "object": "me_ts4_store_listed_flag_888EC458.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_888EC458": 240},
+    },
 )
 
 
