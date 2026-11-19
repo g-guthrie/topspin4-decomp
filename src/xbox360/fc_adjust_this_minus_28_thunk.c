@@ -13,7 +13,7 @@ void *fn_8833C330(void *);
 void *fn_8833CB90(void *);
 void *ts4_call_seq_lbl_8802974C_8833CCA0(void *);
 void *fn_8833CEC8(void *);
-void *fn_8833CF50(void *);
+void *ts4_free_bufs2_154_8833CF50(void *);
 void *fn_8833CFB8(void *);
 void *fn_8833D338(void *);
 void *ts4_if_call_seq_lbl_88029A3C_8833D550(void *);
@@ -187,7 +187,7 @@ ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_8833CDE8, ts4_call_seq_lbl_88029
 ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_8833D728, fn_8833CEC8)
 
 /* Swing_DLL.xex 0x8833D740 */
-ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_8833D740, fn_8833CF50)
+ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_8833D740, ts4_free_bufs2_154_8833CF50)
 
 /* Swing_DLL.xex 0x8833D7D0 */
 ADJUST_MINUS_28_THUNK(ts4_adjust_minus_28_thunk_8833D7D0, fn_8833CFB8)

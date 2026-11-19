@@ -224,7 +224,7 @@ ts4_word ts4_if_call_seq_fn_88599808_88599C78();
 ts4_word fn_8859D5A8();
 ts4_word fn_885AC6C8();
 ts4_word ts4_forward_with_const_248C8000_885BE200();
-ts4_word fn_885D90A8();
+ts4_word ts4_zero6_words_885D90A8();
 ts4_word ts4_free_buffers_885D90C8();
 ts4_word ts4_zero_five_words_885D94F8();
 ts4_word ts4_if_call_seq_u32_off8_885D9518();
@@ -3840,7 +3840,7 @@ ts4_word ts4_if_call_seq_fn_885D90C8_885C0F08(ts4_word a0)
         *(ts4_word *)((char *)(ts4_word)(a0) + 160) = (ts4_word)0;
     }
     memset((ts4_word)a0, (ts4_word)0, (ts4_word)168);
-    fn_885D90A8((ts4_word)a0);
+    ts4_zero6_words_885D90A8((ts4_word)a0);
     ts4_zero_five_words_885D94F8((ts4_word)(a0 + 24));
     ts4_zero_five_words_885D94F8((ts4_word)(a0 + 44));
     ts4_zero_five_words_885D94F8((ts4_word)(a0 + 64));

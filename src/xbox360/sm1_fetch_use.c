@@ -13,7 +13,7 @@ extern int ts4_if_get_u32_off4c_883268B8(int, float);
 extern int ts4_if_get_u32_off4c_88325200(int, float);
 extern int ts4_if_set_u32_off0_8832F930(void *, int *);
 extern int fn_88330450(int, float);
-extern int fn_88330480(int, float);
+extern int ts4_set_nonneg_58_88330480(int, float);
 
 /* Swing_DLL.xex 0x883170A8 */
 FETCH_THEN_USE(ts4_fetch_then_use_float_883170A8, fn_88322CA8, fn_88326660)
@@ -26,4 +26,4 @@ FETCH_THEN_USE(ts4_fetch_then_use_float_88317740, fn_88322CA8, ts4_if_get_u32_of
 /* Swing_DLL.xex 0x88317A60 */
 FETCH_THEN_USE(ts4_fetch_then_use_float_88317A60, ts4_if_set_u32_off0_8832F930, fn_88330450)
 /* Swing_DLL.xex 0x88317AF0 */
-FETCH_THEN_USE(ts4_fetch_then_use_float_88317AF0, ts4_if_set_u32_off0_8832F930, fn_88330480)
+FETCH_THEN_USE(ts4_fetch_then_use_float_88317AF0, ts4_if_set_u32_off0_8832F930, ts4_set_nonneg_58_88330480)

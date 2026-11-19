@@ -231,7 +231,7 @@ static int _add_serialno(void *ctx, ogg_page *og, long **serialno_list, int *n)
     (*n)++;
 
     if (*serialno_list) {
-        *serialno_list = fn_8836CCD8(ctx, *serialno_list, sizeof(**serialno_list) * (*n));
+        *serialno_list = ts4_realloc_count_500_8836CCD8(ctx, *serialno_list, sizeof(**serialno_list) * (*n));
     } else {
         *serialno_list = fn_8836CBE8(ctx, sizeof(**serialno_list));
     }

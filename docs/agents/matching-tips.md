@@ -1373,3 +1373,82 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Other round-3 near misses (drafts): 883E6438 (a `cmpwi cr6; bne +4` left after the last call, plus a register swap);
   882A2EE8 (one extra saved register); 883FCCC0 (Pair zero stores scheduled after `addi r5`); 883FBC58 (prototype of
   fn_883E6978 with a float argument and a stack argument: frame 0x60 not reproduced).
+
+## agU (2026-11-19, b154): whole-binary sweep of the smallest unmatched functions (69 matches)
+- Candidate list (scratchpad agU/cands.py, filt.py): 3050 unmatched functions of 6-40 instructions after removing drafts,
+  ME specs and agT's todo. 769 are left after dropping v0-v13 vector code, asm/CRT shapes (mffs, r13, `mr r8,r8`/`mr r1,r1`,
+  lwarx, mftb, `(r0)` addressing) and mis-split functions whose listing does not end in a return or tail branch
+  (883FBB88, 884F5080, 883F1994: the symbol is cut in the middle of a function). Do not filter on `mflr r12`: that is the
+  normal prologue here. My first filter did, and it hid every non-leaf candidate.
+- Flags: 68 of the 69 matches are /Oc, and one (883EEAB8) is /O1. 55 match on both routes. The other 13 match plain only,
+  because a 0.0f/1.0f literal goes to `__pool` under LTCG.
+- **The 0x88330000-0x883A0000 band is mostly first-try /Oc C.** Recurring shapes, each with a model source:
+  - Outer-object adapters: `O *o = b ? (O *)((char *)b - 0x1c) : 0; ...; return 0;` (setters, flag toggles, zeroing loops,
+    format into a buffer through a varargs call with `(double)` promotion). Models: me_ts4_set_flag_134_8833DE28.c,
+    me_ts4_set_param_13c_148_88349D60.c (switch on k), me_ts4_busy_code_2d_8836F980.c.
+  - Heap frees with file/line: `fn_88315F10(lbl_88B3302C->heap, p, lbl_FILE, LINE)` (models me_ts4_free_buf_16c_883746B0.c,
+    me_ts4_free_bufs8_2d4_88396180.c). Allocations: fn_88315C60 takes 6 arguments (heap, size, file, line, 0, 0), and
+    fn_88316070 is the 6-argument realloc (heap, p, size, file, line, 0).
+  - Child loops: `int r = 0; for (i = 0; i < s->n; i++) r = s->kids[i]->vt->fn(s->kids[i], args...); return r;` (count at
+    +0x7c, kids at +0x80), and the variant `int r = base(s, args); if (r) return r; for (...) ...; return 0;` (count +0xac).
+    14 matches. Argument lists of any mix of int and float matched without edits (me_ts4_kids_call_slot18_8f_883795B0.c).
+- Small fixes that worked:
+  - Indexed address helpers that compile to `slwi/add/slwi` (24- or 20-byte items): the C function swaps r10/r11, and the
+    same body as a C++ member function (`It *O::at(int i) { return &items[i]; }`) matches (8841ED80, 8841F0D8, 886EBA80).
+    Give each file's structs unique names: identical mangled names in two units would collide at link time.
+  - When a string routine keeps `mr r11,r3` and returns with r3 untouched, return the argument: `char *f(char *s) { ...; return s; }`
+    (88329768, 883297A8, 88376700).
+  - Unsigned `cmplwi` against a parameter that has no clrlwi: declare the parameter `unsigned`, not `int` (8833DE28).
+  - The pointer-local store trick (agO) also fixes float load-after-store order: `{ float *p = &s->a; *p = s->base + x; }`
+    (8843F8F8).
+  - Early returns written separately keep the shared `li r3,X` block in the middle (8836F980), as agS found for 883FE980.
+- LTCG constant-propagation signatures (skip these on the plain route): `li rK,C; subf; subic; subfe` for `x != C`
+  (885E9648, 88428E80), and `addi rX,rX,0` before `subic/subfe` (88925410). These are compares with a propagated constant.
+- Not solved: the 8828Cxxx bitfield setters (7 functions) store a u64 dirty word twice with no scheduling and keep
+  everything in r11. Every flag set, volatile and pointer-local form tried was 9 off. Vector-copy getters that use v0-v13
+  (88476128 family) stay open, as the existing note says.
+- Near misses (drafts/me_<ADDR>_nearmiss.c): 883E82F8 (dead addi order), 8864E640 (two fadds operand swaps), 888C72E8
+  (cmplw operand order), 8836CBE8 (add operand order; pads 0-8 no help), 88329478 (lwzx order), 883EEFA0 (`mr r3` vs store
+  order). These are more than 2 off and have no draft: 886EBDA0 (fdivs/fsubs order), 88330278 (li hoist),
+  88399650 (two constants addressed from one base, `lbl_8802E940[-1]`).
+
+## agV (2026-11-19, b155): /O1 cr0 queue (agT todo3), 57-79 instructions (29 matches)
+- Queue re-filtered against b155 (scratchpad agV/filt.py; it also skips addresses that have a draft in src/xbox360/drafts). I worked
+  from 57 to 79 instructions, plus siblings 883D28E8, 882CF300 and 883F2C98. All 29 are /O1 on the plain route. 8 of them miss on
+  LTCG: 882B2688, 882CF300, 883D32B8, 883CF430, 883FF1A0, 883CB130, 883F1400 and 883DBDC0. None uses volatile.
+- **Float literals, all or nothing** (883FF1A0): with `(float)rate * K + 0.5f` for two windows and a `1.0f` store, only
+  the version with all four constants as literals matches. Any mix with `extern const float lbl_...` reschedules the block.
+  Search every combination (16 tries) before giving up on a float-heavy init. The checker accepts `__real@` for labels
+  with the same bytes. The opposite case was 883EE2E8 (open): there, literals 0.0f/1.0f give `__real@` relocations
+  that the checker rejected, because their scheduling differed.
+- `unsigned int` sample rate: `(float)u` gives `std; lfd; fcfid` with no `extsw`. If `extsw` shows up, the source is unsigned.
+- **Declaring two clamped indices together** (882B2688/882CF300, resample taps): `int prev, next; ... if ((unsigned)next >= total)`
+  matches. An `unsigned int next` local swaps r9/r10 through the whole loop body.
+- Signed pointer tests (`cmpwi` on a pointer) came up twice more: 883FBEB0 (`a->tgt`) and 883CB130 (`list->items`). Use
+  the PTR_INT macro from 883FB9D0.
+- 883CB130: a top-bit handle test `if (h >> 31)` gives `clrrwi.`, and `if ((unsigned char)(h >> 31))` gives the target's `srwi.`.
+  Reading the global `lbl_88CAC988->nodes[idx]` directly, with no local copy, brought back the `clrrwi r11,r9,0` before the member use.
+- Writing a call result into an out-param (883EAC40): when two calls in an if/else each test the result, put
+  `if (r) return r;` inside each arm. A shared test after the if/else tail-merges the blocks differently.
+- Tail-link with no helper (883E3700): an inlined `link_before(n, head)` helper put the loop increment in the wrong place.
+  Open-coding the four stores in a block with locals `Link *n = &o->link, *h = &t->head;` matched. 883D32B8 wants the
+  helper with `Link *p = head->prev; n->next = head; n->prev = p;` (next stored first).
+- Path walkers (883D80E0, iterative): `while (path && t->kids) { scan; for (n = first; ; n = n->next) { if (n == end) return 0;
+  if (match) break; } if (!*p) return ITEM(n); t = ITEM(n); path = p + 1; }`, with ITEM as a null-checked macro that is evaluated each time.
+- Prototypes taken from register use. Each disagreement is noted in the file header:
+  - 883CF548 and 883E2B30 are `(Ref *, Alloc *)`; their asm2c bodies declare 8 words.
+  - 883E54A8 is called with 2 arguments in 883E8978; another file declares 3.
+  - fn_883E13B8 returns int in 883E3700; another file declares it void.
+  - ts4_if_get_u32_off4_883E51B8 returns an int index (`>= 0` test in 883E8978). 883EAC40 now uses int as well.
+- Not attempted:
+  - `0x100(r13)` + `mftb` GPU waits: 882914D8, 88291B08, 88292698. `__getReg(13)` is an ordinary call in this compiler, not an
+    intrinsic. 8829A6E8 belongs to the same group.
+  - 0x8876086C false relocation (as in 882DDD58): 882C73D8, 882C5EA8, 882C5FC8.
+  - 88296D48: the target `lis/ld 0x88C6E1A0` has no relocation (there is no symbol there), so it has the same split/config problem in reverse.
+  - ctr search loops (see 883D0C18): 883F2058, 883F8FC8, 883D4A98.
+- Near misses (drafts): 882DD880 (1 off: `li r10,1` scheduled above the lhz/cmplwi of an `m = wide ? 4 : 1` select), 882BF4D8 (2 off: the
+  buffer null test is cr0 where the target has cr6), 883D4998 (3 off: lbzx/stbx/add base/index order on `rest[n]`), 883D86A0 (1 off: lwzx
+  order, the same open class as 883C75D0).
+- Open, more than 3 off: 883EAB38 (inline 0x14-byte ctor; the target materializes zero twice, `li r9,0` and `li r10,0`; a C++ base+derived
+  ctor and pointer types did not change it), 882DD6C8 (register assignment of all 8 saved registers), 883F5598 (7 off, register naming in
+  `bank->used = n*0x90 + base`), 883EE2E8 (store/lfs scheduling of an inline ctor with self-linked node).

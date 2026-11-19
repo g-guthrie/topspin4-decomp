@@ -293,7 +293,7 @@ ts4_word fn_88331BE0();
 ts4_word fn_883320F8();
 ts4_word fn_883766B0();
 ts4_word fn_88376D10();
-ts4_word fn_883AFF60();
+ts4_word ts4_init_param_block_883AFF60();
 ts4_word fn_883B03F0(ts4_word, ts4_word, ts4_word, float);
 ts4_word fn_883B0D50();
 ts4_word fn_883B1460();
@@ -3374,7 +3374,7 @@ ts4_word ts4_call_seq_fn_883B0D50_8838C6E8(ts4_word a0, ts4_word a1, ts4_word a2
     t9 = fn_883B03F0((ts4_word)t7, (ts4_word)256, (ts4_word)((a3 + 65536) + -15268), (*(float *)lbl_8802CEA4));
     t11 = fn_883B03F0((ts4_word)t9, (ts4_word)256, (ts4_word)((a3 + 65536) + -15256), (*(float *)lbl_8802CEA0));
     fn_883B03F0((ts4_word)t11, (ts4_word)256, (ts4_word)((a3 + 65536) + -15244), (*(float *)lbl_8802CE9C));
-    fn_883AFF60((ts4_word)((a3 + 65536) + -15232));
+    ts4_init_param_block_883AFF60((ts4_word)((a3 + 65536) + -15232));
     ts4_init_descriptor_defaults_883AFBC0((ts4_word)((a3 + 65536) + -15112), (ts4_word)((a3 + 65536) + -15188));
     ts4_init_descriptor_defaults_883AFBC0((ts4_word)((a3 + 65536) + -15112), (ts4_word)((a3 + 65536) + -15152));
     return 0;
@@ -3399,7 +3399,7 @@ ts4_word ts4_call_seq_fn_883B0D50_8838CF18(ts4_word a0, ts4_word a1, ts4_word a2
     t8 = fn_883B03F0((ts4_word)t6, (ts4_word)256, (ts4_word)((a3 + 65536) + -25524), (*(float *)lbl_8802CEA4));
     t10 = fn_883B03F0((ts4_word)t8, (ts4_word)256, (ts4_word)((a3 + 65536) + -25512), (*(float *)lbl_8802CEA0));
     fn_883B03F0((ts4_word)t10, (ts4_word)256, (ts4_word)((a3 + 65536) + -25500), (*(float *)lbl_8802CE9C));
-    fn_883AFF60((ts4_word)((a3 + 65536) + -25488));
+    ts4_init_param_block_883AFF60((ts4_word)((a3 + 65536) + -25488));
     ts4_init_descriptor_defaults_883AFBC0((ts4_word)((a3 + 65536) + -25368), (ts4_word)((a3 + 65536) + -25444));
     ts4_init_descriptor_defaults_883AFBC0((ts4_word)((a3 + 65536) + -25368), (ts4_word)((a3 + 65536) + -25408));
     return 0;

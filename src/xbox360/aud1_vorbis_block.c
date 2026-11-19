@@ -70,7 +70,7 @@ int aud1__vorbis_block_ripcord_883BBE98(void *ctx, vorbis_block *vb)
     }
     /* consolidate storage */
     if (vb->totaluse) {
-        vb->localstore = fn_8836CCD8(ctx, vb->localstore, vb->totaluse + vb->localalloc);
+        vb->localstore = ts4_realloc_count_500_8836CCD8(ctx, vb->localstore, vb->totaluse + vb->localalloc);
         if (!vb->localstore) ret = OV_EMEMORY;
         vb->localalloc += vb->totaluse;
         vb->totaluse = 0;

@@ -76,7 +76,7 @@ typedef struct {
 
 /* FMOD codec memory hooks (context first). */
 void *fn_8836CBE8(void *ctx, long size);
-void *fn_8836CCD8(void *ctx, void *ptr, long size);
+void *ts4_realloc_count_500_8836CCD8(void *ctx, void *ptr, long size);
 void ts4_if_get_u32_off500_8836CD70(void *ctx, void *ptr);
 
 /* C library routines as they are named in the symbol map. */

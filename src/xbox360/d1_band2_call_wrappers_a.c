@@ -198,7 +198,7 @@ ts4_uptr fn_885B8290(ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_885B8350(ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr ts4_if_call_seq_u32_off30_885B8FB0(ts4_uptr);
 ts4_uptr fn_885CF138(ts4_uptr, ts4_uptr);
-ts4_uptr fn_885D90A8(ts4_uptr);
+ts4_uptr ts4_zero6_words_885D90A8(ts4_uptr);
 ts4_uptr ts4_zero_five_words_885D94F8(ts4_uptr);
 ts4_uptr fn_885D9C48(ts4_uptr);
 ts4_uptr fn_885DD1F8(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
@@ -441,7 +441,7 @@ ts4_uptr ts4_forward_to_fn_885C0EA8(ts4_uptr p0)
 {
     ts4_uptr t6;
     memset((void *)p0, 0, 168);
-    fn_885D90A8(p0);
+    ts4_zero6_words_885D90A8(p0);
     ts4_zero_five_words_885D94F8((ts4_uptr)((char *)p0 + 24));
     ts4_zero_five_words_885D94F8((ts4_uptr)((char *)p0 + 44));
     ts4_zero_five_words_885D94F8((ts4_uptr)((char *)p0 + 64));
