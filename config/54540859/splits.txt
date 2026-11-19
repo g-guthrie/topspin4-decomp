@@ -49337,3 +49337,29 @@ src/xbox360/me_ts4_vector_realloc_insert_882835C8.c:
 src/xbox360/me_ts4_vector_realloc_insert_88182540.c:
 	.pdata      start:0x88108D88 end:0x88108D90
 	.text       start:0x88182540 end:0x881826AC
+
+src/xbox360/me_ts4_pooled_member_deleting_dtor_88472858.c:
+	.pdata      start:0x88118BC0 end:0x88118BC8
+	.text       start:0x88472858 end:0x884728F8
+
+src/xbox360/me_ts4_pooled_delete_881B8360.c:
+	.pdata      start:0x8810AC48 end:0x8810AC50
+	.text       start:0x881B8360 end:0x881B83E4
+
+src/xbox360/me_ts4_owner_vec20_clear_88940FE0.c:
+	.text       start:0x88940FE0 end:0x88941038
+
+src/xbox360/me_ts4_owner_vec24_clear_list_clear_8899F268.c:
+	.text       start:0x8899F268 end:0x8899F2C4
+
+src/xbox360/me_ts4_owner_vec72_push_back_88880240.c:
+	.pdata      start:0x8812D948 end:0x8812D950
+	.text       start:0x88880240 end:0x888802B4
+
+src/xbox360/me_ts4_find_item_by_name_884A3E30.c:
+	.pdata      start:0x88119D48 end:0x88119D50
+	.text       start:0x884A3E30 end:0x884A3EB0
+
+src/xbox360/me_ts4_find_inline_name_index_884C9850.c:
+	.pdata      start:0x8811A958 end:0x8811A960
+	.text       start:0x884C9850 end:0x884C98C4

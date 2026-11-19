@@ -978,3 +978,19 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Pad-sweep script with joint markers that works on both routes: scratchpad agK/js.py
   (`js.py SRC NAME ADDR LTCG N1 MARK1 N2 MARK2 ...`). Drafts with `#include "../x.h"` need absolute include paths
   when they are copied out of drafts/.
+
+## agL notes (2026-11-19): STL/template family mining with siblings.py
+- Batch every matched STL-ish source through `work/army/ME/siblings.py` in one loop (one address per call: some
+  matched addresses are missing from textdis.pkl and crash a multi-arg run). Filter out drafts/ and reserved lists.
+- Member-embedded instances: many lookalikes are the matched template inlined on `&owner->vec` (vec at +0xdc, +0x14 ...).
+  Keep the matched body as a `__forceinline` helper and call it on the member: 88940FE0, 8899F268 (+ tail call),
+  88880240 matched first try on both routes. Pooled deleting dtors take the same shape, either with the base dtor on
+  `self+0x28` or with no flags argument (88472858, 881B8360).
+- vector operator= family (881A7A20 POD/memcpy): the non-POD siblings (881A84E8 24-byte, 88162CC8 48-byte) add
+  `destroy(first,last)` before the free and `destroy(copy(...), last)` in the shrink branch. Adapting the asm2c source
+  gets 8 off, all one register swap (a0+8 and rhs->last). Pads 0-7 and declaration order are dead knobs. The
+  memmove POD sibling 881A7FF8 (6-byte) is 19 off: MSVC CSEs the `sl - sf` byte count across the alloc call where
+  the target recomputes it.
+- Unresolved: `lwzx rD, rIV, rBASE` (index first) in name-lookup loops whose name is at entry offset 0
+  (885EEB50, 8841EA48, 884DAF90, 884A7430: each 1 off). Ruled out: index forms, a forceinline at(), a wrapper struct, C++,
+  pads, and /Os /O1 flags.
