@@ -1814,3 +1814,57 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   882CDE48/882CDF48 (16-bit box filters: body matches, prologue load order h/pitch and src/dst does not), 883A3000 (pool alloc:
   the target folds the +0x10 `used` offset into the loop pointer), 88385498 (sibling of 88384A00: 8 off in the scheduling of the second copy), 88329A88
   (atoi from the right: the target keeps two saved registers, std/ld rather than savegprlr).
+
+## agAF (b170): small sweep, 15-40 instructions (23 matches)
+
+- **Retry every near-miss draft on /O1 before reshaping it.** 885AA050/885AA168 (agAB's 2-off draft, vtable slot in r10 vs r11)
+  and 883E5F30 (2 off, `add` operand order) both matched unchanged or nearly so on /O1. For 883E5F30 the length local goes
+  first and the end is `a->start + len` after the start store.
+- **Read the label's bytes before writing a float constant.** The unit getters 883CA750/883DF940 multiply by 4, 48 and 24
+  (not 1/4, 1/48, 1/24 as in the 883C76F0 setters). Literals with the right values match on /O1, with the f0/f13 roles right;
+  `extern` labels leave the roles swapped. Read with `scratchpad/gp8/img.py` (`img.f32(addr)`).
+- In-place string case loops that return `s` (884213B0, 88421400): declare the walk pointer inside `if (*s) { char *p = s; do ... }`
+  so the test comes before the `mr`.
+- A struct returned through a hidden pointer that the caller discards (88837FB0, a Lua `{script, top}` ref): declare the callee
+  as `Ref *f(Ref *out, Obj *o)` and pass `&local`. The by-value C form returns in registers and drops the frame slot.
+- A vtable call whose argument is another vtable call (884D7A38) loads the outer `s->vt` first (into a saved register) only when
+  the inner call is written inside the argument list. A `vt` or result local moves it.
+- `r = 0; for (...) if (match) { r = items[i]; break; } return r;` gives `li r3,0` before the count test and the `blelr` exit
+  (88923BE0); `return items[i]` inside the loop does not.
+- A 64-bit probe index (`mulld`, `extsw` of an int mask, `clrrwi rN,i,0` per probe) is an `unsigned __int64` variable narrowed at
+  each use: `slots[(unsigned int)i]`, `return (unsigned int)i` (88423A78).
+- An inline byte compare with `subf.` and a `cntlzw`-free 1/0 select is `#pragma intrinsic(memcmp)` (88162C60).
+- A count-guarded inner pointer walk that starts at `row + 1`: `j = 1; if (j < m) { p = rows[i] + 1; for (; j < m; j++, p++) ... }`
+  (8837E640, agAD's fourth-run rule applied to an inner loop).
+- A store that the target emits before two loads of the same object (88771CB0, `stb` of the dirty byte before begin/end):
+  agO's block-local pointer store fixed it.
+- Lazy import trampolines (884F4630, 884F7D18): `if (!g) resolve(ord, &g); if (g) return g(a, b); return 0x80004005;` on /O1.
+- Open: 888C00A0/8890C618 (`srwi` shift count; 15 forms of the count all give `rldicl`), 88421338 (strlen with the trailing
+  `clrrwi r3` copy; 12 forms), 886EDDF8 and 887F7678 (cmplw operand order), 889A4930 (r11 reuse down a global chain;
+  inline accessors don't help), 888C2C80, 888C4EE0, 883F9D78, 8851EC30 (unchanged by /O1, /Os, /O2 or /Oy-).
+  885928D8 (6 off on /Oc: an inline `(unsigned char)w->mode` accessor gives the extrwi, but each tail gets fresh registers
+  where the target reuses r11), 883C9BD8/883C9F98 (4 off on /O1: the owner-ternary null tests are cr0 where the target has cr6),
+  887CF490 (8 off, register swap), 88772BA8 (the target keeps the hash constant in r29), 884281A0, 881A9968, 88933AB8
+  (the target does not fold the +0x20 array base into the index), 88425670 (3x3 transpose: `__restrict` hoists all loads, no
+  restrict reloads).
+- Draft: drafts/me_88439050_nearmiss.c (3 off, final-call argument order, likely a C++ base cast; sibling 884A5EB8).
+
+### agAE round 2 (b171): 21 matches, 1 draft
+- Matched (/Oc unless noted): 88331AF8, 8835A848, 8832BFF0, 883E1DD0 (/O1), 883E2598, 883E2428, 883E24D8, 88322BF8, 88331E10,
+  88330968, 883290D0, 88334648, 88334700, 88329D20, 8831D7E0, 8839CA60, 88346598, 883FA8C8 (/O1), 883E0960 (/O1), 88359310, 88322CA8.
+- **Switch block order follows the case order in the source.** If the target puts the table/default case last, write it last
+  (`case 1: ... case 2: ... case 0: case 3:`) (8835A848).
+- **`x ? a - x : 0` against `x == 0 ? 0 : a - x`** decides which arm falls through (88346598). The same holds for a ternary max that reloads
+  both fields in its arms: write it inline on the struct fields, `p->s->b < p->s->a ? p->s->a : p->s->b`. A local pointer CSEs the reload (8831D7E0).
+- **"Walk to the root" inline:** `Timer *p = t->parent; if (!p) return t; while (p->parent) p = p->parent; return p;` (883E1DD0).
+- **A do-while list walk that visits the owner and then its children**, with the LINK of the sentinel as the end, gives the
+  `cmplwi r29; addi r11, r30, 0x74` pattern (883E2598, 883E2428 and 883E24D8 share one template, differing only in the float argument count).
+- **Optional-allocator free:** `static __inline void heap_free(Allocator *a, void *p, file, line) { if (a) a->vt->free(...); else fn_88315F10(heap, ...); }`
+  needs /O1 (883FA8C8).
+- **Stores into a static descriptor follow the source statement order**, so match the target's store sequence exactly (88359310).
+- `% n` on a signed int with /O1 brings in MSVC's `twi 5` / `twllei` trap checks automatically (883E0960, a shuffle).
+- `(d < 2) ? 0x24 : 0xb` compiles to `subfc; subfe; clrlwi 27; rlwinm 0,31,28; addi 0xb`. Read the error codes off the rlwinm mask (88322CA8).
+- Draft: drafts/me_88365560_nearmiss.c (vibrato step, 1 instruction: a join `clrlwi`). The family uses one template: 88361168, 88365328
+  (`>>7<<2`), 88368958, 88361248, 88359EA0 and 88359FB0 (tremolo/pan variants, out +0x1DC/+0x264, clamped 0..0x40).
+- Unsolved: 8836E420 (vtable submit loop, 6 off from argument-load scheduling), 883F1888 (index-or-first-flagged lookup, the shared LINK
+  tail), 88353138 (PCM sign/endian fix, register order), 883E50B0 (a C++ move with a stack temporary), 8838B5F8 (tree insert, not attempted).
