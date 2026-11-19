@@ -65,7 +65,7 @@ ts4_word fn_883CA4F0();
 ts4_word fn_883CE7E0();
 ts4_word ts4_hash_bytes_883D1D68();
 ts4_word fn_883D9D88();
-ts4_word fn_883DD558();
+ts4_word ts4_adjust_counts_for_owner_883DD558();
 ts4_word fn_883E2390();
 ts4_word fn_883E4E70();
 ts4_word fn_883E5890();

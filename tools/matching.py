@@ -44531,6 +44531,60 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_vector_push_back_88236148": 212},
     },
+    {
+        "source": "src/xbox360/me_ts4_adjust_counts_clamped_883DC3C0.c",
+        "object": "me_ts4_adjust_counts_clamped_883DC3C0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883DC3C0": 120},
+    },
+    {
+        "source": "src/xbox360/me_ts4_adjust_counts_for_owner_883DD558.c",
+        "object": "me_ts4_adjust_counts_for_owner_883DD558.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_adjust_counts_for_owner_883DD558": 140},
+    },
+    {
+        "source": "src/xbox360/me_ts4_fade_begin_in_883ED2B0.c",
+        "object": "me_ts4_fade_begin_in_883ED2B0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883ED2B0": 184},
+    },
+    {
+        "source": "src/xbox360/me_ts4_fade_begin_out_883ED368.c",
+        "object": "me_ts4_fade_begin_out_883ED368.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883ED368": 180},
+    },
+    {
+        "source": "src/xbox360/me_ts4_forward_if_impl_ready_883E8598.c",
+        "object": "me_ts4_forward_if_impl_ready_883E8598.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_forward_if_impl_ready_883E8598": 204},
+    },
+    {
+        "source": "src/xbox360/me_ts4_init_from_source_883CE938.c",
+        "object": "me_ts4_init_from_source_883CE938.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_init_from_source_883CE938": 220},
+    },
+    {
+        "source": "src/xbox360/me_ts4_list_first_item_883ED740.c",
+        "object": "me_ts4_list_first_item_883ED740.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883ED740": 100},
+    },
+    {
+        "source": "src/xbox360/me_ts4_propagate_def_to_children_883F77C0.c",
+        "object": "me_ts4_propagate_def_to_children_883F77C0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"ts4_propagate_def_to_children_883F77C0": 164},
+    },
+    {
+        "source": "src/xbox360/me_ts4_track_find_time_in_range_883CEBB8.c",
+        "object": "me_ts4_track_find_time_in_range_883CEBB8.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883CEBB8": 204},
+    },
 )
 
 

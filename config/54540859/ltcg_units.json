@@ -2429,5 +2429,87 @@
   "symbols": {
    "ts4_rally_tracker_reset_88683BF0": 388
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_fade_group_begin_in_883ED7A8.c",
+  "object": "me_ts4_fade_group_begin_in_883ED7A8.obj",
+  "context": [
+   "src/xbox360/me_ts4_fade_begin_in_883ED2B0.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/O1"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_fade_group_begin_in_883ED7A8": 84
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_fade_group_begin_out_883ED800.c",
+  "object": "me_ts4_fade_group_begin_out_883ED800.obj",
+  "context": [
+   "src/xbox360/me_ts4_fade_begin_out_883ED368.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/O1"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_fade_group_begin_out_883ED800": 92
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_get_first_item_checked_883EDB98.c",
+  "object": "me_ts4_get_first_item_checked_883EDB98.obj",
+  "context": [
+   "src/xbox360/me_ts4_list_first_item_883ED740.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/O1",
+   "/Ob1"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_get_first_item_checked_883EDB98": 72
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_release_ids_then_update_883DD7A0.c",
+  "object": "me_ts4_release_ids_then_update_883DD7A0.obj",
+  "context": [
+   "src/xbox360/me_ts4_adjust_counts_clamped_883DC3C0.c",
+   "src/xbox360/me_ts4_adjust_counts_for_owner_883DD558.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/O1"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_release_ids_then_update_883DD7A0": 56
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_track_seek_time_in_range_883CF7F0.c",
+  "object": "me_ts4_track_seek_time_in_range_883CF7F0.obj",
+  "context": [
+   "src/xbox360/me_ts4_track_find_time_in_range_883CEBB8.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/O1"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "fn_883CF7F0": 112
+  }
  }
 ]

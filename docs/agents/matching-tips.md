@@ -1238,3 +1238,31 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - 88152ED8 (`reserve(3)` on a 0x208-byte item): 29 off, in drafts/me_88152ED8_nearmiss.c. The target loads `v->alloc.h` once
   above the `begin == 0` test and calls fn_88613570 separately in both arms. Neither a single allocate nor an explicit `h`
   local reproduces this.
+
+## agT (2026-11-19, b150): volatile registers kept across in-unit calls (LTCG + callee context)
+- agQ's scan2 "IPA" flag is mostly false positives: it is a straight-line scan, and it counts the `bl __savegprlr_NN`
+  as a call. A path-aware rescan (scratchpad agT/real.py: CFG fixed point, `bl` into 0x8856A000-0x8856B000 ignored)
+  leaves 17 of the 234 that really read r4-r12 after a call: 883DD7A0, 883EDB98, 882C3628, 883ED7A8, 883ED800, 883CF7F0,
+  883D2620, 882DDD58, 883CF8A8, 883D34C8, 883CBBC8, 883E52E0, 883CAB80, 883F63F8, 882E1CC8, 883EC308, 883CEC88.
+  The rest are normal /O1 functions: 883F77C0, 883E8598 and 883CE938 matched on the plain route (883F77C0 and 883CE938
+  fail on LTCG, where values move into volatile registers or the float literal goes to `__pool`).
+- Recipe that worked (6 LTCG matches): match the small leaf callee on plain /O1 first, keep its `fn_` name (symbols.txt
+  name), save it, then `chk(..., ltcg=True, ctx=[callee.c], flags=['/O1'])`. No `/Ob1` prefix was needed: /O1 LTCG did
+  not inline these callees. `/Oc /Ob1` was always worse (the frame grows).
+- LTCG constant-propagates into the callee when the caller is its only caller in the link: 883DD7A0 passes -1 to
+  fn_883DC3C0 and the `li r6,-1` disappeared. Adding a real matched sibling caller that passes a variable delta
+  (883DD558) as a second context file brings it back. Check for other callers before blaming the source.
+- 883EDB98: with only the callee in context, `out` was kept in r8 (target r9). Flags `/O1 /Ob1` give r9.
+- Float literals on the plain route: `0.0f` gives lbl_88001A20 and `1.0f` gives lbl_88001A68 (accepted by fn_check). Under
+  LTCG they go to `__pool@`; use `extern const float lbl_...` there.
+- Bitfields: MSVC fills from the most significant bit here, so a 2-bit state in the low bits of a u16 (`clrlwi 30`) is
+  the last field: `unsigned short rest:14; unsigned short state:2;`. float to unsigned is `fctidz` (`(unsigned)f`); with
+  `(int)` in between it becomes `fctiwz`.
+- Near misses (drafts/me_<ADDR>_nearmiss.c):
+  - 882DDD58: the code is identical on LTCG + fk2_o1_000.c, but the target has a relocation on `lis/ori 0x8876086C`
+    (an HRESULT that falls inside .text, read as `fn_887607E0+0x8c`). The checker wants the relocation, so this is a
+    split/config problem. Writing it as a function address would be a false source.
+  - 883CF8A8 (caller of 883CF7F0, keeps `out` in r4 and 0.0f in f13): the branch layout is wrong (target has 4 calls with
+    the not-found second seek shared by both directions). Tried nested if/else, gotos and a `lo` local: 47-50 off.
+  - 883D0C18 (callee of 883D2620): the target counts with `mtctr idx` and checks `n == head` before `idx > 0`. A plain
+    `while (n != head && i--)` loop is 11 off. /O1, /Oc, /O2, /Os and LTCG did not give the ctr loop.
