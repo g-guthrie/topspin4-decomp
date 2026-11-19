@@ -3630,6 +3630,24 @@
     ],
     "src/xbox360/me_ts4_str_to_upper_884218C8.c": [
       "/Oc"
+    ],
+    "src/xbox360/me_ts4_any_record_unloaded_88384A00.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_copy_bits_to_mask_88290718.c": [
+      "/O1"
+    ],
+    "src/xbox360/me_ts4_copy_bits_to_mask_88290778.c": [
+      "/O1"
+    ],
+    "src/xbox360/me_ts4_invoke_callback_or_global_883202A0.c": [
+      "/Oc"
+    ],
+    "src/xbox360/me_ts4_pixel_conv_init_882B4340.c": [
+      "/O1"
+    ],
+    "src/xbox360/me_ts4_stream_copy_element_882DDA00.c": [
+      "/O1"
     ]
   },
   "jeff_version": "0.3.5 with patches/jeff-v0.3.5-topspin4.patch",
@@ -36997,15 +37015,21 @@
     {"source":"src/xbox360/me_ts4_forward_f4_by_selector_885CF028.c","symbol":"fn_885CF028","text_range":"0x885CF028-0x885CF084","matched_code_bytes":92,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_scale_count_round_8859BB40.c","symbol":"fn_8859BB40","text_range":"0x8859BB40-0x8859BB9C","matched_code_bytes":92,"function_match_percent":100.0},
     {"source":"src/xbox360/me_ts4_str_to_lower_88421918.c","symbol":"fn_88421918","text_range":"0x88421918-0x88421968","matched_code_bytes":80,"function_match_percent":100.0},
-    {"source":"src/xbox360/me_ts4_str_to_upper_884218C8.c","symbol":"fn_884218C8","text_range":"0x884218C8-0x88421918","matched_code_bytes":80,"function_match_percent":100.0}
+    {"source":"src/xbox360/me_ts4_str_to_upper_884218C8.c","symbol":"fn_884218C8","text_range":"0x884218C8-0x88421918","matched_code_bytes":80,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_any_record_unloaded_88384A00.c","symbol":"fn_88384A00","text_range":"0x88384A00-0x88384AA4","matched_code_bytes":164,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_copy_bits_to_mask_88290718.c","symbol":"fn_88290718","text_range":"0x88290718-0x88290774","matched_code_bytes":92,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_copy_bits_to_mask_88290778.c","symbol":"fn_88290778","text_range":"0x88290778-0x882907D4","matched_code_bytes":92,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_invoke_callback_or_global_883202A0.c","symbol":"fn_883202A0","text_range":"0x883202A0-0x88320300","matched_code_bytes":96,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_pixel_conv_init_882B4340.c","symbol":"fn_882B4340","text_range":"0x882B4340-0x882B4520","pdata_range":"0x88110A38-0x88110A40","matched_code_bytes":480,"function_match_percent":100.0},
+    {"source":"src/xbox360/me_ts4_stream_copy_element_882DDA00.c","symbol":"fn_882DDA00","text_range":"0x882DDA00-0x882DDAA0","pdata_range":"0x88111308-0x88111310","matched_code_bytes":160,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 3358868,
+  "matched_code_bytes": 3359952,
   "module_total_code_bytes": 10154028,
-  "module_matched_code_percent": 33.079166,
+  "module_matched_code_percent": 33.089844,
   "module_total_functions": 46736,
-  "module_matched_functions": 32899,
-  "module_matched_functions_percent": 70.39327,
-  "module_total_units": 25014,
-  "module_complete_units": 2859,
-  "note": "The canonical whole-module report verifies all thirty-two thousand eight hundred ninety-nine functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 32905,
+  "module_matched_functions_percent": 70.40611,
+  "module_total_units": 25023,
+  "module_complete_units": 2865,
+  "note": "The canonical whole-module report verifies all thirty-two thousand nine hundred five functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

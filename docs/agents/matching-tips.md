@@ -1779,3 +1779,14 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 
 - 88384A00 (/Oc) matched: a flag-bit check written as `static __inline unsigned char f(const T *r){return (unsigned char)((r->flags>>1)&1);}` gives the `extrwi` form. Writing every early exit as its own `{ *out = 1; return 0; }` block gives the duplicated exit blocks.
 - 883EEEA8 (pool free) is not solved; the best attempt is 16 instructions off under /O1. The target computes the `inside` byte with `clrlwi.` (a record form) and sets `li r6,0` before the branch. Our build tests it with `cmplwi cr6` instead. The `free(a ? vt : heap)` inline helper got the shape closest.
+
+### agAB round 7 (b169)
+
+- Bit-array writer loops (`stwx` of `(w & ~(1<<b)) | ((v&1)<<b)` with `li rX,1` re-materialised each pass): an inline
+  per-bit setter in a `do { } while (--n)` loop on /O1; /Oc hoists the constant and saves r31 (0x88290718, 0x88290778).
+- Callback with a shared fallback returning 0 (`li r3,0` first, `beqlr` exits): `int r = 0; if (a) r = f(); else if (b)
+  r = g(); return r;`; early `return`s give a different layout (0x883202A0).
+- Unit-conversion getters `switch (unit) { case n: k = lbl; }` then one shared `fmuls`: /O1 stops the tail duplication,
+  but the f0/f13 roles stay swapped (0x883DF940, 0x883CA750; open).
+- Data labels: run a check after every match that names a `lbl_`: the address is in symbols.txt and the target has
+  `lis ha(addr)` plus the matching low half. objdiff MATCH does not compare relocation targets.

@@ -46655,6 +46655,42 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"fn_884218C8": 80},
     },
+    {
+        "source": "src/xbox360/me_ts4_any_record_unloaded_88384A00.c",
+        "object": "me_ts4_any_record_unloaded_88384A00.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_88384A00": 164},
+    },
+    {
+        "source": "src/xbox360/me_ts4_copy_bits_to_mask_88290718.c",
+        "object": "me_ts4_copy_bits_to_mask_88290718.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_88290718": 92},
+    },
+    {
+        "source": "src/xbox360/me_ts4_copy_bits_to_mask_88290778.c",
+        "object": "me_ts4_copy_bits_to_mask_88290778.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_88290778": 92},
+    },
+    {
+        "source": "src/xbox360/me_ts4_invoke_callback_or_global_883202A0.c",
+        "object": "me_ts4_invoke_callback_or_global_883202A0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_883202A0": 96},
+    },
+    {
+        "source": "src/xbox360/me_ts4_pixel_conv_init_882B4340.c",
+        "object": "me_ts4_pixel_conv_init_882B4340.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_882B4340": 480},
+    },
+    {
+        "source": "src/xbox360/me_ts4_stream_copy_element_882DDA00.c",
+        "object": "me_ts4_stream_copy_element_882DDA00.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_882DDA00": 160},
+    },
 )
 
 

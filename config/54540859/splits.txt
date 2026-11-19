@@ -52097,3 +52097,23 @@ src/xbox360/me_ts4_str_to_lower_88421918.c:
 
 src/xbox360/me_ts4_str_to_upper_884218C8.c:
 	.text       start:0x884218C8 end:0x88421918
+
+src/xbox360/me_ts4_any_record_unloaded_88384A00.c:
+	.text       start:0x88384A00 end:0x88384AA4
+
+src/xbox360/me_ts4_copy_bits_to_mask_88290718.c:
+	.text       start:0x88290718 end:0x88290774
+
+src/xbox360/me_ts4_copy_bits_to_mask_88290778.c:
+	.text       start:0x88290778 end:0x882907D4
+
+src/xbox360/me_ts4_invoke_callback_or_global_883202A0.c:
+	.text       start:0x883202A0 end:0x88320300
+
+src/xbox360/me_ts4_pixel_conv_init_882B4340.c:
+	.pdata      start:0x88110A38 end:0x88110A40
+	.text       start:0x882B4340 end:0x882B4520
+
+src/xbox360/me_ts4_stream_copy_element_882DDA00.c:
+	.pdata      start:0x88111308 end:0x88111310
+	.text       start:0x882DDA00 end:0x882DDAA0
