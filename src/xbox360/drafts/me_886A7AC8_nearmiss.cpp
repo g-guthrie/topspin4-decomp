@@ -1,3 +1,4 @@
+/* agF 2026-11-19: not changed (13). Pure scheduling after fn_886A0FC0, same residue class as 0x886B4D00. */
 /* agD round 2: still 13 plain and LTCG. Block-local pointers in Slots and for the Track vt, self_ref, Lanes call through a local, Ring with a Quad-cast ctor, non-forceinline Track: no change. */
 /* agD 2026-11-19: Track ctor as `vt = lbl_880D7600; arr_init(ring);` with the 88695568 Quad-cast arr_init reproduces all ten dead addis: 121 -> 13 off (size now right). Remaining: right after the fn_886A0FC0 call the target stores slots w[0..2] before the vtable lis and spreads the track addis; ours hoists them. Block-local pointers in Slots, vt local, init orders: no change. */
 /* agentA2 (2026-11-18 tips pass): not retried beyond the 8869FAD8 sibling test (Quad-cast/inline-init history ctor does not produce the dead addi); 121 off. */

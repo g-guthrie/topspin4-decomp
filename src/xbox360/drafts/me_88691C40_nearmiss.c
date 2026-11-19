@@ -1,3 +1,4 @@
+/* agF 2026-11-19: 12 -> 2 off (LTCG, same context). Fix: write the select zero and zero init as the literal 0.0f instead of a static kZero; LTCG puts it in g_ts4_event_value's pool slot, keeps it in f29 and copies it to f28. Left: cmplw operand order for the key0 and f4 tests (target loads e first, compares c,e); swaps, !=, casts, ueq helpers, const c: 2-6. */
 /* near miss 0x88691C40 (LTCG route, /Oc, context: src/xbox360/fk6_000.c src/xbox360/me_phase_timer_flags_8866FB60.c
  *   src/xbox360/w5a_h.c, then pp1_pool_primer.c): about 12 real instruction differences (39 after alignment, most of
  *   them branch displacements shifted by one extra instruction); 4 by mnemonic.
@@ -22,13 +23,12 @@ typedef struct Machine { char p[0x10]; Back cur; } Machine;
 typedef struct Self { char p[4]; u8 f4; char p1[0x10 - 5]; int head; int count; char p2[0x1c - 0x18]; Own *f1c; Machine *f20; float f24_unused; float f28;
     char p3[0x4c - 0x2c]; void *f4c; char p4[0x5c - 0x50]; Entry ring[20]; } Self;
 extern float g_ts4_script_constants[];
-static const float kZero = 0.0f;
 void ts4_loop_get_u32_off10_8865FE20(Self *s);
 void ts4_phase_timer_flags_8866FB60(Self *o, float *time, u8 *a, u8 *b);
 void ts4_clamp_to_table_88691B38(Self *self, void *t, int idx, float *val);
 unsigned int *fn_8826CCD8(void *arr, const unsigned int *key);
-static __inline float vmax(float a, float b) { return (a - b >= kZero) ? a : b; }
-static __inline float vmin(float a, float b) { return (a - b >= kZero) ? b : a; }
+static __inline float vmax(float a, float b) { return (a - b >= 0.0f) ? a : b; }
+static __inline float vmin(float a, float b) { return (a - b >= 0.0f) ? b : a; }
 static __inline void *cur(Back *b) { return (char *)b - b->offset; }
 void ts4_ring_apply_timers_88691C40(Self *s)
 {
@@ -38,7 +38,7 @@ void ts4_ring_apply_timers_88691C40(Self *s)
     Entry *c;
     ts4_loop_get_u32_off10_8865FE20(s);
     tbl = cur(&s->f20->cur);
-    zero = kZero;
+    zero = 0.0f;
     rest = zero;
     if (s->f4c) rest = s->f28;
     n = s->count;

@@ -910,3 +910,14 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   item0 add and the placement of the vtable load before the bctrl.
 - 8866A930/AC38: no pad setting and no helper form fixes the "add (rel + i*16), then lwz *rel, then stwx" stores.
   Ruled out: the four forms above, a second helper used only at the active-store sites, and 1-7 pads on top of it.
+
+## Literal zero and statement-order search (agF, 2026-11-19)
+- LTCG select zero held in a nonvolatile FPR (0x88691C40, 12 -> 2): write the zero as the literal `0.0f` in the
+  select helpers and the `rest = 0.0f` init, not a `static const float kZero`. The literal lands in the pool slot at
+  0x8814B440 (g_ts4_event_value), is loaded once into f29 and copied to f28, as in the target. This does not carry
+  over to every function: in 0x8867DA30 the literal went to a different `__pool` slot (worse), so keep the extern there.
+- Scheduling residue around a call argument (0x8867DA30, 13 -> 8): read the float argument into a local
+  (`t = ctx->clock->t;`) and permutation-search its statement position among the struct stores. A short script
+  that writes every order and runs the checker finds this in a few minutes.
+- Unresolved: a `cmplw` whose loads follow one operand order and whose compare follows the other (target loads e
+  then c, compares c,e). Operand swaps, `!=`, casts, compare helpers and `const` give either both in the same order or worse.

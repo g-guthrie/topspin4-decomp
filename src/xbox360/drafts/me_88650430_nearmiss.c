@@ -1,3 +1,4 @@
+/* agF 2026-11-19: not retried (9, stack slots only); no new idea beyond agD's 2880-order brute force. */
 /* agD 2026-11-19: callee at 0x886107F8 is ts4_handle_forward0_886107F8 (was fn_88610798, the reloc name differed). Brute force of all 2880 declaration orders of the two block scopes: 9 off at best. Residue unchanged (slots 0x70/0x60 swapped, k3 at 0x50 vs 0x58, d copy at 0x50 vs 0x70). */
 /* NEAR MISS (9 instructions, plain /Oc): stack slots only. Target puts the first forward handle temp at 0x70 and the ref at 0x60 (we swap them), keeps 0xB894A04C at 0x58 (we reuse 0x50) and copies the difference for the length at 0x70 (we use 0x50). Code order and registers match. */
 /* 0x88650430: true when the point lies within the xdata radius (path 0x3CD06B6C/0xDCB67730, default g_ts4_event_value when unresolved) of the xdata centre (0xB894A04C, vec3 view): |p - c|^2 <= r^2. */

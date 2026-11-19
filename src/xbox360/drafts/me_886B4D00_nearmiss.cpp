@@ -1,3 +1,4 @@
+/* agF 2026-11-19: still 10 (LTCG). Track not derived with vt first or last in its ctor, TrackBase vt via block-local pointer, TrackBase storing lbl_880D7600 then Track storing lbl_880D75FC: 10 or 28. */
 /* agD round 2: 81 -> 10 off on LTCG + primer (plain 37). Fixes: f20 as ZInt member whose ctor stores through a block-local pointer (Root vtable store goes first), level stored through a block-local pointer, v3c0 stored through a block-local pointer (keeps the stvx after k[1]). Left: the Track vtable lis/addi (lbl_880D75FC) is hoisted to the slot-6 area in the target, and so is the g_ts4_event_value lis. Block-local vt pointer, vt local and z local all leave it at 10. */
 /* agentA2 (2026-11-18 tips pass): not retried beyond the 8869FAD8 sibling test (same dead addi +0x14 residue); 263 off. */
 /* near miss 0x886B4D00 (ME agent B): 263 off (/Oc, plain and LTCG). Store order of the constructor body, the base vptr

@@ -1,3 +1,4 @@
+/* agF 2026-11-19: still 5 (18-32 aligned). Tried rel local plus copy (r2 = rel), (unsigned) cast on one read, Rel::at(i)/at(1-i) member helpers, j = 1 - i, base+i / base+1-i, explicit (h - off) temp: normal form unchanged. */
 /* near miss 0x8865D3C0 (plain route, /Oc): size 0x2c4 against 0x2c8. 5 real instruction differences: 18 after
  * alignment, the rest are branch displacements shifted by the one missing instruction. 4 by mnemonic.
  * Behaviour: controller update. Returns if the flags block is already finished (f93). Asks the controller for a
