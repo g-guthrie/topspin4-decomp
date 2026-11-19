@@ -1644,3 +1644,11 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - `r = 0` + `if (p->o) r = p->o->vt->f(p->o, 0); return r;` with `P *p = s->p;` gives `li r3,0; beqlr; clrrwi r3` and a
   dead `blr` after `bctr` (888386C0). A vector bounds-checked get through two inline helpers on `&s->v` (size and slot
   address) gives the clrrwi copy of begin and an index-first lwzx (88879168).
+- (second run) A path walk that reassigns its node parameter got the target's callee-saved order only after copying the
+  parameter into a local (`Node *t = node;`) and declaring the cursor before the start pointer (883D7F20, /O1).
+- agZ's loop-body base local also works in a LEAF loop when the body stores through another pointer (the store forces
+  the base reload like a call does): `unsigned *it = t->items; o->map[it[i] >> 8] = (unsigned char)it[i];` (88446198).
+- Self-relative family: the `cmpwi` (not `cmplwi`) null test of the holder comes from an `int` field cast to a pointer
+  (888AF448 7 off with that). The remaining diff is the target's add-then-select merge before one shared load; every
+  C/C++ form tail-duplicates the load. 884C19A0: a chain of .rdata factors needs `/fp:precise` to keep the source order
+  (1 fmuls operand swap left, draft).
