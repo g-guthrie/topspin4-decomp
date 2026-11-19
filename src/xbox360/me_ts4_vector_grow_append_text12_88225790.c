@@ -3,11 +3,10 @@
 typedef struct Item { const char *text; int w1, w2; } Item;
 typedef struct Alloc { void *h; } Alloc;
 typedef struct Vec { Item *begin; Item *end; Alloc alloc; Item *cap; } Vec;
+void ts4_if_call_seq_u32_off4_8825E738(Vec *v);
 extern void *lbl_88D45B38;
 void *ts4_if_call_seq_fn_88883CD0_8860D250(void *g);
 void *fn_88613570(void *alloc, unsigned size, unsigned align, void *owner);
-void ts4_if_call_seq_fn_881F04B8_886131F0(void *g, void *p, void *h);
-void fn_885651F8(void *p);
 static __inline Item *allocate(Alloc *a, unsigned n) { return (Item *)fn_88613570(a->h, n * 12, 4, a); }
 void ts4_assign_formatted_text(Item *dst, const char *text);
 static __inline void construct(Item *d, const Item *s) { ts4_assign_formatted_text(d, s->text); }

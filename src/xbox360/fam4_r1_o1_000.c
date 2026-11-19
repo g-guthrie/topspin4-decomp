@@ -15,19 +15,19 @@ typedef long long ts4_s64;
 #endif
 typedef unsigned long ts4_word;
 
-ts4_word fn_882C7B38();
+ts4_word ts4_flush_pending_882C7B38();
 ts4_word fn_8832EDB0();
 ts4_word fn_883E2E20();
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88884DE0();
 ts4_word ts4_fn_883E63B8();
 ts4_word ts4_if_get_u32_off0_882CDB18();
 
-/* Swing_DLL.xex 0x882C8400: if_get fn_882C7B38, u32@0x10, u32@0x0, u32@0x8, vcall, u32@0x14 */
+/* Swing_DLL.xex 0x882C8400: if_get ts4_flush_pending_882C7B38, u32@0x10, u32@0x0, u32@0x8, vcall, u32@0x14 */
 ts4_word ts4_if_get_fn_882C7B38_882C8400(ts4_word a0)
 {
     ts4_word t10;
 
-    fn_882C7B38((ts4_word)a0);
+    ts4_flush_pending_882C7B38((ts4_word)a0);
     if ((ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 16)) != 0) {
         ((ts4_word (*)(void *))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(((void *)((*(ts4_word *)((char *)(ts4_word)(a0) + 16))))) + 0))) + 8))))(((void *)((*(ts4_word *)((char *)(ts4_word)(a0) + 16)))));
     }

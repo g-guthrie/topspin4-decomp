@@ -1167,3 +1167,74 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   in constructors (8866CFA8, 886D48F8).
 - matching-b146 still names 0x8814B440 `lbl_8814B440` on the plain route, but symbols.txt calls it `g_ts4_event_value`.
   With the symbols.txt name, the plain check fails only by that relocation name, and LTCG matches.
+
+## agQ (2026-11-19, b148): /O1 cr0 scan below 0x88400000 (55 matches)
+- Scan: unmatched functions below 0x88400000 with 8-150 instructions that contain `cmp[l]wi rN,` without a cr field
+  number 361 (textdis.pkl, b148 report). 234 of them read a volatile register (r4-r12) after a `bl` before writing it.
+  Those keep values in volatile registers across in-unit calls (883DD7A0 keeps `this` in r7 across fn_883DC3C0), so they
+  need the callee's source as LTCG context. Do the other 127 first. The scan script is in scratchpad agQ/scan.py.
+- 54 of the 55 matches are /O1 and one sibling (88377078, cr6 compares) is /Oc. All 55 match on both routes.
+- Intrusive-list walk (`n = head.next; n != &head; n = n->next`, item = `n ? n - 4 : 0`): /O1 rotates it into a jump to the
+  bottom test. A plain `for` over the list matches (883F02A0, 883F2830, 883F2C28, 883F0208, 883FDA60, 883FE220, 883EF2A0).
+  When the end is re-read through the owner each pass (`&t->s->head`), write it that way in the loop test (883F6338).
+  When the end is null-checked (`cmplwi; addi rX,rY,4; bne; li rX,0`), write it as `n != (t->kids ? &t->kids->link : 0)`
+  (883DF0F0, 883DFD60).
+- `clrrwi r3,r11,0` before a vtable call means the member was used directly: `if (t->opt) t->opt->vt->f(t->opt, x)`. With a
+  local (`L *l = t->opt;`) the clrrwi goes away (883EE728 wants the local, 883FF9B0/883F7948 want the member).
+- Singleton creators with two inlined base ctors (883E8F58 + 6 siblings: `stw A,8; stw 0,0x10; stw B,0; stw C,8`): in C,
+  do the first (dead) vtable store through a pointer local, `{ void ***pv = &d->vt8; *pv = lbl_8803978C; }`, so DSE keeps it.
+  A real C++ base+derived ctor pair adds an `addi rX,r3,8`.
+- COM QueryInterface with inline 16-byte IID compares (882DD460, 882DDAA0, 884F9EC8): use `#pragma intrinsic(memcmp)` and
+  `if (!memcmp(a)) *out = u; else if (!memcmp(b)) *out = u; else return E_NOINTERFACE;`. The `||` form puts the failure
+  path first. When the result stays in r31, duplicate the AddRef in both arms and keep one `hr` local.
+- A local pointer copy changed `cmplwi cr6` into `cmplwi cr0` (883F6338). `if (t->s) { s = t->s; ...` restored cr6.
+- `rlwinm.` vs `extrwi.` on a halfword flag test (883C7278, 1 off, draft): every bitfield, shift and mask form gives
+  rlwinm. Near miss 883DF888 (2 off, draft): both fmuls have swapped operands, and no operand order fixes it.
+- Signed ring index `x < 0 ? x + (1 - x / 4) * 4 : x - x / 4 * 4` (srawi/addze, `add.`, subfic) as a static inline matched
+  883FFC48. Note that this is not a true modulo: a negative multiple of 4 maps to 4.
+- Constant hoisted out of two consecutive loops (882EB390, 6 off): a `float k` local and an inline helper both leave
+  the lfs scheduled one slot off.
+- Float temporaries that are all computed before any compare (883C7158): use a Vec3 local for the difference.
+  `if (all zero) *p = 0; else *p = 1;` puts the stb before `li r3,0`, where `*p = !(...)` puts it after.
+- Delay math with `__u64tod` (883FB6B8): `d = (float)delay * K; due = now + (__int64)(d * (float)rate + K2);`. The
+  64-bit stamp comes back as an {int,int} pair and is read with `ld`, so it is typed as a union.
+
+## agR (2026-11-19, b148): vector out-of-line copy, emplace_back and push_back variants (35 matches)
+- Generator: scratchpad agR/ga.py and agR/auto.py (copies of agN's with these additions). `UCOPY=fn` makes ucopy an
+  out-of-line call `Item *fn(first, last, dest)`. `NOCHK=1` drops the null check on the inserted-item construct, and
+  `UNCHK=1` drops it in the ucopy loop. `A16=1` (auto) gives a `__declspec(align(16))` Item. `EMPLACE=ctor|-` with an
+  optional `EBODY='...'` wraps the PREFIX grow body as `grow()` and emits emplace_back: `if (end == cap) grow(v, end);
+  if (end) ctor(end); ++end; return end - 1;`. `PUSH=1` (with `PUSHCHK=1` for a null-checked fast path) wraps the full
+  grow-append as `insert1()` and emits push_back: `if (end != cap) { construct(end, val); ++end; } else insert1(v, end, val);`.
+  `FORCE=1` makes grow `__forceinline`, which vector members need. `OUT=path` writes the source and does not compile it.
+- Bugs fixed in ga.py: `DRANGE` with `ALLOCM` silently dropped the range-destroy call, because ALLOCM had already rewritten
+  the line it replaced. Every allocm+range attempt by agN's auto.py was therefore really a no-destroy attempt.
+  `TIDY` with `ALLOCM` emitted no prototype for the tidy callee, so the source compiled with an implicit `int fn()`
+  declaration. That affected 8 saved files (88228C40, 88228E18, 88228FD8, 882290B8, 882298C8, 882299A0, 88225790,
+  882597D8). They now declare `void fn(Vec *v);` and each was re-verified as matching. auto.py's rename loop now runs
+  8 rounds instead of 4: with fn_AL, fn_U, fn_C and fn_DR as placeholders, 4 rounds ran out before the last rename.
+- Do not run two auto.py/ga.py jobs on the same address. Both write ga_ADDR.c, and save.py will save whichever body
+  is on disk at the time (one header was overwritten that way).
+- A 0x60-byte POD copied with an inline `li 12; mtctr; ldu/stdu -8` loop (88178590): give the Item `__declspec(align(16))`.
+  Without it, a struct assignment of 88 bytes or more is a memcpy call. With align 16, MSVC emits the ldu/stdu block loop.
+- Item of two `__vector4` (88263380): `#include "vx1_vector.h"` and copy member by member (`d->a = s->a; d->b = s->b;`) to get
+  `lvx128/stvx128`. A struct assignment gives ld/std. A C++ empty struct item (size 1, 882596F8) makes the whole copy and
+  construct compile away, so ucopy reduces to `d = nb + (where - begin)`.
+- Inline default ctors in emplace_back that zero several fields (88263548, 88263730, 8827A540): store through an
+  `int *w = v->end->w;` local. Direct `v->end->w[i] = 0` stores schedule the `end` reload before the second store.
+- Byte-item ucopy (88263460): `++first, ++dest` order fixes a swapped addi pair.
+- Item with a vtable word (882598B0, 88228EF8): `d->vt = (const void *)lbl_880F228C;` and then the fields one by one.
+- Counted-copy reuse blocker (Task 2, 88218E08 operator=, 56-byte item). I wrote a typed C model:
+  self/rhs, an inline ucopy, a destroy loop, and a `copy()` with `for (n = l - f; 0 < n; --n)`. It is 102-111 off. In the
+  shrink branch MSVC reuses n (`mr r30,r24`), while the target runs `divw.` again. Results, as candidate `divw.` count
+  against the target's 2:
+  a plain static (non-inline) helper: still reused. A pointer loop `for (; f != l; ++d, ++f)`: MSVC keeps it as a pointer
+  loop, with no counted loop and no divw. `/O1`, `/Os`, `/Ot`, `/Ox`, `/Ob1`: still reused (`/O1` is 94 off). A pointer-local
+  store on `self->last`, or `n` computed through a pointer: no change. The copy as a separate function in an LTCG context
+  TU, inlined at link time: still reused, and `mid - f` is still folded. A C++ by-value iterator struct
+  (`copy(It f, It l, Item *d)`): best at 74 off, still one divw. The target also leaves `(f + size*56) - f` unfolded
+  (`mulli; subf; add; divw.`), so the count expression was out of reach of reassociation/CSE in the original build. Still open.
+  Sources: scratchpad agR/t2 (b.c, idx.c, try_.py).
+- 88152ED8 (`reserve(3)` on a 0x208-byte item): 29 off, in drafts/me_88152ED8_nearmiss.c. The target loads `v->alloc.h` once
+  above the `begin == 0` test and calls fn_88613570 separately in both arms. Neither a single allocate nor an explicit `h`
+  local reproduces this.

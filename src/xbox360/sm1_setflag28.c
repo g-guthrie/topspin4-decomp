@@ -25,7 +25,7 @@ extern int ts4_call_seq_fn_8832EDB0_883833B0(void *, unsigned);
 extern int ts4_call_seq_fn_8832EDB0_883833E8(void *, unsigned);
 extern int ts4_fn_883E63B8(void *, unsigned);
 extern int ts4_if_call_seq_fn_8832EDB0_883294B8(void *, unsigned);
-extern int fn_88377078(void *, unsigned);
+extern int ts4_init_then_notify2_88377078(void *, unsigned);
 
 /* Swing_DLL.xex 0x88309BF0 */
 SET_FLAG(ts4_set_state_flag_88309BF0, fn_8831D7E0, 0x28)
@@ -48,4 +48,4 @@ SET_FLAG(ts4_set_state_flag_88320600, ts4_fn_883E63B8, 0x134)
 /* Swing_DLL.xex 0x88329CB0 */
 SET_FLAG(ts4_set_state_flag_88329CB0, ts4_if_call_seq_fn_8832EDB0_883294B8, 0x0)
 /* Swing_DLL.xex 0x88334820 */
-SET_FLAG(ts4_set_state_flag_88334820, fn_88377078, 0x3c)
+SET_FLAG(ts4_set_state_flag_88334820, ts4_init_then_notify2_88377078, 0x3c)

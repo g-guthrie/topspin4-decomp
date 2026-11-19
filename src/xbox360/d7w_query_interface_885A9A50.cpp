@@ -7,7 +7,7 @@ extern unsigned char lbl_88091EE4[];
 extern unsigned char lbl_88091EF4[];
 extern unsigned char lbl_880917B8[];
 int fn_88593E40(void *self, const unsigned char *iid, void **out);
-int fn_884F9EC8(void *self, const unsigned char *iid, void **out);
+int ts4_query_interface_884F9EC8(void *self, const unsigned char *iid, void **out);
 }
 struct Obj {
     virtual void s0();
@@ -23,7 +23,7 @@ extern "C" int ts4_query_interface_885A9A50(Obj *self, const unsigned char *iid,
         *out = sub;
         self->addref();
     } else {
-        result = fn_884F9EC8(self, iid, out);
+        result = ts4_query_interface_884F9EC8(self, iid, out);
     }
     return result;
 }
@@ -37,7 +37,7 @@ extern "C" int ts4_query_interface_885A7718(Obj *self, const unsigned char *iid,
         *out = sub;
         self->addref();
     } else {
-        result = fn_884F9EC8(self, iid, out);
+        result = ts4_query_interface_884F9EC8(self, iid, out);
     }
     return result;
 }
@@ -71,7 +71,7 @@ extern "C" int ts4_query_interface_885A6C48(Obj *self, const unsigned char *iid,
         *out = self ? (char *)self + 0x24 : 0;
         self->addref();
     } else {
-        result = fn_884F9EC8(self, iid, out);
+        result = ts4_query_interface_884F9EC8(self, iid, out);
     }
     return result;
 }
