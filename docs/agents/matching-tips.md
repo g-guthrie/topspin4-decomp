@@ -1054,3 +1054,49 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - 8890EE68 (keyed Val3 get): a C++ `struct Val3` with a 3-arg ctor and
   `const Val3 &r = (it == end) ? Val3(0, 0xfffff, 0) : it->v; return r;` gets within 3 real ops. The `li r7,0` hoisted to
   entry is still missing. Source: scratchpad agL/c8890EE68_best.cpp.
+
+## agN notes (2026-11-19): vector _Insert_n / grow-append family mining (below 0x88400000)
+- Single-insert grow paths (`li r10,1; stw r10,0x50(r1)` ... `cmplwi size,1`, three args, no tail copy) are
+  `_Insert_n` with `n = 1` and `at_end = 1` as locals. Keep the full body in the source (`if (n == 1) {...} else
+  {fill loop}` and `if (!at_end) d = ucopy(where, v->end, d);`): the folded short form matches the instructions but
+  not the register allocation. Model: src/xbox360/me_ts4_vector_grow_append_882116A0.c.
+- If the one-item construct loads every word of `*val` before the first store (`lwz;lwz;lwz;lwz;stw;stw...`)
+  while the copy loop interleaves, declare the outer parameter `const Item *__restrict val` (only the outer one).
+  This is not a volatile and it held on both routes (88162220, 88189E18, 88214608, 88229798, 88266EF8).
+- Scalar `_Ucopy` (memmove fn_88562DC0, `subf r25,first,last; mr r5,r25; bl; add r3,r3,r25`) must return early:
+  `if (last == first) return dest; off = (char *)last - (char *)first; return (Item *)((char *)memmove(dest, first, off) + off);`
+  An `if (last != first) {...} return dest;` body leaves an extra `mr` or swaps v/n registers (8826B718, 8826E438, 882349A0).
+  For scalar fill, use `for (; 0 < n; --n, ++dest) *dest = *val;` with no null check (mtctr loop). For float items, use
+  `dest->v = val->v` (a struct copy gives lwz/stw). If the newcap add comes out `add. rX, r10, r11`, use
+  `const unsigned *mp = size < n ? &n : &size; unsigned newcap = *mp + size;`.
+- A fixed inline-buffer vector (`addi r8,r3,8` used as the new storage, cap at +0x48, no free; 88235140): make
+  `allocate()` return `a->buf`.
+- Unrolled `ld/std` item copies: `__int64 w[N]`. Unrolled `lhz/sth`: `unsigned short`. The 4th fn_88613570 argument
+  (align) can be 16 (8826E190, 88229580). Check `li r5`.
+- Generators (scratchpad agN): `ga.py ADDR SIZE ITEMDEF [ALIGN]` with env RESTRICT/ALLOCM/DIRECT/COPY/PRE/DESTROY/DRANGE,
+  and `auto.py ADDR`, which brute-forces copy/destroy kinds, fills in callee names from objdiff's reloc/RENAME
+  feedback and saves on a match. It produced most of the grow-append matches.
+
+## agO notes (2026-11-19): lookalike mining at 0x88400000 and up (32 matches)
+- Try `/Os` early on small vcall find loops: 884FA750/884F7E18 (inline pointer array, vslot 6 compare, return the item)
+  were 10 off on every /Oc form (register swap plus the found-path tail placed after the epilogue) and matched on both
+  routes with `/Os` alone.
+- Hash-service setter family: the shape is regular enough to generate. scratchpad agO/gen.py parses the target (global key
+  label from `lis/subi r9`, k1 from the `ori` before the 88610778 call, each fn_8861CE00 hash and its `mr r6`/`lwz r6,0(rN)`
+  source) and agO/mk.py emits the 8894D298 template; 8894D0E8/D1C0/EC98/F188 matched with no edits.
+- In that family, when the target keeps the forwarded key slot apart from the temporaries (key at 0x60, tmp at 0x70), give
+  every service call its own `{ Out tmp; ... }` block (889508E8, 889502B8). A single function-level tmp shares the key slot.
+- `ts4_clone_byte_with_object_context(p, src)` (0x88153620) is the out-of-line `*(u8 *)slot10(p, 1) = *src`. Targets that
+  call it instead of a bctrl pass `&lbl_880xxxxx` (a const byte) or the address of a u8 parameter. The `f0 == 0 || f4 ==
+  0xFFFFF` null-handle test (`li 0 / li 1 / clrlwi 24`) is a `static __inline u8` helper returning that expression (8894EE70).
+- Load and store scheduling of the null-init plus global-key copy (88937148, 888B1780) matched only on LTCG. Plain stays 6-12 off.
+- An array walk whose target has `add rP, rP, rStride` (pointer first) after strength reduction: index it as
+  `data + i * stride` rather than `data += stride` (884D4308). This did not fix the base-reloaded `add r11,r11,r30` in 88432B08.
+- Four zero stores through a just-loaded pointer that reuse its register (`lwz r11,4(r11); li r10,0; stw r10,...(r11)`):
+  take an `int *w = l->rec->w;` local and write `w[0] = 0; ... w[3] = 0;` as separate statements (889158E8). A struct pointer
+  local moves it to a new register; a chained `w[0] = w[1] = ... = 0` reverses the store order.
+- Keyed Val3 get (8890EE68): assigning the members in the ctor body as `a = a_; c = c_; b = b_;` (not an init list) took it from
+  9 to 5 off. Draft in drafts/me_8890EE68_nearmiss.cpp.
+- Open: a constant passed by address to ts4_get_u32_off0_8822AFE8 (`v = 10; get(p, &v)`) is stored one slot early against
+  `li r6,0` (888E1FC0 2 off, 887011A8 3 off). The n+1 recompute in the range-pair setters (88944378/88702E00) is CSE'd in every
+  u32 form. A u64 slot argument gets the second addi but adds rldicl/extsw.

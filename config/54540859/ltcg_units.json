@@ -2309,5 +2309,35 @@
   "symbols": {
    "ts4_segment_lookup_8817A688": 212
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_make_handle_by_hash_88937148.c",
+  "object": "me_ts4_make_handle_by_hash_88937148.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_make_handle_by_hash_88937148": 228
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_set_byte_by_hash_888B1780.c",
+  "object": "me_ts4_set_byte_by_hash_888B1780.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_set_byte_by_hash_888B1780": 220
+  }
  }
 ]

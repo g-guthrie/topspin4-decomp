@@ -236,7 +236,7 @@ ts4_word fn_88933EF8();
 ts4_word ts4_if_call_seq_u32_off0_889367A8();
 ts4_word fn_88936AF0();
 ts4_word ts4_bits_step_88936BB0();
-ts4_word fn_88937148();
+ts4_word ts4_make_handle_by_hash_88937148();
 ts4_word fn_88938E98();
 ts4_word fn_88939288();
 ts4_word ts4_bits_write_bits_889393C0();
