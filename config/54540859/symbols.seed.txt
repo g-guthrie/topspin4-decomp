@@ -32284,3 +32284,6 @@ ts4_publish_value_887013A8 = .text:0x887013A8; // type:function size:0x134
 ts4_segment_lookup_8817A688 = .text:0x8817A688; // type:function size:0xD4
 ts4_set_handle_field_886FD558 = .text:0x886FD558; // type:function size:0xEC
 ts4_set_handle_value_887D37F0 = .text:0x887D37F0; // type:function size:0xFC
+ts4_set_handle_value_887D36F0 = .text:0x887D36F0; // type:function size:0xFC
+ts4_make_flagged_handle_889506E8 = .text:0x889506E8; // type:function size:0x120
+ts4_clear_three_flags_8877E908 = .text:0x8877E908; // type:function size:0x144

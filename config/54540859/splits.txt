@@ -49500,3 +49500,15 @@ src/xbox360/me_ts4_set_handle_field_886FD558.c:
 src/xbox360/me_ts4_set_handle_value_887D37F0.c:
 	.pdata      start:0x88129678 end:0x88129680
 	.text       start:0x887D37F0 end:0x887D38EC
+
+src/xbox360/me_ts4_set_handle_value_887D36F0.c:
+	.pdata      start:0x88129670 end:0x88129678
+	.text       start:0x887D36F0 end:0x887D37EC
+
+src/xbox360/me_ts4_make_flagged_handle_889506E8.c:
+	.pdata      start:0x88131D70 end:0x88131D78
+	.text       start:0x889506E8 end:0x88950808
+
+src/xbox360/me_ts4_clear_three_flags_8877E908.c:
+	.pdata      start:0x88127AD8 end:0x88127AE0
+	.text       start:0x8877E908 end:0x8877EA4C

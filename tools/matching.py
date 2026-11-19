@@ -42659,6 +42659,24 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_set_handle_value_887D37F0": 252},
     },
+    {
+        "source": "src/xbox360/me_ts4_set_handle_value_887D36F0.c",
+        "object": "me_ts4_set_handle_value_887D36F0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_set_handle_value_887D36F0": 252},
+    },
+    {
+        "source": "src/xbox360/me_ts4_make_flagged_handle_889506E8.c",
+        "object": "me_ts4_make_flagged_handle_889506E8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_make_flagged_handle_889506E8": 288},
+    },
+    {
+        "source": "src/xbox360/me_ts4_clear_three_flags_8877E908.c",
+        "object": "me_ts4_clear_three_flags_8877E908.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_clear_three_flags_8877E908": 324},
+    },
 )
 
 
