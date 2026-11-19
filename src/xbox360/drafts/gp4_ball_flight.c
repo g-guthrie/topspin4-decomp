@@ -50,7 +50,7 @@ static const float POOL_PI = 3.1415927f;             /* lbl_880C88DC */
 
 typedef struct Gp4Curve Gp4Curve;
 float gp4_curve16_eval(float x, const Gp4Curve *c);  /* ts4_range_lookup_881899D8 */
-float gp4_curve20_eval(float x, const Gp4Curve *c);  /* fn_8817A688 */
+float gp4_curve20_eval(float x, const Gp4Curve *c);  /* ts4_segment_lookup_8817A688 */
 void  gp4_rotate_about_axis(float v[4], const float axis[4], float angle); /* fn_8864F7B8: v = R(axis, angle) v */
 float gp4_wrap_angle(float a);                       /* fn_8817B608: wraps into (-pi, pi] */
 

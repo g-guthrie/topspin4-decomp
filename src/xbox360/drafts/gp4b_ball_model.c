@@ -94,7 +94,7 @@ static float curve16_eval(float x, const uint8_t *c)
     }
 }
 
-/* fn_8817A688: curve of 20-byte keys {x0, x1, y0, slope, (unused)}; same header.  y = y0 + slope * clamp(x-x0, 0, x1-x0). */
+/* ts4_segment_lookup_8817A688: curve of 20-byte keys {x0, x1, y0, slope, (unused)}; same header.  y = y0 + slope * clamp(x-x0, 0, x1-x0). */
 static float curve20_eval(float x, const uint8_t *c)
 {
     int32_t first = bei32(c);

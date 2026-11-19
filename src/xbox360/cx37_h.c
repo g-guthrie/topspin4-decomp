@@ -8,7 +8,7 @@ typedef unsigned char u8;
 typedef unsigned int u32;
 typedef struct Cx37E4c { u32 w0; u8 pad[0x48]; } Cx37E4c;
 typedef struct Cx37V4c { Cx37E4c *first; Cx37E4c *last; } Cx37V4c;
-extern void fn_88950190(void *out, u32 v);
+extern void ts4_make_flagged_handle_88950190(void *out, u32 v);
 extern void ts4_byte_string_assign_8815F510(Cx37E4c *dst, Cx37E4c *src);
 CX37_INL Cx37E4c *cx37_copy4c(Cx37E4c *first, Cx37E4c *last, Cx37E4c *dst)
 {
@@ -34,7 +34,7 @@ void ts4_clear_list_244_88952D90(Cx37Own244 *o)
     Cx37E4c *p;
     u8 tmp[16];
     for (p = v->first; p != o->v.last; p++)
-        fn_88950190(tmp, p->w0);
+        ts4_make_flagged_handle_88950190(tmp, p->w0);
     v->last = cx37_copy4c(v->last, v->last, v->first);
 }
 /* 0x88952E10 */
@@ -44,6 +44,6 @@ void ts4_clear_list_238_88952E10(Cx37Own238 *o)
     Cx37E4c *p;
     u8 tmp[16];
     for (p = v->first; p != o->v.last; p++)
-        fn_88950190(tmp, p->w0);
+        ts4_make_flagged_handle_88950190(tmp, p->w0);
     v->last = cx37_copy4c(v->last, v->last, v->first);
 }

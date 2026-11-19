@@ -6,7 +6,7 @@
  * Covers:
  *   - XBin container header (fn_8892A968, CXBinDataServer load)
  *   - self-relative array header {rel,count} used by every typed XData struct (ts4_range_lookup_881899D8 & co)
- *   - the two curve evaluators used by the shot templates (ts4_range_lookup_881899D8, fn_8817A688)
+ *   - the two curve evaluators used by the shot templates (ts4_range_lookup_881899D8, ts4_segment_lookup_8817A688)
  *   - archive path hash (fn_886090A0 -> fn_886084C8) and FAT lookup (fn_8827EC98, fn_886217C0)
  *   - the hkx load flow (fn_886472C0 for AOD\%u.hkx, fn_88880B88 for Physics\Physics.hkx)
  * Everything is big endian (Xbox 360): a port must byte-swap on little-endian hosts.
@@ -73,7 +73,7 @@ float ts4_curve16_eval_881899D8(const struct XRelArray *h, float x)
     return t / (pick->x1 - pick->x0) * (pick->y1 - pick->y0) + pick->y0;
 }
 
-/* ---- curve type B: 20-byte keys, node type 0xF9F12A60; fn_8817A688(header, x) (H) -----------------
+/* ---- curve type B: 20-byte keys, node type 0xF9F12A60; ts4_segment_lookup_8817A688(header, x) (H) -----------------
  * y = c + clamp(x - x0, 0, x1 - x0) * m  (affine in x inside the segment; the 5th word is not read). */
 struct CurveKey20 { float x0, x1, c, m; u32 unused; };
 

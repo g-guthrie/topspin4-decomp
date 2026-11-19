@@ -49447,3 +49447,56 @@ src/xbox360/me_ts4_vector_realloc_insert_88262090.c:
 src/xbox360/me_ts4_vector_realloc_insert_88235388.c:
 	.pdata      start:0x8810DFD8 end:0x8810DFE0
 	.text       start:0x88235388 end:0x882354FC
+
+src/xbox360/me_ts4_block_reset_885C8A18.c:
+	.pdata      start:0x8811F020 end:0x8811F028
+	.text       start:0x885C8A18 end:0x885C8B1C
+
+src/xbox360/me_ts4_clear_three_flags_8877EA50.c:
+	.pdata      start:0x88127AE0 end:0x88127AE8
+	.text       start:0x8877EA50 end:0x8877EB94
+
+src/xbox360/me_ts4_ctor_flagged_block_88800758.c:
+	.pdata      start:0x8812A6E0 end:0x8812A6E8
+	.text       start:0x88800758 end:0x88800850
+
+src/xbox360/me_ts4_hash_select_index_886174F0.cpp:
+	.text       start:0x886174F0 end:0x886175B0
+
+src/xbox360/me_ts4_make_flagged_handle_88950190.c:
+	.pdata      start:0x88131D50 end:0x88131D58
+	.text       start:0x88950190 end:0x889502B4
+
+src/xbox360/me_ts4_make_ref_by_hash_889235F8.cpp:
+	.pdata      start:0x881308B0 end:0x881308B8
+	.text       start:0x889235F8 end:0x88923648
+
+src/xbox360/me_ts4_make_valued_handle_8894CCA0.c:
+	.pdata      start:0x88131C60 end:0x88131C68
+	.text       start:0x8894CCA0 end:0x8894CDAC
+
+src/xbox360/me_ts4_pose_add_88661410.c:
+	.text       start:0x88661410 end:0x8866145C
+
+src/xbox360/me_ts4_publish_inverse_flag_8877E630.c:
+	.pdata      start:0x88127AC0 end:0x88127AC8
+	.text       start:0x8877E630 end:0x8877E744
+
+src/xbox360/me_ts4_publish_mode_hash_888C8CA0.cpp:
+	.pdata      start:0x8812ECC0 end:0x8812ECC8
+	.text       start:0x888C8CA0 end:0x888C8DC8
+
+src/xbox360/me_ts4_publish_value_887013A8.c:
+	.pdata      start:0x88125C08 end:0x88125C10
+	.text       start:0x887013A8 end:0x887014DC
+
+src/xbox360/me_ts4_segment_lookup_8817A688.c:
+	.text       start:0x8817A688 end:0x8817A75C
+
+src/xbox360/me_ts4_set_handle_field_886FD558.c:
+	.pdata      start:0x88125A78 end:0x88125A80
+	.text       start:0x886FD558 end:0x886FD644
+
+src/xbox360/me_ts4_set_handle_value_887D37F0.c:
+	.pdata      start:0x88129678 end:0x88129680
+	.text       start:0x887D37F0 end:0x887D38EC

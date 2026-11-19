@@ -208,7 +208,7 @@ ts4_word fn_88883F38();
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88884DE0();
 ts4_word fn_888860A0();
 ts4_word fn_88888668();
-ts4_word fn_888C8CA0();
+ts4_word ts4_publish_mode_hash_888C8CA0();
 ts4_word fn_888CF860();
 ts4_word fn_888D3780();
 ts4_word fn_888EE0E8();
@@ -235,10 +235,10 @@ ts4_word ts4_lookup_then_forward_88309210();
 ts4_word ts4_object_finalize();
 ts4_word ts4_script_string_equals();
 
-/* Swing_DLL.xex 0x88786420: call_seq u32@lbl_88D45954, fn_888C8CA0 */
+/* Swing_DLL.xex 0x88786420: call_seq u32@lbl_88D45954, ts4_publish_mode_hash_888C8CA0 */
 ts4_word ts4_call_seq_u32_lbl_88D45954_88786420(void)
 {
-    fn_888C8CA0((ts4_word)(*(ts4_word *)lbl_88D45954));
+    ts4_publish_mode_hash_888C8CA0((ts4_word)(*(ts4_word *)lbl_88D45954));
     return 0;
 }
 

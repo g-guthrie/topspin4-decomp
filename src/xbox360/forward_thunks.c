@@ -188,7 +188,7 @@ void fn_888B1960(void);
 void ts4_destroy_all_children_888B1BF8(void);
 void ts4_call_seq_lbl_880DBEC0_888B83E8(void);
 void fn_888C5868(void);
-void fn_888C8CA0(void);
+void ts4_publish_mode_hash_888C8CA0(void);
 void ts4_name_keys_register_888DB320(void);
 void fn_88903428(void);
 void fn_88907AB0(void);
@@ -422,7 +422,7 @@ TS4_FORWARD(888B81E8, ts4_destroy_all_children_888B1BF8)
 TS4_FORWARD(888B82A0, ts4_destroy_all_children_888B1BF8)
 TS4_FORWARD(888B8D90, ts4_call_seq_lbl_880DBEC0_888B83E8)
 TS4_FORWARD(888C5BF8, fn_888C5868)
-TS4_FORWARD(888D04D0, fn_888C8CA0)
+TS4_FORWARD(888D04D0, ts4_publish_mode_hash_888C8CA0)
 TS4_FORWARD(888DDCD8, ts4_name_keys_register_888DB320)
 TS4_FORWARD(888DF4A0, ts4_name_keys_register_888DB320)
 TS4_FORWARD(888DF4A8, fn_8892AF80)

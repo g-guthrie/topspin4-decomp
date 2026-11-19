@@ -20,7 +20,7 @@
  *   +0x3C f32 T (= row+0x54)         drag scale: k = T / a4
  *   +0x40 / +0x4C / +0x58 / +0x64    curve16 headers {i32 first_key_rel, i32 count, u32 ?} for the bounce response
  *                                    (speed loss(spin_a), spin decay(spin_a), outgoing elevation(theta), yaw kick(spin_b))
- * node types: GP4B_NODE_TABLE2D 0x7A330099 (ts4_table2d_eval_8826D278), GP4B_NODE_CURVE20 0xF9F12A60 (fn_8817A688), GP4B_NODE_CONST 0x33799CCE.
+ * node types: GP4B_NODE_TABLE2D 0x7A330099 (ts4_table2d_eval_8826D278), GP4B_NODE_CURVE20 0xF9F12A60 (ts4_segment_lookup_8817A688), GP4B_NODE_CONST 0x33799CCE.
  */
 #define GP4B_NODE_TABLE2D 0x7A330099u
 #define GP4B_NODE_CURVE20 0xF9F12A60u

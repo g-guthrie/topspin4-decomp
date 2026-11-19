@@ -24,7 +24,7 @@ typedef unsigned int   gp4_u32;
 #define GP4_HASH_MODE_LIVE_A   0x9EA301C2u /* unnamed: live ball with no net interaction (LetIn rewritten to this by prediction) */
 #define GP4_HASH_MODE_LIVE_B   0x5D25ED1Du /* unnamed: same for LetOut */
 #define GP4_HASH_MODE_CA68AAEC 0xCA68AAECu /* unnamed: treated like Out by fn_889C0C70 */
-#define GP4_HASH_CURVE_1D      0xF9F12A60u /* template node type: 1-D piecewise-linear curve (fn_8817A688, 20-byte keys) */
+#define GP4_HASH_CURVE_1D      0xF9F12A60u /* template node type: 1-D piecewise-linear curve (ts4_segment_lookup_8817A688, 20-byte keys) */
 #define GP4_HASH_CURVE_2D      0x7A330099u /* template node type: 2-D table (ts4_table2d_eval_8826D278) */
 #define GP4_HASH_CONST         0x33799CCEu /* template node type: plain float */
 /* shot "solver kind" stored at template+0x20 (= tpl_ptr+0x8, tpl_ptr = table + index + 0x18), names unknown */
@@ -44,11 +44,11 @@ typedef unsigned int   gp4_u32;
 #define GP4_HASH_STATE_PAUSE     0x165BBDE9u /* "Pause": game state in which fn_8887E5F8 does not step Havok */
 
 /* ---------------------------------------------------------------------------------------------
- * Piecewise-linear curve key blocks used by the shot template (ts4_range_lookup_881899D8 and fn_8817A688).
+ * Piecewise-linear curve key blocks used by the shot template (ts4_range_lookup_881899D8 and ts4_segment_lookup_8817A688).
  * ts4_range_lookup_881899D8(x, curve): curve = { i32 first_key_off (-1 = none); i32 key_count; ... } keys are 16 bytes
  *    { x_a, x_b, y_a, y_b }:  y = y_a + clamp((x - x_a)/(x_b - x_a), 0, 1) * (y_b - y_a)
  *    picking the LAST key with x_a <= x (first key if none).
- * fn_8817A688(x, curve): keys are 20 bytes { x_a, x_b?, y_a, slope, ... } :
+ * ts4_segment_lookup_8817A688(x, curve): keys are 20 bytes { x_a, x_b?, y_a, slope, ... } :
  *    y = y_a + max(min(x - x_a, x_b - x_a), 0) * slope.
  * --------------------------------------------------------------------------------------------- */
 struct Gp4Curve16Key { float x_a, x_b, y_a, y_b; };

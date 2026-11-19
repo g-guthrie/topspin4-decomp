@@ -57,7 +57,7 @@ ts4_word fn_885E76C0();
 ts4_word ts4_if_set_u32_off0_8862C0E8();
 ts4_word ts4_selected_variant_886A0EC8();
 ts4_word fn_886B6448();
-ts4_word fn_887013A8();
+ts4_word ts4_publish_value_887013A8();
 ts4_word fn_88907570();
 ts4_word ts4_acquire_item_88200D60();
 ts4_word ts4_assign_text_from_c_string();
@@ -482,7 +482,7 @@ void ts4_addr_lbl_880F10A0_88727058(void)
     t5 = loc58[1];
     t8 = ((ts4_word (*)(ts4_word, ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t4) + 0))) + 40))))((ts4_word)t4, (ts4_word)(ts4_word)&loc58[0], (ts4_word)t5, (ts4_word)1);
     *(unsigned char *)((char *)(ts4_word)(t8) + 0) = (unsigned char)0;
-    fn_887013A8((ts4_word)0);
+    ts4_publish_value_887013A8((ts4_word)0);
     return;
 }
 
