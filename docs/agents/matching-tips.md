@@ -2962,3 +2962,13 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - Ctor store order: putting the count read after the +0x94 store in source helps. A base body doing `f20 = 0` puts that store before the vt store. Declaring the Range as `hi, lo, cur` matches the target's store order (886E9BC8, still 3 off).
 - Open problem: a self-relative array's end() reloads `rel` in the target, but MSVC CSEs it in every form tried (8870E8F0, 8870EA08, 886EFB28).
 - 88774260 (a register-allocation swap and a ternary branch flip) needs `fn_8876FBD0` as its base call; it was not finished.
+
+## agBF
+
+- Byte-clear vector reset: write it as `v->last = mcopy(v->last, v->last, v->first)`, where mcopy is `if (first==last) return dest; n=last-first; dest=memmove(dest,first,n); return dest+n;` (fn_881A9BE8). The erase loop matches with field-wise element copies (u32,u16,u8,u8), not a struct assignment.
+- Arrays of sub-structs: an index loop (`Rec *r = &o->recs[i]`) gives the target's base register; a pointer-increment loop does not.
+- The "found, then early return" layout comes from inline `if (find(m,id) != m->last) { ...; return; }`.
+- Load order around a vcall: take a `Q *q = s->q;` local and compute the offset local (`ow->x74 - s->base + 0x66c`) before the call.
+- A shared tail `stw` where one branch loads its destination pointer early (886782D0): compute the condition into a `u8`, then take `X74 *d = p->x74;`, then `if (c) h=A; else h=B; d->h=h; return;` inside that branch. LTCG with `flags(/Ob1):src/xbox360/fk5_001.c` is required.
+- `g_ts4_script_constants` is `extern float g_ts4_script_constants[];` and is indexed (for example `[0x3c]`).
+- A dead end, 8887E030 (12 off): every block schedules `lwz` before `addi r3,0x1c`, and C, C++ virtual, MI and LTCG forms all failed. Skip similar shapes.
