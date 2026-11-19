@@ -2920,3 +2920,26 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   - 88728A48: 6 off, a pure r29/r30 swap between the global and the index.
 - Skipped: 886F7CD8, 887074E0, 887726F0 and most 2xx-byte entries (struct-by-value `std r3/r4`); 886F9F00 (VMX); 8873AFF0 (lbl_88D45B38
   dtor family); 886FBBF8 (the target tests a stale register); 887000D8 (bitfield packing from incoming r5-r10); the ctors 88721F10, 8872A910 and 8872E248 were not attempted.
+
+## agBC (b196/b197): ctor queue, renderer queue lines 241-261 (4 matches)
+- **A `mtctr`+`bdz` switch with no bias, where state 0 shares the fallback and the last state does nothing** (88763B80, matched):
+  write `case 0: fallback(); break;` and `default: fallback(); break;` as two identical cases, plus `case 7: break;`.
+  Grouping `case 0: default:` makes MSVC bias the switch (`subi r11,1`) and emit `bdzf` (28 off).
+- **Find in an 8-byte-entry vector, returning a call on the hit** (8877A608): `u8 r = 1; if (id == K) { Ent *end = v->last; ... for (e = v->first; end != e; e++) ...; r = callee(x); } return r;`.
+  `end != e` (not `e != end`) gives the target's `cmplw end, e` operand order.
+- **Script handler that copies an 8-byte name into a self-relative slot** (8877FAD0): a struct assignment
+  `*(Name8 *)((u8 *)r + r->rel) = item->name;` with `typedef struct { u8 b[8]; } Name8;` gives the `lbzu`/`stbu` ctr loop.
+  The checker's FAIL line names the real data labels (`g_ts4_online_context`, `g_ts4_online_state`).
+- **Nested vector reset loops that cache both end pointers** (88720C08): declare `Group **g = o->first, **ge = o->last;` and
+  `Item **e = (*g)->first, **ee = (*g)->last;` in the loop. Re-reading `->last` in the loop condition reloads it (60+ off).
+- **Clear colour copied as 4 floats** (887533F8): load all four first, then store. Every load order lands at 4+ off
+  (the target loads x,y,z,w into f0,f13,f12,f11). The float ctor `Vec4(a,b,c,d)` evaluates its args right to left. Dropped.
+  `0.0f`/`1.0f` literals match `lbl_880D0F70`/`lbl_8814B440`.
+- **Allocate + inline link ctor (cx48_b.c `ts4_link_ctor_8877A540`) + two vcalls** (8877D758): LTCG with `flags(/Ob1):src/xbox360/cx48_b.c`
+  did not inline the ctor. Copying the cx48 inline helpers into the file gets to 7 off: the store at +0x10 is scheduled after
+  the store at +8, and the vtable load is hoisted above the two field stores in C and in a C++ pure-virtual class. Its siblings
+  8877D9A0 and 8877D850 are at 0.97 and will share whatever fixes it.
+- 88725290 (ctor with range/member ctors, 0x70 frame): with member `Q50 { a=0; d=0; b=2; c=3; }` and the body stores it gets to ~16 off.
+  The target loads the float global once, early, and orders `lis` as float, global, 0x81fb. Dropped.
+- Skipped: 887205F0 and 88745F58 (lbl_88D45B38 dtor family); 88752130 (as agBB); 886FF470, 887039C8, 886F8AA0 and 8877D628 (struct-by-value);
+  8871EA50 (rldicr); 886EEAA0 and 88755C60 (VMX); 88703788 (existing open draft).
