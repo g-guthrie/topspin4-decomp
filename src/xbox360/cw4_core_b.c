@@ -201,10 +201,10 @@ char *ts4_find_char_88173D98(char *first, char *last, char value)
 
 
 
-/* 0x8817ED58: vector<word>::insert(pos, &value); grows through fn_8817F4E8 when full; returns an iterator to the new element */
+/* 0x8817ED58: vector<word>::insert(pos, &value); grows through ts4_vector_realloc_insert_8817F4E8 when full; returns an iterator to the new element */
 extern void ts4_destroy_owned_object(void *obj);
 extern void *fn_88562DC0(void *dst, void *src, u32 n);
-extern void fn_8817F4E8(void *v, u32 *pos, u32 *val, u32 n);
+extern void ts4_vector_realloc_insert_8817F4E8(void *v, u32 *pos, u32 *val, u32 n);
 typedef struct Cw4WVec { u32 *begin; u32 *end; u32 *cap; } Cw4WVec;
 u32 *ts4_wvec_insert_8817ED58(Cw4WVec *v, u32 *pos, u32 *val)
 {
@@ -225,7 +225,7 @@ u32 *ts4_wvec_insert_8817ED58(Cw4WVec *v, u32 *pos, u32 *val)
             *pos = copy;
         }
     } else {
-        fn_8817F4E8(v, pos, val, 0);
+        ts4_vector_realloc_insert_8817F4E8(v, pos, val, 0);
     }
     return v->begin + idx;
 }

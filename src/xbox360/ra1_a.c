@@ -19,7 +19,7 @@ typedef struct P20 { char pad[4]; Q20 qa; Q20 qb; } P20;
 typedef struct Vec20 { char pad[4]; Obj20 **end; Obj20 **cap; } Vec20;
 typedef struct S20 { char pad[0x74]; P20 *p74; Vec20 vec; unsigned f84; } S20;
 void fn_886BBEA8(Obj20 *o);
-void fn_8826B718(Vec20 *v, Obj20 **where, Obj20 **val, int n, int m);
+void ts4_vector_realloc_insert_8826B718(Vec20 *v, Obj20 **where, Obj20 **val, int n, int m);
 static __inline Obj20 *w20_pop(Q20 *q)
 {
     Obj20 *x = 0;
@@ -36,7 +36,7 @@ static __inline void w20_push(Vec20 *v, Obj20 *x, Obj20 **val)
             *v->end = x;
         v->end++;
     } else {
-        fn_8826B718(v, v->end, val, 1, 1);
+        ts4_vector_realloc_insert_8826B718(v, v->end, val, 1, 1);
     }
 }
 void ts4_spawn_pooled_886BC3A0(S20 *s)

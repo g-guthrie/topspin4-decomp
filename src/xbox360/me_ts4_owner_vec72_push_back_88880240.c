@@ -2,7 +2,7 @@
 /* Matched by agL (STL/template family mining) with fn_check on the plain and LTCG routes, b133. */
 typedef unsigned char u8;
 typedef unsigned int u32;
-extern void fn_881A6A78(void *v, void *where, const void *item);
+extern void ts4_vector_grow_append_881A6A78(void *v, void *where, const void *item);
 extern void fn_881A7188(void *dst, const void *src);
 
 #ifdef _MSC_VER
@@ -23,7 +23,7 @@ INL void vec72_push_back(Vec72 *v, const Elem72 *item)
         }
         v->end++;
     } else {
-        fn_881A6A78(v, v->end, item);
+        ts4_vector_grow_append_881A6A78(v, v->end, item);
     }
 }
 

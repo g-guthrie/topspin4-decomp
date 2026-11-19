@@ -33,7 +33,7 @@ ts4_word fn_881ABC10();
 ts4_word fn_881E88D0();
 ts4_word fn_881EC8C8();
 ts4_word fn_882253A0();
-ts4_word fn_88263908();
+ts4_word ts4_vector_realloc_insert_88263908();
 ts4_word ts4_pad_record_find_88614938();
 ts4_word fn_888CC218();
 ts4_word ts4_count_true_elements_88931388();
@@ -188,7 +188,7 @@ void ts4_if_call_seq_u32_off14_886150D8(ts4_word a0, ts4_word a1)
             *(ts4_word *)((char *)(ts4_word)(t5) + 4) = (ts4_word)((*(ts4_word *)((char *)(ts4_word)(t5) + 4)) + 4);
             return;
         }
-        fn_88263908((ts4_word)t5, (ts4_word)t7, (ts4_word)(ts4_word)&a1, (ts4_word)1, (ts4_word)1);
+        ts4_vector_realloc_insert_88263908((ts4_word)t5, (ts4_word)t7, (ts4_word)(ts4_word)&a1, (ts4_word)1, (ts4_word)1);
         return;
     }
     return;

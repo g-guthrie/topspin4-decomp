@@ -55,7 +55,7 @@ Cx12A0 *ts4_a0_erase_88224650(Cx12V0 *v, Cx12A0 *pos)
 
 typedef struct Cx12PtrV { u32 p0; u32 *end; u32 p8; u32 *cap; } Cx12PtrV;
 typedef struct Cx12H { u8 pad[0x10]; Cx12PtrV v; } Cx12H;
-extern void fn_8825E9D0(void *, void *, void *, u32, u32);
+extern void ts4_vector_realloc_insert_8825E9D0(void *, void *, void *, u32, u32);
 extern void ts4_remove_swap_8825E8B0(void *, u32);
 void ts4_ptrvec_add_88223000(Cx12H *h, u32 val)
 {
@@ -66,7 +66,7 @@ void ts4_ptrvec_add_88223000(Cx12H *h, u32 val)
         if (end != 0) *end = tmp;
         v->end++;
     } else {
-        fn_8825E9D0(v, end, &tmp, 1, 1);
+        ts4_vector_realloc_insert_8825E9D0(v, end, &tmp, 1, 1);
     }
     ts4_remove_swap_8825E8B0(h, val);
 }
@@ -105,7 +105,7 @@ void ts4_ptrvec_add_fin_88222B50(Cx12H3c *h, u32 idx)
         if (end != 0) *end = tmp;
         v->end++;
     } else {
-        fn_8825E9D0(v, end, &tmp, 1, 1);
+        ts4_vector_realloc_insert_8825E9D0(v, end, &tmp, 1, 1);
     }
     ts4_object_finalize(h->arr + idx * 0x3c + 0x1c);
     ts4_remove_swap_8825E8B0(h, idx);
@@ -125,7 +125,7 @@ void NAME(NAME##H *h, u32 idx) \
         if (end != 0) *end = tmp; \
         v->end++; \
     } else { \
-        fn_8825E9D0(v, end, &tmp, 1, 1); \
+        ts4_vector_realloc_insert_8825E9D0(v, end, &tmp, 1, 1); \
     } \
     e = h->arr + idx; \
     e->vt->dtor(e, 0); \

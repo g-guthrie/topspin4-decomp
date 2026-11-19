@@ -138,7 +138,7 @@ ts4_word ts4_call_seq_u32_off0_882126B8();
 ts4_word fn_88222338();
 ts4_word fn_88223540();
 ts4_word fn_88223B10();
-ts4_word fn_88225790();
+ts4_word ts4_vector_grow_append_88225790();
 ts4_word fn_8822B6E0();
 ts4_word fn_88255AA0();
 ts4_word fn_88608590();

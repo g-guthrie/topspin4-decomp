@@ -22,7 +22,7 @@ typedef unsigned long ts4_word;
 extern char g_ts4_script_constants[];
 extern char lbl_88D41FC4[];
 ts4_word ts4_wvec_insert_8817ED58();
-ts4_word fn_8817F4E8();
+ts4_word ts4_vector_realloc_insert_8817F4E8();
 ts4_word ts4_if_call_seq_u32_off0_8819B0C8();
 ts4_word fn_881AA7A0();
 ts4_word fn_881EC8C8();
@@ -47,7 +47,7 @@ void ts4_if_call_seq_u32_off8_8817E578(ts4_word a0, ts4_word a1, ts4_word a2)
             *(ts4_word *)((char *)(ts4_word)((q80)) + 4) = (ts4_word)((*(ts4_word *)((char *)(ts4_word)((q80)) + 4)) + 4);
             return;
         }
-        fn_8817F4E8((ts4_word)(q80), (ts4_word)t6, (ts4_word)(ts4_word)&a1, (ts4_word)1);
+        ts4_vector_realloc_insert_8817F4E8((ts4_word)(q80), (ts4_word)t6, (ts4_word)(ts4_word)&a1, (ts4_word)1);
         return;
     }
     ts4_wvec_insert_8817ED58((ts4_word)(q80), (ts4_word)(*(ts4_word *)((char *)(ts4_word)((q80)) + 0)), (ts4_word)(ts4_word)&a1);

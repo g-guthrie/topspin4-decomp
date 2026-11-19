@@ -3,7 +3,7 @@
  * Each comment says what still differs. The structure types are the ones used in gp3_types.h / gp0_types.h.
  */
 struct Gp3U32Vector { unsigned int *begin, *end, *cap; };
-void fn_88263908(struct Gp3U32Vector *vector, unsigned int *where, const unsigned int *value, int count, int flag);
+void ts4_vector_realloc_insert_88263908(struct Gp3U32Vector *vector, unsigned int *where, const unsigned int *value, int count, int flag);
 
 struct Gp3RewardCollector2 {
     unsigned char pad0[0x14];
@@ -22,7 +22,7 @@ void gp3_tag_queue_request_886965E0(struct Gp3RewardCollector2 *self, unsigned i
         }
         self->tag_hashes.end = self->tag_hashes.end + 1;
     } else {
-        fn_88263908(&self->tag_hashes, self->tag_hashes.end, &tag_hash, 1, 1);
+        ts4_vector_realloc_insert_88263908(&self->tag_hashes, self->tag_hashes.end, &tag_hash, 1, 1);
     }
     if (self->players.end != self->players.cap) {
         if (self->players.end != 0) {
@@ -30,7 +30,7 @@ void gp3_tag_queue_request_886965E0(struct Gp3RewardCollector2 *self, unsigned i
         }
         self->players.end = self->players.end + 1;
     } else {
-        fn_88263908(&self->players, self->players.end, &player_index, 1, 1);
+        ts4_vector_realloc_insert_88263908(&self->players, self->players.end, &player_index, 1, 1);
     }
 }
 

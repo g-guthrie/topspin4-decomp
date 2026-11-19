@@ -18,20 +18,20 @@ typedef struct { int a; char x[0xc]; char y[0xc]; u8 b; } e20_fill_t;
 /* Swing_DLL.xex 0x8815CBD0: assign a value (int, two sub-objects, byte) into every 0x20-byte element of a range */
 void ts4_fill_range_8815CBD0(e20_fill_t *first, e20_fill_t *last, e20_fill_t *val) { for (; first != last; first++) { first->a = val->a; ts4_byte_string_assign_88158908(first->x, val->x); ts4_byte_string_assign_88158908(first->y, val->y); first->b = val->b; } }
 void fn_88166AF8(void *, void *);
-void fn_8817E890(void *, void *, void *);
+void ts4_vector_grow_append_8817E890(void *, void *, void *);
 typedef struct { int pad; char *end; char *cap; } v50_t;
 /* Swing_DLL.xex 0x8817E358: push_back for 0x50-byte elements: copy-construct in place or grow */
-void ts4_vec_push_50_8817E358(v50_t *v, char *x) { char *e = v->end; if (e != v->cap) { if (e) { fn_88166AF8(e, x); *(int *)(e + 0x4c) = *(int *)(x + 0x4c); } v->end += 0x50; } else fn_8817E890(v, e, x); }
+void ts4_vec_push_50_8817E358(v50_t *v, char *x) { char *e = v->end; if (e != v->cap) { if (e) { fn_88166AF8(e, x); *(int *)(e + 0x4c) = *(int *)(x + 0x4c); } v->end += 0x50; } else ts4_vector_grow_append_8817E890(v, e, x); }
 /* Swing_DLL.xex 0x88165440: destroy five owned members then end the object, when non-null */
 void ts4_dtor_5_88165440(char *t) { if (t) { if (*(u32 *)(t + 0x54)) ts4_destroy_owned_object(*(int *)(t + 0x54)); ts4_destroy_owned_object(*(int *)(t + 0x44)); ts4_destroy_owned_object(*(int *)(t + 0x38)); ts4_destroy_owned_object(*(int *)(t + 0x2c)); ts4_destroy_owned_object(*(int *)(t + 0x14)); ts4_tsu_cleanup_end(t); } }
 /* Swing_DLL.xex 0x8816CDF0: parse a decimal string into *out; returns 1 only when the value changed */
 int ts4_parse_u32_if_changed_8816CDF0(void *unused, u32 *out, char *s) { u32 v = 0; int c = *s; (void)unused; while (c != 0 && c >= 0x30 && c <= 0x39) { v = v * 10 + c - 0x30; c = *++s; } if (*out != v) { *out = v; return 1; } return 0; }
 
 void *fn_88166428(void *, void *);
-void *fn_88162118(void *, void *, void *);
+void *ts4_vector_grow_append_88162118(void *, void *, void *);
 typedef struct { int pad; char *end; char *cap; } v0c_t;
 /* Swing_DLL.xex 0x88161668: push_back for 0xC-byte elements: construct in place or grow */
-void *ts4_vec_push_0c_88161668(v0c_t *v, void *x) { char *e = v->end; void *r; if (e != v->cap) { r = fn_88166428(e, x); v->end += 0xc; } else r = fn_88162118(v, e, x); return r; }
+void *ts4_vec_push_0c_88161668(v0c_t *v, void *x) { char *e = v->end; void *r; if (e != v->cap) { r = fn_88166428(e, x); v->end += 0xc; } else r = ts4_vector_grow_append_88162118(v, e, x); return r; }
 char *fn_88168F08(char *, char *, void *, void *);
 typedef struct { char *b, *e; } rng_t;
 /* Swing_DLL.xex 0x88162B48: find a sub-range at/after pos; index or -1 */

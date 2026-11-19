@@ -1,13 +1,13 @@
 /* Swing_DLL.xex 0x88160EB8-0x88220128, executable version 0.0.0.3. */
 typedef unsigned char u8;
 typedef unsigned int u32;
-extern void fn_88161A18(void *v, void *where, const void *item);
-extern void fn_88162688(void *v, void *where, const void *item);
+extern void ts4_vector_grow_append_88161A18(void *v, void *where, const void *item);
+extern void ts4_vector_grow_append_88162688(void *v, void *where, const void *item);
 extern void fn_88166938(void *dst, const void *src);
 extern void fn_88166AF8(void *dst, const void *src);
 extern void ts4_dc5c_grow_append_88214708(void *v, void *where, const void *item);
-extern void fn_88225880(void *v, void *where, const void *item);
-extern void fn_88225990(void *v, void *where, const void *item);
+extern void ts4_vector_grow_append_88225880(void *v, void *where, const void *item);
+extern void ts4_vector_grow_append_88225990(void *v, void *where, const void *item);
 extern void fn_8822A4A0(void *dst, const void *src);
 extern void ts4_call_seq_u32_off0_88212FD0(void *dst, const void *src);
 
@@ -23,7 +23,7 @@ void ts4_vector_push_back_construct_88160EB8(Vec_88160EB8 *v, const Elem_88160EB
         }
         v->end++;
     } else {
-        fn_88161A18(v, v->end, item);
+        ts4_vector_grow_append_88161A18(v, v->end, item);
     }
 }
 
@@ -39,7 +39,7 @@ void ts4_vector_push_back_construct_881614C8(Vec_881614C8 *v, const Elem_881614C
         }
         v->end++;
     } else {
-        fn_88162688(v, v->end, item);
+        ts4_vector_grow_append_88162688(v, v->end, item);
     }
 }
 
@@ -71,7 +71,7 @@ void ts4_vector_push_back_construct_88220060(Vec_88220060 *v, const Elem_8822006
         }
         v->end++;
     } else {
-        fn_88225880(v, v->end, item);
+        ts4_vector_grow_append_88225880(v, v->end, item);
     }
 }
 
@@ -87,6 +87,6 @@ void ts4_vector_push_back_construct_88220128(Vec_88220128 *v, const Elem_8822012
         }
         v->end++;
     } else {
-        fn_88225990(v, v->end, item);
+        ts4_vector_grow_append_88225990(v, v->end, item);
     }
 }

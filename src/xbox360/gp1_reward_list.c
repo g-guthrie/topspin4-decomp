@@ -8,7 +8,7 @@ struct Gp1U32Vector {
 
 struct Gp1RewardCollector;
 
-void fn_88263908(struct Gp1U32Vector *vector, unsigned int *where, const unsigned int *value, int count, int flag);
+void ts4_vector_realloc_insert_88263908(struct Gp1U32Vector *vector, unsigned int *where, const unsigned int *value, int count, int flag);
 
 struct Gp1RewardList {
     unsigned char pad0[8];
@@ -26,6 +26,6 @@ void ts4_shot_reward_list_push_88673630(struct Gp1RewardList *self, unsigned int
         }
         vector->end = vector->end + 1;
     } else {
-        fn_88263908(vector, vector->end, &reward_hash, 1, 1);
+        ts4_vector_realloc_insert_88263908(vector, vector->end, &reward_hash, 1, 1);
     }
 }

@@ -109,7 +109,7 @@ typedef struct Cx18Tbl { int off; u32 count; } Cx18Tbl;
 typedef struct Cx18Mid { u8 pad[0x38]; Cx18Tbl *tbl; } Cx18Mid;
 typedef struct Cx18Svc27c { u8 pad[0x234]; Cx18Mid *mid; u8 pad238[0x27c - 0x238]; u32 f27c; } Cx18Svc27c;
 extern Cx18Svc27c *lbl_88D45B1C;
-extern void fn_8817F248(Cx18Vec3w *v, Cx18Rec3w *at, Cx18Rec3w *rec);
+extern void ts4_vector_grow_append_8817F248(Cx18Vec3w *v, Cx18Rec3w *at, Cx18Rec3w *rec);
 
 /* 0x88865C90 */
 void ts4_push_rec3_88865C90(Cx18Own3w *o, u32 a, u32 b)
@@ -123,14 +123,14 @@ void ts4_push_rec3_88865C90(Cx18Own3w *o, u32 a, u32 b)
         if (v->end != 0) *v->end = r;
         v->end++;
     } else {
-        fn_8817F248(v, v->end, &r);
+        ts4_vector_grow_append_8817F248(v, v->end, &r);
     }
 }
 
 /* ---- push {a, b} onto the 8-byte record vector at +0x6c ---- */
 typedef struct Cx18Vec2w { Cx18Rec2 *begin; Cx18Rec2 *end; Cx18Rec2 *cap; } Cx18Vec2w;
 typedef struct Cx18Own2w { u8 pad[0x6c]; Cx18Vec2w v; } Cx18Own2w;
-extern void fn_881AB1A0(Cx18Vec2w *v, Cx18Rec2 *at, Cx18Rec2 *rec);
+extern void ts4_vector_grow_append_881AB1A0(Cx18Vec2w *v, Cx18Rec2 *at, Cx18Rec2 *rec);
 
 /* 0x88865D18 */
 void ts4_push_rec2_88865D18(Cx18Own2w *o, u32 a, u32 b)
@@ -143,7 +143,7 @@ void ts4_push_rec2_88865D18(Cx18Own2w *o, u32 a, u32 b)
         if (v->end != 0) *v->end = r;
         v->end++;
     } else {
-        fn_881AB1A0(v, v->end, &r);
+        ts4_vector_grow_append_881AB1A0(v, v->end, &r);
     }
 }
 
@@ -168,7 +168,7 @@ void ts4_push_nonzero_words_88865D88(Cx18Vec28 *src)
                 if (v->end != 0) *v->end = r;
                 v->end++;
             } else {
-                fn_881AB1A0(v, v->end, &r);
+                ts4_vector_grow_append_881AB1A0(v, v->end, &r);
             }
         }
     }
@@ -189,7 +189,7 @@ void ts4_push_pairs_with_key_88865E18(u32 a, Cx18Vec28 *src)
                 if (v->end != 0) *v->end = r;
                 v->end++;
             } else {
-                fn_881AB1A0(v, v->end, &r);
+                ts4_vector_grow_append_881AB1A0(v, v->end, &r);
             }
         }
     }

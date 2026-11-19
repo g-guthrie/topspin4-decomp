@@ -23,7 +23,7 @@ void ts4_copy_tables_88152100(ts4_tables_t *p, ts4_tables_t *q)
 }
 
 /* 0x881524B8: push_back of a 0x98-byte element; grow slow path when full */
-void fn_88152BB0(void *, void *, void *);
+void ts4_vector_grow_append_88152BB0(void *, void *, void *);
 typedef struct { int pad; char *end; char *cap; } ts4_vec98;
 void ts4_vec_push_98_881524B8(ts4_vec98 *v, void *x)
 {
@@ -31,7 +31,7 @@ void ts4_vec_push_98_881524B8(ts4_vec98 *v, void *x)
         if (v->end) memcpy(v->end, x, 0x98);
         v->end += 0x98;
     } else {
-        fn_88152BB0(v, v->end, x);
+        ts4_vector_grow_append_88152BB0(v, v->end, x);
     }
 }
 

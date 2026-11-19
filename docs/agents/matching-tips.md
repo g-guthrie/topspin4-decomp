@@ -1100,3 +1100,11 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Open: a constant passed by address to ts4_get_u32_off0_8822AFE8 (`v = 10; get(p, &v)`) is stored one slot early against
   `li r6,0` (888E1FC0 2 off, 887011A8 3 off). The n+1 recompute in the range-pair setters (88944378/88702E00) is CSE'd in every
   u32 form. A u64 slot argument gets the second addi but adds rldicl/extsw.
+- Grow step without an insert (copy [begin, where) into the new block, end = new prefix end; 882289F8, 88227878,
+  882285E8, 88228900, 8827A7B8): this is the grow-append body with the insert and the at_end tail removed and `where` as the
+  only argument. Here newcap has to be `const unsigned *mp = size < n ? &n : &size; unsigned newcap = size + *mp;`
+  (the inline form swaps the add operands). With an allocator member, old storage is sometimes released by one
+  call `fn(v)` instead of the inline deallocate (ga.py TIDY=...).
+- Open: 883FB5A0 tests a call result with `cmpwi cr0` where every C form gives cr6 (2 off,
+  drafts/me_883FB5A0_nearmiss.c). 882669B0 (16-byte {vtbl,a,b,u8}) has a dead `addi rX,d,0xc` and a subic fill loop.
+  C++ placement new on the u8 member makes a real null check (35 off).

@@ -7,7 +7,7 @@ extern float lbl_8814B440;
 
 void fn_886DC610(void *self, void *entry);
 unsigned char ts4_data_condition_eval_886C9F08(void *table, void *key, void *item);
-void fn_88263908(void *vec, void *where, void *item, int count, int flag);
+void ts4_vector_realloc_insert_88263908(void *vec, void *where, void *item, int count, int flag);
 unsigned char fn_886CB778(void *a, void *b);
 
 struct Ga6Entry98 {
@@ -63,7 +63,7 @@ void ga6_collect_matching_886CEAC8(struct Ga6Searcher *self, void *key, struct G
                         *out->end = item;
                     out->end = out->end + 1;
                 } else {
-                    fn_88263908(out, out->end, p, 1, 1);
+                    ts4_vector_realloc_insert_88263908(out, out->end, p, 1, 1);
                 }
             }
             p++;

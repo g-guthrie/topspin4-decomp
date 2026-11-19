@@ -90,7 +90,7 @@ char *ts4_name_lookup_88926DD8(Cx36NameOwner *o, u32 key)
 /* 0x889281C0: push a word on the vector at +0x54 (grow when full), then notify */
 typedef struct Cx36WVec { u32 *first; u32 *last; u32 *cap; } Cx36WVec;
 typedef struct Cx36WOwner { u8 pad[0x54]; Cx36WVec v; } Cx36WOwner;
-extern void fn_8817F4E8(Cx36WVec *v, u32 *pos, u32 *val, u32 n);
+extern void ts4_vector_realloc_insert_8817F4E8(Cx36WVec *v, u32 *pos, u32 *val, u32 n);
 extern void fn_88927E78(Cx36WOwner *o, u32 val);
 void ts4_push_word_notify_889281C0(Cx36WOwner *o, u32 val)
 {
@@ -101,7 +101,7 @@ void ts4_push_word_notify_889281C0(Cx36WOwner *o, u32 val)
             *v->last = val;
         v->last++;
     } else {
-        fn_8817F4E8(v, v->last, &tmp, 1);
+        ts4_vector_realloc_insert_8817F4E8(v, v->last, &tmp, 1);
     }
     fn_88927E78(o, val);
 }
