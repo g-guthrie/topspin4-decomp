@@ -1774,3 +1774,8 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   the add order), 88290D58 (state-block bind: logic matches, register allocation does not; the packet is a bitfield `{b0:1, b1:1, addr:30}`
   with `addr = ptr >> 2`), 883ED860 (queue insert with inline list helpers; register order and a tail merge), 883DD338 (request post:
   44 off; the shared unlock/return block is placed after the 0x25 path in the target).
+
+## agAD round 5
+
+- 88384A00 (/Oc) matched: a flag-bit check written as `static __inline unsigned char f(const T *r){return (unsigned char)((r->flags>>1)&1);}` gives the `extrwi` form. Writing every early exit as its own `{ *out = 1; return 0; }` block gives the duplicated exit blocks.
+- 883EEEA8 (pool free) is not solved; the best attempt is 16 instructions off under /O1. The target computes the `inside` byte with `clrlwi.` (a record form) and sets `li r6,0` before the branch. Our build tests it with `cmplwi cr6` instead. The `free(a ? vt : heap)` inline helper got the shape closest.
