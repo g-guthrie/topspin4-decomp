@@ -2348,6 +2348,80 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
     the `end`-before-`last` load order. What remains is a pure swap: `last` and the zero constant take r28/r27 the other way
     round. Neither a separate copy-result variable nor `count` as a grow parameter changes it.
     887DA038 is still 16 off; the target keeps `srawi.` for the `size() != 0` test.
+- **Round 3 (b183): the strlen `clrrwi` rule.**
+  - The inline strlen loop (`lbz/addi/cmplwi/bne; subf; subi`) followed by `clrrwi rX,rY,0` is the strlen intrinsic
+    converted to int. Declare `unsigned int strlen(const char *s);` and write `(int)strlen(s)` wherever the length is used,
+    for example `s + (int)strlen(s)`, `124 - (int)strlen(buf)` or `unsigned int len = (int)strlen(name);`.
+  - A hand-written loop gets folded (`e - s - 1 + s` becomes `e - 1`), and an unconverted `strlen(s)` drops the `clrrwi`.
+  - This settled the open char* string constructor (88152D58/881599B8) and the 12-form open item 88421338 (`return (int)strlen(s);`).
+    About 50 unmatched functions have the pattern; scan them with an lbz/cmplwi/bne loop followed within 5 instructions
+    by `clrrwi r,r,0`.
+  - Related shapes:
+    - A `result = 0; ... result = 1; break;` local keeps the target's r27/r31 zero register. A direct `return 1` loses it
+      (886ED490, 886EBEF0).
+    - A capacity check reads both fields into locals before an unrelated store (88421BF8).
+    - A grow size passed as a `?:` argument (88421830).
+    - An allocation inline whose size argument is `len + 1` (88421D50).
+  - CRT/strsafe-style functions near the CRT (882C7840, 88582530) are /O1, like their neighbour 882C74C8. /Oc
+    duplicates the epilogue there.
+  - Other round 3 rules:
+    - A hand-written length loop (`while (*e++); e - s - 1`) compiles with no `clrrwi` (8819B3F8).
+    - `s ? (unsigned short)strlen(s) : -1` stored in a short gives the `clrlwi 16` form (88603D78).
+    - A find_first_of inline must end with `return last;` (88160848).
+    - The 256-byte inline-buffer string constructor copies an uninitialised local store, so the target memcpys
+      0x100 bytes from the stack (88236708).
+    - Two function-scope 256-byte buffers make the 0x290 frame; block-scoped buffers share one slot (8861B800).
+  - Round 3 open items:
+    - 881B1DB0 (vsprintf append, 17 off): the capacity check and the grow loop must not CSE `size`. A grow inline over
+      the embedded `GrowBuf` gets close; what remains is a register swap.
+    - 8821FAF8 (rfind via find_end, 5 off): MSVC orders `p + n + min` as `min + p` then `+ n`; the target does `p + n` first.
+      An `unsigned int rest = size - n;` local fixed the stack slots.
+    - 889414F0 group (offset-array name lookup, 13 off): the inner loop pointer needs r31.
+    - 884F0018 (XAM enumerator create): /O1 gives 35 off.
+    - 888371F8/888372C0 (Lua string set): 24 off.
+    - 8815C0B0/88279448: `add.` operand order. About 25 more max_ref and add-order forms were tried with no change.
+    - 8861B8E0 (`@name="value"` script line parser): LTCG with cl2_c.c as context gives 5 off. The target keeps the
+      index_of result in r6 across the rfind call, where we get r8. Adding cx30_core_a.c to the context lets LTCG
+      constant-propagate the `'"'` argument into index_of, so the image must have other callers.
+      Source: scratchpad w/pl4.c.
+  - Session-state stores through a substruct pointer (8899FA00, 8899F838). When the target reloads
+    `g_ts4_session_context->state` into r11 and stores through it, while ours puts the reloaded state in a fresh
+    register (r7, r4), take a pointer to the substruct (`EventSlot *ev = &ctx->state->event;` or
+    `ClockDisplay *c = &...->clock;`) instead of a `SessionState *st` local. The event slot layout is in
+    src/xbox360/fam2_session_event.c.
+  - Counter pairs updated in both arms of an if (`used++/free--` against `used--/free++`), where the target loads both
+    before the branch and stores after it: read them into locals, adjust, then store (8899FA00).
+  - A dead `cmpwi rN,0` before the final store comes from a sign split that folds to one expression:
+    `if (s > 0) x -= s * 1000; else x += -s * 1000;` (8899F7F8).
+  - A pointer field tested with `cmpwi` (signed) is an int handle; declare the field `int` and cast at the dereference
+    (8899F520).
+  - The same rule matched 8899FAE8: take a `SessionContext *ctx` local, then `SessionConfig *cfg = &ctx->state->cfg;` for
+    the copies and `EventSlot *ev = &ctx->state->event;` for the post. A `SessionState *st` local gives 18 off.
+  - A dead `addi rX,rBase,0x14` just before a run of field stores means the source took the address of an array
+    member: write the stores through `float *v = in->values; v[2] = ...` (8899FE68).
+  - A recursive matcher matched first try as a plain for loop with a swap before and after the self-call (8899FB48).
+  - Self-relative tables (`(char *)t + t->off`): read the table through the owner (`o->table`, `o->log->table`)
+    with no `t` local when the target adds `index * size` to the table base before adding `off` (889A00A8).
+  - More open items in this area:
+    - 889A00A8 draft (2 off): the state load is in r7 where the target has r10.
+    - 889A0540 draft (1 off): the stwx fill order, the same family as 88423C28.
+    - 8899F098 (season/career stats update, 15 off): the target loads `pointsAgainst` after the `pointsFor` store,
+      where ours hoists it. The streak fix: `if (streak <= 0) streak = 1; else streak++;` (and the mirror form for
+      losses) inside a `streak` local.
+    - 889A0698 (OR a 128-bit flag block into a 256-bit mask, 6 off): the target loads all four flag words before
+      any store. Locals give 8 off, or 4 off with a permuted load order.
+      Sibling 8899E040 matched: zero words 0-2, read the four flag words into locals, zero word 7, then store the locals.
+      With the global state load, 889A0698 stays at 6 off in the same form (its w[7] zero is scheduled before the
+      state load).
+    - 8899F6B0: the `clrrwi r3,r11,0` argument to 884EFF18 has not been reproduced (22 off).
+    - 8899CDB8 (copy nested self-relative word arrays, 31 off): with `n`/`m` count locals the structure matches, but the
+      target computes the source as `(s + j*4) + s->off` and keeps the word in r31 (frame save). No index form changes it.
+    - 8899D148 (symmetric 8-wide gap matrix update, 39 off): the target keeps a `clrrwi r31,n,0` loop bound with no ctr loop.
+    - 8899DAF0 (format a name with ts4_format_text, then push a 16-byte item via the 88152530 span16 append inline,
+      13 off): the target frame is 0xb0 with the item at +0x80, and its copy loads all four words before storing.
+      We get a 0x80 frame and an interleaved copy. Source: scratchpad w/daf0.c.
+  - First-try matches in this area: 8899DBB0 (nested self-relative tables) and 8899C8F8 (current entry). For 8899C8F8, keep
+    a `RelTable *t` local but read the index through the block (`b->table.current`).
 - (agAH r6) If the config symbol for an address is not fn_XXXXXXXX, name the function with that existing symbol (for example ts4_profile_internal_is_available at 88936EB8).
 
 ### C++ float fabs (agAH, round 6)
@@ -2357,3 +2431,14 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - If a small function is 1-2 off only in the order of the final store and the `mr r3` (store first on /Oc, mr first in the target), try `/Os`. 883EEA70 matched with `/Oc /Os` and no source change.
 - A call through a vtable slot whose argument is loaded after the slot (`lwz r10,0(r3); lwz r10,0xc(r10); lwz r4,...`) is a C++ virtual call: the C function-pointer form loads the argument first. 883E5D68 matched as a .cpp free function calling `sink->Attach(...)` (with /Os).
 - A small result returned through a hidden pointer (`addi r3,r1,0x50; bl; lbz rX,0(r3)`) means the callee returns a C++ class with a non-trivial copy constructor: C structs of 4 or 8 bytes come back in registers. Declare the callee `extern "C"` (disable C4190) to keep the unmangled config name (884A9798).
+- A loop exit test materialised as `li r11,0/1; extsb r11,r11; cmpwi` in the same register: write `while (!(char)(a || b))`. A `char stop` local puts the extsb in a new register (885191D0).
+- A target that keeps the `twllei` divide trap but still differs under /O2 only in register choice may match under `/Os` alone
+  (no /Oc): /Os keeps the trap and changes allocation (885A9BD8, `total / per + c * n`; the sibling 885A9BA0 still fails).
+- A `clrrwi rX, r3, 0` (a no-op mask) after a call that returns 64 bits, before a 32-bit use, comes from truncating an
+  `unsigned long long` return to int. Declaring the callee with a 32-bit return gives `mr` instead (8841E5D0 family).
+  This is a call result, not a reload, so it is separate from the CL1 load-copy rule above.
+  In the same family, a sign-flag byte read back from the stack only got the target's register numbers when the flag
+  was a plain `char`, not `unsigned char` or `int`.
+- `rlwimi rA, rB, 12, 0, 19` merging a 4-bit and a 12-bit field (88322E58): write both masks explicitly,
+  `((kind << 12) & 0xF000) | (idx & 0xFFF)`. Without the masks you get `slwi` and `or`, even when idx was extracted
+  with `& 0xFFF` earlier.
