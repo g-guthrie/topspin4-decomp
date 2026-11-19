@@ -897,3 +897,16 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   `c->pend->x` again with no store in between, while `c` itself stays cached. Only `Pend *volatile pend;` gave the
   reload (94 -> 12 off). Passing `Pend *` or `Ctx *` to a non-volatile helper, /Ob1 and non-forceinline did not.
   This is the same diagnostic as Agent C's 0x886787D8.
+
+## Self-relative add order: what does and does not control it (agG, 2026-11-19)
+- The written form of a self-relative element address does not reach codegen: `(char*)((T*)rel + i) + *rel`,
+  `((char*)rel + i*16) + *rel`, `&((char*)rel + i*16)[*rel]` and `(T*)((char*)rel + r) + i` compile identically
+  (tested on 8866A930). MSVC canonicalises the sum, so cast order, `&a[i]` vs `a + i` and add order are dead knobs.
+- What changes the order is the OP1 symbol numbering. It is function-wide: dead locals in an inner block count the same
+  as dead locals at the top (on 8866B1C8, 3 pads at the top == 11 pads in the `if` block: period 8). A named temporary
+  inside an inline helper (`{ char *b = ...; }`) also shifts the count. So first run `tools/operand_order_pad.py`
+  (8 settings cover every case); if no setting fixes every add, the residue is scheduling, not source form.
+- 8866B1C8: 3 dead locals at the top plus `itemA(&o->data->items, 0)` for item0 -> 12 to 10 off. What is left is the
+  item0 add and the placement of the vtable load before the bctrl.
+- 8866A930/AC38: no pad setting and no helper form fixes the "add (rel + i*16), then lwz *rel, then stwx" stores.
+  Ruled out: the four forms above, a second helper used only at the active-store sites, and 1-7 pads on top of it.

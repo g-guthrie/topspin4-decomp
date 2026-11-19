@@ -1,3 +1,4 @@
+/* UPDATE 2026-11-19: 10 off (was 12). 3 dead-local pads at the top (OP1 symbol-numbering rule) fix items[i] add order; item0 via itemA(...,0). Left: item0 add operand order (target add r6,r10,r11) and vtable-slot load after the side stw. Still needs the volatile pend member. */
 /* near-miss: 12 off (0x8866B1C8). Needs `Pend *volatile pend` in Ctx to reproduce the ctx->pend reloads
  * (diagnostic, unconfirmed as original). Remaining: operand order of the add for items[i] (i*24+off vs off+i*24)
  * and the final leader recompute: target adds t+off for item0 and schedules the vtable load between the two adds. */
@@ -23,7 +24,7 @@ static __forceinline Item *itemD(Rel *t) { return (Item *)((char *)t + t->offset
 static void count(int *p) { (*p)++; }
 static __forceinline unsigned char pending(Pend *p) { unsigned char b; if (p->a && !p->b) b = 1; else b = 0; return b; }
 void ts4_point_award_8866B1C8(Obj *o)
-{
+{ int op1_pad0 = 0, op1_pad1 = 0, op1_pad2 = 0;
     Name *n = o->ctx->name;
     int s, t, i;
     Ctx *c;
@@ -58,7 +59,7 @@ void ts4_point_award_8866B1C8(Obj *o)
             o->ctx->pend->c = 0;
             o->ctx->flow->b2ca = 0;
             o->data->done = 0;
-            o->side = itemB(&o->data->items, 1)->step >= itemD(&o->data->items)->step;
+            o->side = itemB(&o->data->items, 1)->step >= itemA(&o->data->items, 0)->step;
             o->vt->recompute(o);
         } else
             o->data->done = 1;
