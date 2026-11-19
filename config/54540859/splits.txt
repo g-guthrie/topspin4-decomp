@@ -55025,3 +55025,45 @@ src/xbox360/me_ts4_script_content_has_space_8877A608.c:
 
 src/xbox360/me_ts4_script_set_item_name_8877FAD0.c:
 	.text       start:0x8877FAD0 end:0x8877FBC0
+
+src/xbox360/me_anim_step_repeat_886F2520.c:
+	.pdata      start:0x881256B8 end:0x881256C0
+	.text       start:0x886F2520 end:0x886F2660
+
+src/xbox360/me_input_button_hits_88778F20.c:
+	.text       start:0x88778F20 end:0x88779014
+
+src/xbox360/me_render_slot_event_886EFDB0.c:
+	.text       start:0x886EFDB0 end:0x886EFEF0
+
+src/xbox360/me_renderer_frame_tick_8876CF38.c:
+	.pdata      start:0x88127418 end:0x88127420
+	.text       start:0x8876CF38 end:0x8876D03C
+
+src/xbox360/me_renderer_register_ids_88713C60.c:
+	.pdata      start:0x88126070 end:0x88126078
+	.text       start:0x88713C60 end:0x88713D64
+
+src/xbox360/me_ts4_owner_bind_source_slot_886BCDA8.c:
+	.pdata      start:0x881248F0 end:0x881248F8
+	.text       start:0x886BCDA8 end:0x886BCE88
+
+src/xbox360/me_ts4_owner_bind_three_slots_886BACC0.c:
+	.pdata      start:0x88124870 end:0x88124878
+	.text       start:0x886BACC0 end:0x886BADA0
+
+src/xbox360/me_ts4_record_release_or_reset_888FD9C8.c:
+	.pdata      start:0x8812FE10 end:0x8812FE18
+	.text       start:0x888FD9C8 end:0x888FDAA0
+
+src/xbox360/me_ts4_select_approach_hash_886782D0.c:
+	.pdata      start:0x88123878 end:0x88123880
+	.text       start:0x886782D0 end:0x886783B0
+
+src/xbox360/me_ts4_service_slots_reset_888CA5A8.c:
+	.pdata      start:0x8812ED80 end:0x8812ED88
+	.text       start:0x888CA5A8 end:0x888CA680
+
+src/xbox360/me_ts4_state_reset_buffers_888C6230.c:
+	.pdata      start:0x8812EB80 end:0x8812EB88
+	.text       start:0x888C6230 end:0x888C6308

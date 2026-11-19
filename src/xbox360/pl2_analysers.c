@@ -27,7 +27,7 @@ typedef struct PL2Self {
 } PL2Self;
 void *ts4_graph_set_find_8866F028(PL2Graphs *g, const u32 *name);
 void fn_88911668(PL2An *a, void *inputs, void *graph, void *gin, void *gout);
-void fn_886BACC0(PL2Sub38 *s, PL2Own *o, char *p);
+void ts4_owner_bind_three_slots_886BACC0(PL2Sub38 *s, PL2Own *o, char *p);
 static __inline void pl2_bind(PL2Self *s, PL2An *a, u32 name)
 {
     PL2Own *o = s->owner;
@@ -49,7 +49,7 @@ void ts4_analysers_init_886BDB58(PL2Self *s, PL2Own *o)
     s->x2c = o->t74->a40;
     s->x30 = o->t2c->a0;
     s->x114 = o->t74->a40;
-    fn_886BACC0(&s->x38, o, o->t74->b10);
+    ts4_owner_bind_three_slots_886BACC0(&s->x38, o, o->t74->b10);
     s->x118 = o->t74->b10;
     pl2_bind(s, &s->a158, 0x71198650);
     pl2_bind(s, &s->a19c, 0x4FD4C7A4);

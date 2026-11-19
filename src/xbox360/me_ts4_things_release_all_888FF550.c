@@ -3,7 +3,7 @@
 typedef struct Thing Thing;
 typedef struct ThingVec { Thing **first; Thing **last; } ThingVec;
 typedef struct Owner { unsigned char pad[0x2c]; ThingVec things; } Owner;
-void fn_888FD9C8(Thing *t);
+void ts4_record_release_or_reset_888FD9C8(Thing *t);
 void *fn_88562DC0(void *dst, const void *src, unsigned int n);
 
 static __inline Thing **copy_ptrs(Thing **first, Thing **last, Thing **dest)
@@ -21,6 +21,6 @@ void fn_888FF550(Owner *o)
 {
     ThingVec *v = &o->things;
     Thing **it, **end = o->things.last;
-    for (it = v->first; it != end; it++) fn_888FD9C8(*it);
+    for (it = v->first; it != end; it++) ts4_record_release_or_reset_888FD9C8(*it);
     v->last = copy_ptrs(v->last, v->last, v->first);
 }

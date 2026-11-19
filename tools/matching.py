@@ -51201,6 +51201,66 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_script_set_item_name_8877FAD0": 240},
     },
+    {
+        "source": "src/xbox360/me_anim_step_repeat_886F2520.c",
+        "object": "me_anim_step_repeat_886F2520.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"anim_step_repeat": 320},
+    },
+    {
+        "source": "src/xbox360/me_input_button_hits_88778F20.c",
+        "object": "me_input_button_hits_88778F20.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_88778F20": 244},
+    },
+    {
+        "source": "src/xbox360/me_render_slot_event_886EFDB0.c",
+        "object": "me_render_slot_event_886EFDB0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"render_slot_event": 320},
+    },
+    {
+        "source": "src/xbox360/me_renderer_frame_tick_8876CF38.c",
+        "object": "me_renderer_frame_tick_8876CF38.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_8876CF38": 260},
+    },
+    {
+        "source": "src/xbox360/me_renderer_register_ids_88713C60.c",
+        "object": "me_renderer_register_ids_88713C60.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_88713C60": 260},
+    },
+    {
+        "source": "src/xbox360/me_ts4_owner_bind_source_slot_886BCDA8.c",
+        "object": "me_ts4_owner_bind_source_slot_886BCDA8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_owner_bind_source_slot_886BCDA8": 224},
+    },
+    {
+        "source": "src/xbox360/me_ts4_owner_bind_three_slots_886BACC0.c",
+        "object": "me_ts4_owner_bind_three_slots_886BACC0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_owner_bind_three_slots_886BACC0": 224},
+    },
+    {
+        "source": "src/xbox360/me_ts4_record_release_or_reset_888FD9C8.c",
+        "object": "me_ts4_record_release_or_reset_888FD9C8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_record_release_or_reset_888FD9C8": 216},
+    },
+    {
+        "source": "src/xbox360/me_ts4_service_slots_reset_888CA5A8.c",
+        "object": "me_ts4_service_slots_reset_888CA5A8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_service_slots_reset_888CA5A8": 216},
+    },
+    {
+        "source": "src/xbox360/me_ts4_state_reset_buffers_888C6230.c",
+        "object": "me_ts4_state_reset_buffers_888C6230.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_state_reset_buffers_888C6230": 216},
+    },
 )
 
 

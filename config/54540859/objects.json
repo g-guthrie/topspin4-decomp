@@ -14620,6 +14620,50 @@
       "src/xbox360/me_ts4_script_set_item_name_8877FAD0.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_script_set_item_name_8877FAD0.c"
+      },
+      "src/xbox360/me_anim_step_repeat_886F2520.c": {
+        "status": "Matching",
+        "source": "xbox360/me_anim_step_repeat_886F2520.c"
+      },
+      "src/xbox360/me_input_button_hits_88778F20.c": {
+        "status": "Matching",
+        "source": "xbox360/me_input_button_hits_88778F20.c"
+      },
+      "src/xbox360/me_render_slot_event_886EFDB0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_render_slot_event_886EFDB0.c"
+      },
+      "src/xbox360/me_renderer_frame_tick_8876CF38.c": {
+        "status": "Matching",
+        "source": "xbox360/me_renderer_frame_tick_8876CF38.c"
+      },
+      "src/xbox360/me_renderer_register_ids_88713C60.c": {
+        "status": "Matching",
+        "source": "xbox360/me_renderer_register_ids_88713C60.c"
+      },
+      "src/xbox360/me_ts4_owner_bind_source_slot_886BCDA8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_owner_bind_source_slot_886BCDA8.c"
+      },
+      "src/xbox360/me_ts4_owner_bind_three_slots_886BACC0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_owner_bind_three_slots_886BACC0.c"
+      },
+      "src/xbox360/me_ts4_record_release_or_reset_888FD9C8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_record_release_or_reset_888FD9C8.c"
+      },
+      "src/xbox360/me_ts4_select_approach_hash_886782D0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_select_approach_hash_886782D0.c"
+      },
+      "src/xbox360/me_ts4_service_slots_reset_888CA5A8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_service_slots_reset_888CA5A8.c"
+      },
+      "src/xbox360/me_ts4_state_reset_buffers_888C6230.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_state_reset_buffers_888C6230.c"
       }
     }
   }

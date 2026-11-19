@@ -3167,5 +3167,21 @@
   "symbols": {
    "ts4_table_kind_for_886F75E0": 188
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_select_approach_hash_886782D0.c",
+  "object": "me_ts4_select_approach_hash_886782D0.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/fk5_001.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_select_approach_hash_886782D0": 224
+  }
  }
 ]
