@@ -1,3 +1,4 @@
+/* agD 2026-11-19: still 10. Tried float-returning upper/lower helpers on &c->range, a whole-map inline, has_split(&c->range), C++ member functions on Range (upper/lower, out-pointer form): 10-17, dead addi r3,r3,4 never appears. */
 /* agentA2 (2026-11-18 tips pass): block-local Range pointer, named split/numerator, volatile split, non-inline/static upper(): 10 off at best (all lose the dead addi r3,r3,4; size 0x50 vs 0x54). */
 /* NEAR MISS 0x88644738: 10 off; target keeps a dead `addi r3,r3,4` (&c->range) in the upper branch and reloads
  * split there. Helper forms from the dead-addi tips did not reproduce it. */

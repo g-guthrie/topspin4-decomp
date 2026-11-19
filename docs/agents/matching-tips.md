@@ -836,3 +836,23 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   (0x886787D8, 56 off). Still open.
 - Loop-invariant float constants hoisted into f28-f31 (f31 = highest index): declare block locals in reverse order
   inside `if (lo < i) { float k5 = .., k4 = .., k3 = .., k2 = ..; for (...) }`, so the loads land after the guard.
+
+## Dead-addi constructors and small scheduling fixes (agD, 2026-11-19)
+- C++ constructors with 0x44-byte vtable slots (vt, four words, 12-word body): write the slot ctor body like the
+  0x88695568 C model, `vt = lbl_880D7600; arr_init(body);` with `arr_init` casting to `Quad *` and calling
+  `quad_init` on three quads. This reproduces every dead `addi rX,slot,0x14`: 0x886A7AC8 121 -> 13, 0x886B4D00 263 -> 92
+  (81 LTCG), 0x8869FAD8 129 -> 58 (rewritten in C with five explicit `sub_init` calls).
+- A member array of such slots (`Slot slots[9]`) turns into a loop once the Quad-cast helper is used. Declare named
+  members (`Slot s0, s1, ..., s8;`, same layout) to keep it unrolled.
+- A dead `addi` of a whole sub-object (this+0x330 in 0x886B4D00): initialise its first int[4] through
+  `quad_init((Quad *)a)` in that sub-object's ctor.
+- A float load that the target schedules in the middle of a constructor (0x8869FAD8): read it at that point in the
+  source (`z = g_ts4_event_value;` between `sub_init(&g[3])` and `sub_init(&g[4])`). MSVC will not hoist it above the
+  int stores. A constant stored once (avg[17] = 1.0, which is `g_ts4_script_constants[0]`) goes last.
+- Early stfs order on a stack vector built lane by lane (0x88644C58, 7 -> 5): make the first lane store volatile,
+  `*(volatile float *)&p.v.v[2] = a2;`. Plain reordering of the four lane stores has no effect.
+- Self-relative array helper (0x8866A930/AC38, 8 -> 7): `{ int r = *rel; return (Flag *)((char *)rel + r) + i; }`.
+- Check that callee names in old drafts match the target relocations. 0x88650430 called 0x886107F8
+  (`ts4_handle_forward0_886107F8`), not fn_88610798. The byte diff did not show it.
+- Stack slots of block temporaries (0x88650430): brute force over all 2880 declaration orders of the two blocks did not
+  move it (9 off). Declaration order inside a block does not decide slot assignment there.
