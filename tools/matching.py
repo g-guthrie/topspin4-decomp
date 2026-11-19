@@ -51147,6 +51147,60 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_update_window_fraction_886F0090": 164},
     },
+    {
+        "source": "src/xbox360/me_collect_pending_node_ids_887ED328.c",
+        "object": "me_collect_pending_node_ids_887ED328.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_887ED328": 200},
+    },
+    {
+        "source": "src/xbox360/me_dispatch_enabled_entries_888C7A38.c",
+        "object": "me_dispatch_enabled_entries_888C7A38.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_888C7A38": 188},
+    },
+    {
+        "source": "src/xbox360/me_event_node_link_888FE0C8.c",
+        "object": "me_event_node_link_888FE0C8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_888FE0C8": 176},
+    },
+    {
+        "source": "src/xbox360/me_restart_item_controllers_888C9A68.c",
+        "object": "me_restart_item_controllers_888C9A68.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_888C9A68": 200},
+    },
+    {
+        "source": "src/xbox360/me_slot_values_by_index_889165B8.c",
+        "object": "me_slot_values_by_index_889165B8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_889165B8": 192},
+    },
+    {
+        "source": "src/xbox360/me_ts4_on_event_reset_items_88720C08.c",
+        "object": "me_ts4_on_event_reset_items_88720C08.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_on_event_reset_items_88720C08": 248},
+    },
+    {
+        "source": "src/xbox360/me_ts4_render_state_dispatch_88763B80.c",
+        "object": "me_ts4_render_state_dispatch_88763B80.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_render_state_dispatch_88763B80": 240},
+    },
+    {
+        "source": "src/xbox360/me_ts4_script_content_has_space_8877A608.c",
+        "object": "me_ts4_script_content_has_space_8877A608.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_script_content_has_space_8877A608": 240},
+    },
+    {
+        "source": "src/xbox360/me_ts4_script_set_item_name_8877FAD0.c",
+        "object": "me_ts4_script_set_item_name_8877FAD0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_script_set_item_name_8877FAD0": 240},
+    },
 )
 
 

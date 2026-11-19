@@ -2943,3 +2943,14 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   The target loads the float global once, early, and orders `lis` as float, global, 0x81fb. Dropped.
 - Skipped: 887205F0 and 88745F58 (lbl_88D45B38 dtor family); 88752130 (as agBB); 886FF470, 887039C8, 886F8AA0 and 8877D628 (struct-by-value);
   8871EA50 (rldicr); 886EEAA0 and 88755C60 (VMX); 88703788 (existing open draft).
+
+## agBD
+
+- Self-relative arrays (`rel == -1` means empty): write the begin/end inline helpers as `if (a->rel != -1) e = ...` assignments, not ternaries, to get the target's branch shape (889165B8, 888FE0C8).
+- An early `addi` of a field offset before the loop means the source took a pointer to a sub-struct. Use `List *l = &mgr->list` (888FE0C8 at +0x2c) or `rp(&o->blk->rel)` (889165B8 at +0x104).
+- Storing through a pointer local, `{ unsigned *h = &x->hash; *h = K; }`, forces later fields to be reloaded the way the target does.
+- A contains-helper with a preset result (`unsigned char r = 0; ... r = 1; break; return r;`) gives the target's clrlwi test.
+- To get the target's load order, declare and load the `end` local before `first`.
+- 888D7230/888D72F0 (twins) stay 2 off: the target loads o->cur (0x130) before *id. Reordering, extra locals, LTCG and helpers didn't fix it. Drafts are in src/xbox360/drafts/.
+- If a function starts with `addic. rX,r3,OFF; beqlr`, it is a null-checked base-pointer conversion. Neither an MI static_cast form nor a C ternary reproduced it for 887F00A8 (54 off).
+- Pure register swaps (8886EC30, 88676898) did not respond to operand padding, LTCG or .cpp. Drop them quickly.
