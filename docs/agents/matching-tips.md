@@ -1108,3 +1108,19 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - Open: 883FB5A0 tests a call result with `cmpwi cr0` where every C form gives cr6 (2 off,
   drafts/me_883FB5A0_nearmiss.c). 882669B0 (16-byte {vtbl,a,b,u8}) has a dead `addi rX,d,0xc` and a subic fill loop.
   C++ placement new on the u8 member makes a real null check (35 off).
+
+## agO round 2 (2026-11-19, b143): 9 matches
+- Ctor store order (the vtable store hoisted above member clears, 8862A190 3 off -> match): put the clears in a
+  `static __forceinline void state_init(State *s)` on a sub-struct covering those fields, called before the vtable store.
+  It also fixed 88636DC8 on LTCG and took 88889240 from 12 to 5 off.
+- Range-for with a begin()/end() member pair on a {data, count} struct (8844EAD8): `for (e = v.begin(), end = v.end(); ...)`
+  matched. Open-coded `o->entries + o->count` loads the count first or strength-reduces the pointer to +8.
+- `cmpwi` vs `cmplwi` against 0 on a field means that field is signed: declare it `int` (8841C428 buffer word, 88636DC8
+  lbl_88D45B1C->+0x21c, the null-handle f0 in 88770288). An `int` mode parameter instead of `u8` dropped a clrlwi in 88446550.
+- Find-index leaf that sets `li r3,-1` before the loop (888C39A0): `int r = -1; ... { r = i; break; } return r;`.
+  `return i` inside the loop gives a beqlr-less layout.
+- Two consecutive rodata byte flags addressed from one base (`subi r31,r11,X; subi r4,r31,1`, 88770288/888CF290): one extern
+  `const u8 lbl_Y[]` with `&lbl_Y[-1]` and `&lbl_Y[0]`.
+- Still open: the constant passed by address to ts4_get_u32_off0_8822AFE8 is scheduled one slot off (888E1FC0, 887011A8, 88770288,
+  886FC638). A C++ const-ref wrapper and moving the assignment do not help. 888CF290/888D0150 are missing only a dead
+  `li r11,0` before the value test.

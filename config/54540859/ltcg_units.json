@@ -2339,5 +2339,35 @@
   "symbols": {
    "ts4_set_byte_by_hash_888B1780": 220
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_ctor_flag_copy_cfg_886214A0.c",
+  "object": "me_ts4_ctor_flag_copy_cfg_886214A0.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "fn_886214A0": 84
+  }
+ },
+ {
+  "source": "src/xbox360/me_ts4_ctor_register_current_88636DC8.c",
+  "object": "me_ts4_ctor_register_current_88636DC8.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "fn_88636DC8": 104
+  }
  }
 ]

@@ -350,7 +350,7 @@ ts4_word fn_8893AD90();
 ts4_word fn_8893AE90();
 ts4_word fn_88944378();
 ts4_word fn_88947D60();
-ts4_word fn_8894CDB0();
+ts4_word ts4_make_optional_pair_handle_8894CDB0();
 ts4_word fn_889593B0();
 ts4_word fn_88960D08();
 ts4_word fn_8896A590();

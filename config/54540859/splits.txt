@@ -50113,3 +50113,37 @@ src/xbox360/me_ts4_vector_realloc_insert_text20_88283490.c:
 src/xbox360/me_ts4_vector_realloc_insert_u16x3_881A9298.c:
 	.pdata      start:0x8810A320 end:0x8810A328
 	.text       start:0x881A9298 end:0x881A93A4
+
+src/xbox360/me_ts4_apply_to_handles_then_finish_8844EAD8.cpp:
+	.pdata      start:0x88117D78 end:0x88117D80
+	.text       start:0x8844EAD8 end:0x8844EB60
+
+src/xbox360/me_ts4_make_optional_pair_handle_8894CDB0.c:
+	.pdata      start:0x88131C68 end:0x88131C70
+	.text       start:0x8894CDB0 end:0x8894CF10
+
+src/xbox360/me_ts4_make_linked_handle_88950508.c:
+	.pdata      start:0x88131D68 end:0x88131D70
+	.text       start:0x88950508 end:0x889506E4
+
+src/xbox360/me_ts4_ctor_state_sbuf_8862A190.c:
+	.pdata      start:0x881220A8 end:0x881220B0
+	.text       start:0x8862A190 end:0x8862A1EC
+
+src/xbox360/me_ts4_ctor_flag_copy_cfg_886214A0.c:
+	.pdata      start:0x88121C58 end:0x88121C60
+	.text       start:0x886214A0 end:0x886214F4
+
+src/xbox360/me_ts4_ctor_register_current_88636DC8.c:
+	.pdata      start:0x88122478 end:0x88122480
+	.text       start:0x88636DC8 end:0x88636E30
+
+src/xbox360/me_ts4_count_records_by_key_886EDE40.c:
+	.text       start:0x886EDE40 end:0x886EDE84
+
+src/xbox360/me_ts4_db_find_record_index_888C39A0.c:
+	.text       start:0x888C39A0 end:0x888C39FC
+
+src/xbox360/me_ts4_release_buf_and_pool_obj_8841C428.c:
+	.pdata      start:0x881165E0 end:0x881165E8
+	.text       start:0x8841C428 end:0x8841C4DC
