@@ -10264,6 +10264,70 @@
       "src/xbox360/me_ts4_value_condition_883FCE80.cpp": {
         "status": "Matching",
         "source": "xbox360/me_ts4_value_condition_883FCE80.cpp"
+      },
+      "src/xbox360/me_ts4_create_and_link_entry_883D2700.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_create_and_link_entry_883D2700.c"
+      },
+      "src/xbox360/me_ts4_create_child_from_def_883F8388.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_create_child_from_def_883F8388.c"
+      },
+      "src/xbox360/me_ts4_create_gpu_buffer_882886B8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_create_gpu_buffer_882886B8.c"
+      },
+      "src/xbox360/me_ts4_dispatch_event_text_883CD2E0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_dispatch_event_text_883CD2E0.c"
+      },
+      "src/xbox360/me_ts4_emit_rows_882BFD50.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_emit_rows_882BFD50.c"
+      },
+      "src/xbox360/me_ts4_emit_rows_alt_882DB888.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_emit_rows_alt_882DB888.c"
+      },
+      "src/xbox360/me_ts4_find_entry_by_key_883FB780.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_find_entry_by_key_883FB780.c"
+      },
+      "src/xbox360/me_ts4_init_by_mode_882C8468.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_init_by_mode_882C8468.c"
+      },
+      "src/xbox360/me_ts4_init_row_buffer_882DB018.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_init_row_buffer_882DB018.c"
+      },
+      "src/xbox360/me_ts4_retrain_edram_882A6528.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_retrain_edram_882A6528.c"
+      },
+      "src/xbox360/me_ts4_sum_item_floats_883F7108.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_sum_item_floats_883F7108.c"
+      },
+      "src/xbox360/me_ts4_update_children_then_release_883F0480.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_update_children_then_release_883F0480.c"
+      },
+      "src/xbox360/me_ts4_visit_set_and_kids_883D07C8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_visit_set_and_kids_883D07C8.c"
+      },
+      "src/xbox360/me_ts4_write_elems38_and_extra_883E9670.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_write_elems38_and_extra_883E9670.c"
+      },
+      "src/xbox360/me_ts4_write_elems_and_extra_883E9088.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_write_elems_and_extra_883E9088.c"
+      },
+      "src/xbox360/me_ts4_write_entries_and_sub_883FB9D0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_write_entries_and_sub_883FB9D0.c"
       }
     }
   }

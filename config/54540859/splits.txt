@@ -51033,3 +51033,67 @@ src/xbox360/me_ts4_tick_fade_delay_883CC1F0.cpp:
 src/xbox360/me_ts4_value_condition_883FCE80.cpp:
 	.pdata      start:0x88115C80 end:0x88115C88
 	.text       start:0x883FCE80 end:0x883FD014
+
+src/xbox360/me_ts4_create_and_link_entry_883D2700.c:
+	.pdata      start:0x88114CD0 end:0x88114CD8
+	.text       start:0x883D2700 end:0x883D27C8
+
+src/xbox360/me_ts4_create_child_from_def_883F8388.c:
+	.pdata      start:0x88115A88 end:0x88115A90
+	.text       start:0x883F8388 end:0x883F845C
+
+src/xbox360/me_ts4_create_gpu_buffer_882886B8.c:
+	.pdata      start:0x88110030 end:0x88110038
+	.text       start:0x882886B8 end:0x88288780
+
+src/xbox360/me_ts4_dispatch_event_text_883CD2E0.c:
+	.pdata      start:0x88114B30 end:0x88114B38
+	.text       start:0x883CD2E0 end:0x883CD3AC
+
+src/xbox360/me_ts4_emit_rows_882BFD50.c:
+	.pdata      start:0x88110C88 end:0x88110C90
+	.text       start:0x882BFD50 end:0x882BFE0C
+
+src/xbox360/me_ts4_emit_rows_alt_882DB888.c:
+	.pdata      start:0x88111268 end:0x88111270
+	.text       start:0x882DB888 end:0x882DB944
+
+src/xbox360/me_ts4_find_entry_by_key_883FB780.c:
+	.pdata      start:0x88115BE8 end:0x88115BF0
+	.text       start:0x883FB780 end:0x883FB848
+
+src/xbox360/me_ts4_init_by_mode_882C8468.c:
+	.pdata      start:0x88110E68 end:0x88110E70
+	.text       start:0x882C8468 end:0x882C8520
+
+src/xbox360/me_ts4_init_row_buffer_882DB018.c:
+	.pdata      start:0x88111250 end:0x88111258
+	.text       start:0x882DB018 end:0x882DB0FC
+
+src/xbox360/me_ts4_retrain_edram_882A6528.c:
+	.pdata      start:0x881106B0 end:0x881106B8
+	.text       start:0x882A6528 end:0x882A660C
+
+src/xbox360/me_ts4_sum_item_floats_883F7108.c:
+	.pdata      start:0x88115A40 end:0x88115A48
+	.text       start:0x883F7108 end:0x883F71D4
+
+src/xbox360/me_ts4_update_children_then_release_883F0480.c:
+	.pdata      start:0x88115878 end:0x88115880
+	.text       start:0x883F0480 end:0x883F0524
+
+src/xbox360/me_ts4_visit_set_and_kids_883D07C8.c:
+	.pdata      start:0x88114BF8 end:0x88114C00
+	.text       start:0x883D07C8 end:0x883D08A4
+
+src/xbox360/me_ts4_write_elems38_and_extra_883E9670.c:
+	.pdata      start:0x881155B8 end:0x881155C0
+	.text       start:0x883E9670 end:0x883E9754
+
+src/xbox360/me_ts4_write_elems_and_extra_883E9088.c:
+	.pdata      start:0x88115590 end:0x88115598
+	.text       start:0x883E9088 end:0x883E916C
+
+src/xbox360/me_ts4_write_entries_and_sub_883FB9D0.c:
+	.pdata      start:0x88115C10 end:0x88115C18
+	.text       start:0x883FB9D0 end:0x883FBA90

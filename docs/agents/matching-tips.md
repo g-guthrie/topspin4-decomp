@@ -1352,3 +1352,24 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - 882D1FB8: the base/offset order of lbzx did not change with `4*i`, a shift, a 2-D array cast or const.
 - 883C72E0: the candidate puts the `+= 0xffff` constant in a callee-saved register (`ori r30, r10, 0xffff`), which costs an extra save of r29. The rewrites I tried for the u16 decrement all stayed 133 off.
 - 883CAEC8: the int handle field gets a `clrrwi` and a materialized `!= 0` in the target. It is still 69 off.
+- agT round 3 (b154): 18 more plain /O1 matches. Notes:
+  - Parameters passed straight through to a callee (no `mr` before the `bl`) mean the callee takes them in the same
+    position: 882DB018 calls fn_882D1BC0(t, fmt, 0, 1), and 883D4900/883DE6A8 pass r4-r6 on unchanged.
+  - Import data: `lis r28,0x8800; lwz r3,0x868(r28)` is `__imp_VdHSIOCalibrationLock`. Declare
+    `extern void *__imp_VdHSIOCalibrationLock;` and pass it directly. Kernel calls (KeEnterCriticalRegion,
+    RtlEnterCriticalSection, VdRetrainEDRAM, ...) are declared by their own names (882A6528).
+  - Pointer null test with `cmpwi` (signed): `if (PTR_INT(o) != 0)` with a local `o`, behind an `_MSC_VER` macro so the host
+    check passes (883FB9D0).
+  - Argument setup order: name the arguments as block locals in the order the target computes them
+    (`int px = x0 + x; int py = y0 + y;`, 882BFD50/882DB888).
+  - Tail-insert into an intrusive list: an inline `link_before(n, head)` helper that reads `head->prev` before the first
+    store (883D2700).
+  - Two calls to a manager getter: keep one `Mgr *m = get();` local (883FB780).
+- Open across rounds 2 and 3: `lwzx rD, rIdx, rBase` (target) vs `rBase, rIdx` (ours) when the base is re-read through
+  a two-level chain (`node->kids->items[i]`) inside a strength-reduced loop: 883C75D0, 883CBB30, 883D87A0, 883D9CA0.
+  Accessors, `i[a]`, unsigned indices, referenced pad locals (0-10, top and loop body) and OP1 pads made no difference.
+  In 883D9CA0 the target also allocates the induction to r31 and the node to r30, where ours swaps them.
+- 882DD5F0 has the same `0x8876086C` false relocation as 882DDD58 (needs a split/config fix).
+- Other round-3 near misses (drafts): 883E6438 (a `cmpwi cr6; bne +4` left after the last call, plus a register swap);
+  882A2EE8 (one extra saved register); 883FCCC0 (Pair zero stores scheduled after `addi r5`); 883FBC58 (prototype of
+  fn_883E6978 with a float argument and a stack argument: frame 0x60 not reproduced).

@@ -87,7 +87,7 @@ ts4_word fn_88255AA0();
 ts4_word fn_8825DA28();
 ts4_word ts4_if_call_seq_u32_off8_88280958();
 ts4_word ts4_if_atomic_interlocked_dec_88288530();
-ts4_word fn_882886B8();
+ts4_word ts4_create_gpu_buffer_882886B8();
 ts4_word fn_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_88617D88();

@@ -1,4 +1,4 @@
-/* 0x883F1640: rewinds every node of every group (clears counters and level, resets flags to 0x400, invalidates the index for kind-3 keys), marks every sub-entry, calls fn_883F0480(t, 1), then reapplies each pending item's level and flushes kind-0x30 items */
+/* 0x883F1640: rewinds every node of every group (clears counters and level, resets flags to 0x400, invalidates the index for kind-3 keys), marks every sub-entry, calls ts4_update_children_then_release_883F0480(t, 1), then reapplies each pending item's level and flushes kind-0x30 items */
 /* Matched on /O1 plain only (work/army/ME/v.py chk); C++ virtual set_level (slot 4); the zero float is a local held in f31. */
 struct Link { Link *next; };
 struct Tbl { char pad[0xC]; void *key; };
@@ -14,7 +14,7 @@ struct Item {
 struct Obj { char pad[0x60]; unsigned int flags; };
 struct T { int p0; Obj *obj; char p8[4]; Link groups; char p10[0x18 - 0x10]; Link items; };
 extern "C" int ts4_get_bits_0_1c_7_883E0778(void *key);
-extern "C" int fn_883F0480(T *t, int a);
+extern "C" int ts4_update_children_then_release_883F0480(T *t, int a);
 extern "C" int fn_883CF9B8(Item *it, int a);
 extern "C" int ts4_rewind_groups_883F1640(T *t)
 {
@@ -39,7 +39,7 @@ extern "C" int ts4_rewind_groups_883F1640(T *t)
         for (m = g->subs.next; m != &g->subs; m = m->next)
             (m ? (Sub *)((char *)m - 4) : 0)->flags |= 1;
     }
-    r = fn_883F0480(t, 1);
+    r = ts4_update_children_then_release_883F0480(t, 1);
     if (r) return r;
     for (n = t->items.next; n != &t->items; n = n->next) {
         it = n ? (Item *)((char *)n - 4) : 0;
