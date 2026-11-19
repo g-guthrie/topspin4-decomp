@@ -1986,3 +1986,50 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   release) look like the same shape, but `a` folds back into h+0x30 (34 off).
 - Open: 884926F8 (extent accumulate, 24 off: the target loads all of v[1..3] before the short adds), 884BDB38 (header byte swap:
   the dead `addi rX,+3` copies come from a lo/hi pointer swap inline, 27 off on /O1).
+
+### agAG round 3 (b175): 7 matches
+- Matched: 884ED120 (/Oc, message size switch), 88516C28 (/Oc, factorial with a stack table), 885678D0 strspn, 88567988 strcspn
+  (/O1, CRT C shape with a 32-byte map), 8858DAA8 (/O1, bit writer), 88596630 (/O1, WAVEFORMAT check).
+- **`ok &= mask` chains (`subi; subic; subfe rX,rX,rX; and`) are `if (cond) ok = 0;` statements on /O1**, where `ok` starts at 1.
+  Neither `ok = ok && x` nor `ok &= (x)` reproduces it (88596630).
+- **A switch with `bdz` (not `bdzf`) and shared case blocks**: group the case labels by result and write the groups in the target's block order
+  (884ED120: `case 6:` first, then `case 1: case 5:`, `case 8: case 9:` ...). This extends agAE's switch-order rule.
+- Bit writer (8858DAA8): `int r = w->room - n; w->room = (signed char)r; w->acc |= value << r;` gives the unextended shift count and the
+  extsb'd store and compare.
+- 88563540 (strpbrk, same map) cannot match: its symbol ends 3 instructions early (the `bne; li r3,0; blr` tail is split off as 885635C0). This needs a split fix in config.
+- The 8826C388 family under LTCG with a `__declspec(noinline)` getter in the context file: the call stays, but the caller then keeps its values in volatile
+  registers (24-28 off). So the target was not compiled with knowledge of the callee, and the 8 saved registers come from the source shape.
+- Open: 884DAC70 (whitespace-collapsing copy: the delimiter loop is fixed with `while (*p) if (c == *p++)`, but the source loop's
+  `lbzu`-at-top rotation is not), 884F5610 (sorted u64-key queue insert, 43 off on /O1), 88539B68 (2-bit saturating counters:
+  the target keeps three separate `nor`s of the same value), 88596700 (MS-ADPCM format check, 40 off: /O1 inserts `twllei` on the
+  divide, the target has none), 88596910/8859F4E8 (speaker-mask getters: the loop matches with a union `streams[]`/`ext`, but the tag and
+  return blocks get tail-merged differently, 39 off).
+- Skipped: 884A2D40/884B4FF8 (C++ vtable constructors), 88582F98 (XDK title-launch wrapper), the WMA decoder group 885C2E90..885C31A8.
+
+### agAH round 2 (b175): 29 matches, 7 drafts
+- Matched (/Oc unless noted): 88356BD8, 88399768, 883E5E00 (/O1), 88443170, 884EB5C0, 884FAFC0 (/O1), 884FB038 (/O1), 8857E608 (/O1),
+  885A5EB0 (/Os), 886F36A0, 887E9D78, 8899DFC8, 881F4090, 881F0388, 88411C40, 8842CE08/8842CE80/8842CEF8 (/O1), 884CCF20, 885E5A08 (/O1),
+  8860E740, 88584B50, 889422F8, 889166D8, 882B0290 (/O1), 883298D8, 88531FF8, 88479F38.
+- **/Os gives an unrotated `while` loop** (`b` to the bottom test, the null test at the bottom): 885A5EB0, a locked list find through an inline find().
+- **A vtable loaded before an unrelated call** (883E5E00): read the vtable into a local before the call, `TgtVt *vt = t->tgt->vt; t->src->vt->flush(t->src);
+  *out = vt->position(t->tgt);` on /O1. An `r3` that is not set before the second vcall means the first call's result is not an argument.
+- **A discarded hidden-pointer result:** size the temporary from the frame. 884EB5C0 needs a 4-byte struct; 0x10 gives a frame that is 0x10 too big.
+- **The bisection template from 88517488 also covers byte tables** (88411C40: `x >= p[i+1]` returns i, `x <= p[0]` returns hi).
+- **The 88942370/8863A780 self-relative find covers more tables:** 889422F8 (stride 0x60), 886F36A0 (end recomputed in the loop test, key passed by value).
+  When the key is read from memory (`*key`, a global field), the target compares (key, e->key) with e->key loaded first, and every C/C++ form
+  is 1 off: 886EFCC0, 886EFC48, 886EFD38, 88945960 (drafts for 886EFCC0 and 88945960).
+- **The OP1 symbol-number rule in a nested self-relative lookup** (8899DFC8): a `Rel *rel = &s->rows;` local flipped `add` to (index+first)+base.
+- **In a ring-init loop, the store order picks the induction variable** (88584B50): `e[i].prev = i - 1; e[i].next = i + 1;` matches;
+  next-first gives an `i - 1` induction.
+- **A case-fold helper that modifies its parameter** (`if (...) c += 0x20; return c;`) matches strnicmp 883298D8. The early-return helper is larger.
+- **A done flag kept in r3 across a listener loop** (8860E740): `unsigned char done = 0; L **end = t->end, **it; for (it = t->begin; end != it && !done; it++)`.
+  The same form on 8827DBF0 is still 9 off (parameter registers).
+- **Byte-entry fields:** read the entry layout off the first `addi` (88531FF8: entries at +4, u16 id at +2 of each, so `addi r30,r3,6`).
+- **Cached-id lookup family** 8842CE08/8842CE80/8842CEF8 (/O1, only the lbl_88B3D1D4/D8/DC cache differs); there may be more past 8842CF70.
+- **Assertion helper fn_885DC838:** called as (0, lbl_880B4540 format, expression string, file string, line). Read the strings to type the code (885E5A08: `arg < (5 + 1)`, irinst.cpp).
+- Drafts: 883FD1D8 (2 off, the order of the two byte loads), 885871A0 (1 off, branch target of the found path), 886EFCC0 and 88945960 (1 off, cmplw order),
+  88209E80 (2 off, lfsx operand order at one of two sites), 8837AA88 (2 off, li/addi order of the loop setup; sibling 8831F788 is the same),
+  884EC070 (1 off, lwzx wants base-first and every form gives index-first).
+- Unsolved: 888008B0/88800A28/88800B10 (they reuse r6 across a call, which points to LTCG with callee context), 88941B30 (std::map find, 9 off),
+  884A0768 (the command walk biases its pointer by +4), 884DC9B0 (TLS free of two buffers), 884F7470 (the bool result keeps `li 1; beq; li 0`),
+  88343470 (the clamp's subtraction is recomputed), 887E61A0, 88518EE8 (quaternion cosine, fmr copies), 88924250/881518D0 (from round 1).
