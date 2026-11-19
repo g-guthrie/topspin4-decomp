@@ -2442,3 +2442,49 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - `rlwimi rA, rB, 12, 0, 19` merging a 4-bit and a 12-bit field (88322E58): write both masks explicitly,
   `((kind << 12) & 0xF000) | (idx & 0xFFF)`. Without the masks you get `slwi` and `or`, even when idx was extracted
   with `& 0xFFF` earlier.
+
+## agAK (b185): strlen family, roster/lobby, page pool and Huffman builder (32 matches, 1 draft)
+- **strlen `clrrwi` scan.** The bl-based scan finds nothing: the strlen is inline. Scan for `bne` after `cmplwi`, then
+  `subf` and `subi`, with a `clrrwi` within the next 5 instructions. That gives about 150 unmatched functions; most are large.
+  - A CRT `mbstowcs` (8856A3F8) matched at /O1 with the MS CRT shape: `if (dst && n == 0) return 0; if (dst && n > 0) *dst = 0;`,
+    then `while (count < n)`. Return `count`, not 0, from the early exits.
+  - `ANSI_STRING` init (8857E4E0, /O1): `s.length = (u16)strlen(t); s.maximumLength = s.length;`. A chained `a = b = x`
+    stores the two halves in the wrong order.
+  - A bounded copy before strncat (`lbzx` from `src - buf + d`, test the byte, store, `cmplw d, buf+N-1`) is
+    `do { if (*s == 0) break; *d++ = *s++; } while (d != buf + N - 1); *d = 0;` (888412B0, 8883E850). Set `s` and `d` after
+    any calls; initialising them in their declarations keeps `d` in r31 across the calls.
+- **Self-relative slot search** (889414F0, 889415D0, 889416A8, the old 13-off group): use a `result = 0` local, and in the
+  slot loop write `if (len == 0) { result = s; break; }` then `break` out of the entry loop. `unsigned int len = (int)strlen(..)`
+  gives the `cmplwi`. For 889414F0 (slots end found by calling `end192`), put the entry search in an inline that returns the
+  entry (`find_entry(h, a, b)`). The slot pointer then gets r31, as in the target.
+- **Search returning from a second nested loop** with `li r3,0` before the outer loop and one `mr r3,rX; blr` (8899F970):
+  `found = 0; ... found = *it; goto done;`. Plain returns and inline helpers do not keep the zero in r3.
+- **Session context read once inside a guarded loop** (8899FF98): when the target loads `g_ts4_session_context` after the
+  empty test but before the loop body, and loads `->state` on each iteration, write the member loop as
+  `it = first; if (it != end) { SessionContext *ctx = g_ts4_session_context; do { ... ctx->state->mode ... } while (++it != end); }`.
+- **Config names**: 8899FC10 is `ts4_lobby_remove_fake_player`. agAK/sv.py now looks up symbols.txt, uses the config name,
+  and asserts that the source defines it.
+- **Address of a local computed before a ternary argument** (`addi r3,r1,X` ahead of the compare, 8886A998): write the call
+  in both arms of an if/else. A `?:` argument puts the `addi` after the select.
+- **Hidden-pointer bool results** (884A6C48, 88540460): a C function `u8 *f(u8 *ret, ...)` that stores `*ret` and returns
+  `ret` matches. For sort predicates that reload the key for each comparison, read the key through an inline that takes the
+  owner object (`order_of(x)`), not a cached pointer.
+- **Declaration order sets register numbers** for independent self-relative resolves (884879D0): permute the `Link *a/b/c/d`
+  declarations. The match was `a, c, b, d`, which is the order in which the ranks are used.
+- **Address-taken parameters cached in registers** (8857CBC0 draft, 3 off at /O1): when the target keeps `name`/`len` in
+  r29/r28, stores them back to the parameter home after each change, and reloads only after the call that takes their
+  address, copy them into locals (`s = name; n = nameLen;`) and write them back by hand.
+- **Middleware at 0x8858xxxx-0x8859xxxx is /O1** (page pool 88584868/885847C8/88584AE0/88584B50 and an ar002-style Huffman
+  builder at 88590420/88590608/885904C8/885906F0, plus the run decoders 88591230/88591A40).
+  - `divwu` by a constant held in a register (no magic multiply) is /O1 (88584CE0). Work on a local copy of the parameter
+    so the first stage flows into the second.
+  - A ctr loop over a `u8` count needs the count widened to `u32` first (88584B50).
+  - When the target keeps a volatile register (r3, r5, r9) live across a `bl` to a sibling, it is LTCG. Compile with the
+    sibling's saved source as `--context` (885904C8 with count_len; 885906F0 with sift-down, make_len and count_len).
+  - ar002 `make_tree` (88590818, 17 off): the target recomputes `extsh r4,n` inside the retry loop; every loop or tail-call
+    form hoists it.
+- Open: 889C7AB0 (6 off; data pointer r30/r31 swap around the NetDll_send + registry release), 88956170 (8 off; the
+  `clrrwi` copy of the stored hash into the map entry), 889A0CA8 (4 off; vtable/zero scheduling; probably a C++ ctor),
+  88400358 (38 off; the deque wrap index uses cr0 `subic.`), 88590B80 (14 off; r9/r10 swap), 887759B8 (frame 0x30 larger
+  than ours; the temporaries are probably C++ ones). 8899DAF0/889A7180 (span16 users) still copy with interleaved loads; by-value,
+  temp-copy and placement-new forms give the same 13 off.
