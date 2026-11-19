@@ -46157,6 +46157,66 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_vcallC_lbl8_deref_884667D8": 40},
     },
+    {
+        "source": "src/xbox360/me_ts4_apply_slot67_to_owned_items_883D3738.c",
+        "object": "me_ts4_apply_slot67_to_owned_items_883D3738.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883D3738": 400},
+    },
+    {
+        "source": "src/xbox360/me_ts4_count_items_state_bit8_883C9380.c",
+        "object": "me_ts4_count_items_state_bit8_883C9380.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883C9380": 416},
+    },
+    {
+        "source": "src/xbox360/me_ts4_fill_empty_kid_slots_883D9CA0.c",
+        "object": "me_ts4_fill_empty_kid_slots_883D9CA0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883D9CA0": 228},
+    },
+    {
+        "source": "src/xbox360/me_ts4_find_ent12_data_by_name_8841EA48.c",
+        "object": "me_ts4_find_ent12_data_by_name_8841EA48.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_8841EA48": 128},
+    },
+    {
+        "source": "src/xbox360/me_ts4_find_ent24_value_by_name_884DAF90.c",
+        "object": "me_ts4_find_ent24_value_by_name_884DAF90.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_884DAF90": 132},
+    },
+    {
+        "source": "src/xbox360/me_ts4_find_pair_value_by_name_885EEB50.c",
+        "object": "me_ts4_find_pair_value_by_name_885EEB50.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"fn_885EEB50": 120},
+    },
+    {
+        "source": "src/xbox360/me_ts4_process_ready_kids_883D87A0.c",
+        "object": "me_ts4_process_ready_kids_883D87A0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883D87A0": 224},
+    },
+    {
+        "source": "src/xbox360/me_ts4_release_list_items_883D86A0.c",
+        "object": "me_ts4_release_list_items_883D86A0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883D86A0": 252},
+    },
+    {
+        "source": "src/xbox360/me_ts4_visit_kids_then_sink14_883C75D0.c",
+        "object": "me_ts4_visit_kids_then_sink14_883C75D0.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883C75D0": 144},
+    },
+    {
+        "source": "src/xbox360/me_ts4_visit_kids_unless_grp_sink24_883CBB30.c",
+        "object": "me_ts4_visit_kids_unless_grp_sink24_883CBB30.obj",
+        "extra_flags": ["/O1"],
+        "symbols": {"fn_883CBB30": 152},
+    },
 )
 
 

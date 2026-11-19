@@ -51809,3 +51809,43 @@ src/xbox360/me_ts4_vcall10_fwd_x10_x14_88413818.c:
 
 src/xbox360/me_ts4_vcallC_lbl8_deref_884667D8.c:
 	.text       start:0x884667D8 end:0x88466800
+
+src/xbox360/me_ts4_apply_slot67_to_owned_items_883D3738.c:
+	.pdata      start:0x88114D30 end:0x88114D38
+	.text       start:0x883D3738 end:0x883D38C8
+
+src/xbox360/me_ts4_count_items_state_bit8_883C9380.c:
+	.pdata      start:0x881149D8 end:0x881149E0
+	.text       start:0x883C9380 end:0x883C9520
+
+src/xbox360/me_ts4_fill_empty_kid_slots_883D9CA0.c:
+	.pdata      start:0x88114E88 end:0x88114E90
+	.text       start:0x883D9CA0 end:0x883D9D84
+
+src/xbox360/me_ts4_find_ent12_data_by_name_8841EA48.c:
+	.pdata      start:0x881167D0 end:0x881167D8
+	.text       start:0x8841EA48 end:0x8841EAC8
+
+src/xbox360/me_ts4_find_ent24_value_by_name_884DAF90.c:
+	.pdata      start:0x8811B070 end:0x8811B078
+	.text       start:0x884DAF90 end:0x884DB014
+
+src/xbox360/me_ts4_find_pair_value_by_name_885EEB50.c:
+	.pdata      start:0x8811FE98 end:0x8811FEA0
+	.text       start:0x885EEB50 end:0x885EEBC8
+
+src/xbox360/me_ts4_process_ready_kids_883D87A0.c:
+	.pdata      start:0x88114E28 end:0x88114E30
+	.text       start:0x883D87A0 end:0x883D8880
+
+src/xbox360/me_ts4_release_list_items_883D86A0.c:
+	.pdata      start:0x88114E20 end:0x88114E28
+	.text       start:0x883D86A0 end:0x883D879C
+
+src/xbox360/me_ts4_visit_kids_then_sink14_883C75D0.c:
+	.pdata      start:0x88114940 end:0x88114948
+	.text       start:0x883C75D0 end:0x883C7660
+
+src/xbox360/me_ts4_visit_kids_unless_grp_sink24_883CBB30.c:
+	.pdata      start:0x88114AD0 end:0x88114AD8
+	.text       start:0x883CBB30 end:0x883CBBC8
