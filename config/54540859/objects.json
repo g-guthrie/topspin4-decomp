@@ -14236,6 +14236,58 @@
       "src/xbox360/me_ts4_set_enabled_mode_888C63B8.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_set_enabled_mode_888C63B8.c"
+      },
+      "src/xbox360/me_ts4_ctor_render_state_887482D8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ctor_render_state_887482D8.c"
+      },
+      "src/xbox360/me_ts4_ctor_vec_owner_88721CB0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ctor_vec_owner_88721CB0.c"
+      },
+      "src/xbox360/me_ts4_ctor_vec_state_owner_887261D0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_ctor_vec_state_owner_887261D0.c"
+      },
+      "src/xbox360/me_ts4_cursors_differ_either_in_range_88660470.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_cursors_differ_either_in_range_88660470.c"
+      },
+      "src/xbox360/me_ts4_fade_update_886EEED0.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_fade_update_886EEED0.cpp"
+      },
+      "src/xbox360/me_ts4_has_handle_8899CFF0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_has_handle_8899CFF0.c"
+      },
+      "src/xbox360/me_ts4_id_registered_and_idle_8877F448.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_id_registered_and_idle_8877F448.c"
+      },
+      "src/xbox360/me_ts4_objvec_release_all_88748150.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_objvec_release_all_88748150.cpp"
+      },
+      "src/xbox360/me_ts4_own2_ctor_888663D0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_own2_ctor_888663D0.c"
+      },
+      "src/xbox360/me_ts4_query_entry_and_release_888CCEE0.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_query_entry_and_release_888CCEE0.c"
+      },
+      "src/xbox360/me_ts4_release_children_886ED508.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_release_children_886ED508.cpp"
+      },
+      "src/xbox360/me_ts4_reset_render_state_8873B6E8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_reset_render_state_8873B6E8.c"
+      },
+      "src/xbox360/me_ts4_window_and_range_contains_8890F008.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_window_and_range_contains_8890F008.c"
       }
     }
   }

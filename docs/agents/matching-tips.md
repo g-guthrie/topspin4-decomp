@@ -2647,3 +2647,28 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - In countdown loops, the order of the for-init (`p = base, i = N` versus `i = N, p = base`) sets the order of the `addi`/`li` instructions. Try both.
 - Paired -1 field stores: give one field `unsigned` 0xFFFFFFFF and the other `int` -1 to get the target's register reuse. This confirms agAL's rule (8873B6E8, 887482D8).
 - Dropped (more than 4 off): 88747E58 (overlapping u64/u32 stores), 886F31F8, 886EE6E0, 88771258, 88718210, 8877DDC0 (the target reloads `*self` once after the call).
+
+## agAQ (b190/b191): gameplay queue lines 77-100 (8 matches, 1 draft)
+- **Dead store kept** (888B0FF8: `stw r11,0xa8; stw r8,0xa8`): `{ u32 *h = &o->hash; *h = 0; o->hash = K; }` keeps both
+  stores. Two plain `o->hash =` stores, or an inline clear helper, drop the first one.
+- **`new T[n]` overflow guard** (888866E8: `cmplw n,0x1FFFFFFF; slwi; ble; li -1`): pass
+  `n <= 0x1FFFFFFF ? n * 8 : 0xFFFFFFFF` straight into a static __inline allocator. Write the allocator as
+  `if (!heap) return crt_malloc(size); return heap_alloc(heap, size);`, because the `if (heap)` order flips the branch. A
+  `size` local with an if-assign is 4 off.
+- A six-word clear that the target writes after the vtable/`addi r7` setup (888663D0, LTCG with a
+  `flags(/Ob1):src/xbox360/cx18_core_b.c` callee context) matched with a local `u32 *p = o->f20; p[0]=0;...`. A loop is 22 off.
+- **A `bdz` ladder over `mtctr kind`** (88879280) is a small `switch` with sparse cases plus an explicit list of the default
+  cases up to the bound (`case 0: case 1: ...: case 8:`), with values above the bound falling through. It matched first try in plain C.
+- **String clear** (888F4E70: `if (b != e) { *b = 0; e = b; }`) as a static inline on a `{char *begin, *end}` sub-struct
+  matched first try. A vector erase-all is `ts4_copy_down_8817EEB8(v, v->first, v->end)`.
+- A `x ? -1 : 0` int store after a vcall (888DF8E8) compiles to `subfic/subfe` and matched in plain C. The vcall result is
+  the slot pointer.
+- A destructor with a vtable store, a global clear and member teardown calls (887EE430) was 9 off plain and matched on
+  LTCG with `ctx=[]`. Try LTCG early for dtors. Its sibling 88658DC8 is still 4 off on every store order, plain and LTCG.
+- When an LTCG caller keeps a value in a volatile register across a `bl`, look for an existing context model of the callee
+  (`src/xbox360/cx34_ctx_af5c0.c` for fn_888AF5C0, `pr2_signin.c` for ts4_pad_record_find_88614938) before skipping.
+- Open: 88888C80 (2 off, draft): `lis` r9/r10 swap between the vtable and the global. 888DF9C0 (9 off): flag/vtable/handle
+  ctor scheduling. 888CAD50 (10-11 off): ctor with an embedded circular list; an `emb_list_init(&o->list)` inline
+  gives the `addi r10,+0x2c; addi r10,4` but the scheduling stays off. Skipped: 8866C988 (fn_8866C8B8 has no source to give LTCG
+  the r4 preservation), 888B7360 (tail call with a live cr6), 888C0818/888D9420/888B8F58 (vector or 64-bit float packing),
+  88883CD0/888842F0 (XAM/CRT callees).

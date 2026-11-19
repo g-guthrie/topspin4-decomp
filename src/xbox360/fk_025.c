@@ -137,7 +137,7 @@ ts4_word fn_88906EE8();
 ts4_word fn_88907128();
 ts4_word ts4_pending_pop_first_88908258();
 ts4_word fn_88908B80();
-ts4_word fn_8890F008();
+ts4_word ts4_window_and_range_contains_8890F008();
 ts4_word ts4_hub_delete_all_88912090();
 ts4_word fn_889124A8();
 ts4_word ts4_raise_high_water_88915DC8();
@@ -1757,19 +1757,19 @@ ts4_word ts4_set_u32_off10_8890EF58(ts4_word a0, ts4_word a1)
     return fn_88178C40((ts4_word)(a0 + 4), (ts4_word)a1);
 }
 
-/* Swing_DLL.xex 0x8890F120: call_seq fn_8890F008 */
+/* Swing_DLL.xex 0x8890F120: call_seq ts4_window_and_range_contains_8890F008 */
 ts4_word ts4_call_seq_fn_8890F008_8890F120(ts4_word a0)
 {
     ts4_word t1;
 
-    t1 = fn_8890F008((ts4_word)(a0 + 32));
+    t1 = ts4_window_and_range_contains_8890F008((ts4_word)(a0 + 32));
     return ((t1 & 0xff) == 0);
 }
 
-/* Swing_DLL.xex 0x8890F150: tailcall fn_8890F008 */
+/* Swing_DLL.xex 0x8890F150: tailcall ts4_window_and_range_contains_8890F008 */
 ts4_word ts4_tailcall_fn_8890F008_8890F150(ts4_word a0)
 {
-    return fn_8890F008((ts4_word)(a0 + 12));
+    return ts4_window_and_range_contains_8890F008((ts4_word)(a0 + 12));
 }
 
 /* Swing_DLL.xex 0x8890F1D8: tailcall fn_881705B0 */

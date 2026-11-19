@@ -10,7 +10,7 @@ extern void *lbl_880E06B0[];
 extern void *fn_88866658(void *self);
 extern void *fn_888664F0(void *self);
 extern void *ts4_call_seq_fn_88617D88_88866480(void *self);
-extern void *fn_888663D0(void *self);
+extern void *ts4_own2_ctor_888663D0(void *self);
 extern void *ts4_singleton_service_ctor_888662C8(void *self);
 extern void *fn_888682F0(void *self);
 extern void *fn_88622888(void *self);

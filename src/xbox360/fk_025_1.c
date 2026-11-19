@@ -140,7 +140,7 @@ ts4_word fn_88906EE8();
 ts4_word fn_88907128();
 ts4_word ts4_pending_pop_first_88908258();
 ts4_word fn_88908B80();
-ts4_word fn_8890F008();
+ts4_word ts4_window_and_range_contains_8890F008();
 ts4_word ts4_hub_delete_all_88912090();
 ts4_word fn_889124A8();
 ts4_word ts4_raise_high_water_88915DC8();
