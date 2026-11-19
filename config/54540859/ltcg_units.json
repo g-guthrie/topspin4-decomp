@@ -2889,5 +2889,35 @@
   "symbols": {
    "ts4_unpack_color_table_886EB188": 76
   }
+ },
+ {
+  "source": "src/xbox360/me_hash_post_9546B457_88868A88.c",
+  "object": "me_hash_post_9546B457_88868A88.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_hash_post_9546B457_88868A88": 108
+  }
+ },
+ {
+  "source": "src/xbox360/me_hash_post_B59A4AFD_88868B48.c",
+  "object": "me_hash_post_B59A4AFD_88868B48.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_hash_post_B59A4AFD_88868B48": 108
+  }
  }
 ]

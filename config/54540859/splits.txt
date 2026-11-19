@@ -54569,3 +54569,22 @@ src/xbox360/me_ts4_step_cursor_886FC938.c:
 
 src/xbox360/me_ts4_step_forward_886FC990.c:
 	.text       start:0x886FC990 end:0x886FC9F0
+
+src/xbox360/me_flush_pending_event_88917340.c:
+	.text       start:0x88917340 end:0x8891737C
+
+src/xbox360/me_hash_post_9546B457_88868A88.c:
+	.pdata      start:0x8812D208 end:0x8812D210
+	.text       start:0x88868A88 end:0x88868AF4
+
+src/xbox360/me_hash_post_B59A4AFD_88868B48.c:
+	.pdata      start:0x8812D218 end:0x8812D220
+	.text       start:0x88868B48 end:0x88868BB4
+
+src/xbox360/me_mode_ready_888EE7E8.c:
+	.pdata      start:0x8812FAB0 end:0x8812FAB8
+	.text       start:0x888EE7E8 end:0x888EE86C
+
+src/xbox360/me_ts4_rmod_b_ctor_887245B0.c:
+	.pdata      start:0x88126690 end:0x88126698
+	.text       start:0x887245B0 end:0x8872461C

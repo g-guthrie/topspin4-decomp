@@ -70,12 +70,14 @@ void *ts4_hash_find_881AB900(Ts4HashTable *table, u32 hash, Ts4Handle12 h)
 }
 
 /* Lookup with caller-supplied resolve arguments. */
-void *ts4_hash_find_arg_88180F08(Ts4HashTable *table, u32 hash, u32 b, Ts4Handle12 h)
+/* key: every caller passes a pointer to a key record; it is forwarded
+ * unchanged to fn_8892E7A0, whose parameter type is not yet resolved. */
+void *ts4_hash_find_arg_88180F08(Ts4HashTable *table, u32 hash, const void *key, Ts4Handle12 h)
 {
     void *result = 0;
     void *node = fn_881518D0(table->buckets, &hash);
     if (node) {
-        Ts4HashRecord *rec = fn_8892E7A0(table, node, 1, b, 1, h);
+        Ts4HashRecord *rec = fn_8892E7A0(table, node, 1, (u32)key, 1, h);
         if (rec)
             result = rec->payload;
     }

@@ -50573,6 +50573,24 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_step_forward_886FC990": 96},
     },
+    {
+        "source": "src/xbox360/me_flush_pending_event_88917340.c",
+        "object": "me_flush_pending_event_88917340.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_flush_pending_event_88917340": 60},
+    },
+    {
+        "source": "src/xbox360/me_mode_ready_888EE7E8.c",
+        "object": "me_mode_ready_888EE7E8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_mode_ready_888EE7E8": 132},
+    },
+    {
+        "source": "src/xbox360/me_ts4_rmod_b_ctor_887245B0.c",
+        "object": "me_ts4_rmod_b_ctor_887245B0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_rmod_b_ctor_887245B0": 108},
+    },
 )
 
 

@@ -2574,3 +2574,10 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - 8865FFF8 went from 12 off to 1 off with a `float *bl=&holder->target->blend` pointer plus an ease inline under fp_contract(off). The remaining fadds operand order resisted `+=`, temporaries and an add inline.
 - When the target swaps float registers (8865AC90) or vector registers (88650B80), the sub-struct rule does not help: it only fixes reuse of a GPR base register.
 - Sweep tip: filter gameplay.txt to 60-240 bytes and grep the disassembly for two or more `lwz r11, X(r11)`. Note that column 2 of gameplay.txt is the size in bytes, not instructions.
+
+### agAM round 4 (b188)
+- Hash-post glue (88868A88, 88868B48): build the key {engine->f27c, arg, 1} and the null Ts4Handle12 {0,0xFFFFF,0} in the order k.b, k.c, n.*, k.a, then call ts4_hash_find_arg_88180F08 with key as a pointer and the handle by value. This matches on the LTCG route only (ctx=[]); the plain route gets the wrong store order.
+- 888EE7E8: the "a && (m==4||m==2) && (u8)call()" chain matches as a single return expression. An if/return-0 ladder adds about 8 instructions.
+
+- agAN: 887245B0 (two id-slot inits {0,0xFFFFF,0}) matched only once the slot init was a `static __inline` helper called twice; writing the stores inline put them in the wrong order.
+- agAN: 886F1798/1810/1888 (getters that return a struct by value through a vcall) matched only as C++. In C, the by-value form was 23 off and the pointer-to-result form (`T *f(T *out, L *l)`, vcall `get_id(out, s)`) was 11 off. Dropped because C is required.

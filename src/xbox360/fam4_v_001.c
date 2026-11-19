@@ -147,8 +147,8 @@ ts4_word ts4_if_addr_lbl_880E17D8_88836040();
 ts4_word cx49_luaobj_set_named_888368B0();
 ts4_word fn_88852548();
 ts4_word ts4_loop_get_u32_lbl_88D45B1C_88868008();
-ts4_word fn_88868A88();
-ts4_word fn_88868B48();
+ts4_word ts4_hash_post_9546B457_88868A88();
+ts4_word ts4_hash_post_B59A4AFD_88868B48();
 ts4_word ts4_htbl_set_flag_88869690();
 ts4_word ts4_tbl_set_flag_888697B0();
 ts4_word ts4_htbl_set_flag_88869830();
@@ -1238,7 +1238,7 @@ void ts4_loop_call_seq_u32_off3c_888621C0(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x88869E80: if_call_seq fn_88868A88, u8@0x85, ts4_htbl_set_flag_88869690, fn_88868B48, u8@0x7e, fn_88868B48 */
+/* Swing_DLL.xex 0x88869E80: if_call_seq ts4_hash_post_9546B457_88868A88, u8@0x85, ts4_htbl_set_flag_88869690, ts4_hash_post_B59A4AFD_88868B48, u8@0x7e, ts4_hash_post_B59A4AFD_88868B48 */
 void ts4_if_call_seq_fn_88868A88_88869E80(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t6;
@@ -1257,7 +1257,7 @@ void ts4_if_call_seq_fn_88868A88_88869E80(ts4_word a0, ts4_word a1, ts4_word a2)
         }
         if ((ts4_word)a1 != (ts4_word)((2501050368) | 33759)) {
             if ((ts4_word)a1 == (ts4_word)((995360768) | 58411)) {
-                t6 = fn_88868B48((ts4_word)a0);
+                t6 = ts4_hash_post_B59A4AFD_88868B48((ts4_word)a0);
                 if ((ts4_word)t6 != 0) {
                     *(unsigned char *)((char *)(ts4_word)(t6) + 124) = (unsigned char)a2;
                     return;
@@ -1265,7 +1265,7 @@ void ts4_if_call_seq_fn_88868A88_88869E80(ts4_word a0, ts4_word a1, ts4_word a2)
                 return;
             }
             if ((ts4_word)a1 == (ts4_word)((2724003840) | 46481)) {
-                t5 = fn_88868B48((ts4_word)a0);
+                t5 = ts4_hash_post_B59A4AFD_88868B48((ts4_word)a0);
                 if ((ts4_word)t5 != 0) {
                     *(unsigned char *)((char *)(ts4_word)(t5) + 125) = (unsigned char)a2;
                     return;
@@ -1273,7 +1273,7 @@ void ts4_if_call_seq_fn_88868A88_88869E80(ts4_word a0, ts4_word a1, ts4_word a2)
                 return;
             }
             if ((ts4_word)a1 == (ts4_word)((3579445248) | 34055)) {
-                t4 = fn_88868B48((ts4_word)a0);
+                t4 = ts4_hash_post_B59A4AFD_88868B48((ts4_word)a0);
                 if ((ts4_word)t4 != 0) {
                     *(unsigned char *)((char *)(ts4_word)(t4) + 126) = (unsigned char)a2;
                     return;
@@ -1285,7 +1285,7 @@ void ts4_if_call_seq_fn_88868A88_88869E80(ts4_word a0, ts4_word a1, ts4_word a2)
                 return;
             }
             if ((ts4_word)a1 == (ts4_word)((1347420160) | 13321)) {
-                t1 = fn_88868A88((ts4_word)a0);
+                t1 = ts4_hash_post_9546B457_88868A88((ts4_word)a0);
                 if ((ts4_word)t1 != 0) {
                     *(unsigned char *)((char *)(ts4_word)(t1) + 133) = (unsigned char)a2;
                 }

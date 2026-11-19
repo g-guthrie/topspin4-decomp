@@ -190,7 +190,7 @@ ts4_word ts4_format_save_dir_88866980();
 ts4_word fn_88866DA0();
 ts4_word ts4_format_save_path_entry_88867E68();
 ts4_word ts4_hash_lookup_null_888689A8();
-ts4_word fn_88868B48();
+ts4_word ts4_hash_post_B59A4AFD_88868B48();
 ts4_word fn_888690F0();
 ts4_word fn_88869530();
 ts4_word ts4_format_save_entry_8886B1B0();
@@ -492,12 +492,12 @@ ts4_word ts4_call_seq_ts4_assign_formatted_text_88868E78(ts4_word a0, ts4_word a
     return a0;
 }
 
-/* Swing_DLL.xex 0x88869740: if_call_seq fn_88868B48, u8@0x7e, u8@0x7d, u8@0x7c */
+/* Swing_DLL.xex 0x88869740: if_call_seq ts4_hash_post_B59A4AFD_88868B48, u8@0x7e, u8@0x7d, u8@0x7c */
 ts4_word ts4_if_call_seq_fn_88868B48_88869740(ts4_word a0, int a1, ts4_word a2)
 {
     ts4_word t1;
 
-    t1 = fn_88868B48((ts4_word)a0);
+    t1 = ts4_hash_post_B59A4AFD_88868B48((ts4_word)a0);
     if ((ts4_word)t1 != 0) {
         if ((int)a1 == 1) {
             *(unsigned char *)((char *)(ts4_word)(t1) + 124) = (unsigned char)a2;
