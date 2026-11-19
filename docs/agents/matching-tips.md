@@ -2766,3 +2766,61 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   - 886D0808: LTCG passes cr6 to a callee that has no source.
   - 886D5028 and 886B1578: the callee keeps r4 or r3-r6 live, and it has no source.
   - 8864E310 (VMX), 8865DAC0 (jump table), 888DFA40/888E7278 (64-bit packing), 887F8EE8.
+
+## agAU (b194): renderer queue lines 89-124 (8 matches, 3 drafts)
+- **A ternary picks `cntlzw/extrwi/xori`; arithmetic on the compare picks `subic/subfe`** (8876D8D8, 8876D970): write
+  `st = (d->id == K) ? 5 : 6;`. `(d->id != K) + 5` and `!(d->id == K) + 5` both give the carry form.
+- **The target loads a global before the store it follows in the source** (8873B890: `lwz lbl_88D45A4C` before the `stfsx`):
+  read the global into a local first, `s = lbl; o->x = (float)((double)a / (double)b);`.
+- **Clearing a vector in a dtor with the inline erase(first, last)** (8873DF48, 0x30-byte elements) matched with `v = &o->v;`
+  after the vt store, then `elemvec_erase(v, v->first, v->last)`: an assign loop over `(end - src)/0x30`, a range destroy, `v->last = p`.
+- **The device global is read before the fence test** (88731158: `lwz r3,0(r11)` sits before `cmplwi`): pass the device as
+  an argument to an inline, `gpu_block_on_fence(gpu_device(), old->fence)`, with `if (fence)` inside. `gpu_device()` returns
+  `KeGetCurrentProcessType() == 2 ? *__imp_VdGlobalXamDevice : *__imp_VdGlobalDevice`.
+- **A self-relative table search with `li r3,0` before the loop and `cmplw count,i; bgt`** (88779330, sibling 88779288 at 0.99):
+  `Entry *r = 0; for (i = 0; t->count > i; i++) { e = (Entry *)((char *)t + (i * sizeof(Entry) + t->rel)); if (*key == e->key) { r = e; break; } } return r;`.
+  When the array is a sub-struct, read `t->second.count` in the condition and take `RelArray *a = &t->second` inside the body.
+- **Find-then-erase in a u32 vector with `last` loaded before `first`** (88779428): use a block-scoped `u32 *e = o->list.last;`
+  and test `e != p`. `o->list.last != p` alone still loads `first` first (2 off).
+- **`cmpwi` (signed) null tests on pointers** (88778AD0): `(int)p != 0`, in a .cpp file with a smart-pointer struct. The branch
+  tails are still merged, and `this`/`&h` land in swapped r30/r31 (26 off). Dropped.
+- **Do not attempt the 8872xxxx dtor family that frees via lbl_88D45B38** (88720518, 88720470, 887239C0, 88721E38): the target
+  caches the allocator global in r31 across both member tidies and reloads it only after the 886131F0 call, not after
+  fn_885651F8. That needs LTCG knowledge of fn_885651F8, which has no source. Skipped.
+- Drafts: 886F99C8 (LTCG `ctx=[]`, 3 off: the target holds the Res* in r11, the inlined lookup puts it in r3); 886F1A70 (3 off:
+  `lhzx` operands swapped, and the map head is loaded after the iterator, in .cpp/LTCG builds too); 8876E0B0 (2 off: `o->a` is loaded
+  after the stack local; needs `changed = 0` after the call to free r30).
+- Skipped for 64-bit/struct-by-value packing (`rldicr`): 887696F8, 88717178, 88720F10, 8875EAC8. Not attempted: 886F76A0,
+  886F8518, 88774260, 88778DC8, 886F0090, 88720DA0, 88721F10, 88728A48, 8872A910, 8872B8A0, 8877C0F0.
+
+## agAW (b194): renderer queue lines 125-133 (1 match, 1 draft)
+- **`divw.` record-form element count** (886ECC38: `size = (last-first)/0x68` tested after a bool vcall): write the
+  subtraction inline in each test, `if ((o->last - o->first) == 0)`. A named `int n` local gives `divw` plus `cmpwi`.
+- Self-relative table search returning a field of the hit (8877C0F0): the inline `at(t,i)` used for both test and result
+  gets the `slwi`/re-add tail, but the target loads `t->rel` before `li i`/`addi t` (3 off in plain and LTCG). Draft saved.
+- Dropped: 88773390 (ctor with 4 null handles; the target interleaves stores via r3 before `mr r31`, 19 off in all forms),
+  886EEC48 (float do-while; the target keeps the new `t` in f13 for the compare and reloads it for the loop test, 25 off).
+  Skipped for rldicr packing: 88701E80, 8871AF40.
+- Coordinator rule: never save specs keyed by a mangled C++ name (`??0...`); put C++-only ctor/dtor matches in drafts/.
+
+## agAV (b194): gameplay queue lines 162-174 (1 saved match, 2 ctor matches in drafts, 1 draft)
+- **Stack round trip `addi rX,r1,0x50; stw v,0x50(r1); lwz rY,0(rX)` for a selected hash/colour** (888CB4D0, matched):
+  build the value as a by-value C++ temporary, `struct Hash { unsigned v; Hash(unsigned x) : v(x) {} };`
+  `Hash h = flag ? Hash(H0) : Hash(H1); rec->id = h.v;` in a .cpp with an `extern "C"` function. This should
+  also help the open 886A37D0 and 88669B98, though 886A37D0 still fails on its `clrrwi` copy (30 off).
+- Self-relative base used twice with `mr r9,r10` copy: route the first use through an inline member
+  `char *base() { return (char *)this + rel; }` and write the second one out as `(char *)s->blk + s->blk->rel + K`.
+- **Constructors on the shared base fn_88617D88 where the vtable store sits among the member stores** (888DDF98,
+  888DE430: full matches): use an inline intermediate base `struct Vt : Base { Vt() { vt = lbl_X; } };` where
+  Base's ctor calls fn_88617D88(this). Then add members with inline ctors in field order: range record
+  `{lo=0; cur=0; hi=0xFFFFF}`, `M() { fn_8816D1A8(this); }`. The rest of the body goes in the derived ctor.
+  Per the coordinator, mangled `??0` keys must not be saved as specs, so these are in src/xbox360/drafts/.
+- Open:
+  - 888C80A0 (2 off): same ctor shape, with `w1c = 0` before vt in the intermediate base. The `lis` of the global
+    `lbl_88D4595C = this` is scheduled one slot early.
+  - 888C6320 (6 off): three zeroed out-locals passed to fn_8886FED0(o, id, &a, &b, &c). The addi/stw
+    interleave is wrong in every C, C++, struct, LTCG and /Ox form tried.
+  - 8887C000 (12 off): vector `clear()` inlines give the dead `addi r11,vec`. The last `e =` store
+    should come after `addi r3,r31,0x5c` (mr r11,r3).
+  - 888E9898: rel-table walk with ts4_hash_service_str_888C8370; reached 24 off, then I stopped.
+- Skipped: 8866BAE0/886A37D0 (open clrrwi cases), 886C80C0 (VMX), 888C1368 (64-bit ld/std).

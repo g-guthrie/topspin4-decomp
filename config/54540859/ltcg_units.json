@@ -3120,5 +3120,20 @@
   "symbols": {
    "ts4_pad_signed_in_not_flagged_88867310": 120
   }
+ },
+ {
+  "source": "src/xbox360/me_ts4_node_open_886F5FB0.c",
+  "object": "me_ts4_node_open_886F5FB0.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "fn_886F5FB0": 148
+  }
  }
 ]

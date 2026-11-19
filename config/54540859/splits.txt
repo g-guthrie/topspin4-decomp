@@ -54813,3 +54813,66 @@ src/xbox360/me_ts4_u32vec_remove_all_88879B28.c:
 
 src/xbox360/me_vec16_tidy_free_8873EFC0.c:
 	.text       start:0x8873EFC0 end:0x8873F048
+
+src/xbox360/me_countdown_post_state_8876D8D8.c:
+	.pdata      start:0x88127448 end:0x88127450
+	.text       start:0x8876D8D8 end:0x8876D970
+
+src/xbox360/me_countup_post_state_8876D970.c:
+	.pdata      start:0x88127450 end:0x88127458
+	.text       start:0x8876D970 end:0x8876DA10
+
+src/xbox360/me_dtor_elemvec30_owner_8873DF48.c:
+	.pdata      start:0x88126C50 end:0x88126C58
+	.text       start:0x8873DF48 end:0x8873DFE0
+
+src/xbox360/me_find_rel_entry30_by_key_88779288.cpp:
+	.pdata      start:0x881277E8 end:0x881277F0
+	.text       start:0x88779288 end:0x8877932C
+
+src/xbox360/me_find_rel_entry_by_key_88779330.cpp:
+	.pdata      start:0x881277F0 end:0x881277F8
+	.text       start:0x88779330 end:0x887793D0
+
+src/xbox360/me_gpu_buffer_resize_88731158.c:
+	.pdata      start:0x88126950 end:0x88126958
+	.text       start:0x88731158 end:0x887311F4
+
+src/xbox360/me_renderer_store_time_bind_shaders_8873B890.c:
+	.pdata      start:0x88126BB0 end:0x88126BB8
+	.text       start:0x8873B890 end:0x8873B928
+
+src/xbox360/me_ts4_ctor_handle_vec_owner_88723BE0.c:
+	.pdata      start:0x88126638 end:0x88126640
+	.text       start:0x88723BE0 end:0x88723C70
+
+src/xbox360/me_ts4_key_owner_release_88880AF8.c:
+	.pdata      start:0x8812D978 end:0x8812D980
+	.text       start:0x88880AF8 end:0x88880B88
+
+src/xbox360/me_ts4_key_row_find_888C2AA0.c:
+	.pdata      start:0x8812EA40 end:0x8812EA48
+	.text       start:0x888C2AA0 end:0x888C2B30
+
+src/xbox360/me_ts4_node_on_msg_886EF630.c:
+	.pdata      start:0x881255F0 end:0x881255F8
+	.text       start:0x886EF630 end:0x886EF6C4
+
+src/xbox360/me_ts4_node_open_886F5FB0.c:
+	.pdata      start:0x881257C8 end:0x881257D0
+	.text       start:0x886F5FB0 end:0x886F6044
+
+src/xbox360/me_ts4_ref_item_pos_8877D578.c:
+	.pdata      start:0x88127A00 end:0x88127A08
+	.text       start:0x8877D578 end:0x8877D60C
+
+src/xbox360/me_ts4_relent_set_flag_888F0798.c:
+	.pdata      start:0x8812FB30 end:0x8812FB38
+	.text       start:0x888F0798 end:0x888F0824
+
+src/xbox360/me_ts4_settings_write_889170B8.c:
+	.text       start:0x889170B8 end:0x88917148
+
+src/xbox360/me_u32vec_remove_locked_88779428.c:
+	.pdata      start:0x881277F8 end:0x88127800
+	.text       start:0x88779428 end:0x887794CC
