@@ -3002,3 +3002,23 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   - 8888AB30: the string/`lis` order and an `o->x30` reload; 26 off.
 - The agBF near misses 88879C48 (a local copy of `o->p10`) and 888ED7E0 (an int, bool or reordered `p3_set`) did not move.
 - Skipped: 888688C8, 88869008, 888E3C90 (rldicr); 8864C170 (std); 887F1E18 (clrrwi); 888B19F8, 886C4190, 88917EE0 (VMX).
+
+## agBI (b199): renderer queue lines 349-380 (screen hits), 386-415, plus the 887322A8 family (3 matches, 4 drafts)
+- **Vertex-declaration builders 887322A8/887323F8/88224728: 35 off down to 2 off.** The 12-byte element is `{u16 stream, off; u32 fmt; u8 method, usage, idx;}`
+  (not 3 ints). Copy it in the push with a 3-word struct temporary, `{ W3 t = *(W3 *)s; *(W3 *)p = t; }` where `typedef struct { u32 w[3]; } W3;`.
+  That gives load-all-then-store order, and `end` is no longer reloaded. Separate int temporaries load in the order w1,w2,w0. Use a 0x20-byte vector local.
+  The remaining 2 off: `addi r3,r1,0x50` (the vector ctor arg) is scheduled before `sth r31,0x7c(r1)`. Field stores, aggregate initializers, an init helper, .cpp, and the decl order all give the same result. The drafts are in drafts/.
+- **xdata string-to-enum readers (88704288, 887043D8, both matched):** `ts4_handle_forward_88150770(&ref, handle, &hash)`, where `handle` is a
+  pointer param. The ref record must be 12 bytes (`{node; offset; extra}`) to reproduce the 0x80 frame; 8 or 16 bytes give a wrong frame or slot.
+  The invalid test is `__forceinline u8 f(r) { return r->node == 0 || r->offset == 0xFFFFF; }`. The vcall slot 0x50 takes `(node, &ref, ref.offset, 1)`. Inline `strcmp` with `#pragma intrinsic`.
+- **Two-vector update with an erase (886F9DA8, matched):** the agAR `n = p + 1` induction form works for both loops. When the target reads the element's
+  fields at negative offsets from the `next` register (`lbz -0x18(r31)`), write the field reads as `en[-1].field`, not `e->field`.
+  Increment order `e++; en++;`. Block-scope each loop's iterators.
+- A recursive call shows up in the TARGET column as the function's own name (88719D50 calls itself on `lib->mats[id]`).
+- 88719D50 (draft, 1 off): `lwzx` operand order on `v->first[i]` with a byte-offset induction did not respond to at()/cast/base-copy forms.
+  `int` res field + `GpuRes **pp` release local fixed the cmpwi/cmplwi pair.
+- 88702E00 (string-pair writer, sibling 88944378 at 0.96): `len+1` is recomputed for the svc call and the vt[11] call in the target; MSVC CSEs it
+  through casts and inline wrappers too (57 off). Dropped. 8877CF98: the target frees the vector at two call sites (reloc count 8 vs 6), and passing
+  a by-value C++ vector with a dtor does not make the callee destroy it on Xbox (the caller destroys it). Dropped.
+- Skipped as too large or ctor-heavy: 8875B170 (factory with allocator switch), 88727248 (0x10d0 frame), 8877BCE8, 88759A20, 88725D58, 887270F0,
+  8873C9A0, 8874EC80, 8871ABB0.
