@@ -2857,3 +2857,16 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 - An inline `src_at()` that copies the base pointer fixes the add operand order for `base + i*size` (888D5298).
 - Writing `*o->next == *o->cur` directly in the test, not through locals, fixes the load order (888F56E0).
 - Get the names of data labels from the checker's RENAME lines; textdis offset-to-address mapping is unreliable.
+
+## agAZ (b195/b196): renderer queue lines 150-166 plus 886F76A0 (4 matches, 1 draft)
+- **Script handler family (`Ctx->args` at 0x10, items 0x380, count 0x384)**: reuse the `arg_at`/`arg_number` inlines from
+  cx35_e.c. Use `(u32)d` for `fctidz` (an `(int)` cast gives `fctiwz`). When the target tests count with `beq`, not `ble`,
+  write a separate `arg_first` helper with `if (a->count)` (8877C4A8).
+- **A table lookup with a frame and r31 around a non-tail call to a sourced callee** (886F75E0): LTCG with
+  `flags(/Ob1):<callee src>`, and pass the param register through (`fn(e->value, kind)`). The `li r3,1` placement follows
+  where `r = 1;` is assigned: after the switch, not at the declaration.
+- **A found-pointer null test that survives after the loop, with a trailing dead `blr`** (886F76A0): `f = 0; loop { f = e; break; }`
+  then `r = 0; if (f) r = fn(f->value); return r;`. Writing `if (!f) return 0; return fn(...)`, or using goto, folds the test away.
+- Draft 8877C3E8 (2 off): the loads of `0x2c4` and `0x2c0` come out in the wrong order before the find call.
+- Skipped: 886F1488 (its callee is VMX with no source), 88713F18 and 886F51C0 (struct-by-value), 88725290, 887205F0 and 88745F58
+  (constructors and destructors with member calls), 8877B418 (VMX), 8871C598 (VMX).
