@@ -1717,3 +1717,20 @@ Same bytes, and the relocations now carry the target names. No tool change neede
   a[i] ... }` (88411FE8). Pointer-vector finds want the end hoisted into a local and compared `end != it`, with an `r = 0`
   result and `break` (88803198). A handle re-test after the find (clrrwi copy) is an inline release helper on `&o->sub`
   (8883DD48). `!=` vs `==` operand order on cmplw/subf follows the written order: `owner->root == top` (883E2E78).
+
+### agAB round 5 (b166)
+
+- `/O1` signature check: `cmpwi rX,0` on cr0 plus test-at-top loop entry; retry with `/O1` before reshaping source (883FDBB8, 884F8A90, 8858A668).
+- Keyed find over fixed-stride entries that returns a field: a plain `for (i = 0; i < t->n; i++) if (key == t->arr[i].k) return t->arr[i].v; return 0;` matches; hoisting `n`/`arr` into locals does not (887788F0).
+- Owner-path branch that skips a null test (883C66E8, sibling 883C6740 at +0x18) stays 1 off with plain if/else; unresolved.
+
+### agAD round 2 (b166): 3 matches
+- 882907D8/88290830, which pack the low bytes of the x/y/z words into `0x00ZZYYXX` device registers: the `rlwimi` came from byte-typed struct fields.
+  Read u32 words (`(c->z & 0xff) << 16 | (c->y & 0xff) << 8 | (c->x & 0xff)`); that gives `rotlwi; or; slwi; or`. They then
+  match only on **/O1**, because /Oc chains the ORs through fresh registers (8 off).
+- 882E21B8 (block layout, agAC): the target shares one `return 0x88760B59` block between the `off == 0` test and the `r == 1` test.
+  Write the raw (`== 0x102A1100`) branch first, with `goto bad;` in both arms and `bad: return (int)0x88760B59;` after
+  `return 0;`. That moves the fn_882DD1B8 arm after the epilogue. The size-before-data order then needed a pointer local:
+  `const char *p = (const char *)src + off; data = (char *)p + 4; raw = 1; res->size = *(const unsigned *)p;`.
+- 882C73D8 is still 2 off (`li r3,0` against `stw res,0(out)`). These had no effect: a pointer-local store on `*out`, `return 0` against `r = 0`,
+  `long`, /Os /O2 /Ob0 /Ob1, a D3DX-style `goto fail` with or without an `if (res)` cleanup (that one is larger), and a `goto ok` that skips the tag test.

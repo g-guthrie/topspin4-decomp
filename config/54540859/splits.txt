@@ -51990,3 +51990,64 @@ src/xbox360/me_ts4_vec44_assign_881AE140.c:
 src/xbox360/me_ts4_vec56_assign_88218E08.c:
 	.pdata      start:0x8810D2F0 end:0x8810D2F8
 	.text       start:0x88218E08 end:0x88218FE0
+
+src/xbox360/me_ts4_all_items_empty_883FDBB8.c:
+	.pdata      start:0x88115D00 end:0x88115D08
+	.text       start:0x883FDBB8 end:0x883FDC10
+
+src/xbox360/me_ts4_clear_slot_words_88561E20.c:
+	.text       start:0x88561E20 end:0x88561E78
+
+src/xbox360/me_ts4_entry_flag_if_linked_8890DB38.c:
+	.text       start:0x8890DB38 end:0x8890DB8C
+
+src/xbox360/me_ts4_find_by_id_or_default_88803198.c:
+	.text       start:0x88803198 end:0x888031EC
+
+src/xbox360/me_ts4_find_entry_by_key_886EDB70.c:
+	.text       start:0x886EDB70 end:0x886EDBC4
+
+src/xbox360/me_ts4_find_entry_byte_by_key_887788F0.c:
+	.text       start:0x887788F0 end:0x88778948
+
+src/xbox360/me_ts4_find_group_of_cursor_8848B140.c:
+	.text       start:0x8848B140 end:0x8848B198
+
+src/xbox360/me_ts4_forward_to_found_iface_884F8A90.c:
+	.pdata      start:0x8811BB18 end:0x8811BB20
+	.text       start:0x884F8A90 end:0x884F8AE8
+
+src/xbox360/me_ts4_gpu_pack_rgb_regs_882907D8.c:
+	.text       start:0x882907D8 end:0x8829082C
+
+src/xbox360/me_ts4_gpu_pack_rgb_regs_88290830.c:
+	.text       start:0x88290830 end:0x88290884
+
+src/xbox360/me_ts4_has_pair_entry_884683F0.c:
+	.text       start:0x884683F0 end:0x88468448
+
+src/xbox360/me_ts4_mark_entries_on_88403F78.c:
+	.text       start:0x88403F78 end:0x88403FD0
+
+src/xbox360/me_ts4_max_table_value_8859D398.c:
+	.pdata      start:0x8811E2F8 end:0x8811E300
+	.text       start:0x8859D398 end:0x8859D3F0
+
+src/xbox360/me_ts4_notify_list_items_884AEFB0.c:
+	.pdata      start:0x8811A1F0 end:0x8811A1F8
+	.text       start:0x884AEFB0 end:0x884AF008
+
+src/xbox360/me_ts4_query_then_notify_8841F000.c:
+	.pdata      start:0x881167F0 end:0x881167F8
+	.text       start:0x8841F000 end:0x8841F058
+
+src/xbox360/me_ts4_refresh_flagged_entries_8858A668.c:
+	.pdata      start:0x8811DB80 end:0x8811DB88
+	.text       start:0x8858A668 end:0x8858A6C0
+
+src/xbox360/me_ts4_release_entry_by_id_8883DD48.c:
+	.text       start:0x8883DD48 end:0x8883DD9C
+
+src/xbox360/me_ts4_resource_load_batc_882E21B8.c:
+	.pdata      start:0x881114E0 end:0x881114E8
+	.text       start:0x882E21B8 end:0x882E2308

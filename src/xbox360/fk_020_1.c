@@ -60,7 +60,7 @@ ts4_word fn_8826C198();
 ts4_word fn_8826D088();
 ts4_word fn_88287FA0();
 ts4_word fn_882882A0();
-ts4_word fn_882907D8();
+ts4_word ts4_gpu_pack_rgb_regs_882907D8();
 ts4_word ts4_tailcall_fn_88582F30_8857A128();
 ts4_word fn_8857C1F8();
 ts4_word fn_88608590();
