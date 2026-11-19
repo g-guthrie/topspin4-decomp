@@ -52051,3 +52051,49 @@ src/xbox360/me_ts4_release_entry_by_id_8883DD48.c:
 src/xbox360/me_ts4_resource_load_batc_882E21B8.c:
 	.pdata      start:0x881114E0 end:0x881114E8
 	.text       start:0x882E21B8 end:0x882E2308
+
+src/xbox360/me_ts4_entry_sub_of_index_886F0240.c:
+	.text       start:0x886F0240 end:0x886F0278
+
+src/xbox360/me_ts4_mat2_inverse_8898E050.c:
+	.text       start:0x8898E050 end:0x8898E0A0
+
+src/xbox360/me_ts4_notify_items_reverse_88477010.c:
+	.pdata      start:0x88118DC0 end:0x88118DC8
+	.text       start:0x88477010 end:0x8847706C
+
+src/xbox360/me_ts4_read_hmht_section_883EB800.c:
+	.pdata      start:0x881156E0 end:0x881156E8
+	.text       start:0x883EB800 end:0x883EB9F8
+
+src/xbox360/me_ts4_read_hnlt_section_883EB9F8.c:
+	.pdata      start:0x881156E8 end:0x881156F0
+	.text       start:0x883EB9F8 end:0x883EBC24
+
+src/xbox360/me_ts4_scaled_ratio_or_zero_885BDF00.c:
+	.text       start:0x885BDF00 end:0x885BDF38
+
+src/xbox360/me_ts4_scan_member_state_883F2390.c:
+	.pdata      start:0x88115928 end:0x88115930
+	.text       start:0x883F2390 end:0x883F258C
+
+src/xbox360/me_ts4_selfrel_byte96_888AF448.c:
+	.text       start:0x888AF448 end:0x888AF478
+
+src/xbox360/me_ts4_str_has_prefix_88421968.c:
+	.text       start:0x88421968 end:0x884219C4
+
+src/xbox360/me_ts4_forward_f3_by_selector_885CEFC8.c:
+	.text       start:0x885CEFC8 end:0x885CF024
+
+src/xbox360/me_ts4_forward_f4_by_selector_885CF028.c:
+	.text       start:0x885CF028 end:0x885CF084
+
+src/xbox360/me_ts4_scale_count_round_8859BB40.c:
+	.text       start:0x8859BB40 end:0x8859BB9C
+
+src/xbox360/me_ts4_str_to_lower_88421918.c:
+	.text       start:0x88421918 end:0x88421968
+
+src/xbox360/me_ts4_str_to_upper_884218C8.c:
+	.text       start:0x884218C8 end:0x88421918

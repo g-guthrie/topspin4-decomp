@@ -1,11 +1,12 @@
-/* 0x886EDDF8 near miss (agW, /Oc and /Os): 1 off, operand order of the second cmplw (target r8,r9 = it->b,*b; here r9,r8). */
-/* Finds the first 0xbc-byte item in [first,last) whose +0xa4 equals *a and +0x84 equals *b. `*a == it->a` forms are 2 off. */
-typedef struct { char pad[0x84]; unsigned int b; char pad2[0x1c]; unsigned int a; char pad3[0x14]; } It;
-typedef struct { char pad[0x1c]; It *first; It *last; } O;
-It *ts4_find_pair_886EDDF8(O *o, unsigned int *a, unsigned int *b)
+/* 0x886EDDF8: find the 0xBC-byte entry in [+0x1C,+0x20) whose +0xA4 == *a and +0x84 == *b; 0 if none. */
+/* Near-miss on /Oc (agAB): 1 instruction off at +0x2C. The target loads *b before it->b but still compares cmplw it->b,*b; this form gets the load order right and swaps the cmplw operands. */
+typedef struct E { char p[0x84]; unsigned int b; char p88[0xa4 - 0x88]; unsigned int a; char pa8[0xbc - 0xa8]; } E;
+typedef struct T { char p[0x1c]; E *begin; E *end; } T;
+E *fn_886EDDF8(T *t, const unsigned int *a, const unsigned int *b)
 {
-    It *it;
-    for (it = o->first; it != o->last; it++)
-        if (it->a == *a && *b == it->b) return it;
+    E *it = t->begin, *end = t->end;
+    for (; it != end; it++)
+        if (it->a == *a && *b == it->b)
+            return it;
     return 0;
 }

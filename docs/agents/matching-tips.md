@@ -1737,3 +1737,29 @@ Same bytes, and the relocations now carry the target names. No tool change neede
 - 883FA998 (/O1 queue, a stream reader): the body matches except for two byte-swap cases (mode 0/1) that the target keeps apart with different
   OR orders and a shared tail store. MSVC merges identical unsigned swaps in all 24x24 macro operand orders. An `int` view
   splits the cases but gives `srawi`. Draft: drafts/me_883FA998_nearmiss.c (36 off).
+
+### agAD round 3 (b167): /O1 queue, 3 matches
+- Matched (/O1 plain, keeping the fn_ names): 883EB800 and 883EB9F8 (section readers: an 'hmht'/'hnlt' header via fn_883E7828, a u16 count, a 0x18-byte
+  lookup with an inline ctor, entry arrays with inline vtable ctors, then a per-entry header loop), 883F2390 (three nested
+  intrusive lists, `l ? (T *)((char *)l - 4) : 0`, the probe body written out twice with its own block locals so the stack slots differ).
+  In 883EA6C0 (draft) the reference holder at 0x50 is `Ref {vt, pad, p}`, and the error path releases `p` without the vtable store.
+- File label 0x8803A020 is not in symbols.txt, but `extern const char lbl_8803A020[]` is accepted by the checker.
+- New drafts: 883EAF78 (only stack slots differ: n/items below the header, and 0x10 bytes of frame missing), 883EA6C0 (6 off: `ref.p`
+  is loaded into r3 and then copied to r30), 883D90A8 (1 off: `lwzx` order in a call-free inner loop, which agZ's local/chain rule does not cover),
+  883DC438 (the target keeps the repeated `-1, -1` arguments in a callee-saved register; `int any = -1` gets propagated).
+
+### agAB round 6 (b167)
+
+- Bool written through `r3` with args shifted one slot (`stb rX,0(r3)`): write `void f(unsigned char *out, ...)` and
+  store 0/1 on each path; a guarded `do { } while (p[i])` gives the top `lbz; beq` plus bottom test (0x88421968).
+- In-place char loops whose store is unconditional with an `extsb` of the original byte: an inline
+  `static __inline char conv(char c) { if (lo <= c && c <= hi) return c +/- 0x20; return c; }` called as
+  `buf[i] = conv(buf[i])` matches; a local `char c` with a conditional or unconditional store does not (0x884218C8, 0x88421918).
+- Hand-scheduled float code with single loads despite in-place output: `__restrict` on both pointers, source order of
+  stores as in target (2x2 inverse 0x8898E050). Per-element locals give the wrong register order.
+- Float-to-int with `fctidz` + `lwz -0xc(r1)` is an unsigned conversion; `fctiwz` is signed. f0 reused everywhere
+  points to /O1 (0x8859BB40).
+- Dispatch on a selector compared with `cmplwi` and the clrrwi copy: pointer-typed selector, identity inline accessor
+  per call, /O1 (0x885CEFC8, 0x885CF028).
+- Self-relative holder compared with `cmpwi` (signed): the holder field is an int offset/address; resolve with a ternary
+  `*(int *)o != -1 ? (R *)(*(int *)o + o) : 0` (0x888AF448).

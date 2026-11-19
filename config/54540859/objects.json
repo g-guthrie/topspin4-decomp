@@ -11400,6 +11400,62 @@
       "src/xbox360/me_ts4_resource_load_batc_882E21B8.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_resource_load_batc_882E21B8.c"
+      },
+      "src/xbox360/me_ts4_entry_sub_of_index_886F0240.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_entry_sub_of_index_886F0240.c"
+      },
+      "src/xbox360/me_ts4_mat2_inverse_8898E050.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_mat2_inverse_8898E050.c"
+      },
+      "src/xbox360/me_ts4_notify_items_reverse_88477010.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_notify_items_reverse_88477010.c"
+      },
+      "src/xbox360/me_ts4_read_hmht_section_883EB800.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_read_hmht_section_883EB800.c"
+      },
+      "src/xbox360/me_ts4_read_hnlt_section_883EB9F8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_read_hnlt_section_883EB9F8.c"
+      },
+      "src/xbox360/me_ts4_scaled_ratio_or_zero_885BDF00.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_scaled_ratio_or_zero_885BDF00.c"
+      },
+      "src/xbox360/me_ts4_scan_member_state_883F2390.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_scan_member_state_883F2390.c"
+      },
+      "src/xbox360/me_ts4_selfrel_byte96_888AF448.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_selfrel_byte96_888AF448.c"
+      },
+      "src/xbox360/me_ts4_str_has_prefix_88421968.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_str_has_prefix_88421968.c"
+      },
+      "src/xbox360/me_ts4_forward_f3_by_selector_885CEFC8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_forward_f3_by_selector_885CEFC8.c"
+      },
+      "src/xbox360/me_ts4_forward_f4_by_selector_885CF028.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_forward_f4_by_selector_885CF028.c"
+      },
+      "src/xbox360/me_ts4_scale_count_round_8859BB40.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_scale_count_round_8859BB40.c"
+      },
+      "src/xbox360/me_ts4_str_to_lower_88421918.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_str_to_lower_88421918.c"
+      },
+      "src/xbox360/me_ts4_str_to_upper_884218C8.c": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_str_to_upper_884218C8.c"
       }
     }
   }
