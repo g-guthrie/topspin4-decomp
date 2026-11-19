@@ -921,3 +921,9 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
   that writes every order and runs the checker finds this in a few minutes.
 - Unresolved: a `cmplw` whose loads follow one operand order and whose compare follows the other (target loads e
   then c, compares c,e). Operand swaps, `!=`, casts, compare helpers and `const` give either both in the same order or worse.
+
+## Solved at b129: function-local static names (W8 open item)
+0x886C40B8 had 0 instruction diffs but failed on MSVC's local-static names (`?$S1@...`, `?table@...`). Fix:
+declare the guard and table as file-scope externs with the target's names (`extern "C" unsigned lbl_88D4AAF8;`,
+`extern "C" T lbl_88D4AAD8[4];`) and write the init guard by hand: `g = guard; if (!(g & 1)) { guard = g | 1; init...; }`.
+Same bytes, and the relocations now carry the target names. No tool change needed.

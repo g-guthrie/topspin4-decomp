@@ -8436,6 +8436,10 @@
       "src/xbox360/me_ts4_reset_aim_target_88682B58.c": {
         "status": "Matching",
         "source": "xbox360/me_ts4_reset_aim_target_88682B58.c"
+      },
+      "src/xbox360/me_ts4_color_for_hash_886C40B8.cpp": {
+        "status": "Matching",
+        "source": "xbox360/me_ts4_color_for_hash_886C40B8.cpp"
       }
     }
   }

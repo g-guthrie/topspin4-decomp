@@ -49239,3 +49239,6 @@ src/xbox360/me_ts4_ctor_three_tables_88271158.c:
 src/xbox360/me_ts4_reset_aim_target_88682B58.c:
 	.pdata      start:0x88123C20 end:0x88123C28
 	.text       start:0x88682B58 end:0x88682DC0
+
+src/xbox360/me_ts4_color_for_hash_886C40B8.cpp:
+	.text       start:0x886C40B8 end:0x886C417C

@@ -42272,6 +42272,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_ctor_sentinel_records_8846D5E0": 236},
     },
+    {
+        "source": "src/xbox360/me_ts4_color_for_hash_886C40B8.cpp",
+        "object": "me_ts4_color_for_hash_886C40B8.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"?ts4_color_for_hash@@YA?AUTs4Color@@ABI@Z": 196},
+    },
 )
 
 
