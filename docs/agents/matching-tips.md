@@ -2597,3 +2597,23 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
 ## agAM round 6
 - "This-return" constructors (target stores via the base ctor's returned r3 while still saving r31; 887F4C18, 888B48C0, 886C6660) did not reproduce from plain C or an extern "C" .cpp form (best 5-12 off). Skip them.
 - A __vector4 out-param call (8865EC70) cannot be rewritten as a struct return-by-value. That form grows the function by 0x18-0x28; keep the explicit out pointer.
+
+## agAO (b190): gameplay queue, smallest first (2 matches, 2 drafts)
+- **A flag test that returns 1 or `count == 0`** with `li r3,1; beqlr; subic; subfe; and` (888C1C80): write
+  `int r = 1; if (flag) { if (count) r = 0; } return r;` with an `unsigned int` count. `return !f || !a` and
+  `?:` forms give `cntlzw`/`extrwi`.
+- **One flag store, then a branchy 1/2 store** (888C63B8): `o->flag = !on; if (on) *p = 1; else *p = 2;`. A `?:`
+  or `2 - (on != 0)` folds the value into `addi`.
+- The same `!o->b42` value stored through four pointers (888C5EB8) stays 6 off. `v = 0; if (!x) v = 1;` gets the
+  branch, but the first pointer load is scheduled after the select where the target loads it before.
+- Open items:
+  - 8887B380 draft (1 off): the operand order of the key `cmplw`. Its sibling 8887B328 is at 0.95.
+  - 888E9840 draft (2 off): `mr r31,r3` comes before the `stw r4` home store in the target.
+  - 886E7738 (4 off): two `lvx` vector constant stores are scheduled after the first int store. Loading into
+    locals first and the .cpp build do not change this.
+  - 8888AC30 (4 off): three self-relative args to fn_88636FA0 (`rel(&t->a)`, ...). r5 and r6 are swapped.
+  - 888C1B88/888C1B58 (4 and 7 off): the target loads `s->total` after the `c->cfg` load and the field stores.
+  - 886696A8 (6 off): the target reloads `o->inst` for the second test, and the call uses a `clrrwi` copy.
+  - 888CB9D0 (18 off): a nested self-relative lookup. The index adds come before the base add.
+- 88884488, 88884C88 and 88884618 call XAM wrappers (8857Bxxx). 887F4C18-887F4EC8, 887F4FA0 and 886C6660 are
+  this-return constructors. Skip all of these.
