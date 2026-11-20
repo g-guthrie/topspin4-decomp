@@ -8,7 +8,7 @@ void fn_8884B698(void *object);
 void fn_888E1258(void *object);
 void *ts4_find_service(ts4_u32 service_id);
 void fn_888E4EF8(void *service);
-void fn_888E00D8(void *service);
+void ts4_if_call_seq_lbl_880DAF20_888E00D8(void *service);
 
 /* Registered as PlayerSelectUnloadAllCreatedPlayers. */
 ts4_u32 ts4_script_player_select_unload_all_created_players(void)
@@ -34,7 +34,7 @@ ts4_u32 ts4_script_apply_profile_options(void)
 /* Registered as StartPracticeGround. */
 ts4_u32 ts4_script_start_practice_ground(void)
 {
-    fn_888E00D8(ts4_find_service(0x2D9AB2F6));
+    ts4_if_call_seq_lbl_880DAF20_888E00D8(ts4_find_service(0x2D9AB2F6));
     return 0;
 }
 

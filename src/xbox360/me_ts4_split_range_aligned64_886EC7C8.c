@@ -1,0 +1,2 @@
+typedef struct Ent { unsigned int zero; unsigned int off; unsigned int tag; unsigned int end; } Ent;
+unsigned int ts4_split_range_aligned64_886EC7C8(Ent *e, unsigned int n, unsigned int tag, unsigned int total){ unsigned int max = 0; unsigned int chunk = (total / n + 63) & ~63u; unsigned int off = 0; unsigned int i; for (i = 0; i < n; i++) { unsigned int sz = chunk; if (i == n - 1) sz = total - off; if (sz > max) max = sz; e[i].off = off; e[i].tag = tag; e[i].zero = 0; e[i].end = off + sz; off += sz; } return max; }

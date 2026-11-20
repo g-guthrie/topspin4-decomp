@@ -1,0 +1,44 @@
+/* 0x88182540: std::vector vector insert of 16-byte items copied through fn_88181878, range-destroyed by ts4_destroy_ent16_range_881816D8. Same _Insert_n grow path as 0x8817A2A0. */
+/* Matched on /Oc (work/army/ME/v.py chk); the newcap sum uses an inline ternary to reproduce the operand order. */
+typedef struct Item { unsigned w[4]; } Item;
+typedef struct Vec { Item *begin; Item *end; Item *cap; } Vec;
+extern void *lbl_88D45B38;
+void *ts4_if_call_seq_fn_88883CD0_8860D250(void *g);
+void *fn_88613570(void *alloc, unsigned size, unsigned align, void *owner);
+void fn_88181878(Item *dest, const Item *src);
+void ts4_destroy_ent16_range_881816D8(Item *first, Item *last);
+void ts4_destroy_owned_object(void *p);
+static __inline Item *ucopy(Item *first, Item *last, Item *dest)
+{
+    for (; first != last; ++dest, ++first)
+        if (dest) fn_88181878(dest, first);
+    return dest;
+}
+static __inline Item *ufill(Item *dest, unsigned n, const Item *val)
+{
+    for (; n; --n, ++dest)
+        if (dest) fn_88181878(dest, val);
+    return dest;
+}
+void ts4_vector_realloc_insert_88182540(Vec *v, Item *where, const Item *val, unsigned n)
+{
+    unsigned size = v->end - v->begin;
+    unsigned newcap = size + *(size < n ? &n : &size);
+    Item *nb = 0;
+    Item *d;
+    if (newcap)
+        nb = (Item *)fn_88613570(lbl_88D45B38 ? ts4_if_call_seq_fn_88883CD0_8860D250(lbl_88D45B38) : 0, newcap * 16, 4, &v->cap);
+    d = ucopy(v->begin, where, nb);
+    if (n == 1) {
+        if (d) fn_88181878(d, val);
+        d++;
+    } else {
+        d = ufill(d, n, val);
+    }
+    d = ucopy(where, v->end, d);
+    ts4_destroy_ent16_range_881816D8(v->begin, v->end);
+    ts4_destroy_owned_object(v->begin);
+    v->begin = nb;
+    v->end = d;
+    v->cap = nb + newcap;
+}

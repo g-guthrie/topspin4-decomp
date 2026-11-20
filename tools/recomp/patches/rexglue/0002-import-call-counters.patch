@@ -1,0 +1,188 @@
+diff --git a/include/rex/hook.h b/include/rex/hook.h
+index 4ce4f9b..b351c05 100644
+--- a/include/rex/hook.h
++++ b/include/rex/hook.h
+@@ -17,6 +17,7 @@
+ 
+ #include <fmt/format.h>
+ 
++#include <rex/import_trace.h>
+ #include <rex/logging.h>
+ #include <rex/ppc/context.h>
+ #include <rex/ppc/function.h>
+@@ -36,11 +37,13 @@
+ #define REX_HOOK(subroutine, function)                           \
+   extern "C" REX_FUNC(subroutine) {                              \
+     ZoneNamedN(___tracy_hook_zone, #subroutine, TracyIsStarted); \
++    REX_TRACE_IMPORT(#subroutine);                               \
+     rex::ppc::HostToGuestFunction<function>(ctx, base);          \
+   }
+ #else
+ #define REX_HOOK(subroutine, function)                  \
+   extern "C" REX_FUNC(subroutine) {                     \
++    REX_TRACE_IMPORT(#subroutine);                      \
+     rex::ppc::HostToGuestFunction<function>(ctx, base); \
+   }
+ #endif
+@@ -52,18 +55,21 @@
+ #define REX_STUB(subroutine)              \
+   extern "C" REX_FUNC(subroutine) {       \
+     (void)base;                           \
++    REX_TRACE_IMPORT(#subroutine);        \
+     REXKRNL_WARN("{} STUB", #subroutine); \
+   }
+ 
+ #define REX_STUB_LOG(subroutine, msg)               \
+   extern "C" REX_FUNC(subroutine) {                 \
+     (void)base;                                     \
++    REX_TRACE_IMPORT(#subroutine);                  \
+     REXKRNL_WARN("{} STUB - {}", #subroutine, msg); \
+   }
+ 
+ #define REX_STUB_RETURN(subroutine, value)                                                \
+   extern "C" REX_FUNC(subroutine) {                                                       \
+     (void)base;                                                                           \
++    REX_TRACE_IMPORT(#subroutine);                                                        \
+     REXKRNL_WARN("{} STUB - returning {:#x}", #subroutine, static_cast<uint32_t>(value)); \
+     ctx.r3.u64 = (value);                                                                 \
+   }
+diff --git a/include/rex/import_trace.h b/include/rex/import_trace.h
+new file mode 100644
+index 0000000..ebb09d7
+--- /dev/null
++++ b/include/rex/import_trace.h
+@@ -0,0 +1,37 @@
++/**
++ * @file        import_trace.h
++ * @brief       Per-import call counters (local patch for the Top Spin 4 bring-up)
++ *
++ * Every REX_HOOK / REX_STUB body bumps a counter keyed by the import name. The
++ * first call of each import is logged once. DumpImportCounts writes
++ * "count<TAB>name" lines, most-called first.
++ */
++#pragma once
++
++#include <atomic>
++#include <cstdint>
++
++namespace rex::trace {
++
++struct ImportCounter {
++  const char* name;
++  std::atomic<uint64_t> count{0};
++  ImportCounter* next = nullptr;
++};
++
++ImportCounter* RegisterImportCounter(const char* name);
++void OnFirstImportCall(ImportCounter* counter);
++// Returns the number of distinct imports written; label is written as a header line.
++size_t DumpImportCounts(const char* path, const char* label);
++// Current count for an import name such as "__imp__VdSwap" (0 if never called).
++uint64_t GetImportCount(const char* name);
++
++}  // namespace rex::trace
++
++#define REX_TRACE_IMPORT(name_literal)                                                       \
++  do {                                                                                     \
++    static ::rex::trace::ImportCounter* _rex_import_counter =                              \
++        ::rex::trace::RegisterImportCounter(name_literal);                                 \
++    if (_rex_import_counter->count.fetch_add(1, std::memory_order_relaxed) == 0)           \
++      ::rex::trace::OnFirstImportCall(_rex_import_counter);                                \
++  } while (0)
+diff --git a/src/system/CMakeLists.txt b/src/system/CMakeLists.txt
+index 05979a3..d971cc7 100644
+--- a/src/system/CMakeLists.txt
++++ b/src/system/CMakeLists.txt
+@@ -34,6 +34,7 @@ set(REXSYSTEM_SOURCES
+     xam/user_profile.cpp
+ 
+     ppc_types.cpp
++    import_trace.cpp
+     elf_module.cpp
+     entry_table.cpp
+     export_resolver.cpp
+diff --git a/src/system/import_trace.cpp b/src/system/import_trace.cpp
+new file mode 100644
+index 0000000..4b332af
+--- /dev/null
++++ b/src/system/import_trace.cpp
+@@ -0,0 +1,79 @@
++/**
++ * @file        import_trace.cpp
++ * @brief       Per-import call counters (local patch for the Top Spin 4 bring-up)
++ */
++#include <rex/import_trace.h>
++
++#include <algorithm>
++#include <chrono>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++#include <mutex>
++#include <string>
++#include <vector>
++
++#include <rex/logging.h>
++
++namespace rex::trace {
++namespace {
++std::atomic<ImportCounter*> g_head{nullptr};
++std::mutex g_mutex;
++const auto g_start = std::chrono::steady_clock::now();
++}  // namespace
++
++ImportCounter* RegisterImportCounter(const char* name) {
++  auto* c = new ImportCounter();
++  c->name = name;
++  std::lock_guard<std::mutex> lock(g_mutex);
++  c->next = g_head.load(std::memory_order_relaxed);
++  g_head.store(c, std::memory_order_release);
++  return c;
++}
++
++void OnFirstImportCall(ImportCounter* counter) {
++  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
++                std::chrono::steady_clock::now() - g_start)
++                .count();
++  REXKRNL_INFO("[import-first] {} t={}ms", counter->name, ms);
++  // REX_IMPORT_TRACE_DIR + REX_IMPORT_SNAPSHOT_ON="__imp__A,__imp__B": when one of the
++  // listed imports is called for the first time, write a snapshot of all counters.
++  const char* dir = std::getenv("REX_IMPORT_TRACE_DIR");
++  const char* on = std::getenv("REX_IMPORT_SNAPSHOT_ON");
++  if (dir && on) {
++    std::string list = std::string(",") + on + ",";
++    std::string key = std::string(",") + counter->name + ",";
++    if (list.find(key) != std::string::npos) {
++      std::string path = std::string(dir) + "/imports_at_" + counter->name + ".tsv";
++      DumpImportCounts(path.c_str(), counter->name);
++    }
++  }
++}
++
++uint64_t GetImportCount(const char* name) {
++  for (auto* c = g_head.load(std::memory_order_acquire); c; c = c->next)
++    if (std::strcmp(c->name, name) == 0) return c->count.load(std::memory_order_relaxed);
++  return 0;
++}
++
++size_t DumpImportCounts(const char* path, const char* label) {
++  std::vector<std::pair<uint64_t, const char*>> rows;
++  for (auto* c = g_head.load(std::memory_order_acquire); c; c = c->next) {
++    uint64_t n = c->count.load(std::memory_order_relaxed);
++    if (n) rows.emplace_back(n, c->name);
++  }
++  std::sort(rows.begin(), rows.end(), [](const auto& a, const auto& b) {
++    return a.first != b.first ? a.first > b.first : std::string_view(a.second) < b.second;
++  });
++  FILE* f = std::fopen(path, "w");
++  if (!f) return 0;
++  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
++                std::chrono::steady_clock::now() - g_start)
++                .count();
++  std::fprintf(f, "# %s t=%lldms distinct=%zu\n", label ? label : "", (long long)ms, rows.size());
++  for (auto& [n, name] : rows) std::fprintf(f, "%llu\t%s\n", (unsigned long long)n, name);
++  std::fclose(f);
++  return rows.size();
++}
++
++}  // namespace rex::trace

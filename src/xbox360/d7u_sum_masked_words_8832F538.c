@@ -1,0 +1,53 @@
+/* Swing_DLL.xex 0x8832F538-0x8832F8F0, executable version 0.0.0.3. */
+unsigned ts4_sum_masked_words_8832F538(const unsigned *p, unsigned lo, unsigned hi)
+{
+    unsigned sum = 0;
+    if (lo & 0x1) sum += p[0];
+    if (lo & 0x2) sum += p[1];
+    if (lo & 0x4) sum += p[2];
+    if (lo & 0x8) sum += p[3];
+    if (lo & 0x10) sum += p[4];
+    if (lo & 0x20) sum += p[5];
+    if (lo & 0x40) sum += p[6];
+    if (lo & 0x80) sum += p[7];
+    if (lo & 0x100) sum += p[8];
+    if (lo & 0x200) sum += p[9];
+    if (lo & 0x400) sum += p[10];
+    if (lo & 0x800) sum += p[11];
+    if (lo & 0x1000) sum += p[12];
+    if (lo & 0x2000) sum += p[13];
+    if (lo & 0x4000) sum += p[14];
+    if (lo & 0x8000) sum += p[15];
+    if (lo & 0x10000) sum += p[16];
+    if (lo & 0x20000) sum += p[17];
+    if (lo & 0x40000) sum += p[18];
+    if (lo & 0x80000) sum += p[19];
+    if (lo & 0x100000) sum += p[20];
+    if (lo & 0x200000) sum += p[21];
+    if (hi & 0x1) sum += p[22];
+    if (hi & 0x2) sum += p[23];
+    if (hi & 0x4) sum += p[24];
+    if (hi & 0x8) sum += p[25];
+    if (hi & 0x10) sum += p[26];
+    if (hi & 0x20) sum += p[27];
+    if (hi & 0x40) sum += p[28];
+    if (hi & 0x80) sum += p[29];
+    if (hi & 0x100) sum += p[30];
+    if (hi & 0x200) sum += p[31];
+    if (hi & 0x400) sum += p[32];
+    if (hi & 0x800) sum += p[33];
+    if (hi & 0x1000) sum += p[34];
+    if (hi & 0x2000) sum += p[35];
+    if (hi & 0x4000) sum += p[36];
+    if (hi & 0x8000) sum += p[37];
+    if (hi & 0x10000) sum += p[38];
+    if (hi & 0x20000) sum += p[39];
+    if (hi & 0x40000) sum += p[40];
+    if (hi & 0x80000) sum += p[41];
+    if (hi & 0x100000) sum += p[42];
+    if (hi & 0x200000) sum += p[43];
+    if (hi & 0x400000) sum += p[44];
+    if (hi & 0x800000) sum += p[45];
+    if (hi & 0x1000000) sum += p[46];
+    return sum;
+}

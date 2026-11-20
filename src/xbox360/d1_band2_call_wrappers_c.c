@@ -1,0 +1,228 @@
+/* Swing_DLL.xex family of small call wrappers, executable version 0.0.0.3. */
+typedef unsigned long ts4_uptr;
+ts4_uptr KeTlsGetValue(ts4_uptr, ts4_uptr);
+ts4_uptr RtlEnterCriticalSection(ts4_uptr, ts4_uptr);
+ts4_uptr RtlInitAnsiString(ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr RtlLeaveCriticalSection(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr __restgprlr_28(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr __restgprlr_29(ts4_uptr);
+ts4_uptr __savegprlr_28(void);
+ts4_uptr __savegprlr_29(void);
+ts4_uptr fn_88421450(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr fn_88423CE0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr fn_8843AE88(ts4_uptr);
+extern char fn_884567D8[];
+extern char fn_88458EE0[];
+extern char fn_884596F8[];
+extern char fn_88459C18[];
+extern char ts4_call_seq_u32_lbl_88CACF08_8845C4D0[];
+extern char fn_8845C768[];
+extern char fn_8845CC10[];
+extern char fn_8845EF10[];
+extern char fn_8845F1C8[];
+extern char fn_8845F410[];
+extern char fn_884616C0[];
+extern char fn_88461988[];
+extern char fn_88461C60[];
+ts4_uptr fn_88466AB0(ts4_uptr);
+extern char fn_88466E80[];
+extern char fn_88467030[];
+extern char fn_884677B0[];
+extern char fn_88467F60[];
+ts4_uptr fn_884B70D0(ts4_uptr);
+extern char fn_88521A98[];
+extern char fn_88521B08[];
+extern char fn_88521B30[];
+extern char fn_88521B50[];
+extern char fn_88521B90[];
+extern char fn_88521BC0[];
+extern char fn_88521BD8[];
+extern char fn_88521BF0[];
+extern char fn_88521C08[];
+extern char fn_88521C80[];
+extern char fn_88521CB8[];
+ts4_uptr fn_8852DD38(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr fn_8857B6D8(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr ts4_if_call_seq_u32_offc_88596808(ts4_uptr);
+ts4_uptr ts4_pool1_clear_88599CF8(ts4_uptr);
+ts4_uptr fn_885A50D0(ts4_uptr);
+ts4_uptr ts4_pool16_clear_885A5E20(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr ts4_if_call_seq_u32_off30_885A6ED0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr fn_885A7A00(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr fn_885A9120(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr fn_885AB808(ts4_uptr);
+ts4_uptr fn_885B7EE0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr fn_885D9C48(ts4_uptr);
+ts4_uptr fn_885E3900(ts4_uptr, ts4_uptr);
+ts4_uptr fn_885E4248(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr fn_885E58B0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr fn_885E5BC8(ts4_uptr);
+ts4_uptr fn_88617D88(ts4_uptr);
+ts4_uptr fn_8861B128(ts4_uptr);
+ts4_uptr fn_8861E530(ts4_uptr);
+ts4_uptr fn_8890DDA8(ts4_uptr);
+extern unsigned int lbl_88003A00;
+extern char lbl_8807FF50[];
+extern char lbl_88080078[];
+extern char lbl_88080084[];
+extern char lbl_88080090[];
+extern char lbl_880800A4[];
+extern char lbl_880800B0[];
+extern char lbl_880800BC[];
+extern char lbl_880800D0[];
+extern char lbl_880800DC[];
+extern char lbl_880800E8[];
+extern char lbl_8808022C[];
+extern char lbl_88080250[];
+extern char lbl_8808083C[];
+extern char lbl_88080848[];
+extern char lbl_8808085C[];
+extern char lbl_88080868[];
+extern char lbl_88080874[];
+extern char lbl_88080BF4[];
+extern char lbl_88080C00[];
+extern char lbl_88080C14[];
+extern char lbl_88080C20[];
+extern char lbl_88080C2C[];
+extern char lbl_88081914[];
+extern char lbl_88081920[];
+extern char lbl_8808192C[];
+extern char lbl_88081940[];
+extern char lbl_8808194C[];
+extern char lbl_880832C4[];
+extern char lbl_8808384C[];
+extern char lbl_88087754[];
+extern char lbl_88087A7C[];
+extern char lbl_88087A8C[];
+extern char lbl_88087A9C[];
+extern char lbl_88087AA8[];
+extern char lbl_88087AB4[];
+extern char lbl_88087AC8[];
+extern char lbl_88087AD4[];
+extern char lbl_88087C28[];
+extern char lbl_88087C34[];
+extern char lbl_88087C48[];
+extern char lbl_88087C54[];
+extern char lbl_88087C60[];
+extern char lbl_88088DD4[];
+extern char lbl_88088E04[];
+extern char lbl_88088E1C[];
+extern char lbl_88088E3C[];
+extern char lbl_88088E4C[];
+extern char lbl_880895C4[];
+extern char lbl_880897CC[];
+extern char lbl_880897DC[];
+extern char lbl_880897EC[];
+extern char lbl_8808C6DC[];
+extern char lbl_8808E8B4[];
+extern char lbl_88091974[];
+extern char lbl_880919A0[];
+extern char lbl_88091CE8[];
+extern char lbl_88091D58[];
+extern char lbl_88091F04[];
+extern char lbl_88091F18[];
+extern char lbl_88091F2C[];
+extern char lbl_88091FA4[];
+extern char lbl_88091FB8[];
+extern char lbl_88091FF4[];
+extern char lbl_88092008[];
+extern char lbl_88095E78[];
+extern char lbl_88095EB0[];
+extern char lbl_88095F40[];
+extern char lbl_88095F78[];
+extern char lbl_88095FB0[];
+extern char lbl_880AEB88[];
+extern char lbl_880B2858[];
+extern char lbl_880BA498[];
+extern char lbl_880BCAD8[];
+extern char lbl_880BCB28[];
+extern char lbl_880BCB4C[];
+extern unsigned int lbl_880BD0CC;
+extern char lbl_880BD320[];
+extern char lbl_880BD6C8[];
+extern char lbl_880BDBC0[];
+extern char lbl_880F20E8[];
+extern char lbl_880F4340[];
+extern char lbl_880F5FEC[];
+extern char lbl_880F62F0[];
+extern char lbl_880F63C0[];
+extern char lbl_880F6400[];
+extern char lbl_880F7B80[];
+extern char lbl_880F7C94[];
+extern char lbl_880F7DA0[];
+extern char lbl_880F7F90[];
+extern char lbl_880F84F0[];
+extern char lbl_880F8550[];
+extern char lbl_880F85DC[];
+extern char lbl_880F8928[];
+extern char lbl_880F8B6C[];
+extern char lbl_880F8C78[];
+extern char lbl_880F8D00[];
+extern unsigned int lbl_88CACF08;
+extern unsigned int lbl_88D45B1C;
+extern unsigned int lbl_88D45B28;
+extern unsigned int lbl_88D45B30;
+extern unsigned int lbl_88D45B3C;
+extern unsigned int lbl_88D45B4C;
+ts4_uptr ts4_fn_8847B630(ts4_uptr, ts4_uptr);
+extern char ts4_tailcall_fn_88523FC0_88521BB8[];
+ts4_uptr ts4_set_u32_off0_885E9618(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
+
+ts4_uptr ts4_forward_to_fn_88437248(ts4_uptr p0)
+{
+    fn_8843AE88(p0);
+    *(unsigned int *)((char *)p0 + 0) = (ts4_uptr)lbl_880800E8;
+    *(unsigned int *)((char *)p0 + 8) = (ts4_uptr)lbl_880800DC;
+    *(unsigned int *)((char *)p0 + 12) = (ts4_uptr)lbl_880800BC;
+    *(unsigned int *)((char *)p0 + 16) = (ts4_uptr)lbl_880800D0;
+    *(unsigned int *)((char *)p0 + 20) = (ts4_uptr)lbl_880800B0;
+    *(unsigned int *)((char *)p0 + 32) = 3;
+    return p0;
+}
+
+ts4_uptr ts4_forward_to_fn_88437C98(ts4_uptr p0)
+{
+    fn_8843AE88(p0);
+    *(unsigned int *)((char *)p0 + 0) = (ts4_uptr)lbl_88080874;
+    *(unsigned int *)((char *)p0 + 8) = (ts4_uptr)lbl_88080868;
+    *(unsigned int *)((char *)p0 + 12) = (ts4_uptr)lbl_88080848;
+    *(unsigned int *)((char *)p0 + 16) = (ts4_uptr)lbl_8808085C;
+    *(unsigned int *)((char *)p0 + 20) = (ts4_uptr)lbl_8808083C;
+    *(unsigned int *)((char *)p0 + 32) = 2;
+    return p0;
+}
+
+ts4_uptr ts4_forward_to_fn_884381D8(ts4_uptr p0)
+{
+    fn_8843AE88(p0);
+    *(unsigned int *)((char *)p0 + 0) = (ts4_uptr)lbl_88080C2C;
+    *(unsigned int *)((char *)p0 + 8) = (ts4_uptr)lbl_88080C20;
+    *(unsigned int *)((char *)p0 + 12) = (ts4_uptr)lbl_88080C00;
+    *(unsigned int *)((char *)p0 + 16) = (ts4_uptr)lbl_88080C14;
+    *(unsigned int *)((char *)p0 + 20) = (ts4_uptr)lbl_88080BF4;
+    *(unsigned int *)((char *)p0 + 32) = 1;
+    return p0;
+}
+
+void ts4_store_fields_88607A68(ts4_uptr p0)
+{
+    *(unsigned int *)((char *)p0 + 4) = 4;
+    *(unsigned int *)((char *)p0 + 8) = 0;
+    *(unsigned int *)((char *)p0 + 0) = (ts4_uptr)lbl_880F7DA0;
+    *(unsigned int *)((char *)p0 + 12) = 0;
+    *(unsigned int *)((char *)p0 + 16) = 0;
+    *(unsigned int *)((char *)p0 + 20) = 0;
+    *(unsigned int *)((char *)p0 + 24) = 0;
+    *(unsigned int *)((char *)p0 + 28) = 0;
+    *(unsigned int *)((char *)p0 + 32) = 0;
+}
+
+ts4_uptr ts4_forward_to_fn_88639B88(ts4_uptr p0)
+{
+    fn_88617D88(p0);
+    *(unsigned int *)((char *)p0 + 32) = 2;
+    *(unsigned int *)((char *)p0 + 36) = 0;
+    *(unsigned int *)((char *)p0 + 0) = (ts4_uptr)lbl_880F62F0;
+    *(unsigned int *)((char *)p0 + 40) = 0;
+    return p0;
+}

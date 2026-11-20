@@ -1,0 +1,65 @@
+diff --git a/src/core/socket_posix.cpp b/src/core/socket_posix.cpp
+index b4b885a..d37cd9e 100644
+--- a/src/core/socket_posix.cpp
++++ b/src/core/socket_posix.cpp
+@@ -3,17 +3,38 @@
+ 
+ static_assert(REX_PLATFORM_LINUX || REX_PLATFORM_MAC, "This file is POSIX-only");
+ 
++#include <fcntl.h>
+ #include <sys/ioctl.h>
+ #include <unistd.h>
+ 
++#include <cstdint>
++
+ namespace rex::net {
+ 
+ int socket_close(SocketHandle handle) {
+   return close(static_cast<int>(handle));
+ }
+ 
++// Guests pass Winsock ioctl codes with a big-endian u_long argument in guest memory.
++// Linux uses different request numbers, so translate the two that games use.
+ int socket_ioctl(SocketHandle handle, uint32_t cmd, uint8_t* arg) {
+-  return ioctl(static_cast<int>(handle), cmd, arg);
++  constexpr uint32_t kWsFionbio = 0x8004667E;
++  constexpr uint32_t kWsFionread = 0x4004667F;
++  int fd = static_cast<int>(handle);
++  if (cmd == kWsFionbio) {
++    bool on = arg && (arg[0] | arg[1] | arg[2] | arg[3]) != 0;
++    int flags = fcntl(fd, F_GETFL, 0);
++    if (flags < 0) return -1;
++    return fcntl(fd, F_SETFL, on ? (flags | O_NONBLOCK) : (flags & ~O_NONBLOCK));
++  }
++  if (cmd == kWsFionread) {
++    int avail = 0;
++    if (ioctl(fd, FIONREAD, &avail) < 0) return -1;
++    uint32_t v = static_cast<uint32_t>(avail);
++    arg[0] = uint8_t(v >> 24); arg[1] = uint8_t(v >> 16); arg[2] = uint8_t(v >> 8); arg[3] = uint8_t(v);
++    return 0;
++  }
++  return ioctl(fd, cmd, arg);
+ }
+ 
+ }  // namespace rex::net
+diff --git a/src/kernel/xam/xam_net.cpp b/src/kernel/xam/xam_net.cpp
+index 6e9ac8a..be2418c 100644
+--- a/src/kernel/xam/xam_net.cpp
++++ b/src/kernel/xam/xam_net.cpp
+@@ -12,6 +12,7 @@
+ // Disable warnings about unused parameters for kernel functions
+ #pragma GCC diagnostic ignored "-Wunused-parameter"
+ 
++#include <cerrno>
+ #include <cstring>
+ 
+ #if REX_PLATFORM_MAC
+@@ -739,6 +740,8 @@ u32 NetDll_accept_entry(u32 caller, u32 socket_handle, ppc_ptr_t<XSOCKADDR> addr
+ 
+     return new_socket->handle();
+   } else {
++    // WSAEWOULDBLOCK for a non-blocking listener with nothing pending, else WSAEINVAL
++    XThread::SetLastError((errno == EAGAIN || errno == EWOULDBLOCK) ? 0x2733 : 0x2726);
+     return -1;
+   }
+ }

@@ -1,0 +1,43 @@
+module,address,name,confidence,evidence
+Swing_DLL.xex,886bd690,MovePlanner_Update,high,loops fn_886B8468 up to 8 hops then fn_886AA280; sets candidate dirty flags
+Swing_DLL.xex,886b8468,MovePlanner_NextState,high,23-entry jump table at 886B88BC; li r21 edges; decompiled
+Swing_DLL.xex,886aa280,MovePlanner_OnEnterState,high,cmplwi 0x16 jump table at 886AA2B8; writes bb+0x9d0..0x9ec and 0xde8/0xdec
+Swing_DLL.xex,8865dac0,MovePlanner_OnExitState,medium,23-entry table; two targets (20-22 vs rest)
+Swing_DLL.xex,88699300,MovePlanner_PrepareState,medium,23-way switch called after state change
+Swing_DLL.xex,88698ba8,MovePlanner_StateTimingCheck,low,jump table; called by fn_886B3CF8
+Swing_DLL.xex,88699fc0,MovePlanner_SelectMoveState,high,returns 5/6/3/0xb/0x10/0x14-0x16; mode records +0x270/+0x284/+0x298
+Swing_DLL.xex,88688948,MovePlanner_IsMoveModeValid,high,Rush/JogJogPrepared/JogPrepared log strings
+Swing_DLL.xex,886887c0,MovePlanner_ModeValidity,medium,2-D table lookups cfg+0x17c and mode record
+Swing_DLL.xex,886884e8,MovePlanner_UpdateMoveCommand,high,writes bb+0x9d0=-atan2 and bb+0x9d4=1.0
+Swing_DLL.xex,88688678,MovePlanner_JogSpeedRamp,medium,period cfg+0x3ec; writes bb+0xde8/dec
+Swing_DLL.xex,886a9e48,MovePlanner_SelectFromAnticipate,high,tries profiles 0x218/0x208/0x228; returns state
+Swing_DLL.xex,886a2e48,MovePlanner_CommitProfile,high,stores bb+0xbc8/0xbd1 and P+0x24
+Swing_DLL.xex,886a3440,MovePlanner_CanStartSwing,medium,bb+0x47e and stick window; profile cfg+0x1f8
+Swing_DLL.xex,886a26e0,MovePlanner_CanReach,medium,reach tuning cfg+0x3bc..0x3f4 and anim request
+Swing_DLL.xex,886a2be8,MovePlanner_AltSwingOk,low,arrival < 10 frames then profile 0x228 search
+Swing_DLL.xex,886a9678,MovePlanner_ReplanCheck,low,returns 1/-1/0 used by many states
+Swing_DLL.xex,886a9a48,MovePlanner_JogReplanCheck,low,states 20-22 variant
+Swing_DLL.xex,886a9df0,MovePlanner_TryAltProfiles,medium,profiles +0x238 then +0x248
+Swing_DLL.xex,886a3868,MovePlanner_OnEnterAnticipate,medium,evaluates graph P+0x1e0; sets P+0x2a0
+Swing_DLL.xex,88687ac0,MovePlanner_ZoneTestHeading,medium,zone records +0x2ac/+0x2b8/+0x300
+Swing_DLL.xex,88678708,MovePlanner_ZoneTest,medium,dist^2 < radius^2
+Swing_DLL.xex,8865db50,MovePlanner_HoldWindowOk,high,now-P+0x2a0 <= bb+0xdf4
+Swing_DLL.xex,8866c150,MovePlanner_RushAllowed,high,bb+0x9d4 > const and !P+0x294
+Swing_DLL.xex,8866bfe8,MovePlanner_FramesMinusRunTime,medium,frames to sample minus predicted
+Swing_DLL.xex,8866d930,Rally_IsActive,medium,LetIn/LetOut phase check with deadline
+Swing_DLL.xex,886bf360,PlayerController_Update,high,vtable 880F4478 slot 2
+Swing_DLL.xex,886bf260,PlayerController_UpdateMachines,high,planner gate and hashed machine loop
+Swing_DLL.xex,886b3cf8,PlayerController_NextHashedState,medium,CRC state ids compared in a chain
+Swing_DLL.xex,886a9050,PlayerController_Ctor,high,vtable store and 0x5a0 object layout
+Swing_DLL.xex,886a3ac8,MovePlanner_Ctor,high,vtable 880F46F0
+Swing_DLL.xex,888bb670,MoveConfig_LoadFromXData,medium,CRC-keyed field lookups fill the 0x5A0 record
+Swing_DLL.xex,8869def0,PlayerCtx_Init,high,ctx+0x10 = (info+0x18 == crc32 Human)
+Swing_DLL.xex,88608590,Crc32_String,high,table at 880C84C0; init ~seed
+Swing_DLL.xex,8890e988,GraphEvaluate,high,copy inputs in/ run nodes / copy outputs
+Swing_DLL.xex,88689508,Selector_ScoreCandidates,high,fills bb+0xb90.. and runs graph; human-only InputNotation
+Swing_DLL.xex,8865dba8,Selector_ArgMaxScore,high,flag truth table verified
+Swing_DLL.xex,8869c010,Aim_Update,medium,forces bb+0x448/0x44c to 0 for non-human
+Swing_DLL.xex,886a3df0,Aim_StateUpdate,low,chooses aim mode ids
+Swing_DLL.xex,8866fb60,Anim_QuerySpeedOverride,medium,reads bb+0xde8/0xdec per node hash
+Swing_DLL.xex,886630b8,InputState_DebugText,high,strings Waiting/PressAndHold/Swing/Analysed
+Swing_DLL.xex,88696020,InputAnalyser_Update,medium,state switch 0..3 on this+0x28

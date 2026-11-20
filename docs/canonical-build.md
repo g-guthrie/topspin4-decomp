@@ -25,6 +25,13 @@ git -C work/jeff apply ../../patches/jeff-v0.3.5-topspin4.patch
 cargo build --release --manifest-path work/jeff/Cargo.toml
 ```
 
+For reading Xenon vector (VMX128) code, `tools/fn_asm.py` uses a small
+disassembler built on the same `powerpc` crate as Jeff:
+
+```sh
+cargo build --release --manifest-path tools/ppcdis/Cargo.toml --target-dir work/ppcdis/target
+```
+
 Generate the canonical build files using explicit local tool paths:
 
 ```sh
