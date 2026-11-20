@@ -3061,3 +3061,41 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   spec needs the RENAME lines in `"renames"` (v.py's `save` does not add them; write the JSON by hand).
 - Already matched C files that reference the old `lbl_` names keep matching after the rename (checked at b202).
 - MSVC puts the RTTI locator pointer at vtable-4, so a `lbl_` 4 bytes below a vtable is usually not a second vtable.
+
+## Skip-category recipes (2026-11-20): these are not blockers
+
+Earlier agent briefs said to skip functions containing VMX, `fsel`, 64-bit ops, non-stack
+`ld`/`std`, `fctid`/`fcfid` or `clrrwi`. That rule came from the briefs, not from missing
+tooling: every category already has matched functions. Measured on b202 against the
+unmatched port queues (`gameplay_b190.txt`, `renderer_b190.txt`). Columns: functions with
+the feature / functions where it is the only skip feature.
+
+| Category | Gameplay (any / sole) | Renderer (any / sole) | C that produces it | Matched example |
+|---|---|---|---|---|
+| `clrrwi` | 224 / 100 | 121 / 66 | `x & ~3u` (any low-bit mask clear) | fk2_o1_000.c `ts4_get_u32_off0_883E07E0` |
+| `rldicr`/`rldimi`/`sldi` | 224 / 140 (int64) | 227 / 105 | `((u64)hi << 32) \| lo`; `0x8000000000000000ULL >> n` | sm3_a.c `ts4_pack_u64_8899BF80`; fj_small_a.c `ts4_bit_mask_from_index_plus_32_886EC198` |
+| `cmpld`/`cmpdi` | (in int64) | (in int64) | compare `u64`/`long long` values: `a == b`, `x > 0` | sm3_a.c `ts4_equal_u64_887781F0`, `ts4_positive_low_word_8899BF40` |
+| non-stack `ld`/`std` | 148 / 30 | 107 / 8 | read/write a `u64`/`__int64` field; `std rZero` is an 8-byte zero store | fj_small_a.c `ts4_get_u64_field16_883FFAA0`; sm2_tiny_a.c `ts4_get_s64_at_8_885E9488` |
+| `fcfid`/`fctid` | 120 / 36 | 63 / 23 | `(float)int_value` gives `extsw`+`std`+`lfd`+`fcfid`+`frsp`; `(float)(double)s64`; `(int)f` is `fctiwz` | sm4_tiny_c.c `ts4_ratio_s64_885ED960`; sm2_tiny_c.c `ts4_norm_to_u8_8840F1B0` |
+| `fsel` direct | 109 / 39 | 13 / 1 | `__fself(a, b, c)` intrinsic (`#pragma intrinsic(__fself)`) | me_ts4_fsel_clamp_signed_884C0EE8.c, me_ts4_fsel_min3_store_c0_8847AB40.c |
+| `fsel` + `mfcr`/`lfsx` table | (in fsel) | (in fsel) | inline helper comparing against a **named static zero**, LTCG route: `w5c_max`/`w5c_min` in w5c_types.h (`#define W5C_SEL`). The same ternary written inline in the function body compiles to branches. | w5c_a.c `ts4_clamp_to_range_offset_886CAE50` |
+| VMX | 312 / 149 | 96 / 41 | `__vector4` + intrinsics from ts4_vector.h / vx1_vector.h (`__vxor`, `__vspltisw(0)`, `__vcmpgefpR`) | sm2_tiny_a.c `ts4_vec_xor_886C3CA0`; w6a_a.c `ts4_vec_all_ge_886C35E0` |
+
+Reading the `mfcr` table select: `rlwinm rX, cr, 27, 29, 29` takes LT and `rlwinm rY, cr, 30, 29, 29`
+takes unordered, so the index is `4 * !(d >= 0)` into the pool table at `g_ts4_script_constants+0x68`.
+Index 1 (d < 0) loads the entry that makes `fsel` pick its *third* operand. Use this to recover
+which bound a clamp tests first. 8890E1C8 is `min(max(x, r[0]), r[1])`, not the other way round.
+
+Hand trials on the smallest sole-blocker port functions (one per category) all produced the
+right instruction classes. Every remaining miss was scheduling or register choice, never a
+missing intrinsic:
+
+| Function | Category | Remaining diff | Draft |
+|---|---|---|---|
+| 8890E1C8 | fsel table (LTCG) | 2 instructions: `*x` and `r->lo` loads in swapped order | drafts/skipcat_8890E1C8_nearmiss.c |
+| 888C1910 | fcfid | `-a->off - i` comes out as `add`+`neg`, target is early `neg`+`subf` | drafts/skipcat_888C1910_nearmiss.c |
+| 88747E58 | non-stack `std` | 4: store order around an 8-byte zero at +0x118 that overlaps a word at +0x11c | drafts/skipcat_88747E58_nearmiss.c |
+| 88670CC8 | VMX | 9: target forms `s+0x30` in a register and keeps the opposite `v62`/`v63` assignment | drafts/skipcat_88670CC8_nearmiss.c |
+
+So briefs should stop skipping these categories. Treat them like any other function, and send
+schedule-only misses to the permuter (tools/permute.py).
