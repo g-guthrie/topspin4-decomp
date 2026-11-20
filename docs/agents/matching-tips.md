@@ -3099,3 +3099,13 @@ missing intrinsic:
 
 So briefs should stop skipping these categories. Treat them like any other function, and send
 schedule-only misses to the permuter (tools/permute.py).
+
+## Class maps (2026-11-20)
+
+- `config/54540859/rtti_classes.json` (`python3 tools/rtti_map.py`): MSVC RTTI. It covers Havok only: 438 classes and 496 vtables. The game was built without RTTI, so none of the gameplay or renderer queue is in it. Use it to mark Havok vtable targets as middleware.
+- `config/54540859/vtables.json` (`python3 tools/vtable_map.py`): the game's own vtables. It has 2797 vtables, 2310 of them loaded by code through lis/addi. For each vtable it lists the slot functions and the functions that load it, which are usually the constructor and destructor.
+  - 442 gameplay-queue and 345 renderer-queue functions are slots in 184 and 73 vtables.
+  - Before naming or typing a virtual function, look it up here. Its siblings share the `this` struct, and the loader is the constructor that lays that struct out.
+- Limitations of `vtables.json`:
+  - A vtable that no code references can stay merged with its neighbour.
+  - The 1-slot entries are often plain function-pointer tables, not vtables.
