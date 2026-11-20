@@ -46,6 +46,18 @@ BASE_FLAGS = ["/nologo", "/c", "/O2", "/Oi"]
 PLACEHOLDER_PREFIXES = ("fn_", "lbl_", "jumptable_", "@", "$")
 LOCAL_LABEL_PREFIX = "$LN"  # MSVC code labels (switch case blocks, jump table start)
 
+
+def renameable_cxx(c_sym: str, t_sym: str) -> bool:
+    """A decorated C++ name that may replace a placeholder: a compiler vtable
+    (`??_7Class@@6B@`, or `6B<base>@@@` for a secondary vtable) for a `lbl_`
+    target, or a member/free function (not a `??_` special name and not static
+    data, whose encoding after `@@` starts with 2 or 3) for a `fn_` target."""
+    if c_sym.startswith("??_7") and "@@6B" in c_sym:
+        return t_sym.startswith("lbl_")
+    if c_sym.startswith("?") and not c_sym.startswith("??_") and "@@" in c_sym:
+        return c_sym.split("@@", 1)[1][:1] not in ("2", "3") and t_sym.startswith("fn_")
+    return False
+
 MASKS = {
     0x2: 0xFFFFFFFF,  # ADDR32
     0x3: 0x03FFFFFC,  # ADDR24
@@ -230,7 +242,13 @@ def main() -> int:
                     t_data = target_data(t_sym) if want else None
                     if t_data and t_data[:len(want)] == want:
                         continue
-                if c_sym.startswith("?") or c_sym.startswith("__real@") or c_sym.startswith("$"):
+                if renameable_cxx(c_sym, t_sym) and c_sym not in known_names:
+                    # C++ vtable (??_7) or member function: same rename rule as a C name.
+                    prev = local_renames.get(t_sym) or renames.get(t_sym)
+                    if prev and prev != c_sym:
+                        problems.append(f"{t_sym} named both {prev} and {c_sym}")
+                    local_renames[t_sym] = c_sym
+                elif c_sym.startswith("?") or c_sym.startswith("__real@") or c_sym.startswith("$"):
                     problems.append(f"reloc +{r.offset:#x}: candidate uses {c_sym}, target {t_sym}")
                 elif t_sym.startswith(PLACEHOLDER_PREFIXES) and (c_sym not in known_names):
                     prev = local_renames.get(t_sym) or renames.get(t_sym)

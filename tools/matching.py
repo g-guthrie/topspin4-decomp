@@ -51363,6 +51363,12 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"fn_888EC458": 240},
     },
+    {
+        "source": "src/xbox360/me_ts4_owner_dtor_886B14E0.cpp",
+        "object": "me_ts4_owner_dtor_886B14E0.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"??1TS4Owner880F4424@@UAA@XZ": 148},
+    },
 )
 
 

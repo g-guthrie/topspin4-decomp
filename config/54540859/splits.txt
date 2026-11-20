@@ -55138,3 +55138,7 @@ src/xbox360/me_ts4_show_keyboard_ui_88885D30.c:
 src/xbox360/me_ts4_store_listed_flag_888EC458.cpp:
 	.pdata      start:0x8812FA38 end:0x8812FA40
 	.text       start:0x888EC458 end:0x888EC548
+
+src/xbox360/me_ts4_owner_dtor_886B14E0.cpp:
+	.pdata      start:0x88124748 end:0x88124750
+	.text       start:0x886B14E0 end:0x886B1574

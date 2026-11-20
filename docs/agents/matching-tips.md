@@ -3050,3 +3050,14 @@ Walk a separate `p = a + 1` pointer alongside the counter; MSVC then emits the t
   - 888DA5A8: reset, 11 off. r6 vs r11 for the reloaded `o->x28`.
   - 888DD008: 19 off. The target loads `tmp.first` straight into r25; C and a C++ dtor class both add an `mr`.
 - Skipped: 887EE4B0, 88888F90, 8888D930, 888C9850 (ctors/this-return); 887FE8B0, 888687D8, 888EE390 (rldicr); 88644AE0, 886C5E18, 8864E4B0 (VMX); 8886F8B0 (strings); 888C5C90 (not attempted).
+
+## Real C++ vtables now work (checker fix, b202)
+- `tools/fn_check.py` now accepts compiler vtable symbols (`??_7Class@@6B@`) for `lbl_` targets and decorated C++
+  functions (`??0`/`??1`/`?name@Class@@...`) for `fn_` targets, and prints them as RENAME lines like C names.
+  Constructors and destructors of classes with real `virtual` members no longer need hand-made `const void *vt`.
+- First use: 0x886B14E0 (`src/xbox360/me_ts4_owner_dtor_886B14E0.cpp`), a virtual destructor whose members and
+  array elements are themselves classes with virtual destructors. The compiler emits all four vtable stores itself.
+- Name each class after its vtable address (`TS4Owner880F4424`) so two files never give one vtable two names. The
+  spec needs the RENAME lines in `"renames"` (v.py's `save` does not add them; write the JSON by hand).
+- Already matched C files that reference the old `lbl_` names keep matching after the rename (checked at b202).
+- MSVC puts the RTTI locator pointer at vtable-4, so a `lbl_` 4 bytes below a vtable is usually not a second vtable.
