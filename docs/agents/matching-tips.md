@@ -3109,3 +3109,26 @@ schedule-only misses to the permuter (tools/permute.py).
 - Limitations of `vtables.json`:
   - A vtable that no code references can stay merged with its neighbour.
   - The 1-slot entries are often plain function-pointer tables, not vtables.
+
+## Automatic permuter (2026-11-20)
+
+`python3 tools/perm_auto.py SRC name=0xADDR [--ltcg --context src/xbox360/pp1_pool_primer.c] [-j 4] [--time 300]`
+
+It hill-climbs over C rewrites and needs no markup. A match is written to `work/permute-out/<stem>.auto.c`; otherwise the best attempt goes to `<stem>.autobest.c`.
+
+**Recovery benchmark.**
+
+- Command: `python3 tools/perm_auto_bench.py --n 8 --k 3 --time 180 -j 4 --seed 1`
+- Method: take matched plain-route functions of 3 to 12 statements, apply 3 random mutations, then search.
+- Result: it recovered 8 of 8. The scrambled starts were 1 to 16 instructions off, and every recovery took 1 to 14 candidates and 1 to 3 seconds.
+- Limit: the scrambles use the permuter's own mutations, so this shows the search undoes its own moves. It does not show that it can fix arbitrary hand-written C.
+
+**Real near misses.**
+
+| Function | Before | After | Candidates | Note |
+|---|---|---|---|---|
+| `888C1910` | 28 | 19 | 1,843 | the early `neg` is still missing |
+| `8890E1C8` (LTCG) | 2 | 2 | | load order |
+| `88747E58` | 4 | 4 | | store order; few legal moves |
+
+Use it on schedule-only misses after the hand trial. Extend the mutation set when a miss needs a rewrite it cannot make.
