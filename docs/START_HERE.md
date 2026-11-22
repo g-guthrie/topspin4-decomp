@@ -242,3 +242,5 @@ generator-improvement run is in progress there and will add
 | `docs/matching-build.md`, `docs/canonical-build.md` | Build and measurement details |
 | `docs/additional-content.md` | Title update and DLC records |
 | `THIRD_PARTY_NOTICES.md` | Expat and zlib notices for derived sources |
+
+- Equivalent-route functions are a byte-exact backlog: see docs/equivalence-tier.md section 10 and `tools/byte_exact_backlog.py`. Every equivalent function needs a `/* byte-gap: ... */` comment.

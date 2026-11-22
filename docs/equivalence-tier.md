@@ -651,3 +651,17 @@ the requested trial count, not on the count that ran before the early stop, so `
 re-runs a row with `trials_requested` when the row has it. 0x888C4160 was registered from a
 `--trials 1000` run that stopped at 516; re-running with 516 requested gave a different
 layout and 2/5 blocks. Rows without the field are re-run with their executed count as before.
+
+## 10. Byte-exact backlog (owner decision, 2026-11-22)
+
+For the port, the owner accepts the equivalent route for large functions (about 400 bytes and up) and for
+functions whose byte match stalls on compiler scheduling or register allocation. Every such function stays on
+record as **owed a byte-exact match**:
+
+- The list is `config/54540859/equivalent.json`; `python3 tools/byte_exact_backlog.py` renders it to
+  `reports/byte_exact_backlog.md` with the gap for each function.
+- Each equivalent function's source carries a comment directly above its definition:
+  `/* byte-gap: <N> off (perm best <M>) | not attempted (size); <reason> */`, where N is the
+  `tools/fn_check.py` differing-instruction count of that source and the reason names the codegen obstacle.
+- When a function later reaches a byte match, integrate it through the normal match route and remove its row
+  from equivalent.json; the backlog shrinks accordingly.
