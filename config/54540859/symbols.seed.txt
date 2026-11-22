@@ -33833,3 +33833,6 @@ ts4_camera_current_from_888E1C38 = .text:0x888E1C38; // type:function size:0x104
 ts4_msg_send_on_channel_888D56D8 = .text:0x888D56D8; // type:function size:0x140
 ?setup_ends_and_server@Q5h4Game@@QAAXXZ = .text:0x88677190; // type:function size:0x1EC
 ts4_xdata_load_xyz_888B0788 = .text:0x888B0788; // type:function size:0x214
+ts4_submit_rel_records_8888AC30 = .text:0x8888AC30; // type:function size:0x34
+?remove@Q5FileSys@@UAA_NPBD@Z = .text:0x88884488; // type:function size:0x30
+ts4_pad_poll_88884C88 = .text:0x88884C88; // type:function size:0x44

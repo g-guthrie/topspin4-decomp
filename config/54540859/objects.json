@@ -14872,6 +14872,18 @@
       "src/xbox360/q5h4_xdata_xyz.c": {
         "status": "Matching",
         "source": "xbox360/q5h4_xdata_xyz.c"
+      },
+      "src/xbox360/q5_gameplay_rel_records.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_rel_records.c"
+      },
+      "src/xbox360/q5_gameplay_delete_file.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_delete_file.cpp"
+      },
+      "src/xbox360/q5_gameplay_pad_poll.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_pad_poll.c"
       }
     }
   }

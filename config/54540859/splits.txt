@@ -55277,3 +55277,14 @@ src/xbox360/q5h4_game_ends.cpp:
 src/xbox360/q5h4_xdata_xyz.c:
 	.pdata      start:0x8812E620 end:0x8812E628
 	.text       start:0x888B0788 end:0x888B099C
+
+src/xbox360/q5_gameplay_rel_records.c:
+	.text       start:0x8888AC30 end:0x8888AC64
+
+src/xbox360/q5_gameplay_delete_file.cpp:
+	.pdata      start:0x8812DA40 end:0x8812DA48
+	.text       start:0x88884488 end:0x888844B8
+
+src/xbox360/q5_gameplay_pad_poll.c:
+	.pdata      start:0x8812DA98 end:0x8812DAA0
+	.text       start:0x88884C88 end:0x88884CCC

@@ -51547,6 +51547,21 @@ MATCHING_UNITS = (
         "object": "q5h4_xdata_xyz.obj",
         "symbols": {"ts4_xdata_load_xyz_888B0788": 532},
     },
+    {
+        "source": "src/xbox360/q5_gameplay_rel_records.c",
+        "object": "q5_gameplay_rel_records.obj",
+        "symbols": {"ts4_submit_rel_records_8888AC30": 52},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_delete_file.cpp",
+        "object": "q5_gameplay_delete_file.obj",
+        "symbols": {"?remove@Q5FileSys@@UAA_NPBD@Z": 48},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_pad_poll.c",
+        "object": "q5_gameplay_pad_poll.obj",
+        "symbols": {"ts4_pad_poll_88884C88": 68},
+    },
 )
 
 
