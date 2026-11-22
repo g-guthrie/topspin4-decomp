@@ -1,0 +1,59 @@
+{
+ "comment": "Register functions proven EQUIVALENT (tools/fn_equiv.py) in the committed registry.",
+ "rows": [
+  {
+   "function": "ts4_locked_list_push_8864BBB0",
+   "address": "0x8864BBB0",
+   "size": 88,
+   "checker": "fn_equiv/1",
+   "seed": 1,
+   "trials": 165,
+   "valid": 154,
+   "discarded": 11,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay.c",
+   "source_sha256": "ea2b6c53ef6145e72f0c78ca36536f2de89cf5d24f59b84e6f8f138fe4dd6d0b",
+   "flags": [],
+   "spec_flags": []
+  },
+  {
+   "function": "ts4_vec_box_test_forward_886C8C48",
+   "address": "0x886C8C48",
+   "size": 32,
+   "checker": "fn_equiv/1",
+   "seed": 1,
+   "trials": 161,
+   "valid": 161,
+   "discarded": 0,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_forwarders.c",
+   "source_sha256": "b74287cb0f3e265e206b99ceb97a8feb4bbee764f0033dee31c71cd551b0f2ae",
+   "flags": [],
+   "spec_flags": []
+  },
+  {
+   "function": "ts4_ctor_vtable_880E4528_887F4C18",
+   "address": "0x887F4C18",
+   "size": 56,
+   "checker": "fn_equiv/1",
+   "seed": 1,
+   "trials": 163,
+   "valid": 163,
+   "discarded": 0,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_forwarders.c",
+   "source_sha256": "b74287cb0f3e265e206b99ceb97a8feb4bbee764f0033dee31c71cd551b0f2ae",
+   "flags": [],
+   "spec_flags": []
+  }
+ ]
+}

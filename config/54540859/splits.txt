@@ -55142,3 +55142,14 @@ src/xbox360/me_ts4_store_listed_flag_888EC458.cpp:
 src/xbox360/me_ts4_owner_dtor_886B14E0.cpp:
 	.pdata      start:0x88124748 end:0x88124750
 	.text       start:0x886B14E0 end:0x886B1574
+
+src/xbox360/q5_render_sr_lookup.c:
+	.text       start:0x886F3588 end:0x886F35B4
+
+src/xbox360/q5_gameplay_pair_visit.cpp:
+	.pdata      start:0x881249D8 end:0x881249E0
+	.text       start:0x886C4CB8 end:0x886C4D0C
+
+src/xbox360/q5_gameplay_hash_find.c:
+	.pdata      start:0x8812F7D0 end:0x8812F7D8
+	.text       start:0x888E3848 end:0x888E38A8

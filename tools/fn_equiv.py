@@ -77,7 +77,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CHECKER_VERSION = "fn_equiv/1"
+CHECKER_VERSION = "fn_equiv/2"
 DLL = ROOT / "orig" / "54540859" / "Swing_DLL.dll"
 
 
@@ -1759,6 +1759,7 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
     corpus = []          # (run seed, state, trace) of trials that reached new blocks
     rand_end = max(40, trials * 2 // 5)
     boundary = None      # (register, constant) pairs for the boundary phase
+    pair_plans = {}      # corpus index -> remaining pointer-pair mutations of that trial
     for t in range(trials):
         s = seed * 1_000_003 + t
         if t == rand_end and corpus:
@@ -1775,6 +1776,17 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
             reg, c = boundary[t - rand_end]
             ps, pstate, _ = corpus[(t - rand_end) % len(corpus)]
             state = dict(pstate, regs={**pstate["regs"], reg: c})
+            s = ps
+        elif (pm := pair_mutation(corpus, pair_plans, live) if (t - rand_end) % 4 == 3 else None) is not None:
+            # pointer-pair trial (every fourth trial of the guided phase while plans remain): one
+            # pointer the function read is set to a neighbouring pointer plus 4*k, so a begin/end
+            # loop runs k steps and leaves through its own exit instead of walking off the heap
+            ps, pstate, (kind, key, v) = pm
+            state = dict(pstate, regs=dict(pstate["regs"]), mem_ov=dict(pstate.get("mem_ov") or {}))
+            if kind == "reg":
+                state["regs"][key] = v
+            else:
+                state["mem_ov"][key] = struct.pack(">I", v)
             s = ps
         else:
             # coverage-guided phase: take a trial that reached new blocks and replace one value it
@@ -1855,6 +1867,47 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
         return Result(res, verdict="UNCHECKED",
                       reason=f"coverage {res['coverage']:.0%} below {min_cov:.0%} ({len(covered)}/{len(blocks)} blocks)")
     return Result(res, verdict="EQUIVALENT", reason="")
+
+
+PAIR_STEPS = (1, 2, 3, 4, 6, 8, 5, 7)   # element counts tried for a begin/end pointer pair
+PAIR_NEAR = 8                           # two loaded words this close are taken as one pair
+
+
+def pointer_pairs(trace, live=None):
+    """Mutations that turn two values a trial read into a begin/end pair: (kind, key, value)
+    with value = another read pointer + 4*k. Candidates are two words loaded from addresses at
+    most PAIR_NEAR bytes apart (the first/last fields of a container) or two argument registers
+    (a first/last argument pair); the source must be a heap pointer. Both directions are
+    listed, so loops that walk down are covered too. Ordered by k, small counts first."""
+    seen, ents = set(), []
+    for kind, key, old, size in trace:
+        if size != 4 or kind not in ("reg", "mem") or (kind, key) in seen:
+            continue
+        if kind == "reg" and (key not in GPR_ARGS or (live is not None and key not in live)):
+            continue
+        seen.add((kind, key))
+        ents.append((kind, key, old & 0xFFFFFFFF))
+    pairs = []
+    for dk, dkey, dold in ents:
+        for sk, skey, sold in ents:
+            if sk != dk or skey == dkey or not HEAP_LO <= sold < HEAP_HI - 0x1000 or sold & 3:
+                continue
+            if dk == "mem" and abs(dkey - skey) > PAIR_NEAR:
+                continue
+            pairs.append((dk, dkey, dold, sold))
+    return [(dk, dkey, (sold + 4 * k) & 0xFFFFFFFF) for k in PAIR_STEPS for dk, dkey, dold, sold in pairs
+            if (sold + 4 * k) & 0xFFFFFFFF != dold]
+
+
+def pair_mutation(corpus, plans, live=None):
+    """Next pointer-pair mutation, newest corpus trial first: (seed, state, (kind, key, value)),
+    or None when every plan is used up."""
+    for ci in range(len(corpus) - 1, -1, -1):
+        if ci not in plans:
+            plans[ci] = pointer_pairs(corpus[ci][2], live)
+        if plans[ci]:
+            return corpus[ci][0], corpus[ci][1], plans[ci].pop(0)
+    return None
 
 
 def valid_ptr(world, v):

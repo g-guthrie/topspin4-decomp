@@ -33795,3 +33795,6 @@ fn_888EC458 = .text:0x888EC458; // type:function size:0xF0
 ??_7TS4Owner880F4424@@6B@ = .rdata:0x880F4424; // type:label
 ??_7TS4Element880F4850@@6B@ = .rdata:0x880F4850; // type:label
 ??_7TS4Member880F4854@@6B@ = .rdata:0x880F4854; // type:label
+ts4_sr_lookup_table_b_886F3588 = .text:0x886F3588; // type:function size:0x2C
+ts4_pair_forward_both_halves_886C4CB8 = .text:0x886C4CB8; // type:function size:0x54
+ts4_hash_find_c7f47320_888E3848 = .text:0x888E3848; // type:function size:0x60

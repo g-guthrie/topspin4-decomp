@@ -670,8 +670,92 @@ def m_unhoist(toks, rng, fn):
     return None
 
 
+def params(toks, fn):
+    """[(type, name)] of the function whose body is fn, parsed from its parameter list."""
+    j = sigb(toks, fn[0] - 1)
+    while toks[j] == "const":
+        j = sigb(toks, j - 1)
+    if toks[j] != ")":
+        return []
+    depth, i = 0, j
+    while i >= 0:
+        if toks[i] == ")": depth += 1
+        elif toks[i] == "(":
+            depth -= 1
+            if depth == 0: break
+        i -= 1
+    out, cur, d = [], [], 0
+    for t in toks[i + 1:j] + [","]:
+        if t in "([": d += 1
+        if t in ")]": d -= 1
+        if t == "," and d == 0:
+            sg = [x for x in cur if not x.isspace() and not x.startswith(("/*", "//"))]
+            if len(sg) >= 2 and is_ident(sg[-1]) and "(" not in sg and "[" not in sg:
+                out.append((" ".join(sg[:-1]).replace(" *", "*"), sg[-1]))
+            cur = []
+        else:
+            cur.append(t)
+    return out
+
+
+def ret_type(toks, fn):
+    """Return type of the function (tokens from the previous ; } or comment to its name)."""
+    j = sigb(toks, fn[0] - 1)
+    while toks[j] == "const":
+        j = sigb(toks, j - 1)
+    depth = 0
+    while j >= 0:
+        if toks[j] == ")": depth += 1
+        elif toks[j] == "(":
+            depth -= 1
+            if depth == 0: break
+        j -= 1
+    k = sigb(toks, j - 1) - 1  # before the function name
+    ty = []
+    while k >= 0 and toks[k] not in (";", "}", "{") and not toks[k].startswith(("/*", "//", "#")):
+        if not toks[k].isspace():
+            ty.append(toks[k])
+        k -= 1
+    ty = [t for t in reversed(ty) if t not in ("static", "inline", "__inline", "__forceinline", "extern")]
+    return " ".join(ty) if ty else None
+
+
+def m_alias(toks, rng, fn):
+    """Copy a parameter into a local at the top of the body and use the copy
+    (all uses, or a random subset). A local alias changes the register and
+    operand order the compiler picks (the OP1 `dst = self` rule)."""
+    ps = [p for p in params(toks, fn) if p[0] not in ("void",)]
+    if not ps:
+        return None
+    ty, name = rng.choice(ps)
+    lo, hi = fn
+    uses = [i for i in range(lo + 1, hi) if toks[i] == name and toks[sigb(toks, i - 1)] not in ("->", ".")]
+    if not uses:
+        return None
+    alias = f"{name}_{rng.randrange(100)}"
+    pick = set(uses) if rng.random() < 0.6 else set(rng.sample(uses, rng.randint(1, len(uses))))
+    body = [alias if i in pick else toks[i] for i in range(lo + 1, hi)]
+    return toks[:lo + 1] + tokenize(f" {ty} {alias} = {name}; ") + body + toks[hi:]
+
+
+def m_retsplit(toks, rng, fn):
+    """`return E;` -> `{ T r = E; return r; }` with T the function's return type."""
+    ty = ret_type(toks, fn)
+    if not ty or ty == "void":
+        return None
+    st = [x for b in blocks(toks, *fn) for x in statements(toks, *b) if toks[x[0]] == "return"]
+    st = [x for x in st if sig(toks, x[0] + 1) < x[1] and not is_ident(toks[sig(toks, x[0] + 1)]) or
+          sig(toks, sig(toks, x[0] + 1) + 1) < x[1]]
+    if not st:
+        return None
+    s, e = rng.choice(st)
+    expr = "".join(toks[s + 1:e]).strip()
+    r = f"r{rng.randrange(100)}"
+    return toks[:s] + tokenize(f"{{ {ty} {r} = {expr}; return {r}; }}") + toks[e + 1:]
+
+
 MUTATORS = [m_swap, m_swap, m_commute, m_commute, m_flip, m_negsub, m_compound, m_decls, m_split,
-            m_inttype, m_paren, m_hoist, m_hoist, m_hoist, m_unhoist]
+            m_inttype, m_paren, m_hoist, m_hoist, m_hoist, m_unhoist, m_alias, m_retsplit]
 
 
 def mutate(text, rng, func, cxx):

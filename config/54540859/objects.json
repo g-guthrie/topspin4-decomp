@@ -14740,6 +14740,18 @@
       "src/xbox360/me_ts4_owner_dtor_886B14E0.cpp": {
         "status": "Matching",
         "source": "xbox360/me_ts4_owner_dtor_886B14E0.cpp"
+      },
+      "src/xbox360/q5_render_sr_lookup.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_render_sr_lookup.c"
+      },
+      "src/xbox360/q5_gameplay_pair_visit.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_pair_visit.cpp"
+      },
+      "src/xbox360/q5_gameplay_hash_find.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_hash_find.c"
       }
     }
   }

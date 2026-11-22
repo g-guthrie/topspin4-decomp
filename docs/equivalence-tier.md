@@ -1,6 +1,6 @@
 # The "equivalent" tier: behaviour checked by running original and candidate side by side
 
-EQ1, 2026-11-14. Tool: `tools/fn_equiv.py` (checker version string `fn_equiv/1`), tests:
+EQ1, 2026-11-14. Tool: `tools/fn_equiv.py` (checker version string `fn_equiv/2` since Q5F; the EQ1 evidence below was made with `fn_equiv/1`), tests:
 `tests/test_fn_equiv.py`. Nothing in `src/`, `config/` or `tools/matching.py` was changed and
 `tools/matching.py` was not run. This document describes the checker, the evidence that it
 works, what it measured on the remaining code, and how the tier should enter the project.
@@ -138,7 +138,13 @@ from memory both programs share and may write (heap pages, `.data`, BSS) are eve
 this phase or by pointer resolution: read-only data (`.text`, `.rdata`: jump tables, float
 literal pools, string constants) sits at a different address in the candidate, so changing the
 original's copy would make the two runs see different inputs. (An earlier version did this and
-reported 8 byte-matched functions as DIFFERENT; see 3.1.) The comparison constants include each
+reported 8 byte-matched functions as DIFFERENT; see 3.1.) Since `fn_equiv/2`, every fourth
+trial of this phase is a pointer-pair trial while any remain: one pointer the kept trial read is
+set to a neighbouring pointer plus `4*k` (k = 1, 2, 3, 4, 6, 8, 5, 7; neighbours are two words
+loaded at most 8 bytes apart, or two argument registers; both directions). This makes a begin/end
+pair a few elements apart, so a `for (it = begin; it != end; ++it)` loop leaves through its own
+exit; random pointers never do that, and the trial walked off the heap and was discarded
+(0x8887B380: 6/7 blocks before, 7/7 after). The comparison constants include each
 jump table's case values (the `addi rX, rY, -bias` before the `bctr` plus 0..n-1), so switches
 are entered on every case. A trial in which the original still faults after pointer
 resolution, or runs past 200,000 instructions, is discarded (the input breaks the original's

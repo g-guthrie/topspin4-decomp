@@ -57,6 +57,23 @@ def beq(off, cr=0):         # bc 12, 4*cr+2, off
     return (16 << 26) | (12 << 21) | ((4 * cr + 2) << 16) | (off & 0xFFFC)
 
 
+def cmplw(a, b, cr=0):
+    return xo(31, cr << 2, a, b, 32)
+
+
+def bne(off, cr=0):         # bc 4, 4*cr+2, off
+    return (16 << 26) | (4 << 21) | ((4 * cr + 2) << 16) | (off & 0xFFFC)
+
+
+def range_loop(miss):
+    """for (it = o->begin; it != o->end; ++it) if (*it == 0) return 2;  return miss;
+    (begin at +0x40, end at +0x44; an empty range returns 9)"""
+    return [lwz(10, 3, 0x40), lwz(9, 3, 0x44), cmplw(10, 9), bne(12), li(3, 9), BLR,
+            lwz(11, 10, 0), cmpwi(11, 0), beq(24), addi(10, 10, 4), cmplw(10, 9), bne(-20),
+            li(3, miss), BLR,           # the loop's own exit: reached only when end == begin + 4*k
+            li(3, 2), BLR]
+
+
 def bl(frm, to):
     return (18 << 26) | ((to - frm) & 0x03FFFFFC) | 1
 
@@ -135,6 +152,35 @@ def caller_code(adjust):
     return gen
 
 
+class PointerPairTests(unittest.TestCase):
+    def test_pairs_from_adjacent_words_and_argument_registers(self):
+        heap = F.RANDPTR_LO + 0x1000
+        trace = [("reg", 3, heap, 4), ("reg", 4, 7, 4), ("reg", 13, heap, 4),
+                 ("mem", heap + 0x40, heap + 0x100, 4), ("mem", heap + 0x44, heap + 0x5000, 4),
+                 ("mem", heap + 0x40, heap + 0x100, 4),                 # read again: listed once
+                 ("mem", heap + 0x80, heap + 0x200, 4), ("mem", heap + 0x46, 0x1234, 2)]
+        plans = F.pointer_pairs(trace, live={3, 4})
+        # end <- begin + 4*k for every step, smallest count first; begin <- end + 4*k too
+        ends = [v for kind, key, v in plans if (kind, key) == ("mem", heap + 0x44)]
+        self.assertEqual(ends, [heap + 0x100 + 4 * k for k in F.PAIR_STEPS])
+        self.assertIn(("mem", heap + 0x40, heap + 0x5004), plans)
+        # a far word is not paired; the non-pointer argument is a destination only, never a source
+        self.assertFalse(any(key == heap + 0x80 for _, key, _ in plans))
+        self.assertIn(("reg", 4, heap + 4), plans)
+        self.assertFalse(any(kind == "reg" and key in (3, 13) for kind, key, _ in plans))
+        self.assertEqual(F.pointer_pairs([("reg", 3, 5, 4), ("mem", heap, 0, 4)]), [])
+
+    def test_pair_mutation_drains_newest_first(self):
+        heap = F.RANDPTR_LO + 0x2000
+        tr = [("mem", heap, heap + 0x40, 4), ("mem", heap + 4, 0, 4)]
+        corpus = [(1, {"regs": {}}, []), (2, {"regs": {}}, tr)]
+        plans = {}
+        got = [F.pair_mutation(corpus, plans) for _ in range(len(F.PAIR_STEPS) + 1)]
+        self.assertEqual([g[0] for g in got[:-1]], [2] * len(F.PAIR_STEPS))
+        self.assertEqual(got[0][2], ("mem", heap + 4, heap + 0x44))
+        self.assertIsNone(got[-1])
+
+
 @unittest.skipUnless(F.HAVE_UNICORN, "unicorn not installed")
 class EquivTests(unittest.TestCase):
     @classmethod
@@ -151,6 +197,7 @@ class EquivTests(unittest.TestCase):
             "callee": (CALLEE, [lwz(5, 3, 0), add(3, 5, 4), BLR]),       # reads r3, r4
             "orig_out": (BASE + 0x700, outparam_code(0x50)),
             "orig_rodata": (BASE + 0x600, [dform(15, 4, 0, 0x8800), lwz(3, 4, 0x3000), BLR]),
+            "orig_range": (BASE + 0x800, range_loop(5)),
             "orig_rec": (BASE + 0x500, lambda at: prologue() + [addi(3, 3, -1), bl(at + 16, at)] + epilogue()),
         })
         cls.machine = F.Machine(cls.world)
@@ -239,6 +286,17 @@ class EquivTests(unittest.TestCase):
             body.append(bl(at + 4 * len(body), CALLEE))
             return body + [lwz(3, 1, 0x54), addi(3, 3, 0)] + epilogue()
         self.assertEqual(self.check("orig_out", preinit)["verdict"], "EQUIVALENT")
+
+    def test_begin_end_loop_reaches_its_exit(self):
+        # random begin/end pointers never sit a few words apart, so only the pointer-pair
+        # mutation (end = begin + 4*k) reaches the block after the loop
+        r = self.check("orig_range", range_loop(5), trials=400, time_budget=0)
+        self.assertEqual(r["verdict"], "EQUIVALENT", r)
+        self.assertEqual(r["blocks_covered"], r["blocks"], r)
+        # a candidate that differs only on that exit is caught
+        r = self.check("orig_range", range_loop(6), trials=400, time_budget=0)
+        self.assertEqual(r["verdict"], "DIFFERENT", r)
+        self.assertIn("return value", r["reason"])
 
     def test_read_only_data_is_not_mutated(self):
         # the original reads a constant from read-only image data; the candidate has the same

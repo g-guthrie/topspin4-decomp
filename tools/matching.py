@@ -51369,6 +51369,21 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"??1TS4Owner880F4424@@UAA@XZ": 148},
     },
+    {
+        "source": "src/xbox360/q5_render_sr_lookup.c",
+        "object": "q5_render_sr_lookup.obj",
+        "symbols": {"ts4_sr_lookup_table_b_886F3588": 44},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_pair_visit.cpp",
+        "object": "q5_gameplay_pair_visit.obj",
+        "symbols": {"ts4_pair_forward_both_halves_886C4CB8": 84},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_hash_find.c",
+        "object": "q5_gameplay_hash_find.obj",
+        "symbols": {"ts4_hash_find_c7f47320_888E3848": 96},
+    },
 )
 
 
