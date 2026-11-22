@@ -51490,6 +51490,32 @@ MATCHING_UNITS = (
         "object": "q5h3_xform_copy.obj",
         "symbols": {"ts4_xform_copy_to_rel_888B0D50": 208},
     },
+    {
+        "source": "src/xbox360/q5_gameplay_ref_params.cpp",
+        "object": "q5_gameplay_ref_params.obj",
+        "symbols": {"ts4_param_user_load_ref_887FDE60": 212},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_camera_at.c",
+        "object": "q5_gameplay_camera_at.obj",
+        "symbols": {"ts4_camera_current_at_888E1B30": 260},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_msg_send.cpp",
+        "object": "q5_gameplay_msg_send.obj",
+        "symbols": {"ts4_msg_send_on_channel_88867B20": 320},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_game_ends.cpp",
+        "object": "q5_gameplay_game_ends.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"?setup_ends_and_server@Q5Game@@QAAXXZ": 492},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_xdata_xyz.c",
+        "object": "q5_gameplay_xdata_xyz.obj",
+        "symbols": {"ts4_xdata_load_xyz_888B0570": 532},
+    },
 )
 
 
