@@ -8,6 +8,9 @@ Each spec has "route": "equiv", "source", "flags", "functions" {name: addr} and
 its evidence verdict is EQUIVALENT, coverage is 1.0 or at least the spec's
 "min_coverage" (default 0.9, the checker's default), and the evidence
 source_sha256 equals the current source file. --verify reruns fn_equiv first.
+--recheck re-runs fn_equiv on every registered row (its source, flags and seed,
+at least its trial count, no time budget) and writes nothing: exit status 0
+only when every row is still EQUIVALENT with the registered source hash.
 A function that is already matched (config/54540859/match.json) is not
 registered: the matched tier always wins (docs/equivalence-tier.md section 6).
 
@@ -30,12 +33,45 @@ def matched_starts():
     return {int(x["text_range"].split("-")[0], 16) for x in m}
 
 
+def recheck(rows, only=()):
+    """Re-run the checker on registered rows; returns the number that no longer pass."""
+    import shutil
+    sys.path.insert(0, str(ROOT / "tools"))
+    import fn_equiv
+    bad = 0
+    for r in rows:
+        if only and r["address"].upper() not in {f"0X{int(x, 16):08X}" for x in only}:
+            continue
+        src = ROOT / r["source"]
+        why = None
+        if hashlib.sha256(src.read_bytes()).hexdigest() != r["source_sha256"]:
+            why = "source changed since registration"
+        else:
+            obj = fn_equiv.compile_source(src, r.get("flags") or r.get("spec_flags") or [])
+            res = fn_equiv.check_object(obj, [(r["function"], int(r["address"], 16))],
+                                        source_text=src.read_text(errors="replace"), seed=r["seed"],
+                                        trials=max(400, r["trials"]), time_budget=0)[0]
+            shutil.rmtree(obj.parent, ignore_errors=True)
+            if res["verdict"] != "EQUIVALENT":
+                why = f"{res['verdict']}: {res.get('reason')}"
+        bad += why is not None
+        print(f"{r['address']} {r['function']}: " + (f"FAIL ({why})" if why else
+              f"ok ({res['valid']} valid of {res['trials']}, coverage {res['coverage']:.2f}, {res['checker']})"),
+              flush=True)
+    print(f"recheck: {bad} failing row(s)")
+    return bad
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("specs", nargs="*")
     ap.add_argument("--verify", action="store_true")
+    ap.add_argument("--recheck", nargs="*", metavar="ADDR", default=None,
+                    help="re-run fn_equiv on the registered rows (all, or the given addresses); writes nothing")
     a = ap.parse_args()
     reg = json.loads(REG.read_text()) if REG.exists() else {"comment": __doc__.strip().splitlines()[0], "rows": []}
+    if a.recheck is not None:
+        return 1 if recheck(reg["rows"], a.recheck) else 0
     rows = {r["address"]: r for r in reg["rows"]}
     matched = matched_starts()
     bad = 0

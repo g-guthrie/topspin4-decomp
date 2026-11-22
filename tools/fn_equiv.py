@@ -45,12 +45,24 @@ Model (see docs/equivalence-tier.md for the full policy):
 - Trials where the ORIGINAL faults (e.g. dereferences a small integer) or runs
   past the instruction budget are discarded: the input violates its
   precondition. A candidate that faults where the original did not is DIFFERENT.
-- Coverage: basic blocks of the original reached by valid trials.
+- Coverage: basic blocks of the original reached by valid trials. Blocks no path
+  from the entry reaches (the `blr` after a tail call) and inline jump-table
+  words (entries may leave the function) are not blocks to cover.
+- 64-bit registers: where the consumer reads the upper word of r3-r10 (static
+  analysis of the callee, of the function, or of the image's callers for r3),
+  argument and return registers are seeded and compared in full.
+- VMX/VMX128: v0-v127 are kept by the checker and the common vector
+  instructions are interpreted (VEC_* tables); compared are v1-v13 the callee
+  reads at each call, v1 at return when the function wrote it, and the
+  callee-saved v14-v31/v64-v127. Other vector instructions, and functions that
+  call the __savevmx/__restvmx helpers, stay UNCHECKED.
+- A frame object passed to a callee that provably never reads through that
+  pointer (pure out-parameter) is not compared at the call.
 
 Verdicts: EQUIVALENT (all valid trials agree, at least --min-valid valid trials,
 block coverage >= --min-coverage), DIFFERENT (first differing trial printed,
 with arguments simplified where the difference persists), UNCHECKED (reason:
-vector/VMX128 code, unresolved symbol, unsupported instruction, too few valid
+uninterpreted vector instruction, unresolved symbol, unsupported instruction, too few valid
 trials, coverage below threshold, ...).
 
 Exit status: 0 when every mapping is EQUIVALENT, 1 if any is DIFFERENT, 2 otherwise.
@@ -77,7 +89,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CHECKER_VERSION = "fn_equiv/2"
+CHECKER_VERSION = "fn_equiv/4"
 DLL = ROOT / "orig" / "54540859" / "Swing_DLL.dll"
 
 
@@ -127,6 +139,7 @@ STACK_TOP = 0x7F0F0000            # r1 at entry; above it: caller frame (seeded)
 RET_MAGIC = 0x7FFF0000
 MSR = 0x8000000000002000          # SF (64-bit) | FP
 UNRESOLVED_BASE = 0xEEE00000
+MAX_EVENTS = 4000                 # intercepted calls per run before the trial is discarded (--max-calls)
 STACK_ARG_WINDOW = 4              # bytes of a frame object passed by pointer that are compared
 # (one word: beyond it the window would reach neighbouring locals and register save slots, which
 # two different compilations place differently; see docs/equivalence-tier.md 7.1)
@@ -173,10 +186,11 @@ HELPER_DEFS = frozenset((0, 11, 12) + tuple(range(14, 32)) + tuple(32 + i for i 
 
 
 class Insn:
-    __slots__ = ("reads", "writes", "kind", "target", "word")
+    __slots__ = ("reads", "writes", "kind", "target", "word", "vec")
 
-    def __init__(self, word, reads=(), writes=(), kind=None, target=None):
+    def __init__(self, word, reads=(), writes=(), kind=None, target=None, vec=None):
         self.word, self.reads, self.writes, self.kind, self.target = word, frozenset(reads), frozenset(writes), kind, target
+        self.vec = vec          # vec_decode() of a supported vector instruction, else None
 
 
 def decode(w: int, pc: int) -> Insn:
@@ -186,7 +200,7 @@ def decode(w: int, pc: int) -> Insn:
     d, a, b, c = (w >> 21) & 31, (w >> 16) & 31, (w >> 11) & 31, (w >> 6) & 31
     ra0 = (a,) if a else ()
     if op in (4, 5, 6):
-        return Insn(w, kind="vec")
+        return vec_insn(w)
     if op == 31 and (w >> 1) & 0x3FF == 444 and d == a == b and not w & 1:
         return Insn(w)            # `or rX,rX,rX` (mr rX,rX): a no-op hint, reads nothing
     if op == 18:
@@ -295,7 +309,7 @@ def decode(w: int, pc: int) -> Insn:
         xo = (w >> 1) & 0x3FF
         xo9 = xo & 0x1FF
         if xo in VEC31:
-            return Insn(w, kind="vec")
+            return vec_insn(w)
         if xo in (0, 32):
             return Insn(w, (a, b), ())
         if xo in (4, 68):
@@ -338,11 +352,339 @@ def is_vector(w: int) -> bool:
 
 TERMINATORS = {"b", "bc", "blr", "bclr", "bctr", "bcctr"}
 
+# ---------------------------------------------------------------------------
+# VMX / VMX128. Unicorn exposes no vector registers and knows no VMX128 encodings, so the
+# checker keeps v0-v127 itself (16 big-endian bytes each) and interprets the supported vector
+# instructions of the original and of the candidate in a code hook. Both runs go through the
+# same interpreter; an instruction outside VEC_OPS makes the function UNCHECKED.
+# Calling convention (Xenon): v1-v13 arguments, v1 return value, v0-v13 and v32-v63 volatile,
+# v14-v31 and v64-v127 callee-saved.
+VEC_ARGS = tuple(range(1, 14))
+VEC_VOLATILE = tuple(range(0, 14)) + tuple(range(32, 64))
+VEC_NONVOL = tuple(range(14, 32)) + tuple(range(64, 128))
+
+VEC_MEM31 = {103: "lvx", 231: "stvx", 359: "lvx", 487: "stvx", 519: "lvlx", 551: "lvrx", 647: "stvlx",
+             679: "stvrx", 71: "lvewx", 199: "stvewx"}
+VEC_MEM128 = {195: "lvx", 451: "stvx", 707: "lvx", 963: "stvx", 1027: "lvlx", 1091: "lvrx",
+              1283: "stvlx", 1347: "stvrx", 131: "lvewx", 387: "stvewx"}
+VEC_VA = {46: "vmaddfp", 47: "vnmsubfp", 42: "vsel", 43: "vperm"}      # vD <- vA, vB, vC
+VEC_VX = {10: "vaddfp", 74: "vsubfp", 1034: "vmaxfp", 1098: "vminfp", 1028: "vand", 1092: "vandc",
+          1156: "vor", 1220: "vxor", 1284: "vnor", 140: "vmrghw", 396: "vmrglw", 388: "vslw",
+          644: "vsrw", 128: "vadduwm", 1152: "vsubuwm"}                # vD <- vA, vB
+VEC_VXB = {266: "vrefp", 330: "vrsqrtefp"}                             # vD <- vB
+VEC_VXI = {652: "vspltw", 842: "vcfsx", 778: "vcfux", 970: "vctsxs", 906: "vctuxs"}   # vD <- vB, uimm
+VEC_CMP = {198: "vcmpeqfp", 454: "vcmpgefp", 710: "vcmpgtfp", 134: "vcmpequw"}
+VEC_5 = {16: "vaddfp", 80: "vsubfp", 144: "vmulfp", 400: "vmsum3fp", 464: "vmsum4fp", 528: "vand",
+         592: "vandc", 656: "vnor", 720: "vor", 784: "vxor"}           # vD <- vA, vB
+VEC_5ACC = {208: "vmaddfp", 272: "vmaddcfp", 336: "vnmsubfp", 848: "vsel"}   # vD <- vA, vB, vD
+VEC_6 = {640: "vmaxfp", 704: "vminfp", 768: "vmrghw", 832: "vmrglw", 208: "vslw", 464: "vsrw"}
+VEC_6CMP = {0: "vcmpeqfp", 128: "vcmpgefp", 256: "vcmpgtfp", 512: "vcmpequw"}
+VEC_6B = {1584: "vrefp", 1648: "vrsqrtefp"}
+VEC_6I = {1840: "vspltw", 688: "vcfsx", 752: "vcfux", 560: "vctsxs", 624: "vctuxs"}
+
+
+def vec_decode(w: int):
+    """(name, vD, sources, imm, rc, (rA, rB) or None) of a supported vector instruction, else None.
+    sources are vector register numbers in the order the semantics use them (see vec_apply);
+    for the memory forms vD is the loaded or stored register."""
+    op = w >> 26
+    d, a, b, c = (w >> 21) & 31, (w >> 16) & 31, (w >> 11) & 31, (w >> 6) & 31
+    if op == 31:
+        n = VEC_MEM31.get((w >> 1) & 0x3FF)
+        return (n, d, (), 0, 0, (a, b)) if n else None
+    D = d | ((w >> 2) & 3) << 5                     # VMX128 register fields
+    A = a | ((w >> 5) & 1) << 5 | ((w >> 10) & 1) << 6
+    B = b | (w & 3) << 5
+    if op == 4:
+        if w & 0x10:
+            return ("vsldoi", D, (A, B), (w >> 6) & 15, 0, None)
+        if w & 0x33 == 0x03:
+            n = VEC_MEM128.get(w & 0x7F3)
+            return (n, D, (), 0, 0, (a, b)) if n else None
+        x6, x11 = w & 0x3F, w & 0x7FF
+        if x6 in (46, 47):          # vmaddfp / vnmsubfp vD,vA,vC,vB: sources as (vA, vC, vB)
+            return (VEC_VA[x6], d, (a, c, b), 0, 0, None)
+        if x6 in VEC_VA:
+            return (VEC_VA[x6], d, (a, b, c), 0, 0, None)
+        if x6 == 44 and not w & 0x400:
+            return ("vsldoi", d, (a, b), c & 15, 0, None)
+        if x11 in VEC_VX:
+            return (VEC_VX[x11], d, (a, b), 0, 0, None)
+        if x11 in VEC_VXB and not a:
+            return (VEC_VXB[x11], d, (b,), 0, 0, None)
+        if x11 in VEC_VXI:
+            return (VEC_VXI[x11], d, (b,), a, 0, None)
+        if x11 == 908 and not b:
+            return ("vspltisw", d, (), sext(a, 5), 0, None)
+        if w & 0x3FF in VEC_CMP:
+            return (VEC_CMP[w & 0x3FF], d, (a, b), 0, (w >> 10) & 1, None)
+        return None
+    if op == 5:
+        if w & 0x210 == 0:
+            return ("vperm", D, (A, B, (w >> 6) & 7), 0, 0, None)
+        k = w & 0x3D0
+        if k in VEC_5:
+            return (VEC_5[k], D, (A, B), 0, 0, None)
+        if k in VEC_5ACC:
+            return (VEC_5ACC[k], D, (A, B, D), 0, 0, None)
+        return None
+    if op == 6:
+        k3 = w & 0x7F0
+        if k3 in VEC_6B:
+            return (VEC_6B[k3], D, (B,), 0, 0, None)
+        if k3 in VEC_6I:
+            return (VEC_6I[k3], D, (B,), a, 0, None)
+        if k3 == 1904:
+            return ("vspltisw", D, (), sext(a, 5), 0, None)
+        if w & 0x730 == 0x710:
+            return ("vrlimi", D, (B, D), a | ((w >> 6) & 3) << 8, 0, None)     # imm: mask | rotate << 8
+        if w & 0x630 == 0x210:
+            return ("vpermwi", D, (B,), a | ((w >> 6) & 7) << 5, 0, None)
+        if w & 0x390 in VEC_6CMP and not w & 0x10:
+            return (VEC_6CMP[w & 0x390], D, (A, B), 0, (w >> 6) & 1, None)
+        if w & 0x3D0 in VEC_6:
+            return (VEC_6[w & 0x3D0], D, (A, B), 0, 0, None)
+    return None
+
+
+def vec_insn(w: int) -> Insn:
+    v = vec_decode(w)
+    if v is None or v[5] is None:
+        return Insn(w, kind="vec", vec=v)
+    ra, rb = v[5]
+    return Insn(w, ((ra,) if ra else ()) + (rb,), (), kind="vec", vec=v)
+
+
+def vec_regs(v):
+    """(vector registers read, vector registers written) of a vec_decode() result."""
+    name, d, src = v[0], v[1], v[2]
+    if name.startswith("st"):
+        return (d,), ()
+    return tuple(src), (d,)
+
+
+def _f32(x):
+    try:
+        return struct.unpack(">f", struct.pack(">f", x))[0]
+    except OverflowError:
+        return math.copysign(math.inf, x)
+
+
+def _fl(v):
+    return struct.unpack(">4f", v)
+
+
+def _pf(xs):
+    return b"".join(struct.pack(">f", _f32(x)) for x in xs)
+
+
+def _wd(v):
+    return struct.unpack(">4I", v)
+
+
+def _pw(xs):
+    return struct.pack(">4I", *(x & 0xFFFFFFFF for x in xs))
+
+
+def _fdiv(x, y):
+    if y != y or x != x:
+        return math.nan
+    if y == 0:
+        return math.nan if x == 0 else math.copysign(math.inf, x) * math.copysign(1.0, y)
+    return x / y
+
+
+def _fmul(x, y):
+    try:
+        return x * y
+    except OverflowError:       # pragma: no cover - float products do not raise
+        return math.inf
+
+
+def _sat(x, lo, hi):
+    if x != x:
+        return 0
+    return lo if x <= lo else hi if x >= hi else int(x)
+
+
+def _vcmp(name, x, y):
+    if name == "vcmpeqfp":
+        return x == y
+    if name == "vcmpgefp":
+        return x >= y
+    return x > y
+
+
+def vec_apply(name, s, imm):
+    """Result bytes of a register-only vector instruction; s: source values (vec_decode order)."""
+    if name in ("vor", "vand", "vandc", "vxor", "vnor"):
+        x, y = int.from_bytes(s[0], "big"), int.from_bytes(s[1], "big")
+        m = (1 << 128) - 1
+        r = {"vor": x | y, "vand": x & y, "vandc": x & ~y, "vxor": x ^ y, "vnor": ~(x | y)}[name] & m
+        return r.to_bytes(16, "big")
+    if name in ("vaddfp", "vsubfp", "vmulfp", "vmaxfp", "vminfp"):
+        fx, fy = _fl(s[0]), _fl(s[1])
+        if name in ("vmaxfp", "vminfp"):
+            pick = max if name == "vmaxfp" else min
+            return _pf(math.nan if x != x or y != y else pick(x, y) for x, y in zip(fx, fy))
+        f = {"vaddfp": lambda x, y: x + y, "vsubfp": lambda x, y: x - y, "vmulfp": _fmul}[name]
+        return _pf(f(x, y) for x, y in zip(fx, fy))
+    if name == "vmaddfp":           # AltiVec: vA*vC + vB; VMX128: vA*vB + vD (sources x, y, z: x*y + z)
+        x, y, z = (_fl(v) for v in s)
+        return _pf(_fmul(p, q) + r for p, q, r in zip(x, y, z))
+    if name == "vmaddcfp":          # VMX128: vA*vD + vB
+        x, y, z = (_fl(v) for v in s)
+        return _pf(p * r + q for p, q, r in zip(x, y, z))
+    if name == "vnmsubfp":          # AltiVec: -(vA*vC - vB); VMX128: -(vA*vB - vD)
+        x, y, z = (_fl(v) for v in s)
+        return _pf(-(p * q - r) for p, q, r in zip(x, y, z))
+    if name in ("vmsum3fp", "vmsum4fp"):
+        x, y = _fl(s[0]), _fl(s[1])
+        n = 3 if name == "vmsum3fp" else 4
+        t = 0.0
+        for i in range(n):
+            t = _f32(t + _f32(x[i] * y[i]))
+        return _pf([t] * 4)
+    if name == "vsel":              # bits of vB where the mask (vC, or vD for VMX128) is 1, else vA
+        x, y, m = (int.from_bytes(v, "big") for v in s)
+        return ((x & ~m) | (y & m)).to_bytes(16, "big")
+    if name == "vperm":
+        t = s[0] + s[1]
+        return bytes(t[i & 31] for i in s[2])
+    if name == "vsldoi":
+        return (s[0] + s[1])[imm:imm + 16]
+    if name == "vspltw":
+        return s[0][4 * (imm & 3):4 * (imm & 3) + 4] * 4
+    if name == "vspltisw":
+        return struct.pack(">i", imm) * 4
+    if name == "vpermwi":
+        return b"".join(s[0][4 * ((imm >> sh) & 3):][:4] for sh in (6, 4, 2, 0))
+    if name == "vrlimi":            # words of vB rotated left by z replace the words of vD selected by the mask
+        z, mask = imm >> 8, imm & 15
+        src, dst = _wd(s[0]), _wd(s[1])
+        return _pw(src[(i + z) & 3] if mask & (8 >> i) else dst[i] for i in range(4))
+    if name in ("vmrghw", "vmrglw"):
+        x, y = _wd(s[0]), _wd(s[1])
+        o = 0 if name == "vmrghw" else 2
+        return _pw((x[o], y[o], x[o + 1], y[o + 1]))
+    if name in ("vcmpeqfp", "vcmpgefp", "vcmpgtfp"):
+        return _pw(0xFFFFFFFF if _vcmp(name, x, y) else 0 for x, y in zip(_fl(s[0]), _fl(s[1])))
+    if name == "vcmpequw":
+        return _pw(0xFFFFFFFF if x == y else 0 for x, y in zip(_wd(s[0]), _wd(s[1])))
+    if name == "vrefp":
+        return _pf(_fdiv(1.0, x) for x in _fl(s[0]))
+    if name == "vrsqrtefp":
+        return _pf(math.nan if x != x or x < 0 else _fdiv(1.0, math.sqrt(x)) for x in _fl(s[0]))
+    if name == "vcfsx":
+        return _pf(sext(x, 32) / (1 << imm) for x in _wd(s[0]))
+    if name == "vcfux":
+        return _pf(x / (1 << imm) for x in _wd(s[0]))
+    if name == "vctsxs":
+        return _pw(_sat(x * (1 << imm), -0x80000000, 0x7FFFFFFF) for x in _fl(s[0]))
+    if name == "vctuxs":
+        return _pw(_sat(x * (1 << imm), 0, 0xFFFFFFFF) for x in _fl(s[0]))
+    if name in ("vslw", "vsrw", "vadduwm", "vsubuwm"):
+        f = {"vslw": lambda x, y: x << (y & 31), "vsrw": lambda x, y: x >> (y & 31),
+             "vadduwm": lambda x, y: x + y, "vsubuwm": lambda x, y: x - y}[name]
+        return _pw(f(x, y) for x, y in zip(_wd(s[0]), _wd(s[1])))
+    raise KeyError(name)
+
+
+def vec_poison(reg, k):
+    return bytes((0xBA, 0xD0, reg, k & 0xFF)) * 4
+
+
+def is_vec_poison(v):
+    return v[:2] == b"\xBA\xD0" and v[:4] * 4 == v
+
+# 64-bit use of GPRs. Xenon registers are 64 bits wide and the ABI passes `long long` values and
+# small structs in full registers, while 32-bit code leaves the upper halves undefined. The
+# checker therefore compares the upper half of a register only where the consumer reads it.
+M64 = (1 << 64) - 1
+W_USE2 = {233, 73, 9, 489, 457}                  # mulld mulhd mulhdu divd divdu: rA, rB
+W_PROP_LOG = {28, 60, 444, 412, 316, 476, 124, 284}   # and andc or orc xor nand nor eqv: rA <- rS, rB
+W_PROP2 = {266, 40, 10, 8, 138, 136}             # add subf addc subfc adde subfe: rD <- rA, rB
+W_PROP1 = {104, 202, 200, 234, 232}              # neg addze subfze addme subfme: rD <- rA
+R1_LOAD = {32: 4, 34: 1, 40: 2, 42: 2, 48: 4, 50: 8}
+R1_STORE = {36: 4, 38: 1, 44: 2, 52: 4, 54: 8}
+
+
+def wide_effect(w: int):
+    """(use, dst, srcs) of one instruction: `use` are GPRs whose upper 32 bits it observes; when
+    `dst` is not None its upper 32 bits are a function of the upper bits of `srcs` (a 64-bit
+    move/add/logical op). Every other register write produces a value whose upper half does not
+    depend on an input's upper half. Loads and stores through r1 are handled by the caller."""
+    op = w >> 26
+    d, a, b = (w >> 21) & 31, (w >> 16) & 31, (w >> 11) & 31
+    if op == 30:
+        sh = ((w >> 11) & 31) | ((w >> 1) & 1) << 5
+        f = (w >> 5) & 0x3F
+        m = (f >> 1) | (f & 1) << 5
+        x3 = (w >> 2) & 7
+        if x3 > 3:
+            return (d,), None, ()                # rldcl/rldcr
+        mask = ((1 << (64 - m)) - 1) if x3 == 0 else (M64 & ~((1 << (63 - m)) - 1)) if x3 == 1 else \
+            ((1 << (64 - m)) - 1) & ~((1 << sh) - 1)
+        hi = 0xFFFFFFFF00000000
+        used = ((hi << sh | hi >> (64 - sh)) & M64 if sh else hi) & mask
+        if x3 == 3:
+            return ((d,) if used else ()), a, (a,)     # rldimi keeps the rest of rA
+        return ((d,) if used else ()), None, ()
+    if op == 62:
+        return (d,), None, ()
+    if op == 2:
+        return (a,), None, ()
+    if op in (10, 11):
+        return ((a,) if (w >> 21) & 1 else ()), None, ()
+    if op in (14, 15):
+        return (), (d if a else None), ((a,) if a else ())
+    if op in (12, 13, 8, 7):
+        return (), d, (a,)
+    if 24 <= op <= 27:
+        return (), a, (d,)
+    if op == 20:
+        return (), a, (a,)
+    if op == 31:
+        xo = (w >> 1) & 0x3FF
+        xo9 = xo & 0x1FF
+        if xo in (0, 32):
+            return ((a, b) if (w >> 21) & 1 else ()), None, ()
+        if xo == 68:
+            return (a, b), None, ()
+        if xo in (149, 181, 214, 27, 539, 794, 826, 827, 58):   # stdx stdux stdcx. sld srd srad sradi cntlzd
+            return (d,), None, ()
+        if xo in W_PROP_LOG:
+            return (), a, (d, b)
+        if xo9 in W_USE2 and xo not in LOG2 and xo not in LDX and xo not in STX:
+            return (a, b), None, ()
+        if xo9 in W_PROP2 and xo not in LOG2 and xo not in LDX and xo not in STX:
+            return (), d, (a, b)
+        if xo9 in W_PROP1:
+            return (), d, (a,)
+    return (), None, ()
+
+
+def r1_access(w: int):
+    """(is_store, displacement, byte size) of a load/store through r1, else None."""
+    op = w >> 26
+    if (w >> 16) & 31 != 1:
+        return None
+    if op in R1_LOAD:
+        return False, sext(w & 0xFFFF, 16), R1_LOAD[op]
+    if op in R1_STORE:
+        return True, sext(w & 0xFFFF, 16), R1_STORE[op]
+    if op == 58 and w & 3 != 1:
+        return False, sext(w & 0xFFFC, 16), 8 if w & 3 == 0 else 4
+    if op == 62 and w & 3 == 0:
+        return True, sext(w & 0xFFFC, 16), 8
+    return None
+
 
 class Func:
     """Decoded function: instructions, jump tables, basic blocks."""
 
-    def __init__(self, code: bytes, base: int):
+    def __init__(self, code: bytes, base: int, text=None):
+        """text: (lo, hi) of the image's code, to recognise jump-table entries that leave the function."""
         self.base, self.size = base, len(code)
         n = len(code) // 4
         words = struct.unpack(f">{n}I", code[: n * 4])
@@ -355,8 +697,21 @@ class Func:
             prev = [x.word for x in self.insns[max(0, i - 8):i]]
             if not any((x >> 26) == 31 and ((x >> 1) & 0x3FF) == 467 for x in prev):
                 continue            # no mtctr shortly before: a tail call through ctr
-            j, tgts = i + 1, []
-            while j < n and base <= words[j] < base + self.size and (words[j] - base) % 4 == 0:
+            # A table may also point at case bodies outside the function (bodies shared with or
+            # split into neighbouring functions). Such words look like `lbz` instructions, so
+            # they are taken as table data only up to the entry count of the guarding
+            # `cmplwi rX,N` (N + 1 entries) and never past an in-function target of the table.
+            count = None
+            for x in reversed(self.insns[max(0, i - 12):i]):
+                if (x.word >> 26) == 10:
+                    count = (x.word & 0xFFFF) + 1
+                    break
+            lo, hi = text if text and count else (base, base)
+            j, tgts, stop = i + 1, [], n
+            while (j < min(n, stop, i + 1 + (count or n)) and words[j] % 4 == 0 and
+                   (base <= words[j] < base + self.size or lo <= words[j] < hi)):
+                if base + 4 * j < words[j] < base + self.size:
+                    stop = min(stop, (words[j] - base) // 4)
                 tgts.append(words[j])
                 j += 1
             if tgts:
@@ -382,6 +737,64 @@ class Func:
             if e2 > s:
                 self.blocks.append((s, e2))
 
+    def succ(self):
+        """Successor block indices of every block (in-function control flow only)."""
+        start_of = {s: k for k, (s, _) in enumerate(self.blocks)}
+        out = []
+        for s, e in self.blocks:
+            last = self.insns[e - 1]
+            nxt = []
+            if last.kind in ("b", "bc") and self.inside(last.target):
+                nxt.append((last.target - self.base) // 4)
+            nxt += [(t - self.base) // 4 for t in self.tables.get(e - 1, ())]
+            if last.kind not in ("b", "blr", "bctr"):
+                nxt.append(e)
+            out.append([start_of[i] for i in nxt if i in start_of])
+        return out
+
+    def frame_adjust(self):
+        """Per instruction: how far r1 is below its entry value (0 before the `stwu r1,-F(r1)`
+        and after an epilogue's `addi r1,..`, F in between), so r1 displacements can be compared
+        across the prologue."""
+        out, adj, frame = [], 0, 0
+        for ins in self.insns:
+            out.append(adj)
+            w = ins.word
+            op, rd, ra = w >> 26, (w >> 21) & 31, (w >> 16) & 31
+            if op == 37 and rd == 1 and ra == 1 and sext(w & 0xFFFF, 16) < 0:
+                adj = frame = -sext(w & 0xFFFF, 16)
+            elif op == 14 and rd == 1:
+                adj = 0
+            elif ins.kind in ("b", "blr", "bctr"):
+                adj = frame
+        return out
+
+    def dead_blocks(self):
+        """Start addresses of blocks that no path from the entry reaches: code after an
+        unconditional transfer (`b`, `blr`, table `bctr`) that no branch or jump table targets,
+        e.g. the `blr` MSVC leaves after a tail call `b callee`. No trial can run them, so they
+        do not count for coverage. Empty when the function has an indirect jump without a
+        recognised table (its targets are unknown)."""
+        start_of = {s: k for k, (s, _) in enumerate(self.blocks)}
+        seen, todo = set(), [0] if self.blocks else []
+        while todo:
+            k = todo.pop()
+            if k in seen:
+                continue
+            seen.add(k)
+            s, e = self.blocks[k]
+            last = self.insns[e - 1]
+            nxt = []
+            if last.kind in ("bctr", "bcctr") and e - 1 not in self.tables:
+                return []
+            if last.kind in ("b", "bc") and self.inside(last.target):
+                nxt.append((last.target - self.base) // 4)
+            nxt += [(t - self.base) // 4 for t in self.tables.get(e - 1, ())]
+            if last.kind not in ("b", "blr", "bctr"):
+                nxt.append(e)
+            todo += [start_of[i] for i in nxt if i in start_of]
+        return [self.base + 4 * s for k, (s, _) in enumerate(self.blocks) if k not in seen]
+
     def inside(self, addr):
         return self.base <= addr < self.base + self.size
 
@@ -390,6 +803,13 @@ class Func:
 
     def has_vector(self):
         return any(ins.kind == "vec" for i, ins in enumerate(self.insns) if i not in self.data)
+
+    def unsupported_vector(self):
+        """Word of the first vector instruction the checker cannot interpret, or None."""
+        for i, ins in enumerate(self.insns):
+            if i not in self.data and ins.kind == "vec" and ins.vec is None:
+                return ins.word
+        return None
 
     def code_words(self):
         return [(self.base + 4 * i, ins) for i, ins in enumerate(self.insns) if i not in self.data]
@@ -400,17 +820,21 @@ class Analysis:
     registers written (transitively). `code_of(addr)` returns the bytes of the
     function starting at addr, or None."""
 
-    def __init__(self, code_of, is_helper=lambda a: False):
+    def __init__(self, code_of, is_helper=lambda a: False, text=None):
         self.code_of = code_of
+        self.text = text
         self.is_helper = is_helper
         self.funcs, self.live, self.defs, self._slots = {}, {}, {}, {}
         self.varargs = set()
         self._busy_live, self._busy_defs = set(), set()
+        self.wide, self._busy_wide = {}, set()
+        self.vlive, self._busy_vlive = {}, set()
+        self._reads, self._busy_reads = {}, set()
 
     def func(self, addr):
         if addr not in self.funcs:
             code = self.code_of(addr)
-            self.funcs[addr] = Func(code, addr) if code else None
+            self.funcs[addr] = Func(code, addr, self.text) if code else None
         return self.funcs[addr]
 
     def stack_arg_slots(self, addr):
@@ -465,9 +889,189 @@ class Analysis:
                     exact = False
             elif k in ("bctrl", "unknown", "sc") or (k == "bctr" and (i - f.base) // 4 not in f.tables):
                 out |= VOLATILE
+            elif k == "bctr":
+                for t in f.tables[(i - f.base) // 4]:
+                    if not f.inside(t):
+                        out |= self.defs_of(t, depth + 1)
         self._busy_defs.discard(addr)
         res = frozenset(out)
         self.defs[addr] = res
+        return res
+
+    def wide_in(self, addr, depth=0):
+        """Argument GPRs (r3-r10) whose upper 32 bits the function at addr observes: read by a
+        64-bit instruction (std to memory, 64-bit rotate/shift/multiply/compare), stored to its
+        frame with std and read back from the high word, or passed on to a callee that does.
+        An under-approximation where code is not understood (unknown callee, address-taken
+        frame slot): those registers keep the 32-bit comparison."""
+        if addr in self.wide:
+            return self.wide[addr]
+        f = None if self.is_helper(addr) else self.func(addr)
+        if f is None or depth > 40 or addr in self._busy_wide:
+            return frozenset()
+        self._busy_wide.add(addr)
+        succ, adj = f.succ(), f.frame_adjust()
+
+        def transfer(k, W):
+            s, e = f.blocks[k]
+            for i in range(e - 1, s - 1, -1):
+                ins = f.insns[i]
+                w, kind = ins.word, ins.kind
+                if kind == "bl" or (kind in ("b", "bc") and not f.inside(ins.target)):
+                    if kind != "bc":
+                        W -= self.defs_of(ins.target, depth + 1)
+                    W |= self.wide_in(ins.target, depth + 1)
+                    continue
+                if kind in ("bctrl", "unknown", "sc"):
+                    W -= VOLATILE
+                    continue
+                acc = r1_access(w)
+                if acc:
+                    store, disp, n = acc
+                    lo = disp - adj[i]
+                    if store:
+                        if (w >> 26) == 62 and ("s", lo) in W:
+                            W.add((w >> 21) & 31)        # the high word of this std is read later
+                        W -= {("s", x) for x in range(lo, lo + n - 3)}
+                    elif (w >> 26) == 58 and w & 3 == 0 and (w >> 21) & 31 not in W:
+                        W -= ins.writes                  # ld of a register nobody reads in full
+                    else:
+                        W -= ins.writes
+                        W |= {("s", x) for x in range(lo - 3, lo + n) if x % 4 == 0}
+                    continue
+                use, dst, srcs = wide_effect(w)
+                hit = dst is not None and dst in W
+                W -= ins.writes
+                W.update(use)
+                if hit:
+                    W.update(srcs)
+            return W
+
+        win = [set() for _ in f.blocks]
+        for _ in range(4 * len(f.blocks) + 4):
+            changed = False
+            for k in range(len(f.blocks) - 1, -1, -1):
+                out = set()
+                for j in succ[k]:
+                    out |= win[j]
+                new = transfer(k, out)
+                if new != win[k]:
+                    win[k], changed = new, True
+            if not changed:
+                break
+        self._busy_wide.discard(addr)
+        res = frozenset(win[0]) & GPR_ARG_SET if win else frozenset()
+        self.wide[addr] = res
+        return res
+
+    def reads_through(self, addr, reg, depth=0):
+        """May the function at addr read the object its pointer argument `reg` (r3-r10) points
+        to? False only when that is ruled out: on every path the pointer and its register copies
+        are used for nothing but stores through them, comparisons, further copies, the return
+        value, and calls whose callees satisfy the same. Anything else (a load, pointer
+        arithmetic, storing the pointer, an indirect call that may receive it) answers True."""
+        key = (addr, reg)
+        if key in self._reads:
+            return self._reads[key]
+        f = self.func(addr)
+        if f is None or depth > 8 or key in self._busy_reads or self.is_helper(addr):
+            return True
+        self._busy_reads.add(key)
+        succ = f.succ()
+        state = {0: frozenset((reg,))}
+        todo, result = [0], False
+        while todo and not result:
+            k = todo.pop()
+            alias = set(state[k])
+            s, e = f.blocks[k]
+            for i in range(s, e):
+                if not alias:
+                    break
+                ins = f.insns[i]
+                w, kind = ins.word, ins.kind
+                op, rd, ra, rb = w >> 26, (w >> 21) & 31, (w >> 16) & 31, (w >> 11) & 31
+                if kind == "bl" or (kind in ("b", "bc") and not f.inside(ins.target)):
+                    if not self.is_helper(ins.target):
+                        live = self.live_in(ins.target)
+                        for r in sorted(alias & GPR_ARG_SET):
+                            if (live is None or r in live) and self.reads_through(ins.target, r, depth + 1):
+                                result = True
+                    alias -= self.defs_of(ins.target)
+                    continue
+                if kind in ("bctrl", "bctr", "bcctr", "sc", "unknown", "vec") and (i not in f.tables):
+                    if alias & (GPR_ARG_SET if kind != "vec" else ins.reads) or kind in ("unknown", "sc"):
+                        result = True
+                    alias -= VOLATILE if kind != "vec" else set()
+                    continue
+                used = ins.reads & alias
+                if used:
+                    xo = (w >> 1) & 0x3FF
+                    if op == 31 and xo == 444 and rd == rb:                 # mr rA,rS
+                        alias.add(ra)
+                        continue
+                    if op in (10, 11) or (op == 31 and xo in (0, 32)):      # compare
+                        continue
+                    if op in (36, 38, 44, 52, 54, 62) and ra in alias and rd not in alias:
+                        continue                                            # store through the pointer
+                    result = True
+                    break
+                alias -= ins.writes
+            if result:
+                break
+            out = frozenset(alias)
+            for j in succ[k]:
+                new = state.get(j, frozenset()) | out
+                if new != state.get(j):
+                    state[j] = new
+                    todo.append(j)
+        self._busy_reads.discard(key)
+        self._reads[key] = result
+        return result
+
+    def vec_live_in(self, addr, depth=0):
+        """Vector argument registers (numbers 1-13) the function reads before writing, calls
+        included; None if unknown (no code, an uninterpreted vector instruction, recursion)."""
+        if addr in self.vlive:
+            return self.vlive[addr]
+        if self.is_helper(addr):
+            return frozenset()
+        f = self.func(addr)
+        if f is None or depth > 40 or addr in self._busy_vlive or f.unsupported_vector() is not None:
+            return None
+        self._busy_vlive.add(addr)
+        gen, kill, unknown = [], [], False
+        for s, e in f.blocks:
+            g, kl = set(), set()
+            for i in range(s, e):
+                ins = f.insns[i]
+                k = ins.kind
+                rd, wr = vec_regs(ins.vec) if ins.vec else ((), ())
+                if k == "bl" or (k in ("b", "bc") and not f.inside(ins.target)):
+                    sub = self.vec_live_in(ins.target, depth + 1)
+                    if sub is None:
+                        unknown = True
+                    rd, wr = sub or (), VEC_VOLATILE
+                elif k in ("bctrl", "bctr", "bcctr") and i not in f.tables:
+                    wr = VEC_VOLATILE
+                g |= set(rd) - kl
+                kl |= set(wr)
+            gen.append(g & set(VEC_ARGS))
+            kill.append(kl)
+        succ = f.succ()
+        live = [set() for _ in f.blocks]
+        changed = True
+        while changed:
+            changed = False
+            for k in range(len(f.blocks) - 1, -1, -1):
+                out = set()
+                for j in succ[k]:
+                    out |= live[j]
+                new = gen[k] | (out - kill[k])
+                if new != live[k]:
+                    live[k], changed = new, True
+        self._busy_vlive.discard(addr)
+        res = None if unknown else frozenset(live[0]) if f.blocks else frozenset()
+        self.vlive[addr] = res
         return res
 
     def live_in(self, addr, depth=0):
@@ -506,6 +1110,13 @@ class Analysis:
                     writes |= VOLATILE
                 elif kind == "unknown":
                     unknown = True
+                elif kind == "bctr":
+                    # jump-table entries that leave the function are tail calls
+                    for t in f.tables[i]:
+                        if not f.inside(t):
+                            sub = self.live_in(t, depth + 1)
+                            reads |= {3} if sub is None else sub
+                            writes |= self.defs_of(t, depth + 1)
                 g |= reads - kl
                 kl |= writes
             last = f.insns[e - 1]
@@ -574,8 +1185,9 @@ class World:
             if sec == ".text" and size and name.startswith(VMX_HELPERS):
                 self.vmx_helpers.append((addr, addr + size))
         self.libc = {self.by_name[n]: n for n in LIBC if n in self.by_name}
-        self.analysis = Analysis(self.code_of, self.in_helper)
+        self.analysis = Analysis(self.code_of, self.in_helper, self.text_range)
         self._callsites = None
+        self._retwide = {}
 
     def code_of(self, addr):
         size = self.func_size.get(addr)
@@ -671,6 +1283,51 @@ class World:
                         break
                     pc += 4
         return len(sites), use[3], use[33], weak[3], weak[33]
+
+
+    def return_wide(self, addr):
+        """Does some direct caller read the upper 32 bits of r3 after `bl addr` (a 64-bit
+        integer or a small struct returned in the full register)? Straight-line scan."""
+        if addr not in self._retwide:
+            self._retwide[addr] = any(self._wide_after(site + 4) for site in self.callsites().get(addr, [])[:200])
+        return self._retwide[addr]
+
+    def _wide_after(self, pc):
+        tracked, slots = {3}, set()
+        for _ in range(40):
+            off = pc - self.base
+            if not (0 <= off < len(self.image) - 4) or not (tracked or slots):
+                return False
+            w = struct.unpack_from(">I", self.image, off)[0]
+            ins = decode(w, pc)
+            if ins.kind == "bl":
+                return bool(tracked & self.analysis.wide_in(ins.target))
+            if ins.kind is not None and ins.kind not in ("trap", "dcbz", "mftb"):
+                return False
+            acc = r1_access(w)
+            if acc:
+                store, disp, n = acc
+                if store:
+                    slots -= set(range(disp, disp + n - 3))
+                    if (w >> 26) == 62 and (w >> 21) & 31 in tracked:
+                        slots.add(disp)
+                else:
+                    hit = any(disp - 4 < x < disp + n for x in slots)
+                    tracked -= ins.writes
+                    if hit and (w >> 26) == 58 and w & 3 == 0:
+                        tracked.add((w >> 21) & 31)
+                    elif hit:
+                        return True
+            else:
+                use, dst, srcs = wide_effect(w)
+                if tracked & set(use):
+                    return True
+                hit = dst is not None and tracked & set(srcs)
+                tracked -= ins.writes
+                if hit:
+                    tracked.add(dst)
+            pc += 4
+        return False
 
 
 _WORLD = None
@@ -1050,6 +1707,7 @@ class Machine:
         self.touched = set()
         self.special = {}          # address -> kind for per-instruction hooks
         self.special_hooks = []
+        self.max_events = MAX_EVENTS
         uc.hook_add(UC_HOOK_BLOCK, self._on_block)
         uc.hook_add(UC_HOOK_MEM_UNMAPPED, self._on_unmapped)
         uc.hook_add(UC_HOOK_MEM_WRITE, self._on_write)
@@ -1212,6 +1870,13 @@ class Machine:
         if kind == "mftb":
             self.tb += 1000
             uc.reg_write(P.UC_PPC_REG_0 + ((w >> 21) & 31), self.tb)
+        elif kind == "vec":
+            try:
+                self._vec(uc, vec_decode(w))
+            except Fault as e:
+                self.fault = ("vec", e.args[0])
+                uc.emu_stop()
+                return
         elif kind == "dcbz":
             ra, rb = (w >> 16) & 31, (w >> 11) & 31
             ea = ((uc.reg_read(P.UC_PPC_REG_0 + ra) if ra else 0) + uc.reg_read(P.UC_PPC_REG_0 + rb)) & 0xFFFFFFFF
@@ -1223,6 +1888,46 @@ class Machine:
                 uc.emu_stop()
                 return
         uc.reg_write(P.UC_PPC_REG_PC, a + 4)
+
+    def _vstore(self, a, data):
+        self.write(a, data)
+        if STACK_LO <= a < STACK_HI:
+            r = range(a, a + len(data))
+            self.stack_touched.update(r)
+            self.stack_since.update(r)
+
+    def _vec(self, uc, v):
+        """Interpret one supported vector instruction on the checker's own v0-v127."""
+        name, d, src, imm, rc, mem = v
+        vr = self.vr
+        if mem is None:
+            out = vec_apply(name, [vr[r] for r in src], imm)
+            vr[d] = out
+            if d == 1:
+                self.v1_own = True
+            if rc:      # CR6: bit 0 (LT) all elements true, bit 2 (EQ) all false
+                uc.reg_write(P.UC_PPC_REG_CR6, 8 if out == b"\xFF" * 16 else 2 if out == bytes(16) else 0)
+            return
+        ra, rb = mem
+        ea = ((uc.reg_read(P.UC_PPC_REG_0 + ra) if ra else 0) + uc.reg_read(P.UC_PPC_REG_0 + rb)) & 0xFFFFFFFF
+        lo, k = ea & ~15, ea & 15
+        if name == "lvx" or name == "lvewx":        # lvewx: hardware loads the whole aligned vector
+            val = self.read(lo, 16)
+        elif name == "lvlx":
+            val = self.read(ea, 16 - k) + bytes(k)
+        elif name == "lvrx":
+            val = bytes(16 - k) + (self.read(lo, k) if k else b"")
+        elif name == "stvx":
+            return self._vstore(lo, vr[d])
+        elif name == "stvewx":
+            return self._vstore(ea & ~3, vr[d][k & 12:(k & 12) + 4])
+        elif name == "stvlx":
+            return self._vstore(ea, vr[d][:16 - k])
+        else:                                       # stvrx
+            return self._vstore(lo, vr[d][16 - k:]) if k else None
+        vr[d] = val
+        if d == 1:
+            self.v1_own = True
 
     def _on_block(self, uc, address, size, ud):
         a = address & 0xFFFFFFFF
@@ -1240,6 +1945,8 @@ class Machine:
         for lo, hi in self.local:
             if lo <= a < hi:
                 self.last = (a, size)
+                if self.trace is not None:
+                    self.marks.append((a, size, len(self.trace)))
                 if self.cov is not None:
                     self.cov.add((a, size))
                 self.icount += size >> 2
@@ -1333,8 +2040,11 @@ class Machine:
             if STACK_LO <= v < STACK_HI:
                 # pointer into the stack (own frame, or the caller's home/argument area):
                 # compare the object, not its address
+                # a callee that provably never reads through this pointer (a pure out-parameter)
+                # cannot observe what the frame slot held before the call: nothing to compare
+                blind = image_fn and not self.w.analysis.reads_through(a, reg)
                 frame[reg] = tuple(self.stack_buf[x - STACK_LO]
-                                   if x in self.stack_touched and not self._save_slot(x) else None
+                                   if x in self.stack_touched and not blind and not self._save_slot(x) else None
                                    for x in range(v, min(v + STACK_ARG_WINDOW, STACK_HI)))
         sargs = {}
         if args is None or 10 in args:
@@ -1351,8 +2061,9 @@ class Machine:
                     sargs[j] = tuple(self.stack_buf[x - STACK_LO] if x in own else None
                                      for x in range(lo, lo + 8))
         self.stack_since = set()
-        self.events.append((a, vals, args, self.delta(), frame, sargs))
-        if len(self.events) > 400:
+        vargs = self.w.analysis.vec_live_in(a) if image_fn else None
+        self.events.append((a, vals, args, self.delta(), frame, sargs, tuple(self.vr[1:14]), vargs))
+        if len(self.events) > self.max_events:
             self.outcome = ("limit", "calls")
             uc.emu_stop()
             return
@@ -1378,6 +2089,11 @@ class Machine:
                 self.stack_touched.add(x)
             if self.trace is not None:
                 self.trace.append(("ret", (k, a, reg), ov, 4))
+        # vector registers: the volatile ones do not survive a call; v1 holds a seeded "result"
+        for reg in VEC_VOLATILE:
+            self.vr[reg] = vec_poison(reg, k + 1)
+        self.vr[1] = vec_value(random.Random((self.seed << 22) ^ (k << 42) ^ a))
+        self.v1_own = False
         defs = self.w.analysis.defs_of(a) if image_fn else VOLATILE
         r = random.Random((self.seed << 20) ^ (k << 40) ^ a)
         for reg in VOLATILE & defs:
@@ -1385,6 +2101,10 @@ class Machine:
                 rv = self.ret_ov.get((k, a))
                 if rv is None:
                     rv = int_value(r, self.consts)
+                if image_fn and self.w.return_wide(a):
+                    # a caller reads the callee's r3 in full: seed the upper half as well
+                    rv = (rv & 0xFFFFFFFF) | (int_value(random.Random((self.seed << 21) ^ (k << 41) ^ a), self.consts)
+                                              & 0xFFFFFFFF) << 32
                 self._set(3, rv)
                 if self.trace is not None:
                     self.trace.append(("ret", (k, a), rv & 0xFFFFFFFF, 4))
@@ -1400,6 +2120,8 @@ class Machine:
         self.seed, self.consts, self.local, self.cov = seed, consts, local, coverage
         self.events, self.outcome, self.fault, self.icount, self.tb = [], None, None, 0, 0x1000
         self.entry, self.last = entry, None
+        self.vr = list(state.get("vregs") or default_vregs())
+        self.v1_own = False          # v1 last written by the function itself (a vector result)
         # reset memory
         for pg, (buf, data) in self.pages.items():
             uc.mem_unmap(pg, PAGE)
@@ -1431,9 +2153,11 @@ class Machine:
                     reg2[0][reg2[1]] = byte
                     self.ov_bytes[a + i] = byte
         self.trace = [] if track else None
+        self.marks = []              # (block address, size, len(trace) on entry) while tracking
         if track:
             self._read_hook = uc.hook_add(UC_HOOK_MEM_READ, self._on_read)
             self.trace += [("reg", r, state["regs"][r], 4) for r in GPR_ARGS + (13,)]
+            self.trace += [("regh", r, state["regs"][r] >> 32, 4) for r in state.get("wide", ())]
         ctypes.memmove(self.stack_buf, state["stack"], STACK_HI - STACK_LO)
         uc.reg_write(P.UC_PPC_REG_MSR, MSR)
         for reg, v in state["regs"].items():
@@ -1460,6 +2184,7 @@ class Machine:
                 self.outcome = ("limit", pc)
         res = {
             "trace": self.trace,
+            "marks": self.marks,
             "fault_addr": self.fault[1] if self.fault and isinstance(self.fault[1], int) else None,
             "outcome": self.outcome,
             "events": self.events,
@@ -1467,6 +2192,8 @@ class Machine:
             "r3": uc.reg_read(P.UC_PPC_REG_3),
             "f1": uc.reg_read(P.UC_PPC_REG_FPR1),
             "delta": self.delta(),
+            "v1": self.vr[1] if self.v1_own else None,
+            "vnonvol": tuple(self.vr[i] for i in VEC_NONVOL),
             "nonvol": tuple(uc.reg_read(P.UC_PPC_REG_0 + i) & 0xFFFFFFFF for i in (1, 2, 13) + NONVOL_GPR)
             + tuple(uc.reg_read(P.UC_PPC_REG_FPR0 + i) for i in NONVOL_FPR),
         }
@@ -1478,7 +2205,43 @@ class Machine:
 # ---------------------------------------------------------------------------
 # Trials and comparison
 
-def make_state(seed, live, consts):
+def vec_value(r):
+    """A seeded vector argument: four single-precision floats, mostly ordinary numbers."""
+    def one():
+        k = r.random()
+        if k < 0.12:
+            return r.choice((0.0, -0.0, 1.0, -1.0, 0.5, 2.0))
+        if k < 0.9:
+            return _f32(r.uniform(-100.0, 100.0))
+        return r.choice((math.inf, -math.inf, math.nan, 1e30, -1e30, 1e-30))
+    return _pf(one() for _ in range(4))
+
+
+def default_vregs(r=None):
+    """Initial v0-v127: seeded v1-v13 (arguments), canaries in the callee-saved registers,
+    poison elsewhere."""
+    vr = [vec_poison(i, 0) for i in range(128)]
+    for i in VEC_NONVOL:
+        vr[i] = bytes((0xC0, 0xDE, 0x76, i)) * 4
+    if r is not None:
+        for i in VEC_ARGS:
+            vr[i] = vec_value(r)
+    return vr
+
+
+def set_reg(state, kind, reg, v):
+    """Set an argument register of a trial state (kind "reg": the low word, or the whole register
+    when it is not a 64-bit argument; "regh": the upper word)."""
+    regs = state["regs"]
+    if kind == "regh":
+        regs[reg] = (v & 0xFFFFFFFF) << 32 | (regs[reg] & 0xFFFFFFFF)
+    elif reg in state.get("wide", ()):
+        regs[reg] = (regs[reg] >> 32) << 32 | (v & 0xFFFFFFFF)
+    else:
+        regs[reg] = v
+
+
+def make_state(seed, live, consts, wide=()):
     r = random.Random(seed * 7919 + 17)
     regs = {}
     for reg in range(32):
@@ -1499,12 +2262,19 @@ def make_state(seed, live, consts):
     for reg in FPR_ARGS:
         if live is None or reg in live:
             regs[reg] = float_bits(r)
+    # 64-bit arguments (long long, small structs in a register): the upper word is a second
+    # 32-bit value of the same kinds (separate generator: the other draws stay as they were)
+    rw = random.Random(seed * 104729 + 71)
+    for reg in sorted(wide):
+        hi = int_value(rw, consts, argi=reg - 3) & 0xFFFFFFFF
+        regs[reg] = hi << 32 | (regs[reg] & 0xFFFFFFFF)
     fill = struct.pack(">I", 0xCDCD0000 | (seed & 0xFFFF)) * ((STACK_TOP - STACK_LO) // 4)
     rr = random.Random(seed * 31 + 5)
     above = page_words(seed, 0x7F0F0000, consts) * ((STACK_HI - STACK_TOP) // PAGE)
     above = bytearray(above)
     # linkage area / home slots stay pattern-filled; stack-passed args follow at +0x50
-    return {"regs": regs, "stack": fill + bytes(above)}, rr
+    return {"regs": regs, "stack": fill + bytes(above), "wide": tuple(sorted(wide)),
+            "vregs": default_vregs(random.Random(seed * 15485863 + 29))}, rr
 
 
 def ret_regs(kind):
@@ -1545,14 +2315,15 @@ def compare(world, A, B, rkind, nonvol=True):
     ea, eb = A["events"], B["events"]
     allregs = GPR_ARGS + FPR_ARGS
     for i in range(min(len(ea), len(eb))):
-        ta, va, args, da, fa, sa = ea[i]
-        tb, vb, _, db, fb, sb = eb[i]
+        ta, va, args, da, fa, sa, wa, wargs = ea[i]
+        tb, vb, _, db, fb, sb, wb, _ = eb[i]
         if ta != tb:
             return f"call #{i + 1}: original calls {world.label(ta)}, candidate calls {world.label(tb)}"
         # stack arguments: only slots the original wrote (an unset slot is not an argument it
         # passes), and only those the callee reads when its code shows which
         slots = world.analysis.stack_arg_slots(ta) if ta in world.func_size else None
         variadic = ta in world.analysis.varargs
+        wide = world.analysis.wide_in(ta) if ta in world.func_size else ()
         # a variadic callee's argument count is not known statically: compare only what both pass
         diffj = [k for k in sa if sa[k] != sb.get(k) and (slots is None or k in slots)
                  and not (variadic and k not in sb)]
@@ -1563,7 +2334,7 @@ def compare(world, A, B, rkind, nonvol=True):
                     f"{fmt(sa.get(j))}, candidate {fmt(sb.get(j))}")
         for j, reg in enumerate(allregs):
             x, y = va[j], vb[j]
-            if reg < 32:
+            if reg < 32 and reg not in wide:      # the callee reads the low word only
                 x, y = x & 0xFFFFFFFF, y & 0xFFFFFFFF
             if reg in fa and reg in fb:
                 # an object the original never wrote is a pure out-parameter for it: what the
@@ -1586,6 +2357,12 @@ def compare(world, A, B, rkind, nonvol=True):
             elif not is_poison(reg, va[j]) and not is_poison(reg, vb[j]):
                 return (f"call #{i + 1} to {world.label(ta)} (indirect/unknown callee): argument {regname(reg)} "
                         f"original {x:#x}, candidate {y:#x}")
+        for j, reg in enumerate(VEC_ARGS):
+            if wa[j] == wb[j] or is_vec_poison(wa[j]):
+                continue
+            if (wargs is not None and reg in wargs) or (wargs is None and not is_vec_poison(wb[j])):
+                return (f"call #{i + 1} to {world.label(ta)}: vector argument v{reg} original {wa[j].hex()}, "
+                        f"candidate {wb[j].hex()}")
         if da != db:
             return f"call #{i + 1} to {world.label(ta)}: memory before the call differs: " + delta_diff(world, da, db)
     if len(ea) != len(eb):
@@ -1613,6 +2390,12 @@ def compare(world, A, B, rkind, nonvol=True):
                 fa = struct.unpack('>d', struct.pack('>Q', A['f1']))[0]
                 fb = struct.unpack('>d', struct.pack('>Q', B['f1']))[0]
                 return f"return value f1: original {fa!r} ({A['f1']:#x}), candidate {fb!r} ({B['f1']:#x})"
+        if A.get("v1") is not None and A["v1"] != B.get("v1"):
+            return (f"return value v1: original {A['v1'].hex()}, candidate "
+                    f"{B['v1'].hex() if B.get('v1') else 'not written'}")
+        if nonvol and A.get("vnonvol") != B.get("vnonvol"):
+            bad = [f"v{r}" for r, x, y in zip(VEC_NONVOL, A["vnonvol"], B["vnonvol"]) if x != y]
+            return "callee-saved vector registers not preserved by the candidate: " + ", ".join(bad)
         if nonvol and A["nonvol"] != B["nonvol"]:
             names = ["r1", "r2", "r13"] + [f"r{i}" for i in NONVOL_GPR] + [f"f{i}" for i in NONVOL_FPR]
             bad = [names[i] for i in range(len(names)) if A["nonvol"][i] != B["nonvol"][i]]
@@ -1664,6 +2447,16 @@ def code_consts(func: Func):
             prev[(w >> 21) & 31] = (w & 0xFFFF) << 16
         elif op == 24 and ((w >> 21) & 31) in prev:
             out.add(prev[(w >> 21) & 31] | (w & 0xFFFF))
+    # `x == C` as cntlzw(x - C): `addis rX,rY,hi` + `addi rX,rX,lo` (a 32-bit C, e.g. a name hash)
+    # or one `addi rX,rY,-C` directly before a `cntlzw` of rX
+    words = [ins.word for _, ins in func.code_words()]
+    for i in range(len(words) - 1):
+        w, n = words[i], words[i + 1]
+        rd, ra = (w >> 21) & 31, (w >> 16) & 31
+        if w >> 26 == 15 and ra and n >> 26 == 14 and (n >> 21) & 31 == rd and (n >> 16) & 31 == rd:
+            out.add(-((sext(w & 0xFFFF, 16) << 16) + sext(n & 0xFFFF, 16)) & 0xFFFFFFFF)
+        elif w >> 26 == 14 and ra > 1 and n >> 26 == 31 and (n >> 1) & 0x3FF == 26 and (n >> 21) & 31 == rd:
+            out.add(-sext(w & 0xFFFF, 16) & 0xFFFFFFFF)
     # switch case values: a jump table of n entries indexed by (x - bias) is reached by x in
     # bias .. bias+n-1 (the bias is the `addi rX, rY, -bias` shortly before the bctr)
     for i, tgts in func.tables.items():
@@ -1695,11 +2488,14 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
     if fn is None:
         return Result(res, verdict="UNCHECKED", reason="candidate function not defined in object")
     c_addr, c_size, c_sec = fn
-    cfunc = Func(bytes(linked.mem[c_addr - linked.base: c_addr - linked.base + c_size]), c_addr)
-    if func.has_vector():
-        return Result(res, verdict="UNCHECKED", reason="vmx: original uses VMX/VMX128 instructions")
-    if cfunc.has_vector():
-        return Result(res, verdict="UNCHECKED", reason="vmx: candidate uses VMX/VMX128 instructions")
+    cfunc = Func(bytes(linked.mem[c_addr - linked.base: c_addr - linked.base + c_size]), c_addr, world.text_range)
+    for who, f in (("original", func), ("candidate", cfunc)):
+        bad = f.unsupported_vector()
+        if bad is not None:
+            return Result(res, verdict="UNCHECKED",
+                          reason=f"vmx: {who} uses a VMX/VMX128 instruction the checker does not interpret ({bad:08x})")
+    if func.has_vector() or cfunc.has_vector():
+        res["vmx"] = True
     for _, ins in func.code_words():
         if ins.kind == "bl" and any(lo <= ins.target < hi for lo, hi in world.vmx_helpers):
             return Result(res, verdict="UNCHECKED", reason="vmx: original saves vector registers")
@@ -1735,15 +2531,27 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
             return_kind = "void"     # never writes r3 and never calls: nothing to return
         else:
             return_kind = "int"
+    if return_kind == "int" and world.return_wide(target_addr):
+        return_kind = "int64"        # a caller reads the upper word of r3
     res["return"] = return_kind
     live = world.analysis.live_in(target_addr)
     res["args"] = sorted(regname(r) for r in live) if live is not None else "unknown"
+    wide = world.analysis.wide_in(target_addr)
+    if live is not None:
+        wide &= live
+    if wide:
+        res["args64"] = sorted(regname(r) for r in wide)
     consts = code_consts(func)
     special = {}
     for f in (func, cfunc):
         for a, ins in f.code_words():
-            if ins.kind in ("mftb", "dcbz"):
+            if ins.kind in ("mftb", "dcbz") or (ins.kind == "vec" and ins.vec):
                 special[a] = ins.kind
+    for lo, hi, _ in linked.text_ranges:        # vector code of the candidate's local helpers
+        for a in range(lo, hi, 4):
+            w = struct.unpack(">I", bytes(linked.mem[a - linked.base: a - linked.base + 4]))[0]
+            if a not in special and decode(w, a).vec:
+                special[a] = "vec"
     machine.set_special(special)
     machine.load_candidate(linked)
     o_local = [(target_addr, target_addr + size)]
@@ -1754,12 +2562,18 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
     t0 = time.time()
     first_diff = None
     last_new = 0
-    blocks = func.block_addrs()
+    # statically unreachable blocks are not coverage targets (not applied to SEH functions,
+    # whose __except blocks are entered by the unwinder rather than by a branch)
+    dead = set() if world.label(target_addr - 8).startswith("except_data") else set(func.dead_blocks())
+    blocks = [b for b in func.block_addrs() if b not in dead]
+    if dead:
+        res["dead_blocks"] = [f"0x{b:08X}" for b in sorted(dead)]
     covered = set()
     corpus = []          # (run seed, state, trace) of trials that reached new blocks
     rand_end = max(40, trials * 2 // 5)
     boundary = None      # (register, constant) pairs for the boundary phase
     pair_plans = {}      # corpus index -> remaining pointer-pair mutations of that trial
+    front = {"done": set(), "plans": [], "stamp": None}   # frontier mutations (frontier_mutation)
     for t in range(trials):
         s = seed * 1_000_003 + t
         if t == rand_end and corpus:
@@ -1771,28 +2585,45 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
             br.shuffle(boundary)
             boundary = boundary[: trials // 3]
         if t < rand_end or not corpus:
-            state, _ = make_state(s, live, consts)
+            state, _ = make_state(s, live, consts, wide)
         elif boundary and t - rand_end < len(boundary):
             reg, c = boundary[t - rand_end]
-            ps, pstate, _ = corpus[(t - rand_end) % len(corpus)]
-            state = dict(pstate, regs={**pstate["regs"], reg: c})
+            ps, pstate = corpus[(t - rand_end) % len(corpus)][:2]
+            state = dict(pstate, regs=dict(pstate["regs"]))
+            set_reg(state, "reg", reg, c)
+            s = ps
+        elif (fm := frontier_mutation(func, cov, corpus, front, dead) if (t - rand_end) % 4 in (1, 2) else None) is not None:
+            # frontier trial (two of four trials of the guided phase while plans remain): a value
+            # read just before a conditional branch whose other side has not been reached is set to
+            # what the branch compares against (see frontier_plans)
+            ci, kind, key, size, v = fm
+            ps, pstate = corpus[ci][:2]
+            state = dict(pstate, regs=dict(pstate["regs"]), mem_ov=dict(pstate.get("mem_ov") or {}),
+                         ret_ov=dict(pstate.get("ret_ov") or {}))
+            if kind in ("reg", "regh"):
+                set_reg(state, kind, key, v)
+            elif kind == "mem":
+                state["mem_ov"][key] = v.to_bytes(size, "big")
+            else:
+                state["ret_ov"][key] = v
             s = ps
         elif (pm := pair_mutation(corpus, pair_plans, live) if (t - rand_end) % 4 == 3 else None) is not None:
             # pointer-pair trial (every fourth trial of the guided phase while plans remain): one
             # pointer the function read is set to a neighbouring pointer plus 4*k, so a begin/end
             # loop runs k steps and leaves through its own exit instead of walking off the heap
-            ps, pstate, (kind, key, v) = pm
+            ps, pstate, sets = pm
             state = dict(pstate, regs=dict(pstate["regs"]), mem_ov=dict(pstate.get("mem_ov") or {}))
-            if kind == "reg":
-                state["regs"][key] = v
-            else:
-                state["mem_ov"][key] = struct.pack(">I", v)
+            for kind, key, v in ([sets] if isinstance(sets, tuple) else sets):
+                if kind == "reg":
+                    set_reg(state, kind, key, v)
+                else:
+                    state["mem_ov"][key] = struct.pack(">I", v)
             s = ps
         else:
             # coverage-guided phase: take a trial that reached new blocks and replace one value it
             # read (an argument, a loaded byte/halfword/word or a call's return value)
             mr = random.Random(s ^ 0x5EED)
-            ps, pstate, ptrace = corpus[min(len(corpus) - 1, int(len(corpus) * mr.random() ** 0.5))]
+            ps, pstate, ptrace = corpus[min(len(corpus) - 1, int(len(corpus) * mr.random() ** 0.5))][:3]
             state = dict(pstate, regs=dict(pstate["regs"]), mem_ov=dict(pstate.get("mem_ov") or {}),
                          ret_ov=dict(pstate.get("ret_ov") or {}))
             for _ in range(1 + (mr.random() < 0.3)):
@@ -1801,8 +2632,8 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
                 v = (old + mr.choice((-1, 1))) if x < 0.2 else 0 if x < 0.3 else 1 if x < 0.4 else \
                     (mr.choice(consts) if consts and x < 0.7 else int_value(mr, consts))
                 v &= (1 << (8 * size)) - 1
-                if kind == "reg":
-                    state["regs"][key] = v
+                if kind in ("reg", "regh"):
+                    set_reg(state, kind, key, v)
                 elif kind == "mem":
                     state["mem_ov"][key] = v.to_bytes(size, "big")
                 else:
@@ -1827,7 +2658,7 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
             if len(corpus) < 200:
                 T = machine.run(target_addr, o_local, state, s, consts, 200_000, None, track=True)
                 if T["trace"]:
-                    corpus.append((s, state, T["trace"]))
+                    corpus.append((s, state, T["trace"], T["marks"]))
         diff = compare(world, A, B, return_kind)
         if diff:
             first_diff = (s, state, diff, A, B)
@@ -1869,7 +2700,106 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
     return Result(res, verdict="EQUIVALENT", reason="")
 
 
+FRONT_WINDOW = 6     # values read before the branch's block that are also tried
+FRONT_PARENTS = 3    # corpus trials used per frontier branch
+
+
+def branch_compare(func: Func, k):
+    """Constants worth trying for the values block k reads, as (flag constants, branch
+    constants), each with its neighbours. Flag constants: C of an `x == C` test computed as
+    cntlzw(x - C), whose result may be branched on much later. Branch constants, for the
+    conditional branch ending the block: the immediate of the compare before it, or the constant
+    a register operand was loaded with in the block (`li`, `lis` + `ori`/`addi`)."""
+    s, e = func.blocks[k]
+    known, out, sub = {}, [], []
+    for i in range(s, e - 1):
+        w = func.insns[i].word
+        op, rd, ra, imm = w >> 26, (w >> 21) & 31, (w >> 16) & 31, w & 0xFFFF
+        if op in (10, 11):
+            out = [imm if op == 10 else sext(imm, 16)]
+        elif op == 31 and (w >> 1) & 0x3FF in (0, 32):
+            out = [known[r] for r in (ra, (w >> 11) & 31) if r in known]
+        elif op == 15 and ra and i + 1 < e and func.insns[i + 1].word >> 16 == (14 << 10) | (rd << 5) | rd:
+            # x - C built by addis + addi (tested with cntlzw): C itself
+            sub.append(-((sext(imm, 16) << 16) + sext(func.insns[i + 1].word & 0xFFFF, 16)) & 0xFFFFFFFF)
+        val = None
+        if op in (14, 15) and (ra == 0 or ra in known):
+            val = (known.get(ra, 0) + (sext(imm, 16) << (16 if op == 15 else 0))) & 0xFFFFFFFF
+        elif op == 24 and rd in known:
+            val, rd = known[rd] | imm, ra
+        for r in func.insns[i].writes:
+            known.pop(r, None)
+        if val is not None:
+            known[rd] = val
+    return [v + d for v in sub for d in (0, 1, -1)], [v + d for v in out for d in (0, 1, -1)]
+
+
+def frontier_plans(func: Func, cov, corpus, done, dead=()):
+    """Mutations aimed at blocks no trial has reached. A frontier is a reached block ending in a
+    conditional branch with an unreached successor (or, while any block is unreached, a block
+    computing an `x == C` flag, for which only C is tried). For each corpus trial that ran the branch
+    (newest first), every value it read in that block or shortly before (an argument, a loaded
+    byte/halfword/word, a call's return value) is set in turn to the compare's constant, to
+    zero/non-zero and to the other values read there (so `a == b` can hold). Returns
+    [(priority, corpus index, kind, key, size, value)]; each mutation is listed once."""
+    hit = lambda b: any(a <= b < a + sz for a, sz in cov)
+    addr = func.block_addrs()
+    reached = [hit(a) and a not in dead for a in addr]
+    plans = []
+    if all(reached[k] or addr[k] in dead for k in range(len(addr))):
+        return plans
+    for k, nxt in enumerate(func.succ()):
+        if not reached[k]:
+            continue
+        flag, consts = branch_compare(func, k)
+        frontier = len(nxt) >= 2 and not all(reached[j] or addr[j] in dead for j in nxt)
+        if not frontier and not flag:
+            continue             # (a flag block is tried while any block is unreached)
+        consts = flag + consts if frontier else flag
+        br = func.base + 4 * (func.blocks[k][1] - 1)
+        used = 0
+        for ci in range(len(corpus) - 1, -1, -1):
+            if used >= FRONT_PARENTS:
+                break
+            trace, marks = corpus[ci][2], corpus[ci][3]
+            at = [i for i, (a, sz, _) in enumerate(marks) if a <= br < a + sz]
+            if not at or (br, ci) in done:
+                continue
+            done.add((br, ci))
+            used += 1
+            i = at[-1]
+            end = marks[i + 1][2] if i + 1 < len(marks) else len(trace)
+            seen, window = set(), []
+            for ent in reversed(trace[max(0, marks[i][2] - FRONT_WINDOW):end]):
+                if (ent[0], ent[1]) not in seen and not (ent[0] == "reg" and ent[1] == 13):
+                    seen.add((ent[0], ent[1]))
+                    window.append(ent)
+            for rank, (kind, key, old, size) in enumerate(window):
+                mask = (1 << (8 * size)) - 1
+                old &= mask
+                vals = [c & mask for c in consts]
+                if frontier and not (size == 4 and HEAP_LO <= old < HEAP_HI):   # a pointer: only the constants
+                    vals += [0 if old else 1] + [o[2] & mask for o in window if o[3] == size][:4]
+                    vals += [(old + 1) & mask, (old - 1) & mask]
+                for n, v in enumerate(vals):
+                    if v != old and (ci, kind, key, v) not in done:
+                        done.add((ci, kind, key, v))
+                        plans.append((n + rank, ci, kind, key, size, v))
+    return plans
+
+
+def frontier_mutation(func, cov, corpus, front, dead=()):
+    """Next frontier mutation, or None. Plans are rebuilt when coverage or the corpus grew."""
+    stamp = (len(cov), len(corpus))
+    if front["stamp"] != stamp:
+        front["stamp"] = stamp
+        front["plans"] = sorted(front["plans"] + frontier_plans(func, cov, corpus, front["done"], dead),
+                                key=lambda p: p[0])     # stable: most promising first
+    return front["plans"].pop(0)[1:] if front["plans"] else None
+
+
 PAIR_STEPS = (1, 2, 3, 4, 6, 8, 5, 7)   # element counts tried for a begin/end pointer pair
+PAIR_FRESH_STEPS = (1, 2, 3)             # element counts tried with a fresh begin pointer
 PAIR_NEAR = 8                           # two loaded words this close are taken as one pair
 
 
@@ -1899,12 +2829,33 @@ def pointer_pairs(trace, live=None):
             if (sold + 4 * k) & 0xFFFFFFFF != dold]
 
 
+def fresh_pairs(trace):
+    """Two-word mutations [(kind, key, value), (kind, key, value)] for two neighbouring loaded
+    words of which the first is no usable pointer (a random word, or null: the empty
+    container): begin becomes a fresh heap buffer and end becomes begin + 4*k, so a loop over a
+    small positive element count runs at all."""
+    seen, ents = set(), []
+    for kind, key, old, size in trace:
+        if size == 4 and kind == "mem" and key not in seen:
+            seen.add(key)
+            ents.append((key, old & 0xFFFFFFFF))
+    good = lambda v: HEAP_LO <= v < HEAP_HI - 0x1000 and not v & 3
+    near = [(lo, hi) for lo, lold in ents if not good(lold) for hi, _ in ents if 0 < hi - lo <= PAIR_NEAR]
+    out = []
+    for k in PAIR_FRESH_STEPS:
+        for lo, hi in near:
+            base = RANDPTR_LO + (((lo * 2654435761) >> 4) % ((HEAP_HI - RANDPTR_LO - 0x40000) >> 4) << 4)
+            out.append([("mem", lo, base), ("mem", hi, base + 4 * k)])
+    return out
+
+
 def pair_mutation(corpus, plans, live=None):
-    """Next pointer-pair mutation, newest corpus trial first: (seed, state, (kind, key, value)),
+    """Next pointer-pair mutation, newest corpus trial first: (seed, state, (kind, key, value)
+    or a fresh_pairs() list),
     or None when every plan is used up."""
     for ci in range(len(corpus) - 1, -1, -1):
         if ci not in plans:
-            plans[ci] = pointer_pairs(corpus[ci][2], live)
+            plans[ci] = pointer_pairs(corpus[ci][2], live) + fresh_pairs(corpus[ci][2])
         if plans[ci]:
             return corpus[ci][0], corpus[ci][1], plans[ci].pop(0)
     return None
@@ -1938,14 +2889,24 @@ def run_fixing(machine, world, entry, local, state, s, consts, cov, max_fix=24):
                     continue     # already replaced: the value was stored there by the function
                 src = ent
                 break
+        ptr = RANDPTR_LO + ((((s * 2654435761) ^ (it * 40503) ^ F) % ((HEAP_HI - RANDPTR_LO - 0x40000) >> 4)) << 4)
+        if src is None:
+            # the address is no single bad pointer plus a displacement but a sum (base + index *
+            # size + table offset ...): make the most recent large non-pointer word that was
+            # loaded or returned a small number and try again, one word per round
+            for ent in reversed(T["trace"]):
+                v = ent[2] & 0xFFFFFFFF
+                if ent[3] == 4 and ent[0] in ("mem", "ret") and ent[1] not in done and v > 0xFFFF and \
+                        not valid_ptr(world, v):
+                    src, ptr = ent, (s + it) % 3
+                    break
         if src is None:
             break
-        ptr = RANDPTR_LO + ((((s * 2654435761) ^ (it * 40503) ^ F) % ((HEAP_HI - RANDPTR_LO - 0x40000) >> 4)) << 4)
         state = dict(state, regs=dict(state["regs"]), mem_ov=dict(state.get("mem_ov") or {}),
                      ret_ov=dict(state.get("ret_ov") or {}))
         kind, key = src[0], src[1]
-        if kind == "reg":
-            state["regs"][key] = ptr
+        if kind in ("reg", "regh"):
+            set_reg(state, kind, key, ptr)
         elif kind == "mem":
             state["mem_ov"][key] = struct.pack(">I", ptr)
         else:
@@ -1984,6 +2945,9 @@ def reduce_report(machine, world, oaddr, olocal, caddr, clocal, s, state, live, 
         if reg >= 32:
             args.append(f"{regname(reg)}={struct.unpack('>d', struct.pack('>Q', v))[0]!r}")
         else:
+            if reg in state.get("wide", ()):
+                args.append(f"{regname(reg)}={v:#018x}")
+                continue
             v &= 0xFFFFFFFF
             args.append(f"{regname(reg)}={describe_addr(world, v) if HEAP_LO <= v < HEAP_HI else hex(v)}")
     lines.append("inputs: " + (", ".join(args) or "(none)") + (f"  (simplified: {', '.join(simplified)})" if simplified else ""))
@@ -2088,6 +3052,8 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--min-coverage", type=float, default=0.9)
     ap.add_argument("--min-valid", type=int, default=30)
+    ap.add_argument("--max-calls", type=int, default=MAX_EVENTS,
+                    help="intercepted calls per run before a trial is discarded (default %(default)s)")
     ap.add_argument("--time", type=float, default=60.0, help="time budget per function in seconds (0: no limit, fully reproducible)")
     ap.add_argument("--json", type=Path, help="write the evidence records to this file")
     ap.add_argument("--quiet", action="store_true")
@@ -2096,6 +3062,7 @@ def main() -> int:
         print("UNCHECKED: unicorn is not installed (pip install unicorn)")
         return 2
     world = load_world()
+    get_machine(world).max_events = a.max_calls
     maps = []
     for m in a.mappings:
         name, _, target = m.partition("=")

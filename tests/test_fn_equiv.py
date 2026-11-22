@@ -262,8 +262,13 @@ class EquivTests(unittest.TestCase):
         cand2 = lambda at: prologue() + [addi(3, 3, -2), bl(at + 16, target)] + epilogue()
         self.assertEqual(self.check("orig_rec", cand2)["verdict"], "DIFFERENT")
 
-    def test_vector_code_unchecked(self):
+    def test_vector_code(self):
+        # vaddfp v1,v2,v3 is interpreted (see tests/test_fn_equiv_q5f.py for the vector model)
         r = self.check("orig_vec", [VADDFP, BLR])
+        self.assertEqual(r["verdict"], "EQUIVALENT", r)
+        self.assertTrue(r["vmx"])
+        vsplth = (4 << 26) | (1 << 21) | (2 << 11) | 588     # not interpreted
+        r = self.check("orig_vec", [vsplth, BLR])
         self.assertEqual(r["verdict"], "UNCHECKED")
         self.assertIn("vmx", r["reason"])
 

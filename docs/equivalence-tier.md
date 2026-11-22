@@ -589,3 +589,41 @@ evidence in `work/equiv/`, which is not tracked):
 With these, every non-VMX row of the table has C proven EQUIVALENT or byte-matched. Status on 2026-11-18:
 byte-matched rows 2 (`fn_886AFDF8`), 3, 4, 6 and 13; VMX rows 5, 8, 9, 14 remain unverifiable by
 this checker (see `docs/agents/near-misses/RT1.failed.md`).
+
+
+### 9.3 Checker versions fn_equiv/3 and fn_equiv/4 (2026-11-22, Q5 escalations)
+
+Changes to `tools/fn_equiv.py`, each with a synthetic test in `tests/test_fn_equiv_q5f.py`. Registered
+rows are re-validated with `TS4_MATCHING_DIR=$PWD/work/matching-b205 python3 tools/equiv_register.py --recheck`
+(re-runs every row with its source, flags and seed; writes nothing; exit 0 only when all pass).
+
+- **Unreachable blocks** (`Func.dead_blocks`): blocks no path from the entry reaches, such as the `blr` MSVC
+  leaves after a tail call `b callee`, do not count for coverage (evidence field `dead_blocks`). Not applied
+  to SEH parents, whose `__except` blocks are entered by the unwinder.
+- **Inline jump tables whose entries leave the function**: table words are recognised up to the entry count
+  of the guarding `cmplwi` when they point anywhere into the image's code; out-of-function entries are
+  tail calls for the liveness analysis. Before, such words were counted as an unreachable code block.
+- **64-bit registers**: `Analysis.wide_in` / `World.return_wide` find the argument registers whose upper
+  word the consumer reads (`long long`, structs of up to 8 bytes passed in a register); those are seeded
+  and compared in full (evidence field `args64`). fn_equiv/2 compared 32 bits only and accepted a
+  candidate that zeroed the upper half of a forwarded struct.
+- **VMX / VMX128**: the checker keeps v0-v127 and interprets the common vector instructions (`VEC_*`
+  tables, `vec_decode`, `vec_apply`; the decoder agrees with the powerpc crate on all 89,610 vector
+  words of the image for the instructions it accepts, about 98% of them). Compared: v1-v13 the callee
+  reads at each call, v1 at return when the function wrote it, callee-saved v14-v31 / v64-v127.
+  Estimates (`vrefp`, `vrsqrtefp`) are computed exactly and results are rounded through Python floats;
+  both runs use the same interpreter, so this affects only inputs where rounding decides a branch.
+  Still UNCHECKED: other vector instructions (`vpkd3d128`, `vupkd3d128`, `lvsl`, byte/halfword forms) and
+  functions calling `__savevmx` / `__restvmx`. Memory read by vector loads is not a mutation source.
+- **Pure out-parameters** (`Analysis.reads_through`): a frame object passed to a callee that provably never
+  reads through that pointer is not compared at the call (stale stack residue is unobservable).
+- **Input generation**: frontier-directed mutations (a value read just before a branch whose other side
+  is unreached is set to the constant the branch compares against); `fresh_pairs` (a begin/end pair with
+  a fresh begin pointer and a small positive count); a fault at an address that is a sum of loaded words
+  (base + index * size + offset) makes the most recent large loaded word small and retries.
+- **Call cap**: a run may make `MAX_EVENTS` = 4000 intercepted calls (was 400; `--max-calls`).
+
+`tools/fn_check.py` compares an SEH function the way the target splits it: the parent and each funclet
+(`.pdata` entries inside the candidate symbol) against consecutive target functions, plus the handler and
+scope table against the image (`check_seh`). Integration of such a unit needs the funclet symbol of the
+split object to be a label of the parent (objdiff infers the parent's size from the next non-label symbol).
