@@ -228,6 +228,50 @@
    "spec_flags": []
   },
   {
+   "function": "ts4_player_set_anim_pair_88669B98",
+   "address": "0x88669B98",
+   "size": 148,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 412,
+   "valid": 306,
+   "discarded": 106,
+   "blocks": 8,
+   "blocks_covered": 8,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_selected_flag_8866BAE0",
+   "address": "0x8866BAE0",
+   "size": 152,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 504,
+   "valid": 397,
+   "discarded": 107,
+   "blocks": 8,
+   "blocks_covered": 8,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_target_far_and_idle_8866C150",
    "address": "0x8866C150",
    "size": 88,
@@ -300,6 +344,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_e.c",
    "source_sha256": "4c4187380e7c3faf5b4ab49e056a03855b6ce404df6a73787eb6ab641019fd32",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_update_highlight_886A37D0",
+   "address": "0x886A37D0",
+   "size": 152,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 406,
+   "valid": 318,
+   "discarded": 88,
+   "blocks": 6,
+   "blocks_covered": 6,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
    "flags": [
     "/Oc"
    ],
@@ -854,6 +920,28 @@
    ]
   },
   {
+   "function": "ts4_tables_reset_8887C000",
+   "address": "0x8887C000",
+   "size": 152,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 403,
+   "valid": 378,
+   "discarded": 25,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_ramp_init_8887DA38",
    "address": "0x8887DA38",
    "size": 88,
@@ -890,6 +978,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_f.c",
    "source_sha256": "afa37317515d441d321ac5f7f76f41dbcc34e864f05396a19e7fdf4fed2ecbdd",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_emitter_describe_88880750",
+   "address": "0x88880750",
+   "size": 148,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 419,
+   "valid": 374,
+   "discarded": 45,
+   "blocks": 3,
+   "blocks_covered": 3,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
    "flags": [
     "/Oc"
    ],
@@ -1004,6 +1114,28 @@
    ]
   },
   {
+   "function": "ts4_post_prefixed_88888DA8",
+   "address": "0x88888DA8",
+   "size": 152,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 407,
+   "valid": 342,
+   "discarded": 65,
+   "blocks": 4,
+   "blocks_covered": 4,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_worker_start_8888A4E8",
    "address": "0x8888A4E8",
    "size": 128,
@@ -1018,6 +1150,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_e.c",
    "source_sha256": "4c4187380e7c3faf5b4ab49e056a03855b6ce404df6a73787eb6ab641019fd32",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_tracker_commit_888B1960",
+   "address": "0x888B1960",
+   "size": 148,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 405,
+   "valid": 270,
+   "discarded": 135,
+   "blocks": 4,
+   "blocks_covered": 4,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
    "flags": [
     "/Oc"
    ],
@@ -1084,6 +1238,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_d.c",
    "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_bits_test_888C1368",
+   "address": "0x888C1368",
+   "size": 152,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 405,
+   "valid": 379,
+   "discarded": 26,
+   "blocks": 3,
+   "blocks_covered": 3,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
    "flags": [
     "/Oc"
    ],
@@ -1238,6 +1414,28 @@
    ]
   },
   {
+   "function": "ts4_pad_send_stick_888C5C00",
+   "address": "0x888C5C00",
+   "size": 144,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 407,
+   "valid": 322,
+   "discarded": 85,
+   "blocks": 4,
+   "blocks_covered": 4,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_pad_zero_all_888C5D80",
    "address": "0x888C5D80",
    "size": 144,
@@ -1278,6 +1476,28 @@
    "spec_flags": []
   },
   {
+   "function": "ts4_svc_dtor_888CA910",
+   "address": "0x888CA910",
+   "size": 144,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 404,
+   "valid": 404,
+   "discarded": 0,
+   "blocks": 5,
+   "blocks_covered": 5,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_item_tint_888CAA98",
    "address": "0x888CAA98",
    "size": 104,
@@ -1292,6 +1512,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_d.c",
    "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_show_device_selector_888CB5F8",
+   "address": "0x888CB5F8",
+   "size": 144,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 404,
+   "valid": 324,
+   "discarded": 80,
+   "blocks": 6,
+   "blocks_covered": 6,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
    "flags": [
     "/Oc"
    ],
@@ -1516,6 +1758,28 @@
    ]
   },
   {
+   "function": "ts4_hash_reset_C750E1AC_888E7278",
+   "address": "0x888E7278",
+   "size": 144,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 408,
+   "valid": 345,
+   "discarded": 63,
+   "blocks": 3,
+   "blocks_covered": 3,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_restore_record_and_clear_prop_888E9840",
    "address": "0x888E9840",
    "size": 84,
@@ -1530,6 +1794,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_c.c",
    "source_sha256": "9a74a07ce460ddbdb1faee489ad38acb5187dcd1bfd6e66b34cc924eb5299678",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_apply_prop_record_888E9898",
+   "address": "0x888E9898",
+   "size": 152,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 409,
+   "valid": 213,
+   "discarded": 196,
+   "blocks": 8,
+   "blocks_covered": 8,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_h.c",
+   "source_sha256": "fb4cc5dd5e348cd6cfffba1f053f47c5579341242cefd2ff154be735ff8b8e45",
    "flags": [
     "/Oc"
    ],

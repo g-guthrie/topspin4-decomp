@@ -130,7 +130,7 @@ ts4_word ts4_hash_lookup_null_release_888E38A8();
 ts4_word ts4_hash_lookup_null_release_888E3908();
 ts4_word fn_888F14D8();
 ts4_word ts4_reset_obj_888F4E70();
-ts4_word fn_888F70A0();
+ts4_word ts4_rigs_restore_888F70A0();
 ts4_word ts4_if_get_u32_off5c_888FA388();
 ts4_word fn_888FBEB0();
 ts4_word fn_88901010();

@@ -9,7 +9,7 @@ typedef unsigned char u8;
 #define CX41_PTR(p, o) (*(char **)((char *)(p) + (o)))
 
 extern void ts4_destroy_owned_object(void *p);
-extern void fn_888F70A0(void *p);
+extern void ts4_rigs_restore_888F70A0(void *p);
 extern void ts4_reset_four_slots_888CEBA8(void *p);
 extern void ts4_if_get_u32_lbl_88D45B1C_888C0E18(void *a, u32 b);
 extern void ts4_school_play_power_up_888FBB40(u32 v);
@@ -42,7 +42,7 @@ void ts4_set_flag_e5_and_reset_888F8110(char *self, u8 flag)
 {
     CX41_U8(self, 0xe5) = flag;
     if (flag == 0) {
-        fn_888F70A0(self);
+        ts4_rigs_restore_888F70A0(self);
         ts4_reset_four_slots_888CEBA8(self);
     }
 }

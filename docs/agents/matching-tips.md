@@ -3166,3 +3166,18 @@ Use it on schedule-only misses after the hand trial. Extend the mutation set whe
   (`T **pe = &l->end; r = *pe - 1;`).
 - SEH: `__try { call } __except (filter-expression) {}`; MSVC emits the filter as a funclet right after the parent
   with its own `.pdata` entry. fn_check compares parent and funclet as separate ranges.
+- Jump table over a range of no-op cases: give each case its own body (one empty-inline call per case); a plain
+  range test compiles to compares.
+- A global the target reloads only after registry calls: write the reload explicitly after each call.
+- `fmuls fX,f5,f0` operand order in some targets has no source form found; route to equivalent.
+- LTCG keeping r3/r4/r5 live across a call, or constant call arguments in callee-saved registers: equivalent.
+- lvx128/stvx128 copies need `__vector4` variables from ts4_vector.h.
+- A zero-init between two calls is scheduled before the second call into a callee-saved register.
+- Self-relative begin/end helpers: write the if-form (`e = 0; if (off != -1) e = base + off;`), not a ternary.
+- Per-field float copies through separate `float *d` / `const float *s` keep interleaved lfs/stfs; a struct
+  assignment becomes a word loop.
+- `__fsqrts(__vmsum3fp(v,v).v[0])` ICEs MSVC (C1001); put the vmsum result in a temporary.
+- Member vector held in r31: `Q5Vec *v = &self->items;`.
+- No string.h under MSVC here: `#ifdef _MSC_VER extern void *memcpy(void*,const void*,unsigned int); #else
+  #include <string.h> #endif`. For the 64-bit host syntax check, type pointer fields as pointers and cast u32
+  keys through a `q5_uptr` typedef (unsigned int on MSVC, unsigned long on the host).

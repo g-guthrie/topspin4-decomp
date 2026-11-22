@@ -51596,6 +51596,14 @@ MATCHING_UNITS = (
         "object": "q5_gameplay_move_leave.obj",
         "symbols": {"ts4_move_state_leave_8865DAC0": 144},
     },
+    {
+        "source": "src/xbox360/q5_gameplay_small_h.c",
+        "object": "q5_gameplay_small_h.obj",
+        "symbols": {
+            "ts4_count_owned_slots_888DFA40": 144,
+            "ts4_rigs_restore_888F70A0": 152,
+        },
+    },
 )
 
 
