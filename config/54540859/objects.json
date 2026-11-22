@@ -14912,6 +14912,10 @@
       "src/xbox360/q5_gameplay_small_h.c": {
         "status": "Matching",
         "source": "xbox360/q5_gameplay_small_h.c"
+      },
+      "src/xbox360/q5a_gameplay_small_i.c": {
+        "status": "Matching",
+        "source": "xbox360/q5a_gameplay_small_i.c"
       }
     }
   }

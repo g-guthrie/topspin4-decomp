@@ -3181,3 +3181,13 @@ Use it on schedule-only misses after the hand trial. Extend the mutation set whe
 - No string.h under MSVC here: `#ifdef _MSC_VER extern void *memcpy(void*,const void*,unsigned int); #else
   #include <string.h> #endif`. For the 64-bit host syntax check, type pointer fields as pointers and cast u32
   keys through a `q5_uptr` typedef (unsigned int on MSVC, unsigned long on the host).
+
+### Q5 batch I rules (Opus A)
+- Local pointer arrays: store the elements first, then `p = names;`. Initialising `p` at declaration hoists the `addi` above the stores (888683F0).
+- Load a vtable into a typed temporary (`Vt *vt = s->vt; vt->fn(...)`) to fix r9/r10 swaps after the call (88656538).
+- vector<bool>-style bit clear: take the `{u32 *p; int off}` iterator by value and mutate it in place (`it.p += off/32; off %= 32; if (off<0){off+=32;--it.p;}`); a separate word pointer costs 10-13 register diffs (888C12C0).
+- Inlined constructors whose target stores 0x14.. before 0x0..: model the fields as member sub-structs with their own static init helpers; an 8-aligned u64 needs its own sub-struct, or a single sub-struct gets padded. Copy a late key store through a local or the earlier default store is eliminated (887EC8C0).
+- A `cmplwi n,0; beqlr` guard in front of a search loop appears only when the loop is an inline bool helper (888C5E10).
+- `if (n) {...} return 0;` produces a `beq` to a shared `li r3,0` tail; an early `return 0` is 4 bytes shorter.
+- Literal loads with no relocation in the split (e.g. 88885408 `"Locale\\"` at 0x880DF1F0) can never pass fn_check; go equivalent and fix the split later.
+- LTCG register preservation across calls and `clrrwi` patterns: go equivalent directly.

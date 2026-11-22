@@ -51604,6 +51604,15 @@ MATCHING_UNITS = (
             "ts4_rigs_restore_888F70A0": 152,
         },
     },
+    {
+        "source": "src/xbox360/q5a_gameplay_small_i.c",
+        "object": "q5a_gameplay_small_i.obj",
+        "symbols": {
+            "ts4_register_two_names_888683F0": 160,
+            "ts4_bits_reset_888C12C0": 164,
+            "ts4_curve_value_88656538": 164,
+        },
+    },
 )
 
 
