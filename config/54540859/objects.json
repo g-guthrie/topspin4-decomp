@@ -14752,6 +14752,22 @@
       "src/xbox360/q5_gameplay_hash_find.c": {
         "status": "Matching",
         "source": "xbox360/q5_gameplay_hash_find.c"
+      },
+      "src/xbox360/q5h1_render_sr_lookup.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h1_render_sr_lookup.c"
+      },
+      "src/xbox360/q5h1_pair_visit.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5h1_pair_visit.cpp"
+      },
+      "src/xbox360/q5h1_hash_find.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h1_hash_find.c"
+      },
+      "src/xbox360/q5f_world_set.c": {
+        "status": "Matching",
+        "source": "xbox360/q5f_world_set.c"
       }
     }
   }

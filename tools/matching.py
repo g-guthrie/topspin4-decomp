@@ -51384,6 +51384,29 @@ MATCHING_UNITS = (
         "object": "q5_gameplay_hash_find.obj",
         "symbols": {"ts4_hash_find_c7f47320_888E3848": 96},
     },
+    {
+        "source": "src/xbox360/q5h1_render_sr_lookup.c",
+        "object": "q5h1_render_sr_lookup.obj",
+        "symbols": {"ts4_sr_lookup_table_a_886F35B8": 44},
+    },
+    {
+        "source": "src/xbox360/q5h1_pair_visit.cpp",
+        "object": "q5h1_pair_visit.obj",
+        "symbols": {"ts4_pair_forward_both_halves_886C4C60": 84},
+    },
+    {
+        "source": "src/xbox360/q5h1_hash_find.c",
+        "object": "q5h1_hash_find.obj",
+        "symbols": {"ts4_hash_find_00deeef6_88848B50": 96},
+    },
+    {
+        "source": "src/xbox360/q5f_world_set.c",
+        "object": "q5f_world_set.obj",
+        "symbols": {
+            "ts4_world_set_release_by_key_8887B328": 88,
+            "ts4_world_set_acquire_by_key_8887B380": 88,
+        },
+    },
 )
 
 
