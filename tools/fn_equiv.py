@@ -94,7 +94,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CHECKER_VERSION = "fn_equiv/5"
+CHECKER_VERSION = "fn_equiv/6"
 DLL = ROOT / "orig" / "54540859" / "Swing_DLL.dll"
 
 
@@ -144,6 +144,7 @@ STACK_TOP = 0x7F0F0000            # r1 at entry; above it: caller frame (seeded)
 RET_MAGIC = 0x7FFF0000
 MSR = 0x8000000000002000          # SF (64-bit) | FP
 UNRESOLVED_BASE = 0xEEE00000
+OUT_WORDS_MAX = 8                 # words of an out-parameter object the call model can seed
 FAULT_NULL_PAGE = 0x10000         # fault addresses below this are null-pointer dereferences
 FAULT_MIN = 3                     # agreeing faulting trials needed to count a fault block as covered
 FAULT_EXTRA = 12                  # re-runs per stored input of a fault path seen fewer than FAULT_MIN times
@@ -191,6 +192,10 @@ F63A = {18: "AB", 20: "AB", 21: "AB", 22: "B", 23: "ABC", 24: "B", 25: "AC", 26:
 F63B = {12, 14, 15, 814, 815, 846, 40, 72, 136, 264}   # fD <- fB
 ALL_GPR = frozenset(range(32))
 HELPER_DEFS = frozenset((0, 11, 12) + tuple(range(14, 32)) + tuple(32 + i for i in range(14, 32)))
+
+
+OWN_STORES = {36: 4, 38: 1, 44: 2, 52: 4, 54: 8, 62: 8}       # stw stb sth stfs stfd std: bytes stored
+OWN_LOADS = {32: 4, 34: 1, 40: 2, 42: 2, 48: 4, 50: 8, 58: 8}   # lwz lbz lhz lha lfs lfd ld: bytes loaded
 
 
 class Insn:
@@ -837,6 +842,9 @@ class Analysis:
         self._busy_live, self._busy_defs = set(), set()
         self.wide, self._busy_wide = {}, set()
         self.vlive, self._busy_vlive = {}, set()
+        self.vdefs, self._busy_vdefs = {}, set()
+        self._retarg = {}
+        self._wthru = {}
         self._reads, self._busy_reads = {}, set()
 
     def func(self, addr):
@@ -977,7 +985,11 @@ class Analysis:
         to? False only when that is ruled out: on every path the pointer and its register copies
         are used for nothing but stores through them, comparisons, further copies, the return
         value, and calls whose callees satisfy the same. Anything else (a load, pointer
-        arithmetic, storing the pointer, an indirect call that may receive it) answers True."""
+        arithmetic other than `addi rD,ptr,C`, storing the pointer, an indirect call that may
+        receive it) answers True.
+        A load of bytes the function itself stored through the pointer on every path to it is
+        allowed (an out-parameter the callee accumulates into): `lvx vD,0,ptr` after
+        `stvx vS,0,ptr`, or a D-form load whose bytes earlier D-form stores cover."""
         key = (addr, reg)
         if key in self._reads:
             return self._reads[key]
@@ -986,55 +998,190 @@ class Analysis:
             return True
         self._busy_reads.add(key)
         succ = f.succ()
-        state = {0: frozenset((reg,))}
-        todo, result = [0], False
+        # per block: ({(register, offset)}: registers that may hold the pointer plus a constant,
+        # what was stored through it on every path: byte offsets of D-form stores and ("v", offset)
+        # for a vector stored at pointer + offset)
+        state = {0: (frozenset(((reg, 0),)), frozenset())}
+        todo, result, exits = [0], False, {}
         while todo and not result:
             k = todo.pop()
-            alias = set(state[k])
+            alias, written = {}, set(state[k][1])       # alias: register -> {offsets}
+            for r, o in state[k][0]:
+                alias.setdefault(r, set()).add(o)
             s, e = f.blocks[k]
+
+            def drop(regs):
+                for r in regs:
+                    alias.pop(r, None)
+
+            def at(r):          # the one offset register r holds, or None when it is not unique
+                return next(iter(alias[r])) if len(alias[r]) == 1 else None
+
             for i in range(s, e):
                 if not alias:
                     break
                 ins = f.insns[i]
                 w, kind = ins.word, ins.kind
+                if kind == "vec" and ins.vec and ins.vec[5] and ins.vec[5][0] == 0 and ins.vec[5][1] in alias \
+                        and i not in f.tables:
+                    o = at(ins.vec[5][1])
+                    if ins.vec[0] == "stvx":
+                        if o is not None:
+                            written.add(("v", o))
+                        continue
+                    if ins.vec[0] == "lvx" and o is not None and ("v", o) in written:
+                        continue
                 op, rd, ra, rb = w >> 26, (w >> 21) & 31, (w >> 16) & 31, (w >> 11) & 31
+                size = OWN_LOADS.get(op)
+                if size and ra in alias and at(ra) is not None and not (op == 58 and w & 3):
+                    d = at(ra) + sext(w & (0xFFFC if op == 58 else 0xFFFF), 16)
+                    if all(x in written for x in range(d, d + size)):
+                        drop(ins.writes)             # reads back what the function stored there
+                        continue
                 if kind == "bl" or (kind in ("b", "bc") and not f.inside(ins.target)):
                     if not self.is_helper(ins.target):
                         live = self.live_in(ins.target)
-                        for r in sorted(alias & GPR_ARG_SET):
+                        for r in sorted(GPR_ARG_SET & alias.keys()):
                             if (live is None or r in live) and self.reads_through(ins.target, r, depth + 1):
                                 result = True
-                    alias -= self.defs_of(ins.target)
+                    drop(self.defs_of(ins.target))
                     continue
                 if kind in ("bctrl", "bctr", "bcctr", "sc", "unknown", "vec") and (i not in f.tables):
-                    if alias & (GPR_ARG_SET if kind != "vec" else ins.reads) or kind in ("unknown", "sc"):
+                    if (GPR_ARG_SET if kind != "vec" else ins.reads) & alias.keys() or kind in ("unknown", "sc"):
                         result = True
-                    alias -= VOLATILE if kind != "vec" else set()
+                    drop(VOLATILE if kind != "vec" else ())
                     continue
-                used = ins.reads & alias
+                used = ins.reads & alias.keys()
                 if used:
                     xo = (w >> 1) & 0x3FF
                     if op == 31 and xo == 444 and rd == rb:                 # mr rA,rS
-                        alias.add(ra)
+                        alias[ra] = set(alias[rd])
+                        continue
+                    if op == 14 and ra in alias and len(alias[ra]) <= 4:    # addi rD,ptr,C: ptr + C
+                        alias[rd] = {o + sext(w & 0xFFFF, 16) for o in alias[ra]}
                         continue
                     if op in (10, 11) or (op == 31 and xo in (0, 32)):      # compare
                         continue
                     if op in (36, 38, 44, 52, 54, 62) and ra in alias and rd not in alias:
+                        if not (op == 62 and w & 3) and at(ra) is not None:
+                            d = at(ra) + sext(w & (0xFFFC if op == 62 else 0xFFFF), 16)
+                            written.update(range(d, d + OWN_STORES[op]))
                         continue                                            # store through the pointer
                     result = True
                     break
-                alias -= ins.writes
+                drop(ins.writes)
             if result:
                 break
-            out = frozenset(alias)
+            if f.insns[e - 1].kind in ("blr", "bclr", "bctr", "bcctr") or \
+                    (f.insns[e - 1].kind in ("b", "bc") and not f.inside(f.insns[e - 1].target)):
+                exits[k] = frozenset(written)
+            pairs = frozenset((r, o) for r, os_ in alias.items() for o in os_)
             for j in succ[k]:
-                new = state.get(j, frozenset()) | out
-                if new != state.get(j):
+                old = state.get(j)
+                new = (pairs, frozenset(written)) if old is None else (old[0] | pairs, old[1] & written)
+                if new != old:
                     state[j] = new
                     todo.append(j)
         self._busy_reads.discard(key)
         self._reads[key] = result
+        self._wthru[key] = frozenset() if result or not exits else frozenset.intersection(*exits.values())
         return result
+
+    def writes_through(self, addr, reg):
+        """What the function at addr stores through its pointer argument `reg` on every path to
+        every exit: byte offsets (D-form stores) and ("v", offset) for a 16-byte vector stored at
+        pointer + offset (stvx: at that address rounded down to 16). Empty when it may read
+        through the pointer or nothing is known. A callee returning a struct or a vector
+        through the pointer writes all of these, not just one word."""
+        self.reads_through(addr, reg)
+        return self._wthru.get((addr, reg), frozenset())
+
+    def returns_arg(self, addr):
+        """n (3-10) when the function at addr provably returns the value its argument register
+        rn had on entry, on every return path (`mr r31,r3 ... mr r3,r31; blr`: a callee handing
+        back its out-pointer); else None. Register copies only; a call kills the volatile
+        registers its callee may write, a tail call or an indirect jump answers None."""
+        if addr in self._retarg:
+            return self._retarg[addr]
+        self._retarg[addr] = None
+        f = None if self.is_helper(addr) else self.func(addr)
+        if f is None:
+            return None
+        succ = f.succ()
+        state = {0: frozenset((r, r) for r in range(3, 11))}      # (register, argument it holds)
+        todo, exits, ok = [0], set(), True
+        while todo and ok:
+            k = todo.pop()
+            held = dict(state[k])
+            s, e = f.blocks[k]
+            for i in range(s, e):
+                if i in f.data:
+                    continue
+                ins = f.insns[i]
+                w, kind = ins.word, ins.kind
+                if kind in ("blr", "bclr") or (kind in ("b", "bc") and not f.inside(ins.target)):
+                    if kind in ("b", "bc") and not self.is_helper(ins.target):
+                        ok = False          # a tail call
+                        break
+                    exits.add(held.get(3))
+                elif kind == "bl":
+                    # r14-r31 survive a call (the ABI the whole checker assumes)
+                    for r in VOLATILE & (HELPER_DEFS if self.is_helper(ins.target) else self.defs_of(ins.target)):
+                        held.pop(r, None)
+                elif kind in ("bctrl", "sc", "unknown"):
+                    for r in VOLATILE:
+                        held.pop(r, None)
+                elif kind in ("bctr", "bcctr") and i not in f.tables:
+                    ok = False
+                    break
+                elif w >> 26 == 31 and (w >> 1) & 0x3FF == 444 and (w >> 21) & 31 == (w >> 11) & 31:   # mr rA,rS
+                    src = held.get((w >> 21) & 31)
+                    held.pop((w >> 16) & 31, None)
+                    if src is not None:
+                        held[(w >> 16) & 31] = src
+                else:
+                    for r in ins.writes:
+                        held.pop(r, None)
+            out = frozenset(held.items())
+            for j in succ[k]:
+                new = out if j not in state else state[j] & out
+                if new != state.get(j):
+                    state[j] = new
+                    todo.append(j)
+        if ok and len(exits) == 1 and None not in exits:
+            self._retarg[addr] = next(iter(exits))
+        return self._retarg[addr]
+
+    def vec_defs_of(self, addr, depth=0):
+        """Volatile vector registers (v0-v13, v32-v63) the function at addr may write,
+        transitively; all of them when unknown (no code, an uninterpreted vector instruction,
+        an indirect call or jump, recursion). LTCG callers keep values in volatile vector
+        registers across calls to callees known not to write them."""
+        if addr in self.vdefs:
+            return self.vdefs[addr]
+        if self.is_helper(addr):
+            return frozenset()
+        f = self.func(addr)
+        if f is None or depth > 40 or addr in self._busy_vdefs or f.unsupported_vector() is not None:
+            return frozenset(VEC_VOLATILE)
+        self._busy_vdefs.add(addr)
+        out = set()
+        for i, ins in f.code_words():
+            k = ins.kind
+            if ins.vec:
+                out |= set(vec_regs(ins.vec)[1])
+            if k == "bl" or (k in ("b", "bc") and not f.inside(ins.target)):
+                out |= self.vec_defs_of(ins.target, depth + 1)
+            elif k in ("bctrl", "bcctr", "unknown", "sc") or (k == "bctr" and (i - f.base) // 4 not in f.tables):
+                out |= set(VEC_VOLATILE)
+            elif k == "bctr":
+                for t in f.tables[(i - f.base) // 4]:
+                    if not f.inside(t):
+                        out |= self.vec_defs_of(t, depth + 1)
+        self._busy_vdefs.discard(addr)
+        res = frozenset(out) & frozenset(VEC_VOLATILE)
+        self.vdefs[addr] = res       # an over-approximation when a cycle was cut: still safe
+        return res
 
     def vec_live_in(self, addr, depth=0):
         """Vector argument registers (numbers 1-13) the function reads before writing, calls
@@ -2097,8 +2244,31 @@ class Machine:
                 self.stack_touched.add(x)
             if self.trace is not None:
                 self.trace.append(("ret", (k, a, reg), ov, 4))
-        # vector registers: the volatile ones do not survive a call; v1 holds a seeded "result"
-        for reg in VEC_VOLATILE:
+            # further words the callee provably stores through the pointer (a small struct
+            # returned through it): seeded as well, so no stale frame word is read back
+            wr = set()
+            for x in (self.w.analysis.writes_through(a, reg) if image_fn else ()):
+                if isinstance(x, int):
+                    wr.add(x)
+                else:
+                    lo = ((v + x[1]) & ~15) - v
+                    wr.update(range(lo, lo + 16))
+            for o in range(4, OUT_WORDS_MAX * 4, 4):
+                if not all(x in wr for x in range(o, o + 4)) or v + o > STACK_TOP - 4 or \
+                        any(self._save_slot(x) for x in range(v + o, v + o + 4)):
+                    continue
+                ov = self.ret_ov.get((k, a, reg, o))
+                if ov is None:
+                    ov = int_value(random.Random((self.seed << 24) ^ (k << 44) ^ a ^ (reg << 8) ^ (o << 12)), self.consts)
+                ov &= 0xFFFFFFFF
+                for x in range(4):
+                    self.stack_buf[v + o + x - STACK_LO] = (ov >> (24 - 8 * x)) & 0xFF
+                    self.stack_touched.add(v + o + x)
+                if self.trace is not None:
+                    self.trace.append(("ret", (k, a, reg, o), ov, 4))
+        # vector registers: the volatile ones the callee may write (all of them for an unknown
+        # callee) do not survive a call; v1 holds a seeded "result"
+        for reg in (self.w.analysis.vec_defs_of(a) if image_fn else VEC_VOLATILE):
             self.vr[reg] = vec_poison(reg, k + 1)
         self.vr[1] = vec_value(random.Random((self.seed << 22) ^ (k << 42) ^ a))
         self.v1_own = False
@@ -2106,6 +2276,11 @@ class Machine:
         r = random.Random((self.seed << 20) ^ (k << 40) ^ a)
         for reg in VOLATILE & defs:
             if reg == 3:
+                back = self.w.analysis.returns_arg(a) if image_fn else None
+                if back is not None:
+                    # the callee hands back its own argument (its out-pointer): no seeded value
+                    self._set(3, vals[GPR_ARGS.index(back)])
+                    continue
                 rv = self.ret_ov.get((k, a))
                 if rv is None:
                     rv = int_value(r, self.consts)

@@ -1729,6 +1729,29 @@
    ]
   },
   {
+   "function": "ts4_load_child_params_888BB670",
+   "address": "0x888BB670",
+   "size": 8300,
+   "checker": "fn_equiv/6",
+   "seed": 1,
+   "trials": 616,
+   "valid": 465,
+   "discarded": 151,
+   "blocks": 46,
+   "blocks_covered": 46,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5b_xdata_child_loader.c",
+   "source_sha256": "a8a6bae88f85769e7ab616a0f0b5aa43eef5785935171af17ec4d8cb07d79406",
+   "flags": [
+    "/Oc"
+   ],
+   "trials_requested": 800,
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_bits_test_888C1368",
    "address": "0x888C1368",
    "size": 152,

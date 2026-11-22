@@ -135,12 +135,14 @@ class StaticTests(unittest.TestCase):
             "out": (BASE + 0x100, [stw(4, 3, 0), BLR]),
             "copy": (BASE + 0x140, [xo(31, 3, 30, 3, 444), stw(4, 30, 4), cmpwi(30, 0), BLR]),   # mr r30,r3
             "in": (BASE + 0x180, [lwz(5, 3, 0), BLR]),
-            "arith": (BASE + 0x1C0, [addi(5, 3, 4), BLR]),
+            "arith": (BASE + 0x1C0, [xo(31, 5, 3, 4, 266), BLR]),                # add r5,r3,r4
+            "plus": (BASE + 0x240, [addi(5, 3, 4), stw(4, 5, 0), BLR]),          # a store at pointer + 4
             "fwd": (BASE + 0x200, lambda at: [b(at, BASE + 0x180)]),            # tail call to a reader
         })
         an = world.analysis
         self.assertFalse(an.reads_through(world.by_name["out"], 3))
         self.assertFalse(an.reads_through(world.by_name["copy"], 3))
+        self.assertFalse(an.reads_through(world.by_name["plus"], 3))
         for n in ("in", "arith", "fwd"):
             self.assertTrue(an.reads_through(world.by_name[n], 3), n)
 
@@ -348,6 +350,142 @@ class FaultBlockTests(unittest.TestCase):
         cand = [cmpwi(3, 0), (16 << 26) | (4 << 21) | 12, li(3, 0), BLR, lwz(3, 4, 0x70), BLR]
         r = self.run_check(cand)
         self.assertEqual(r["verdict"], "UNCHECKED", r)
+
+
+class VecClobberTests(unittest.TestCase):
+    """Volatile vector registers survive a call to a callee that provably does not write them."""
+    LVX63, STVX63, VOR62 = 0x13E348C7, 0x13E039C7, 0x17DFFAF5   # lvx128 v63,r3,r9 / stvx128 v63,0,r7 / vor128 v62,v63,v63
+    LEAF, VLEAF, IND, VIA = BASE + 0x400, BASE + 0x440, BASE + 0x480, BASE + 0x4C0
+
+    @classmethod
+    def code(cls, callee, reload):
+        def gen(at):
+            body = prologue() + [li(9, 0), cls.LVX63]
+            body.append(bl(at + 4 * len(body), callee))
+            return body + ([li(9, 0), cls.LVX63] if reload else []) + [cls.STVX63] + epilogue()
+        return gen
+
+    def world(self, callee):
+        return make_world({"t": (BASE + 0x100, self.code(callee, False)),
+                           "leaf": (self.LEAF, [li(11, 1), BLR]), "w63": (BASE + 0x500, [self.LVX63, BLR]), "vleaf": (self.VLEAF, [self.VOR62, BLR]),
+                           "ind": (self.IND, prologue() + [0x4E800421] + epilogue()),         # bctrl
+                           "via": (self.VIA, lambda at: prologue() + [bl(at + 12, self.VLEAF)] + epilogue())})
+
+    def test_vec_defs_of(self):
+        an = self.world(self.LEAF).analysis
+        self.assertEqual(an.vec_defs_of(self.LEAF), frozenset())
+        self.assertEqual(an.vec_defs_of(self.VLEAF), frozenset({62}))
+        self.assertEqual(an.vec_defs_of(self.VIA), frozenset({62}))
+        self.assertEqual(an.vec_defs_of(self.IND), frozenset(F.VEC_VOLATILE))
+        self.assertEqual(an.vec_defs_of(BASE + 0x3000), frozenset(F.VEC_VOLATILE))   # no code there
+
+    def check(self, callee):
+        world = self.world(callee)
+        linked = FakeLinked({"cand": self.code(callee, True)})
+        return F.check_one(F.Machine(world), world, linked, "cand", BASE + 0x100, trials=120, time_budget=0)
+
+    def test_kept_across_a_callee_that_writes_no_vector_register(self):
+        # the original stores v63 loaded before the call, the candidate reloads it after the call
+        for callee in (self.LEAF, self.VLEAF, self.VIA):
+            self.assertEqual(self.check(callee)["verdict"], "EQUIVALENT", hex(callee))
+
+    def test_poisoned_across_a_callee_that_writes_it(self):
+        self.assertEqual(self.world(self.LEAF).analysis.vec_defs_of(BASE + 0x500), frozenset({63}))
+        self.assertEqual(self.check(BASE + 0x500)["verdict"], "DIFFERENT")
+
+
+class OwnStoreReadTests(unittest.TestCase):
+    """reads_through: a vector load of what the callee itself stored at the pointer is no read."""
+    STVX63_R4, LVX56_R30, LVX63_R4 = 0x13E021C7, 0x1300F0C7, 0x13E020C7   # stvx128 v63,0,r4 / lvx128 v56,0,r30 / lvx128 v63,0,r4
+
+    def test_load_after_own_store(self):
+        mr30 = xo(31, 4, 30, 4, 444)
+        world = make_world({
+            "acc": (BASE + 0x100, [self.STVX63_R4, mr30, self.LVX56_R30, BLR]),
+            "rd": (BASE + 0x140, [self.LVX63_R4, self.STVX63_R4, BLR]),
+            # the store is on one path only
+            "half": (BASE + 0x180, [cmpwi(5, 0), beq(8), self.STVX63_R4, self.LVX63_R4, BLR]),
+        })
+        an = world.analysis
+        self.assertEqual(F.decode(self.LVX63_R4, 0).vec[:2] + (F.decode(self.LVX63_R4, 0).vec[5],), ("lvx", 63, (0, 4)))
+        self.assertFalse(an.reads_through(BASE + 0x100, 4))
+        self.assertTrue(an.reads_through(BASE + 0x140, 4))
+        self.assertTrue(an.reads_through(BASE + 0x180, 4))
+
+    def test_word_load_after_own_word_store(self):
+        world = make_world({
+            "acc": (BASE + 0x100, [stw(5, 4, 8), lwz(6, 4, 8), addi(6, 6, 1), stw(6, 4, 8), BLR]),
+            "other": (BASE + 0x140, [stw(5, 4, 8), lwz(6, 4, 4), BLR]),              # another word
+            "wider": (BASE + 0x180, [dform(38, 5, 4, 8), lwz(6, 4, 8), BLR]),        # stb, then a 4-byte load
+            "half": (BASE + 0x1C0, [cmpwi(5, 0), beq(8), stw(5, 4, 8), lwz(6, 4, 8), BLR]),
+        })
+        an = world.analysis
+        self.assertFalse(an.reads_through(BASE + 0x100, 4))
+        for at in (0x140, 0x180, 0x1C0):
+            self.assertTrue(an.reads_through(BASE + at, 4), hex(at))
+
+    def test_stores_through_pointer_plus_constant(self):
+        world = make_world({
+            "two": (BASE + 0x100, [addi(11, 4, 0x10), stw(5, 11, 0), stw(5, 4, 0), lwz(6, 4, 0x10), BLR]),
+            "rd": (BASE + 0x140, [addi(11, 4, 0x10), lwz(6, 11, 0), BLR]),
+            "walk": (BASE + 0x180, [stw(5, 4, 0), addi(4, 4, 4), cmpwi(5, 0), (16 << 26) | (4 << 21) | (2 << 16) | ((-12) & 0xFFFC), BLR]),
+        })
+        an = world.analysis
+        self.assertFalse(an.reads_through(BASE + 0x100, 4))     # the load at +0x10 reads the store via r11
+        self.assertTrue(an.reads_through(BASE + 0x140, 4))
+        self.assertTrue(an.reads_through(BASE + 0x180, 4))      # an unbounded walk: gives up (terminates)
+
+
+class ReturnsArgTests(unittest.TestCase):
+    """A callee that provably returns its own r3 argument: the caller may read through the result."""
+    BACK, NOT, CLOB = BASE + 0x400, BASE + 0x440, BASE + 0x480
+
+    def world(self, callee):
+        mr = lambda a, s: xo(31, s, a, s, 444)
+        def caller(deref_result):
+            def gen(at):
+                body = prologue() + [addi(3, 1, 0x50)]
+                body.append(bl(at + 4 * len(body), callee))
+                return body + [lwz(3, 3, 0) if deref_result else lwz(3, 1, 0x50)] + epilogue()
+            return gen
+        self.cand = caller(True)
+        return make_world({
+            "t": (BASE + 0x100, caller(False)),
+            "back": (self.BACK, [mr(31, 3), li(11, 5), stw(11, 31, 0), mr(3, 31), BLR]),
+            "not": (self.NOT, [mr(31, 3), stw(4, 31, 0), cmpwi(4, 0), beq(8), li(3, 0), BLR]),
+            "clob": (self.CLOB, lambda at: [mr(11, 3), bl(at + 4, self.BACK), mr(3, 11), BLR]),
+        })
+
+    def test_analysis(self):
+        an = self.world(self.BACK).analysis
+        self.assertEqual(an.returns_arg(self.BACK), 3)
+        self.assertIsNone(an.returns_arg(self.NOT))        # one path returns 0
+        self.assertIsNone(an.returns_arg(self.CLOB))       # the copy sat in a volatile register over a call
+
+    def test_struct_return_words_are_all_seeded(self):
+        # callee(out, x): out[0] = x; out[1] = 1; return out.  The original reads out[1] through the
+        # result, the candidate from its own frame slot at another offset.
+        mr = lambda a, s: xo(31, s, a, s, 444)
+        sret = BASE + 0x500
+        def caller(off, via_result):
+            def gen(at):
+                body = prologue() + [addi(3, 1, off)]
+                body.append(bl(at + 4 * len(body), sret))
+                return body + [lwz(3, 3, 4) if via_result else lwz(3, 1, off + 4)] + epilogue()
+            return gen
+        world = make_world({"t": (BASE + 0x100, caller(0x50, True)),
+                            "sret": (sret, [mr(31, 3), stw(4, 31, 0), li(11, 1), stw(11, 31, 4), mr(3, 31), BLR])})
+        self.assertEqual(world.analysis.writes_through(sret, 3), frozenset(range(8)))
+        r = F.check_one(F.Machine(world), world, FakeLinked({"cand": caller(0x40, False)}), "cand", BASE + 0x100,
+                        trials=120, time_budget=0)
+        self.assertEqual(r["verdict"], "EQUIVALENT", r)
+
+    def test_caller_reads_through_the_result(self):
+        for callee, want in ((self.BACK, "EQUIVALENT"), (self.NOT, "DIFFERENT")):
+            world = self.world(callee)
+            r = F.check_one(F.Machine(world), world, FakeLinked({"cand": self.cand}), "cand", BASE + 0x100,
+                            trials=120, time_budget=0)
+            self.assertEqual(r["verdict"], want, (hex(callee), r))
 
 
 class StrideTests(unittest.TestCase):

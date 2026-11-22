@@ -652,6 +652,20 @@ re-runs a row with `trials_requested` when the row has it. 0x888C4160 was regist
 `--trials 1000` run that stopped at 516; re-running with 516 requested gave a different
 layout and 2/5 blocks. Rows without the field are re-run with their executed count as before.
 
+fn_equiv/6 (call model, found on 0x886B8468):
+
+- Vector clobbers per callee. `Analysis.vec_defs_of` lists the volatile vector registers
+  (v0-v13, v32-v63) a callee or its transitive callees can write; an intercepted call poisons
+  only those. An unknown callee (no code, an uninterpreted vector instruction, an indirect call
+  or jump, recursion) still poisons all of them. LTCG code keeps values in v32-v63 across calls.
+- `Analysis.returns_arg`: a callee that returns its own argument register on every return path
+  (`mr r31,r3 ... mr r3,r31`, an out-pointer handed back) gives the caller that value in r3
+  instead of a seeded one, so `*callee(&out, ...)` and reading `out` directly compare equal.
+- `reads_through` no longer counts a load of bytes the callee itself stored through the pointer
+  on every path (`stvx`/`lvx` at the same address, D-form stores covering a D-form load), and
+  follows `addi rD,ptr,C`. A callee that only accumulates into its out-parameter is then a
+  pure writer, and stale bytes in the caller's reused stack slot are not compared.
+
 ## 10. Byte-exact backlog (owner decision, 2026-11-22)
 
 For the port, the owner accepts the equivalent route for large functions (about 400 bytes and up) and for

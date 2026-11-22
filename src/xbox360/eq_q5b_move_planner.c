@@ -69,10 +69,12 @@ typedef struct Q5bBall { q5b_u8 pad0[0x2C]; q5b_u32 mode; q5b_u8 pad30[0xD8 - 0x
 typedef struct Q5bBallSys { q5b_u8 pad0[0x20]; Q5bBall *ball; struct Gp2BallPrediction *prediction; } Q5bBallSys;
 typedef struct Q5bCourtInfo { q5b_u8 pad0[0x84]; q5b_u32 kind; } Q5bCourtInfo;
 typedef struct Q5bCourtEntry { q5b_u8 pad0[0x88]; Q5bCourtInfo *info; } Q5bCourtEntry;
-typedef struct Q5bRules { int mode; Q5bCourtEntry **courts; } Q5bRules;
+typedef struct Q5bRules { int mode; } Q5bRules;
 typedef struct Q5bBox { q5b_u8 pad0[0x1B0]; __vector4 center; } Q5bBox;
 typedef struct Q5bMatch {
-    q5b_u8 pad0[0x30];
+    q5b_u8 pad0[0x4];
+    Q5bCourtEntry **courts; /* +0x04 (886B89B0 loads it from the match, not from match->rules) */
+    q5b_u8 pad8[0x30 - 0x8];
     Q5bClock *clock;        /* +0x30 */
     q5b_u8 pad34[0x44 - 0x34];
     Q5bBox *box;            /* +0x44 */
@@ -483,7 +485,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
                     a = q5b_fabs(ang);
                     lo = (double)a < K_RETARGET_ANGLE_LO;
                     hi = a > K_RETARGET_ANGLE_HI;
-                    jump = jump && !lo && hi;
+                    jump = jump && !lo && !hi; /* 886B8714: the jump needs LO <= |angle| <= HI */
                     if (jump && !(step[1] >= turn_max)) {
                         step[1] = one;
                         step[0] = ang;
@@ -524,7 +526,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
     case GP3_MOVE_1_READY: {
         int far_from_steps;
         if (can_react && p->match->rules->mode == 2 &&
-            p->match->rules->courts[p->team->state->court_index]->info->kind == Q5B_HASH_COURT_KIND_SKIP)
+            p->match->courts[p->team->state->court_index]->info->kind == Q5B_HASH_COURT_KIND_SKIP)
             return q5b_hold(s);
         q5b_score_default(s);
         p = s->player;
