@@ -131,10 +131,11 @@ files, extracted data, SDK-derived tables or compiler binaries.
 python3 tools/fn_asm.py fn_XXXXXXXX                       # original asm with relocations
 python3 tools/fn_check.py src/xbox360/foo.c ts4_name=0xADDR [...] [--flags /GS-]
 # write work/specs/<FAMILY>/<stem>.json: {"source","flags","functions":{name:addr},"renames":{}}
-python3 tools/fix_refs.py work/specs/<FAMILY>/*.json      # update placeholder references
+python3 tools/fix_refs.py work/specs/<FAMILY>/*.json      # placeholder refs, and callers of renamed functions
 python3 tools/integrate_match.py work/specs/<FAMILY>/*.json
-python3 tools/matching.py --fresh-analysis ...           # the authority; must pass
-python3 tools/sync_progress.py                           # match.json, progress, README, report.json.gz
+python3 tools/ltcg_precheck.py --split-dir work/matching-<last>/split  # seconds; catches LTCG failures first
+python3 tools/matching.py --fresh-analysis ...           # the authority; must pass (~40 min)
+python3 tools/sync_progress.py --work-dir work/matching-<this>  # match.json, progress, README, report.json.gz
 python3 tools/link_probe.py --wrapper <wibo-pr110> --linker-dir <X360 dir> --write  # optional
 python3 -m unittest discover -s tests && python3 tools/validate_link_status.py \
   && python3 tools/validate_decomp_dev_report.py && python3 tools/check_no_game_data.py

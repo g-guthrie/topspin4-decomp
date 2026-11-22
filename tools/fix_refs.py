@@ -34,3 +34,29 @@ for sp in specs:
     if hits:
         open(sp['source'],'w').write(pat.sub(lambda m:ren[m.group(1)],src))
         print(sp['source'],sorted(hits)[:8],len(hits))
+
+# Existing sources that call a function these specs rename must follow the
+# rename too: the LTCG route compares callee names, not addresses (b207 broke on
+# cx41_l1.c calling fn_888FBB40 after it became ts4_school_play_power_up_888FBB40).
+# Old names come from the committed symbols.txt, so this also works after
+# integrate_match.py has already renamed the symbols.
+head=subprocess.run(['git','show','HEAD:config/54540859/symbols.txt'],capture_output=True,text=True).stdout
+head_by={}
+for line in head.splitlines():
+    m=re.match(r'^(\S+) = \.text:0x([0-9A-Fa-f]+);',line)
+    if m: head_by[int(m.group(2),16)]=m.group(1)
+spec_ren={}
+for sp in specs:
+    for new,addr in sp['functions'].items():
+        old=head_by.get(int(addr,16),new)
+        if old!=new: spec_ren[old]=new
+if spec_ren:
+    import pathlib
+    p2=re.compile(r'\b('+'|'.join(map(re.escape,spec_ren))+r')\b')
+    own={sp['source'] for sp in specs}
+    for f in sorted(pathlib.Path('src/xbox360').glob('*.c*')):
+        if str(f) in own: continue
+        t=f.read_text()
+        if p2.search(t):
+            f.write_text(p2.sub(lambda m:spec_ren[m.group(1)],t))
+            print('updated caller',f)
