@@ -75,7 +75,7 @@ extern void *fn_888B1AE0(void *);
 extern void *ts4_loop_call_seq_fn_88563230_88884B20(void *, int, void *, int);
 extern void ts4_resume_thread(void *);
 extern char lbl_880D9334[], lbl_880D9354[];
-extern void fn_888BFC20(void);
+extern void ts4_dirty_disc_thread_888BFC20(void);
 extern void fn_889055A0(void);
 extern int ts4_format_text(void *, int, void *, int);
 extern char lbl_880D1B40[];
@@ -331,8 +331,8 @@ void ts4_call_with_zero_byte_and_minus1_88865648(void) { u8 t = 0; fn_88865388(l
 /* 0x888656C8: call helper on global with flag 1, index a and a zeroed stack byte */
 void ts4_call_with_zero_byte_and_arg_888656C8(int a) { u8 t = 0; fn_88865388(lbl_88D459DC, 1, a, &t); }
 
-/* 0x888C2290: create thread running fn_888BFC20 (stack 0x20000) and resume it */
-void ts4_spawn_and_resume_thread_888C2290(void) { ts4_resume_thread(ts4_loop_call_seq_fn_88563230_88884B20((void *)fn_888BFC20, 0, lbl_880D9334, 0x20000)); }
+/* 0x888C2290: create thread running ts4_dirty_disc_thread_888BFC20 (stack 0x20000) and resume it */
+void ts4_spawn_and_resume_thread_888C2290(void) { ts4_resume_thread(ts4_loop_call_seq_fn_88563230_88884B20((void *)ts4_dirty_disc_thread_888BFC20, 0, lbl_880D9334, 0x20000)); }
 
 /* 0x889058D0: create thread running fn_889055A0 with the given argument and resume it */
 void ts4_spawn_and_resume_thread_889058D0(int a) { ts4_resume_thread(ts4_loop_call_seq_fn_88563230_88884B20((void *)fn_889055A0, a, lbl_880D9354, 0x20000)); }

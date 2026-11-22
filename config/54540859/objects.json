@@ -14884,6 +14884,18 @@
       "src/xbox360/q5_gameplay_pad_poll.c": {
         "status": "Matching",
         "source": "xbox360/q5_gameplay_pad_poll.c"
+      },
+      "src/xbox360/q5_gameplay_node_and_pad.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_node_and_pad.c"
+      },
+      "src/xbox360/q5_gameplay_scale_reset.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_scale_reset.c"
+      },
+      "src/xbox360/q5_gameplay_select_first.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_select_first.c"
       }
     }
   }

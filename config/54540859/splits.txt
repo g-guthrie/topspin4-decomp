@@ -55288,3 +55288,16 @@ src/xbox360/q5_gameplay_delete_file.cpp:
 src/xbox360/q5_gameplay_pad_poll.c:
 	.pdata      start:0x8812DA98 end:0x8812DAA0
 	.text       start:0x88884C88 end:0x88884CCC
+
+src/xbox360/q5_gameplay_node_and_pad.c:
+	.pdata      start:0x8812DB60 end:0x8812DB68
+	.pdata      start:0x8812E960 end:0x8812E968
+	.text       start:0x88886458 end:0x888864B4
+	.text       start:0x888BFC20 end:0x888BFC7C
+
+src/xbox360/q5_gameplay_scale_reset.c:
+	.text       start:0x888C0890 end:0x888C08F0
+
+src/xbox360/q5_gameplay_select_first.c:
+	.pdata      start:0x8812A0C0 end:0x8812A0C8
+	.text       start:0x887F1050 end:0x887F10B8
