@@ -55304,3 +55304,8 @@ src/xbox360/q5_gameplay_select_first.c:
 
 src/xbox360/q5f_range_endpoints.c:
 	.text       start:0x8869FCF0 end:0x8869FD6C
+
+src/xbox360/q5f_set_thread_name_seh.c:
+	.pdata      start:0x8812DA08 end:0x8812DA10
+	.pdata      start:0x8812DA10 end:0x8812DA18
+	.text       start:0x88883DD8 end:0x88883E74

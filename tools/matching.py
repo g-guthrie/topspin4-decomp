@@ -51585,6 +51585,12 @@ MATCHING_UNITS = (
         "object": "q5f_range_endpoints.obj",
         "symbols": {"ts4_call_with_range_endpoints_8869FCF0": 124},
     },
+    {
+        "source": "src/xbox360/q5f_set_thread_name_seh.c",
+        "object": "q5f_set_thread_name_seh.obj",
+        "seh_labels": ["fn_88883E4C"],
+        "symbols": {"ts4_set_thread_name_88883DE0": 148},
+    },
 )
 
 
