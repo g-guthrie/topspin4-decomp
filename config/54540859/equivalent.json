@@ -122,6 +122,28 @@
    ]
   },
   {
+   "function": "ts4_bind_ctx_8865E638",
+   "address": "0x8865E638",
+   "size": 108,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 407,
+   "valid": 353,
+   "discarded": 54,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_pending_flush_88669040",
    "address": "0x88669040",
    "size": 92,
@@ -136,6 +158,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_c.c",
    "source_sha256": "9a74a07ce460ddbdb1faee489ad38acb5187dcd1bfd6e66b34cc924eb5299678",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_sample_min_8866C988",
+   "address": "0x8866C988",
+   "size": 116,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 403,
+   "valid": 378,
+   "discarded": 25,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
    "flags": [
     "/Oc"
    ],
@@ -176,6 +220,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_c.c",
    "source_sha256": "9a74a07ce460ddbdb1faee489ad38acb5187dcd1bfd6e66b34cc924eb5299678",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_layer_weight_886C7C28",
+   "address": "0x886C7C28",
+   "size": 120,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 406,
+   "valid": 169,
+   "discarded": 237,
+   "blocks": 4,
+   "blocks_covered": 4,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
    "flags": [
     "/Oc"
    ],
@@ -234,6 +300,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_c.c",
    "source_sha256": "9a74a07ce460ddbdb1faee489ad38acb5187dcd1bfd6e66b34cc924eb5299678",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_visit_slots_886E3938",
+   "address": "0x886E3938",
+   "size": 112,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 408,
+   "valid": 147,
+   "discarded": 261,
+   "blocks": 4,
+   "blocks_covered": 4,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
    "flags": [
     "/Oc"
    ],
@@ -412,6 +500,28 @@
    ]
   },
   {
+   "function": "ts4_thread_slot_data_88883CD0",
+   "address": "0x88883CD0",
+   "size": 120,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 403,
+   "valid": 403,
+   "discarded": 0,
+   "blocks": 5,
+   "blocks_covered": 5,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_ring_push_88885BB8",
    "address": "0x88885BB8",
    "size": 92,
@@ -426,6 +536,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_c.c",
    "source_sha256": "9a74a07ce460ddbdb1faee489ad38acb5187dcd1bfd6e66b34cc924eb5299678",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_flag_obj_ctor_88886608",
+   "address": "0x88886608",
+   "size": 112,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 403,
+   "valid": 378,
+   "discarded": 25,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
    "flags": [
     "/Oc"
    ],
@@ -450,6 +582,72 @@
    "source_sha256": "7abb9d70fe983c36d13638422943a9c871c29e75bf84f29e62f8957d073470bd",
    "flags": [],
    "spec_flags": []
+  },
+  {
+   "function": "ts4_text_obj_ctor_88888C80",
+   "address": "0x88888C80",
+   "size": 116,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 403,
+   "valid": 378,
+   "discarded": 25,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_set_bounds_888B7360",
+   "address": "0x888B7360",
+   "size": 116,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 407,
+   "valid": 188,
+   "discarded": 219,
+   "blocks": 2,
+   "blocks_covered": 2,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_bind_read_fe11d138_888B8F58",
+   "address": "0x888B8F58",
+   "size": 124,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 410,
+   "valid": 385,
+   "discarded": 25,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
   },
   {
    "function": "ts4_phase_enter_idle_888C1B58",
@@ -528,6 +726,28 @@
    "spec_flags": []
   },
   {
+   "function": "ts4_item_tint_888CAA98",
+   "address": "0x888CAA98",
+   "size": 104,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 407,
+   "valid": 359,
+   "discarded": 48,
+   "blocks": 6,
+   "blocks_covered": 6,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_bank_cursor_value_888CB9D0",
    "address": "0x888CB9D0",
    "size": 80,
@@ -542,6 +762,28 @@
    "verdict": "EQUIVALENT",
    "source": "src/xbox360/eq_q5_gameplay_small_c.c",
    "source_sha256": "9a74a07ce460ddbdb1faee489ad38acb5187dcd1bfd6e66b34cc924eb5299678",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_ids_contain_888CDBC8",
+   "address": "0x888CDBC8",
+   "size": 124,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 410,
+   "valid": 87,
+   "discarded": 323,
+   "blocks": 10,
+   "blocks_covered": 10,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
    "flags": [
     "/Oc"
    ],
@@ -588,6 +830,94 @@
    "source_sha256": "08c4f21f6255dd164499cfc7048d68886499e11efaa3e04fbc42fea58843545c",
    "flags": [],
    "spec_flags": []
+  },
+  {
+   "function": "ts4_send_vectors_5392B268_888D9420",
+   "address": "0x888D9420",
+   "size": 120,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 404,
+   "valid": 404,
+   "discarded": 0,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_queue_device_job_888DA288",
+   "address": "0x888DA288",
+   "size": 104,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 405,
+   "valid": 405,
+   "discarded": 0,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_window_obj_ctor_888DF740",
+   "address": "0x888DF740",
+   "size": 112,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 404,
+   "valid": 404,
+   "discarded": 0,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
+   "function": "ts4_bind_services_888E6C78",
+   "address": "0x888E6C78",
+   "size": 124,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 410,
+   "valid": 344,
+   "discarded": 66,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
   },
   {
    "function": "ts4_restore_record_and_clear_prop_888E9840",
@@ -646,6 +976,28 @@
    "source_sha256": "5caf998dc6e0f55908049ca80f8d3da417779c5909c3d1a03a0d73c43886a594",
    "flags": [],
    "spec_flags": []
+  },
+  {
+   "function": "ts4_clamp_to_range_8890E1C8",
+   "address": "0x8890E1C8",
+   "size": 108,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 405,
+   "valid": 405,
+   "discarded": 0,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_small_d.c",
+   "source_sha256": "ccb77d987edf38b3dc48ee1e62f89d214609c352eed809d45b31fda8be271074",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
   }
  ]
 }
