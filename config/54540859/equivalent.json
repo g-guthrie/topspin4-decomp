@@ -920,6 +920,38 @@
    ]
   },
   {
+   "function": "ts4_tbl_any_match_888795F8",
+   "address": "0x888795F8",
+   "size": 144,
+   "checker": "fn_equiv/5",
+   "seed": 1,
+   "trials": 400,
+   "valid": 281,
+   "discarded": 119,
+   "blocks": 9,
+   "blocks_covered": 9,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5f_tbl_any_match.c",
+   "source_sha256": "091a0e70fe2e95f40f0670e56e62afcb11794ad2fbd85aa5d933b646682b876d",
+   "flags": [
+    "/Oc"
+   ],
+   "fault_blocks": [
+    {
+     "block": "0x88879634",
+     "fault_pc": "0x8887964C",
+     "address": "0x70",
+     "access": "19",
+     "trials": 4
+    }
+   ],
+   "trials_requested": 400,
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_tables_reset_8887C000",
    "address": "0x8887C000",
    "size": 152,

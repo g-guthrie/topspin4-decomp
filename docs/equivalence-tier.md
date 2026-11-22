@@ -630,3 +630,24 @@ scope table against the image (`check_seh`). For integration the spec carries `"
 `tools/matching.py` turns those target funclet symbols into labels after the split (objdiff sizes a symbol up
 to the next non-label symbol, so the parent then spans its funclets as in the candidate).
 `fn_check.py` removes its `work/fncheck-*` scratch directory on exit, also after a failure; `--keep` keeps it.
+
+fn_equiv/5 adds fault blocks. A block that no valid trial reaches counts as covered when
+at least 3 faulting trials of the original reached it, all of them faulted at one instruction
+with one access kind and one address below 0x10000 (a null-pointer dereference), and the
+candidate, run on each of those inputs, made the same calls and memory writes and then faulted
+with the same access kind at the same address; one disagreeing trial keeps the block uncovered.
+A path seen once or twice is re-run with single values changed (12 re-runs per stored input)
+to reach the threshold. The rule only raises coverage: it never produces DIFFERENT, and the
+evidence lists each such block under `fault_blocks` (block, fault_pc, address, access, trials).
+First use: 0x888795F8, whose negative-index path reads 0x70 of a null item.
+
+fn_equiv/5 also tries element strides for begin/end pairs. `code_strides` takes the immediates
+of `addi rD,rA,+-C` and of an `li` that feeds a divw/divwu divisor (C = 8..0x1000, multiple
+of 4); after the 4*k spans, pair mutations use 1, 2 and 3 whole elements of each stride. This
+is what reaches the body of the 0x1c-element loop of 0x888C4160.
+
+Evidence records `trials_requested`. The phase layout (random, boundary, guided) depends on
+the requested trial count, not on the count that ran before the early stop, so `--recheck`
+re-runs a row with `trials_requested` when the row has it. 0x888C4160 was registered from a
+`--trials 1000` run that stopped at 516; re-running with 516 requested gave a different
+layout and 2/5 blocks. Rows without the field are re-run with their executed count as before.

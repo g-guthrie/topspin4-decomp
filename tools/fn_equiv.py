@@ -56,6 +56,11 @@ Model (see docs/equivalence-tier.md for the full policy):
   reads at each call, v1 at return when the function wrote it, and the
   callee-saved v14-v31/v64-v127. Other vector instructions, and functions that
   call the __savevmx/__restvmx helpers, stay UNCHECKED.
+- Fault blocks: a block reached only by trials in which the original takes a
+  null-pointer fault (one instruction, one address; at least 3 trials) counts
+  as covered when the candidate, on each of those inputs, makes the same calls
+  and writes and faults at the same address with the same access kind
+  (evidence field fault_blocks). Otherwise it stays uncovered.
 - A frame object passed to a callee that provably never reads through that
   pointer (pure out-parameter) is not compared at the call.
 
@@ -89,7 +94,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CHECKER_VERSION = "fn_equiv/4"
+CHECKER_VERSION = "fn_equiv/5"
 DLL = ROOT / "orig" / "54540859" / "Swing_DLL.dll"
 
 
@@ -139,6 +144,9 @@ STACK_TOP = 0x7F0F0000            # r1 at entry; above it: caller frame (seeded)
 RET_MAGIC = 0x7FFF0000
 MSR = 0x8000000000002000          # SF (64-bit) | FP
 UNRESOLVED_BASE = 0xEEE00000
+FAULT_NULL_PAGE = 0x10000         # fault addresses below this are null-pointer dereferences
+FAULT_MIN = 3                     # agreeing faulting trials needed to count a fault block as covered
+FAULT_EXTRA = 12                  # re-runs per stored input of a fault path seen fewer than FAULT_MIN times
 MAX_EVENTS = 4000                 # intercepted calls per run before the trial is discarded (--max-calls)
 STACK_ARG_WINDOW = 4              # bytes of a frame object passed by pointer that are compared
 # (one word: beyond it the window would reach neighbouring locals and register save slots, which
@@ -2186,6 +2194,8 @@ class Machine:
             "trace": self.trace,
             "marks": self.marks,
             "fault_addr": self.fault[1] if self.fault and isinstance(self.fault[1], int) else None,
+            "fault": tuple(self.fault) if self.fault else None,      # (access kind, address)
+            "fault_pc": pc if self.fault else None,
             "outcome": self.outcome,
             "events": self.events,
             "icount": self.icount,
@@ -2477,8 +2487,10 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
               trials=400, seed=1, min_cov=0.9, min_valid=30, time_budget=60.0, return_kind=None,
               source_text=None):
     """Compare one candidate function with the original at target_addr. Returns a Result dict."""
+    # trials_requested: the phase layout (random / boundary / guided) depends on the requested
+    # count, not on how many trials ran before the early stop, so a re-run needs this number
     res = Result(function=cand_name, address=f"0x{target_addr:08X}", checker=CHECKER_VERSION,
-                 seed=seed)
+                 seed=seed, trials_requested=trials)
     size = world.func_size.get(target_addr)
     if not size:
         return Result(res, verdict="UNCHECKED", reason="original function size unknown")
@@ -2542,6 +2554,7 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
     if wide:
         res["args64"] = sorted(regname(r) for r in wide)
     consts = code_consts(func)
+    strides = code_strides(func)
     special = {}
     for f in (func, cfunc):
         for a, ins in f.code_words():
@@ -2569,11 +2582,33 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
     if dead:
         res["dead_blocks"] = [f"0x{b:08X}" for b in sorted(dead)]
     covered = set()
+    fault_seen = {}      # block -> faulting trials of the original that reached it (fault_blocks)
     corpus = []          # (run seed, state, trace) of trials that reached new blocks
     rand_end = max(40, trials * 2 // 5)
     boundary = None      # (register, constant) pairs for the boundary phase
     pair_plans = {}      # corpus index -> remaining pointer-pair mutations of that trial
     front = {"done": set(), "plans": [], "stamp": None}   # frontier mutations (frontier_mutation)
+
+    def note_fault(state, s, A):
+        """A discarded trial: when the original took a null-pointer fault, note the blocks only
+        such trials reach and whether the candidate faults the same way (see fault_blocks below)."""
+        fa = A.get("fault")
+        if A["outcome"][0] != "fault" or not fa or not isinstance(fa[1], int) or fa[1] >= FAULT_NULL_PAGE:
+            return
+        hit = [b for b in blocks if any(a <= b < a + sz for a, sz in A["run_cov"])
+               and not any(a <= b < a + sz for a, sz in cov)]
+        if not hit:
+            return
+        B = machine.run(c_addr, c_local, state, s, consts, max(4 * A["icount"] + 5000, 20000), None)
+        same = B.get("fault") == fa and compare(world, A, B, return_kind) is None
+        for b in hit:
+            rec = fault_seen.setdefault(b, {"pcs": set(), "faults": set(), "agree": 0, "differ": 0, "inputs": []})
+            rec["pcs"].add(A["fault_pc"])
+            rec["faults"].add(fa)
+            rec["agree" if same else "differ"] += 1
+            if len(rec["inputs"]) < 4:
+                rec["inputs"].append((s, state))
+
     for t in range(trials):
         s = seed * 1_000_003 + t
         if t == rand_end and corpus:
@@ -2607,7 +2642,7 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
             else:
                 state["ret_ov"][key] = v
             s = ps
-        elif (pm := pair_mutation(corpus, pair_plans, live) if (t - rand_end) % 4 == 3 else None) is not None:
+        elif (pm := pair_mutation(corpus, pair_plans, live, strides) if (t - rand_end) % 4 == 3 else None) is not None:
             # pointer-pair trial (every fourth trial of the guided phase while plans remain): one
             # pointer the function read is set to a neighbouring pointer plus 4*k, so a begin/end
             # loop runs k steps and leaves through its own exit instead of walking off the heap
@@ -2647,6 +2682,7 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
         if A["outcome"][0] in ("fault", "limit"):
             discarded += 1
             discard_reasons[A["outcome"][0]] = discard_reasons.get(A["outcome"][0], 0) + 1
+            note_fault(state, s, A)
             continue
         B = machine.run(c_addr, c_local, state, s, consts, max(4 * A["icount"] + 5000, 20000), None)
         if B["outcome"][0] == "trap" and B["outcome"][1] == 96:
@@ -2672,6 +2708,45 @@ def check_one(machine: Machine, world: World, linked: Linked, cand_name: str, ta
             if len(covered) == len(blocks):
                 break
     covered = {b for b in blocks if any(a <= b < a + sz for a, sz in cov)}
+    if first_diff is None:
+        # a fault path seen fewer than FAULT_MIN times: re-run its inputs with one value changed
+        for b in blocks:
+            rec = fault_seen.get(b)
+            if b in covered or rec is None or rec["differ"] or rec["agree"] >= FAULT_MIN:
+                continue
+            for n, (ps, pstate) in enumerate(list(rec["inputs"])):
+                ptrace = machine.run(target_addr, o_local, pstate, ps, consts, 200_000, None, track=True)["trace"]
+                mr = random.Random(ps ^ 0xFA17 ^ n)
+                for _ in range(FAULT_EXTRA if ptrace else 0):
+                    state = dict(pstate, regs=dict(pstate["regs"]), mem_ov=dict(pstate.get("mem_ov") or {}),
+                                 ret_ov=dict(pstate.get("ret_ov") or {}))
+                    kind, key, old, size = mr.choice(ptrace)
+                    v = (old + mr.choice((-1, 1)) if mr.random() < 0.5 else int_value(mr, consts)) & ((1 << (8 * size)) - 1)
+                    if kind in ("reg", "regh"):
+                        set_reg(state, kind, key, v)
+                    elif kind == "mem":
+                        state["mem_ov"][key] = v.to_bytes(size, "big")
+                    else:
+                        state["ret_ov"][key] = v
+                    state, A = run_fixing(machine, world, target_addr, o_local, state, ps, consts, set(cov))
+                    note_fault(state, ps, A)
+    # Fault blocks: a block no valid trial reaches counts as covered when every trial that
+    # reached it ended in the same null-pointer fault of the original (one instruction, one
+    # address and access kind; at least FAULT_MIN trials) and the candidate, run on each of
+    # those inputs, made the same calls and memory writes and then faulted at the same address
+    # with the same access kind. Such a path has no behaviour beyond the fault to compare.
+    fault_blocks = []
+    for b in blocks:
+        rec = fault_seen.get(b)
+        if b in covered or rec is None:
+            continue
+        if rec["agree"] >= FAULT_MIN and not rec["differ"] and len(rec["pcs"]) == 1 and len(rec["faults"]) == 1:
+            (kind, addr), = rec["faults"]
+            fault_blocks.append({"block": f"0x{b:08X}", "fault_pc": f"0x{next(iter(rec['pcs'])):08X}",
+                                 "address": f"0x{addr:X}", "access": str(kind), "trials": rec["agree"]})
+            covered.add(b)
+    if fault_blocks:
+        res["fault_blocks"] = fault_blocks
     res.update(trials=valid + discarded, valid=valid, discarded=discarded, discard_reasons=discard_reasons,
                blocks=len(blocks), blocks_covered=len(covered),
                coverage=round(len(covered) / len(blocks), 4) if blocks else 1.0,
@@ -2803,7 +2878,27 @@ PAIR_FRESH_STEPS = (1, 2, 3)             # element counts tried with a fresh beg
 PAIR_NEAR = 8                           # two loaded words this close are taken as one pair
 
 
-def pointer_pairs(trace, live=None):
+def code_strides(func: Func, most=4):
+    """Element sizes the code steps or divides by: the immediate of `addi rD,rA,+-C` (rA no stack
+    or base register) and of an `li rX,C` whose register is the divisor of a divw/divwu, for
+    C = 8..0x1000 and a multiple of 4. The most frequent `most` values, used as begin/end spans
+    (pointer_pairs, fresh_pairs) so a loop over 0x1c-byte elements gets a whole element count."""
+    words = [ins.word for _, ins in func.code_words()]
+    divisors = {(w >> 11) & 31 for w in words if w >> 26 == 31 and (w >> 1) & 0x1FF in (459, 491)}
+    count = {}
+    for w in words:
+        if w >> 26 != 14:
+            continue
+        rd, ra, c = (w >> 21) & 31, (w >> 16) & 31, abs(sext(w & 0xFFFF, 16))
+        if (rd in divisors if ra == 0 else ra not in (1, 2, 13)) and 8 <= c <= 0x1000 and not c & 3:
+            count[c] = count.get(c, 0) + 1
+    return sorted(count, key=lambda c: (-count[c], c))[:most]
+
+
+STRIDE_COUNTS = (1, 2, 3)               # element counts tried per code_strides() element size
+
+
+def pointer_pairs(trace, live=None, spans=None):
     """Mutations that turn two values a trial read into a begin/end pair: (kind, key, value)
     with value = another read pointer + 4*k. Candidates are two words loaded from addresses at
     most PAIR_NEAR bytes apart (the first/last fields of a container) or two argument registers
@@ -2825,11 +2920,12 @@ def pointer_pairs(trace, live=None):
             if dk == "mem" and abs(dkey - skey) > PAIR_NEAR:
                 continue
             pairs.append((dk, dkey, dold, sold))
-    return [(dk, dkey, (sold + 4 * k) & 0xFFFFFFFF) for k in PAIR_STEPS for dk, dkey, dold, sold in pairs
-            if (sold + 4 * k) & 0xFFFFFFFF != dold]
+    spans = [4 * k for k in PAIR_STEPS] if spans is None else spans
+    return [(dk, dkey, (sold + d) & 0xFFFFFFFF) for d in spans for dk, dkey, dold, sold in pairs
+            if (sold + d) & 0xFFFFFFFF != dold]
 
 
-def fresh_pairs(trace):
+def fresh_pairs(trace, spans=None):
     """Two-word mutations [(kind, key, value), (kind, key, value)] for two neighbouring loaded
     words of which the first is no usable pointer (a random word, or null: the empty
     container): begin becomes a fresh heap buffer and end becomes begin + 4*k, so a loop over a
@@ -2842,20 +2938,23 @@ def fresh_pairs(trace):
     good = lambda v: HEAP_LO <= v < HEAP_HI - 0x1000 and not v & 3
     near = [(lo, hi) for lo, lold in ents if not good(lold) for hi, _ in ents if 0 < hi - lo <= PAIR_NEAR]
     out = []
-    for k in PAIR_FRESH_STEPS:
+    for d in ([4 * k for k in PAIR_FRESH_STEPS] if spans is None else spans):
         for lo, hi in near:
             base = RANDPTR_LO + (((lo * 2654435761) >> 4) % ((HEAP_HI - RANDPTR_LO - 0x40000) >> 4) << 4)
-            out.append([("mem", lo, base), ("mem", hi, base + 4 * k)])
+            out.append([("mem", lo, base), ("mem", hi, base + d)])
     return out
 
 
-def pair_mutation(corpus, plans, live=None):
+def pair_mutation(corpus, plans, live=None, strides=()):
     """Next pointer-pair mutation, newest corpus trial first: (seed, state, (kind, key, value)
     or a fresh_pairs() list),
     or None when every plan is used up."""
     for ci in range(len(corpus) - 1, -1, -1):
         if ci not in plans:
             plans[ci] = pointer_pairs(corpus[ci][2], live) + fresh_pairs(corpus[ci][2])
+            if strides:      # after the 4*k plans: whole element counts of the code's own strides
+                spans = [c * n for n in STRIDE_COUNTS for c in strides]
+                plans[ci] += pointer_pairs(corpus[ci][2], live, spans) + fresh_pairs(corpus[ci][2], spans)
         if plans[ci]:
             return corpus[ci][0], corpus[ci][1], plans[ci].pop(0)
     return None
@@ -2913,6 +3012,7 @@ def run_fixing(machine, world, entry, local, state, s, consts, cov, max_fix=24):
             state["ret_ov"][key] = ptr
     if cov is not None and A["outcome"][0] not in ("fault", "limit"):
         cov |= tmp
+    A["run_cov"] = tmp
     return state, A
 
 
@@ -3035,6 +3135,9 @@ def format_result(r):
     if "valid" in r:
         head += (f": {r['valid']} valid trial(s) of {r['trials']}, coverage {r['coverage']:.0%} "
                  f"({r['blocks_covered']}/{r['blocks']} blocks)")
+    for fb in r.get("fault_blocks", ()):
+        head += (f"\n  fault block {fb['block']}: counted as covered, original and candidate both fault at "
+                 f"{fb['address']} (original pc {fb['fault_pc']}) in {fb['trials']} trial(s)")
     if r.get("reason"):
         head += f"\n  reason: {r['reason']}"
     if r.get("report"):

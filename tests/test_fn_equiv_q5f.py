@@ -313,6 +313,76 @@ class SehTests(unittest.TestCase):
         self.assertEqual(C.image_seh(bytes(image), base, fn, 0x20)[1], [(4, 0xC, ("const", 1), 0x10)])
 
 
+class FaultBlockTests(unittest.TestCase):
+    """r3 < 0 -> the function reads 0x70 of a null pointer (always faults); else returns *r4."""
+
+    @staticmethod
+    def code(null=0, off=0x70):
+        return [cmpwi(3, 0), (16 << 26) | (4 << 21) | (0 << 16) | 12,      # bge +12
+                li(11, null), b(BASE + 0x10C, BASE + 0x114), xo(31, 4, 11, 4, 444),   # mr r11,r4
+                lwz(3, 11, off), BLR]
+
+    def run_check(self, cand):
+        world = make_world({"t": (BASE + 0x100, self.code())})
+        linked = FakeLinked({"cand": cand})
+        return F.check_one(F.Machine(world), world, linked, "cand", BASE + 0x100, trials=200)
+
+    def test_same_fault_counts_as_covered(self):
+        at = F.CAND_BASE
+        same = [cmpwi(3, 0), (16 << 26) | (4 << 21) | 12, li(11, 0), b(at + 12, at + 20),
+                xo(31, 4, 11, 4, 444), lwz(3, 11, 0x70), BLR]
+        r = self.run_check(same)
+        self.assertEqual(r["verdict"], "EQUIVALENT", r)
+        self.assertEqual([(f["block"], f["address"]) for f in r["fault_blocks"]], [(f"0x{BASE + 0x108:08X}", "0x70")])
+        self.assertEqual(r["blocks_covered"], r["blocks"])
+
+    def test_other_behaviour_on_the_fault_path_is_not_covered(self):
+        at = F.CAND_BASE
+        for null in (4, ):                  # faults at 0x74 instead of 0x70
+            cand = [cmpwi(3, 0), (16 << 26) | (4 << 21) | 12, li(11, null), b(at + 12, at + 20),
+                    xo(31, 4, 11, 4, 444), lwz(3, 11, 0x70), BLR]
+            r = self.run_check(cand)
+            self.assertEqual(r["verdict"], "UNCHECKED", r)
+            self.assertNotIn("fault_blocks", r)
+        # a candidate that returns instead of faulting
+        cand = [cmpwi(3, 0), (16 << 26) | (4 << 21) | 12, li(3, 0), BLR, lwz(3, 4, 0x70), BLR]
+        r = self.run_check(cand)
+        self.assertEqual(r["verdict"], "UNCHECKED", r)
+
+
+class StrideTests(unittest.TestCase):
+    """Loop over 0x1c-byte elements of a begin/end pair at 0xc/0x10 of *r3 (divw by 0x1c)."""
+
+    @staticmethod
+    def code():
+        divw = xo(31, 8, 9, 30, 491, 1)                  # divw. r8,r9,r30
+        return [lwz(11, 3, 0xC), li(30, 0x1C), lwz(10, 3, 0x10), xo(31, 9, 11, 10, 40), divw,   # subf r9,r11,r10
+                beq(32),
+                lwz(11, 3, 0x10), addi(11, 11, -0x1C), stw(11, 3, 0x10), lwz(9, 3, 0xC),
+                xo(31, 9, 9, 11, 40), divw, (16 << 26) | (4 << 21) | (2 << 16) | ((-24) & 0xFFFC),   # bne -24
+                li(3, 0), BLR]
+
+    def test_strides_from_divisor_and_step(self):
+        world = make_world({"t": (BASE + 0x100, self.code())})
+        self.assertEqual(F.code_strides(world.analysis.func(BASE + 0x100)), [0x1C])
+
+    def test_stride_spans_are_appended_after_the_word_spans(self):
+        trace = [("mem", 0x7000000C, 0x12345678, 4), ("mem", 0x70000010, 0x9ABCDEF0, 4)]
+        plain = F.fresh_pairs(trace)
+        plans = {}
+        _, _, first = F.pair_mutation([(1, {}, trace, None)], plans, None, [0x1C])
+        self.assertEqual(first, plain[0])
+        spans = [hi[2] - lo[2] for lo, hi in [first] + plans[0]]
+        self.assertEqual(spans[:len(plain)], [4, 8, 12][:len(plain)])
+        self.assertEqual(spans[len(plain):], [0x1C, 0x38, 0x54])
+
+    def test_loop_is_covered_and_requested_trials_recorded(self):
+        world = make_world({"t": (BASE + 0x100, self.code())})
+        linked = FakeLinked({"cand": self.code()})
+        r = F.check_one(F.Machine(world), world, linked, "cand", BASE + 0x100, trials=300, time_budget=0)
+        self.assertEqual((r["verdict"], r["blocks_covered"], r["trials_requested"]), ("EQUIVALENT", r["blocks"], 300), r)
+
+
 class ScratchAndLabelTests(unittest.TestCase):
     def test_scratch_directories_are_removed_at_exit(self):
         import tempfile

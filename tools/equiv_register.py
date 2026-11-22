@@ -9,7 +9,7 @@ its evidence verdict is EQUIVALENT, coverage is 1.0 or at least the spec's
 "min_coverage" (default 0.9, the checker's default), and the evidence
 source_sha256 equals the current source file. --verify reruns fn_equiv first.
 --recheck re-runs fn_equiv on every registered row (its source, flags and seed,
-at least its trial count, no time budget) and writes nothing: exit status 0
+its requested trial count when recorded, else at least the count it ran, no time budget) and writes nothing: exit status 0
 only when every row is still EQUIVALENT with the registered source hash.
 A function that is already matched (config/54540859/match.json) is not
 registered: the matched tier always wins (docs/equivalence-tier.md section 6).
@@ -25,7 +25,8 @@ ROOT = Path(__file__).resolve().parent.parent
 REG = ROOT / "config/54540859/equivalent.json"
 PROGRESS = ROOT / "config/progress.json"
 KEEP = ("function", "address", "size", "checker", "seed", "trials", "valid", "discarded",
-        "blocks", "blocks_covered", "coverage", "verdict", "source", "source_sha256", "flags")
+        "blocks", "blocks_covered", "coverage", "verdict", "source", "source_sha256", "flags",
+        "fault_blocks", "trials_requested")
 
 
 def matched_starts():
@@ -51,7 +52,8 @@ def recheck(rows, only=()):
             obj = fn_equiv.compile_source(src, r.get("flags") or r.get("spec_flags") or [])
             res = fn_equiv.check_object(obj, [(r["function"], int(r["address"], 16))],
                                         source_text=src.read_text(errors="replace"), seed=r["seed"],
-                                        trials=max(400, r["trials"]), time_budget=0)[0]
+                                        trials=r.get("trials_requested") or max(400, r["trials"]),
+                                        time_budget=0)[0]
             shutil.rmtree(obj.parent, ignore_errors=True)
             if res["verdict"] != "EQUIVALENT":
                 why = f"{res['verdict']}: {res.get('reason')}"
