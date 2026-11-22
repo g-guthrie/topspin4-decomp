@@ -55167,3 +55167,33 @@ src/xbox360/q5h1_hash_find.c:
 
 src/xbox360/q5f_world_set.c:
 	.text       start:0x8887B328 end:0x8887B3D8
+
+src/xbox360/q5_gameplay_vec3_forward.c:
+	.pdata      start:0x8812F3B8 end:0x8812F3C0
+	.text       start:0x888D93B8 end:0x888D941C
+
+src/xbox360/q5_gameplay_vec_store.c:
+	.pdata      start:0x881301E0 end:0x881301E8
+	.text       start:0x8890DE88 end:0x8890DEF0
+
+src/xbox360/q5_gameplay_physic_warn.c:
+	.pdata      start:0x8812D6E8 end:0x8812D6F0
+	.text       start:0x88879098 end:0x88879120
+
+src/xbox360/q5_render_find.c:
+	.text       start:0x886EFC48 end:0x886EFCC0
+
+src/xbox360/q5h2_vec3_pair_hash.c:
+	.pdata      start:0x8812F3C8 end:0x8812F3D0
+	.text       start:0x888D9498 end:0x888D94FC
+
+src/xbox360/q5h2_vec_store.c:
+	.pdata      start:0x881301E8 end:0x881301F0
+	.text       start:0x8890DEF0 end:0x8890DF58
+
+src/xbox360/q5h2_find_rec.c:
+	.text       start:0x886EFD38 end:0x886EFDB0
+
+src/xbox360/q5h2_physic_warn.c:
+	.pdata      start:0x8812D6F0 end:0x8812D6F8
+	.text       start:0x888791E8 end:0x88879270

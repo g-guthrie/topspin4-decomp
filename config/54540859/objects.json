@@ -14768,6 +14768,38 @@
       "src/xbox360/q5f_world_set.c": {
         "status": "Matching",
         "source": "xbox360/q5f_world_set.c"
+      },
+      "src/xbox360/q5_gameplay_vec3_forward.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_vec3_forward.c"
+      },
+      "src/xbox360/q5_gameplay_vec_store.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_vec_store.c"
+      },
+      "src/xbox360/q5_gameplay_physic_warn.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_gameplay_physic_warn.c"
+      },
+      "src/xbox360/q5_render_find.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_render_find.c"
+      },
+      "src/xbox360/q5h2_vec3_pair_hash.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h2_vec3_pair_hash.c"
+      },
+      "src/xbox360/q5h2_vec_store.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h2_vec_store.c"
+      },
+      "src/xbox360/q5h2_find_rec.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h2_find_rec.c"
+      },
+      "src/xbox360/q5h2_physic_warn.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h2_physic_warn.c"
       }
     }
   }

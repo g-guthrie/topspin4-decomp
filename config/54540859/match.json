@@ -40200,15 +40200,23 @@
     {"source":"src/xbox360/q5h1_pair_visit.cpp","symbol":"ts4_pair_forward_both_halves_886C4C60","text_range":"0x886C4C60-0x886C4CB4","pdata_range":"0x881249D0-0x881249D8","matched_code_bytes":84,"function_match_percent":100.0},
     {"source":"src/xbox360/q5h1_hash_find.c","symbol":"ts4_hash_find_00deeef6_88848B50","text_range":"0x88848B50-0x88848BB0","pdata_range":"0x8812C738-0x8812C740","matched_code_bytes":96,"function_match_percent":100.0},
     {"source":"src/xbox360/q5f_world_set.c","symbol":"ts4_world_set_release_by_key_8887B328","text_range":"0x8887B328-0x8887B380","matched_code_bytes":88,"function_match_percent":100.0},
-    {"source":"src/xbox360/q5f_world_set.c","symbol":"ts4_world_set_acquire_by_key_8887B380","text_range":"0x8887B380-0x8887B3D8","matched_code_bytes":88,"function_match_percent":100.0}
+    {"source":"src/xbox360/q5f_world_set.c","symbol":"ts4_world_set_acquire_by_key_8887B380","text_range":"0x8887B380-0x8887B3D8","matched_code_bytes":88,"function_match_percent":100.0},
+    {"source":"src/xbox360/q5_gameplay_vec3_forward.c","symbol":"ts4_vec3_pair_hash_5392b268_888D93B8","text_range":"0x888D93B8-0x888D941C","pdata_range":"0x8812F3B8-0x8812F3C0","matched_code_bytes":100,"function_match_percent":100.0},
+    {"source":"src/xbox360/q5_gameplay_vec_store.c","symbol":"ts4_vec_pair_store_discard_8890DE88","text_range":"0x8890DE88-0x8890DEF0","pdata_range":"0x881301E0-0x881301E8","matched_code_bytes":104,"function_match_percent":100.0},
+    {"source":"src/xbox360/q5_gameplay_physic_warn.c","symbol":"ts4_physic_data_update_version_88879098","text_range":"0x88879098-0x88879120","pdata_range":"0x8812D6E8-0x8812D6F0","matched_code_bytes":136,"function_match_percent":100.0},
+    {"source":"src/xbox360/q5_render_find.c","symbol":"ts4_find_rec_by_key_886EFC48","text_range":"0x886EFC48-0x886EFCC0","matched_code_bytes":120,"function_match_percent":100.0},
+    {"source":"src/xbox360/q5h2_vec3_pair_hash.c","symbol":"ts4_vec3_pair_hash_6a900a21_888D9498","text_range":"0x888D9498-0x888D94FC","pdata_range":"0x8812F3C8-0x8812F3D0","matched_code_bytes":100,"function_match_percent":100.0},
+    {"source":"src/xbox360/q5h2_vec_store.c","symbol":"ts4_vec_pair_store_discard_8890DEF0","text_range":"0x8890DEF0-0x8890DF58","pdata_range":"0x881301E8-0x881301F0","matched_code_bytes":104,"function_match_percent":100.0},
+    {"source":"src/xbox360/q5h2_find_rec.c","symbol":"ts4_find_rec_by_key_886EFD38","text_range":"0x886EFD38-0x886EFDB0","matched_code_bytes":120,"function_match_percent":100.0},
+    {"source":"src/xbox360/q5h2_physic_warn.c","symbol":"ts4_physic_data_update_version_888791E8","text_range":"0x888791E8-0x88879270","pdata_range":"0x8812D6F0-0x8812D6F8","matched_code_bytes":136,"function_match_percent":100.0}
   ],
-  "matched_code_bytes": 3490320,
+  "matched_code_bytes": 3491240,
   "module_total_code_bytes": 10154020,
-  "module_matched_code_percent": 34.373775,
+  "module_matched_code_percent": 34.382835,
   "module_total_functions": 46734,
-  "module_matched_functions": 33731,
-  "module_matched_functions_percent": 72.176575,
-  "module_total_units": 26257,
-  "module_complete_units": 3687,
-  "note": "The canonical whole-module report verifies all thirty-three thousand seven hundred thirty-one functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
+  "module_matched_functions": 33739,
+  "module_matched_functions_percent": 72.193695,
+  "module_total_units": 26270,
+  "module_complete_units": 3695,
+  "note": "The canonical whole-module report verifies all thirty-three thousand seven hundred thirty-nine functions at 100%; functions with .pdata also have relocation-aware matching sections. Progress reports code bytes only; source units are provisional measurement units until original object boundaries are independently proven."
 }

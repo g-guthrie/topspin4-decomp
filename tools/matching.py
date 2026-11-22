@@ -51407,6 +51407,46 @@ MATCHING_UNITS = (
             "ts4_world_set_acquire_by_key_8887B380": 88,
         },
     },
+    {
+        "source": "src/xbox360/q5_gameplay_vec3_forward.c",
+        "object": "q5_gameplay_vec3_forward.obj",
+        "symbols": {"ts4_vec3_pair_hash_5392b268_888D93B8": 100},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_vec_store.c",
+        "object": "q5_gameplay_vec_store.obj",
+        "symbols": {"ts4_vec_pair_store_discard_8890DE88": 104},
+    },
+    {
+        "source": "src/xbox360/q5_gameplay_physic_warn.c",
+        "object": "q5_gameplay_physic_warn.obj",
+        "symbols": {"ts4_physic_data_update_version_88879098": 136},
+    },
+    {
+        "source": "src/xbox360/q5_render_find.c",
+        "object": "q5_render_find.obj",
+        "symbols": {"ts4_find_rec_by_key_886EFC48": 120},
+    },
+    {
+        "source": "src/xbox360/q5h2_vec3_pair_hash.c",
+        "object": "q5h2_vec3_pair_hash.obj",
+        "symbols": {"ts4_vec3_pair_hash_6a900a21_888D9498": 100},
+    },
+    {
+        "source": "src/xbox360/q5h2_vec_store.c",
+        "object": "q5h2_vec_store.obj",
+        "symbols": {"ts4_vec_pair_store_discard_8890DEF0": 104},
+    },
+    {
+        "source": "src/xbox360/q5h2_find_rec.c",
+        "object": "q5h2_find_rec.obj",
+        "symbols": {"ts4_find_rec_by_key_886EFD38": 120},
+    },
+    {
+        "source": "src/xbox360/q5h2_physic_warn.c",
+        "object": "q5h2_physic_warn.obj",
+        "symbols": {"ts4_physic_data_update_version_888791E8": 136},
+    },
 )
 
 
