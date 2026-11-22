@@ -919,8 +919,11 @@ then the loop `for (; c != e; c++)`, then `if (sum == zero) { z: inv = zero; } e
 - Scheduling residue around a call argument (0x8867DA30, 13 -> 8): read the float argument into a local
   (`t = ctx->clock->t;`) and permutation-search its statement position among the struct stores. A short script
   that writes every order and runs the checker finds this in a few minutes.
-- Unresolved: a `cmplw` whose loads follow one operand order and whose compare follows the other (target loads e
-  then c, compares c,e). Operand swaps, `!=`, casts, compare helpers and `const` give either both in the same order or worse.
+- Solved (Q5, 0x8887B380/0x8887B328): a `cmplw` whose loads follow one operand order and whose compare follows
+  the other. Make the key a one-word struct and copy it into a struct local before comparing
+  (`Q5WorldKey k; k = e->key; if (key->id == k.id)`). A scalar local is forward-substituted and forces loads and
+  compare into one order; the struct copy keeps the load where it was written. Operand swaps, `!=`, casts, compare
+  helpers and `const` do not work.
 
 ## Solved at b129: function-local static names (W8 open item)
 0x886C40B8 had 0 instruction diffs but failed on MSVC's local-static names (`?$S1@...`, `?table@...`). Fix:
@@ -3132,3 +3135,14 @@ It hill-climbs over C rewrites and needs no markup. A match is written to `work/
 | `88747E58` | 4 | 4 | | store order; few legal moves |
 
 Use it on schedule-only misses after the hand trial. Extend the mutation set when a miss needs a rewrite it cannot make.
+
+## Q5 codegen rules (2026-11-22)
+- Second base kept in a saved register: write a C++ class with two bases, convert to the second base, and add
+  `__assume(p != 0)` so MSVC drops the null-adjust branch.
+- Hash constants: pass them as a `struct Ga3Id` by value; this fixes the lis/ori scheduling against neighbouring loads.
+- Operand order of an add: a local copy (`dst = self;`) sets which register comes first.
+- A ctor that stores through the r3 returned by its base ctor and keeps a dead `mr r31,r3` has no source form found
+  so far: route it to the equivalent tier (fn_equiv) rather than spending permuter time.
+- perm_auto now has `m_alias` (copy a parameter into a local and replace some or all uses) and `m_retsplit`
+  (`return E;` -> `{ T r = E; return r; }`). On forwarders whose frame size differs (0x4 vs 0x20) neither helps:
+  the frame shape has no source form, so those go to equivalent too.
