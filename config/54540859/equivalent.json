@@ -180,6 +180,24 @@
    "source_sha256": "776f9620cf8eff5e0b0f3963e33dc8670622518ca20d81f0f0bb2ee1e98283eb",
    "flags": [],
    "spec_flags": []
+  },
+  {
+   "function": "ts4_get_service_ad0c7318_888EC5F8",
+   "address": "0x888EC5F8",
+   "size": 176,
+   "checker": "fn_equiv/2",
+   "seed": 1,
+   "trials": 161,
+   "valid": 140,
+   "discarded": 21,
+   "blocks": 6,
+   "blocks_covered": 6,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/q5h3_service.c",
+   "source_sha256": "5caf998dc6e0f55908049ca80f8d3da417779c5909c3d1a03a0d73c43886a594",
+   "flags": [],
+   "spec_flags": []
   }
  ]
 }

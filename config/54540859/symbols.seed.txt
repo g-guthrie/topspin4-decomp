@@ -33811,3 +33811,7 @@ ts4_vec3_pair_hash_6a900a21_888D9498 = .text:0x888D9498; // type:function size:0
 ts4_vec_pair_store_discard_8890DEF0 = .text:0x8890DEF0; // type:function size:0x68
 ts4_find_rec_by_key_886EFD38 = .text:0x886EFD38; // type:function size:0x78
 ts4_physic_data_update_version_888791E8 = .text:0x888791E8; // type:function size:0x88
+ts4_school_play_add_score_888FBA90 = .text:0x888FBA90; // type:function size:0xAC
+ts4_tag_node_c0ba51f5_01505c7e_888C9D18 = .text:0x888C9D18; // type:function size:0xBC
+ts4_post_event_4aa6a6e3_888D7230 = .text:0x888D7230; // type:function size:0xC0
+ts4_xform_copy_to_rel_888B09A0 = .text:0x888B09A0; // type:function size:0xD0

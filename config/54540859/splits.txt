@@ -55197,3 +55197,19 @@ src/xbox360/q5h2_find_rec.c:
 src/xbox360/q5h2_physic_warn.c:
 	.pdata      start:0x8812D6F0 end:0x8812D6F8
 	.text       start:0x888791E8 end:0x88879270
+
+src/xbox360/q5_gameplay_school_sound.c:
+	.pdata      start:0x8812FDA0 end:0x8812FDA8
+	.text       start:0x888FBA90 end:0x888FBB3C
+
+src/xbox360/q5_gameplay_node_tag.c:
+	.pdata      start:0x8812ED30 end:0x8812ED38
+	.text       start:0x888C9D18 end:0x888C9DD4
+
+src/xbox360/q5_gameplay_post_event.c:
+	.pdata      start:0x8812F278 end:0x8812F280
+	.text       start:0x888D7230 end:0x888D72F0
+
+src/xbox360/q5_gameplay_xform_copy.c:
+	.pdata      start:0x8812E628 end:0x8812E630
+	.text       start:0x888B09A0 end:0x888B0A70
