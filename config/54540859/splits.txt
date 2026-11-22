@@ -55333,3 +55333,7 @@ src/xbox360/q5a_gameplay_small_j.c:
 	.text       start:0x8865A9C8 end:0x8865AA78
 	.text       start:0x886D3A00 end:0x886D3AAC
 	.text       start:0x8886B840 end:0x8886B8E0
+
+src/xbox360/q5a_gameplay_small_k.c:
+	.pdata      start:0x8812D488 end:0x8812D490
+	.text       start:0x8886FCC0 end:0x8886FD70

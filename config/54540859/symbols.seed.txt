@@ -33851,3 +33851,4 @@ ts4_curve_value_88656538 = .text:0x88656538; // type:function size:0xA4
 ts4_keytable_release_8886B840 = .text:0x8886B840; // type:function size:0xA0
 ts4_layout_refresh_886D3A00 = .text:0x886D3A00; // type:function size:0xAC
 ts4_tree_number_8865A9C8 = .text:0x8865A9C8; // type:function size:0xB0
+ts4_apply_ece067e5_entries_8886FCC0 = .text:0x8886FCC0; // type:function size:0xB0

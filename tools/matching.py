@@ -51613,6 +51613,20 @@ MATCHING_UNITS = (
             "ts4_curve_value_88656538": 164,
         },
     },
+    {
+        "source": "src/xbox360/q5a_gameplay_small_j.c",
+        "object": "q5a_gameplay_small_j.obj",
+        "symbols": {
+            "ts4_keytable_release_8886B840": 160,
+            "ts4_layout_refresh_886D3A00": 172,
+            "ts4_tree_number_8865A9C8": 176,
+        },
+    },
+    {
+        "source": "src/xbox360/q5a_gameplay_small_k.c",
+        "object": "q5a_gameplay_small_k.obj",
+        "symbols": {"ts4_apply_ece067e5_entries_8886FCC0": 176},
+    },
 )
 
 

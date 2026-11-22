@@ -7,7 +7,7 @@ extern void *lbl_88D459E0;
 extern void *lbl_88D4594C;
 extern void *lbl_88D41FC4;
 void ts4_if_call_seq_u32_lbl_88D45B1C_887AE088(void *object);
-void fn_8886FCC0(void *object);
+void ts4_apply_ece067e5_entries_8886FCC0(void *object);
 void fn_888647B0(void *object);
 void ts4_pending_pop_first_88908258(void *object);
 void fn_88202CD8(void *manager, void *value);
@@ -22,7 +22,7 @@ ts4_u32 ts4_script_dll_init_master_pad(void)
 /* Registered as Debug_UnlockAll. */
 ts4_u32 ts4_script_debug_unlock_all(void)
 {
-    fn_8886FCC0(lbl_88D459D4);
+    ts4_apply_ece067e5_entries_8886FCC0(lbl_88D459D4);
     return 0;
 }
 
