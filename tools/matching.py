@@ -51467,6 +51467,29 @@ MATCHING_UNITS = (
         "object": "q5_gameplay_xform_copy.obj",
         "symbols": {"ts4_xform_copy_to_rel_888B09A0": 208},
     },
+    {
+        "source": "src/xbox360/q5h3_school_sound.c",
+        "object": "q5h3_school_sound.obj",
+        "symbols": {"ts4_school_play_power_up_888FBB40": 172},
+    },
+    {
+        "source": "src/xbox360/q5h3_node_tag.c",
+        "object": "q5h3_node_tag.obj",
+        "symbols": {
+            "ts4_tag_node_c0ba51f5_26296dd2_888C9DD8": 188,
+            "ts4_tag_node_c0ba51f5_2b05e119_888C9E98": 188,
+        },
+    },
+    {
+        "source": "src/xbox360/q5h3_post_event.c",
+        "object": "q5h3_post_event.obj",
+        "symbols": {"ts4_post_event_ad796eef_888D72F0": 192},
+    },
+    {
+        "source": "src/xbox360/q5h3_xform_copy.c",
+        "object": "q5h3_xform_copy.obj",
+        "symbols": {"ts4_xform_copy_to_rel_888B0D50": 208},
+    },
 )
 
 

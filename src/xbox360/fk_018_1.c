@@ -142,7 +142,7 @@ ts4_word fn_88883CD0();
 ts4_word fn_888860A0();
 ts4_word ts4_call_seq_lbl_880DF0F0_88888338();
 ts4_word fn_888D7230();
-ts4_word fn_888D72F0();
+ts4_word ts4_post_event_ad796eef_888D72F0();
 ts4_word fn_888DF110();
 ts4_word fn_8892AF80();
 ts4_word fn_8892EB28();

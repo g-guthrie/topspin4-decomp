@@ -14816,6 +14816,22 @@
       "src/xbox360/q5_gameplay_xform_copy.c": {
         "status": "Matching",
         "source": "xbox360/q5_gameplay_xform_copy.c"
+      },
+      "src/xbox360/q5h3_school_sound.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h3_school_sound.c"
+      },
+      "src/xbox360/q5h3_node_tag.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h3_node_tag.c"
+      },
+      "src/xbox360/q5h3_post_event.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h3_post_event.c"
+      },
+      "src/xbox360/q5h3_xform_copy.c": {
+        "status": "Matching",
+        "source": "xbox360/q5h3_xform_copy.c"
       }
     }
   }

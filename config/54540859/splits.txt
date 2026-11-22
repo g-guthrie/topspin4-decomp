@@ -55213,3 +55213,21 @@ src/xbox360/q5_gameplay_post_event.c:
 src/xbox360/q5_gameplay_xform_copy.c:
 	.pdata      start:0x8812E628 end:0x8812E630
 	.text       start:0x888B09A0 end:0x888B0A70
+
+src/xbox360/q5h3_school_sound.c:
+	.pdata      start:0x8812FDA8 end:0x8812FDB0
+	.text       start:0x888FBB40 end:0x888FBBEC
+
+src/xbox360/q5h3_node_tag.c:
+	.pdata      start:0x8812ED38 end:0x8812ED40
+	.pdata      start:0x8812ED40 end:0x8812ED48
+	.text       start:0x888C9DD8 end:0x888C9E94
+	.text       start:0x888C9E98 end:0x888C9F54
+
+src/xbox360/q5h3_post_event.c:
+	.pdata      start:0x8812F280 end:0x8812F288
+	.text       start:0x888D72F0 end:0x888D73B0
+
+src/xbox360/q5h3_xform_copy.c:
+	.pdata      start:0x8812E658 end:0x8812E660
+	.text       start:0x888B0D50 end:0x888B0E20

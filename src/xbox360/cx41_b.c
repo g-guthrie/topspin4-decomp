@@ -12,7 +12,7 @@ extern void ts4_destroy_owned_object(void *p);
 extern void fn_888F70A0(void *p);
 extern void ts4_reset_four_slots_888CEBA8(void *p);
 extern void ts4_if_get_u32_lbl_88D45B1C_888C0E18(void *a, u32 b);
-extern void fn_888FBB40(u32 v);
+extern void ts4_school_play_power_up_888FBB40(u32 v);
 extern void *ts4_hash_find_null_888E1D40(void *self);
 extern char *ts4_find_record_by_key_881877A8(void *tbl, u32 *key);
 extern void ts4_clear_script_prop_B1CA7E98_888C8190(void *obj);
