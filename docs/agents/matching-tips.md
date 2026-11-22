@@ -3158,3 +3158,11 @@ Use it on schedule-only misses after the hand trial. Extend the mutation set whe
 - 12-byte xdata handle forwarding: pass `struct Q5XRef { node, offset, extra }` by value.
 - `0 != call()` gives `subfe`; `0 == call()` gives `cntlzw`. Pick the one the target uses.
 - LTCG-only helpers must be `static`, not `static inline`, or /GL inlines them differently.
+- Select of `a - b >= 0.0f` built as fcmpu/mfcr/lfsx(±1 table)/fsel: on the equivalent route write it with the
+  `__fself` intrinsic (`#pragma intrinsic` under `#ifdef _MSC_VER`, C fallback `x >= 0 ? a : b`), else the private
+  `__real@3f800000bf800000` pool gives fn_equiv a false DIFFERENT.
+- LTCG callers that keep r4/f1 live across a call to a callee that never writes them: send straight to equivalent.
+- A second `lwz` of the same field the compiler would CSE: take its address and read through it
+  (`T **pe = &l->end; r = *pe - 1;`).
+- SEH: `__try { call } __except (filter-expression) {}`; MSVC emits the filter as a funclet right after the parent
+  with its own `.pdata` entry. fn_check compares parent and funclet as separate ranges.
