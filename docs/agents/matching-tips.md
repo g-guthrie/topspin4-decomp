@@ -3146,3 +3146,15 @@ Use it on schedule-only misses after the hand trial. Extend the mutation set whe
 - perm_auto now has `m_alias` (copy a parameter into a local and replace some or all uses) and `m_retsplit`
   (`return E;` -> `{ T r = E; return r; }`). On forwarders whose frame size differs (0x4 vs 0x20) neither helps:
   the frame shape has no source form, so those go to equivalent too.
+- `REFLO 0xF70` on `g_ts4_script_constants` with no index register is element `[0]`; write `g_ts4_script_constants[0].field`.
+- Tail-merged calls that share a key argument: declare the key local at function scope, not per branch.
+- A find loop with an early `return` shape: write it as a `__forceinline` helper with the early return inside.
+- float3 copies: copy field by field in x, y, z order; a struct assignment reorders the lfs/stfs pairs.
+- Operand order that a local copy does not fix: try `tools/operand_order_pad.py` (pad locals change register choice).
+- `divw` with no `twi` trap after it means the unit was built with `/Oc`; add the flag to the spec.
+- `clrrwi` on an accumulator: an inline `u32 &acc()` accessor used twice produces it.
+- Order of `li` for constant arguments is set by an inline wrapper that takes them in the callee's order.
+- sret vec3 returns: hold the components in locals and store them to the result only after the last call.
+- 12-byte xdata handle forwarding: pass `struct Q5XRef { node, offset, extra }` by value.
+- `0 != call()` gives `subfe`; `0 == call()` gives `cntlzw`. Pick the one the target uses.
+- LTCG-only helpers must be `static`, not `static inline`, or /GL inlines them differently.
