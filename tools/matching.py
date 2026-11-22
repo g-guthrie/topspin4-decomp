@@ -51516,6 +51516,37 @@ MATCHING_UNITS = (
         "object": "q5_gameplay_xdata_xyz.obj",
         "symbols": {"ts4_xdata_load_xyz_888B0570": 532},
     },
+    {
+        "source": "src/xbox360/q5h4_ref_params.cpp",
+        "object": "q5h4_ref_params.obj",
+        "symbols": {
+            "ts4_param_user_load_ref_887FDF38": 212,
+            "ts4_param_user_load_ref_887FE0A8": 212,
+            "ts4_param_user_load_ref_887FE330": 212,
+            "ts4_param_user_load_ref_887FE408": 212,
+        },
+    },
+    {
+        "source": "src/xbox360/q5h4_camera_from.c",
+        "object": "q5h4_camera_from.obj",
+        "symbols": {"ts4_camera_current_from_888E1C38": 260},
+    },
+    {
+        "source": "src/xbox360/q5h4_msg_send.cpp",
+        "object": "q5h4_msg_send.obj",
+        "symbols": {"ts4_msg_send_on_channel_888D56D8": 320},
+    },
+    {
+        "source": "src/xbox360/q5h4_game_ends.cpp",
+        "object": "q5h4_game_ends.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"?setup_ends_and_server@Q5h4Game@@QAAXXZ": 492},
+    },
+    {
+        "source": "src/xbox360/q5h4_xdata_xyz.c",
+        "object": "q5h4_xdata_xyz.obj",
+        "symbols": {"ts4_xdata_load_xyz_888B0788": 532},
+    },
 )
 
 

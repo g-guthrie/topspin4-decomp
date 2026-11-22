@@ -55251,3 +55251,29 @@ src/xbox360/q5_gameplay_game_ends.cpp:
 src/xbox360/q5_gameplay_xdata_xyz.c:
 	.pdata      start:0x8812E618 end:0x8812E620
 	.text       start:0x888B0570 end:0x888B0784
+
+src/xbox360/q5h4_ref_params.cpp:
+	.pdata      start:0x8812A5E0 end:0x8812A5E8
+	.pdata      start:0x8812A5F0 end:0x8812A5F8
+	.pdata      start:0x8812A608 end:0x8812A610
+	.pdata      start:0x8812A610 end:0x8812A618
+	.text       start:0x887FDF38 end:0x887FE00C
+	.text       start:0x887FE0A8 end:0x887FE17C
+	.text       start:0x887FE330 end:0x887FE404
+	.text       start:0x887FE408 end:0x887FE4DC
+
+src/xbox360/q5h4_camera_from.c:
+	.pdata      start:0x8812F740 end:0x8812F748
+	.text       start:0x888E1C38 end:0x888E1D3C
+
+src/xbox360/q5h4_msg_send.cpp:
+	.pdata      start:0x8812F188 end:0x8812F190
+	.text       start:0x888D56D8 end:0x888D5818
+
+src/xbox360/q5h4_game_ends.cpp:
+	.pdata      start:0x88123830 end:0x88123838
+	.text       start:0x88677190 end:0x8867737C
+
+src/xbox360/q5h4_xdata_xyz.c:
+	.pdata      start:0x8812E620 end:0x8812E628
+	.text       start:0x888B0788 end:0x888B099C
