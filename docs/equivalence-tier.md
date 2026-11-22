@@ -625,5 +625,8 @@ rows are re-validated with `TS4_MATCHING_DIR=$PWD/work/matching-b205 python3 too
 
 `tools/fn_check.py` compares an SEH function the way the target splits it: the parent and each funclet
 (`.pdata` entries inside the candidate symbol) against consecutive target functions, plus the handler and
-scope table against the image (`check_seh`). Integration of such a unit needs the funclet symbol of the
-split object to be a label of the parent (objdiff infers the parent's size from the next non-label symbol).
+scope table against the image (`check_seh`). For integration the spec carries `"seh": {"funclets": {...}, "except_data": ...}`:
+`tools/integrate_match.py` adds the funclet and handler-record ranges to the unit and writes `"seh_labels"`;
+`tools/matching.py` turns those target funclet symbols into labels after the split (objdiff sizes a symbol up
+to the next non-label symbol, so the parent then spans its funclets as in the candidate).
+`fn_check.py` removes its `work/fncheck-*` scratch directory on exit, also after a failure; `--keep` keeps it.

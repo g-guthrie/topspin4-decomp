@@ -14896,6 +14896,10 @@
       "src/xbox360/q5_gameplay_select_first.c": {
         "status": "Matching",
         "source": "xbox360/q5_gameplay_select_first.c"
+      },
+      "src/xbox360/q5f_range_endpoints.c": {
+        "status": "Matching",
+        "source": "xbox360/q5f_range_endpoints.c"
       }
     }
   }

@@ -147,17 +147,6 @@ static __inline W6dElem *w6d_last(W6dList *l)
     return r;
 }
 
-void ts4_call_with_range_endpoints_8869FCF0(W6dSel *self, void *arg)
-{
-    W6dList *l = self->list24;
-    W6dElem *first = w6d_first(l);
-    W6dElem *last = w6d_last(l);
-    if (first != 0 && last != 0)
-        fn_88692670(arg, first->v[0], last->v[0]);
-    else
-        fn_88692670(arg, self->def20->a, self->def20->b);
-}
-
 typedef struct W6dSrcEnt { float w; __vector4 *vp; } W6dSrcEnt;
 typedef struct W6dOutItem { __vector4 pos; float w; float pad[3]; } W6dOutItem;
 typedef struct W6dOutList {

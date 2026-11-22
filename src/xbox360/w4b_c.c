@@ -19,7 +19,7 @@ struct W4bSelfC {
     int counter;
 };
 
-extern void fn_8869FCF0(void *target, int arg);
+extern void ts4_call_with_range_endpoints_8869FCF0(void *target, int arg);
 extern void fn_8869D8D0(struct W4bSelfC *self);
 
 W4B_INLINE int *w4b_counter(struct W4bSelfC *s) { return &s->counter; }
@@ -28,7 +28,7 @@ W4B_INLINE int *w4b_counter(struct W4bSelfC *s) { return &s->counter; }
 void ts4_tick_selection_886A5C00(struct W4bSelfC *self)
 {
     if (self->b3->b2->b1->key == self->b3->key) {
-        fn_8869FCF0(self->c48->target, self->arg68);
+        ts4_call_with_range_endpoints_8869FCF0(self->c48->target, self->arg68);
         fn_8869D8D0(self);
     }
     self->obj->vtbl->slot[3](self->obj);

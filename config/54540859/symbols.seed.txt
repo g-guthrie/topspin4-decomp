@@ -33840,3 +33840,4 @@ ts4_node_swap_88886458 = .text:0x88886458; // type:function size:0x5C
 ts4_dirty_disc_thread_888BFC20 = .text:0x888BFC20; // type:function size:0x5C
 ts4_scale_reset_888C0890 = .text:0x888C0890; // type:function size:0x60
 ts4_select_first_887F1050 = .text:0x887F1050; // type:function size:0x68
+ts4_call_with_range_endpoints_8869FCF0 = .text:0x8869FCF0; // type:function size:0x7C

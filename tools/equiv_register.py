@@ -37,7 +37,8 @@ def recheck(rows, only=()):
     """Re-run the checker on registered rows; returns the number that no longer pass."""
     import shutil
     sys.path.insert(0, str(ROOT / "tools"))
-    import fn_equiv
+    import fn_equiv, fn_check
+    fn_check.exit_on_sigterm()
     bad = 0
     for r in rows:
         if only and r["address"].upper() not in {f"0X{int(x, 16):08X}" for x in only}:

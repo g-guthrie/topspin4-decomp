@@ -313,5 +313,46 @@ class SehTests(unittest.TestCase):
         self.assertEqual(C.image_seh(bytes(image), base, fn, 0x20)[1], [(4, 0xC, ("const", 1), 0x10)])
 
 
+class ScratchAndLabelTests(unittest.TestCase):
+    def test_scratch_directories_are_removed_at_exit(self):
+        import tempfile
+        made = [Path(tempfile.mkdtemp(prefix="fncheck-test-")) for _ in range(2)]
+        saved, keep = list(C._SCRATCH), C.KEEP_SCRATCH
+        try:
+            C._SCRATCH[:] = made
+            C.KEEP_SCRATCH = True
+            C._remove_scratch()
+            self.assertTrue(all(d.is_dir() for d in made))
+            C.KEEP_SCRATCH = False
+            C._remove_scratch()
+            self.assertFalse(any(d.exists() for d in made))
+        finally:
+            C._SCRATCH[:], C.KEEP_SCRATCH = saved, keep
+
+    def test_funclet_symbol_becomes_a_label(self):
+        import tempfile
+        import matching
+        # a COFF object with one .text section and three symbols; the last name is in the string table
+        def sym(name, value, typ, cls):
+            raw = name if isinstance(name, bytes) else name.encode().ljust(8, b"\0")
+            return raw + struct.pack("<IhHBB", value, 1, typ, cls, 0)
+        long_name = b"fn_88883E4C_filter\0"
+        syms = sym("except_d", 0, 0, 6) + sym("fn_par", 8, 0x20, 2) + sym(struct.pack("<II", 0, 4), 0x74, 0x20, 2)
+        header = struct.pack("<HHIIIHH", 0x1F2, 1, 0, 20 + 40 + 0x9C, 3, 0, 0)
+        section = b".text".ljust(8, b"\0") + struct.pack("<IIIIIIHHI", 0, 0, 0x9C, 60, 0, 0, 0, 0, 0x60000020)
+        blob = header + section + bytes(0x9C) + syms + struct.pack("<I", 4 + len(long_name)) + long_name
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "t.obj"
+            path.write_bytes(blob)
+            before = {s.name: s.storage for s in xcoff.read_coff(path).symbols}
+            self.assertEqual(before["fn_88883E4C_filter"], 2)
+            self.assertEqual(matching.coff_symbols_to_labels(path, {"fn_88883E4C_filter"}), ["fn_88883E4C_filter"])
+            after = {s.name: s.storage for s in xcoff.read_coff(path).symbols}
+            self.assertEqual(after, dict(before, fn_88883E4C_filter=6))
+            self.assertEqual(matching.coff_symbols_to_labels(path, {"absent"}), [])
+            # as a label the funclet no longer ends the parent
+            self.assertEqual(len(xcoff.read_coff(path).function("fn_par")[0]), 0x9C - 8)
+
+
 if __name__ == "__main__":
     unittest.main()

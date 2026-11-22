@@ -9,7 +9,15 @@ Each spec is JSON:
     "flags": ["/GS-"],                         # optional extra cl flags
     "functions": {"ts4_name": "0x88170328"},   # defined symbol -> original address
     "renames": {"fn_88171960": "ts4_callee"}  # optional placeholder renames
+    "seh": {"funclets": {"0x88883E4C": "..."}, "except_data": "0x88883DD8"}   # optional
   }
+
+"seh" describes a function with structured exception handling as tools/fn_check.py
+matched it: the funclets (`__except` filters; separate .pdata functions in the target,
+part of the parent's symbol in the candidate) that directly follow a listed function,
+and the 8-byte handler record in front of it. Their ranges join the unit, the parent's
+expected size grows by the funclets, and the unit gets "seh_labels": the target
+funclet symbols that tools/matching.py turns into labels before objdiff runs.
 
 The script updates symbols.txt, symbols.seed.txt, splits.txt, objects.json and
 the MATCHING_UNITS table in tools/matching.py. It refuses conflicting names,
@@ -135,6 +143,36 @@ def main() -> int:
             if address in pdata:
                 pdata_ranges.append((pdata[address], pdata[address] + 8))
             symbol_sizes[name] = size
+        seh = spec.get("seh") or {}
+        seh_labels = []
+        if seh and spec.get("route") == "ltcg":
+            raise SystemExit(f"{source}: SEH units are not supported on the LTCG route")
+        ends = {int(a, 16) + symbol_sizes[n]: n for n, a in spec["functions"].items()}
+        for address in sorted(int(a, 16) for a in seh.get("funclets", {})):
+            index = by_addr_text.get(address)
+            if index is None:
+                raise SystemExit(f"no function symbol at SEH funclet {address:#x}")
+            if address not in ends:
+                raise SystemExit(f"SEH funclet {address:#x} does not directly follow a function of {source}")
+            size = int(re.search(r"size:0x([0-9A-Fa-f]+)", lines[index]).group(1), 16)
+            for start, end in existing:
+                if start < address + size and address < end:
+                    raise SystemExit(f"SEH funclet {address:#x} overlaps an existing split {start:#x}-{end:#x}")
+            parent = ends.pop(address)
+            ends[address + size] = parent
+            symbol_sizes[parent] += size
+            seh_labels.append(LINE.match(lines[index]).group(1))
+            text_ranges.append((address, address + size))
+            if address in pdata:
+                pdata_ranges.append((pdata[address], pdata[address] + 8))
+        if "except_data" in seh:
+            address = int(seh["except_data"], 16)
+            if address + 8 not in {int(a, 16) for a in spec["functions"].values()}:
+                raise SystemExit(f"SEH except_data {address:#x} is not directly in front of a function of {source}")
+            for start, end in existing:
+                if start < address + 8 and address < end:
+                    raise SystemExit(f"SEH except_data {address:#x} overlaps an existing split {start:#x}-{end:#x}")
+            text_ranges.append((address, address + 8))
         for old, new in spec.get("renames", {}).items():
             if old not in by_name:
                 if new in by_name:
@@ -172,6 +210,8 @@ def main() -> int:
         ]
         if spec.get("flags"):
             entry.append(f'        "extra_flags": {json.dumps(spec["flags"])},')
+        if seh_labels:
+            entry.append(f'        "seh_labels": {json.dumps(seh_labels)},')
         if len(symbol_sizes) == 1:
             (name, size), = symbol_sizes.items()
             entry.append(f'        "symbols": {{"{name}": {size}}},')

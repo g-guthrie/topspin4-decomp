@@ -38,11 +38,14 @@ Requires a completed tools/matching.py run and work/matching-tools.
 from __future__ import annotations
 
 import argparse
+import atexit
 import os
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
+import threading
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -81,8 +84,32 @@ MASKS = {
 }
 
 
+_SCRATCH: list[Path] = []      # scratch directories made by compile_candidate in this process
+KEEP_SCRATCH = False            # --keep: leave them in work/ for inspection
+
+
+def _remove_scratch() -> None:
+    if not KEEP_SCRATCH:
+        for directory in _SCRATCH:
+            shutil.rmtree(directory, ignore_errors=True)
+
+
+atexit.register(_remove_scratch)
+
+
+def exit_on_sigterm() -> None:
+    """Make a terminated run (a timeout) exit through atexit, so its scratch is removed too."""
+    if threading.current_thread() is threading.main_thread() and \
+            signal.getsignal(signal.SIGTERM) is signal.SIG_DFL:
+        signal.signal(signal.SIGTERM, lambda *_: sys.exit(143))
+
+
 def compile_candidate(source: Path, flags: list[str]) -> Path:
+    """Compile `source` in a fresh work/fncheck-* directory and return the object path.
+    The directory is removed when the process exits (also after a failed compile or check,
+    or an exception in a tool that imports this function) unless KEEP_SCRATCH is set."""
     workdir = Path(tempfile.mkdtemp(prefix="fncheck-", dir=ROOT / "work"))
+    _SCRATCH.append(workdir)
     local = workdir / source.name
     shutil.copyfile(source, local)
     includes = []
@@ -243,7 +270,12 @@ def main() -> int:
     parser.add_argument("mappings", nargs="+", help="candidate_name=target_name_or_0xaddr")
     parser.add_argument("--flags", nargs="*", default=[], help="extra cl flags, e.g. /GS-")
     parser.add_argument("--quiet", action="store_true", help="omit listings for matches")
+    parser.add_argument("--keep", action="store_true",
+                        help="keep the work/fncheck-* scratch directory (object, copied source)")
     args = parser.parse_args()
+    global KEEP_SCRATCH
+    KEEP_SCRATCH = args.keep
+    exit_on_sigterm()
 
     symbols = load_symbols()
     by_addr = {entry[2]: entry[0] for entry in symbols if entry[1] == ".text"}
@@ -410,7 +442,9 @@ def main() -> int:
                 print(f"SEH {cand_name}: {note}")
     for old, new in sorted(renames.items()):
         print(f"RENAME {old} -> {new}")
-    if not failures:
+    if args.keep:
+        print(f"kept {obj_path.parent}")
+    elif not failures:
         shutil.rmtree(obj_path.parent, ignore_errors=True)
     return 1 if failures else 0
 

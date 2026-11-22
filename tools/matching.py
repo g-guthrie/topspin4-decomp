@@ -51580,6 +51580,11 @@ MATCHING_UNITS = (
         "object": "q5_gameplay_select_first.obj",
         "symbols": {"ts4_select_first_887F1050": 104},
     },
+    {
+        "source": "src/xbox360/q5f_range_endpoints.c",
+        "object": "q5f_range_endpoints.obj",
+        "symbols": {"ts4_call_with_range_endpoints_8869FCF0": 124},
+    },
 )
 
 
@@ -51641,6 +51646,51 @@ def block_relocations_yaml() -> str:
     return "block_relocations:\n" + "".join(
         f"  - target: {json.dumps(target)}\n" for target in targets
     )
+
+
+def coff_symbols_to_labels(path: Path, names: set[str]) -> list[str]:
+    """Turn function symbols of a split COFF object into labels (storage class 6, type 0).
+
+    Jeff makes every .pdata entry a function, so an SEH funclet (the `__except` filter the
+    compiler emits right after its parent, inside the parent's symbol) becomes a separate
+    target function and objdiff, which sizes a symbol up to the next non-label symbol,
+    compares the candidate's parent+funclet symbol against the parent alone. As a label the
+    funclet is part of the parent again. Returns the names found; idempotent."""
+    import struct
+
+    data = bytearray(path.read_bytes())
+    _machine, _nsec, _stamp, symoff, nsym, _opt, _chars = struct.unpack_from("<HHIIIHH", data, 0)
+    strings = symoff + 18 * nsym
+    found, index = [], 0
+    while index < nsym:
+        entry = symoff + 18 * index
+        raw = bytes(data[entry : entry + 8])
+        if raw[:4] == b"\0\0\0\0":
+            start = strings + struct.unpack_from("<I", raw, 4)[0]
+            name = bytes(data[start : data.index(0, start)]).decode("latin-1")
+        else:
+            name = raw.rstrip(b"\0").decode("latin-1")
+        if name in names:
+            struct.pack_into("<HB", data, entry + 14, 0, 6)
+            found.append(name)
+        index += 1 + data[entry + 17]
+    if found:
+        path.write_bytes(data)
+    return found
+
+
+def patch_seh_labels(split_config: dict) -> None:
+    """Apply the "seh_labels" of MATCHING_UNITS to the freshly split target objects."""
+    targets = {unit["name"]: resolve_generated(unit["object"]) for unit in split_config["units"]}
+    for unit in MATCHING_UNITS:
+        labels = set(unit.get("seh_labels", ()))
+        if not labels:
+            continue
+        found = coff_symbols_to_labels(targets[unit["source"]], labels)
+        if set(found) != labels:
+            raise SystemExit(f"{unit['source']}: SEH funclet symbol(s) not in the split object: "
+                             f"{', '.join(sorted(labels - set(found)))}")
+        print(f"SEH: {', '.join(sorted(found))} made label(s) in {targets[unit['source']].name}")
 
 
 def resolve_generated(path: str) -> Path:
@@ -51777,6 +51827,7 @@ def main() -> int:
 
     rebuilt_by_source.update(ltcg_route.build(args, rebuilt_dir, split_dir, symbols, xex))
     split_config = json.loads((split_dir / "config.json").read_text())
+    patch_seh_labels(split_config)
     project = objdiff_config(split_config, rebuilt_by_source)
     (project_dir / "objdiff.json").write_text(
         json.dumps(project, indent=2) + "\n", encoding="utf-8"

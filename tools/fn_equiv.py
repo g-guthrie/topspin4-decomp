@@ -3067,6 +3067,8 @@ def main() -> int:
     for m in a.mappings:
         name, _, target = m.partition("=")
         maps.append((name, resolve_target(world, target)))
+    import fn_check
+    fn_check.exit_on_sigterm()      # a timed-out run removes its work/fncheck-* scratch as well
     obj = a.obj or compile_source(a.source, a.flags)
     text = a.source.read_text(errors="replace") if a.source.is_file() else None
     results = check_object(obj, maps, source_text=text, trials=a.trials, seed=a.seed, min_cov=a.min_coverage,
