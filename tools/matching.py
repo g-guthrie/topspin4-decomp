@@ -51591,6 +51591,11 @@ MATCHING_UNITS = (
         "seh_labels": ["fn_88883E4C"],
         "symbols": {"ts4_set_thread_name_88883DE0": 148},
     },
+    {
+        "source": "src/xbox360/q5_gameplay_move_leave.c",
+        "object": "q5_gameplay_move_leave.obj",
+        "symbols": {"ts4_move_state_leave_8865DAC0": 144},
+    },
 )
 
 

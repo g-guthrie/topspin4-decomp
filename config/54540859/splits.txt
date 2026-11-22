@@ -55309,3 +55309,6 @@ src/xbox360/q5f_set_thread_name_seh.c:
 	.pdata      start:0x8812DA08 end:0x8812DA10
 	.pdata      start:0x8812DA10 end:0x8812DA18
 	.text       start:0x88883DD8 end:0x88883E74
+
+src/xbox360/q5_gameplay_move_leave.c:
+	.text       start:0x8865DAC0 end:0x8865DB50

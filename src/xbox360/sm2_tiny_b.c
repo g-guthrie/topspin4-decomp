@@ -6,7 +6,7 @@ extern void ts4_destroy_owned_object(void *object);
 extern void ts4_set_u32_off8_8847FA60(void *p, unsigned v);
 extern void ts4_tailcall_NetDll_closesocket_884F0258(int s);
 extern void ts4_mat34_scale_rows_8864E5A8(void *a, float x, float y, float z);
-extern void fn_886D0808(void *p);
+extern void fn_886D0808(void *self, int want);
 extern void fn_88566E40(void *p);
 extern void fn_88472530(void *p);
 
@@ -20,7 +20,7 @@ void ts4_set_byte_nested_a34_88660CE0(const char *s, char v) { *(char *)(*(char 
 unsigned char ts4_pack_or_shl1_8840F170(unsigned char a, int b) { return (unsigned char)((b << 1) | a); }
 unsigned ts4_get_u32_by_is_zero_8865A278(const char *p, unsigned v) { return ((const unsigned *)*(const char **)(p + 0x10))[v == 0]; }
 float ts4_swap_float_stride8_88554430(char *a, int i, float v) { float t = *(float *)(a + i * 8); *(float *)(a + i * 8) = v; return t; }
-void ts4_if_state1_forward_886D0898(const char *p) { if (*p == 1) fn_886D0808((void *)p); }
+void ts4_if_state1_forward_886D0898(const char *p, int want) { if (*p == 1) fn_886D0808((void *)p, want); }
 void ts4_if_set_u32_off8_8846A380(char *p) { if (p) ts4_set_u32_off8_8847FA60(p, *(unsigned *)(p + 8)); }
 void ts4_destroy_field0_886CFA08(char *p) { if (*(void **)p) ts4_destroy_owned_object(*(void **)p); }
 void ts4_destroy_field14_886291C8(char *p) { if (*(void **)(p + 0x14)) ts4_destroy_owned_object(*(void **)(p + 0x14)); }

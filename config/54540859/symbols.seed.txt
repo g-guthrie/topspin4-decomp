@@ -33842,3 +33842,4 @@ ts4_scale_reset_888C0890 = .text:0x888C0890; // type:function size:0x60
 ts4_select_first_887F1050 = .text:0x887F1050; // type:function size:0x68
 ts4_call_with_range_endpoints_8869FCF0 = .text:0x8869FCF0; // type:function size:0x7C
 ts4_set_thread_name_88883DE0 = .text:0x88883DE0; // type:function size:0x6C
+ts4_move_state_leave_8865DAC0 = .text:0x8865DAC0; // type:function size:0x90
