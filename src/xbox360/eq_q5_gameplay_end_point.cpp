@@ -32,6 +32,7 @@ struct Obj {
 };
 static inline unsigned char foreign5(Ctx *c, State *s, int index) { unsigned char b; if (index == -1 || index == c->side->current || s->locked) b = 0; else b = 1; return b; }
 static inline Item *item(Items *t, int i) { return (Item *)((char *)t + (i * 0x18 + t->offset)); }
+/* byte-gap: 6 off; r6/r7 swap and add operand order in the final winner/loser item stores; target keeps a dead mr and a dead addi */
 extern "C" void ts4_end_point_8865CCD0(Obj *o)
 { int op1_pad0 = 0, op1_pad1 = 0, op1_pad2 = 0, op1_pad3 = 0;
     int server;

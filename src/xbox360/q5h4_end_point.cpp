@@ -31,6 +31,7 @@ static inline unsigned char q5h4_foreign5(Q5h4Ctx *c, Q5h4State *s, int index) {
 static inline Q5h4Item *q5h4_item(Q5h4Items *t, int i) { return (Q5h4Item *)((char *)t + (i * 0x18 + t->offset)); }
 
 /* 0x8865D108 */
+/* byte-gap: 6 off; r6/r7 swap and add operand order in the final winner/loser item stores; target keeps a dead mr and a dead addi */
 extern "C" void ts4_end_point_8865D108(Q5h4Obj *o)
 { int op1_pad0 = 0, op1_pad1 = 0, op1_pad2 = 0, op1_pad3 = 0;
     (void)op1_pad0; (void)op1_pad1; (void)op1_pad2; (void)op1_pad3;

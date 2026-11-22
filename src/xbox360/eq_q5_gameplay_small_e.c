@@ -13,6 +13,7 @@ extern int ts4_state_flag_8865DA28(const char *object);
 extern int fn_886A58F0(void *query);
 
 /* Swing_DLL.xex 0x886A80F0 */
+/* byte-gap: 28 off; LTCG keeps force in r4 across ts4_state_flag_8865DA28 (the callee does not write r4) */
 int ts4_stroke_query_886A80F0(Q5Stroke *self, u8 force)
 {
     u8 busy = (u8)ts4_state_flag_8865DA28((const char *)self->state);
@@ -43,6 +44,7 @@ extern void fn_886DBF40(void *a, u32 b, void *c, u32 d, int e, u32 f);
 extern void fn_886C6660(Q5Pend98 *dst, const Q5Pend98 *src);
 
 /* Swing_DLL.xex 0x886DC610 */
+/* byte-gap: 31 off; LTCG keeps the new end in r4 across the copy */
 void ts4_pending_take_886DC610(Q5PendList *self, Q5Pend98 *entry)
 {
     Q5PendEnv *env = self->env;
@@ -68,6 +70,7 @@ typedef struct Q5Ent84 {
 typedef struct Q5EntOwner { Q5Ent84 self; Q5Ent84 *begin; Q5Ent84 *end; } Q5EntOwner;
 
 /* Swing_DLL.xex 0x8886FE50 */
+/* byte-gap: 30 off; the two copy tails are not merged the same way */
 int ts4_entry_info_8886FE50(Q5EntOwner *o, u32 idx, u32 *a, u32 *b, u32 *c)
 {
     Q5Ent84 *e;
@@ -97,6 +100,7 @@ extern void fn_8857B598(u32 thread, u32 processor);
 extern void ts4_resume_thread(u32 thread);
 
 /* Swing_DLL.xex 0x8888A4E8 */
+/* byte-gap: 0 off; fn_check reports 0 off, but the notes say the handle is reused from r3 for the 0x8857B598 call; verify with matching.py */
 void ts4_worker_start_8888A4E8(Q5Worker *w)
 {
     u32 t;
@@ -121,6 +125,7 @@ typedef struct Q5Scroller { char pad[4]; Q5DimOwner *owner; char pad8[0x4c]; u8 
 extern float g_ts4_script_constants[];
 
 /* Swing_DLL.xex 0x888C1910 */
+/* byte-gap: 28 off; int->float conversion staging */
 void ts4_scroll_offset_888C1910(Q5Scroller *s)
 {
     Q5DimOwner *o;
@@ -148,6 +153,7 @@ extern void fn_888FA078(Q5Slot3c *slot);
 extern char lbl_880DBD08[];
 
 /* Swing_DLL.xex 0x888FD948 */
+/* byte-gap: 4 off; loop counter form and zero-store scheduling */
 Q5SlotObj *ts4_slot_obj_ctor_888FD948(Q5SlotObj *o)
 {
     int i;
@@ -173,6 +179,7 @@ Q5SlotObj *ts4_slot_obj_ctor_888FD948(Q5SlotObj *o)
  * index leaves the outputs untouched. Always returns 1. Not byte-matched: tail merging. */
 
 /* Swing_DLL.xex 0x8886FED0 */
+/* byte-gap: 31 off; tail merging */
 int ts4_entry_counts_8886FED0(Q5EntOwner *o, u32 idx, u32 *a, u32 *b, u32 *count)
 {
     Q5Ent84 *e;
@@ -200,6 +207,7 @@ extern float ts4_rng_range_8861E598(Q5Rng *rng, float lo, float hi);
 extern void ts4_loop_call_seq_u32_off2c_8890E988(void *seq);
 
 /* Swing_DLL.xex 0x88693FA8 */
+/* byte-gap: 8 off; register numbering of the saved bounds */
 void ts4_jitter_reset_88693FA8(Q5Jitter *j, Q5JitOwner *o, Q5Rng *rng)
 {
     float lo = lbl_8814B440;

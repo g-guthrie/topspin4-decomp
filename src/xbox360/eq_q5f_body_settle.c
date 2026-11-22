@@ -14,6 +14,7 @@ extern void fn_886AB250(Q5Solver *s, Q5Body *b);
 extern void fn_889C2818(void *solver, Q5Body *b);
 
 /* Swing_DLL.xex 0x886AD1F0 */
+/* byte-gap: 9 off; LTCG keeps r3/r4 live into 0x886AB250 */
 void ts4_body_settle_886AD1F0(Q5Solver *s, Q5Body *b)
 {
     u32 i = 0;

@@ -30,6 +30,7 @@ extern void fn_88668650(void *sink, u32 arg);
 
 /* Swing_DLL.xex 0x886696A8: when the rally count reaches the score target and the
  * state is not locked, notify the game's sink with the state's event argument. */
+/* byte-gap: 17 off; target reloads self->game after the first test and keeps a clrrwi copy for the call */
 void ts4_rally_goal_check_886696A8(Q5fRallyCtl *self)
 {
     Q5fRallyGame *g = self->game;

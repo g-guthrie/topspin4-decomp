@@ -27,6 +27,7 @@ typedef struct Q5h4Op { char p0[8]; u32 w8; char pc[0x14]; Q5h4Ctx *ctx; Q5h4Sin
 extern "C" u32 *ts4_set_u32_off0_887F7B18(u32 *, u8);
 extern "C" void fn_881B5150(Q5h4Op *);
 static void *q5h4_rel(Q5h4Rel *r) { return (char *)r + r->off; }
+/* byte-gap: 75 off; LTCG template; 14 off under fn_check_ltcg (sister of 0x887F8920) */
 extern "C" u32 ts4_var_max_node_887F8A50(Q5h4Op *self)
 {
     Q5h4Desc *d = self->desc;

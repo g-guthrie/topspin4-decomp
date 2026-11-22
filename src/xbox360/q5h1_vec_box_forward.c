@@ -14,6 +14,7 @@ extern u8 fn_886C8C68(const Q5h1VecPair *a, const Q5h1VecPair *b, const Q5h1VecP
                       Q5h1Vec4 *out1, Q5h1Vec4 *out2, Q5h1Vec4 *out3);
 
 /* Swing_DLL.xex 0x886C90F0: forward all seven arguments to fn_886C8C68 and return its result. */
+/* byte-gap: 8 off; original keeps a frame around a non-tail call (sister of 0x886C8C48) */
 u8 ts4_vec_box_test_forward_886C90F0(const Q5h1VecPair *a, const Q5h1VecPair *b, const Q5h1VecPair *c,
                                      Q5h1Vec4 *out0, Q5h1Vec4 *out1, Q5h1Vec4 *out2, Q5h1Vec4 *out3)
 {

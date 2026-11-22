@@ -16,6 +16,7 @@ extern u32 lbl_88C6A45C;
 extern void ts4_vec204_move_tail_881B9148(Q5TailList *list);
 
 /* Swing_DLL.xex 0x888868E0 */
+/* byte-gap: 4 off; target reuses r11 for both the 0 and 4 constants */
 void ts4_deactivate_move_tail_888868E0(Q5TailOwner *self)
 {
     self->active = 0;
@@ -45,6 +46,7 @@ typedef struct Q5RecData { char pad0[0x24]; Q5RecHdr hdr; } Q5RecData;
 typedef struct Q5RecOwner { char pad0[8]; Q5RecData *data; } Q5RecOwner;
 
 /* Swing_DLL.xex 0x8865C2D8 */
+/* byte-gap: 9 off; reason not recorded */
 void ts4_rec_clear_dirty_snapshot_8865C2D8(Q5RecOwner *self)
 {
     Q5RecHdr *h = &self->data->hdr;

@@ -15,6 +15,7 @@ extern const void *lbl_880E4880[];
 extern Q5h1Obj887F4BA0 *fn_887F4BA0(Q5h1Obj887F4BA0 *self);
 
 /* Swing_DLL.xex 0x887F4C60 */
+/* byte-gap: 12 off; same dead save of self in r31 as template 0x887F4C18 */
 Q5h1Obj887F4BA0 *ts4_ctor_vtable_880E4760_887F4C60(Q5h1Obj887F4BA0 *self)
 {
     Q5h1Obj887F4BA0 *obj = fn_887F4BA0(self);
@@ -23,6 +24,7 @@ Q5h1Obj887F4BA0 *ts4_ctor_vtable_880E4760_887F4C60(Q5h1Obj887F4BA0 *self)
 }
 
 /* Swing_DLL.xex 0x887F4CB0 */
+/* byte-gap: 12 off; same dead save of self in r31 as template 0x887F4C18 */
 Q5h1Obj887F4BA0 *ts4_ctor_vtable_880E4528_887F4CB0(Q5h1Obj887F4BA0 *self)
 {
     Q5h1Obj887F4BA0 *obj = fn_887F4BA0(self);
@@ -31,6 +33,7 @@ Q5h1Obj887F4BA0 *ts4_ctor_vtable_880E4528_887F4CB0(Q5h1Obj887F4BA0 *self)
 }
 
 /* Swing_DLL.xex 0x887F4CF8 */
+/* byte-gap: 12 off; same dead save of self in r31 as template 0x887F4C18 */
 Q5h1Obj887F4BA0 *ts4_ctor_vtable_880E47F0_887F4CF8(Q5h1Obj887F4BA0 *self)
 {
     Q5h1Obj887F4BA0 *obj = fn_887F4BA0(self);
@@ -39,6 +42,7 @@ Q5h1Obj887F4BA0 *ts4_ctor_vtable_880E47F0_887F4CF8(Q5h1Obj887F4BA0 *self)
 }
 
 /* Swing_DLL.xex 0x887F4EC8 */
+/* byte-gap: 12 off; same dead save of self in r31 as template 0x887F4C18 */
 Q5h1Obj887F4BA0 *ts4_ctor_vtable_880E4880_887F4EC8(Q5h1Obj887F4BA0 *self)
 {
     Q5h1Obj887F4BA0 *obj = fn_887F4BA0(self);

@@ -36,6 +36,7 @@ extern char g_ts4_script_constants[];
 extern int ts4_if_call_seq_u32_off0_8857B180(int id, u16 *xy);
 
 /* Swing_DLL.xex 0x888C5C00 */
+/* byte-gap: 33 off; LTCG keeps f1/f2 live across the call; target's fmuls operand order is not reproducible from C */
 int ts4_pad_send_stick_888C5C00(Q5StickOut *o, int pad, float x, float y)
 {
     Q5PadRec *rec = ts4_pad_record_find_88614938(lbl_88D45B1C->modules, pad);
@@ -59,6 +60,7 @@ extern u32 ts4_tailcall_XamShowDeviceSelectorUI_8857A6C8(int user, u32 content_t
                                                            Q5Size64 bytes, u32 *device_id, Q5Overlapped *ov);
 
 /* Swing_DLL.xex 0x888CB5F8 */
+/* byte-gap: 20 off; target forms the second word of the 64-bit size through a separate address and stores the final byte without the extra register copy */
 void ts4_show_device_selector_888CB5F8(Q5DevSel *self)
 {
     Q5Size64 bytes;
@@ -93,6 +95,7 @@ extern Dc44 *ts4_dc44_copy_881817A0(Dc44 *first, Dc44 *last, Dc44 *dst);
 extern void ts4_if_call_seq_lbl_880F7EE4_88617D28(void *self);
 
 /* Swing_DLL.xex 0x888CA910 */
+/* byte-gap: 7 off; scheduling of mr r30,r3 and the global store (perm_auto best 7) */
 void ts4_svc_dtor_888CA910(Q5Svc *self)
 {
     Q5Vec *v = &self->items;
@@ -119,6 +122,7 @@ extern Q5HashTable *lbl_88D458F0;
 extern Q5HashRec *ts4_hash_find_arg_88180F08(Q5HashTable *table, u32 hash, Q5HashKey3 *key, Q5Handle12 h);
 
 /* Swing_DLL.xex 0x888E7278 */
+/* byte-gap: 22 off; argument set-up scheduling (perm_auto best 22) */
 void ts4_hash_reset_C750E1AC_888E7278(u32 v)
 {
     Q5HashKey3 k;
@@ -150,6 +154,7 @@ extern Q5Str *fn_88163300(Q5Str *out, Q5Str *a, const char *b);
 extern void *ts4_if_call_seq_u32_off0_8816D140(Q5Str16 *self, Q5Str *s);
 
 /* Swing_DLL.xex 0x88888DA8 */
+/* byte-gap: 36 off; target keeps the converted buffer in r30 and the global's address in r31 for the whole function */
 void ts4_post_prefixed_88888DA8(Q5Named *self, const char *text)
 {
     if (lbl_88D45B1C->sink && self->active) {
@@ -178,6 +183,7 @@ extern char *lbl_88D45964;
 extern void ts4_ptr_vec_add_unique_888AE990(char *self, u32 key);
 
 /* Swing_DLL.xex 0x888B1960 */
+/* byte-gap: 31 off; target tests the relative pointer with add + cmplwi cr6 (not add.) and keeps a dead blr after the tail call (LTCG) */
 void ts4_tracker_commit_888B1960(Q5Tracker *self)
 {
     Q5RelRef *r;
@@ -228,6 +234,7 @@ static __inline u32 q5_pick_anim(u8 win)
 }
 
 /* Swing_DLL.xex 0x88669B98 */
+/* byte-gap: 37 off; reason not recorded */
 void ts4_player_set_anim_pair_88669B98(Q5Owner4 *self, Q5PlayerA *p)
 {
     Q5PAnim *a = p->anim;
@@ -249,6 +256,7 @@ typedef struct Q5Emitter { char pad[0xc]; Q5Clip *clip; char pad10[0x60]; const 
 extern void fn_8816CAA0(void *dst, const char *s);
 
 /* Swing_DLL.xex 0x88880750 */
+/* byte-gap: 25 off; VMX length (vmsum3fp, fsqrts, splat round-trip through the stack) */
 void ts4_emitter_describe_88880750(Q5Emitter *self, void *name_out, u32 *f40, float *len, u32 *f58, u32 *f44)
 {
     Q5Clip *c;
@@ -281,6 +289,7 @@ typedef struct Q5SelX { char pad[0x18]; Q5SelItem *sel; char pad1c[0x2c]; Q5SelY
 typedef struct Q5SelS { char pad[0x1c]; Q5SelX *x; } Q5SelS;
 
 /* Swing_DLL.xex 0x8866BAE0 */
+/* byte-gap: 37 off; target re-reads self->x and keeps an LTCG no-op clrrwi */
 int ts4_selected_flag_8866BAE0(Q5SelS *self)
 {
     Q5SelX *x = self->x;
@@ -309,6 +318,7 @@ extern u32 fn_88691298(void *a, void *b, void *c);
 extern void fn_8869BDF8(void *a, void *b, Q5Color c);
 
 /* Swing_DLL.xex 0x886A37D0 */
+/* byte-gap: 30 off; LTCG no-op clrrwi on the object pointer */
 void ts4_update_highlight_886A37D0(Q5HlSelf *self)
 {
     Q5HlObj *o = self->obj;
@@ -337,6 +347,7 @@ static __inline u32 q5_bits_size(const Q5BitVec *v)
 }
 
 /* Swing_DLL.xex 0x888C1368 */
+/* byte-gap: 34 off; target stages the iterator pair through the stack */
 int ts4_bits_test_888C1368(Q5BitOwner *self, u32 idx)
 {
     if (idx < q5_bits_size(&self->bits)) {
@@ -365,6 +376,7 @@ static __inline void q5_vec_clear(Q5Vec3w *v)
 }
 
 /* Swing_DLL.xex 0x8887C000 */
+/* byte-gap: 12 off; scheduling of the final vector end store (perm_auto best 12) */
 void ts4_tables_reset_8887C000(Q5Tables *self)
 {
     self->count = 0;
@@ -404,6 +416,7 @@ static __inline u32 *q5_rel_begin(Q5PropRec *r)
 }
 
 /* Swing_DLL.xex 0x888E9898 */
+/* byte-gap: 2 off; mr r29,r3 is scheduled before the key spill (perm_auto best 2) */
 void ts4_apply_prop_record_888E9898(Q5PropHolder *self, u32 key)
 {
     Q5PropRec *r = ts4_find_record_by_key_881877A8(ts4_hash_find_null_888E1D40(), &key);

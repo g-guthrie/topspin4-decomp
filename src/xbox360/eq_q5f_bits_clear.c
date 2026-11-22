@@ -16,6 +16,7 @@ static __inline u32 q5_bits_size(const Q5BitVec *v)
 }
 
 /* Swing_DLL.xex 0x888C15A0 */
+/* byte-gap: 28 off; target stages the iterator pair through the stack */
 void ts4_bits_clear_888C15A0(Q5BitOwner *self, u32 idx)
 {
     if (idx < q5_bits_size(&self->bits)) {

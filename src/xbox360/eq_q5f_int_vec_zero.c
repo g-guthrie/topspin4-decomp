@@ -14,6 +14,7 @@ typedef struct Q5fIntVec {
 extern void *ts4_memset(void *dst, int c, u32 n);
 
 /* Swing_DLL.xex 0x887F73F0: zero every int of a [first, last) vector. */
+/* byte-gap: 6 off; reason not recorded */
 void ts4_int_vec_zero_887F73F0(Q5fIntVec *v)
 {
     if (v->first != v->last)

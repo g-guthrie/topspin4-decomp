@@ -15,6 +15,7 @@ typedef struct Q5GMgr { char pad[0x70]; Q5GTable table; char pad74[8]; u32 curre
 typedef struct Q5GOwner { char pad[0x10]; Q5Group **groups; char pad14[0x1c]; Q5GMgr *mgr; } Q5GOwner;
 
 /* Swing_DLL.xex 0x8865EF18 */
+/* byte-gap: 32 off; the table base is hoisted out of the loop in the target */
 int ts4_group_has_state1_8865EF18(Q5GOwner *self)
 {
     Q5GMgr *m = self->mgr;

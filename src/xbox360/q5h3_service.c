@@ -23,6 +23,7 @@ extern void fn_8892F038(Q5h3ServiceRec *rec, u32 a, void *factory, u32 b, u32 c,
 /* 0x888EC5F8: find record 0xAD0C7318 in the global table, create its service if needed, and return the
  * service's resolve(0) (virtual slot +0x4c), or 0 when there is still no service.
  * Same body as 0x888EC548 (the record hash is the only difference in the target code). */
+/* byte-gap: 39 off; same body as 0x888EC548 (the record hash is the only difference in the target code) */
 Q5h3Service *ts4_get_service_ad0c7318_888EC5F8(void)
 {
     struct Ga3Id id;

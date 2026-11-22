@@ -24,6 +24,7 @@ static u32 q5_bank_slot(Q5BankRel *r, u32 i) { return ((u32 *)(r->off + (char *)
 static Q5BankItem *q5_bank_item(Q5BankRel *r, u32 i) { return (Q5BankItem *)(r->off + (char *)r) + i; }
 
 /* Swing_DLL.xex 0x888CB9D0 */
+/* byte-gap: 18 off; register allocation and load order differ (perm_auto best 18 after 865 candidates) */
 u32 ts4_bank_cursor_value_888CB9D0(Q5BankOwner *self)
 {
     Q5BankCursor *c = self->cur;
@@ -41,6 +42,7 @@ extern Q5SavedRec *ts4_find_record_by_key_881877A8(void *tbl, u32 *key);
 extern void ts4_clear_script_prop_B1CA7E98_888C8190(void *obj);
 
 /* Swing_DLL.xex 0x888E9840 */
+/* byte-gap: 2 off; target copies obj to r31 before the key's home-slot store (2 instructions off in every form tried) */
 void ts4_restore_record_and_clear_prop_888E9840(void *obj, u32 key)
 {
     Q5SavedRec *r = ts4_find_record_by_key_881877A8(ts4_hash_find_null_888E1D40(), &key);
@@ -62,6 +64,7 @@ extern void ts4_multiply_by_keys_886491E8(Q5Shaper *s, struct W8dRel_886491E8 *k
 extern void fn_88644DE0(Q5Shaper *s, float gain, int flag);
 
 /* Swing_DLL.xex 0x88649298 */
+/* byte-gap: 20 off; LTCG keeps gain in volatile f1 across the calls; plain C spills it to f31 */
 void ts4_shaper_apply_rel_88649298(Q5Shaper *s, void *src, Q5Pt3Rel *pts,
                                    struct W8dRel_886491E8 *keys, int flag, float gain)
 {
@@ -84,6 +87,7 @@ typedef struct Q5ShotRec {
 extern void ts4_record_copy_886C4AF0(Q5ShotRec *d, const Q5ShotRec *s);
 
 /* Swing_DLL.xex 0x886C6660 */
+/* byte-gap: 6 off; target uses r3/r4 after the call (LTCG callee leaves them intact); we reload from r31/r30 */
 void ts4_shot_rec_copy_886C6660(Q5ShotRec *d, const Q5ShotRec *s)
 {
     ts4_record_copy_886C4AF0(d, s);
@@ -103,6 +107,7 @@ extern void *ts4_if_call_seq_u32_lbl_88D459E4_8883F238(void);
 extern void fn_886223B0(void *mgr, u32 i, char *name);
 
 /* Swing_DLL.xex 0x888D66C8 */
+/* byte-gap: 6 off; register numbering of the slot address and the order of the last two argument moves */
 void ts4_save_slot_publish_name_888D66C8(Q5SaveOwner *self, u32 i)
 {
     char name[0x200];
@@ -127,6 +132,7 @@ extern void fn_88668DF8(Q5Pending *o);
 extern void ts4_clear_records_88668D70(Q5Pending *o);
 
 /* Swing_DLL.xex 0x88669040 */
+/* byte-gap: 21 off; LTCG keeps obj in r3 and the zero in r5 across the calls */
 void ts4_pending_flush_88669040(Q5Pending *o)
 {
     if (o->rebuild == 1) {
@@ -151,6 +157,7 @@ typedef struct Q5Ring { u32 cap; Q5RingEnt *buf; u32 pad24; u32 head; u32 count;
 typedef struct Q5RingOwner { char pad0[0x1c]; Q5Ring ring; } Q5RingOwner;
 
 /* Swing_DLL.xex 0x88885BB8 */
+/* byte-gap: 23 off; target addresses the ring through a copy of the owner pointer with a dead addi of the ring base */
 void ts4_ring_push_88885BB8(Q5RingOwner *o, u32 v)
 {
     Q5Ring *r = &o->ring;
@@ -174,6 +181,7 @@ typedef struct Q5ModeFlags {
 } Q5ModeFlags;
 
 /* Swing_DLL.xex 0x888C3940 */
+/* byte-gap: 10 off; target stores the on bytes through a zero-extended copy of the zero (perm_auto best 10) */
 u8 ts4_set_mode_clamped_888C3940(Q5ModeFlags *f, u8 m)
 {
     u8 old = f->mode;
@@ -207,6 +215,7 @@ typedef struct Q5ScaleSrc {
 typedef struct Q5ScaleDst { char pad0[4]; Q5V2 target; Q5V2 cur; } Q5ScaleDst;
 
 /* Swing_DLL.xex 0x886CEEC0 */
+/* byte-gap: 24 off; load scheduling and a dead addi of &d->cur */
 void ts4_vec2_set_scale_886CEEC0(Q5ScaleDst *d, Q5ScaleSrc *s, float x, float y)
 {
     float k;
@@ -244,6 +253,7 @@ static __inline u32 *q5_rel_u32_end(Q5RelU32Arr *a)
 }
 
 /* Swing_DLL.xex 0x887F1F00 */
+/* byte-gap: 21 off; target re-reads the link offset through a clrrwi copy and tests the count with ble */
 void *ts4_stack_top_887F1F00(Q5Stack *self)
 {
     if (self->frames && q5_frame_count(self->frames) > 0)
@@ -269,6 +279,7 @@ typedef struct Q5Ramp {
 } Q5Ramp;
 
 /* Swing_DLL.xex 0x8887DA38 */
+/* byte-gap: 6 off; target schedules the rate store before the +0x14/+0x18 clears (perm_auto best 2) */
 void ts4_ramp_init_8887DA38(Q5Ramp *r)
 {
     r->vtbl = lbl_880DF824;

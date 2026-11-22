@@ -32,6 +32,7 @@ typedef struct Q5Op { char p0[8]; u32 w8; char pc[0x14]; Q5Ctx *ctx; Q5Sink *sin
 extern "C" u32 *ts4_set_u32_off0_887F7B18(u32 *, u8);
 extern "C" void fn_881B53A0(Q5Op *);
 static void *q5_rel(Q5Rel *r) { return (char *)r + r->off; }
+/* byte-gap: 75 off; LTCG register swap of self and the running minimum (r7/r8); 14 off under fn_check_ltcg */
 extern "C" u32 ts4_var_min_node_887F8920(Q5Op *self)
 {
     Q5Desc *d = self->desc;

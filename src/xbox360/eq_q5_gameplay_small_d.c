@@ -24,6 +24,7 @@ static __inline float q5_fmin(float a, float b) { return __fself(a - b - lbl_881
 typedef struct Q5Range { float lo; float hi; } Q5Range;
 
 /* Swing_DLL.xex 0x8890E1C8 */
+/* byte-gap: 25 off; target compares each difference with 0.0f and picks the select sign from a +-1.0 table, a literal pool this build cannot place at the target address */
 void ts4_clamp_to_range_8890E1C8(Q5Range *r, float *x)
 {
     float v = *x, lo = r->lo;
@@ -38,6 +39,7 @@ typedef struct Q5Sampler { void *vtbl; Q5SampleRec *rec; } Q5Sampler;
 extern float fn_8866C8B8(Q5Sampler *self, void *rec);
 
 /* Swing_DLL.xex 0x8866C988 */
+/* byte-gap: 26 off; LTCG keeps r4 and the first result in volatile registers across the second call */
 float ts4_sample_min_8866C988(Q5Sampler *self)
 {
     float a = fn_8866C8B8(self, self->rec->a);
@@ -59,6 +61,7 @@ typedef struct Q5Visitor {
 extern void fn_886E3328(u32 slot, Q5Visitor *self, u32 *item, Q5Rec530 *record, u32 extra);
 
 /* Swing_DLL.xex 0x886E3938 */
+/* byte-gap: 24 off; the loop induction variables differ */
 void ts4_visit_slots_886E3938(Q5Visitor *self, Q5RelArr *items)
 {
     int i;
@@ -79,6 +82,7 @@ typedef struct Q5Binder { void *vtbl; Q5Ctx *ctx; void *found; Q5Blk *blk; char 
 extern void *fn_8826D010(void *table, u32 *key);
 
 /* Swing_DLL.xex 0x8865E638 */
+/* byte-gap: 22 off; the stores are scheduled differently */
 void ts4_bind_ctx_8865E638(Q5Binder *b, Q5Ctx *c)
 {
     u32 key = 0xb746006e;
@@ -101,6 +105,7 @@ typedef struct Q5Sub20 { void *vtbl; u32 w4, w8, wc, w10, w14; char pad18[4]; u8
 typedef struct Q5FlagObj { void *vtbl; char base[0x18]; u8 b1c; u8 b1d; char pad1e[2]; Q5Sub20 sub; } Q5FlagObj;
 
 /* Swing_DLL.xex 0x88886608 */
+/* byte-gap: 15 off; reason not recorded */
 Q5FlagObj *ts4_flag_obj_ctor_88886608(Q5FlagObj *o)
 {
     fn_88617D88(o);
@@ -126,6 +131,7 @@ typedef struct Q5WinObj {
 } Q5WinObj;
 
 /* Swing_DLL.xex 0x888DF740 */
+/* byte-gap: 8 off; reason not recorded */
 Q5WinObj *ts4_window_obj_ctor_888DF740(Q5WinObj *o)
 {
     fn_88617D88(o);
@@ -158,6 +164,7 @@ extern Q5TextObj *lbl_88D45B2C;
 extern void ts4_assign_formatted_text(Q5Text *dst, const char *text);
 
 /* Swing_DLL.xex 0x88888C80 */
+/* byte-gap: 2 off; reason not recorded */
 Q5TextObj *ts4_text_obj_ctor_88888C80(Q5TextObj *o)
 {
     fn_88617D88(o);
@@ -191,6 +198,7 @@ typedef struct Q5BoxOwner {
 extern void fn_888B0E38(Q5BoxOwner *self);
 
 /* Swing_DLL.xex 0x888B7360 */
+/* byte-gap: 20 off; target issues a dead compare of +0x7c before the tail call */
 void ts4_set_bounds_888B7360(Q5BoxOwner *self, const Q5Box *box)
 {
     Q5Bounds *b;
@@ -224,6 +232,7 @@ extern int ts4_anim_layer_index_886C66C0(Q5AnimStack *stack);
 typedef union Q5FBits { float f; u32 u; } Q5FBits;
 
 /* Swing_DLL.xex 0x886C7C28 */
+/* byte-gap: 27 off; LTCG keeps the default weight in volatile f7 across the layer lookup */
 float ts4_layer_weight_886C7C28(Q5AnimUser *u)
 {
     float def = u->owner->holder->cfg->default_weight;
@@ -246,6 +255,7 @@ extern char lbl_88D3EB60[];
 extern int fn_8857C8C8(void);
 
 /* Swing_DLL.xex 0x88883CD0 */
+/* byte-gap: 23 off; loop register allocation */
 void *ts4_thread_slot_data_88883CD0(u32 off)
 {
     int id = fn_8857C8C8();
@@ -266,6 +276,7 @@ typedef struct Q5V3 { float x, y, z; } Q5V3;
 extern void fn_888D0FE0(void *self, u32 hash, Q5V3 a, Q5V3 b);
 
 /* Swing_DLL.xex 0x888D9420 */
+/* byte-gap: 1 off; the stack staging of the by-value structs differs */
 void ts4_send_vectors_5392B268_888D9420(void *self, float k)
 {
     Q5V3 a, b;
@@ -295,6 +306,7 @@ static __inline void q5_set3(Q5Tint *t, float r, float g, float b)
 }
 
 /* Swing_DLL.xex 0x888CAA98 */
+/* byte-gap: 7 off; tint loads are scheduled differently (perm_auto best 7) */
 void ts4_item_tint_888CAA98(Q5ItemList *l, Q5Item *it)
 {
     Q5Notif *n;
@@ -321,6 +333,7 @@ extern void ts4_set_u8_lbl_88C46F6A_888BFCE0(void);
 extern char lbl_88C46F6A[];
 
 /* Swing_DLL.xex 0x888DA288 */
+/* byte-gap: 11 off; constant/address materialisation order (perm_auto best 11) */
 void ts4_queue_device_job_888DA288(int pad)
 {
     lbl_88C46F6A[0] = 0;
@@ -340,6 +353,7 @@ extern void fn_888E6A28(void *self, void *arg);
 typedef struct Q5HBind34 { char pad[0x34]; u32 value; } Q5HBind34;
 
 /* Swing_DLL.xex 0x888B8F58 */
+/* byte-gap: 0 off; fn_check reports 0 off, but the notes say stack slot layout of the by-value handles differs; verify with matching.py */
 void ts4_bind_read_fe11d138_888B8F58(Q5HBind34 *self, Q5Handle h)
 {
     Q5Handle child;
@@ -363,6 +377,7 @@ typedef struct Q5Engine224 { char pad[0x224]; void *m224; } Q5Engine224;
 extern Q5Engine224 *lbl_88D45B1C;
 
 /* Swing_DLL.xex 0x888E6C78 */
+/* byte-gap: 13 off; register allocation of the saved handle words */
 void ts4_bind_services_888E6C78(Q5SvcUser *self, Q5Handle h)
 {
     Q5SvcRec *rec;
@@ -390,6 +405,7 @@ static __inline u32 *q5_ids_end(Q5RelIds *a)
 }
 
 /* Swing_DLL.xex 0x888CDBC8 */
+/* byte-gap: 31 off; the list bounds are recomputed differently */
 int ts4_ids_contain_888CDBC8(Q5IdOwner *self, u32 id)
 {
     Q5RelIds *a;

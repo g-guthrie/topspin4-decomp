@@ -15,6 +15,7 @@ extern void ts4_multiply_by_keys_886491E8(Q5Shaper *s, struct W8dRel_886491E8 *k
 extern void fn_88644DE0(Q5Shaper *s, float gain, int flag);
 
 /* Swing_DLL.xex 0x88649C10 */
+/* byte-gap: 26 off; LTCG keeps gain in volatile f1 across the first two calls; plain C spills it to f31 */
 void ts4_shaper_apply_88649C10(Q5Shaper *s, void *src, Q5Pt3Vec *pts,
                                struct W8dRel_886491E8 *keys, float gain)
 {

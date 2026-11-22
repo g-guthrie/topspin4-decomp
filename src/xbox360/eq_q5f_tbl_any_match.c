@@ -17,6 +17,7 @@ typedef struct Q5TblOwner { char p[0x10]; Q5Tbl *tbl; } Q5TblOwner;
 extern u8 fn_881643D0(void *arg, void *key);
 
 /* Swing_DLL.xex 0x888795F8 */
+/* byte-gap: 9 off; original hoists the map pointer and keeps a byte offset beside the counter */
 int ts4_tbl_any_match_888795F8(Q5TblOwner *self, void *arg)
 {
     Q5Tbl *t = self->tbl;

@@ -23,6 +23,7 @@ typedef struct Q5Phase {
 } Q5Phase;
 
 /* Swing_DLL.xex 0x888C1B58 */
+/* byte-gap: 7 off; target schedules the loads of the deadline and of self->periods after the counter stores (perm_auto best 7) */
 void ts4_phase_enter_idle_888C1B58(Q5PhaseOwner *self, Q5Phase *ph)
 {
     ph->active = 0;
@@ -32,6 +33,7 @@ void ts4_phase_enter_idle_888C1B58(Q5PhaseOwner *self, Q5Phase *ph)
 }
 
 /* Swing_DLL.xex 0x888C1B88 */
+/* byte-gap: 4 off; target schedules the loads of the deadline and of self->periods after the counter stores (perm_auto best 7) */
 void ts4_phase_enter_active_888C1B88(Q5PhaseOwner *self, Q5Phase *ph)
 {
     ph->active = 1;
@@ -51,6 +53,7 @@ typedef struct Q5Parts {
 } Q5Parts;
 
 /* Swing_DLL.xex 0x888C5EB8 */
+/* byte-gap: 6 off; the first part pointer is loaded before the select in the target */
 void ts4_parts_sync_visible_888C5EB8(Q5Parts *self)
 {
     int i;
@@ -74,6 +77,7 @@ typedef struct Q5BestHolder { char pad0[0x20]; Q5BestTable *table; } Q5BestHolde
 typedef struct Q5BestOwner { char pad0[0x5c]; Q5BestHolder *holder; } Q5BestOwner;
 
 /* Swing_DLL.xex 0x8866EB80 */
+/* byte-gap: 15 off; target materialises the constant into five registers (dead mr copies) */
 void ts4_best_reset_8866EB80(Q5BestOwner *self)
 {
     Q5BestTable *t = self->holder->table;
@@ -91,6 +95,7 @@ typedef struct Q5XRef { Q5XNode *node; u32 offset; u32 extra; } Q5XRef;
 extern void fn_888D0FE0(void *self, u32 hash, Q5XRef a, Q5XRef b);
 
 /* Swing_DLL.xex 0x888D9368 */
+/* byte-gap: 15 off; the hash is built in r11 and moved to r4 in the target */
 void ts4_xdata_forward_5392B268_888D9368(void *self, Q5XRef a, Q5XRef b)
 {
     fn_888D0FE0(self, 0x5392B268, a, b);

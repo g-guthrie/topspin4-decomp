@@ -26,6 +26,7 @@ extern void ts4_forward_888B3C90(Q5Cmd *self);
 extern u8 ts4_get_u8_off68_888B3C7C(Q5Cmd *self);
 
 /* Swing_DLL.xex 0x888B3BF0 */
+/* byte-gap: 21 off; the jump table lands on case bodies that are separate functions */
 void ts4_command_dispatch_888B3BF0(Q5Cmd *self, u32 cmd)
 {
     switch (cmd) {

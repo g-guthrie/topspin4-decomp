@@ -7,6 +7,7 @@ extern char lbl_880FC650[];
 extern float lbl_8814B440;
 struct Ga6Pose { __vector4 v[4]; ts4_word w40; float f44; };
 struct Ga6PoseHolder { char pad_00[8]; struct Ga6Pose *pose; char pad_0c[0xC]; int w18; };
+/* byte-gap: 5 off; the target keeps three vor128 copies of one loaded vector */
 void ts4_pose_reset_default_886D19C8(struct Ga6PoseHolder *h)
 {
     struct Ga6Pose *p = h->pose;

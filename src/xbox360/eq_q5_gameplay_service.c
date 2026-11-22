@@ -25,6 +25,7 @@ extern void fn_8892F038(Q5ServiceRec *rec, u32 a, void *factory, u32 b, u32 c, u
  * Near miss (32 off): the target keeps the zero of the handle in r30 and reuses it for `return 0`;
  * no C or C++ form found (shared zero local, result local, ternary, inline lookup, C++ handle ctor).
  * perm_auto: 1503 candidates, no gain. */
+/* byte-gap: 39 off; target keeps the zero of the handle in r30 and reuses it for return 0; no C form found (perm_auto: 1503 candidates) */
 Q5Service *ts4_get_service_9b6e0efe_888EC548(void)
 {
     struct Ga3Id id;

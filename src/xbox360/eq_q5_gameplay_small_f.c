@@ -27,6 +27,7 @@ extern char lbl_880F34BC[];
 extern __vector4 lbl_880FC770, lbl_880FC760;
 
 /* Swing_DLL.xex 0x886E7EF0 */
+/* byte-gap: 14 off; address loads and stores are scheduled differently (perm_auto best 14) */
 Q5Ctor7EF0 *ts4_ctor_886E7EF0(Q5Ctor7EF0 *self)
 {
     __vector4 *v;
@@ -72,6 +73,7 @@ static __inline u16 q5_arg_index(char *a)
 }
 
 /* Swing_DLL.xex 0x887F8710 */
+/* byte-gap: 21 off; original keeps a dead copy of the data offset (mr r10,r8) that no source shape reproduced (perm_auto best 21) */
 int ts4_vm_not_887F8710(Q5VmOp *op)
 {
     char *frame = op->ctx->c->frame;
@@ -101,6 +103,7 @@ typedef struct Q5Slot { void *p; u32 a, b; } Q5Slot;
 typedef struct Q5Slots { void *vtbl; char pad[0x2c]; Q5Slot slot[10]; } Q5Slots;
 
 /* Swing_DLL.xex 0x8887EB10 */
+/* byte-gap: 2 off; `li r27,9` and the vtable store swap places (perm_auto best 2) */
 void ts4_slots_dtor_8887EB10(Q5Slots *self)
 {
     int i;
@@ -140,6 +143,7 @@ extern Q5M *lbl_88D45A78;
 typedef struct Q5RectOwner { char p[0x28]; Q5Rect r; } Q5RectOwner;
 
 /* Swing_DLL.xex 0x888C3198 */
+/* byte-gap: 31 off; rect copy is staged through different registers */
 void ts4_rect_apply_888C3198(Q5RectOwner *self, u8 full)
 {
     Q5G *g = lbl_88D45AD4;
@@ -178,6 +182,7 @@ extern void ts4_noop_881B3360(void);
 extern void ts4_destroy_owned_object(void *p);
 
 /* Swing_DLL.xex 0x888DA428 */
+/* byte-gap: 31 off; the original keeps the constant call arguments in callee-saved registers across the key call (frame 0xd0) */
 void ts4_bind_A3794455_888DA428(Q5Outer *self, void *arg)
 {
     Q5Inner *inner = self->inner;
@@ -197,6 +202,7 @@ typedef struct Q5V3 { float x, y, z; } Q5V3;
 extern void fn_888D0FE0(void *self, u32 hash, Q5V3 a, Q5V3 b);
 
 /* Swing_DLL.xex 0x888DC298 */
+/* byte-gap: 1 off; target emits fmuls f13,f5,f0 and every source order gives fmuls f13,f0,f5 (same operand-order miss as 0x888C5C00) */
 void ts4_send_scaled_5392B268_888DC298(void *self, float x0, float x1, float y0, float y1, float t)
 {
     float k;
@@ -226,6 +232,7 @@ extern void *ts4_decode_rel_ptr_off0_881BB8A0(char *p);
 extern void fn_886CA858(Q5RelOwner *self, Q5RelEnt *e);
 
 /* Swing_DLL.xex 0x886D0808 */
+/* byte-gap: 30 off; LTCG keeps the compare whose consumer was dropped */
 void ts4_rel_entries_visit_886D0808(Q5RelOwner *self, int want)
 {
     Q5RelTab *t = self->tab;
@@ -255,6 +262,7 @@ extern int ts4_anim_layer_index_886C66C0(Q5Layers *stack);
 extern void fn_886D4978(void *self, Q5Layers *obj, u32 item, int index);
 
 /* Swing_DLL.xex 0x886D5028 */
+/* byte-gap: 30 off; LTCG keeps obj in r4 across ts4_clear_three_vectors_886C3658 */
 void ts4_layers_unwind_886D5028(void *self, Q5Layers *obj)
 {
     u32 *begin, *it;
@@ -292,6 +300,7 @@ static __inline void q5_set3(Q5Tgt *t, float x, float y, float z)
 }
 
 /* Swing_DLL.xex 0x888C4160 */
+/* byte-gap: 4 off; final pointer lands in r8 instead of r11 */
 void ts4_clear_and_zero_888C4160(Q5Clr *self)
 {
     Q5Vec1c *v = &self->v;
@@ -325,6 +334,7 @@ extern char lbl_880F4424[], lbl_880F4854[];
 extern void fn_886AD158(Q5Shot41c *shot);
 
 /* Swing_DLL.xex 0x886B1578 */
+/* byte-gap: 30 off; LTCG keeps the shot pointer, count and zero in r3/r4/r5 across fn_886AD158 */
 Q5ShotSet *ts4_shot_set_ctor_886B1578(Q5ShotSet *self)
 {
     int i;
@@ -377,6 +387,7 @@ static int q5_pad_id(int i)
 }
 
 /* Swing_DLL.xex 0x888C5D80 */
+/* byte-gap: 28 off; original hoists -1 into a callee-saved register */
 void ts4_pad_zero_all_888C5D80(Q5PadOut *self)
 {
     u32 i;

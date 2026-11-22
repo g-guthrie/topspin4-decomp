@@ -21,6 +21,7 @@ typedef struct Q5h1LockedList {
 extern void ts4_if_call_seq_fn_8864DFF0_88278450(Q5h1U32List *list, const u32 *value);
 
 /* Swing_DLL.xex 0x8864BAE8: append value to the list at +0x38 while holding the lock at +0x48; returns 0. */
+/* byte-gap: 2 off; target spills value after loading the lock and copying self (as 0x8864BBB0) */
 int ts4_locked_list_push_8864BAE8(Q5h1LockedList *self, u32 value)
 {
     Q5h1Lock *lock = self->lock;

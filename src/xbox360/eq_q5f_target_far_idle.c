@@ -30,6 +30,7 @@ typedef struct W6aSelf270 {
 } W6aSelf270;
 
 extern float g_ts4_script_constants[];
+/* byte-gap: 4 off; only the li order of the two vector offsets differs */
 int ts4_target_far_and_idle_8866C150(W6aSelf270 *self)
 {
     W6aActor8e0 *a = self->target->actor;

@@ -6,6 +6,7 @@ typedef unsigned int u32;
 typedef struct Q5Xf { __vector4 rot; __vector4 pos; char p20[0x38]; u32 a, b, c, d, e; u32 dirty; } Q5Xf;
 extern const __vector4 lbl_880FC770;
 extern const __vector4 lbl_880FC760;
+/* byte-gap: 3 off; order of the two constant vector loads */
 void ts4_xform_reset_identity_886E7738(Q5Xf *self)
 {
     __vector4 pos = lbl_880FC760, rot = lbl_880FC770;
