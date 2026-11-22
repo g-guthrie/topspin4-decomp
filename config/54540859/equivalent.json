@@ -24,6 +24,28 @@
    ]
   },
   {
+   "function": "ts4_shaper_apply_88649C10",
+   "address": "0x88649C10",
+   "size": 120,
+   "checker": "fn_equiv/3",
+   "seed": 1,
+   "trials": 407,
+   "valid": 382,
+   "discarded": 25,
+   "blocks": 1,
+   "blocks_covered": 1,
+   "coverage": 1.0,
+   "verdict": "EQUIVALENT",
+   "source": "src/xbox360/eq_q5_gameplay_shaper.c",
+   "source_sha256": "fdee53a5738bcbac012c69408fa1662251beddc21c76f1c7ce85bdadb66f0fb3",
+   "flags": [
+    "/Oc"
+   ],
+   "spec_flags": [
+    "/Oc"
+   ]
+  },
+  {
    "function": "ts4_locked_list_push_8864BAE8",
    "address": "0x8864BAE8",
    "size": 88,

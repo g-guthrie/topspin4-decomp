@@ -22,7 +22,7 @@
   "matching_total_functions": 46733,
   "matching_functions_percent": 72.26157,
   "matching_basis": "objdiff-cli 3.7.1 over all Jeff 0.3.5 split units for Swing_DLL.xex",
-  "equivalent_functions": 66,
-  "equivalent_bytes": 7916,
+  "equivalent_functions": 67,
+  "equivalent_bytes": 8036,
   "equivalent_basis": "tools/fn_equiv.py verdicts registered by tools/equiv_register.py; never summed with matching_*"
 }
