@@ -5,7 +5,7 @@ struct W2bEntry { char pad[0x20]; w2b_u32 f20, f24, f28; };
 struct W2bEntryBase { int dummy; };
 struct W2bEntryOwner { char pad[0x28]; char *tab; };
 
-extern void fn_886D3A00(void *base, struct W2bEntry *e, int one);
+extern void ts4_layout_refresh_886D3A00(void *base, struct W2bEntry *e, int one);
 
 /* Swing_DLL.xex 0x886D7578 */
 void ts4_set_entry_886D7578(struct W2bEntryOwner *self, int idx, w2b_u32 val)
@@ -19,5 +19,5 @@ void ts4_set_entry_886D7578(struct W2bEntryOwner *self, int idx, w2b_u32 val)
     e->f28 = val;
     e->f20 = flag;
     e->f24 = 1;
-    fn_886D3A00(base, e, 1);
+    ts4_layout_refresh_886D3A00(base, e, 1);
 }

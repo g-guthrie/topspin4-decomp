@@ -1,0 +1,332 @@
+[
+ {
+  "template": "ts4_sr_lookup_table_b_886F3588",
+  "addr": "0x886F3588",
+  "source": "src/xbox360/q5_render_sr_lookup.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x886F35B8"
+  ],
+  "notes": "Sister 0x886F35B8 reads table A (block +0x08, Q5SrBlock.a) with desc->index_a (+0x30) and stores self->value_a (+0x24). Keep the exact local list including the otherwise pointless `dst` copy of self: it sets the operand order of the two adds (OP1 rule); without it the adds come out as (i*8+rel)+table."
+ },
+ {
+  "template": "ts4_pair_forward_both_halves_886C4CB8",
+  "addr": "0x886C4CB8",
+  "source": "src/xbox360/q5_gameplay_pair_visit.cpp",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x886C4C60"
+  ],
+  "notes": "Sister 0x886C4C60 is identical except the second half starts at +0xC: declare Q5PairFirstC/Q5PairSecondC with a 0xC-byte first base (char bytes[0xC]) and a Q5PairRecordC : Q5PairFirstC, Q5PairSecondC. Keep the base-class conversion and the __assume(record != 0); a plain &t->second does not match (5 off)."
+ },
+ {
+  "template": "ts4_hash_find_c7f47320_888E3848",
+  "addr": "0x888E3848",
+  "source": "src/xbox360/q5_gameplay_hash_find.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x88848B50"
+  ],
+  "notes": "Sister 0x88848B50 is identical with hash 0x00DEEEF6u (verified MATCH with that one-constant change). The hash MUST be passed as struct Ga3Id by value (ga3_types.h); a plain u32 argument is 8 off on scheduling (lis/ori into r4 too early). Keep the store order key.value, key.kind, key.count, then the null handle."
+ },
+ {
+  "template": "ts4_vec_box_test_forward_886C8C48",
+  "addr": "0x886C8C48",
+  "source": "src/xbox360/eq_q5_forwarders.c",
+  "flags": [],
+  "ltcg": false,
+  "route": "equiv",
+  "sisters": [
+   "0x886C90F0"
+  ],
+  "notes": "EQUIVALENT only. Sister 0x886C90F0 forwards to fn_886C8C68 instead of fn_886C8878 with the same seven pointer arguments; return the u8 result. Prove with tools/fn_equiv.py --json and add to an eq_q5_* file."
+ },
+ {
+  "template": "ts4_ctor_vtable_880E4528_887F4C18",
+  "addr": "0x887F4C18",
+  "source": "src/xbox360/eq_q5_forwarders.c",
+  "flags": [],
+  "ltcg": false,
+  "route": "equiv",
+  "sisters": [
+   "0x887F4C60",
+   "0x887F4CB0",
+   "0x887F4CF8",
+   "0x887F4EC8"
+  ],
+  "notes": "EQUIVALENT only (the target stores the vtable through the base ctor's returned r3 while keeping a dead mr r31,r3; no C/C++/LTCG form found). Each sister calls a base ctor and stores a different vtable label (e.g. lbl_880E4760 for 0x887F4C60): read fn_asm for the base ctor and lbl_ per sister. Store through the pointer the base ctor returns (fn_equiv seeds callee return values)."
+ },
+ {
+  "template": "ts4_locked_list_push_8864BBB0",
+  "addr": "0x8864BBB0",
+  "source": "src/xbox360/eq_q5_gameplay.c",
+  "flags": [],
+  "ltcg": false,
+  "route": "equiv",
+  "sisters": [
+   "0x8864BAE8"
+  ],
+  "notes": "EQUIVALENT only (2 off: the target spills the value argument after lwz lock / mr self; every C/C++/LTCG form spills it first; perm_auto 924 candidates no gain). Sister 0x8864BAE8 has the lock at +0x48 and the list at +0x38 instead of +0x24/+0xC: adjust the struct padding, keep the same body, prove with fn_equiv."
+ },
+ {
+  "template": "ts4_vec3_pair_hash_5392b268_888D93B8",
+  "addr": "0x888D93B8",
+  "source": "src/xbox360/q5_gameplay_vec3_forward.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x888D9498"
+  ],
+  "notes": "Sister 0x888D9498: hash 0x6A900A21u and floats g_ts4_script_constants[0x754/4], [0x758/4] (verified MATCH with those three changes). Keep the hash as struct Ga3Id and both vec3 as 12-byte structs by value."
+ },
+ {
+  "template": "ts4_vec_pair_store_discard_8890DE88",
+  "addr": "0x8890DE88",
+  "source": "src/xbox360/q5_gameplay_vec_store.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x8890DEF0"
+  ],
+  "notes": "Sister 0x8890DEF0 is byte-identical (same .obj): the same body under a new name, verified MATCH. Include vx1_vector.h (16-byte aligned __vector4); one temporary for both stores."
+ },
+ {
+  "template": "ts4_find_rec_by_key_886EFC48",
+  "addr": "0x886EFC48",
+  "source": "src/xbox360/q5_render_find.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x886EFD38"
+  ],
+  "notes": "MATCH. Key is a one-word struct copied into a struct local (`Q5RecKey k; k = e->key; if (key->id == k.id)`), which fixes the cmplw operand order. Sister 0x886EFD38: list at block +0x08 (not +0x60), 0xC-byte records (count*12) with the key at +0x00; use a 12-byte record type with its own begin/end inlines and the same struct-copy compare. Keep the doubled `owner->block->recs` access in begin and end: hoisting the block pointer into a local is 27 off. Sister verified MATCH (fn_check, b203)."
+ },
+ {
+  "template": "ts4_physic_data_update_version_88879098",
+  "addr": "0x88879098",
+  "source": "src/xbox360/q5_gameplay_physic_warn.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x888791E8"
+  ],
+  "notes": "Sister 0x888791E8 has the same body and the same message lbl_880DF64C; only the file string changes (lbl_880DF6D8, PhysicEngineCommandProcessor.cpp) and the line (0x1E3). Use the callee names fn_check reports (ts4_if_get_u32_off0_884C6B58, ts4_if_get_u32_off8_8841D058, ts4_ref_holder_dtor_8841D638): plain fn_ names fail on relocations."
+ },
+ {
+  "template": "ts4_school_play_add_score_888FBA90",
+  "addr": "0x888FBA90",
+  "source": "src/xbox360/q5_gameplay_school_sound.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x888FBB40"
+  ],
+  "notes": "Sister 0x888FBB40 (power-up cue): thresholds <=1 / <=3 (cmpwi 3 instead of 4), strings lbl_880DA3E0/3F8/410 ('Root/School/PowerUpOne/Two/Three'), key 0xDAA805A2. One text local at function scope plus three separate key locals k1,k2,k3 (one per branch); block-scoped keys share a slot and over-merge (size 0x80)."
+ },
+ {
+  "template": "ts4_tag_node_c0ba51f5_01505c7e_888C9D18",
+  "addr": "0x888C9D18",
+  "source": "src/xbox360/q5_gameplay_node_tag.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x888C9DD8",
+   "0x888C9E98"
+  ],
+  "notes": "Sisters differ only in the tag passed to fn_8887B148: 0x888C9DD8 uses 0x26296DD2, 0x888C9E98 uses 0x2B05E119 (same node type 0xC0BA51F5, same offsets). Keep the find as a forceinline helper with early return and store its result in a local before setting the Ga3Id tag; passing the helper call directly as the argument is 20 off."
+ },
+ {
+  "template": "ts4_post_event_4aa6a6e3_888D7230",
+  "addr": "0x888D7230",
+  "source": "src/xbox360/q5_gameplay_post_event.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x888D72F0"
+  ],
+  "notes": "Sister 0x888D72F0: event hash 0xAD796EEF instead of 0x4AA6A6E3, everything else identical; verified MATCH (b204). It supersedes the 2-off draft src/xbox360/drafts/me_888D72F0_nearmiss_agBD.c. The fix is the struct-copy cmplw trick (`cur = o->cur; if (id->v != cur.v)`). The REFLO 0xf70 is g_ts4_script_constants[0] (the symbol is at 0x880D0F70), not an offset."
+ },
+ {
+  "template": "ts4_xform_copy_to_rel_888B09A0",
+  "addr": "0x888B09A0",
+  "source": "src/xbox360/q5_gameplay_xform_copy.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x888B0D50"
+  ],
+  "notes": "Sister 0x888B0D50 is byte-identical: the same body under a new name, verified MATCH (b204). Copy the float3 temporaries field by field, x, y, z (a struct assignment gives lwz/stw; z, y, x order swaps the loads). The 5 operand_order_pad locals are needed: a plain source is 1 off on the add operand order."
+ },
+ {
+  "template": "ts4_get_service_9b6e0efe_888EC548",
+  "addr": "0x888EC548",
+  "source": "src/xbox360/eq_q5_gameplay_service.c",
+  "flags": [],
+  "ltcg": false,
+  "route": "equiv",
+  "sisters": [
+   "0x888EC5F8"
+  ],
+  "notes": "EQUIVALENT only: 32 off, because the target keeps the handle's zero in r30 for `return 0`; perm_auto ran 1503 candidates with no gain. Sister 0x888EC5F8 differs only in the record hash, 0xAD0C7318 instead of 0x9B6E0EFE. Prove it with fn_equiv."
+ },
+ {
+  "template": "ts4_param_user_load_ref_887FDE60",
+  "addr": "0x887FDE60",
+  "source": "src/xbox360/q5_gameplay_ref_params.cpp",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x887FDF38",
+   "0x887FE0A8",
+   "0x887FE330",
+   "0x887FE408"
+  ],
+  "notes": "All four sisters have the same instructions; only the relative call and branch displacements differ. 0x887FDF38 and 0x887FE330 verified MATCH (b204). Clone them by renaming only. It must be .cpp with a real virtual apply() (slot 13): in C the vtable-slot load is not hoisted above the field stores (9 off)."
+ },
+ {
+  "template": "ts4_camera_current_at_888E1B30",
+  "addr": "0x888E1B30",
+  "source": "src/xbox360/q5_gameplay_camera_at.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x888E1C38"
+  ],
+  "notes": "Sister 0x888E1C38 ('.../CurrentCamera/From') is the same code with lbl_880DA96C in place of lbl_880DA99C; verified MATCH (b204). Keep x, y and z in locals and store them all after the third get; storing early is 12 off. The 2nd and 3rd forwards copy their result back into r through a block-scoped temp."
+ },
+ {
+  "template": "ts4_msg_send_on_channel_88867B20",
+  "addr": "0x88867B20",
+  "source": "src/xbox360/q5_gameplay_msg_send.cpp",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x888D56D8"
+  ],
+  "notes": "Sister 0x888D56D8 is identical except the first call is ts4_if_get_u32_lbl_88D45B1C_888C0198 instead of ..._88864EF8; verified MATCH (b204). Must be .cpp. Keep the q5_alloc inline wrapper and the `if (h.sink) { Q5Sink *sink = h.sink; ... h.sink->owner->release(&h); }` shape."
+ },
+ {
+  "template": "?setup_ends_and_server@Q5Game@@QAAXXZ",
+  "addr": "0x886775C8",
+  "source": "src/xbox360/q5_gameplay_game_ends.cpp",
+  "flags": [
+   "/Oc"
+  ],
+  "ltcg": false,
+  "sisters": [
+   "0x88677190"
+  ],
+  "notes": "Sister 0x88677190 is byte-identical apart from branch targets; verified MATCH (b204) with the same source. For the sister, rename the class (e.g. Q5Game2) so the mangled name is unique. /Oc is required. The u32& accessor serve_changes() used twice gives the clrrwi copy; q5_seed() keeps `0 % n` unfolded. This replaces the near-miss draft src/xbox360/drafts/me_88677190_nearmiss.c."
+ },
+ {
+  "template": "ts4_xdata_load_xyz_888B0570",
+  "addr": "0x888B0570",
+  "source": "src/xbox360/q5_gameplay_xdata_xyz.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [
+   "0x888B0788"
+  ],
+  "notes": "Sister 0x888B0788 only moves the Q5Self fields: x, y, z, offset at +0x80, +0x84, +0x88, +0x8c instead of +0x90..+0x9c (change p0[0x90] to p0[0x80]). The hashes and callees are the same. Verified MATCH (b204) with that one change."
+ },
+ {
+  "template": "ts4_var_min_node_887F8920",
+  "addr": "0x887F8920",
+  "source": "src/xbox360/eq_q5_gameplay_var_min.cpp",
+  "flags": [],
+  "ltcg": true,
+  "route": "equiv",
+  "sisters": [
+   "0x887F8A50"
+  ],
+  "notes": "EQUIVALENT only (LTCG original; 14 off with fn_check_ltcg --context src/xbox360/cx40_ctx_c.c, one r7/r8 swap; perm --ltcg stalled at 3). Sister 0x887F8A50 is the max variant: the compare becomes `if (m < v) m = v` (target bge instead of blt). Prove with fn_equiv --seed 1 --trials 3000: the mode byte is random, so the default 400 trials do not reach the two modes."
+ },
+ {
+  "template": "end_point_scoring",
+  "addr": "0x8865CCD0",
+  "source": "src/xbox360/eq_q5_gameplay_end_point.cpp",
+  "flags": [
+   "/Oc"
+  ],
+  "ltcg": false,
+  "sisters": [
+   "0x8865D108"
+  ],
+  "route": "equiv",
+  "notes": "Same body as port_eq_scoring_end_point_8865C920.cpp (already equivalent). 6 off under /Oc (register allocation only); perm_auto stalled at 6. Evidence: fn_equiv --flags /Oc --seed 1 --trials 1000, 662 valid, 92% (22/24). Sister: rename and re-run fn_equiv with --flags /Oc."
+ },
+ {
+  "template": "unsigned_size_front_helpers",
+  "addr": "0x887F1050",
+  "source": "src/xbox360/q5_gameplay_select_first.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [],
+  "route": "match",
+  "notes": "Vector emptiness test: an inline unsigned size() (end - begin) compared `> 0` gives srawi.+beq; a separate inline front() that re-reads begin gives the `clrrwi r4,r10,0`. Writing begin[0] directly or `!= begin` does not match."
+ },
+ {
+  "template": "float_pair_setter_order",
+  "addr": "0x888C0890",
+  "source": "src/xbox360/q5_gameplay_scale_reset.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [],
+  "route": "match",
+  "notes": "Two adjacent float stores issued through an inline setter q5_set2(&st->range, a, b) keep the target's store order relative to a following int/byte store; direct field stores get rescheduled."
+ },
+ {
+  "template": "float3_unaligned_load",
+  "addr": "0x888C0890",
+  "source": "src/xbox360/q5_gameplay_scale_reset.c",
+  "flags": [],
+  "ltcg": false,
+  "sisters": [],
+  "route": "match",
+  "notes": "Float3 to __vector4 load: inline __lvlx(p,0), __lvrx(p,12), __vsldoi(hi,hi,4), __vor. Declare `__vector4 __vsldoi(...)` and put `#pragma intrinsic(__vsldoi)` inside #ifdef _MSC_VER so the host cc -Werror check passes."
+ },
+ {
+  "template": "shaper_apply_ltcg_f1",
+  "addr": "0x88649298",
+  "source": "src/xbox360/eq_q5_gameplay_small_c.c",
+  "flags": [
+   "/Oc"
+  ],
+  "ltcg": true,
+  "sisters": [
+   "0x88649C10"
+  ],
+  "route": "equiv",
+  "notes": "LTCG keeps `gain` in volatile f1 across calls; unmatchable from plain C, but fn_equiv passes (its callee interception clobbers only the registers the callee writes). Sister 0x88649C10: the existing draft src/xbox360/drafts/me_88649C10_nearmiss.c already passes as is (fn_equiv --flags /Oc --seed 1 --trials 1000: EQUIVALENT, 382 valid, 100%). It is not in the opus.txt section 2 queue, so it was not registered here."
+ },
+ {
+  "template": "ltcg_reg_reuse_after_call",
+  "addr": "0x886C6660",
+  "source": "src/xbox360/eq_q5_gameplay_small_c.c",
+  "flags": [
+   "/Oc"
+  ],
+  "ltcg": true,
+  "sisters": [],
+  "route": "equiv",
+  "notes": "The target reuses r3/r4 after a call whose callee preserves them (LTCG). The C version spills to r31/r30; route it straight to equivalent."
+ },
+ {
+  "template": "script_constant_offset",
+  "addr": "0x886CEEC0",
+  "source": "src/xbox360/eq_q5_gameplay_small_c.c",
+  "flags": [
+   "/Oc"
+  ],
+  "ltcg": false,
+  "sisters": [
+   "0x8887DA38",
+   "0x8866C150"
+  ],
+  "route": "equiv",
+  "notes": "lis/addi on g_ts4_script_constants carries the symbol's own low half (0xf70); the field offset is the lfs displacement, so write g_ts4_script_constants[disp/4] (e.g. [0x3e4/4], [0x20/4], [0x430/4]), never a literal."
+ }
+]

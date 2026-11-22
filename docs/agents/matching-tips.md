@@ -3191,3 +3191,11 @@ Use it on schedule-only misses after the hand trial. Extend the mutation set whe
 - `if (n) {...} return 0;` produces a `beq` to a shared `li r3,0` tail; an early `return 0` is 4 bytes shorter.
 - Literal loads with no relocation in the split (e.g. 88885408 `"Locale\\"` at 0x880DF1F0) can never pass fn_check; go equivalent and fix the split later.
 - LTCG register preservation across calls and `clrrwi` patterns: go equivalent directly.
+
+### Q5 batches J-K rules (Opus A)
+- Self-relative tree walk: load the offset into a local inside the loop (`int off = node->off; b = (char*)node + off;`); this also fixes the tail's subtraction order, which rewriting the expression never does (8865A9C8).
+- Load call arguments into separate named locals first; it matched a 4-argument call on the first try (886D3A00).
+- Cache `text = name.first` in a local before a call so the register is reused for the later destroy (888E4CA0: 20 off to 3 off).
+- A cursor helper that reads through an address-taken pointer reproduces a large reader frame (888DDD70).
+- Null-checked self-relative `{int off; u32 count}` lists: write begin/end as `T *r = 0; if (a->off != -1) r = ...; return r;`, not a ternary (25 off to match, 8886FCC0).
+- Loops over heap vectors that make a virtual call per element (88912118, 8886AB08) rarely terminate under fn_equiv's seeded inputs; they need a byte match or bounded-range harness support.

@@ -46,7 +46,7 @@ struct Gp7PlanRequest {
     int arg_b;               /* +0x28 */
 };
 
-void fn_886D3A00(void *table, struct Gp7PlanRequest *request, int flag);
+void ts4_layout_refresh_886D3A00(void *table, struct Gp7PlanRequest *request, int flag);
 
 /* Swing_DLL.xex 0x886D3AB0: fill the request object of `slot` and run it (tail call). */
 void ts4_swing_anim_arm_request_886D3AB0(struct Gp7PlanRequest **table, int slot, int arg_a, int arg_b)
@@ -55,7 +55,7 @@ void ts4_swing_anim_arm_request_886D3AB0(struct Gp7PlanRequest **table, int slot
     request->arg_b = arg_b;
     request->arg_a = arg_a;
     request->armed = 1;
-    fn_886D3A00(table, request, 1);
+    ts4_layout_refresh_886D3A00(table, request, 1);
 }
 
 /* ---- thunks of the swing request object (this+0x28 = player animation object P, this+0x30 = planner) ---- */
