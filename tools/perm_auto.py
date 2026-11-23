@@ -3,7 +3,11 @@
 
 Usage:
   python3 tools/perm_auto.py SRC name=0xADDR [--ltcg [--context C ...] [--include NAME ...]] [--flags F ...]
-                             [-j 4] [--time 600] [--seed N] [--func NAME] [--out PATH]
+                             [-j 4] [--time 600] [--seed N] [--func NAME] [--out PATH] [--targeted]
+
+With --targeted the mutators are weighted by the classes of the baseline diff (register numbering,
+commutative/compare operand order, adjacent swap, srwi/rldicl form; see docs/agents/regalloc.md and
+tools/regalloc_mutate.py, which also has a deterministic beam search over the same moves).
 
 No markup is needed (tools/permute.py is the markup-driven exhaustive search).
 The body of the function named in the mapping (or --func) is tokenized and
@@ -758,13 +762,13 @@ MUTATORS = [m_swap, m_swap, m_commute, m_commute, m_flip, m_negsub, m_compound, 
             m_inttype, m_paren, m_hoist, m_hoist, m_hoist, m_unhoist, m_alias, m_retsplit]
 
 
-def mutate(text, rng, func, cxx):
+def mutate(text, rng, func, cxx, mutators=None):
     toks = tokenize(text)
     types = field_types(text)
     for _ in range(12):
         fn = find_function(toks, func)
-        m = rng.choice(MUTATORS)
-        new = (m(toks, rng, fn, cxx) if m is m_split else m(toks, rng, fn, cxx, types) if m is m_hoist else m(toks, rng, fn))
+        m = rng.choice(mutators or MUTATORS)
+        new = (m(toks, rng, fn, cxx) if m.__name__ == "m_split" else m(toks, rng, fn, cxx, types) if m.__name__ == "m_hoist" else m(toks, rng, fn))
         if new is not None and new != toks:
             return "".join(new), m.__name__[2:]
     return None, None
@@ -784,6 +788,23 @@ def score(output, rc):
         return sum(n)
     stars = sum(1 for l in output.splitlines() if l.startswith("*"))
     return stars or 10 ** 6
+
+
+def targeted_mutators(base, args, tmpdir):
+    """Mutator list weighted by the diff classes of the baseline (first families get the most weight).
+    Arithmetic `commute` is dropped: add/fadds/fmuls/xor operand order is canonicalised by the compiler and
+    does not follow the source (docs/agents/regalloc.md, rule C1); compares keep source order (cmpflip)."""
+    import regalloc_mutate as rm
+    _sc, out = rm.run_check(base, args, tmpdir, Path(args.source).suffix)
+    rows = rm.parse_diff(out)
+    fams = rm.families_for(rows, rm.classify(rows))
+    lst = []
+    for k, fam in enumerate(fams):
+        m = rm.FAMILIES[fam]
+        w = max(1, 4 - k)
+        lst += [m] * w
+    print("targeted families:", ",".join(fams), flush=True)
+    return lst
 
 
 def evaluate(text, args, tmpdir):
@@ -825,6 +846,9 @@ def main(argv=None):
     ap.add_argument("--seed", type=int)
     ap.add_argument("--out")
     ap.add_argument("--pool", type=int, default=6)
+    ap.add_argument("--targeted", action="store_true",
+                    help="weight the mutators by the baseline diff classes (tools/regalloc_mutate.py, "
+                         "docs/agents/regalloc.md) and add its cmpflip/pad/shiftcast/perm3 rewrites")
     args = ap.parse_args(argv)
     if args.flags is None:
         args.flags = ["/Oc"]
@@ -842,6 +866,9 @@ def main(argv=None):
     out = Path(args.out) if args.out else outdir / f"{src.stem}.auto{src.suffix}"
     best_path = outdir / f"{src.stem}.autobest{src.suffix}"
 
+    mutators = None
+    if args.targeted:
+        mutators = targeted_mutators(base, args, tmpdir)
     s0 = evaluate(base, args, tmpdir)
     if s0 is None:
         raise SystemExit("baseline does not compile/compare; fix it first")
@@ -861,7 +888,7 @@ def main(argv=None):
                 parent = pool[0][1] if rng.random() < 0.5 else rng.choice(pool)[1]
                 text, names = parent, []
                 for _ in range(rng.choice((1, 1, 1, 2, 2, 3))):
-                    t2, nm = mutate(text, rng, func, cxx)
+                    t2, nm = mutate(text, rng, func, cxx, mutators)
                     if t2:
                         text, names = t2, names + [nm]
                 if text in seen:
