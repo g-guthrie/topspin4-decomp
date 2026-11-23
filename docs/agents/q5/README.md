@@ -13,6 +13,9 @@ Middleware (Havok, FMOD, Bink, XDK, CRT) is out of scope.
 | File | What |
 |---|---|
 | `worklist.txt` | The work list. `## 1` gameplay group reps, `## 2` remaining gameplay (ascending size), `## 3` renderer reps, `## 4` remaining renderer. One `0xADDR SIZE QUEUE [| sisters]` per line. |
+| `worklist_v2.txt` | **Current work list** (2026-11-23): scope = gameplay plus its non-middleware call-graph dependencies, split into 19 subsystems, each line with its bottom-up level (0 = every in-scope callee matched). Regenerate with `python3 tools/callgraph_worklist.py`. `worklist.txt` is the old size-ordered list, kept for reference. |
+| `subsystems.md` | Subsystem table: ranges, counts, key classes, entry points, scope totals, method. |
+| `scope_callgraph.json` | In-scope call edges of unsolved functions; `q5_status.py` uses it for live readiness. |
 | `brief-opus.md` | Brief for solver agents (Opus). Read all of it, including "Owner decisions (2026-11-22)". |
 | `brief-haiku.md` | Brief for rote sister-function agents (Haiku). |
 | `brief-fable.md` | Brief for the escalation/tooling solver. |
@@ -20,7 +23,7 @@ Middleware (Havok, FMOD, Bink, XDK, CRT) is out of scope.
 | `templates.json` | Matched group representatives and their sisters (rote work for Haiku). |
 | `notes/` | Per-function hand-over notes for unfinished large functions. |
 
-Status at any time: `python3 tools/q5_status.py` (add `--from-end` for the
+Status at any time: `python3 tools/q5_status.py` (v2 by default: per subsystem; `--next N --subsystem ID` lists ready functions, `--blocked` shows what blocks the nearest ones) (add `--from-end` for the
 largest-first view, `--next N`). It reads this directory, match.json,
 equivalent.json and the claim dirs.
 
