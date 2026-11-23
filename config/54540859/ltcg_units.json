@@ -3230,5 +3230,20 @@
   "symbols": {
    "ts4_prediction_ticks_until_x_886600E0": 272
   }
+ },
+ {
+  "source": "src/xbox360/q5_rally_active.c",
+  "object": "q5_rally_active.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_rally_active_8866D930": 208
+  }
  }
 ]

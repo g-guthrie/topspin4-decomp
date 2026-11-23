@@ -4,7 +4,7 @@
  * SwingCategory (S+0x360, ProStyle/Surface = None) and asks the animation system for a clip
  * (immediately, or deferred with the autoswing window); stops at the first started clip.
  *
- * MATCH on the LTCG route with src/xbox360/ltcg_ctx_rally_active_8866D930.c (fn_8866D930) as context and
+ * MATCH on the LTCG route with src/xbox360/ltcg_ctx_rally_active_8866D930.c (ts4_rally_active_8866D930) as context and
  * WITHOUT pp1_pool_primer.c: the 0.5f literal must not land in the g_ts4_script_constants pool.
  * Shape from the RT2 draft (src/xbox360/drafts/rt2_swing_walk.c); EQUIVALENT per tools/fn_equiv.py.
  */
@@ -122,7 +122,7 @@ static void rt2_set_category(struct Rt2SwingSelection *sel, ts4_u32 value)
     sel->category = value;
 }
 
-D1G_EXTERN_C ts4_bool fn_8866D930(struct Rt2WalkController *pc);
+D1G_EXTERN_C ts4_bool ts4_rally_active_8866D930(struct Rt2WalkController *pc);
 D1G_EXTERN_C ts4_bool fn_88697E98(struct Rt2WalkRequest *self, struct Rt2CategoryRow *row);
 D1G_EXTERN_C int ts4_min_cost_until_zero_886AC7E0(struct Rt2WalkController *pc, int deferred, int frames);
 
@@ -142,7 +142,7 @@ D1G_EXTERN_C ts4_bool ts4_swing_category_walk_886AFDF8(struct Rt2WalkRequest *se
         int frames = pc->slot->match->clock->frame - pc->slot->rally->launch_frame;
         gate = pc->ai->inner->reaction_time < (float)frames && frames > 1;
     }
-    if (!gate || !fn_8866D930(pc)) {
+    if (!gate || !ts4_rally_active_8866D930(pc)) {
         self->unk_40 = 0;
     } else {
         char *end;

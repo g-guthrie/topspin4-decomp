@@ -258,3 +258,213 @@ Target 2240 instructions, candidate 2216; 38 epilogues (target 39).
 `python3 tools/fn_equiv.py src/xbox360/eq_q5b_move_planner.c ts4_move_planner_transition_886B8468=0x886B8468 --flags /Oc --time 300 --trials 800 --json work/specs/Q5/eq_q5b_move_planner.equiv.json`
 (source sha256 0c34d7bdd956823733e683ce6e9466c4aa73c25b57860636030d9559bd6b8ea1): no difference, 535 valid of 800,
 coverage 53% (195/366), verdict UNCHECKED as before. The C++ draft was not run through fn_equiv.
+
+# Round 3 (2026-11-23, work/matching-b215, cl 16.00.10224 PPC, /O2 /Oi /Oc /GL + link /LTCG)
+
+Goal: old blocker 1, the reload of the player state after the first path getter (`lwz r11,0x74(r30)` at
+0x886B85B4). Same metric as round 2 (scratch script: aligned off / loose off). `inc` below means the check was run
+with `--include ts4_path_weighted_ahead_8868ED00` (keeps that getter's standard convention); round 2's numbers are
+without it.
+
+## Result
+
+- Blocker 1 is not decided by a callee. It is the caller's source form: the target reaches the state through an
+  accessor chain `state(player(planner))` at every use in the re-target block, with no `p` / `st` local. Solved in
+  the draft (the load and call sequence of the block is now the target's).
+- One unsourced callee on the path is byte-matched: 0x8866D930 `ts4_rally_active_8866D930` (0xD0), source
+  src/xbox360/q5_rally_active.c, spec work/specs/Q5/q5_rally_active.json. No volatile.
+- 0x8865E730 `ts4_if_get_8865E730` (0x50, already owned by src/xbox360/fk5_001.c) is retyped in place from the
+  word-typed asm2c body to a `__vector4 *` body; still a byte match. Its typing decides whether the planner keeps
+  the player pointer in r30 across the call.
+- 0x886884E8 (planner callee, same source shape as the re-target block) is a near miss, one dead `li` short:
+  src/xbox360/drafts/q5_886884E8_aim_at_target_nearmiss.cpp, no spec.
+- Planner, C3 contexts: 605 / 237 -> 586 / 236 (inc: 600 / 232 -> 580 / 231). Not matched.
+
+## Diagnosis experiments (all in scratch copies, nothing of this is a match)
+
+Callee write-summary swaps, planner draft of round 2, C3, inc. Baseline 600 / 232, state kept in r29 across both
+path getters.
+
+| id | change in a scratch copy of a callee | result | state reloaded after getter 1 |
+|---|---|---|---|
+| x1 | 0x8868ED00 also stores through `self->state` | 583 / 235 | yes |
+| g5 | 0x8868ED00 increments a global | 583 / 235 | yes |
+| s1 | sampler 0x8867A7C0 increments a global | 583 / 235 | yes |
+| g1 | 0x8868ED00 writes `*out` through a local alias pointer | 600 / 232 | no |
+| g2 | 0x8868ED00 writes `*out` through an inline store helper | 600 / 232 | no |
+| g3 | 0x8868ED00 takes `void *out` | 600 / 232 | no |
+| g7 | 0x8868ED00 with an extra `out->v[3] = 0` | 600 / 232 | no |
+| g4 | 0x8868ED00 takes the out pointer as `unsigned long` | 621 / 275 | yes, with other damage |
+| s2 | sampler takes the out pointer as `unsigned long` | 623 / 273 | yes, with other damage |
+| x4 | fk5_001.c with the typed 0x8865E730 (see below) | 598 / 245 | no |
+
+A getter that may write unknown memory does give the reload, but the three functions between the state load and
+the reload (0x8868ED00, its callee 0x8867A7C0, and 0x8865E730) are exact in the link and their exact bodies only
+store through the caller's out pointer; none of the dirty variants is a match of its function. So the callee
+summary is not what the original relied on.
+
+LTCG write-summary rules (probe: a caller that holds `p->state` across one call to a callee variant). The callee
+is treated as writing unknown memory (caller reloads) when it stores to a global or static, stores through a
+pointer it loaded from memory, stores through a pointer made from an integer, uses `__stvewx` / `__stvlx` /
+`__stvx_volatile` / `__lvx_volatile`, does a volatile store, or calls such a callee. It is clean (caller keeps the
+value) when it only stores through typed pointer parameters that point at the caller's locals, reads globals, or
+uses `__lvlx(&local, 0)`.
+
+Caller-side experiments in a small sibling, 0x886884E8 (0x18C; same shape as the re-target block: side set, target
+position, path getter 0x8867A908, position, squared distances), with the exact getter and sampler in the link:
+
+- a2 / a5, `MaPlayer *p = s->player` and `p->state->...`: no reload after the getter call or in the else branch.
+- a6, `ma_state(ma_player(s))->...` at every use: the state is reloaded after the getter call and in the else
+  branch, the player is merged into r29, `__savegprlr_26` as the target.
+- a7..a11 (remaining shapes, see the rules below): best 0x188 vs 0x18C, 98 vs 99 instructions, 10 / 6. The target
+  has one dead `li r9,0` at 0x88688504 that no variant reproduced (about 60 variants: cursor structs with a
+  constant member, aggregate and partial initialisers, destructor classes, loops over the two aim floats, zero
+  helpers). Kept as a draft.
+
+Planner with the same change (scratch copies of the draft, C3, inc, callee contexts as at the start of the round):
+
+| id | re-target block | result | note |
+|---|---|---|---|
+| base | `p->state->...` (round 2) | 600 / 232 | no reload after getter 1 |
+| p1 | state through the chain, `p` kept for the two path-getter calls | 600 / 232 | size 0x22b4 |
+| p3 | `q5b_state(p)` on the local `p` | 601 / 233 | no reload: the accessor alone does nothing |
+| p2 | player and state through the chain everywhere in the block | 589 / 239 | reload after getter 1 as the target; `s->player` is also reloaded after 0x8865E730 |
+| p2 + typed 0x8865E730 | | 586 / 240 | player stays in r30 from the mirror call on |
+| p2 + scalarised (non-volatile, inexact) 0x8866D930 | | 580 / 237 | |
+| p2 + both | | 580 / 231 | load and call sequence of the block identical to the target |
+
+Target sequence of the block: `lwz r30,0x154(r3)` | bl 0x8866D930 | `lwz r11,0x74(r30)` | `lwz r9,0x74(r30)` |
+bl 0x8865E730 | `lwz r7,0x74(r30)` | bl 0x8868ED00 | `lwz r11,0x74(r30)` | bl 0x8867A908. Round 2's draft had
+three state loads before the mirror call, `lwz r29,0x74(r30)` after it and none after getter 1.
+
+## Callees (step 2)
+
+| address | name | result | source | spec |
+|---|---|---|---|---|
+| 0x8866D930 | ts4_rally_active_8866D930 (was fn_8866D930) | MATCH, 0xd0, plain and LTCG route | src/xbox360/q5_rally_active.c | work/specs/Q5/q5_rally_active.json |
+| 0x8865E730 | ts4_if_get_8865E730 (name kept) | MATCH, 0x50, retyped in place | src/xbox360/fk5_001.c | work/specs/K5/fk5_001.json (unchanged) |
+| 0x886884E8 | ts4_move_planner_aim_at_target_886884E8 (fn_886884E8 in symbols.txt) | near miss 0x188 vs 0x18c, 10 / 6 | src/xbox360/drafts/q5_886884E8_aim_at_target_nearmiss.cpp | none |
+
+Commands:
+
+    python3 tools/fn_check.py src/xbox360/q5_rally_active.c ts4_rally_active_8866D930=0x8866D930 --flags /Oc
+    python3 tools/fn_check_ltcg.py src/xbox360/q5_rally_active.c ts4_rally_active_8866D930=0x8866D930 --flags /Oc --context src/xbox360/pp1_pool_primer.c
+    python3 work/dupcheck.py work/specs/Q5/q5_rally_active.json          (prints nothing)
+    python3 tools/fn_check.py src/xbox360/fk5_001.c ts4_if_get_8865E730=0x8865E730
+
+Source sha256: q5_rally_active.c 8c274d604ee7ef9fa08c609037148697e45b0819f8b80b7d30e37622ae38427c,
+fk5_001.c 9569d8b859689a692979019d9a796ca5f3eb69ac03a5fe1ea74fb6d4f7e90229,
+drafts/q5_886884E8_aim_at_target_nearmiss.cpp 4a5d7b8d322a33220061dc4fe37a9dfebfccfd1b445e29584e092f86acfb838b,
+drafts/q5_move_planner_best.cpp 9a79a20b2e2a56894a043bf2198de3e193dab908cd1a634b038e74471bb61cba.
+
+0x8866D930. The existing context body (src/xbox360/ltcg_ctx_rally_active_8866D930.c, 20 off, registers only, with
+`int *volatile keep`) is untouched; it is still the context of work/specs/ME/me_ts4_swing_category_walk_886AFDF8.json.
+The target stores the address of the let deadline to -0x10(r1) and never reads it. Tried without volatile:
+destructor-class view of the pointer, inline helpers by pointer / reference / template, out-parameter helper,
+one-element array, member function on a deadline sub-object: all 0xc8 (no store), 13 / 5; binding the address to
+`int *const &`: 0xc8, 6 / 2; a partially initialised two-member struct: 0xe0. MATCH: a local struct of two pointers
+`{ const int *deadline; const Clock *clock; }` assigned member by member and read back
+(`*timer.deadline - timer.clock->frame`). The assignment order does not matter; with the members swapped the store
+goes to -0xC (1 off). The swing-category walk still matches with the exact body as its context (scratch copy with
+the call renamed):
+
+    python3 tools/fn_check_ltcg.py <copy of me_ts4_swing_category_walk_886AFDF8.c calling ts4_rally_active_8866D930> ts4_swing_category_walk_886AFDF8=0x886AFDF8 --flags /Oc /Isrc/xbox360 --context src/xbox360/q5_rally_active.c
+    MATCH ts4_swing_category_walk_886AFDF8 ... size 0x3ac (ltcg)
+
+Integration note: `fn_8866D930` is defined by ltcg_ctx_rally_active_8866D930.c and called by
+me_ts4_swing_category_walk_886AFDF8.c (an integrated LTCG unit), rt1_eq_swing_category_walk.c, eq_q5b_move_planner.c
+and four drafts; a rename has to reach the unit and its context together (or the unit's context is switched to
+q5_rally_active.c, which the check above supports).
+
+0x8865E730. Replaced body in fk5_001.c:
+
+    void ts4_if_get_8865E730(__vector4 *point, int key)
+    {
+        if (key == (int)0xA2EDA1E7u) {
+            float nx = -point->v[0];
+            __vector4 v = *point;
+            float nz;
+            v = __vrlimi(v, __lvlx(&nx, 0), 8, 0);
+            *point = v;
+            nz = -point->v[2];
+            v = __vrlimi(v, __lvlx(&nz, 0), 2, 2);
+            *point = v;
+        }
+    }
+
+Verification of the edited file: all 200 functions of work/specs/K5/fk5_001.json give the same result as before
+the edit (197 MATCH; the same 3 FAIL lines before and after, relocation names only: 0x886131F0, 0x888A7320,
+0x888AA8D0, whose callees were renamed after the file was written); the one LTCG unit that uses fk5_001.c as
+context still matches:
+
+    python3 tools/fn_check.py src/xbox360/fk5_001.c <the 200 name=address pairs of the spec>
+    python3 tools/fn_check_ltcg.py src/xbox360/me_ts4_select_approach_hash_886782D0.c ts4_select_approach_hash_886782D0=0x886782D0 --flags /Oc --context "flags(/Ob1):src/xbox360/fk5_001.c" --context src/xbox360/pp1_pool_primer.c
+    MATCH ts4_select_approach_hash_886782D0 ... size 0xe0 (ltcg)
+
+## Planner (step 3)
+
+Draft changes (src/xbox360/drafts/q5_move_planner_best.cpp): two accessors `q5b_player(s)`, `q5b_state(p)`; in
+the re-target block every `p->state` is `q5b_state(q5b_player(s))`, `p->own_ball` is `q5b_player(s)->own_ball`,
+and the two path-getter wrappers get `q5b_player(s)`; the first callee is called by its new name. `p` stays for
+the rally-active call and the rest of the function.
+
+Context set C3' = C3 with `flags(/Ob1):src/xbox360/q5_rally_active.c` in place of
+`flags(/Ob1):src/xbox360/ltcg_ctx_rally_active_8866D930.c` (fk5_001.c now carries the typed 0x8865E730).
+
+| step | draft | context | size | aligned off | loose off | note |
+|---|---|---|---|---|---|---|
+| 25 | round 2 | C3 | 0x22a0 | 605 | 237 | before |
+| 25 | round 2 | C3, inc | 0x22a4 | 600 | 232 | before |
+| 26 | round 2, call renamed | C3 with exact 0x8866D930 | 0x22a0 | 605 | 237 | the exact callee alone changes nothing (inc: 600 / 232) |
+| 27 | accessor chain | C3 with exact 0x8866D930, word-typed 0x8865E730, inc | 0x22b0 | 583 | 239 | reload after getter 1 present; `s->player` reloaded after the mirror call |
+| 28 | accessor chain | C3' | 0x22a0 | 586 | 236 | **final state**, round 2 metric |
+| 28 | accessor chain | C3', inc | 0x22a4 | 580 | 231 | final state |
+| 28 | accessor chain | C2' (no near-miss arg-max) | 0x22a0 | 628 | 271 | round 2: 624 / 252 |
+
+Final check line (step 28, C3', inc):
+
+    python3 tools/fn_check_ltcg.py src/xbox360/drafts/q5_move_planner_best.cpp ts4_move_planner_transition_886B8468=0x886B8468 --flags /Oc --include ts4_path_weighted_ahead_8868ED00 --context "flags(/Ob1):src/xbox360/q5_ctx_move_planner_callees.c" --context "flags(/Ob1):src/xbox360/q5_path_sample.cpp" --context "flags(/Ob1):src/xbox360/q5_prediction_ticks_until_x.c" --context "flags(/Ob1):src/xbox360/cl1_clrrwi_reload.c" --context "flags(/Ob1):src/xbox360/fk5_001.c" --context "flags(/Ob1):src/xbox360/ga1_gameplay_a.c" --context "flags(/Ob1):src/xbox360/q5_rally_active.c" --context "flags(/Ob1):src/xbox360/drafts/q5_select_best_sample.c" --context src/xbox360/pp1_pool_primer.c
+    FAIL ts4_move_planner_transition_886B8468 vs fn_886B8468 @ 886B8468: size 0x22a4 != target 0x2300; 2108 differing instruction(s), first at +0x30; relocation layout differs (target 222, candidate 220)
+
+Not rerun: fn_equiv on the draft (never run on the C++ draft), tools/perm_auto.py. The byte-gap comment in
+eq_q5b_move_planner.c still carries round 2's numbers (left alone: editing it changes the hash its equivalence
+record is tied to).
+
+## Codegen rules found in round 3
+
+12. Accessor chain without a named local: the early common-subexpression pass merges the identical inner loads
+    `planner->player` into one temporary (kept in a saved register across clean calls); the chained loads
+    `temp->state` are only merged by the late, block-local pass, which any call ends. Result: the state is
+    reloaded in every basic block and after every call, the player is not. With a named local `p` the loads
+    `p->state` are merged early across blocks and clean calls. An accessor applied to the local (`state(p)`)
+    behaves like `p->state`. Real out-of-line trivial accessors inlined by LTCG behave like forceinline ones.
+13. Whether the player pointer itself survives a call depends on the callee's write summary (rules above):
+    with a word-typed 0x8865E730 or a volatile-store 0x8866D930 in the link the planner reloads `s->player`.
+14. Fields of a local struct with two or more members are memory to the early pass: a pointer read back from such
+    a field is not merged with the value it was assigned from (0x886884E8: third `planner->player` load after the
+    side test), and in a leaf function the store of the first member can survive although nothing reads it
+    (0x8866D930: `stw r8,-0x10(r1)`). A one-member struct or a plain pointer copy is merged and leaves nothing.
+    Constants assigned to such fields are still propagated and their stores vanish.
+15. A partially initialised aggregate (`T c = { s };`) is kept whole in memory: store, zero-fill of the rest,
+    reload.
+16. A forceinline accessor returning `unsigned char`, used twice: the second use is a late-merged copy
+    `clrlwi rX,rY,24` (the byte analogue of rule 7's `clrrwi`).
+17. A named pointer `T *applied = aim + 1` is its own alias base for the early pass: stores through it end the
+    merging of loads through `aim` (`*applied = *aim; s->hold = *aim;` gives four lwz/stw pairs) and it is folded
+    late to `8(r30)`. `aim[1] = aim[0]`, a struct of two pointers, a macro or an inline copy helper let the loads
+    be merged.
+18. One-argument squared length of a single subtraction, `len_sq(__vsubfp(target, x))`, gives one `vsubfp` and one
+    `vmsum3fp` per distance and the target's VMX numbering; `dot(sub, sub)` written with two subtractions gives two.
+19. A vector load cannot move across a float store that may alias it: `delta = set_y(target - *from, 0); aim->turn
+    = 1.0f;` puts the `lvlx` before the `stfs`.
+20. Dead leftovers of the target that no source form reproduced: `li r9,0` in 0x886884E8, `add r11,r7,r9` at
+    0x886B8530 in the planner (the index sum is used by the following `lvx` as r7+r9).
+
+## Remaining blockers (after round 3)
+
+1. Solved in the draft: state reload after the first path getter.
+2. Stack slots: the five position-getter result slots (round 2) and the re-target block's `contact` (0x60 in the
+   target), not worked on.
+3. 38 epilogues instead of 39 and the hold-block merge, not worked on.
+4. 0x8865DBA8 not exact; 0x886884E8 one instruction short; 29 further callees have no source.
+5. The dead `add` at 0x886B8530.

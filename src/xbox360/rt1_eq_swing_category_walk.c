@@ -3,7 +3,7 @@
  * ref/gameplay/swing_category.c sc_walk).
  *
  * Reaction gate (human, or AI frames since the opponent's launch beyond SwingReactionTime and
- * > 1, then fn_8866D930). For each row of the category list whose condition holds: write the
+ * > 1, then ts4_rally_active_8866D930). For each row of the category list whose condition holds: write the
  * category (ProStyle / Surface keys = None) and query a clip: immediately when already autoswung,
  * latched with an EasyAutoSwing row, or SlowDown > 0.5, or in any non-autoswing walk; otherwise
  * deferred with the (window, limit) frame pair. "No clip" (-1) tries AltValue. The walk stops at
@@ -13,15 +13,15 @@
  *
  * Verdict: EQUIVALENT (tools/fn_equiv.py --flags /Oc --seed 1: 100% block coverage;
  * work/specs/RT1/rt1_eq_swing_category_walk.equiv.json). Not byte-matched: the original keeps the
- * list pointer in r4 across fn_8866D930 (LTCG: that callee never writes r4), so register
- * allocation differs from +0x1C on; a byte match needs the LTCG route with fn_8866D930 in context.
+ * list pointer in r4 across ts4_rally_active_8866D930 (LTCG: that callee never writes r4), so register
+ * allocation differs from +0x1C on; a byte match needs the LTCG route with ts4_rally_active_8866D930 in context.
  * 2026-11-18: the LTCG form in src/xbox360/drafts/me_886AFDF8_nearmiss.c (context rt2_rally_active.c) is
  * 3 instructions off (one lfs scheduled early); see its header for the source shape.
  */
 #include "rt1_types.h"
 
 /* Rally/request gate of the human swing (no C yet; reads only r3). */
-ts4_bool fn_8866D930(struct Rt1PlayerCtxW *pc);
+ts4_bool ts4_rally_active_8866D930(struct Rt1PlayerCtxW *pc);
 /* SwingCategory_Condition: evaluates row->condition. */
 ts4_bool fn_88697E98(struct Rt1SwingRequest *self, const struct Rt1CategoryRow *row);
 /* SwingClip_QueryLevels: -1 no clip, 0 started, > 0 frames to the racket event (deferred). */
@@ -56,7 +56,7 @@ ts4_bool ts4_swing_category_walk_886AFDF8(struct Rt1SwingRequest *self, const st
 
     if (!ready)
         ready = rt1_reaction_elapsed(pc);
-    if (ready && fn_8866D930(pc)) {
+    if (ready && ts4_rally_active_8866D930(pc)) {
         const struct Rt1CategoryRow *row = 0;
         const struct Rt1CategoryRow *end = 0;
         if (list->offset != -1)

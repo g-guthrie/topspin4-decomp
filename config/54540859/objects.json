@@ -14932,6 +14932,10 @@
       "src/xbox360/q5_prediction_ticks_until_x.c": {
         "status": "Matching",
         "source": "xbox360/q5_prediction_ticks_until_x.c"
+      },
+      "src/xbox360/q5_rally_active.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_rally_active.c"
       }
     }
   }

@@ -263,7 +263,7 @@ Q5B_OFF(Q5bMoveCfg, cond_300, 0x300);
 #endif
 
 /* ---- callees ---- */
-extern q5b_u8 fn_8866D930(Q5bPlayer *p);
+extern q5b_u8 ts4_rally_active_8866D930(Q5bPlayer *p);
 extern void ts4_if_get_8865E730(__vector4 *point, q5b_u32 mirror_key);
 extern void fn_8868ED00(Q5bPlayer *p, __vector4 *out, int frames);
 extern void ts4_vec_with_offset_8867A908(Q5bPlayer *p, __vector4 *out, float t);
@@ -444,7 +444,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
     const float one = K_ONE;
     const float aim_pos = K_AIM_POSITIVE;
     Q5bPlayer *p = s->player;
-    q5b_u8 can_react = fn_8866D930(p);
+    q5b_u8 can_react = ts4_rally_active_8866D930(p);
     int next = cur;
 
     if (s->retarget_pending) {

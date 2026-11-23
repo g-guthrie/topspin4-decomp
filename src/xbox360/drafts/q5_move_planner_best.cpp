@@ -16,8 +16,8 @@
  *  - dispatch on the (possibly changed) state through a 23-entry jump table.
  * Offsets, branch senses (NaN behaviour of every float compare) and the load order before possibly faulting loads
  * follow the machine code; names are by role (M/L confidence, see gp3.md). Not byte-matched: see the byte-gap line
- * above the function in eq_q5b_move_planner.c and docs/agents/q5/notes/886b8468_match_log.md (check command,
- * contexts, per-step counts, round 2). */
+ * above the function below and docs/agents/q5/notes/886b8468_match_log.md (check command, contexts, per-step
+ * counts, rounds 2 and 3). */
 #include "vx1_vector.h"
 #include "gp3_types.h"
 
@@ -276,7 +276,7 @@ Q5B_OFF(Q5bMoveCfg, cond_300, 0x300);
 #endif
 
 /* ---- callees ---- */
-extern q5b_u8 fn_8866D930(Q5bPlayer *p);
+extern q5b_u8 ts4_rally_active_8866D930(Q5bPlayer *p); /* q5_rally_active.c */
 extern void ts4_if_get_8865E730(__vector4 *point, q5b_u32 mirror_key);
 extern void ts4_path_weighted_ahead_8868ED00(Q5bPlayer *p, __vector4 *out, int frames);
 extern void ts4_vec_with_offset_8867A908(Q5bPlayer *p, __vector4 *out, float t);
@@ -572,23 +572,32 @@ Q5B_INLINE int q5b_contact_wait(Q5bPlanner *s, int next)
     return GP3_MOVE_13;
 }
 
+/* Accessors. The re-target block reaches the player and its state through them at every use instead of through a
+   local: the chained load `player(s)->state` is then not merged across basic blocks or calls, which is the
+   target's reload of the state after the mirror call and after the first path getter (round 3). */
+Q5B_INLINE Q5bPlayer *q5b_player(const Q5bPlanner *s) { return s->player; }
+Q5B_INLINE Q5bMoveState *q5b_state(const Q5bPlayer *p) { return p->state; }
+
 /* mirror a court point to the player's side of the net */
 Q5B_INLINE void q5b_mirror_point(__vector4 *point, const Q5bMoveState *st)
 {
     ts4_if_get_8865E730(point, st->mirror_key);
 }
 
-/* byte-gap: 605 off (aligned; size 0x22a0 vs 0x2300, frame 0x1d0 as the target, 237 off beyond register/stack-slot
- * choice, of which 23 are the jump-table words); LTCG route with the exact path getters, sampler and
- * ticks-until-x callee and the near-miss arg-max (drafts/q5_select_best_sample.c) as context; 624 / 252 without the
- * near miss. Blockers: the target reloads player state after the path getters although it uses their clobber sets;
- * the five position-getter result slots come out in a different order (the order changes whenever any stack
- * temporary is added, so it is the stack packer's, not the declaration order); 38 epilogues instead of 39. */
+/* byte-gap: 586 off (aligned; size 0x22a0 vs 0x2300, frame 0x1d0 as the target, 236 off beyond register/stack-slot
+ * choice, of which 23 are the jump-table words); LTCG route with the exact path getters, sampler, ticks-until-x,
+ * rally-active (q5_rally_active.c) and mirror (typed ts4_if_get_8865E730 in fk5_001.c) callees and the near-miss
+ * arg-max (drafts/q5_select_best_sample.c) as context; 580 / 231 with --include ts4_path_weighted_ahead_8868ED00.
+ * Round 2 was 605 / 237 (600 / 232 with the --include). Round 3: the re-target block's load and call sequence is
+ * now the target's (player kept in r30, state reloaded per block, after the mirror call and after the first path
+ * getter). Blockers left: the five position-getter result slots and `contact` sit in other stack slots (the order
+ * changes whenever any stack temporary is added, so it is the stack packer's, not the declaration order); a dead
+ * `add r11,r7,r9` of the target at 0x886B8530 is not reproduced; 38 epilogues instead of 39. */
 
 int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
 {
     Q5bPlayer *p = s->player;
-    q5b_bool can_react = fn_8866D930(p);
+    q5b_bool can_react = ts4_rally_active_8866D930(p);
     int next = cur;
     /* results of the by-value position getter: the target keeps one temporary per call site */
     __vector4 here_step, here_adjust, here_lateral, here_ready, here_pick;
@@ -597,11 +606,11 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         const struct Gp2CandidateSet *set;
         __vector4 contact, target, pos, delta;
         s->retarget_pending = 0;
-        set = q5b_side_set(s, p->state->side);
-        contact = *q5b_sample_pos(p->own_ball->prediction, p->state->sample);
-        target = *q5b_set_position(set, p->state->sample);
-        q5b_mirror_point(&contact, p->state);
-        pos = p->state->pos;
+        set = q5b_side_set(s, q5b_state(q5b_player(s))->side);
+        contact = *q5b_sample_pos(q5b_player(s)->own_ball->prediction, q5b_state(q5b_player(s))->sample);
+        target = *q5b_set_position(set, q5b_state(q5b_player(s))->sample);
+        q5b_mirror_point(&contact, q5b_state(q5b_player(s)));
+        pos = q5b_state(q5b_player(s))->pos;
         delta = __vsubfp(target, pos);
         if (q5b_dot(delta, delta) < K_RETARGET_RADIUS2) {
             __vector4 probe, side, toward;
@@ -609,11 +618,11 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
             q5b_bool jump;
             float *step;
             float d;
-            ahead = q5b_dot(delta, __vsubfp(target, q5b_path_ahead(p, 20).v)) > K_ZERO;
+            ahead = q5b_dot(delta, __vsubfp(target, q5b_path_ahead(q5b_player(s), 20).v)) > K_ZERO;
             jump = 0;
-            step = &p->state->step_yaw;
+            step = &q5b_state(q5b_player(s))->step_yaw;
             side = q5b_set_y(__vsubfp(contact, target), K_ZERO);
-            probe = q5b_path_at(p, K_STEP_LOOKAHEAD).v;
+            probe = q5b_path_at(q5b_player(s), K_STEP_LOOKAHEAD).v;
             d = q5b_dot(side, delta);
             toward = __vsubfp(probe, pos);
             facing = d > K_ZERO && q5b_dot(toward, side) > K_ZERO;

@@ -57,7 +57,7 @@ struct Rt2RallyCtl {
 
 /* True while the rally is live: not in a let, or the let deadline has passed, and the player's
    behaviour node is not kind 0x11/0x12. Swing_DLL.xex 0x8866D930 */
-D1G_EXTERN_C ts4_bool fn_8866D930(struct Rt2RallyCtl *ctl)
+D1G_EXTERN_C ts4_bool ts4_rally_active_8866D930(struct Rt2RallyCtl *ctl)
 {
     ts4_bool active = 1;
     struct Rt2LetMatch *m = ctl->match;

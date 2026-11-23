@@ -1332,32 +1332,21 @@ void ts4_get_u32_off14_8865A0A0(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x8865E730: if_get  */
-void ts4_if_get_8865E730(ts4_word a0, int a1)
+/* Swing_DLL.xex 0x8865E730: mirror a court point to the far side (negate x and z) when `key` is the far-side
+   tag 0xA2EDA1E7; typed in round 3 of the 0x886B8468 work (docs/agents/q5/notes/886b8468_match_log.md): with the
+   word-typed asm2c body an LTCG caller assumes the call may write any memory. */
+void ts4_if_get_8865E730(__vector4 *point, int key)
 {
-    __vector4 vv2;
-    __vector4 vv3;
-    __vector4 vv4;
-    __vector4 vv6;
-    __vector4 vv7;
-    ts4_word locm10[1];
-    ts4_word locmc[1];
-    float t1;
-
-    if ((int)a1 == (int)((2733441024) | 41447)) {
-        t1 = *(float *)((char *)(ts4_word)(a0) + 0);
-        vv2 = *(__vector4 *)((ts4_word)(a0));
-        *(float *)((char *)locm10 + 0) = (-t1);
-        vv3 = __lvlx((void *)((ts4_word)&locm10[0]), 0);
-        vv4 = __vrlimi(vv2, vv3, 8, 0);
-        *(__vector4 *)((ts4_word)(a0)) = vv4;
-        *(float *)((char *)locmc + 0) = (-(*(float *)((char *)(ts4_word)(a0) + 8)));
-        vv6 = __lvlx((void *)((ts4_word)&locmc[0]), 0);
-        vv7 = __vrlimi(vv4, vv6, 2, 2);
-        *(__vector4 *)((ts4_word)(a0)) = vv7;
-        return;
+    if (key == (int)0xA2EDA1E7u) {
+        float nx = -point->v[0];
+        __vector4 v = *point;
+        float nz;
+        v = __vrlimi(v, __lvlx(&nx, 0), 8, 0);
+        *point = v;
+        nz = -point->v[2];
+        v = __vrlimi(v, __lvlx(&nz, 0), 2, 2);
+        *point = v;
     }
-    return;
 }
 
 /* Swing_DLL.xex 0x8865EAC0: get u32@0x28, u32@0x20, u32@0x10 */
