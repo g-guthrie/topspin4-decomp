@@ -11,7 +11,7 @@ extern int ts4_format_text(char *dst, unsigned size, const char *fmt, ...);
 extern char lbl_880C8F28[];
 extern struct D1Out *ts4_query_handle_88655800(struct D1Out *out, const u8 *flag, const char *key);
 extern void ts4_assign_formatted_text(struct D1Big *dst, const char *src);
-extern struct D1Out *fn_88655718(struct D1Out *out, const u8 *flag, struct D1Big *key);
+extern struct D1Out *ts4_store_load_handle_88655718(struct D1Out *out, const u8 *flag, struct D1Big *key);
 extern void ts4_destroy_owned_object(void *p);
 extern void fn_88657658(struct D1S *s);
 int ts4_load_handle_88658B90(struct D1S *s, u8 reuse)
@@ -25,7 +25,7 @@ int ts4_load_handle_88658B90(struct D1S *s, u8 reuse)
         ((struct D1Obj *)(unsigned long)s->h)->vt->slot7((struct D1Obj *)(unsigned long)s->h, 0, 1);
     } else {
         ts4_assign_formatted_text(&b, buf);
-        fn_88655718(&a, &s->flag, &b);
+        ts4_store_load_handle_88655718(&a, &s->flag, &b);
         s->h = a.v;
         ts4_destroy_owned_object((void *)(unsigned long)b.v);
         if (s->h == 0) return 0;

@@ -95,7 +95,7 @@ ts4_word fn_8864BAE8();
 ts4_word ts4_pump_state_8864CF98();
 ts4_word ts4_msg_pool_service_get_8864DFF0();
 ts4_word fn_8864E310();
-ts4_word fn_88655718();
+ts4_word ts4_store_load_handle_88655718();
 ts4_word ts4_flush_queue_88655BC8();
 ts4_word ts4_load_handle_88658B90();
 ts4_word ts4_shot_tree_walk_8865A938();
@@ -1175,10 +1175,10 @@ ts4_word ts4_if_call_seq_u32_offc_886555C0(ts4_word a0, ts4_word a1, ts4_word a2
     return 1;
 }
 
-/* Swing_DLL.xex 0x886557D0: call_seq fn_88655718 */
+/* Swing_DLL.xex 0x886557D0: call_seq ts4_store_load_handle_88655718 */
 ts4_word ts4_call_seq_fn_88655718_886557D0(ts4_word a0, ts4_word a1)
 {
-    fn_88655718((ts4_word)a0, (ts4_word)a1);
+    ts4_store_load_handle_88655718((ts4_word)a0, (ts4_word)a1);
     return a0;
 }
 

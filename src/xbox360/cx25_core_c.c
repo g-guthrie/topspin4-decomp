@@ -174,7 +174,7 @@ void ts4_v2c_resize_8820B1A0(Cx25cV2c *v, u32 n)
 
 /* ---- string-pointer ranges ---- */
 extern u32 fn_881519D0(void);
-extern void fn_8819AFC8(void *dst, void *src, u32 x);
+extern void ts4_string_copy_mgr_8819AFC8(void *dst, void *src, u32 x);
 
 /* 0x881FB7F8: copy-construct [first, last) of string handles into dst, passing each string's size (or the default) along; returns the end of dst */
 u32 **ts4_copy_strs_881FB7F8(u32 **first, u32 **last, u32 **dst)
@@ -187,7 +187,7 @@ u32 **ts4_copy_strs_881FB7F8(u32 **first, u32 **last, u32 **dst)
                 int n = ((int *)*s)[-4];
                 u32 x = (u32)n;
                 if (n == 0) x = fn_881519D0();
-                fn_8819AFC8(dst, s, x);
+                ts4_string_copy_mgr_8819AFC8(dst, s, x);
             }
             s++;
             dst++;

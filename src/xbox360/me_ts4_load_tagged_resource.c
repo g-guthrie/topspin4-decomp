@@ -23,7 +23,7 @@ extern int ts4_format_text(char *dst, unsigned size, const char *fmt, ...);
 extern char lbl_880F5080[];
 extern const Tag10 lbl_880F508C;
 extern void ts4_assign_formatted_text(struct D1Big *dst, const char *src);
-extern struct D1Out *fn_88655718(struct D1Out *out, const u8 *flag, struct D1Big *key);
+extern struct D1Out *ts4_store_load_handle_88655718(struct D1Out *out, const u8 *flag, struct D1Big *key);
 extern void ts4_destroy_owned_object(void *p);
 
 static __inline u8 store_has(const u8 *flag, const char *key)
@@ -55,7 +55,7 @@ void ts4_load_tagged_resource_88658A38(struct D1S *s, int id)
     ts4_format_text(buf, 0x200, lbl_880F5080, s->w4, id);
     if (!store_has(&s->flag, buf)) {
         ts4_assign_formatted_text(&b, buf);
-        fn_88655718(&h, &s->flag, &b);
+        ts4_store_load_handle_88655718(&h, &s->flag, &b);
         ts4_destroy_owned_object((void *)(unsigned long)b.v);
         if (h.v) {
             Tag10 tag = lbl_880F508C;

@@ -26,7 +26,7 @@ Elem_88150310 *ts4_vector_erase_range_88150310(Vec_88150310 *v, Elem_88150310 *f
 typedef struct Elem_88159558 { u8 bytes[52]; } Elem_88159558;
 typedef struct Vec_88159558 { u32 pad; Elem_88159558 *end; } Vec_88159558;
 extern void fn_8815D570(Elem_88159558 *dst, Elem_88159558 *src);
-extern void fn_8815BB30(Elem_88159558 *first, Elem_88159558 *last);
+extern void ts4_buf3_destroy_range_8815BB30(Elem_88159558 *first, Elem_88159558 *last);
 
 /* Erases [first, last): shifts the tail down element by element, destroys the leftovers and shrinks the vector. */
 Elem_88159558 *ts4_vector_erase_range_88159558(Vec_88159558 *v, Elem_88159558 *first, Elem_88159558 *last)
@@ -39,7 +39,7 @@ Elem_88159558 *ts4_vector_erase_range_88159558(Vec_88159558 *v, Elem_88159558 *f
             ++d;
         } while (--n > 0);
     }
-    fn_8815BB30(d, v->end);
+    ts4_buf3_destroy_range_8815BB30(d, v->end);
     v->end = d;
     return first;
 }

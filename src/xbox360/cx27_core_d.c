@@ -139,7 +139,7 @@ extern void fn_881BD170(void *dst, void *src);
 
 typedef struct Cx27Rec8 { u32 id; u32 *str; } Cx27Rec8;
 extern u32 fn_881519D0(void);
-extern void fn_8819AFC8(void *dst, void *src, u32 a);
+extern void ts4_string_copy_mgr_8819AFC8(void *dst, void *src, u32 a);
 
 /* ---- grow-and-append of 0x40-byte records ---- */
 typedef struct Cx27R40 { u8 b[0x40]; } Cx27R40;

@@ -251,7 +251,7 @@ ts4_uptr fn_88649A90(ts4_uptr, ts4_uptr);
 ts4_uptr ts4_pump_state_8864CF98(void);
 ts4_uptr ts4_type_register_886529C8(ts4_uptr);
 ts4_uptr ts4_call_seq_lbl_880F5230_88652A90(void);
-ts4_uptr fn_88655718(ts4_uptr);
+ts4_uptr ts4_store_load_handle_88655718(ts4_uptr);
 ts4_uptr fn_88669C30(ts4_uptr);
 ts4_uptr ts4_reset_sub_886C5C28(ts4_uptr);
 ts4_uptr fn_88883CD0(ts4_uptr, ts4_uptr);

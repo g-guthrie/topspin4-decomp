@@ -55548,3 +55548,64 @@ src/xbox360/q5s_eng_xdata_str.c:
 src/xbox360/q5s_eng_time.c:
 	.pdata      start:0x8810F458 end:0x8810F460
 	.text       start:0x882783F0 end:0x88278450
+
+src/xbox360/q5s_cont_misc.cpp:
+	.pdata      start:0x88108CF0 end:0x88108CF8
+	.pdata      start:0x88109CF0 end:0x88109CF8
+	.text       start:0x8816B238 end:0x8816B2C4
+	.text       start:0x881811A8 end:0x88181240
+	.text       start:0x8819AFC8 end:0x8819B060
+
+src/xbox360/q5s_cont_heapfree.c:
+	.pdata      start:0x88107390 end:0x88107398
+	.pdata      start:0x88108C18 end:0x88108C20
+	.text       start:0x8815BB30 end:0x8815BBCC
+	.text       start:0x8817F670 end:0x8817F704
+
+src/xbox360/q5s_cont_lookup.cpp:
+	.pdata      start:0x88107EA8 end:0x88107EB0
+	.pdata      start:0x88107EF0 end:0x88107EF8
+	.text       start:0x8816C490 end:0x8816C520
+	.text       start:0x8816CBB0 end:0x8816CC3C
+
+src/xbox360/q5s_math_store_handle.c:
+	.pdata      start:0x88122F58 end:0x88122F60
+	.text       start:0x88655718 end:0x886557D0
+
+src/xbox360/q5s_math_item_list.c:
+	.pdata      start:0x88122F78 end:0x88122F80
+	.text       start:0x886559C8 end:0x88655A88
+
+src/xbox360/q5s_math_xform_inplace.c:
+	.text       start:0x881A40F0 end:0x881A4194
+
+src/xbox360/q5s_math_table_find.c:
+	.pdata      start:0x88122FB0 end:0x88122FB8
+	.text       start:0x88656048 end:0x88656118
+
+src/xbox360/q5s_math_slot_init.c:
+	.text       start:0x88273318 end:0x882733F4
+
+src/xbox360/q5s_math_look_to.c:
+	.text       start:0x8825CF28 end:0x8825D008
+
+src/xbox360/q5s_swan_grid.c:
+	.pdata      start:0x881249B0 end:0x881249B8
+	.text       start:0x886C4190 end:0x886C4278
+
+src/xbox360/q5s_swan_layers.c:
+	.text       start:0x886C4A10 end:0x886C4AB8
+
+src/xbox360/q5s_swan_scale.c:
+	.text       start:0x886CEEC0 end:0x886CEF20
+
+src/xbox360/q5s_swan_find.c:
+	.pdata      start:0x88124BE8 end:0x88124BF0
+	.text       start:0x886CB8D0 end:0x886CB96C
+
+src/xbox360/q5s_swan_blend.cpp:
+	.pdata      start:0x881249E0 end:0x881249E8
+	.text       start:0x886C4D10 end:0x886C4DE0
+
+src/xbox360/q5s_swan_pose.c:
+	.text       start:0x886C6590 end:0x886C665C

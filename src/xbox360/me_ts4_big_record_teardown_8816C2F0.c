@@ -21,7 +21,7 @@ typedef struct Big {
 } Big;
 void ts4_destroy_owned_object(void *obj);
 void ts4_registry_dispatch_888860A0(void *p);
-void fn_8815BB30(Text *first, Text *last);
+void ts4_buf3_destroy_range_8815BB30(Text *first, Text *last);
 void *ts4_find_range_owner_8860D360(Ts4Registry *registry, void *key);
 void ts4_node_visit_8860DBC8(void *entry, void *key);
 void ts4_if_call_seq_u32_off0_88158648(void *p);
@@ -48,7 +48,7 @@ static __inline void text_vecs_destroy_n(TextVec *first, int count)
     TextVec *p = first + count;
     while (--count >= 0) {
         --p;
-        fn_8815BB30(p->first, p->last);
+        ts4_buf3_destroy_range_8815BB30(p->first, p->last);
         if (p->first) ts4_destroy_owned_object(p->first);
     }
 }

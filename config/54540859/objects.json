@@ -15060,6 +15060,66 @@
       "src/xbox360/q5s_eng_time.c": {
         "status": "Matching",
         "source": "xbox360/q5s_eng_time.c"
+      },
+      "src/xbox360/q5s_cont_misc.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5s_cont_misc.cpp"
+      },
+      "src/xbox360/q5s_cont_heapfree.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_cont_heapfree.c"
+      },
+      "src/xbox360/q5s_cont_lookup.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5s_cont_lookup.cpp"
+      },
+      "src/xbox360/q5s_math_store_handle.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_store_handle.c"
+      },
+      "src/xbox360/q5s_math_item_list.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_item_list.c"
+      },
+      "src/xbox360/q5s_math_xform_inplace.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_xform_inplace.c"
+      },
+      "src/xbox360/q5s_math_table_find.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_table_find.c"
+      },
+      "src/xbox360/q5s_math_slot_init.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_slot_init.c"
+      },
+      "src/xbox360/q5s_math_look_to.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_look_to.c"
+      },
+      "src/xbox360/q5s_swan_grid.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_swan_grid.c"
+      },
+      "src/xbox360/q5s_swan_layers.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_swan_layers.c"
+      },
+      "src/xbox360/q5s_swan_scale.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_swan_scale.c"
+      },
+      "src/xbox360/q5s_swan_find.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_swan_find.c"
+      },
+      "src/xbox360/q5s_swan_blend.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5s_swan_blend.cpp"
+      },
+      "src/xbox360/q5s_swan_pose.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_swan_pose.c"
       }
     }
   }
