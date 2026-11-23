@@ -437,7 +437,7 @@ Q5B_INLINE int q5b_contact_wait(Q5bPlanner *s, int next)
     return GP3_MOVE_13;
 }
 
-/* byte-gap: not attempted (size); 8960-byte LTCG state machine with VMX128 math, keeps volatile registers across calls */
+/* byte-gap: 679 off (best); LTCG vector-getter mod/ref and struct-return slot layout not reproducible from C (src/xbox360/drafts/q5_move_planner_best.c, work/q5/notes/886b8468_match_log.md) */
 int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
 {
     const float zero = lbl_8814B440;
