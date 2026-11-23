@@ -33855,3 +33855,7 @@ ts4_apply_ece067e5_entries_8886FCC0 = .text:0x8886FCC0; // type:function size:0x
 ts4_path_sample_8867A7C0 = .text:0x8867A7C0; // type:function size:0x144
 ts4_prediction_ticks_until_x_886600E0 = .text:0x886600E0; // type:function size:0x110
 ts4_rally_active_8866D930 = .text:0x8866D930; // type:function size:0xD0
+ts4_line_init_normalized_8826AC10 = .text:0x8826AC10; // type:function size:0x54
+ts4_line_init_two_points_88189888 = .text:0x88189888; // type:function size:0x5C
+ts4_line_closest_point_8826D3A0 = .text:0x8826D3A0; // type:function size:0x64
+ts4_planner_update_committed_8866BD00 = .text:0x8866BD00; // type:function size:0xD4

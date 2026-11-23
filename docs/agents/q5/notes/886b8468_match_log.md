@@ -468,3 +468,23 @@ record is tied to).
 3. 38 epilogues instead of 39 and the hold-block merge, not worked on.
 4. 0x8865DBA8 not exact; 0x886884E8 one instruction short; 29 further callees have no source.
 5. The dead `add` at 0x886B8530.
+
+## Round 4: callees
+
+Tool: cl 16.00.10224 PPC via `TS4_MATCHING_DIR=$PWD/work/matching-b215`. LTCG checks use `python3 tools/fn_check_ltcg.py <src> <sym>=<addr> --flags /Oc [--context ...] --context src/xbox360/pp1_pool_primer.c`.
+
+| address | name | result | source (sha256 prefix) | spec | check |
+|---|---|---|---|---|---|
+| 0x8826AC10 | ts4_line_init_normalized_8826AC10 | MATCH (ltcg), 0x54 | src/xbox360/q5_line_init.c (ae233b3b) | work/specs/Q5/q5_line_init.json | `fn_check_ltcg.py src/xbox360/q5_line_init.c ts4_line_init_normalized_8826AC10=0x8826AC10 ts4_line_init_two_points_88189888=0x88189888 --flags /Oc --context src/xbox360/pp1_pool_primer.c` |
+| 0x88189888 | ts4_line_init_two_points_88189888 | MATCH (ltcg), 0x5c | same | same | same |
+| 0x8826D3A0 | ts4_line_closest_point_8826D3A0 | MATCH (ltcg), 0x64 | src/xbox360/q5_line_project.cpp (939e6971) | work/specs/Q5/q5_line_project.json | `fn_check_ltcg.py src/xbox360/q5_line_project.cpp ts4_line_closest_point_8826D3A0=0x8826D3A0 --flags /Oc --context src/xbox360/pp1_pool_primer.c` |
+| 0x8866BD00 | ts4_planner_update_committed_8866BD00 | MATCH (ltcg), 0xd4 | src/xbox360/q5_planner_commit.c (e96d4ce0) | work/specs/Q5/q5_planner_commit.json | `fn_check_ltcg.py src/xbox360/q5_planner_commit.c ts4_planner_update_committed_8866BD00=0x8866BD00 --flags /Oc --context src/xbox360/cl1_clrrwi_reload.c --context src/xbox360/q5_prediction_ticks_until_x.c --context src/xbox360/pp1_pool_primer.c` |
+| 0x8866C150 | ts4_target_far_and_idle_8866C150 | open, 1 off (EQUIVALENT file unchanged) | src/xbox360/drafts/q5_8866C150_target_far_nearmiss.c (bebb6efc) | - | `fn_check.py <draft> ts4_target_far_and_idle_8866C150=0x8866C150` |
+| 0x88678708 | ts4_target_within_radius_88678708 | open, 10 off | src/xbox360/drafts/q5_88678708_within_radius_nearmiss.cpp (fa8e58a1) | - | `fn_check_ltcg.py <draft> ts4_target_within_radius_88678708=0x88678708 --flags /Oc --context src/xbox360/pp1_pool_primer.c` |
+| 0x8817B608 | ts4_angle_wrap_pi_8817B608 | open, 33 off | src/xbox360/drafts/q5_8817B608_angle_wrap_nearmiss.c (d526d99e) | - | `fn_check.py <draft> ts4_angle_wrap_pi_8817B608=0x8817B608` |
+| 0x88564BF8 | atan2 (CRT) | open, 68 off | src/xbox360/drafts/q5_88564BF8_atan2_nearmiss.c (c331c994) | - | `fn_check.py <draft> fn_88564BF8=0x88564BF8` |
+| 0x8866E318 | ts4_court_bounds_8866E318 | open, 41 off (scratch) | src/xbox360/drafts/me_8866E318_nearmiss.c | - | - |
+
+Not started (time budget): 0x8866D180, 0x8866BDD8, 0x881896F8, 0x8866BFE8, 0x886884E8, 0x88678548, 0x886A3440, 0x886B81E0.
+
+Note: the planner prototypes of fn_8826D3A0 in src/xbox360/eq_q5b_move_planner.c and drafts/q5_move_planner_best.cpp have the argument roles swapped. The real order is (point r3, line r4, out r5, t r6). Not edited.

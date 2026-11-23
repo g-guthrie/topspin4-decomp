@@ -55346,3 +55346,14 @@ src/xbox360/q5_prediction_ticks_until_x.c:
 
 src/xbox360/q5_rally_active.c:
 	.text       start:0x8866D930 end:0x8866DA00
+
+src/xbox360/q5_line_init.c:
+	.text       start:0x88189888 end:0x881898E4
+	.text       start:0x8826AC10 end:0x8826AC64
+
+src/xbox360/q5_line_project.cpp:
+	.text       start:0x8826D3A0 end:0x8826D404
+
+src/xbox360/q5_planner_commit.c:
+	.pdata      start:0x88123530 end:0x88123538
+	.text       start:0x8866BD00 end:0x8866BDD4

@@ -285,7 +285,7 @@ extern q5b_u8 fn_88687AC0(Q5bPlanner *s, const void *cond);
 extern int fn_886A9678(Q5bPlanner *s);
 extern q5b_u8 fn_886A3440(Q5bPlanner *s);
 extern q5b_u8 fn_886A26E0(Q5bPlanner *s);
-extern void fn_8866BD00(Q5bPlanner *s);
+extern void ts4_planner_update_committed_8866BD00(Q5bPlanner *s);
 extern q5b_u8 fn_886A2E48(Q5bPlanner *s, const void *profile);
 extern q5b_u8 fn_8866C150(Q5bPlanner *s);
 extern q5b_u8 fn_88678708(Q5bPlanner *s, const void *cond);
@@ -309,11 +309,11 @@ extern q5b_u8 fn_886A2BE8(Q5bPlanner *s);
 extern void ts4_if_call_seq_u32_off154_886A9DF0(Q5bPlanner *s);
 extern q5b_u8 ts4_query_slot_matches_target_8865EB60(Q5bPlayer *p);
 extern int ts4_two_event_ticks_remaining_886CD1E8(void *events);
-extern void fn_88189888(Q5bLine *line, const __vector4 *a, const __vector4 *b);
+extern void ts4_line_init_two_points_88189888(Q5bLine *line, const __vector4 *a, const __vector4 *b);
 extern void fn_8866D180(__vector4 *dir, q5b_u32 mirror_key);
-extern void fn_8826AC10(Q5bLine *line, const __vector4 *point, const __vector4 *dir);
+extern void ts4_line_init_normalized_8826AC10(Q5bLine *line, const __vector4 *point, const __vector4 *dir);
 extern int fn_881896F8(const Q5bLine *a, const Q5bLine *b, __vector4 *hit, float *t1, float *t2);
-extern void fn_8826D3A0(__vector4 *out, const Q5bLine *a, const Q5bLine *b, float *t);
+extern void ts4_line_closest_point_8826D3A0(__vector4 *out, const Q5bLine *a, const Q5bLine *b, float *t);
 extern void fn_88699300(Q5bPlanner *s, int state);
 
 /* ---- helpers ---- */
@@ -707,7 +707,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
             return q5b_hold_sample(s, GP3_MOVE_6);
         if (can_react && r == -1)
             return GP3_MOVE_13;
-        fn_8866BD00(s);
+        ts4_planner_update_committed_8866BD00(s);
         if (!s->committed)
             fn_886A2E48(s, s->player->cfg->profile_208);
         return next;
@@ -869,7 +869,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
             fn_886A2E48(s, s->player->cfg->profile_208);
             fn_886787D8(s);
         }
-        fn_8866BD00(s);
+        ts4_planner_update_committed_8866BD00(s);
         return next;
     }
 
@@ -947,7 +947,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
             return q5b_hold_sample(s, GP3_MOVE_12);
         if (can_react && r == -1)
             return GP3_MOVE_13;
-        fn_8866BD00(s);
+        ts4_planner_update_committed_8866BD00(s);
         if (!s->committed)
             ts4_if_call_seq_u32_off154_886A9DF0(s);
         s->player->state->turn_on = 1;
@@ -1063,7 +1063,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         target = *q5b_set_position(set, st->sample);
         {
             __vector4 a = flat_pos, b = flat_ahead;
-            fn_88189888(&path, &a, &b);
+            ts4_line_init_two_points_88189888(&path, &a, &b);
         }
         p = s->player;
         dir = p->body->facing;
@@ -1072,9 +1072,9 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         hit.v[1] = zero;
         hit.v[2] = target.v[2];
         hit.v[3] = zero;
-        fn_8826AC10(&run, &hit, &dir);
+        ts4_line_init_normalized_8826AC10(&run, &hit, &dir);
         fn_881896F8(&path, &run, &hit, &t1, &t2);
-        fn_8826D3A0(&hit, &path, &run, &t2);
+        ts4_line_closest_point_8826D3A0(&hit, &path, &run, &t2);
         if (!s->adjust_running) {
             t2 = t2 + K_ADJUST_TIME_BIAS;
             if (q5b_negative(t2)) {
@@ -1133,7 +1133,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
             return GP3_MOVE_20_RUSH;
         if (next != GP3_MOVE_9)
             return next;
-        fn_8866BD00(s);
+        ts4_planner_update_committed_8866BD00(s);
         if (s->committed)
             return next;
         if (!fn_886A2E48(s, s->profile))

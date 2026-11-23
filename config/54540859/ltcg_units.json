@@ -3245,5 +3245,53 @@
   "symbols": {
    "ts4_rally_active_8866D930": 208
   }
+ },
+ {
+  "source": "src/xbox360/q5_line_init.c",
+  "object": "q5_line_init.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_line_init_normalized_8826AC10": 84,
+   "ts4_line_init_two_points_88189888": 92
+  }
+ },
+ {
+  "source": "src/xbox360/q5_line_project.cpp",
+  "object": "q5_line_project.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_line_closest_point_8826D3A0": 100
+  }
+ },
+ {
+  "source": "src/xbox360/q5_planner_commit.c",
+  "object": "q5_planner_commit.obj",
+  "context": [
+   "src/xbox360/cl1_clrrwi_reload.c",
+   "src/xbox360/q5_prediction_ticks_until_x.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_planner_update_committed_8866BD00": 212
+  }
  }
 ]

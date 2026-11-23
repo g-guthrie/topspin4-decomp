@@ -14936,6 +14936,18 @@
       "src/xbox360/q5_rally_active.c": {
         "status": "Matching",
         "source": "xbox360/q5_rally_active.c"
+      },
+      "src/xbox360/q5_line_init.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_line_init.c"
+      },
+      "src/xbox360/q5_line_project.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5_line_project.cpp"
+      },
+      "src/xbox360/q5_planner_commit.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_planner_commit.c"
       }
     }
   }
