@@ -113,3 +113,20 @@ difference it prints both runs side by side (`EQDBG_N=<window>`), and
   fn_check: equivalent route; the split needs fixing.
 - Vector registers across calls: see the fn_equiv version notes in
   docs/equivalence-tier.md for current behaviour.
+
+## Parked 2026-11-23 (after b224)
+
+State: 33,914 functions, 3,519,592 / 10,154,020 code bytes (34.66%). Subsystem wave rounds 1-2
+(cont, eng, swan, math, move, world) produced 147 byte-exact matches in b222-b224. Open near-misses
+are in src/xbox360/drafts/q5s_*_nearmiss.* with blockers; claims under work/q5/claims/ are stale
+once a new wave starts (clear them by exact name).
+
+Recommended order on resume:
+1. Checker fixes for false negatives: ICF-folded functions (881A2508, 886D0EB0 vtable pair),
+   C++ member symbols called from C (8819C360, 881509F8: rename callers or /alternatename),
+   0x8814B440 constant naming differs between plain and LTCG routes, auto-context stand-in choice.
+2. Class-recovery pass (C++ classes from vtables/ctors/dtors into src/xbox360/include/ts4/):
+   many near-misses cite an unknown class shape (+0x154 move target, +0x3c block, matrix/handle).
+3. Register-allocation research: about half the open near-misses differ only in register numbering
+   and perm_auto rarely helps; study MSVC's allocator and build a smarter permuter or rules.
+Then resume subsystem solver waves; planner 0x886B8468 last (26 callees unmatched).
