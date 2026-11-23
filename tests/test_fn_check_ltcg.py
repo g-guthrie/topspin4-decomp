@@ -162,5 +162,20 @@ class TargetSites(unittest.TestCase):
         self.assertEqual([s.address for s in sites], [0x83000010, 0x83000010])
 
 
+class ScratchParent(unittest.TestCase):
+    def test_default_is_work_and_the_environment_overrides_it(self):
+        import os
+        import tempfile
+        from unittest import mock
+        with mock.patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("TS4_LTCG_SCRATCH", None)
+            self.assertEqual(L.scratch_parent(), L.ROOT / "work")
+        with tempfile.TemporaryDirectory() as tmp:
+            mine = Path(tmp) / "worker3"
+            with mock.patch.dict(os.environ, {"TS4_LTCG_SCRATCH": str(mine)}):
+                self.assertEqual(L.scratch_parent(), mine.absolute())
+                self.assertTrue(mine.is_dir())   # created on demand
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -103,8 +103,29 @@ first. `tools/fn_check_ltcg.py --auto-context` picks the contexts:
   source names it.
 - On FAIL it tries up to `--auto-tries` (12) smaller links in a fixed order: without the /INCLUDEs, `/Ob1` on every
   callee source, without one callee source at a time, one callee source alone, no callee source.
-- It cannot know `--no-include` with a caller context, or a new stand-in for an unmatched callee: pass those by
+- Before those, once and outside the count, it tries the failed link "without the pool primer": a literal the
+  original keeps in another pool than g_ts4_script_constants (the 0.5f at lbl_8814B910 of 0x88779248 and
+  0x886AFDF8, the zeros of cx18_ltcg_a.c) costs one instruction more when it lands in the primed pool.
+- It cannot know `--no-include` with a caller context, a new stand-in for an unmatched callee, or a stand-in for
+  a callee whose matched source compiles to another body under /GL (see the list below): pass those by
   hand. Logic and tests: tools/ltcg_autocontext.py, tests/test_ltcg_autocontext.py.
+
+### Units that need manual context (full run, 2026-11-23)
+
+`TS4_MATCHING_DIR=$PWD/work/matching-b225 python3 tools/ltcg_autocontext_all.py` checks every unit of
+config/54540859/ltcg_units.json with its flags and `--auto-context` only (none of its recorded context, include
+or no_include values), one worker per core; rows go to work/autoctx_full.tsv, outputs to work/autoctx_logs/.
+Result on the b225 split: **256 of 257 units (422 of 423 functions) match by auto-context alone**, 14 of them
+through a fallback link (3 "without the pool primer"). The earlier "216 units, 209 by auto alone, 7 manual"
+figure (commit 2d0d5c8) predates the return-kind filter, the call-site count and the ranked fallback; its list
+was not kept and this one replaces it.
+
+| Unit | Function | Manual context | Why auto-context cannot find it |
+|---|---|---|---|
+| src/xbox360/cx33_ltcg_b.c | ts4_fill_lookup_8890E810 | `--context "flags(/Ob1):src/xbox360/cx33_ctx_e698.c"` | Its callee 0x8890E698 is matched on the plain route (me_ts4_registry_find_value_8890E698.c, `find_key` as `static __inline`). Under /GL the link does not inline `find_key`: the callee comes out as 0x50 bytes with a `bl` (0xC8 in the original), so the caller sees another clobber set and keeps other registers across the call (38 instructions differ; no fallback link matches). The stand-in cx33_ctx_e698.c writes the search out in the function body and gives the original's register use. Auto-context prefers a matched source to a stand-in, and must: a stand-in is only right for the caller it was written for. |
+
+Not a unit, checked as well: the spec work/specs/Q5/q5_path_getters.json (q5_ctx_move_planner_callees.c,
+0x8868ED00 and 0x8867A908) matches by auto-context alone.
 
 ## Tools: aliases (ICF folds, C++ members called from C)
 

@@ -320,6 +320,33 @@ Say "LTCG route" in your report.
   `/Ob1` on the others); one callee source alone; no callee source. The first MATCH is reported with its
   explicit command (0x8816CBB0: "MATCH without d1_band1_offset_array_ptrs_8815E4D0.c": the body of its
   0x88187738 callee changes r30/r31 in the caller).
+- *Pool primer.* Before the ranked links, once and not counted in `--auto-tries`, the failed link is repeated
+  "without the pool primer". The primer lays the literals out as in g_ts4_script_constants; a function whose
+  literal the original keeps in another pool (0x88779248 and 0x886AFDF8: 0.5f at `lbl_8814B910`; the zeros of
+  cx18_ltcg_a.c) then reaches it through the big pool's base, `addi` + `lfs` instead of one `lfs`, and is one
+  instruction too long. An explicit `--context src/xbox360/pp1_pool_primer.c` is never dropped.
+
+**Full run (2026-11-23, b225 split, tree at 7e47b7e plus the primer fallback).**
+```sh
+TS4_MATCHING_DIR=$PWD/work/matching-b225 python3 tools/ltcg_autocontext_all.py   # --jobs = cores (4), --timeout 1200; b215 is a symlink to b225
+```
+It checks every unit of `config/54540859/ltcg_units.json` (sha256 `4e2ac1471ec25b79374e816a43df7477bbaec8111a421c23b0b433d74d557d94`, 257 units, 423 functions) with
+its recorded flags and `--auto-context` only, each worker in its own scratch directory (`TS4_LTCG_SCRATCH`), and
+writes `work/autoctx_full.tsv` and `work/autoctx_logs/`. Compiler X360/16.00.10224.00, 6 min 5 s wall on 4 cores
+(1,453 s summed; slowest unit 43 s).
+
+| | Units | Functions |
+|---|---|---|
+| MATCH by auto-context alone | **256 / 257** | 422 / 423 |
+| ... with the full context | 242 | |
+| ... through a fallback link | 14 (3 without the pool primer, 4 without the callee sources, 4 without one callee source, 2 without the /INCLUDEs, 1 with one callee source alone) | |
+| FAIL (needs manual context) | 1: `cx33_ltcg_b.c` (0x8890E810) | 1 |
+
+Before the primer fallback the same run gave 253 / 257: `cx18_ltcg_a.c` (5 of 6 functions),
+`me_ts4_round_to_int_88779248.c` and `me_ts4_swing_category_walk_886AFDF8.c` failed on the primed pool alone.
+The remaining unit needs a hand-written stand-in for its callee 0x8890E698, whose plain-route source gets another
+body under /GL (`static __inline` helper not inlined); the list with the reason is in
+`docs/agents/q5/README.md` ("Units that need manual context"). The comparison itself is unchanged.
 
 **Pitfalls.**
 - Write float literals freely: pooled literals compare by value.
@@ -401,6 +428,8 @@ source shape.
 - `tools/fn_check_ltcg.py`: the checker; `--setup` prepares the toolchain.
 - `tools/icf_alias.py`, `config/54540859/icf_aliases.json`, `tests/test_icf_alias.py`: reviewed aliases
   (section 12).
+- `tools/ltcg_autocontext.py`, `tests/test_ltcg_autocontext.py`: the `--auto-context` logic;
+  `tools/ltcg_autocontext_all.py`: the parallel check of every unit with auto-context alone (section 7).
 - `tools/ltcg_route.py`: pipeline hooks.
 - `tests/test_fn_check_ltcg.py`, `tests/test_ltcg_route.py`: synthetic tests.
 - `docs/ltcg-route-pipeline.patch`: the matching.py / integrate_match.py / sync_progress.py / link_probe.py

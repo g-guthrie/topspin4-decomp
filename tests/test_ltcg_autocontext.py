@@ -280,6 +280,9 @@ class Fallbacks(unittest.TestCase):
     def test_two_callee_sources(self):
         a, b = self.P + "a.c", self.P + "b.c"
         got = self.variants([a, "flags(/Ob1):" + b])
+        # first the failed link without the primer, everything else unchanged
+        self.assertEqual(got[0], ("without the pool primer", [a, "flags(/Ob1):" + b], ["given", "f_a", "f_b"]))
+        got = got[1:]
         labels = [label for label, _c, _i in got]
         self.assertEqual(labels[0], "without the /INCLUDE of the callees")
         self.assertEqual(got[0][1:], ([a, "flags(/Ob1):" + b, self.PRIMER], ["given"]))
@@ -296,8 +299,11 @@ class Fallbacks(unittest.TestCase):
     def test_explicit_contexts_stay_and_the_limit_holds(self):
         m = "flags(/Ob1):" + self.P + "m.c"
         got = self.variants([self.P + "a.c", self.P + "b.c", self.P + "c.c"], manual=[m], limit=5)
-        self.assertEqual(len(got), 5)
-        for _label, ctx, inc in got:
+        self.assertEqual(len(got), 6)                       # the primer-less link is not counted
+        self.assertEqual(got[0][0], "without the pool primer")
+        self.assertEqual(got[0][1][0], m)
+        self.assertNotIn(self.PRIMER, got[0][1])
+        for _label, ctx, inc in got[1:]:
             self.assertEqual(ctx[0], m)
             self.assertEqual(ctx[-1], self.PRIMER)
             self.assertIn("given", inc)
@@ -307,11 +313,21 @@ class Fallbacks(unittest.TestCase):
     def test_one_callee_source(self):
         a = self.P + "a.c"
         self.assertEqual([label for label, _c, _i in self.variants([a])],
-                         ["without the /INCLUDE of the callees", "with flags(/Ob1): on every callee source",
-                          "without the callee sources"])
+                         ["without the pool primer", "without the /INCLUDE of the callees",
+                          "with flags(/Ob1): on every callee source", "without the callee sources"])
 
-    def test_nothing_to_try_without_callee_sources(self):
-        self.assertEqual(A.fallback_variants([self.PRIMER], [], [], [], {}), [])
+    def test_only_the_primer_to_drop_without_callee_sources(self):
+        # 0x88779248: no callee source; its 0.5f is in another pool than the primed one
+        self.assertEqual(A.fallback_variants([self.PRIMER], [], [], [], {}),
+                         [("without the pool primer", [], [])])
+        self.assertEqual(A.fallback_variants([], [], [], [], {}), [])
+
+    def test_explicit_primer_stays(self):
+        a = self.P + "a.c"
+        got = A.fallback_variants([self.PRIMER, a], [self.PRIMER], ["f_a"], [], {"f_a": a})
+        self.assertNotIn("without the pool primer", [label for label, _c, _i in got])
+        for _label, ctx, _inc in got:
+            self.assertIn(self.PRIMER, ctx)
 
 
 class Helpers(unittest.TestCase):
@@ -346,6 +362,33 @@ class PartlyInlined(unittest.TestCase):
         self.assertEqual(len(self.check(0)), 1)     # inlined everywhere
         self.assertEqual(len(self.check(1)), 1)     # inlined at one of two call sites
         self.assertEqual(self.check(2), [])         # both calls are there
+
+
+class SweepRows(unittest.TestCase):
+    """tools/ltcg_autocontext_all.py: the command of a unit and the TSV row of its output."""
+
+    UNIT = {"source": "src/xbox360/a.c", "flags": ["/Oc"], "context": ["src/xbox360/ctx.c"],
+            "include": ["f_x"], "no_include": True, "symbols": {"f_a": 8, "f_b": 12}}
+
+    def test_command_has_the_flags_and_none_of_the_recorded_context(self):
+        import ltcg_autocontext_all as S
+        cmd = S.command(self.UNIT)
+        self.assertEqual(cmd[1:], ["tools/fn_check_ltcg.py", "src/xbox360/a.c", "f_a=f_a", "f_b=f_b",
+                                   "--auto-context", "--quiet", "--flags", "/Oc"])
+
+    def test_rows(self):
+        import ltcg_autocontext_all as S
+        ok = "MATCH f_a vs f_a @ 82000000 size 0x8 (ltcg)\nMATCH f_b vs f_b @ 82000010 size 0xc (ltcg)\n"
+        self.assertEqual(S.summarize(self.UNIT, 0, ok, 3.21),
+                         ("src/xbox360/a.c", 2, 2, "MATCH", "3.2", "/Oc", ""))
+        via = "auto-context: no match with the full context; MATCH without the pool primer\n" + ok
+        self.assertEqual(S.summarize(self.UNIT, 0, via, 1)[3:], ("MATCH", "1.0", "/Oc", "without the pool primer"))
+        bad = "MATCH f_a vs f_a @ 82000000 size 0x8 (ltcg)\nFAIL f_b vs f_b @ 82000010: 2 differing\n"
+        self.assertEqual(S.summarize(self.UNIT, 1, bad, 1)[2:4], (1, "FAIL"))
+        self.assertEqual(S.summarize(self.UNIT, 1, bad, 1)[6], "f_b")
+        # every function must be reported as MATCH: exit status 0 alone is not enough
+        self.assertEqual(S.summarize(self.UNIT, 0, "MATCH f_a vs f_a\n", 1)[3], "FAIL")
+        self.assertEqual(S.summarize(self.UNIT, None, "", 1200)[3], "TIMEOUT")
 
 
 if __name__ == "__main__":

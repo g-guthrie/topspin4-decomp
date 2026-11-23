@@ -44,6 +44,9 @@ Relocation targets are accepted when:
 
 Exit status 0 means every mapping matched (with at most RENAME/POOL notes).
 
+Scratch directories (ltcgcheck-*) are made in work/, or in the directory
+TS4_LTCG_SCRATCH names: give each worker of a parallel run its own.
+
 By default each mapped function is forced into the link with /INCLUDE.
 Pass --no-include when a context source contains the function's real
 caller(s): /INCLUDE makes the symbol externally visible, which stops LTCG
@@ -68,8 +71,9 @@ compile, or that makes the link fail (two sources defining one function), is
 dropped with a message and the check is repeated without it. When the result
 is FAIL, smaller links are also tried in a fixed order (without the /INCLUDEs;
 `flags(/Ob1):` on every callee source; without one callee source at a time; one
-callee source alone; without the callee sources: at most --auto-tries of them)
-and a MATCH there is reported with its explicit command: in a small link a
+callee source alone; without the callee sources: at most --auto-tries of them;
+before them, once, the failed link without the pool primer, for a function
+whose literals the original keeps in another pool) and a MATCH there is reported with its explicit command: in a small link a
 callee source can also disturb the function (a global declared with another
 type there, a body whose register use the original did not have);
 --auto-no-fallback skips this. A candidate source that defines a callee with
@@ -635,7 +639,7 @@ def verify(source: Path, contexts: list[str], flags: list[str], pairs: list[tupl
         name_address.setdefault(entry[0], entry[2])
     text_addresses = {e[2] for e in symbols if e[1] == ".text"}
     code_names |= {e.alias for e in aliases.entries if e.address in text_addresses}  # function stubs
-    workdir = Path(tempfile.mkdtemp(prefix="ltcgcheck-", dir=ROOT / "work"))
+    workdir = Path(tempfile.mkdtemp(prefix="ltcgcheck-", dir=scratch_parent()))
     includes = ([] if no_include else [c for c, _ in pairs]) + list(extra_includes or [])
     image, map_symbols, alias = build(source, contexts, flags, includes, toolchain, wibo,
                                       workdir, code_names, verbose)
@@ -790,6 +794,15 @@ def explicit_command(args, contexts: list[str]) -> str:
     for context in contexts:
         parts += ["--context", context]
     return " ".join(shlex.quote(p) for p in parts)
+
+
+def scratch_parent() -> Path:
+    """Where the ltcgcheck-* scratch directories go: work/, or TS4_LTCG_SCRATCH (one per worker of a
+    parallel run, so a worker that is killed leaves its scratch where the runner can remove it)."""
+    value = os.environ.get("TS4_LTCG_SCRATCH")
+    parent = Path(value).expanduser().absolute() if value else ROOT / "work"
+    parent.mkdir(parents=True, exist_ok=True)
+    return parent
 
 
 def main() -> int:

@@ -46,6 +46,8 @@ the full context does not match: without the /INCLUDEs, with `flags(/Ob1):` on e
 source (each callee the original reaches with `bl` stays out of line), without one callee
 source at a time (a callee body can also disturb the caller: 0x8816CBB0 only matches without
 the body of its 0x88187738 callee), one callee source alone, and no callee source at all.
+The same link without the pool primer goes first, outside the count: a literal the original
+keeps in another pool than g_ts4_script_constants must not land in the primed pool.
 
 Callees with no matched source are returned as "missing": match those first.
 Standard library only; nothing here reads game data.
@@ -436,7 +438,8 @@ def fallback_variants(contexts: list[str], manual: list[str], includes: list[str
     includes). contexts: the list that failed; manual: the explicit --context values (kept in
     every variant, like the primer); includes: the /INCLUDE names that failed; given_includes:
     the explicit ones; owner: forced callee -> its source. At most `limit` variants, none equal
-    to the failed one or to an earlier variant."""
+    to the failed one or to an earlier variant; when the primer is in `contexts`, "without the
+    pool primer" (everything else as it failed) comes first and is not counted."""
     def path_of(entry):
         return split_context(entry)[1]
 
@@ -476,6 +479,13 @@ def fallback_variants(contexts: list[str], manual: list[str], includes: list[str
             add(f"with {path_of(entry)} alone", ctx, inc)
             add(f"with {NO_INLINE}{path_of(entry)} alone", no_inline(ctx), inc)
     add("without the callee sources", keep([])[0], given_includes)
+    # The primer puts the literals of the function under test into the g_ts4_script_constants
+    # layout. A function whose literals the original keeps in another pool is then addressed
+    # through the big pool's base (addi + lfs, one instruction more: 0x88779248, 0x886AFDF8).
+    # One link, tried first and not counted in `limit`.
+    bare = [c for c in contexts if path_of(c) != primer or c in manual]   # an explicit primer stays
+    if primer and bare != contexts and (tuple(bare), tuple(includes)) not in seen:
+        out.insert(0, ("without the pool primer", bare, list(includes)))
     return out
 
 
