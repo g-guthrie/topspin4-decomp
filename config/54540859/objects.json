@@ -14924,6 +14924,14 @@
       "src/xbox360/q5a_gameplay_small_k.c": {
         "status": "Matching",
         "source": "xbox360/q5a_gameplay_small_k.c"
+      },
+      "src/xbox360/q5_path_sample.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5_path_sample.cpp"
+      },
+      "src/xbox360/q5_prediction_ticks_until_x.c": {
+        "status": "Matching",
+        "source": "xbox360/q5_prediction_ticks_until_x.c"
       }
     }
   }

@@ -3199,5 +3199,36 @@
   "symbols": {
    "ts4_pass_mat_drawable_88714F10": 392
   }
+ },
+ {
+  "source": "src/xbox360/q5_path_sample.cpp",
+  "object": "q5_path_sample.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_path_sample_8867A7C0": 324
+  }
+ },
+ {
+  "source": "src/xbox360/q5_prediction_ticks_until_x.c",
+  "object": "q5_prediction_ticks_until_x.obj",
+  "context": [
+   "src/xbox360/cl1_clrrwi_reload.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_prediction_ticks_until_x_886600E0": 272
+  }
  }
 ]

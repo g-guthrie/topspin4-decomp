@@ -1,19 +1,26 @@
-/* Q5 LTCG context for ts4_move_planner_transition_886B8468 (src/xbox360/q5_move_planner.c): real bodies of
- * the vector callees whose register use the planner relies on. The planner keeps vectors in volatile
- * v47/v50/v53/v58 across these calls, which the code generator only does when it has seen that the callees
- * (and fn_8867A7C0 below them, src/xbox360/q5_ctx_path_sample.c) leave those registers alone.
- * Compile with flags(/Ob1) so they stay calls. */
+/* Q5: the two path getters of the movement planner (Swing_DLL.xex 0x8868ED00, 0x8867A908), byte-matched on the
+ * LTCG route (work/specs/Q5/q5_path_getters.json) with the real ts4_path_sample_8867A7C0
+ * (src/xbox360/q5_path_sample.cpp) in the link.
+ *
+ * Also the LTCG context for ts4_move_planner_transition_886B8468: the planner keeps vectors in volatile
+ * v47/v50/v53/v58 across these calls, which the code generator only does when it has seen that the callees (and
+ * the sampler below them) leave those registers alone. Compile with flags(/Ob1) so they stay calls.
+ *
+ * These stay C: compiled as C++ the accumulation in 0x8868ED00 is fused early (`vmaddfp v0,v0,v13,v12` on
+ * volatile v0/v12/v13) instead of the target's late `vmaddfp128 v56,v61,v59`. */
 #include "w6b_types.h"
 
-typedef struct Q5cAnim { unsigned char pad0[0x90]; __vector4 velocity; } Q5cAnim;
-typedef struct Q5cPlayer { unsigned char pad0[0x78]; Q5cAnim *anim; } Q5cPlayer;
+typedef struct Q5cPathState { unsigned char pad0[0x90]; __vector4 position; } Q5cPathState;
+typedef struct Q5cPlayer { unsigned char pad0[0x78]; Q5cPathState *state; } Q5cPlayer;
 
-void fn_8867A7C0(Q5cPlayer *self, __vector4 *out, float t);
+/* displacement along the recorded path at the fractional tick t (src/xbox360/q5_path_sample.cpp) */
+void ts4_path_sample_8867A7C0(const Q5cPlayer *self, __vector4 *out, float t);
 
-/* 0x8868ED00: *out = velocity + sum over i in 1..n-1 of (1 - i/n) * (path(i) - path(i-1)), path(0) = 0 */
-void fn_8868ED00(Q5cPlayer *self, __vector4 *out, int n)
+/* 0x8868ED00: *out = position + sum over i in 1..n-1 of (1 - i/n) * (d(i) - d(i-1)), d = path displacement,
+ * d(0) = 0: the position n ticks ahead with the path steps weighted down linearly */
+void ts4_path_weighted_ahead_8868ED00(const Q5cPlayer *self, __vector4 *out, int n)
 {
-    *out = self->anim->velocity;
+    *out = self->state->position;
     if (n > 0) {
         float one = 1.0f;
         float inv = one / (float)n;
@@ -25,7 +32,7 @@ void fn_8868ED00(Q5cPlayer *self, __vector4 *out, int n)
             __vector4 tmp;
             __vector4 cur;
             w = w - inv;
-            fn_8867A7C0(self, &tmp, idx);
+            ts4_path_sample_8867A7C0(self, &tmp, idx);
             cur = tmp;
             {
                 __vector4 l = __vmulfp(__vsubfp(cur, prev), vx1_replicate(w));
@@ -39,12 +46,12 @@ void fn_8868ED00(Q5cPlayer *self, __vector4 *out, int n)
 
 static const float q5c_zero = 0.0f;
 
-/* 0x8867A908: *out = velocity, plus the path sample at t when t > 0 */
-void ts4_vec_with_offset_8867A908(Q5cPlayer *self, __vector4 *out, float t)
+/* 0x8867A908: *out = position, plus the path displacement at t when t > 0 */
+void ts4_vec_with_offset_8867A908(const Q5cPlayer *self, __vector4 *out, float t)
 {
-    *out = self->anim->velocity;
+    *out = self->state->position;
     if (t > q5c_zero) {
-        fn_8867A7C0(self, out, t);
-        *out = __vaddfp(*out, self->anim->velocity);
+        ts4_path_sample_8867A7C0(self, out, t);
+        *out = __vaddfp(*out, self->state->position);
     }
 }

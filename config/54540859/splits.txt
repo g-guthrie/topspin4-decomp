@@ -55337,3 +55337,9 @@ src/xbox360/q5a_gameplay_small_j.c:
 src/xbox360/q5a_gameplay_small_k.c:
 	.pdata      start:0x8812D488 end:0x8812D490
 	.text       start:0x8886FCC0 end:0x8886FD70
+
+src/xbox360/q5_path_sample.cpp:
+	.text       start:0x8867A7C0 end:0x8867A904
+
+src/xbox360/q5_prediction_ticks_until_x.c:
+	.text       start:0x886600E0 end:0x886601F0

@@ -2,6 +2,11 @@
  * 0x2300 bytes). The proven fn_equiv source of the same function is eq_q5b_move_planner.c; this copy is restructured
  * toward the machine code (break + single return, inline helpers, literal constants) for the LTCG route.
  *
+ * C++ since round 2 (2026-11-23): everything keeps C linkage, the only C++ construct is Q5Vec, a vector class with
+ * a user-declared destructor that the two path-getter wrappers return by value. Such a temporary is real memory to
+ * the code generator; with it the vector registers of the preamble number as in the target (v61, v60, v59, v57,
+ * v56, v58, v55, v54, v63, v53). Compiled as C++ without it the function is equivalent to the C form.
+ *
  * ts4_move_planner_transition_886B8468(planner, cur) returns the next Gp3MoveState of the planner owned by a
  * PlayerController (see work/gameplay-notes/gp3.md 5.3). Returning `cur` means "stay"; the caller loops until the
  * state is stable. Structure:
@@ -11,9 +16,12 @@
  *  - dispatch on the (possibly changed) state through a 23-entry jump table.
  * Offsets, branch senses (NaN behaviour of every float compare) and the load order before possibly faulting loads
  * follow the machine code; names are by role (M/L confidence, see gp3.md). Not byte-matched: see the byte-gap line
- * above the function and work/q5/notes/886b8468_match_log.md (check command, contexts, per-step counts). */
+ * above the function in eq_q5b_move_planner.c and docs/agents/q5/notes/886b8468_match_log.md (check command,
+ * contexts, per-step counts, round 2). */
 #include "vx1_vector.h"
 #include "gp3_types.h"
+
+extern "C" {
 
 double fabs(double x);
 #ifdef _MSC_VER
@@ -214,7 +222,7 @@ typedef struct Q5bPlayer {
 } Q5bPlayer;
 
 typedef struct Q5bLock { q5b_u8 pad0[0x30]; q5b_u8 locked_a; q5b_u8 pad31[0x64 - 0x31]; q5b_u8 locked_b; } Q5bLock;
-typedef struct Q5bScorer { q5b_u8 pad0[0xE0]; } Q5bScorer; /* GP2 selection scorer (fn_8865DBA8 arg-max) */
+typedef struct Q5bScorer { q5b_u8 pad0[0xE0]; } Q5bScorer; /* GP2 selection scorer (ts4_swing_select_best_sample_8865DBA8 arg-max) */
 
 typedef struct Q5bPlanner {
     q5b_u8 pad0[0x20];
@@ -270,7 +278,7 @@ Q5B_OFF(Q5bMoveCfg, cond_300, 0x300);
 /* ---- callees ---- */
 extern q5b_u8 fn_8866D930(Q5bPlayer *p);
 extern void ts4_if_get_8865E730(__vector4 *point, q5b_u32 mirror_key);
-extern void fn_8868ED00(Q5bPlayer *p, __vector4 *out, int frames);
+extern void ts4_path_weighted_ahead_8868ED00(Q5bPlayer *p, __vector4 *out, int frames);
 extern void ts4_vec_with_offset_8867A908(Q5bPlayer *p, __vector4 *out, float t);
 extern double fn_88564BF8(double y, double x); /* atan2 */
 extern q5b_u32 *ts4_if_call_seq_u32_off28_886C7D58(q5b_u32 *out, void *events);
@@ -298,9 +306,9 @@ extern float fn_8866BFE8(Q5bPlanner *s);
 extern int fn_886A9A48(Q5bPlanner *s);
 extern void fn_886884E8(Q5bPlanner *s);
 extern void fn_886987C8(Q5bPlanner *s);
-extern void fn_8865DBA8(Q5bScorer *s, int *best_index, q5b_u8 *best_side, int exclude_volley, int only_volley);
+extern void ts4_swing_select_best_sample_8865DBA8(Q5bScorer *s, int *best_index, q5b_u8 *best_side, int exclude_volley, int only_volley);
 extern int fn_88699FC0(Q5bPlanner *s);
-extern int fn_886600E0(struct Gp2BallPrediction *pred, float x);
+extern int ts4_prediction_ticks_until_x_886600E0(struct Gp2BallPrediction *pred, float x);
 extern int ts4_if_call_seq_u32_off118_8865D790(Q5bPlanner *s);
 extern void fn_8817B608(float *angle);
 extern float ts4_table2d_eval_8826D278(const void *table, float x, float y);
@@ -339,19 +347,28 @@ Q5B_INLINE float q5b_dot(__vector4 a, __vector4 b)
     return d.v[0];
 }
 
+/* by-value result of the path getters: the user-declared destructor makes the returned temporary real memory */
+extern "C++" {
+struct Q5Vec {
+    __vector4 v;
+    Q5Vec() {}
+    ~Q5Vec() {}
+};
+}
+
 /* the player's position `frames` ticks ahead on its current path */
-Q5B_INLINE __vector4 q5b_path_ahead(Q5bPlayer *p, int frames)
+Q5B_INLINE Q5Vec q5b_path_ahead(Q5bPlayer *p, int frames)
 {
-    __vector4 r;
-    fn_8868ED00(p, &r, frames);
+    Q5Vec r;
+    ts4_path_weighted_ahead_8868ED00(p, &r.v, frames);
     return r;
 }
 
 /* the player's path position at time offset t */
-Q5B_INLINE __vector4 q5b_path_at(Q5bPlayer *p, float t)
+Q5B_INLINE Q5Vec q5b_path_at(Q5bPlayer *p, float t)
 {
-    __vector4 r;
-    ts4_vec_with_offset_8867A908(p, &r, t);
+    Q5Vec r;
+    ts4_vec_with_offset_8867A908(p, &r.v, t);
     return r;
 }
 
@@ -555,9 +572,19 @@ Q5B_INLINE int q5b_contact_wait(Q5bPlanner *s, int next)
     return GP3_MOVE_13;
 }
 
-/* byte-gap: 679 off (aligned; size 0x22b8 vs 0x2300, 201 off beyond register/stack-slot choice); LTCG route with the
- * vector callees as context. Blockers: the target reloads player state after the by-value vector getters (C++
- * return-by-value mod/ref) and gives each by-value getter call its own stack slot in an order C does not reproduce. */
+/* mirror a court point to the player's side of the net */
+Q5B_INLINE void q5b_mirror_point(__vector4 *point, const Q5bMoveState *st)
+{
+    ts4_if_get_8865E730(point, st->mirror_key);
+}
+
+/* byte-gap: 605 off (aligned; size 0x22a0 vs 0x2300, frame 0x1d0 as the target, 237 off beyond register/stack-slot
+ * choice, of which 23 are the jump-table words); LTCG route with the exact path getters, sampler and
+ * ticks-until-x callee and the near-miss arg-max (drafts/q5_select_best_sample.c) as context; 624 / 252 without the
+ * near miss. Blockers: the target reloads player state after the path getters although it uses their clobber sets;
+ * the five position-getter result slots come out in a different order (the order changes whenever any stack
+ * temporary is added, so it is the stack packer's, not the declaration order); 38 epilogues instead of 39. */
+
 int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
 {
     Q5bPlayer *p = s->player;
@@ -573,7 +600,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         set = q5b_side_set(s, p->state->side);
         contact = *q5b_sample_pos(p->own_ball->prediction, p->state->sample);
         target = *q5b_set_position(set, p->state->sample);
-        ts4_if_get_8865E730(&contact, p->state->mirror_key);
+        q5b_mirror_point(&contact, p->state);
         pos = p->state->pos;
         delta = __vsubfp(target, pos);
         if (q5b_dot(delta, delta) < K_RETARGET_RADIUS2) {
@@ -582,11 +609,11 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
             q5b_bool jump;
             float *step;
             float d;
-            ahead = q5b_dot(delta, __vsubfp(target, q5b_path_ahead(p, 20))) > K_ZERO;
+            ahead = q5b_dot(delta, __vsubfp(target, q5b_path_ahead(p, 20).v)) > K_ZERO;
             jump = 0;
             step = &p->state->step_yaw;
             side = q5b_set_y(__vsubfp(contact, target), K_ZERO);
-            probe = q5b_path_at(p, K_STEP_LOOKAHEAD);
+            probe = q5b_path_at(p, K_STEP_LOOKAHEAD).v;
             d = q5b_dot(side, delta);
             toward = __vsubfp(probe, pos);
             facing = d > K_ZERO && q5b_dot(toward, side) > K_ZERO;
@@ -928,20 +955,21 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         struct Gp2BallPrediction *pred;
         Q5bScorer *scorer;
         int k;
+        float x;
         p = s->player;
         if (!p->is_human) {
             Q5bMoveState *st = p->state;
             side = 0;
             idx = -1;
             if (st->volley_only) {
-                fn_8865DBA8(&s->scorer, &idx, &side, 0, 1);
+                ts4_swing_select_best_sample_8865DBA8(&s->scorer, &idx, &side, 0, 1);
                 s->retarget_pending = 1;
                 next = GP3_MOVE_16_VOLLEY;
                 p->state->sample = idx;
                 s->player->state->side = side;
                 break;
             }
-            fn_8865DBA8(&s->scorer, &idx, &side, 1, 0);
+            ts4_swing_select_best_sample_8865DBA8(&s->scorer, &idx, &side, 1, 0);
             st->sample = idx;
             s->player->state->side = side;
             next = fn_88699FC0(s);
@@ -949,9 +977,10 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         }
         if (s->state_ticks <= 3)
             break;
+        x = ts4_if_get_u32_off4c_8865EC70(&here_pick, p)->v[0];
         pred = p->own_ball->prediction;
         volley = 0;
-        k = fn_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here_pick, p)->v[0]);
+        k = ts4_prediction_ticks_until_x_886600E0(pred, x);
         if (k != -1) {
             const struct Gp2CandidateSet *sets = s->sets;
             q5b_bool baseline = q5b_set_type(&sets[0], k) == GP2_HASH_BASELINE ||
@@ -988,11 +1017,11 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         side = 0;
         idx = -1;
         ts4_call_seq_u32_off8_886894A8(scorer, volley);
-        fn_8865DBA8(scorer, &idx, &side, 0, 0);
+        ts4_swing_select_best_sample_8865DBA8(scorer, &idx, &side, 0, 0);
         if (idx == -1) {
             s->profile = s->player->cfg->profile_228;
             ts4_selection_scorer_run_8869AEF8(scorer, 0, s->player->cfg->profile_228);
-            fn_8865DBA8(scorer, &idx, &side, 0, 0);
+            ts4_swing_select_best_sample_8865DBA8(scorer, &idx, &side, 0, 0);
             if (idx == -1) {
                 Q5bPlayer *q;
                 int moving;
@@ -1076,7 +1105,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         l = q5b_samples(pred);
         if (pred->samples_begin == pred->samples_end)
             break;
-        k = fn_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here_step, p)->v[0]);
+        k = ts4_prediction_ticks_until_x_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here_step, p)->v[0]);
         if (k != -1) {
             e = l->begin + k;
         } else {
@@ -1229,7 +1258,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         float t2;
         p = s->player;
         {
-            __vector4 ahead = q5b_path_at(p, K_ADJUST_LOOKAHEAD);
+            __vector4 ahead = q5b_path_at(p, K_ADJUST_LOOKAHEAD).v;
             Q5bMoveState *st = p->state;
             const struct Gp2CandidateSet *set = q5b_side_set(s, st->side);
             target = *q5b_set_position(set, st->sample);
@@ -1261,9 +1290,11 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
             } else {
                 struct Gp2BallPrediction *pred;
                 int k;
+                float x;
                 p = s->player;
+                x = ts4_if_get_u32_off4c_8865EC70(&here_adjust, p)->v[0];
                 pred = p->own_ball->prediction;
-                k = fn_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here_adjust, p)->v[0]);
+                k = ts4_prediction_ticks_until_x_886600E0(pred, x);
                 if (k != -1) {
                     const struct Gp2BallSample *e = pred->samples_begin + k;
                     float lateral_max = p->cfg->contact_lateral_max;
@@ -1322,4 +1353,6 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         break;
     }
     return next;
+}
+
 }

@@ -52,7 +52,7 @@ void ts4_select_vector_8866CB28(__vector4 *out, W6eSel *self)
 
 typedef struct W6eP78 { unsigned char pad[0x90]; __vector4 vec90; } W6eP78;
 typedef struct W6eObj78 { unsigned char pad[0x78]; W6eP78 *p78; } W6eObj78;
-void fn_8867A7C0(W6eObj78 *self, __vector4 *out, float t);
+void ts4_path_sample_8867A7C0(W6eObj78 *self, __vector4 *out, float t);
 extern const float g_ts4_script_constants[];
 
 void ts4_accumulate_samples_8868ED00(W6eObj78 *self, __vector4 *out, int n)
@@ -69,7 +69,7 @@ void ts4_accumulate_samples_8868ED00(W6eObj78 *self, __vector4 *out, int n)
             __vector4 tmp;
             __vector4 cur;
             w = w - inv;
-            fn_8867A7C0(self, &tmp, idx);
+            ts4_path_sample_8867A7C0(self, &tmp, idx);
             cur = tmp;
             *out = __vmaddfp(vx1_replicate(w), __vsubfp(cur, prev), *out);
             prev = cur;

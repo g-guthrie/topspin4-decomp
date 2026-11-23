@@ -295,7 +295,7 @@ extern void fn_886884E8(Q5bPlanner *s);
 extern void fn_886987C8(Q5bPlanner *s);
 extern void fn_8865DBA8(Q5bScorer *s, int *best_index, q5b_u8 *best_side, int exclude_volley, int only_volley);
 extern int fn_88699FC0(Q5bPlanner *s);
-extern int fn_886600E0(struct Gp2BallPrediction *pred, float x);
+extern int ts4_prediction_ticks_until_x_886600E0(struct Gp2BallPrediction *pred, float x);
 extern int ts4_if_call_seq_u32_off118_8865D790(Q5bPlanner *s);
 extern void fn_8817B608(float *angle);
 extern float ts4_table2d_eval_8826D278(const void *table, float x, float y);
@@ -437,7 +437,7 @@ Q5B_INLINE int q5b_contact_wait(Q5bPlanner *s, int next)
     return GP3_MOVE_13;
 }
 
-/* byte-gap: 679 off (best); LTCG vector-getter mod/ref and struct-return slot layout not reproducible from C (src/xbox360/drafts/q5_move_planner_best.c, work/q5/notes/886b8468_match_log.md) */
+/* byte-gap: 605 off (best, C++ draft; size 0x22a0 vs 0x2300); state reload after the path getters, result-slot order and one epilogue copy not reproduced (src/xbox360/drafts/q5_move_planner_best.cpp, docs/agents/q5/notes/886b8468_match_log.md round 2) */
 int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
 {
     const float zero = lbl_8814B440;
@@ -797,7 +797,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         if (s->state_ticks <= 3)
             return next;
         pred = p->own_ball->prediction;
-        k = fn_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here, p)->v[0]);
+        k = ts4_prediction_ticks_until_x_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here, p)->v[0]);
         volley = 0;
         if (k != -1) {
             const q5b_u32 *ta = q5b_set_types(&s->sets[0]);
@@ -901,7 +901,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
         pred = p->own_ball->prediction;
         if (pred->samples_begin == pred->samples_end)
             return next;
-        k = fn_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here, p)->v[0]);
+        k = ts4_prediction_ticks_until_x_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here, p)->v[0]);
         if (k != -1) {
             e = pred->samples_begin + k;
         } else {
@@ -1092,7 +1092,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
                 int k;
                 p = s->player;
                 pred = p->own_ball->prediction;
-                k = fn_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here, p)->v[0]);
+                k = ts4_prediction_ticks_until_x_886600E0(pred, ts4_if_get_u32_off4c_8865EC70(&here, p)->v[0]);
                 if (k != -1) {
                     const struct Gp2BallSample *e = pred->samples_begin + k;
                     float lateral_max = p->cfg->contact_lateral_max;
