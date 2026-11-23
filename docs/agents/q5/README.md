@@ -4,7 +4,7 @@ Goal: every gameplay function (then renderer) reaches MATCH (byte-identical).
 
 Owner decision (2026-11-23): **byte-exact only.** No new equivalent functions. The 116 already registered
 (config/54540859/equivalent.json, reports/byte_exact_backlog.md) are work still owed and go back on the list.
-Stalled functions become near-miss drafts plus an escalate.json entry, never equivalents. Equivalence
+Stalled functions become near-miss drafts plus an escalate.json entry, never equivalents. A near-miss is parked only with a concrete reason the odds improve later (unmatched callee, named tool limit, missing type); otherwise it is worked now. Equivalence
 sections below are kept only for maintaining the existing 116.
 Middleware (Havok, FMOD, Bink, XDK, CRT) is out of scope.
 
@@ -56,6 +56,8 @@ workload.
    `TS4_MATCHING_DIR=$PWD/work/matching-<latest> python3 tools/equiv_register.py <spec>`.
 2. For each match spec:
    `python3 work/dupcheck.py $S && python3 tools/fix_refs.py $S && python3 tools/integrate_match.py $S && python3 tools/ltcg_precheck.py --split-dir work/matching-<latest>/split`.
+   An LTCG spec's `"context"` is the list `fn_check_ltcg.py --auto-context` printed ("explicit command"); to
+   re-check a hand-in, run its source with `--auto-context` (see "Tools: LTCG context selection").
 3. Build (about 40 min):
    ```
    T=$PWD/work/matching-tools; nohup sh -c "python3 tools/matching.py --fresh-analysis --jeff work/jeff/target/release/jeff --compiler-dir $T/compilers/X360/16.00.10224.00 --wrapper $T/work_wibo --objdiff $T/objdiff-cli --work-dir work/matching-bNNN > work/bNNN.log 2>&1; echo rc=\$? > work/bNNN.rc" >/dev/null 2>&1 &
@@ -66,6 +68,31 @@ workload.
 5. Keep one build dir (disk). Point older paths at the newest with a symlink so
    running agents keep working.
 6. Periodically: `python3 tools/equiv_register.py --recheck` (must be 0 failing).
+
+## Tools: LTCG context selection
+
+Work bottom-up through the call graph: a function's LTCG code depends on its callees' bodies, so match the callees
+first. `tools/fn_check_ltcg.py --auto-context` picks the contexts:
+
+    python3 tools/fn_check_ltcg.py <src> name=0xADDR --flags /Oc --auto-context [--auto-depth 2]
+
+- Use `--auto-context`; match the listed missing callees first ("missing callee bodies" in its output).
+- It reads the callees from the original (`bl` targets; `--auto-depth 2` adds the callees of matched callees), maps
+  them to their matched sources (config/54540859/match.json, then work/specs), and adds each source once, plus the
+  contexts recorded for a callee that is itself an LTCG unit, the sources of functions the source names but the
+  original does not call (the link inlined them), and src/xbox360/pp1_pool_primer.c last. Explicit `--context`
+  values stay in front and win for their file.
+- Called callees are forced with `--include` (they matched as functions of their own). Contexts are compiled plain;
+  when the link inlines a callee the original calls, the check repeats with `flags(/Ob1):` on that callee's source.
+  `--auto-prefix "flags(/Ob1):"` puts a fixed prefix on every chosen source instead.
+- A callee with no matched source gets the stand-in a registered unit already uses for it, if there is one
+  (cw1_ctx_format_text.c for ts4_format_text); it stays on the missing list.
+- A context that does not compile, or that breaks the link (a function defined twice), is dropped with a message
+  and the check repeats without it.
+- Call each callee by the name its matched source uses; the output says when the source does not.
+- It prints the equivalent explicit command: put that context list (and `include`) in the spec.
+- It cannot know `--no-include` with a caller context, or a new stand-in for an unmatched callee: pass those by
+  hand. Logic and tests: tools/ltcg_autocontext.py, tests/test_ltcg_autocontext.py.
 
 ## Debugging equivalence failures
 

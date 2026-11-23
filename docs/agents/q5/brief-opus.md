@@ -22,10 +22,16 @@ Run `export TS4_MATCHING_DIR=$PWD/work/matching-<latest>`, or the highest work/m
 |---|---|
 | Original asm | `python3 tools/fn_asm.py fn_X` |
 | Match check | `python3 tools/fn_check.py <src> name=0xADDR [--flags ...]` |
-| Match check, LTCG units | `tools/fn_check_ltcg.py ... --context src/xbox360/pp1_pool_primer.c` |
+| Match check, LTCG units | `python3 tools/fn_check_ltcg.py <src> name=0xADDR --flags /Oc --auto-context` |
 | Automatic permuter | `python3 tools/perm_auto.py <src> name=0xADDR -j 4 --time 300` |
 | Equivalence check | `python3 tools/fn_equiv.py <src> name=0xADDR` |
 
+- LTCG checks: use `--auto-context`; match the listed missing callees first. It reads the function's callees from
+  the original, puts each matched callee's source in the link (pool primer last) and prints the contexts, the
+  "missing callee bodies" and the equivalent explicit command (use its context list in the spec). Call each callee
+  by the name its matched source uses (the output says when you don't). Add `--context` only for what it cannot
+  know (a new stand-in for an unmatched callee); details in docs/agents/q5/README.md, "Tools: LTCG context
+  selection", and docs/ltcg-route.md, "Choosing context files".
 - Use the automatic permuter for misses that are only scheduling or register order.
 - The equivalence check runs the original and your C side by side.
 - config/54540859/vtables.json gives each virtual function's class siblings and constructor. Use it to type `this`.
@@ -62,7 +68,7 @@ Work each function like this:
 
 1. Work towards MATCH with the recipes, the permuter, and probes of the compiler.
 2. If MATCH stalls, try the big levers: decompile the callees first (under LTCG their bodies change this function's codegen), different source structure, C++ instead of C, LTCG contexts, compiler probes.
-3. The one exception to finishing is **escalation**: you have done all of the above and made no progress for about 45 minutes.
+3. The one exception to finishing is **escalation**, and it needs a concrete reason the odds will improve later (owner rule, 2026-11-23). Valid reasons: an in-scope callee is still unmatched (name it), a named tool limit (with evidence), or a missing shared type. "It was hard" is not a reason: if nothing will change later, keep working it now, try the big levers again, and hand it in still open with its exact state rather than escalating it.
    - Save the best attempt as a near-miss draft (see the owner decision above).
    - Append it to docs/agents/q5/escalate.json, a JSON list: `{"addr": "0x...", "name": "...", "best_source": "<path to your best attempt>", "state": "N off, first divergence", "tried": "what you tried"}`.
    - Then continue with the next function. The main session hands escalated functions to a stronger solver, so they still get solved.
