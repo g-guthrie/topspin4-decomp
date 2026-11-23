@@ -55357,3 +55357,95 @@ src/xbox360/q5_line_project.cpp:
 src/xbox360/q5_planner_commit.c:
 	.pdata      start:0x88123530 end:0x88123538
 	.text       start:0x8866BD00 end:0x8866BDD4
+
+src/xbox360/q5s_cont_bititer.cpp:
+	.text       start:0x8816FE78 end:0x8816FEE0
+
+src/xbox360/q5s_cont_desc_emit.cpp:
+	.pdata      start:0x88108340 end:0x88108348
+	.pdata      start:0x88108348 end:0x88108350
+	.pdata      start:0x88108350 end:0x88108358
+	.pdata      start:0x88108358 end:0x88108360
+	.text       start:0x88172D50 end:0x88172F60
+
+src/xbox360/q5s_cont_hash.c:
+	.text       start:0x8818FF70 end:0x8818FFE4
+
+src/xbox360/q5s_cont_key16.c:
+	.text       start:0x8818A210 end:0x8818A290
+
+src/xbox360/q5s_cont_strings.cpp:
+	.pdata      start:0x88108640 end:0x88108648
+	.pdata      start:0x88109CE0 end:0x88109CE8
+	.pdata      start:0x88109DB8 end:0x88109DC0
+	.text       start:0x88176E18 end:0x88176E74
+	.text       start:0x8819AE68 end:0x8819AEC8
+	.text       start:0x8819BE18 end:0x8819BE88
+
+src/xbox360/q5s_eng_misc.c:
+	.pdata      start:0x88120C50 end:0x88120C58
+	.text       start:0x88605438 end:0x88605488
+	.text       start:0x88605CF0 end:0x88605D40
+	.text       start:0x8860EE20 end:0x8860EE68
+	.text       start:0x8863A5B0 end:0x8863A5E4
+
+src/xbox360/q5s_eng_handles.cpp:
+	.pdata      start:0x88120EB0 end:0x88120EB8
+	.text       start:0x8860A488 end:0x8860A4D8
+	.text       start:0x8860B368 end:0x8860B3C0
+	.text       start:0x88611148 end:0x886111A0
+
+src/xbox360/q5s_eng_stream.cpp:
+	.pdata      start:0x88122368 end:0x88122370
+	.pdata      start:0x88122370 end:0x88122378
+	.text       start:0x88631100 end:0x88631174
+
+src/xbox360/q5s_eng_xdata_read.c:
+	.text       start:0x885F5568 end:0x885F55B8
+	.text       start:0x885F99E0 end:0x885F9A90
+	.text       start:0x885F9AE8 end:0x885F9B80
+	.text       start:0x885F9BD0 end:0x885F9C50
+	.text       start:0x885F9CA0 end:0x885F9CD0
+	.text       start:0x885F9E08 end:0x885F9EB8
+	.text       start:0x885FA018 end:0x885FA048
+	.text       start:0x885FA290 end:0x885FA2C0
+	.text       start:0x885FA3A0 end:0x885FA408
+	.text       start:0x885FA4C0 end:0x885FA4F0
+	.text       start:0x885FA530 end:0x885FA598
+	.text       start:0x885FA5E0 end:0x885FA648
+	.text       start:0x885FA690 end:0x885FA728
+	.text       start:0x885FA778 end:0x885FA7E0
+	.text       start:0x885FA828 end:0x885FA878
+	.text       start:0x885FA8C0 end:0x885FA970
+	.text       start:0x885FA9C8 end:0x885FA9F8
+	.text       start:0x885FAA38 end:0x885FAAE8
+	.text       start:0x885FAB40 end:0x885FAB70
+	.text       start:0x885FAD38 end:0x885FAD68
+	.text       start:0x885FAE20 end:0x885FAF30
+	.text       start:0x885FAF98 end:0x885FB0C0
+	.text       start:0x885FB200 end:0x885FB250
+	.text       start:0x885FB298 end:0x885FB2E8
+	.text       start:0x885FB330 end:0x885FB360
+	.text       start:0x885FB3A0 end:0x885FB3F0
+	.text       start:0x885FB538 end:0x885FB5A0
+	.text       start:0x885FB5E8 end:0x885FB6B0
+	.text       start:0x885FB778 end:0x885FB7A8
+	.text       start:0x885FB7E8 end:0x885FB818
+	.text       start:0x88600B20 end:0x88600B70
+	.text       start:0x88601270 end:0x88601368
+	.text       start:0x886013C8 end:0x886013F8
+	.text       start:0x88601438 end:0x886014B8
+	.text       start:0x88601508 end:0x88601570
+	.text       start:0x886015B8 end:0x88601650
+	.text       start:0x886016A0 end:0x886016D0
+	.text       start:0x88601710 end:0x886017F0
+	.text       start:0x88601850 end:0x886018B8
+	.text       start:0x88601900 end:0x88601A88
+	.text       start:0x88601B00 end:0x88601B50
+	.text       start:0x88602BF0 end:0x88602C20
+	.text       start:0x88602C60 end:0x88602E00
+	.text       start:0x88602E80 end:0x88602F60
+	.text       start:0x88602FC0 end:0x88603100
+	.text       start:0x88603170 end:0x886031C0
+	.text       start:0x88603208 end:0x886032E8
+	.text       start:0x88604458 end:0x88604488

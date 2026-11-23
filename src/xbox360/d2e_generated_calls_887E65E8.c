@@ -76,7 +76,7 @@ ts4_word fn_88161620();
 ts4_word ts4_bstr_concat_rev_881640A8();
 ts4_word fn_8816CAA0();
 ts4_word fn_881898E8();
-ts4_word fn_8819AE68();
+ts4_word ts4_wstring_assign_cstr_8819AE68();
 ts4_word ts4_if_call_seq_u32_off0_8819C190();
 ts4_word ts4_small_string512_ctor_881A50F0();
 ts4_word ts4_obj_teardown_881A62E8();

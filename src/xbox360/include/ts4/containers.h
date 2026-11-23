@@ -41,4 +41,65 @@ typedef struct Ts4PtrVector {
 TS4_ASSERT_OFFSET(Ts4PtrVector, end, 0x4);
 TS4_ASSERT_SIZE(Ts4PtrVector, 0xC);
 
+/* Engine narrow string (CStringT-like): the object is one `char *` to the data; a refcounted header sits
+ * just before it (data - sizeof(Ts4StrHdr)). q5s_cont: Right (8819BE18) reads length/alloc and clones the header. */
+typedef struct Ts4StrHdr {
+    void *alloc;                                 /* +0x00 V 8819BE18 (string manager passed to assign) */
+    int length;                                  /* +0x04 V 8819BE18 */
+    int alloc_length;                            /* +0x08 U (CStringData order) */
+    int refs;                                    /* +0x0C U (CStringData order) */
+} Ts4StrHdr;
+TS4_ASSERT_OFFSET(Ts4StrHdr, length, 0x4);
+TS4_ASSERT_SIZE(Ts4StrHdr, 0x10);
+typedef struct Ts4String {
+    char *data;                                  /* +0x00 V 8819BE18 */
+} Ts4String;
+TS4_ASSERT_SIZE(Ts4String, 0x4);
+#define TS4_STR_HDR(s) ((Ts4StrHdr *)(s)->data - 1)
+
+/* Growable text buffer {first, last, end} (vector<char>-like). assign(const char *) = 8816CAA0. */
+typedef struct Ts4Text {
+    char *first;                                 /* +0x00 V 8816CAA0 */
+    char *last;                                  /* +0x04 V 8816CAA0 */
+    char *end;                                   /* +0x08 V 8816CAA0 */
+} Ts4Text;
+TS4_ASSERT_SIZE(Ts4Text, 0xC);
+
+/* Bit iterator (vector<bool> style): word pointer plus bit offset 0..31. */
+typedef struct Ts4BitIt {
+    unsigned int *word;                                   /* +0x00 V 8816FE78 */
+    int bit;                                     /* +0x04 V 8816FE78 */
+} Ts4BitIt;
+TS4_ASSERT_SIZE(Ts4BitIt, 0x8);
+
+/* Chained hash table (bucket array of singly linked nodes; node keeps its full hash). */
+typedef struct Ts4HashNode {
+    unsigned char _pad00[0x14];                             /* +0x00 key/value payload (varies) */
+    struct Ts4HashNode *next;                    /* +0x14 V 8818FF70 88190190 */
+    unsigned int hash;                                    /* +0x18 V 8818FF70 88190190 */
+} Ts4HashNode;
+TS4_ASSERT_OFFSET(Ts4HashNode, next, 0x14);
+TS4_ASSERT_OFFSET(Ts4HashNode, hash, 0x18);
+typedef struct Ts4HashTable {
+    unsigned char _pad00[0x14];
+    Ts4HashNode **buckets;                       /* +0x14 V 8818FF70 */
+    unsigned int count;                                   /* +0x18 U (88190190 path) */
+    unsigned int bucket_count;                            /* +0x1C V 8818FF70 */
+} Ts4HashTable;
+TS4_ASSERT_OFFSET(Ts4HashTable, buckets, 0x14);
+TS4_ASSERT_OFFSET(Ts4HashTable, bucket_count, 0x1C);
+typedef struct Ts4HashIter {
+    Ts4HashTable *table;                         /* +0x00 V 8818FF70 */
+    Ts4HashNode *node;                           /* +0x04 V 8818FF70 */
+} Ts4HashIter;
+TS4_ASSERT_SIZE(Ts4HashIter, 0x8);
+
+/* 16-byte key: pointer identity when size == 0, else 16 inline bytes compared with memcmp. */
+typedef struct Ts4Key16 {
+    union { void *ptr; unsigned char bytes[16]; } u;        /* +0x00 V 8818A210 */
+    unsigned int size;                                    /* +0x10 V 8818A210 */
+} Ts4Key16;
+TS4_ASSERT_OFFSET(Ts4Key16, size, 0x10);
+TS4_ASSERT_SIZE(Ts4Key16, 0x14);
+
 #endif /* TS4_CONTAINERS_H */

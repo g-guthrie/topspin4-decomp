@@ -26,18 +26,24 @@ typedef struct Ts4MovePlanner {
     unsigned char committed;                     /* +0x120 V 8866BD00 */
     char pad_0121[0x33];
     struct Ts4Player *player;                    /* +0x154 V 8865DAC0 8865DB50~ 8866BD00 8866BEE0~ +4 also read as unsigned int (886A31B8) */
-    char pad_0158[0x12C];
+    char pad_0158[0x118];
+    Ts4Vec4 f_270;                               /* +0x270 V 8866C150 (position compared with player->state->local_position) */
+    char pad_0280[0x4];
     unsigned char side_flags_latched;            /* +0x284 U symbols.md */
     char pad_0285[0x3];
     unsigned int held_command[2];                /* +0x288 U symbols.md */
-    char pad_0290[0x10];
+    char pad_0290[0x4];
+    unsigned char f_294;                         /* +0x294 V 8866C150 */
+    char pad_0295[0xB];
     int f_2a0;                                   /* +0x2A0 V 8865DB50~ */
 } Ts4MovePlanner;
 TS4_ASSERT_OFFSET(Ts4MovePlanner, f_024, 0x24);
 TS4_ASSERT_OFFSET(Ts4MovePlanner, committed, 0x120);
 TS4_ASSERT_OFFSET(Ts4MovePlanner, player, 0x154);
+TS4_ASSERT_OFFSET(Ts4MovePlanner, f_270, 0x270);
 TS4_ASSERT_OFFSET(Ts4MovePlanner, side_flags_latched, 0x284);
 TS4_ASSERT_OFFSET(Ts4MovePlanner, held_command, 0x288);
+TS4_ASSERT_OFFSET(Ts4MovePlanner, f_294, 0x294);
 TS4_ASSERT_OFFSET(Ts4MovePlanner, f_2a0, 0x2A0);
 
 /* CandidateSet (0x60 bytes, two per brain). gp2: Gp2CandidateSet. */

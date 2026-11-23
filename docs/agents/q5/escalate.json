@@ -42,13 +42,6 @@
   "notes": "Reads the r13 processor control block (+0x6c selects the stack bounds pair +0x70/+0x74 or +0x78/+0x7c) and returns whether r3 lies within the current stack: a runtime _AddressOnStack-style helper sharing an object with the SetThreadName code (0x88883DE0). Not decompiled under the no-XDK/CRT rule; needs a coordinator decision."
  },
  {
-  "addr": "0x8866C150",
-  "queue": "gameplay",
-  "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_target_far_idle.json)",
-  "draft": "src/xbox360/drafts/q5_8866C150_nearmiss.c",
-  "notes": "4 off under fn_check, VMX (lvx/vsubfp distance test against g_ts4_script_constants[0x3e4/4]). Only the li r9/r10 order of the 0x8e0/0x270 vector offsets differs; perm_auto best 4. fn_equiv cannot check VMX, so the equivalent route does not apply."
- },
- {
   "addr": "0x886D19C8",
   "queue": "gameplay",
   "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_pose_reset_default.json)",
@@ -140,8 +133,8 @@
   "addr": "0x88678708",
   "name": "ts4_target_within_radius_88678708",
   "best_source": "src/xbox360/drafts/q5_88678708_within_radius_nearmiss.cpp",
-  "state": "open: 10 instructions off",
-  "tried": "fn_check_ltcg /Oc + pool primer: C++ Path()/Actor() members reproduce the pointer reload; remaining gaps are the self-relative &rel address form (target lwz r10,4(r11); addi r11,r11,4; lvx with idx*16+rel) and mr r5,r6 for fn_8866BC48's unused 3rd argument. operator[] via const int* variant 34 off, permuter best 27. Round 4."
+  "state": "open: 19 off against real (matched) callee 8866BC48 (3-arg form); older 10-off figure was against a stub",
+  "tried": "fn_check_ltcg /Oc + pool primer: C++ Path()/Actor() members reproduce the pointer reload; remaining gaps are the self-relative &rel address form (target lwz r10,4(r11); addi r11,r11,4; lvx with idx*16+rel) and mr r5,r6 for fn_8866BC48's unused 3rd argument. operator[] via const int* variant 34 off, permuter best 27. Round 4. Round 5 (q5s move): callees 886601F0/8866BC48 now MATCH (src/xbox360/q5s_move_ball_reach.c); 101 accessor combinations for self->target->actor plateau at 19 off; draft src/xbox360/drafts/q5s_move_88678708_nearmiss.cpp. Blocker: single post-join actor reload + mr r5,r6 late-CSE copy not reproduced; class at self+0x154 has no shared type."
  },
  {
   "addr": "0x88564BF8",
@@ -151,17 +144,10 @@
   "tried": "Outside LTCG; plain fn_check. Table struct at lbl_88C30C70 identified (half_pi,pi,tan15,sqrt3,p[4],q[4],offset[4],zero,one). Gaps: record-form clrrwi. sign tests (we get clrrwi+cmplwi), fabs(x)-first ordering, polynomial register allocation. Likely hand-written/CRT asm-shaped; low value. Round 4."
  },
  {
-  "addr": "0x8817B608",
-  "name": "ts4_angle_wrap_pi_8817B608",
-  "best_source": "src/xbox360/drafts/q5_8817B608_angle_wrap_nearmiss.c",
-  "state": "open: 33 off, size 0x4c vs 0x88",
-  "tried": "Target uses an fsel table form; every C form tried branches instead. Round 4."
- },
- {
   "addr": "0x8866E318",
   "name": "ts4_court_bounds_8866E318",
   "best_source": "src/xbox360/drafts/me_8866E318_nearmiss.c",
-  "state": "open: 41 off (round 4 scratch, not saved), existing draft 42 off",
-  "tried": "Constants decoded (g_ts4_script_constants +0x140/+0x3ac/+0x2c4/+0x3fc/+0x2c0/+0x400/+0x2bc, lbl_880C8F9C, radius scale lbl_8814B45C). Target re-reads z_max/z_min after storing them (no store forwarding); not reproduced. Round 4."
+  "state": "open: 36 off (round 5 draft src/xbox360/drafts/q5s_move_8866E318_nearmiss.c)",
+  "tried": "Constants decoded (g_ts4_script_constants +0x140/+0x3ac/+0x2c4/+0x3fc/+0x2c0/+0x400/+0x2bc, lbl_880C8F9C, radius scale lbl_8814B45C). Target re-reads z_max/z_min after storing them (no store forwarding); not reproduced. Round 4. Round 5 (q5s move): named globals in place of literals; volatile re-read of z_min/z_max reproduces the reloads but not operand order/FPR numbering; per-branch stores and a local struct copy worse; perm_auto 900s best 36."
  }
 ]

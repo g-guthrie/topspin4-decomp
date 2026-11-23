@@ -77,6 +77,8 @@ void ts4_line_closest_point_8826D3A0(const __vector4 *p, const Ts4Line *line, __
 float ts4_range_lookup_881899D8(float x, const void *list);
 /* game RNG: uniform in [lo, hi) (rng = World+0xB4)                                             8861E598 */
 float ts4_rng_range_8861E598(void *rng, float lo, float hi);
+/* wrap *angle into [-pi, pi] in place, one 2*pi step each way (q5s_math_angle_wrap.c)          8817B608 */
+void ts4_angle_wrap_pi_8817B608(float *angle);
 TS4_EXTERN_C_END
 
 #endif /* TS4_MATH_H */
