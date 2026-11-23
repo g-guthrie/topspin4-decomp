@@ -89,6 +89,10 @@ first. `tools/fn_check_ltcg.py --auto-context` picks the contexts:
   (cw1_ctx_format_text.c for ts4_format_text); it stays on the missing list.
 - A context that does not compile, or that breaks the link (a function defined twice), is dropped with a message
   and the check repeats without it.
+- A linker crash (wibo SIGSEGV) drops the automatic `--include` values first. When the full context does not
+  match, it also tries "without the /INCLUDE of the callees" and "without the callee sources" and says which one
+  matched (`--auto-no-include` / `--auto-no-fallback` turn these off). The printed explicit command is the one
+  that produced the result.
 - Call each callee by the name its matched source uses; the output says when the source does not.
 - It prints the equivalent explicit command: put that context list (and `include`) in the spec.
 - It cannot know `--no-include` with a caller context, or a new stand-in for an unmatched callee: pass those by

@@ -4,6 +4,7 @@
 Usage:
   python3 tools/fn_check_ltcg.py SRC [--context SRC2 ...] name=0xADDR [...]
          [--flags /GS-] [--no-include] [--keep] [--quiet]
+  python3 tools/fn_check_ltcg.py SRC name=0xADDR [...] --auto-context [--flags /Oc]
   python3 tools/fn_check_ltcg.py --setup        # build work/ltcg-toolchain once
 
 Why: the Rich header of Swing_DLL.xex lists 362 objects of kind
@@ -47,6 +48,28 @@ By default each mapped function is forced into the link with /INCLUDE.
 Pass --no-include when a context source contains the function's real
 caller(s): /INCLUDE makes the symbol externally visible, which stops LTCG
 from giving it a private calling convention.
+
+--auto-context chooses the contexts from the call graph (tools/ltcg_autocontext.py):
+the direct callees of each mapped function are read from the original code
+(--auto-depth 2 adds the callees of those callees), each callee is mapped to
+the source that byte-matches it (config/54540859/match.json, then work/specs),
+and those sources become contexts, each once, with the contexts recorded for a
+callee that is itself an LTCG unit, the sources of functions SRC names but the
+original does not call (the link inlined them), and
+src/xbox360/pp1_pool_primer.c last. The called callees are forced with
+/INCLUDE (they were matched as functions of their own; --auto-no-include turns
+that off). Explicit --context values are kept in front. Contexts are compiled
+plain; when the link inlines a callee the original calls, the check is
+repeated with `flags(/Ob1):` on that callee's source (--auto-prefix P puts P on
+every chosen source instead and repeats nothing). The chosen contexts, the
+callees without a matched source ("missing callee bodies": match those first)
+and the equivalent explicit command are printed. A context that fails to
+compile, or that makes the link fail (two sources defining one function), is
+dropped with a message and the check is repeated without it. When the result
+is FAIL, two smaller links are also tried (without the /INCLUDEs; without the
+callee sources) and a MATCH there is reported with its explicit command: in a
+small link a callee source can also disturb the function (a global declared
+with another type there); --auto-no-fallback skips this.
 """
 
 from __future__ import annotations
@@ -63,6 +86,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import ltcg_autocontext as auto  # noqa: E402
 from xcoff import ROOT, Reloc, load_symbols  # noqa: E402
 
 TOOLS = ROOT / "work" / "matching-tools"
@@ -291,7 +315,7 @@ def target_sites(code: bytes, start: int, relocs: list[Reloc]) -> list[Site]:
     """Relocation sites of the target, with addresses decoded from the linked original."""
     words = [int.from_bytes(code[i : i + 4], "big") for i in range(0, len(code), 4)]
     sites = []
-    highs: list[tuple[int, str, int]] = []
+    highs: list[tuple[int, str, int, int]] = []  # index, symbol, high half, lis destination register
     for r in sorted(relocs, key=lambda r: r.offset):
         index = r.offset // 4
         if index >= len(words):
@@ -302,11 +326,15 @@ def target_sites(code: bytes, start: int, relocs: list[Reloc]) -> list[Site]:
         elif r.kind == ADDR32:
             sites.append(Site(index * 4, ADDR32, word))
         elif r.kind == REFHI:
-            highs.append((index, r.symbol, (word & 0xFFFF) << 16))
+            highs.append((index, r.symbol, (word & 0xFFFF) << 16, (word >> 21) & 31))
             sites.append(Site(index * 4, REFHI, -1))
         elif r.kind in (REFLO, 0x4):
             low = _sext16(word & 0xFFFF)
-            hi = next((h for h in reversed(highs) if h[1] == r.symbol), None)
+            # The high half is the latest lis of this symbol into the register the low half is
+            # based on: two lis/lo pairs of one symbol can interleave. Else the latest lis.
+            base = (word >> 16) & 31
+            hi = (next((h for h in reversed(highs) if h[1] == r.symbol and h[3] == base), None)
+                  or next((h for h in reversed(highs) if h[1] == r.symbol), None))
             full = ((hi[2] + low) & 0xFFFFFFFF) if hi else -1
             sites.append(Site(index * 4, REFLO, full))
             if hi:
@@ -401,6 +429,15 @@ def compare(c_code: bytes, c_sites: list[Site], c_start: int, c_index: SymbolInd
 
 # --------------------------------------------------------------------------- build
 
+class BuildError(SystemExit):
+    """A compile or link failure; `source` is the failing source, `output` the tool output."""
+
+    def __init__(self, message: str, source: Path | None = None, output: str = "",
+                 workdir: Path | None = None):
+        super().__init__(message)
+        self.source, self.output, self.workdir = source, output, workdir
+
+
 def run(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess:
     env = dict(os.environ, TMP=str(cwd), TEMP=str(cwd))
     return subprocess.run(cmd, cwd=cwd, env=env, capture_output=True, text=True)
@@ -476,11 +513,14 @@ def build(primary: Path, contexts: list[str], flags: list[str], includes: list[s
         obj = local.with_suffix(".obj")
         if result.returncode or not obj.is_file():
             sys.stdout.write(result.stdout + result.stderr)
-            raise SystemExit(f"compile failed: {source}")
+            raise BuildError(f"compile failed: {source}", source, result.stdout + result.stderr, workdir)
         objects.append(obj.name)
     base_cmd = [str(wibo), str(link), *LINK_FLAGS, *[f"/INCLUDE:{n}" for n in includes]]
     # Pass 1: discover externals.
     first = run(base_cmd + ["/FORCE:UNRESOLVED", "/out:probe.dll", *objects], workdir)
+    if "caught SIG" in first.stdout + first.stderr:  # no externals after a crash: stop here
+        # Its unresolved-symbol lines name every object, so none of them is passed on as a culprit.
+        raise BuildError("linker crashed", None, "", workdir)
     unresolved = sorted({m.group(1) or m.group(2) for m in UNRESOLVED.finditer(first.stdout + first.stderr)
                          if not (m.group(1) or m.group(2)).startswith("__imp_")})
     if code_names is None:
@@ -495,9 +535,11 @@ def build(primary: Path, contexts: list[str], flags: list[str], includes: list[s
     rsp = workdir / "link.rsp"
     rsp.write_text("\n".join(alt + objects + ["lt1stubs.obj"]) + "\n")
     second = run(base_cmd + ["/MAP:out.map", "/out:out.dll", "@link.rsp"], workdir)
-    if not (workdir / "out.dll").is_file():
+    if not (workdir / "out.dll").is_file() or not (workdir / "out.map").is_file():
         sys.stdout.write(second.stdout + second.stderr)
-        raise SystemExit("link failed")
+        if "caught SIG" in second.stdout + second.stderr:
+            raise BuildError("linker crashed", None, "", workdir)
+        raise BuildError("link failed", None, second.stdout + second.stderr, workdir)
     for line in (second.stdout + second.stderr).splitlines():
         if verbose and ("error" in line or "warning" in line):
             print("  " + line.strip())
@@ -588,6 +630,98 @@ def verify(source: Path, contexts: list[str], flags: list[str], pairs: list[tupl
     return out, c_index, t_index, workdir
 
 
+def auto_contexts(args, pairs, symbols, find_function) -> list[str]:
+    """--auto-context: explicit contexts, then the matched sources of the callees, primer last."""
+    names = {e[2]: e[0] for e in symbols if e[1] == ".text"}
+    by_name = {e[0]: e[2] for e in symbols if e[1] == ".text"}
+
+    def callees_of(address):
+        try:
+            _path, start, code, relocs = find_function(names[address])
+        except (KeyError, SystemExit):
+            return []
+        return [a for a in auto.callee_addresses(code, start, relocs)
+                if a in names and not auto.HELPER.match(names[a])]
+
+    source_map = auto.load_source_map(ROOT, address_of=by_name.get)
+    targets = [by_name[t] for _c, t in pairs]
+    callees = auto.call_graph(targets, callees_of, lambda a: a in source_map, args.auto_depth)
+    address_of = {c.symbol: a for a, cands in source_map.items() for c in cands}
+    address_of.update(by_name)
+    text = args.source.read_text(errors="replace")
+    direct = {a for t in targets for a in callees_of(t)}
+    inlined = [a for a in auto.referenced_addresses(text, address_of.get, skip=set(targets) | direct)
+               if a in names and not auto.HELPER.match(names[a])]
+    sel = auto.choose(callees, source_map, args.source, ROOT, targets, args.auto_prefix or "",
+                      manual=args.context, inlined=inlined, recorded=auto.load_recorded(ROOT),
+                      flags=args.flags)
+    for address, cand in sel.covered.items():
+        if address in direct and cand.symbol not in text:
+            sel.notes.append(f"{args.source.name} does not mention {cand.symbol}: a call under "
+                             f"another name does not use the context body")
+    print("\n".join(auto.report(sel, lambda a: names.get(a, "?"), args.auto_depth)))
+    if not args.auto_no_include:
+        args.include += [n for n in sel.includes() if n not in args.include]
+    called = {names[t]: [sel.covered[a] for a in callees_of(t) if a in sel.covered] for t in targets}
+    return sel.contexts, called, {c.symbol: c.source for c in sel.covered.values()}
+
+
+def matched(checked: list[Checked]) -> bool:
+    return all(c.result and c.result.ok for c in checked)
+
+
+def inlined_sources(checked: list[Checked], c_index: SymbolIndex, called: dict, text: str) -> list:
+    """Chosen callees (Candidate) the original calls but the linked candidate does not: the
+    link inlined them (or SRC does not call them: only callees SRC names are reported)."""
+    out = []
+    for item in checked:
+        if item.result is None:
+            continue
+        hits = [c_index.lookup(s.address) for s in item.c_sites if s.kind == REL24 and s.address >= 0]
+        present = {hit[0] for hit in hits if hit}
+        out += [c for c in called.get(item.target, [])
+                if c.symbol not in present and c.symbol in text and c not in out]
+    return out
+
+
+def failing_context(error: BuildError, contexts: list[str], manual: int, guess: bool = True) -> str | None:
+    """The automatic context to drop after a failed build, or None when none is to blame.
+
+    Sources are compiled as u<index>_<name>, index 0 being the source under test and
+    contexts[i] index i + 1; the first `manual` contexts are explicit and never dropped.
+    A compile failure names its source. A link failure names objects (LNK2005 "X already
+    defined in Y", LNK2001 for an import the stubs cannot stand in for): the last automatic
+    one named goes. With no object named and `guess`,
+    the last automatic context goes, so repeated failures end at the explicit contexts alone.
+    """
+    droppable = list(range(manual, len(contexts)))
+    if contexts and droppable and parse_context(contexts[-1])[2].as_posix() == auto.PRIMER:
+        droppable.pop()  # the pool primer stays
+    if error.source is not None:
+        hit = [i for i in droppable if parse_context(contexts[i])[2] == error.source]
+        return contexts[hit[0]] if hit else None
+    errors = "\n".join(line for line in error.output.splitlines() if "error" in line)
+    named = [int(n) - 1 for n in re.findall(r"\bu(\d+)_\S+?\.obj", errors)]
+    hit = [i for i in named if i in droppable]
+    if hit:
+        return contexts[max(hit)]
+    return contexts[droppable[-1]] if droppable and guess else None
+
+
+def explicit_command(args, contexts: list[str]) -> str:
+    import shlex
+    parts = ["python3", "tools/fn_check_ltcg.py", str(args.source), *args.mappings]
+    if args.flags:
+        parts += ["--flags", *args.flags]
+    for name in args.include:
+        parts += ["--include", name]
+    if args.no_include:
+        parts.append("--no-include")
+    for context in contexts:
+        parts += ["--context", context]
+    return " ".join(shlex.quote(p) for p in parts)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -602,6 +736,18 @@ def main() -> int:
     parser.add_argument("--include", action="append", default=[],
                         help="also force this symbol with /INCLUDE (keeps a context callee's standard "
                              "calling convention when it has other callers in the original)")
+    parser.add_argument("--auto-context", action="store_true",
+                        help="add the matched sources of the mapped functions' callees as contexts, "
+                             "pool primer last; prints the contexts and the missing callee bodies")
+    parser.add_argument("--auto-depth", type=int, default=1, choices=(1, 2),
+                        help="1: direct callees (default); 2: also the callees of matched callees")
+    parser.add_argument("--auto-prefix", default=None,
+                        help='fixed prefix for every chosen source, e.g. "flags(/Ob1):" or "" (default: '
+                             'plain, then flags(/Ob1): for a source whose callee the link inlined)')
+    parser.add_argument("--auto-no-include", action="store_true",
+                        help="do not force the called context callees with /INCLUDE")
+    parser.add_argument("--auto-no-fallback", action="store_true",
+                        help="on FAIL, do not also try without the /INCLUDEs and without the callee sources")
     parser.add_argument("--keep", action="store_true", help="keep the scratch directory")
     parser.add_argument("--quiet", action="store_true", help="omit listings for failures")
     parser.add_argument("--setup", action="store_true", help="prepare work/ltcg-toolchain and exit")
@@ -630,10 +776,79 @@ def main() -> int:
         _path, start, code, relocs = find_function(name)
         return start, code, relocs
 
-    checked, c_index, t_index, workdir = verify(
-        args.source, args.context, args.flags, pairs, find_target, symbols,
-        no_include=args.no_include, toolchain=args.toolchain, wibo=args.wibo, keep=args.keep,
-        extra_includes=args.include)
+    contexts, called, owner, no_inline = list(args.context), {}, {}, set()
+    given_includes = list(args.include)
+    if args.auto_context:
+        contexts, called, owner = auto_contexts(args, pairs, symbols, find_function)
+    while True:
+        try:
+            checked, c_index, t_index, workdir = verify(
+                args.source, contexts, args.flags, pairs, find_target, symbols,
+                no_include=args.no_include, toolchain=args.toolchain, wibo=args.wibo, keep=args.keep,
+                extra_includes=args.include)
+        except BuildError as error:
+            # Only automatic contexts are dropped; a failure of the source under test or of an
+            # explicit --context stays an error.
+            manual = len(args.context)
+            bad = failing_context(error, contexts, manual, guess=False) if args.auto_context else None
+            drop_includes = bad is None and error.source is None and args.include != given_includes
+            if not drop_includes and args.auto_context:
+                bad = bad or failing_context(error, contexts, manual)
+            if bad is None and not drop_includes:
+                print(f"scratch: {error.workdir}")
+                raise
+            if error.workdir and not args.keep:
+                shutil.rmtree(error.workdir, ignore_errors=True)
+            if drop_includes:
+                print(f"auto-context: {error} with the callees forced by /INCLUDE; repeating without "
+                      f"them (only the explicit --include values stay).")
+                args.include = given_includes
+            else:
+                print(f"auto-context: dropped {bad} ({error}); its callees are checked without their "
+                      f"bodies. Repeating without it.")
+                contexts = [c for c in contexts if c != bad]
+                gone = parse_context(bad)[2].as_posix()
+                args.include = [n for n in args.include if n in given_includes or owner.get(n) != gone]
+            continue
+        # Plain contexts first; a callee the link inlined gets /Ob1 on its source, once.
+        again = [] if args.auto_prefix is not None or matched(checked) else [
+            c for c in inlined_sources(checked, c_index, called, args.source.read_text(errors="replace"))
+            if c.source not in no_inline]
+        if not again:
+            break
+        for cand in again:
+            if cand.source in no_inline:
+                continue
+            print(f"auto-context: {cand.symbol} is called in the original and not in the candidate "
+                  f"(inlined): repeating with {auto.NO_INLINE}{cand.source}")
+            no_inline.add(cand.source)
+            contexts = auto.with_prefix(contexts, cand.source, auto.NO_INLINE)
+        if not args.keep:
+            shutil.rmtree(workdir, ignore_errors=True)
+    if args.auto_context and not args.auto_no_fallback and not matched(checked):
+        # In a small link the callee bodies, or forcing them, can also move a function away
+        # from its match: say so when a smaller context matches.
+        smaller = [c for c in contexts if c in args.context or c == auto.PRIMER]
+        for label, ctx, inc in (("without the /INCLUDE of the callees", contexts, given_includes),
+                                ("without the callee sources", smaller, given_includes)):
+            if (ctx, inc) == (contexts, args.include):
+                continue
+            try:
+                other = verify(args.source, ctx, args.flags, pairs, find_target, symbols,
+                               no_include=args.no_include, toolchain=args.toolchain, wibo=args.wibo,
+                               verbose=False, extra_includes=inc)
+            except BuildError as error:
+                shutil.rmtree(error.workdir, ignore_errors=True)
+                continue
+            if matched(other[0]):
+                print(f"auto-context: no match with the full context; MATCH {label}")
+                if not args.keep:
+                    shutil.rmtree(workdir, ignore_errors=True)
+                (checked, c_index, t_index, workdir), contexts, args.include = other, ctx, inc
+                break
+            shutil.rmtree(other[3], ignore_errors=True)
+    if args.auto_context:
+        print("explicit command: " + explicit_command(args, contexts))
     failures, renames = 0, {}
     for item in checked:
         cand, tname, t_start, res = item.candidate, item.target, item.t_start, item.result

@@ -279,7 +279,16 @@ python3 tools/fn_check_ltcg.py src/xbox360/<you>_x.c name=0xADDR [...] \
 Output is `MATCH`, `FAIL` with a side-by-side listing, `RENAME` lines (as in fn_check) and `POOL` lines
 (constants accepted by value).
 
-**Choosing context files.**
+**Choosing context files.** Start with `--auto-context` (add `--auto-depth 2` to follow the callees of matched
+callees). It reads the target's callees from the original, adds the matched source of each, the contexts recorded
+for a callee that is an LTCG unit, the sources of functions the source names but the original does not call
+(inlined) and the pool primer last, forces the called callees with `--include`, and prints the contexts, the callees
+with no matched source ("missing callee bodies": match those first) and the explicit command. Contexts are compiled
+plain; when the link inlines a callee the original calls, the check repeats with `flags(/Ob1):` on that callee's
+source. `flags(/Ob1):` on a file keeps the functions *defined in it* from being inlined anywhere, also into each
+other: a callee that inlines file-local helpers gets a different body (and clobber set) under it
+(0x886C5DB0 matches with w7c_a.c plain and fails with `flags(/Ob1):`). The rules below are what it applies, and what
+to add by hand (`--context` values are kept in front):
 - Add the file that **defines** each callee whose register use the target relies on. Find the definition
   with `grep -ln "<callee> *([^;]*$" src/xbox360/*`.
 - Add the file defining a callee whose noreturn behaviour or frame matters, such as `luaL_error` in

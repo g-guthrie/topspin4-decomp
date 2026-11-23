@@ -145,5 +145,22 @@ class FnCheckLtcgTest(unittest.TestCase):
         self.assertEqual(alias["lt1stub_2"], "__savegprlr_27")
 
 
+class TargetSites(unittest.TestCase):
+    def test_low_half_pairs_with_the_lis_of_its_base_register(self):
+        # lis r11,0x8300; lis r10,0x8301; lfs f1,0x10(r11); lfs f2,0x20(r10): one symbol, two
+        # interleaved pairs. Each low half belongs to the lis that set its base register.
+        code = words(0x3D608300, 0x3D408301, 0xC02B0010, 0xC04A0020)
+        relocs = [Reloc(0, "g", L.REFHI), Reloc(4, "g", L.REFHI), Reloc(8, "g", L.REFLO),
+                  Reloc(12, "g", L.REFLO)]
+        sites = L.target_sites(code, 0x83100000, relocs)
+        self.assertEqual([(s.offset, s.address) for s in sites],
+                         [(0, 0x83000010), (4, 0x83010020), (8, 0x83000010), (12, 0x83010020)])
+
+    def test_low_half_without_a_register_match_takes_the_latest_lis(self):
+        code = words(0x3D608300, 0xC02A0010)  # lis r11; lfs f1,0x10(r10)
+        sites = L.target_sites(code, 0x83100000, [Reloc(0, "g", L.REFHI), Reloc(4, "g", L.REFLO)])
+        self.assertEqual([s.address for s in sites], [0x83000010, 0x83000010])
+
+
 if __name__ == "__main__":
     unittest.main()
