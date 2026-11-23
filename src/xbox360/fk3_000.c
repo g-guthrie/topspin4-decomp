@@ -105,7 +105,7 @@ ts4_word ts4_destroy_rec30_range_88166178();
 ts4_word ts4_chunk_reader_read_8816B5A8();
 ts4_word fn_8816D1A8();
 ts4_word fn_881705B0();
-ts4_word fn_8817B608();
+ts4_word ts4_angle_wrap_pi_8817B608();
 ts4_word fn_8817C510();
 ts4_word fn_8817EA90();
 ts4_word fn_88187E70();
@@ -182,7 +182,7 @@ ts4_word ts4_field_set_string_885F8540();
 ts4_word ts4_field_set_string_885FFA88();
 ts4_word ts4_field_set_string_885FFC30();
 ts4_word ts4_field_set_string_885FFCB0();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word ts4_name_without_ext_88608A40();
 ts4_word ts4_node_dispatch_with_target_88613268();
 ts4_word ts4_pad_record_find_88614938();
@@ -5370,7 +5370,7 @@ ts4_word ts4_loop_call_seq_u32_off1c_88887928(ts4_word a0, ts4_word a1, ts4_word
             if ((ts4_word)a1 == (ts4_word)t14) {
                 ts4_memset((ts4_word)(lv12 + 4), (ts4_word)0, (ts4_word)64);
                 ts4_copy_bytes((ts4_word)(lv12 + 4), (ts4_word)a2, (ts4_word)64);
-                t17 = fn_88608590((ts4_word)0, (ts4_word)(lv12 + 4));
+                t17 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)(lv12 + 4));
                 *(ts4_word *)((char *)(ts4_word)(lv12) + 68) = (ts4_word)t17;
                 return t17;
             }
@@ -5554,7 +5554,7 @@ void ts4_loop_get_u32_off0_8890DA58(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x8890F8D8: call_seq u32@0x0, u32@0x28, fn_8890F370, g_ts4_script_constants, fn_8817B608 */
+/* Swing_DLL.xex 0x8890F8D8: call_seq u32@0x0, u32@0x28, fn_8890F370, g_ts4_script_constants, ts4_angle_wrap_pi_8817B608 */
 ts4_word ts4_call_seq_u32_off0_8890F8D8(ts4_word a0, ts4_word a1, ts4_word a2, float f1)
 {
     ts4_word loc54[1];
@@ -5579,7 +5579,7 @@ ts4_word ts4_call_seq_u32_off0_8890F8D8(ts4_word a0, ts4_word a1, ts4_word a2, f
     *(volatile float *)((char *)(ts4_word)(a0) + 16) = t5;
     t7 = *(float *)((char *)(ts4_word)(a1) + 84);
     *(volatile float *)((char *)(ts4_word)(a0) + 12) = ((t4 - (*(float *)((char *)(ts4_word)(a0) + 8))) + t7);
-    t9 = fn_8817B608((ts4_word)(a0 + 12));
+    t9 = ts4_angle_wrap_pi_8817B608((ts4_word)(a0 + 12));
     return t9;
 }
 

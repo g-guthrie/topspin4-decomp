@@ -7,7 +7,7 @@ struct Ts4IdTable { Ts4IdTableVt *vt; Ts4IdPair *first; Ts4IdPair *last; };
 typedef struct Ts4SceneRoot { char pad[0x10]; Ts4IdTable *ids; } Ts4SceneRoot;
 extern Ts4SceneRoot *lbl_88D45AD4;
 extern const char lbl_880F1084[];
-int fn_88608590(int, const char *);
+int ts4_crc32_cstr_seed_88608590(int, const char *);
 static __inline int ts4_id_table_lookup(Ts4IdTable *t, u32 key)
 {
     Ts4IdPair *p;
@@ -19,7 +19,7 @@ static __inline int ts4_id_table_lookup(Ts4IdTable *t, u32 key)
 void ts4_scene_activate_named_88701118(void)
 {
     Ts4IdTable *t = lbl_88D45AD4->ids;
-    int v = ts4_id_table_lookup(t, fn_88608590(0, lbl_880F1084));
+    int v = ts4_id_table_lookup(t, ts4_crc32_cstr_seed_88608590(0, lbl_880F1084));
     if (v != -1)
         t->vt->activate(t, v);
 }

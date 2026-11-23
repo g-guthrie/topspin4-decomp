@@ -3,10 +3,10 @@ typedef struct RelObj { char pad[0x18]; unsigned id; } RelObj;
 typedef struct RelEnt { int rel; unsigned type; } RelEnt;
 typedef struct RelEntArr { int rel; unsigned count; } RelEntArr;
 typedef struct RelOwner { char pad[0x18]; RelEntArr arr; } RelOwner;
-unsigned fn_88608590(int ctx, unsigned key);
+unsigned ts4_crc32_cstr_seed_88608590(int ctx, unsigned key);
 RelObj *relobj_find_by_id_a3521606_88779D78(RelOwner *o, unsigned *key)
 {
-    unsigned id = fn_88608590(0, *key);
+    unsigned id = ts4_crc32_cstr_seed_88608590(0, *key);
     RelEntArr *a = &o->arr;
     RelObj *r = 0;
     unsigned i;

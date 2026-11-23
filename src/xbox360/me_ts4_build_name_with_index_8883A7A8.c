@@ -3,7 +3,7 @@
 unsigned int strlen(const char *s);
 char *ts4_crt_itoa_8856BD18(int val, char *buf, int radix);
 char *ts4_crt_strncat_88564EF0(char *dst, const char *src, unsigned int count);
-int fn_88608590(int, const char *);
+int ts4_crc32_cstr_seed_88608590(int, const char *);
 extern char lbl_880E14A8[];
 
 int *fn_8883A7A8(int *out, int index)
@@ -25,6 +25,6 @@ int *fn_8883A7A8(int *out, int index)
     }
     *d = 0;
     ts4_crt_strncat_88564EF0(buf, num, 124 - (int)strlen(buf));
-    *out = fn_88608590(0, buf);
+    *out = ts4_crc32_cstr_seed_88608590(0, buf);
     return out;
 }

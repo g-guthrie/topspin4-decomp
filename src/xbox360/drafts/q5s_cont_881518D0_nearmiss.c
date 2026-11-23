@@ -1,5 +1,5 @@
 /* nearmiss: 16 off (LTCG /Oc), register allocation only (target lo=r6 hi=r7 a=r5 key=r8 mid=r10 e=r11; ours
- * a=r6 lo=r7 hi=r8 key=r5); blocker: tools/perm_auto.py, 72 candidates, no improvement; the loop/hoist structure
+ * a=r6 lo=r7 hi=r8 key=r5); blocker: tools/perm_auto.py, 72 candidates, then a 386-candidate run (best 16), no improvement; the loop/hoist structure
  * variants tried change size (0x68 vs 0x74). Odds improve with a source-level register-order probe tool. */
 #include "../include/ts4/ts4.h"
 

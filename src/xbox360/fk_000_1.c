@@ -91,7 +91,7 @@ ts4_word ts4_tailcall_NetDll_ioctlsocket_884F0268();
 ts4_word ts4_tailcall_NetDll_accept_884F02E0();
 ts4_word fn_88562DC0();
 ts4_word ts4_tailcall_fn_88564B00_88564770();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_8860D250();
 ts4_word ts4_node_dispatch_8860DCF8();

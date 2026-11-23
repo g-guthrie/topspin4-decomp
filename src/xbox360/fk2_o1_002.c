@@ -205,7 +205,7 @@ ts4_word fn_885E6318();
 ts4_word fn_885E63A0();
 ts4_word fn_885E6428();
 ts4_word fn_885E6C48();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word ts4_loop_call_seq_u32_offc_8860BD70();
 ts4_word ts4_node_dispatch_with_target_88613268();
 ts4_word ga6_update_unless_typed_886E79A8();
@@ -3054,7 +3054,7 @@ ts4_word ts4_call_seq_fn_88163B90_88736BB8(ts4_word a0, ts4_word a1)
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 296) = (ts4_word)0;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 300) = (ts4_word)0;
     ts4_byte_string_assign_8816D090((ts4_word)a0, (ts4_word)a1);
-    t4 = fn_88608590((ts4_word)0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+    t4 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 268) = (ts4_word)t4;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 284) = (ts4_word)2;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 276) = (ts4_word)0;

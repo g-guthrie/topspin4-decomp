@@ -112,7 +112,7 @@ ts4_uptr fn_885E48D8(ts4_uptr);
 ts4_uptr fn_885E58B0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_885E5BC8(ts4_uptr);
 ts4_uptr fn_885E76C0(ts4_uptr, ts4_uptr, ts4_uptr);
-ts4_uptr fn_88608590(ts4_uptr, ts4_uptr, ts4_uptr);
+ts4_uptr ts4_crc32_cstr_seed_88608590(ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_8860A2A8(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_8860A308(ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr ts4_node_dispatch_8860DCF8(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);

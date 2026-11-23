@@ -70,7 +70,7 @@ ts4_word fn_8857A1E0();
 ts4_word ts4_call_if_state1_8857A720();
 ts4_word ts4_call_if_state1_8857A8A0();
 ts4_word ts4_slots_run_88606788();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word fn_88609F90();
 ts4_word fn_8860BBD8();
 ts4_word ts4_hash_to_kind_8860C128();

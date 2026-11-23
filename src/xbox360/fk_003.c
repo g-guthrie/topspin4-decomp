@@ -98,7 +98,7 @@ ts4_word ts4_if_call_seq_u32_off0_8819B0C8();
 ts4_word ts4_if_call_seq_u32_off0_8819C190();
 ts4_word fn_881BD170();
 ts4_word ts4_counted_ptr_assign_881C38D0();
-ts4_word fn_881C5BD8();
+ts4_word ts4_ratio_counts_update_881C5BD8();
 ts4_word fn_881C86B0();
 ts4_word fn_881C88B0();
 ts4_word fn_881CCD90();
@@ -139,7 +139,7 @@ ts4_word fn_88223B10();
 ts4_word ts4_vector_grow_append_88225790();
 ts4_word fn_8822B6E0();
 ts4_word fn_88255AA0();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_8860D250();
 ts4_word ts4_node_dispatch_with_target_88613268();
@@ -359,7 +359,7 @@ ts4_word ts4_if_get_u32_off20_881F9080(ts4_word a0)
     return (*(ts4_word *)lbl_88D41FC0);
 }
 
-/* Swing_DLL.xex 0x881FBD30: if_call_seq u32@0x14, fn_881992A8, u32@0x14, u32@0x1c, fn_881C5BD8 */
+/* Swing_DLL.xex 0x881FBD30: if_call_seq u32@0x14, fn_881992A8, u32@0x14, u32@0x1c, ts4_ratio_counts_update_881C5BD8 */
 ts4_word ts4_if_call_seq_u32_off14_881FBD30(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word t1;
@@ -376,7 +376,7 @@ ts4_word ts4_if_call_seq_u32_off14_881FBD30(ts4_word a0, ts4_word a1, ts4_word a
         *(ts4_word *)((char *)(ts4_word)(a0) + 20) = (ts4_word)0;
     }
     *(ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)a1;
-    fn_881C5BD8((ts4_word)a0);
+    ts4_ratio_counts_update_881C5BD8((ts4_word)a0);
     return 1;
 }
 
@@ -2388,13 +2388,13 @@ ts4_word ts4_if_call_seq_u32_offc_8821FFE8(ts4_word a0, ts4_word a1, ts4_word a2
     return t7;
 }
 
-/* Swing_DLL.xex 0x882224D8: call_seq fn_88608590, fn_88222338 */
+/* Swing_DLL.xex 0x882224D8: call_seq ts4_crc32_cstr_seed_88608590, fn_88222338 */
 ts4_word ts4_call_seq_fn_88608590_882224D8(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t1;
     ts4_word t2;
 
-    t1 = fn_88608590((ts4_word)0, (ts4_word)a2);
+    t1 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)a2);
     t2 = fn_88222338((ts4_word)a0, (ts4_word)a1, (ts4_word)t1);
     return t2;
 }

@@ -366,13 +366,13 @@ typedef struct Q5Item Q5Item;
 typedef struct Q5Vec3w { Q5Item *begin; Q5Item *end; void *alloc; } Q5Vec3w;
 typedef struct Q5Tables { char pad[0x10]; u32 count; u32 index; char pad18[0x20]; Q5Vec3w b38; Q5Vec3w b44;
     Q5Vec3w b50; char list5c[0xc]; char list68[0xc]; char obj74[4]; } Q5Tables;
-extern Q5Item *fn_88186110(Q5Item *first, Q5Item *last, Q5Item *dest);
+extern Q5Item *ts4_copy_mtx_rows_88186110(Q5Item *first, Q5Item *last, Q5Item *dest);
 extern void fn_881A6728(void *list);
 
 static __inline void q5_vec_clear(Q5Vec3w *v)
 {
     Q5Item **pe = &v->end;
-    *pe = fn_88186110(*pe, *pe, v->begin);
+    *pe = ts4_copy_mtx_rows_88186110(*pe, *pe, v->begin);
 }
 
 /* Swing_DLL.xex 0x8887C000 */

@@ -9,7 +9,7 @@ extern "C" {
 extern char *lbl_88D45AD4;
 extern char *lbl_88D45A4C;
 extern void fn_886F6348(void *, int);
-extern u32 fn_88608590(int, u32);
+extern u32 ts4_crc32_cstr_seed_88608590(int, u32);
 extern void fn_88713970(u64, u64, int, int, int);
 extern void ts4_if_call_seq_ts4_handle_forward_88150770_88703E18(void *);
 extern void fn_88713F18(void *, u32, float);

@@ -51627,6 +51627,12 @@ MATCHING_UNITS = (
         "object": "q5a_gameplay_small_k.obj",
         "symbols": {"ts4_apply_ece067e5_entries_8886FCC0": 176},
     },
+    {
+        "source": "src/xbox360/q5s_world_xform.c",
+        "object": "q5s_world_xform.obj",
+        "extra_flags": ["/Oc"],
+        "symbols": {"ts4_placed_set_888C0818": 116},
+    },
 )
 
 

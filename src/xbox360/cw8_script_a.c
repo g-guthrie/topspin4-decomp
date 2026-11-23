@@ -21,7 +21,7 @@ extern Val *g_ts4_default_script_value;
 extern const char g_ts4_true_string[];
 extern double g_ts4_script_constants[];
 u8 ts4_script_string_equals(void *value, const char *text);
-extern u32 fn_88608590(void *a, void *b);
+extern u32 ts4_crc32_cstr_seed_88608590(void *a, void *b);
 extern void fn_88202810(void *target, void *name, u8 flag, u32 one, u32 hash);
 extern void fn_88202DF0(void *target, void *name, int amount);
 extern void fn_88202900(void *target);
@@ -52,7 +52,7 @@ u32 ts4_script_call_name_bool_hash_881D1D78(Ctx *c)
     u8 flag = ts4_script_string_equals(arg_at(c->args, 1)->payload, g_ts4_true_string);
     u32 hash = 0;
     if (arg_at(c->args, 2)->type == 2) {
-        hash = fn_88608590(0, *(void **)arg_at(c->args, 2)->payload);
+        hash = ts4_crc32_cstr_seed_88608590(0, *(void **)arg_at(c->args, 2)->payload);
     }
     fn_88202810(c->host->target, name, flag, 1, hash);
     return 0;
@@ -71,7 +71,7 @@ u32 ts4_script_call_name_amount_881D1E68(Ctx *c)
 u32 ts4_script_call_hash_or_plain_881D1F28(Ctx *c)
 {
     if (arg_at(c->args, 0)->type == 2) {
-        u32 hash = fn_88608590(0, *(void **)arg_at(c->args, 0)->payload);
+        u32 hash = ts4_crc32_cstr_seed_88608590(0, *(void **)arg_at(c->args, 0)->payload);
         ts4_loop_call_seq_u32_off10_88202BF8(c->host->target, hash);
     } else {
         fn_88202900(c->host->target);

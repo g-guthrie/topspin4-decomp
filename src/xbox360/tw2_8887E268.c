@@ -5,12 +5,12 @@ typedef struct CxItem { CxDel d; int f4; u32 f8; } CxItem;
 typedef struct CxVec { CxItem **begin; CxItem **end; } CxVec;
 typedef struct CxPtrVec { int pad0; CxVec v; } CxPtrVec;
 extern void *fn_88562DC0(void *dst, void *src, int n);
-u32 fn_88608590(int a, u32 b);
+u32 ts4_crc32_cstr_seed_88608590(int a, u32 b);
 void fn_8887CB88(void *p);
 
 void ts4_remove_entry_by_key_8887E268(CxPtrVec *o, u32 *key)
 {
-    u32 id = fn_88608590(0, *key);
+    u32 id = ts4_crc32_cstr_seed_88608590(0, *key);
     CxVec *v = &o->v;
     CxItem **p;
     for (p = v->begin; p != o->v.end; p++) {

@@ -41,12 +41,12 @@ extern char lbl_880E15E4[];
 extern char lbl_880E15EC[];
 extern char lbl_880E15F8[];
 extern char lbl_880E1608[];
-extern int fn_88608590(int, const char *);
+extern int ts4_crc32_cstr_seed_88608590(int, const char *);
 extern void fn_88564EF0(char *dst, const char *src, u32 room);
 
 /* Copy the literal STR1 into a 124-byte stack buffer (bounded), optionally append
    the caller's suffix, optionally append a second literal STR2, then intern the
-   resulting string via fn_88608590(0, buf) and store the result in *out. */
+   resulting string via ts4_crc32_cstr_seed_88608590(0, buf) and store the result in *out. */
 #define TS4_BUILD_NAME_BODY(STR1) \
     char buf[124]; \
     const char *s = STR1; \
@@ -64,7 +64,7 @@ extern void fn_88564EF0(char *dst, const char *src, u32 room);
     int *NAME(int *out, const char *suffix) \
     { \
         TS4_BUILD_NAME_BODY(STR1) \
-        *out = fn_88608590(0, buf); \
+        *out = ts4_crc32_cstr_seed_88608590(0, buf); \
         return out; \
     }
 
@@ -73,7 +73,7 @@ extern void fn_88564EF0(char *dst, const char *src, u32 room);
     { \
         TS4_BUILD_NAME_BODY(STR1) \
         fn_88564EF0(buf, STR2, 124 - strlen(buf)); \
-        *out = fn_88608590(0, buf); \
+        *out = ts4_crc32_cstr_seed_88608590(0, buf); \
         return out; \
     }
 

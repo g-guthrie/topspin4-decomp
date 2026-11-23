@@ -135,7 +135,7 @@ typedef struct W5dHdr { unsigned char pad00[8]; unsigned short idx; } W5dHdr;
 typedef struct W5dAcc { float v0; float v1; } W5dAcc;
 typedef struct W5dCtx { unsigned char pad00[0x20]; void *sink; } W5dCtx;
 typedef struct W5dThis { unsigned char pad00[4]; W5dAcc *p4; } W5dThis;
-extern void fn_88269420(float *v, float lim);
+extern void ts4_clamp_pair_0_hi_88269420(float *v, float lim);
 extern void ts4_push_tagged_element_88648020(void *sink, int id, float a, float *v, float b);
 static __inline W5dAcc *w5d_acc(W5dThis *t) { return t->p4; }
 void ts4_scale_range_with_gain_886D1910(W5dThis *self, W5dTab *tab, W5dCtx *ctx, float *rng, float *extra)
@@ -150,7 +150,7 @@ void ts4_scale_range_with_gain_886D1910(W5dThis *self, W5dTab *tab, W5dCtx *ctx,
     float bs = r->base;
     buf[0] = a * sc + bs;
     buf[1] = b * sc + bs;
-    fn_88269420(buf, 1.0f);
+    ts4_clamp_pair_0_hi_88269420(buf, 1.0f);
     self->p4->v0 = self->p4->v1 * r->gain + self->p4->v0;
     if (id != -1)
         ts4_push_tagged_element_88648020(sink, id, w5d_acc(self)->v1, buf, extra[1]);

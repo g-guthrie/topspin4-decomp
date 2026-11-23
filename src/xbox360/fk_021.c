@@ -88,7 +88,7 @@ ts4_word fn_8825DA28();
 ts4_word ts4_if_call_seq_u32_off8_88280958();
 ts4_word ts4_if_atomic_interlocked_dec_88288530();
 ts4_word ts4_create_gpu_buffer_882886B8();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_88617D88();
 ts4_word ts4_if_get_u32_off1c_88655518();
@@ -655,7 +655,7 @@ ts4_word ts4_call_seq_ts4_object_finalize_8876DE98(ts4_word a0)
     return t2;
 }
 
-/* Swing_DLL.xex 0x8876E058: if_get u32@0x0, fn_88608590, ts4_find_service, u32@0x0, u32@0x4c, vcall */
+/* Swing_DLL.xex 0x8876E058: if_get u32@0x0, ts4_crc32_cstr_seed_88608590, ts4_find_service, u32@0x0, u32@0x4c, vcall */
 ts4_word ts4_if_get_u32_off0_8876E058(ts4_word a0, ts4_word a1)
 {
     ts4_word p7;
@@ -663,7 +663,7 @@ ts4_word ts4_if_get_u32_off0_8876E058(ts4_word a0, ts4_word a1)
     ts4_word t3;
     ts4_word t6;
 
-    t2 = fn_88608590((ts4_word)0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+    t2 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
     t3 = ts4_find_service((ts4_word)t2);
     p7 = (ts4_word)t3;
     if ((ts4_word)t3 != 0) {

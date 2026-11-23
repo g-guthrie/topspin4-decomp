@@ -14984,6 +14984,82 @@
       "src/xbox360/q5s_eng_xdata_read.c": {
         "status": "Matching",
         "source": "xbox360/q5s_eng_xdata_read.c"
+      },
+      "src/xbox360/q5s_swan_lerp.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_swan_lerp.c"
+      },
+      "src/xbox360/q5s_swan_shot_rec.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_swan_shot_rec.c"
+      },
+      "src/xbox360/q5s_math_misc.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_misc.c"
+      },
+      "src/xbox360/q5s_math_copy.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_copy.c"
+      },
+      "src/xbox360/q5s_math_ramp.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_ramp.c"
+      },
+      "src/xbox360/q5s_math_track.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_track.cpp"
+      },
+      "src/xbox360/q5s_math_segment.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_segment.c"
+      },
+      "src/xbox360/q5s_math_clamp.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_clamp.c"
+      },
+      "src/xbox360/q5s_math_approach.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_approach.c"
+      },
+      "src/xbox360/q5s_math_mtx.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_mtx.c"
+      },
+      "src/xbox360/q5s_math_angle_wrap.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_math_angle_wrap.c"
+      },
+      "src/xbox360/q5s_move_target_far.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_move_target_far.c"
+      },
+      "src/xbox360/q5s_move_ball_reach.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_move_ball_reach.c"
+      },
+      "src/xbox360/q5s_world_phase.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_world_phase.c"
+      },
+      "src/xbox360/q5s_world_misc.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_world_misc.c"
+      },
+      "src/xbox360/q5s_world_xform.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_world_xform.c"
+      },
+      "src/xbox360/q5s_eng_crc.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_eng_crc.c"
+      },
+      "src/xbox360/q5s_eng_xdata_str.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_eng_xdata_str.c"
+      },
+      "src/xbox360/q5s_eng_time.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_eng_time.c"
       }
     }
   }

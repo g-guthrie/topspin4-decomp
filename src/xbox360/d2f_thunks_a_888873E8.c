@@ -166,7 +166,7 @@ ts4_word ts4_if_get_u32_lbl_88C32048_8857A1E0();
 ts4_word fn_8857B388();
 ts4_word ts4_if_call_seq_NtSuspendThread_8857B4C8();
 ts4_word ts4_if_call_seq_NtSetEvent_8857C1F8();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word fn_8860BBD8();
 ts4_word ts4_node_dispatch_8860DCF8();
 ts4_word ts4_handle_forward0_886107F8();

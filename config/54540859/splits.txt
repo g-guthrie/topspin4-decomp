@@ -55449,3 +55449,102 @@ src/xbox360/q5s_eng_xdata_read.c:
 	.text       start:0x88603170 end:0x886031C0
 	.text       start:0x88603208 end:0x886032E8
 	.text       start:0x88604458 end:0x88604488
+
+src/xbox360/q5s_swan_lerp.c:
+	.pdata      start:0x88124CE0 end:0x88124CE8
+	.text       start:0x886C4540 end:0x886C4588
+	.text       start:0x886CE940 end:0x886CEA0C
+
+src/xbox360/q5s_swan_shot_rec.c:
+	.pdata      start:0x88124A40 end:0x88124A48
+	.text       start:0x886C6660 end:0x886C66B0
+
+src/xbox360/q5s_math_misc.c:
+	.text       start:0x881C5BD8 end:0x881C5C2C
+	.text       start:0x881CD128 end:0x881CD1AC
+
+src/xbox360/q5s_math_copy.c:
+	.text       start:0x88186110 end:0x88186170
+
+src/xbox360/q5s_math_ramp.c:
+	.text       start:0x88179740 end:0x881797D0
+
+src/xbox360/q5s_math_track.cpp:
+	.text       start:0x88870500 end:0x888705A0
+
+src/xbox360/q5s_math_segment.c:
+	.text       start:0x88265890 end:0x88265938
+
+src/xbox360/q5s_math_clamp.c:
+	.text       start:0x88269420 end:0x882694CC
+
+src/xbox360/q5s_math_approach.c:
+	.text       start:0x881A38F0 end:0x881A39AC
+
+src/xbox360/q5s_math_mtx.c:
+	.text       start:0x881A4308 end:0x881A43C8
+
+src/xbox360/q5s_math_angle_wrap.c:
+	.text       start:0x8817B608 end:0x8817B690
+
+src/xbox360/q5s_move_target_far.c:
+	.text       start:0x8866C150 end:0x8866C1A8
+
+src/xbox360/q5s_move_ball_reach.c:
+	.pdata      start:0x88123300 end:0x88123308
+	.pdata      start:0x88123528 end:0x88123530
+	.text       start:0x886601F0 end:0x886602B4
+	.text       start:0x8866BC48 end:0x8866BCFC
+
+src/xbox360/q5s_world_phase.c:
+	.text       start:0x888C1B58 end:0x888C1BC0
+
+src/xbox360/q5s_world_misc.c:
+	.text       start:0x888C4EE0 end:0x888C4F24
+	.text       start:0x888C72E8 end:0x888C7314
+
+src/xbox360/q5s_world_xform.c:
+	.text       start:0x888C0818 end:0x888C088C
+
+src/xbox360/q5s_eng_crc.c:
+	.text       start:0x88608590 end:0x886085E0
+
+src/xbox360/q5s_eng_xdata_str.c:
+	.pdata      start:0x88120330 end:0x88120338
+	.pdata      start:0x88120350 end:0x88120358
+	.pdata      start:0x881208B0 end:0x881208B8
+	.pdata      start:0x881208C0 end:0x881208C8
+	.pdata      start:0x881208C8 end:0x881208D0
+	.pdata      start:0x881208D0 end:0x881208D8
+	.pdata      start:0x881208E0 end:0x881208E8
+	.pdata      start:0x881208F8 end:0x88120900
+	.pdata      start:0x88120900 end:0x88120908
+	.pdata      start:0x88120908 end:0x88120910
+	.pdata      start:0x88120910 end:0x88120918
+	.pdata      start:0x88120928 end:0x88120930
+	.pdata      start:0x88120930 end:0x88120938
+	.pdata      start:0x88120938 end:0x88120940
+	.pdata      start:0x88120960 end:0x88120968
+	.pdata      start:0x88120968 end:0x88120970
+	.pdata      start:0x88120978 end:0x88120980
+	.pdata      start:0x88120B98 end:0x88120BA0
+	.text       start:0x885F82C0 end:0x885F8390
+	.text       start:0x885F85C0 end:0x885F87B8
+	.text       start:0x885FF7C0 end:0x885FF840
+	.text       start:0x885FF8C0 end:0x885FF96C
+	.text       start:0x885FF970 end:0x885FF9EC
+	.text       start:0x885FF9F0 end:0x885FFA84
+	.text       start:0x885FFB08 end:0x885FFC2C
+	.text       start:0x885FFD30 end:0x885FFDCC
+	.text       start:0x885FFDD0 end:0x8860007C
+	.text       start:0x88600080 end:0x88600210
+	.text       start:0x88600308 end:0x88600434
+	.text       start:0x88600438 end:0x886004B4
+	.text       start:0x88600678 end:0x8860079C
+	.text       start:0x886007A0 end:0x886009C0
+	.text       start:0x88600A38 end:0x88600AF4
+	.text       start:0x886042C8 end:0x88604388
+
+src/xbox360/q5s_eng_time.c:
+	.pdata      start:0x8810F458 end:0x8810F460
+	.text       start:0x882783F0 end:0x88278450

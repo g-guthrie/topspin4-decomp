@@ -65,7 +65,7 @@ ts4_word ts4_tailcall_fn_88564208_885643D0();
 ts4_word fn_885651F8();
 ts4_word fn_88565320();
 ts4_word fn_88569D30();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_88611620();
 ts4_word fn_88617788();
@@ -2082,7 +2082,7 @@ ts4_word ts4_call_seq_u32_lbl_88D459E0_88842658(ts4_word a0, ts4_word a1)
     return t2;
 }
 
-/* Swing_DLL.xex 0x88842FD0: call_seq lbl_880E1614, fn_88608590, u32@lbl_88D45B20, ts4_keyed_item_list_add_unique_888416A8, lbl_880E1628, fn_88608590 */
+/* Swing_DLL.xex 0x88842FD0: call_seq lbl_880E1614, ts4_crc32_cstr_seed_88608590, u32@lbl_88D45B20, ts4_keyed_item_list_add_unique_888416A8, lbl_880E1628, ts4_crc32_cstr_seed_88608590 */
 ts4_word ts4_call_seq_lbl_880E1614_88842FD0(void)
 {
     ts4_word loc50[1];
@@ -2092,16 +2092,16 @@ ts4_word ts4_call_seq_lbl_880E1614_88842FD0(void)
     ts4_word t10;
     ts4_word t12;
 
-    t1 = fn_88608590((ts4_word)0, (ts4_word)(ts4_word)lbl_880E1614);
+    t1 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)(ts4_word)lbl_880E1614);
     loc50[0] = (ts4_word)t1;
     ts4_keyed_item_list_add_unique_888416A8((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)(ts4_word)&loc50[0]);
-    t4 = fn_88608590((ts4_word)0, (ts4_word)(ts4_word)lbl_880E1628);
+    t4 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)(ts4_word)lbl_880E1628);
     loc50[0] = (ts4_word)t4;
     ts4_keyed_item_list_add_unique_88842C30((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)(ts4_word)&loc50[0]);
-    t7 = fn_88608590((ts4_word)0, (ts4_word)(ts4_word)lbl_880E1638);
+    t7 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)(ts4_word)lbl_880E1638);
     loc50[0] = (ts4_word)t7;
     ts4_keyed_item_list_add_unique_88841FE0((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)(ts4_word)&loc50[0]);
-    t10 = fn_88608590((ts4_word)0, (ts4_word)(ts4_word)lbl_880E164C);
+    t10 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)(ts4_word)lbl_880E164C);
     loc50[0] = (ts4_word)t10;
     t12 = ts4_keyed_item_list_add_unique_8883EAF8((ts4_word)(*(ts4_word *)lbl_88D45B20), (ts4_word)(ts4_word)&loc50[0]);
     return t12;

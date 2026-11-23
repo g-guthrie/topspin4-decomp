@@ -15,7 +15,7 @@ extern void *lbl_88D45B38;
 void fn_88627EC0(void *self, TS4TripleArg value);
 void *ts4_if_call_seq_fn_88883CD0_8860D250(void *heap);
 extern Ts4XdataRef *ts4_handle_forward_88150770(Ts4XdataRef *out, TS4TripleArg *handle, u32 *type_hash);
-u32 fn_88608590(int a, const char *s);
+u32 ts4_crc32_cstr_seed_88608590(int a, const char *s);
 void *ts4_find_service(u32 hash);
 static __inline void scope_init(Ts4HeapScope *s, void *owner) { s->vt = &lbl_880F7AEC; s->heap = ts4_if_call_seq_fn_88883CD0_8860D250(lbl_88D45B38); s->owner = owner; }
 void ts4_service_ref_init(Ts4SvcUser *self, TS4TripleArg value)
@@ -28,6 +28,6 @@ void ts4_service_ref_init(Ts4SvcUser *self, TS4TripleArg value)
     scope.vt->enter(&scope);
     hash = 0xCEB2A4D9u;
     r = ts4_handle_forward_88150770(&tmp, &value, &hash);
-    self->service = ts4_find_service(fn_88608590(0, (const char *)r->node->vt->get_string(r->node, r, r->offset, 1)));
+    self->service = ts4_find_service(ts4_crc32_cstr_seed_88608590(0, (const char *)r->node->vt->get_string(r->node, r, r->offset, 1)));
     scope.vt->leave(&scope);
 }

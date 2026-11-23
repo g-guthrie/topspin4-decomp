@@ -9,7 +9,7 @@ typedef struct Mgr { u8 pad[0x18]; Skel *skel; } Mgr;
 typedef struct IntVec { int *begin; int *end; u32 pad; int *cap; } IntVec;
 typedef struct Node { const char *name; } Node;
 extern Mgr *lbl_88D45AD4;
-u32 fn_88608590(int seed, const char *s);
+u32 ts4_crc32_cstr_seed_88608590(int seed, const char *s);
 int *cw3_find_int_881655A0(int *first, int *last, const int *val);
 void ts4_vector_grow_append_scalar4_8816DD48(IntVec *v, int *where, const int *val);
 void fn_88733D98(Bone *b, void *ctx);
@@ -21,7 +21,7 @@ static int bone_index(Skel *sk, u32 h) {
 }
 void skel_collect_bone(Node *n, IntVec *out, void *ctx){
   Mgr *m = lbl_88D45AD4;
-  int v = bone_index(m->skel, fn_88608590(0, n->name));
+  int v = bone_index(m->skel, ts4_crc32_cstr_seed_88608590(0, n->name));
   int id = v;
   Bone *b; int *e;
   if (v == -1) return;

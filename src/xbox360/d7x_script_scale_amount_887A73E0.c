@@ -10,7 +10,7 @@ extern int ts4_lua_toboolean_88822398(lua_State *L, int idx);
 extern double ts4_lua_tonumber_88822420(lua_State *L, int idx);
 extern int lib3_lua_type_88822738(lua_State *L, int idx);
 extern const char *lib3_lua_tostring_88822888(lua_State *L, int idx);
-extern unsigned int fn_88608590(unsigned int zero, const char *s);
+extern unsigned int ts4_crc32_cstr_seed_88608590(unsigned int zero, const char *s);
 extern void ts4_call_seq_u32_off0_881B1A98(Out *out, void *self, int v);
 
 int ts4_script_scale_amount_887A73E0(void *self, Args *a)
@@ -38,7 +38,7 @@ int ts4_script_hash_string_arg_887A7790(void *self, Args *a)
 ok:
     {
         Out o;
-        ts4_call_seq_u32_off0_881B1A98(&o, self, fn_88608590(0, lib3_lua_tostring_88822888(*f->L, f->idx)));
+        ts4_call_seq_u32_off0_881B1A98(&o, self, ts4_crc32_cstr_seed_88608590(0, lib3_lua_tostring_88822888(*f->L, f->idx)));
     }
     return 1;
 }

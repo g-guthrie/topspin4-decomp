@@ -134,7 +134,7 @@ ts4_word ts4_tailcall_fn_88582F30_8857A128();
 ts4_word ts4_if_get_u32_lbl_88C32048_8857A1E0();
 ts4_word ts4_tailcall_XamContentGetCreator_8857B2E8();
 ts4_word fn_8857C8C8();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_88610620();
 ts4_word ts4_if_call_seq_fn_881F04B8_886131F0();
@@ -600,7 +600,7 @@ ts4_word ts4_if_call_seq_memcpy_887CC8F8(ts4_word a0, ts4_word a1, ts4_word a2, 
         ts4_destroy_owned_object((ts4_word)t5);
         *(ts4_word *)((char *)(ts4_word)(a0) + 864) = (ts4_word)a2;
         *(ts4_word *)((char *)(ts4_word)(a0) + 556) = (ts4_word)2;
-        t8 = fn_88608590((ts4_word)0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 868)));
+        t8 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a0) + 868)));
         fn_88617788((ts4_word)a0, (ts4_word)t8);
         *(ts4_word *)((char *)(ts4_word)(a0) + 860) = (ts4_word)a4;
         *(unsigned char *)((char *)(ts4_word)(a0) + 880) = (unsigned char)1;

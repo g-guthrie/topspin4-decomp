@@ -100,7 +100,7 @@ ts4_word ts4_if_call_seq_u32_lbl_88D459E4_8883F238();
 ts4_word ts4_register_records_8886B8E0();
 ts4_word fn_8886FE50();
 ts4_word fn_8886FED0();
-ts4_word fn_88870500();
+ts4_word ts4_track_key_pos_get_88870500();
 ts4_word fn_888705A0();
 ts4_word fn_88871108();
 ts4_word fn_888718A8();

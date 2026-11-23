@@ -70,13 +70,13 @@ void *ts4_assign_from_source_88629310(void *self, FmtSrc *src)
     return self;
 }
 
-extern void *fn_881A4308(void *dst, void *a, void *b);
+extern void *ts4_mtx_mul_881A4308(void *dst, void *a, void *b);
 typedef struct R3A368 { u8 pad[0x80]; u8 f80[0x40]; u8 fc0[0x40]; u8 f100[0x13c]; u8 f23c, f23d; } R3A368;
 /* 0x8863A368: when the dirty flag is set rebuild the block at +0x100 from the two blocks below it, then flip the flags; return the block */
 void *ts4_refresh_block_8863A368(R3A368 *self)
 {
     if (self->f23c != 0) {
-        fn_881A4308(self->f100, self->f80, self->fc0);
+        ts4_mtx_mul_881A4308(self->f100, self->f80, self->fc0);
         self->f23c = 0;
         self->f23d = 1;
     }

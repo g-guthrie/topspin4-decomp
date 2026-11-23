@@ -118,7 +118,7 @@ ts4_word fn_8816CAA0();
 ts4_word ts4_if_call_seq_u32_off0_8816D140();
 ts4_word fn_8816D1A8();
 ts4_word ts4_vector_grow_append_scalar4_8816DD48();
-ts4_word fn_8817B608();
+ts4_word ts4_angle_wrap_pi_8817B608();
 ts4_word ts4_small_string512_from_cstr_88180070();
 ts4_word fn_8819A9D8();
 ts4_word ts4_call_seq_u32_off0_8819AD80();
@@ -159,7 +159,7 @@ ts4_word ts4_load_surface_882C5EA8();
 ts4_word ts4_set_u8_off0_88401F80();
 ts4_word fn_885651F8();
 ts4_word ts4_tailcall_fn_88584548_8857AFE8();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word ts4_hash_normalized_path_886090A0();
 ts4_word fn_8860BBD8();
 ts4_word ts4_if_call_seq_fn_88883CD0_8860D250();
@@ -1031,14 +1031,14 @@ ts4_word ts4_if_call_seq_u32_off1c_88678468(ts4_word a0, int a1, ts4_word a2, ts
     return p16;
 }
 
-/* Swing_DLL.xex 0x886799B8: get fn_8817B608 */
+/* Swing_DLL.xex 0x886799B8: get ts4_angle_wrap_pi_8817B608 */
 ts4_word ts4_get_fn_8817B608_886799B8(ts4_word a0)
 {
     float t1;
 
     t1 = *(float *)((char *)(ts4_word)(a0) + 0);
     *(float *)((char *)(ts4_word)(a0) + 0) = (t1 + (*(float *)lbl_880C88DC));
-    return fn_8817B608((ts4_word)a0);
+    return ts4_angle_wrap_pi_8817B608((ts4_word)a0);
 }
 
 /* Swing_DLL.xex 0x88679F48: if_call_seq lbl_880F43E8, u32@0x0, u32@0xc, ts4_destroy_owned_object, lbl_880F436C, u32@0x0 */
@@ -2387,7 +2387,7 @@ ts4_word ts4_loop_call_seq_ts4_object_finalize_886F5DF0(ts4_word a0, ts4_word a1
     return ((int)(t18 - (*(ts4_word *)((char *)(ts4_word)(a1) + 0))) >> 2);
 }
 
-/* Swing_DLL.xex 0x886F78C8: if_get ts4_handle_forward_88150770, u32@0x0, u32@0x50, vcall, fn_88608590, fn_886ED860 */
+/* Swing_DLL.xex 0x886F78C8: if_get ts4_handle_forward_88150770, u32@0x0, u32@0x50, vcall, ts4_crc32_cstr_seed_88608590, fn_886ED860 */
 ts4_word ts4_if_get_fn_88150770_886F78C8(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3, ts4_word a4, ts4_word a5, ts4_word a6, ts4_word a7)
 {
     ts4_word loc50[1];
@@ -2420,7 +2420,7 @@ ts4_word ts4_if_get_fn_88150770_886F78C8(ts4_word a0, ts4_word a1, ts4_word a2, 
     t8 = loc58[0];
     t9 = loc58[1];
     t12 = ((ts4_word (*)(ts4_word, ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t8) + 0))) + 80))))((ts4_word)t8, (ts4_word)(ts4_word)&loc58[0], (ts4_word)t9, (ts4_word)1);
-    t13 = fn_88608590((ts4_word)0, (ts4_word)t12);
+    t13 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)t12);
     t14 = fn_886ED860((ts4_word)t13);
     return t14;
 }

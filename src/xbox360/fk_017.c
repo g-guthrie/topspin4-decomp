@@ -30,7 +30,7 @@ ts4_word ts4_tailcall_fn_88582F30_8857A128();
 ts4_word fn_8857B6D8();
 ts4_word fn_886074E8();
 ts4_word ts4_find_handler_slot2_88607740();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word ts4_hash_normalized_path_886090A0();
 ts4_word fn_886095B8();
 ts4_word fn_8860A168();
@@ -1488,32 +1488,32 @@ void ts4_get_u32_off4c_8860BF38(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x8860C208: call_seq u32@0x0, fn_88608590, u32@0x0 */
+/* Swing_DLL.xex 0x8860C208: call_seq u32@0x0, ts4_crc32_cstr_seed_88608590, u32@0x0 */
 ts4_word ts4_call_seq_u32_off0_8860C208(ts4_word a0, ts4_word a1)
 {
     ts4_word t2;
 
-    t2 = fn_88608590((ts4_word)0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
+    t2 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0)));
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)t2;
     return a0;
 }
 
-/* Swing_DLL.xex 0x8860C248: call_seq fn_88608590, u32@0x0 */
+/* Swing_DLL.xex 0x8860C248: call_seq ts4_crc32_cstr_seed_88608590, u32@0x0 */
 ts4_word ts4_call_seq_fn_88608590_8860C248(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t1;
 
-    t1 = fn_88608590((ts4_word)a1, (ts4_word)a2);
+    t1 = ts4_crc32_cstr_seed_88608590((ts4_word)a1, (ts4_word)a2);
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)t1;
     return a0;
 }
 
-/* Swing_DLL.xex 0x8860C288: call_seq fn_88608590, u32@0x0 */
+/* Swing_DLL.xex 0x8860C288: call_seq ts4_crc32_cstr_seed_88608590, u32@0x0 */
 ts4_word ts4_call_seq_fn_88608590_8860C288(ts4_word a0, ts4_word a1)
 {
     ts4_word t1;
 
-    t1 = fn_88608590((ts4_word)0, (ts4_word)a1);
+    t1 = ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)a1);
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)t1;
     return a0;
 }
@@ -1558,10 +1558,10 @@ ts4_word ts4_get_u32_lbl_88D45B1C_8860C3D0(void)
     return (*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)lbl_88D45B1C)) + 568));
 }
 
-/* Swing_DLL.xex 0x8860C3E0: tailcall fn_88608590 */
+/* Swing_DLL.xex 0x8860C3E0: tailcall ts4_crc32_cstr_seed_88608590 */
 ts4_word ts4_tailcall_fn_88608590_8860C3E0(ts4_word a0)
 {
-    return fn_88608590((ts4_word)0, (ts4_word)a0);
+    return ts4_crc32_cstr_seed_88608590((ts4_word)0, (ts4_word)a0);
 }
 
 /* Swing_DLL.xex 0x8860C478: get u32@lbl_88D45B38, u32@0x2c, u32@0x2c */

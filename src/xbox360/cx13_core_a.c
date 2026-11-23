@@ -289,7 +289,7 @@ int ts4_membuf_write_88614508(JBuf *self, const void *src, int n)
 
 /* ---- directory size total ---- */
 extern void ts4_normalize_dir_path_88606978(void *buf, const char *path);
-extern u32 fn_88608590(u32 a, void *buf);
+extern u32 ts4_crc32_cstr_seed_88608590(u32 a, void *buf);
 typedef struct KItemVt { void *s[5]; u32 (*size)(void *); } KItemVt;
 typedef struct KSub { const KItemVt *vt; } KSub;
 typedef struct KItem { u8 pad[0x204]; u32 hash; KSub *sub; } KItem;
@@ -306,7 +306,7 @@ u32 ts4_dir_total_size_886140B8(KOwner *self, const char *path)
     KItem **end;
     lock->vt->enter(lock);
     ts4_normalize_dir_path_88606978(buf, path);
-    hash = fn_88608590(0, buf);
+    hash = ts4_crc32_cstr_seed_88608590(0, buf);
     end = self->end;
     it = self->begin;
     total = 0;

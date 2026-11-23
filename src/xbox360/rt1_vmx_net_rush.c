@@ -22,7 +22,7 @@ extern const float g_ts4_script_constants[];  /* +0x184 pi/180, +0x2AC 0.1 */
 /* PlayerCtx_LocalToWorld: LocalPosition to world (r4 = pc is left intact for the caller). */
 __vector4 *ts4_if_get_u32_off4c_8865EC70(__vector4 *out, struct Rt1PlayerCtxR *pc);
 double fn_88564BF8(double y, double x);       /* atan2 */
-void fn_8817B608(float *angle);               /* wrap to [-pi, pi) */
+void ts4_angle_wrap_pi_8817B608(float *angle);               /* wrap to [-pi, pi) */
 /* Match_NextHitterPlannedFrame. */
 ts4_bool ts4_next_hitter_planned_frame_8865EF98(struct Rt1MatchR *match, int *frame_out);
 /* Repositioning_BehaviorFlags. */
@@ -65,9 +65,9 @@ void ts4_repositioning_human_mode_8869B928(struct Rt1Repositioning *r)
             ts4_if_get_u32_off4c_8865EC70(&world, pc);
             to_net = __vsubfp(r->net_point, world);
             angle = (float)fn_88564BF8(to_net.v[2], to_net.v[0]);
-            fn_8817B608(&angle);
+            ts4_angle_wrap_pi_8817B608(&angle);
             diff = stick_angle - angle;
-            fn_8817B608(&diff);
+            ts4_angle_wrap_pi_8817B608(&diff);
             aligned = fabs(diff) < set->max_stick_angle_deg * RT1_K(0x184);
             {
                 __vector4 dist_sq = __vmsum3fp(to_net, to_net);

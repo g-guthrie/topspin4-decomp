@@ -16,7 +16,7 @@ extern int lbl_88C6BDF8[];
 void *ts4_find_service(u32 id);
 void fn_88800D40(void);
 void *fn_88562DC0(void *dst, void *src, int n);
-u32 fn_88608590(int a, u32 b);
+u32 ts4_crc32_cstr_seed_88608590(int a, u32 b);
 void fn_8887CB88(void *p);
 void fn_88472130(void *p);
 void fn_88471F10(void *p);
@@ -119,7 +119,7 @@ void ts4_free_all_entries_8887E110(CxPtrVec *o)
 
 void ts4_remove_entry_by_key_8887E1A8(CxPtrVec *o, u32 *key)
 {
-    u32 id = fn_88608590(0, *key);
+    u32 id = ts4_crc32_cstr_seed_88608590(0, *key);
     CxVec *v = &o->v;
     CxItem **p;
     for (p = v->begin; p != o->v.end; p++) {

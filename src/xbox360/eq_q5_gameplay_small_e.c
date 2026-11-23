@@ -41,7 +41,7 @@ typedef struct Q5PendEnv {
 } Q5PendEnv;
 typedef struct Q5PendList { char pad0[8]; Q5PendEnv *env; char padc[8]; Q5Pend98 *end; } Q5PendList;
 extern void fn_886DBF40(void *a, u32 b, void *c, u32 d, int e, u32 f);
-extern void fn_886C6660(Q5Pend98 *dst, const Q5Pend98 *src);
+extern void ts4_shot_rec_copy_886C6660(Q5Pend98 *dst, const Q5Pend98 *src);
 
 /* Swing_DLL.xex 0x886DC610 */
 /* byte-gap: 31 off; LTCG keeps the new end in r4 across the copy */
@@ -53,7 +53,7 @@ void ts4_pending_take_886DC610(Q5PendList *self, Q5Pend98 *entry)
     fn_886DBF40(&it->w4, it->w4, env->cfg_c->pc + 0x60, env->cfg->w40, -1, env->w28c);
     last = self->end - 1;
     if (entry != last)
-        fn_886C6660(entry, last);
+        ts4_shot_rec_copy_886C6660(entry, last);
     self->end = last;
 }
 

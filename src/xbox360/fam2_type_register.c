@@ -1,5 +1,5 @@
 /* Family FAM2: one-shot type registrations (Swing_DLL.xex 0x88638D10, 0x886529C8, 0x88771378, 0x887F48B8,
-   0x88890140).  Each interns the type NAME with fn_88608590, scans the global registry vector
+   0x88890140).  Each interns the type NAME with ts4_crc32_cstr_seed_88608590, scans the global registry vector
    lbl_88D45B20 for an entry already carrying that id and, if none is found, allocates an 8-byte
    entry {VTBL, id} from the shared heap lbl_88D45B38 and appends it with fn_881898E8. */
 typedef unsigned int u32;
@@ -7,7 +7,7 @@ typedef struct Ts4TypeEntry { void *vt; u32 id; } Ts4TypeEntry;
 typedef struct Ts4TypeRegistry { Ts4TypeEntry **first, **last; } Ts4TypeRegistry;
 extern Ts4TypeRegistry *lbl_88D45B20;
 extern void *lbl_88D45B38;
-extern u32 fn_88608590(u32 zero, const char *name);
+extern u32 ts4_crc32_cstr_seed_88608590(u32 zero, const char *name);
 extern void *ts4_node_dispatch_with_target_88613268(void *heap, int size, int align, int flags, int tag);
 extern void fn_881898E8(Ts4TypeRegistry *list, Ts4TypeEntry **entry);
 extern char lbl_880F6340[], lbl_880F539C[], lbl_880EFB50[], lbl_880E44A8[], lbl_880DD880[];
@@ -24,7 +24,7 @@ static __inline Ts4TypeEntry *type_entry_init(Ts4TypeEntry *e, void *vt, u32 id)
 void ts4_type_register_##A(void); \
 void ts4_type_register_##A(void) \
 { \
-    u32 id = fn_88608590(0, NAME); \
+    u32 id = ts4_crc32_cstr_seed_88608590(0, NAME); \
     Ts4TypeRegistry *reg = lbl_88D45B20; \
     Ts4TypeEntry **end = reg->last; \
     Ts4TypeEntry **it; \

@@ -294,7 +294,7 @@ extern float lbl_880C960C;
 extern void ts4_vector_grow_append_scalar4_88174A38(void *vec, void *where, void *val);
 extern void fn_881705B0(void *vec, int n);
 extern void ts4_object_finalize(void *);
-extern u32 fn_88608590(u32 a, u32 b);
+extern u32 ts4_crc32_cstr_seed_88608590(u32 a, u32 b);
 extern u32 lbl_88C6BAD0[];
 extern u32 lbl_88C6BA40[];
 extern u32 lbl_88C6B9E8[];
@@ -330,7 +330,7 @@ void ts4_advance_child_index_888AE1E8(char *self)
 u32 NAME(u32 name) \
 { \
     u32 i = 0; \
-    u32 h = fn_88608590(0, name); \
+    u32 h = ts4_crc32_cstr_seed_88608590(0, name); \
     u32 *p = (TBL); \
     u32 k; \
     for (k = 0; k < (N) * 4; k += 4) { \

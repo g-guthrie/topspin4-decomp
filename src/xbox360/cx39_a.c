@@ -131,7 +131,7 @@ typedef struct Cx39CPk { u8 pad[0x64]; Cx39CNV v; } Cx39CPk;
 extern void *ts4_find_service(u32 id);
 extern void *ts4_memset(void *dst, int c, u32 n);
 extern void ts4_normalize_dir_path_88606978(char *out, const char *in);
-extern u32 fn_88608590(u32 seed, const char *s);
+extern u32 ts4_crc32_cstr_seed_88608590(u32 seed, const char *s);
 extern u32 fn_8861A370(void *svc, u32 h);
 extern void fn_8861A278(void *svc, const char *s);
 extern void ts4_vec_erase_0c_88160DB0(Cx39CNV *v, Cx39CNm *it);
@@ -145,7 +145,7 @@ u32 ts4_drop_known_paths_88965C80(Cx39CPk *o)
         char *s = p->name;
         ts4_memset(buf, 0, 0x200);
         ts4_normalize_dir_path_88606978(buf, s);
-        if (fn_8861A370(svc, fn_88608590(0, buf)) != 0) {
+        if (fn_8861A370(svc, ts4_crc32_cstr_seed_88608590(0, buf)) != 0) {
             fn_8861A278(svc, p->name);
             ts4_vec_erase_0c_88160DB0(v, p);
         } else {
@@ -321,7 +321,7 @@ struct Cx39HOb { Cx39HVt *vt; };
 typedef struct Cx39HNm2 { u8 pad[0x50]; int w50; } Cx39HNm2;
 typedef struct Cx39HOwn { u8 pad; } Cx39HOwn;
 extern u8 lbl_880C1320[];
-extern u32 fn_88608590(u32 seed, const char *s);
+extern u32 ts4_crc32_cstr_seed_88608590(u32 seed, const char *s);
 extern Cx39HOb *fn_88941B30(Cx39HOwn *g, u32 *h);
 extern void *ts4_find_by_name_88943978(Cx39HOwn *self, char **a);
 extern void fn_8897CE90(char **b, void *arg);
@@ -333,9 +333,9 @@ Cx39HOb *ts4_register_named_8897CF90(Cx39HOwn *self, char **a, char **b)
     Cx39HNm2 *p;
     char *n;
     u32 seed;
-    seed = fn_88608590(0, *a);
+    seed = ts4_crc32_cstr_seed_88608590(0, *a);
     n = *b;
-    h0 = fn_88608590(seed, n);
+    h0 = ts4_crc32_cstr_seed_88608590(seed, n);
     r = fn_88941B30(self, &h0);
     if (r == 0) {
         p = ts4_find_by_name_88943978(self, a);
@@ -350,8 +350,8 @@ Cx39HOb *ts4_register_named_8897CF90(Cx39HOwn *self, char **a, char **b)
                     s = (const char *)np + *np;
                 else
                     s = (const char *)lbl_880C1320;
-                seed = fn_88608590(0, s);
-                h1 = fn_88608590(seed, n);
+                seed = ts4_crc32_cstr_seed_88608590(0, s);
+                h1 = ts4_crc32_cstr_seed_88608590(seed, n);
                 f = fn_88941B30(self, &h1);
                 if (f == 0)
                     fn_8897CE90(b, q);

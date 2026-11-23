@@ -97,7 +97,7 @@ ts4_word fn_885637C0();
 ts4_word fn_8857A1E0();
 ts4_word ts4_tailcall_fn_8857A2A0_8857A330();
 ts4_word ts4_get_u32__imp_KeTimeStampBundle_8857B830();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word ts4_node_dispatch_8860DCF8();
 ts4_word ts4_pad_record_find_88614938();
 ts4_word fn_88617D88();

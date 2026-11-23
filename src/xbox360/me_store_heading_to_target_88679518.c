@@ -9,7 +9,7 @@ typedef struct Self { char p[0x1c]; Ctx *f1c; __vector4 v20; char p2[0x10]; int 
 extern const float lbl_880C88DC;
 __vector4 *ts4_if_get_u32_off4c_8865EC70(__vector4 *out, Ctx *pc);
 double fn_88564BF8(double y, double x);
-void fn_8817B608(float *angle);
+void ts4_angle_wrap_pi_8817B608(float *angle);
 static __inline int side(Self *s) { return s->f1c->f4c->f24->fb0; }
 static __inline Out *outp(Self *s) { return s->f1c->f74; }
 void ts4_store_heading_to_target_88679518(Self *s)
@@ -23,7 +23,7 @@ void ts4_store_heading_to_target_88679518(Self *s)
             d = __vsubfp(s->v20, *ts4_if_get_u32_off4c_8865EC70(&w, s->f1c));
             ang = (float)fn_88564BF8(d.v[2], d.v[0]);
             if (h == 0x317C51B7) ang = -ang; else ang = lbl_880C88DC - ang;
-            fn_8817B608(&ang);
+            ts4_angle_wrap_pi_8817B608(&ang);
             o->f9d8 = ang;
         }
     }

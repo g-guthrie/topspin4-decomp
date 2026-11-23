@@ -5,7 +5,7 @@ typedef struct Cx43Sess { u8 pad[0x68]; u8 *p68; } Cx43Sess;
 extern Cx43Sess *g_ts4_session_context;
 extern int ts4_format_text(char *dst, unsigned size, const char *fmt, ...);
 extern char lbl_880D1CEC[];
-extern u32 fn_88608590(u32 a, const char *s);
+extern u32 ts4_crc32_cstr_seed_88608590(u32 a, const char *s);
 extern u8 *ts4_find_entry_by_id_88866B60(u32 id, u8 *tab);
 
 /* 0x889A5510 */
@@ -17,7 +17,7 @@ u32 ts4_lookup_by_index_889A5510(u32 n)
     u32 h;
     ts4_format_text(buf, 0x10, lbl_880D1CEC, n + 1);
     r = 0;
-    h = fn_88608590(0, buf);
+    h = ts4_crc32_cstr_seed_88608590(0, buf);
     e = ts4_find_entry_by_id_88866B60(h, g_ts4_session_context->p68 + 0x13c0);
     if (e)
         r = *(u32 *)(e + 0xe0);

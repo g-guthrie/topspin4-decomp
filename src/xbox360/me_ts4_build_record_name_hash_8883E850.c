@@ -13,7 +13,7 @@ typedef struct NameHash { u32 hash; } NameHash;
 
 NameRecord *ts4_find_record_by_key_881AD158(NameTable *t, const u32 *key);
 char *ts4_crt_strncat_88564EF0(char *dst, const char *src, u32 n);
-u32 fn_88608590(u32 seed, const char *s);
+u32 ts4_crc32_cstr_seed_88608590(u32 seed, const char *s);
 extern const char lbl_880E146C[];
 extern const char lbl_880E1084[];
 extern const char lbl_880C1320[];
@@ -44,6 +44,6 @@ NameHash *fn_8883E850(NameHash *out, NameOwner *o, u32 key)
     *d = 0;
     ts4_crt_strncat_88564EF0(buf, rel_str(&r->name, lbl_880C1320), 0x7C - (int)strlen(buf));
     ts4_crt_strncat_88564EF0(buf, lbl_880E1084, 0x7C - (int)strlen(buf));
-    out->hash = fn_88608590(0, buf);
+    out->hash = ts4_crc32_cstr_seed_88608590(0, buf);
     return out;
 }

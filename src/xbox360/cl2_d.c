@@ -83,7 +83,7 @@ struct Reg2 { char pad[0x238]; struct Svc2 *svc; };
 extern struct Reg2 *lbl_88D45B1C;
 extern char lbl_880E152C[];
 void fn_8816D1A8(struct BS *s);
-int fn_88608590(int a, const char *s);
+int ts4_crc32_cstr_seed_88608590(int a, const char *s);
 void ts4_destroy_owned_object(void *p);
 int *ts4_name_lookup_88847898(int *out, const char *s)
 {
@@ -93,7 +93,7 @@ int *ts4_name_lookup_88847898(int *out, const char *s)
     lbl_88D45B1C->svc->vt->query(lbl_88D45B1C->svc, s, &tmp);
     cl2_copy_bounded(buf, lbl_880E152C, 0x7c);
     ts4_crt_strncat_88564EF0(buf, tmp.first, 0x7c - (int)strlen(buf));
-    *out = fn_88608590(0, buf);
+    *out = ts4_crc32_cstr_seed_88608590(0, buf);
     ts4_destroy_owned_object(tmp.first);
     return out;
 }

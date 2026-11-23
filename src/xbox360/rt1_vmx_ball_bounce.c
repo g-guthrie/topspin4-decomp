@@ -24,7 +24,7 @@ extern const float g_ts4_script_constants[];  /* +0 1.0, +0xE8 pi/2, +0x1E0 5.0,
 
 double fn_88564BF8(double y, double x);       /* atan2 */
 float ts4_range_lookup_881899D8(float x, const struct Rt1RangeList *list);
-void fn_8817B608(float *angle);               /* wrap to [-pi, pi) */
+void ts4_angle_wrap_pi_8817B608(float *angle);               /* wrap to [-pi, pi) */
 void fn_8864F7B8(__vector4 *v, const __vector4 *axis, float angle); /* rotate v about axis */
 void fn_889C0DC0(struct Rt1Ball *ball, ts4_bool keep);
 
@@ -98,7 +98,7 @@ void ts4_ball_bounce_response_889C1C80(struct Rt1Ball *ball, struct Rt1Vec4 *vel
     weight = spin_a * RT1_K(0x1E0);
     fzero = g_ts4_event_value;
     weight = (weight < fzero) ? -weight : weight;
-    fn_8817B608(&delta);
+    ts4_angle_wrap_pi_8817B608(&delta);
 
     scale = RT1_K(0) - loss;
     *(__vector4 *)vel = __vmulfp(*(__vector4 *)vel, __vspltw(__lvlx(&scale, 0), 0));

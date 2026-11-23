@@ -2,7 +2,7 @@
  * /Oc. Use a bounded-copy inline on both branches; `124 - (int)strlen(buf)` gives the clrrwi. */
 unsigned int strlen(const char *s);
 char *ts4_crt_strncat_88564EF0(char *dst, const char *src, unsigned int count);
-int fn_88608590(int, const char *);
+int ts4_crc32_cstr_seed_88608590(int, const char *);
 extern char lbl_880E1564[];
 extern char lbl_880E1078[];
 
@@ -28,6 +28,6 @@ int *fn_88839AD8(int *out, const char *prefix)
     else
         copy_bounded(buf, lbl_880E1564);
     ts4_crt_strncat_88564EF0(buf, lbl_880E1078, 124 - (int)strlen(buf));
-    *out = fn_88608590(0, buf);
+    *out = ts4_crc32_cstr_seed_88608590(0, buf);
     return out;
 }

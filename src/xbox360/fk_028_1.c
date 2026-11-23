@@ -82,7 +82,7 @@ ts4_word fn_88569B08();
 ts4_word ts4_tailcall_fn_88569A10_88569BD0();
 ts4_word fn_8857A1E0();
 ts4_word fn_88608088();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word ts4_node_dispatch_8860DCF8();
 ts4_word fn_88616758();
 ts4_word ts4_dc0crobj_reset_88616A70();

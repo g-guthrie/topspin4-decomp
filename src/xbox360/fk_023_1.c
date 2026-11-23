@@ -64,7 +64,7 @@ ts4_word ts4_tailcall_fn_88564208_885643D0();
 ts4_word fn_885651F8();
 ts4_word fn_88565320();
 ts4_word fn_88569D30();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word fn_8860BBD8();
 ts4_word fn_88611620();
 ts4_word fn_88617788();

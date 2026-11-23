@@ -11,7 +11,7 @@ extern char lbl_880C8F91[];   /* byte 0: unregister */
 extern char lbl_880C8F37[];   /* byte 1: register */
 extern void *lbl_88D45B20;    /* node-type registry */
 
-int fn_88608590(int seed, const char *text);          /* crc32(text) */
+int ts4_crc32_cstr_seed_88608590(int seed, const char *text);          /* crc32(text) */
 void ts4_keyed_item_list_add_unique_if_mode_886D2910(void *registry, int *hash, const char *mode);
 void ts4_keyed_item_list_add_unique_if_mode_886D1B90(void *registry, int *hash, const char *mode);
 void fn_881B9148(void *list);
@@ -20,9 +20,9 @@ void fn_88627EC0(void *module, long long a, long long b);
 /* Swing_DLL.xex 0x886D75B8: register (mode byte == 1) or unregister the two swing animation node types. */
 void ts4_swing_anim_register_node_types_886D75B8(const char *mode)
 {
-    int hash = fn_88608590(0, lbl_880F36AC);
+    int hash = ts4_crc32_cstr_seed_88608590(0, lbl_880F36AC);
     ts4_keyed_item_list_add_unique_if_mode_886D2910(lbl_88D45B20, &hash, mode);
-    hash = fn_88608590(0, lbl_880F36C4);
+    hash = ts4_crc32_cstr_seed_88608590(0, lbl_880F36C4);
     ts4_keyed_item_list_add_unique_if_mode_886D1B90(lbl_88D45B20, &hash, mode);
 }
 

@@ -115,7 +115,7 @@ ts4_word fn_8823DD50();
 ts4_word fn_88287FA0();
 ts4_word fn_885651F8();
 ts4_word fn_8857C8C8();
-ts4_word fn_88608590();
+ts4_word ts4_crc32_cstr_seed_88608590();
 ts4_word fn_8860BBD8();
 ts4_word ts4_if_call_seq_fn_881F04B8_886131F0();
 ts4_word ts4_node_dispatch_with_target_88613268();

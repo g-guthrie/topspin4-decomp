@@ -64,7 +64,7 @@ extern u8 lbl_880C1320[];
 extern u8 fn_8822BF98(void *, void *);
 extern Tri *ts4_if_call_seq_u32_off0_8878F8F0(Tri *out, void *name);
 extern void ts4_assign_formatted_text(void *dst, const char *text);
-extern u32 fn_88608590(u32 a, void *name);
+extern u32 ts4_crc32_cstr_seed_88608590(u32 a, void *name);
 extern void *fn_88618998(void *g, u32 h);
 extern void ts4_loop_get_u32_off120_88608698(void *g, void *x);
 extern void ts4_destroy_owned_object(void *p);

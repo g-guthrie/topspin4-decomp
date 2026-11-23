@@ -313,7 +313,7 @@ R134 *ts4_uninit_copy_rec134_88233A88(R134 *first, R134 *last, R134 *dest)
 }
 
 /* ---- keyed entry vector ---- */
-extern u32 fn_88608590(u32 a, u32 b);
+extern u32 ts4_crc32_cstr_seed_88608590(u32 a, u32 b);
 extern void fn_8825C638(void *v, u32 key, u32 val);
 typedef struct Ent { u32 key, val; } Ent;
 typedef struct EVec { Ent *first; Ent *last; } EVec;
@@ -321,7 +321,7 @@ typedef struct EVec { Ent *first; Ent *last; } EVec;
 /* 0x882333C0: remove the entry for one key (swap with the last entry) and re-add its value under another key */
 void ts4_vec_rekey_entry_882333C0(EVec *v, u32 *oldkey, u32 *newkey)
 {
-    u32 h = fn_88608590(0, *oldkey);
+    u32 h = ts4_crc32_cstr_seed_88608590(0, *oldkey);
     Ent *p = v->first;
     Ent *end = v->last;
     if (p != end) {
@@ -337,7 +337,7 @@ void ts4_vec_rekey_entry_882333C0(EVec *v, u32 *oldkey, u32 *newkey)
             if (p != e) *p = *e;
             v->last = v->last - 1;
             {
-                u32 k2 = fn_88608590(0, *newkey);
+                u32 k2 = ts4_crc32_cstr_seed_88608590(0, *newkey);
                 fn_8825C638(v, k2, val);
             }
         }

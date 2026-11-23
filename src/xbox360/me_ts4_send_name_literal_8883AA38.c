@@ -2,7 +2,7 @@
  * /Oc. Same body as the cx23 CX23_NAME_THEN_SEND macro, except the strlen is written `124 - (int)strlen(buf)` (the clrrwi). */
 unsigned int strlen(const char *s);
 char *ts4_crt_strncat_88564EF0(char *dst, const char *src, unsigned int count);
-int fn_88608590(int, const char *);
+int ts4_crc32_cstr_seed_88608590(int, const char *);
 void *ts4_find_service(unsigned int hash);
 void *fn_88611620(void *svc, int name);
 extern char lbl_880E1054[];
@@ -25,5 +25,5 @@ void fn_8883AA38(const char *suffix)
     if (suffix)
         ts4_crt_strncat_88564EF0(buf, suffix, 124 - (int)strlen(buf));
     svc = ts4_find_service(0xE2AE8939);
-    fn_88611620(svc, fn_88608590(0, buf));
+    fn_88611620(svc, ts4_crc32_cstr_seed_88608590(0, buf));
 }

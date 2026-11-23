@@ -59,7 +59,7 @@ extern const float g_ts4_script_constants[];
 #define K_TURN_ANGLE_MIN      Q5B_K(0x830)
 
 extern const float lbl_8814B440; /* 0.0f, also loaded as a whole vector (lvlx) to clear a lane */
-extern const float lbl_880C88DC; /* angle offset added before wrapping with fn_8817B608 */
+extern const float lbl_880C88DC; /* angle offset added before wrapping with ts4_angle_wrap_pi_8817B608 */
 
 /* ---- object layouts (only the fields this function touches) ---- */
 typedef struct Q5bLine { __vector4 point; __vector4 dir; } Q5bLine;
@@ -287,7 +287,7 @@ extern q5b_u8 fn_886A3440(Q5bPlanner *s);
 extern q5b_u8 fn_886A26E0(Q5bPlanner *s);
 extern void ts4_planner_update_committed_8866BD00(Q5bPlanner *s);
 extern q5b_u8 fn_886A2E48(Q5bPlanner *s, const void *profile);
-extern q5b_u8 fn_8866C150(Q5bPlanner *s);
+extern q5b_u8 ts4_target_far_and_idle_8866C150(Q5bPlanner *s);
 extern q5b_u8 fn_88678708(Q5bPlanner *s, const void *cond);
 extern float fn_8866BFE8(Q5bPlanner *s);
 extern int fn_886A9A48(Q5bPlanner *s);
@@ -297,7 +297,7 @@ extern void fn_8865DBA8(Q5bScorer *s, int *best_index, q5b_u8 *best_side, int ex
 extern int fn_88699FC0(Q5bPlanner *s);
 extern int ts4_prediction_ticks_until_x_886600E0(struct Gp2BallPrediction *pred, float x);
 extern int ts4_if_call_seq_u32_off118_8865D790(Q5bPlanner *s);
-extern void fn_8817B608(float *angle);
+extern void ts4_angle_wrap_pi_8817B608(float *angle);
 extern float ts4_table2d_eval_8826D278(const void *table, float x, float y);
 extern void ts4_call_seq_u32_off8_886894A8(Q5bScorer *s, int volley);
 extern void fn_886787D8(Q5bPlanner *s);
@@ -727,7 +727,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
             return next;
         if (fn_886A26E0(s))
             return 0x13;
-        reached = fn_8866C150(s);
+        reached = ts4_target_far_and_idle_8866C150(s);
         jog_ok = fn_88678708(s, s->player->cfg->cond_2f4);
         if (next == GP3_MOVE_21_JOG_PREPARED && reached && jog_ok) {
             next = GP3_MOVE_22_JOG_JOG_PREPARED;
@@ -823,7 +823,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
                 ts4_if_get_8865E730(&ball, tag);
                 if (tag == GP3_HASH_COURT_SIDE_A) {
                     float a = spin + lbl_880C88DC;
-                    fn_8817B608(&a);
+                    ts4_angle_wrap_pi_8817B608(&a);
                     spin = a;
                 }
                 pos = st->pos;
@@ -987,7 +987,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
             ts4_if_get_8865E730(&contact, st->mirror_key);
             contact = __vrlimi(__vsubfp(contact, target), __lvlx(&lbl_8814B440, 0), 4, 3);
             turn = -(float)fn_88564BF8(contact.v[2], contact.v[0]) - *(const float *)&st->aim[0];
-            fn_8817B608(&turn);
+            ts4_angle_wrap_pi_8817B608(&turn);
             if (!(q5b_fabs(turn) > K_TURN_ANGLE_MIN))
                 return next;
         }
@@ -1083,7 +1083,7 @@ int ts4_move_planner_transition_886B8468(Q5bPlanner *s, int cur)
                 s->adjust_countdown = 10;
                 st = s->player->state;
                 yaw = st->step_yaw + lbl_880C88DC;
-                fn_8817B608(&yaw);
+                ts4_angle_wrap_pi_8817B608(&yaw);
                 st->step_yaw = (yaw >= zero) ? aim_pos : K_AIM_NEGATIVE;
                 fn_88699300(s, s->resume_state);
             } else {
