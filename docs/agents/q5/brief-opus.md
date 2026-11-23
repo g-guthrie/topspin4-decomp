@@ -91,9 +91,10 @@ If a function looks impossible for a tooling reason, report it to main in your h
 - **Files and git.**
   - Don't run tools/matching.py.
   - Don't commit.
-  - Don't edit shared headers except by adding new ones.
+  - Don't edit shared headers except by adding new ones, or by adding evidenced fields/prototypes to src/xbox360/include/ts4/ per docs/agents/types.md.
   - Never put game data in the repo.
 - **Honesty.** A function is matched only if fn_check says so, and nothing else counts.
+- Use and extend src/xbox360/include/ts4/ types; no new private struct for a class that has a shared type. Conventions: docs/agents/types.md.
 
 ## Hand-ins and report
 

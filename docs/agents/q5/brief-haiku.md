@@ -39,6 +39,7 @@ You get entries from docs/agents/q5/templates.json, listed in your prompt. For e
 - **Every sister gets solved.** A sister is solved when it MATCHES. Owner decision (2026-11-23): byte-exact only, no equivalent route. If a sister will not match after the permuter, keep working it; save a near-miss draft only with a concrete reason the odds improve later (an unmatched callee, a tool limit), and report its exact state. If a sister really is not a clone (different control flow), still write it from its own asm and match it.
 - **Files and git.** Don't edit any file other than your own. Don't run tools/matching.py. Don't commit. Never put game data in the repo.
 - **Honesty.** A function counts only if the checker says MATCH.
+- Use and extend src/xbox360/include/ts4/ types; no new private struct for a class that has a shared type. Conventions: docs/agents/types.md.
 
 ## Final report
 
