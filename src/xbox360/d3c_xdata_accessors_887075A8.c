@@ -49,14 +49,14 @@ static void ts4_if_call_seq_fn_88627EC0_88628688(Ts4FlagOwner *o, Ts4Handle12 ha
 
 /* Read the float xdata view (type hash 0x4376f65a) for the handle as raw bits; a default constant when unresolved. */
 extern float ts4_if_get_u32_off0_8816CCE0(Ts4XdataRef *r);
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 static u32 ts4_if_call_seq_fn_88150770_886F7738(void *handle)
 {
     u32 hash = 0x4376f65a;
     Ts4XdataRef r;
     float f;
     fn_88150770(&r, handle, &hash);
-    if (!ts4_xdata_ref_invalid(&r)) f = ts4_if_get_u32_off0_8816CCE0(&r); else f = lbl_8814B440;
+    if (!ts4_xdata_ref_invalid(&r)) f = ts4_if_get_u32_off0_8816CCE0(&r); else f = g_ts4_event_value;
     return *(u32 *)&f;
 }
 

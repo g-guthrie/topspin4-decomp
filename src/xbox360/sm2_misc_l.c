@@ -2,7 +2,7 @@
 extern void fn_8858DAA8(void *p, unsigned char a, int b);
 extern int lbl_88D459BC;
 extern int lbl_88D459C0;
-extern const float lbl_8814B440;
+extern const float g_ts4_event_value;
 extern const float lbl_8802A6AC;
 extern const float lbl_8802E854;
 extern unsigned lbl_88D42948[];
@@ -25,7 +25,7 @@ void ts4_sum_globals_if_kind1_886EC958(char *p)
 float ts4_get_float_or_default_88614C28(const char *p, int i)
 {
     if (*(const unsigned char *)(p + 0xc2) != 0) return ((const float *)p)[i + 0x2d];
-    return lbl_8814B440;
+    return g_ts4_event_value;
 }
 float ts4_i16_to_float_885BC630(const short *p) { return (float)*p * lbl_8802A6AC; }
 float ts4_i32_to_float_885BC6D0(const int *p) { return (float)*p * lbl_8802E854; }

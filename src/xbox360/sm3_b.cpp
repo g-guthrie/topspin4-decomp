@@ -64,7 +64,7 @@ extern char ts4_noop_88AFF300[], ts4_noop_88AFF308[];
 extern char lbl_88D488B8[], lbl_88D48A98[];
 extern double floor(float);
 extern float lbl_8814B910;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern void *ts4_if_call_seq_u32_off0_8819B0C8(void *, void *);
 extern void *ts4_vec10_erase_88213CC8(void *, void *);
 extern void *ts4_find_record_by_key_881AD100(void *, u32 *);
@@ -599,7 +599,7 @@ void ts4_set_rel_array_word_24_889A0C60(char *self, u32 *src) { char *q = *(char
 void ts4_call_with_flag_if_sub_fc_8883DD28(char *self) { char *s = self + 0x80; if (*(u32 *)(s + 0xc)) fn_889254C8(s, 1); }
 
 /* 0x888D9878: report component event A3AE3B93 for the component at +0x48 with constant float */
-void ts4_report_event_a3ae3b93_888D9878(char *self) { ts4_report_component_event(*(void **)(self + 0x48), -1, 0xA3AE3B93u, lbl_8814B440); }
+void ts4_report_event_a3ae3b93_888D9878(char *self) { ts4_report_component_event(*(void **)(self + 0x48), -1, 0xA3AE3B93u, g_ts4_event_value); }
 
 /* 0x88864C18: pointer to the first 0x20 in a zero-terminated 16-bit string, or 0 */
 u16 *ts4_find_space_in_wide_string_88864C18(u16 *p) { while (*p != 0) { if (*p == 0x20) return p; p++; } return 0; }

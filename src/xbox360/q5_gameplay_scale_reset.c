@@ -1,4 +1,4 @@
-/* Q5 gameplay: 0x888C0890 reset of a scale state to the unit value (lbl_8814B440, 1.0f):
+/* Q5 gameplay: 0x888C0890 reset of a scale state to the unit value (g_ts4_event_value, 1.0f):
  * marks it dirty, stores (1,1,1) as an unaligned float3 load into +0x70, sets the
  * range pair to (1,1) and clears +0x88. Byte-matches with the default flags.
  * The range pair goes through an inline setter; direct member stores schedule
@@ -10,7 +10,7 @@ __vector4 __vsldoi(__vector4 a, __vector4 b, int imm);
 #endif
 typedef unsigned int u32;
 typedef unsigned char u8;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 typedef struct Q5F3 { float x, y, z; } Q5F3;
 typedef struct Q5F2 { float lo, hi; } Q5F2;
 typedef struct Q5ScaleState {
@@ -34,7 +34,7 @@ static __inline __vector4 q5_load3(const void *p)
 void ts4_scale_reset_888C0890(Q5ScaleOwner *o)
 {
     Q5F3 t;
-    float one = lbl_8814B440;
+    float one = g_ts4_event_value;
     o->st->dirty = 1;
     t.x = one;
     t.y = one;

@@ -1,5 +1,5 @@
 /* SM2: linear searches over pointer vectors and small float clamps. */
-extern const float lbl_8814B440;
+extern const float g_ts4_event_value;
 extern const float g_ts4_script_constants[];
 
 /* find the element whose id (+4) equals key in a [begin, end) pointer vector */
@@ -29,5 +29,5 @@ unsigned char ts4_is_default_value_886EEE98(int unused, const char *p)
 {
     float v = *(const float *)(p + 0x54);
     (void)unused;
-    return v == lbl_8814B440 || v == g_ts4_script_constants[0];
+    return v == g_ts4_event_value || v == g_ts4_script_constants[0];
 }

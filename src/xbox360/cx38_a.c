@@ -33,13 +33,13 @@ void ts4_crit_leave_887C78F0(Crit *self)
 
 extern void *ts4_addr_fn_881F7958_881F4108(void *);
 extern char lbl_880EF750[];
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 typedef struct S53E8 { void *vt; char pad[0x20]; float a, b, c; } S53E8;
 S53E8 *ts4_ctor_zero3_887B53E8(S53E8 *self)
 {
     ts4_addr_fn_881F7958_881F4108(self);
     self->vt = lbl_880EF750;
-    self->a = lbl_8814B440;
+    self->a = g_ts4_event_value;
     self->b = self->a;
     self->c = self->a;
     return self;

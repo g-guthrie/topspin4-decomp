@@ -58,7 +58,7 @@ extern char lbl_880F7D58[];
 extern char lbl_880F7D74[];
 extern char lbl_880F7DA0[];
 extern char lbl_880F8C74[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_8814B910[];
 extern char lbl_88B3302C[];
 extern char lbl_88B330C4[];
@@ -1584,7 +1584,7 @@ float ts4_get_u32_off40_882625F0(ts4_word a0, ts4_word a1)
     *(float *)((char *)locm10 + 0) = t1;
     t3 = *(float *)((char *)(ts4_word)(a1) + 8);
     *(float *)((char *)locm10 + 4) = t2;
-    t4 = *(float *)lbl_8814B440;
+    t4 = *(float *)g_ts4_event_value;
     *(float *)((char *)locm10 + 12) = t4;
     *(float *)((char *)locm10 + 8) = t3;
     vv5 = *(__vector4 *)((ts4_word)((ts4_word)&locm10[0]));
@@ -3559,7 +3559,7 @@ void ts4_loop_get_u32_off4a4_8863ADD0(ts4_word a0, ts4_word a1)
 /* Swing_DLL.xex 0x88644DC8: get  */
 void ts4_get_88644DC8(ts4_word a0, __vector4 vp1)
 {
-    *(float *)((char *)(ts4_word)(a0) + 96) = (*(float *)lbl_8814B440);
+    *(float *)((char *)(ts4_word)(a0) + 96) = (*(float *)g_ts4_event_value);
     *(__vector4 *)((ts4_word)(a0 + 80)) = vp1;
     return;
 }
@@ -3784,7 +3784,7 @@ void ts4_get_u32_off1c_886631B0(ts4_word a0)
     float t5;
 
     t2 = *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 28))) + 8);
-    t3 = *(float *)lbl_8814B440;
+    t3 = *(float *)g_ts4_event_value;
     *(float *)((char *)locm10 + 4) = t3;
     *(float *)((char *)locm10 + 12) = t3;
     t4 = *(ts4_word *)((char *)(ts4_word)(t2) + 116);
@@ -4141,7 +4141,7 @@ __vector4 ts4_get_886ECA40(ts4_word a0)
     t2 = *(float *)((char *)(ts4_word)(a0) + 4);
     t3 = *(float *)((char *)(ts4_word)(a0) + 8);
     *(float *)((char *)locm10 + 4) = t2;
-    *(float *)((char *)locm10 + 12) = (*(float *)lbl_8814B440);
+    *(float *)((char *)locm10 + 12) = (*(float *)g_ts4_event_value);
     *(float *)((char *)locm10 + 8) = t3;
     vv5 = *(__vector4 *)((ts4_word)((ts4_word)&locm10[0]));
     return vv5;

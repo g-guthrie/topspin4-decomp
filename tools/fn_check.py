@@ -50,6 +50,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fn_asm import disassemble, find_function  # noqa: E402
+import icf_alias  # noqa: E402
 from xcoff import ROOT, demangle_base, load_symbols, read_coff  # noqa: E402
 
 TOOLS = ROOT / "work" / "matching-tools"
@@ -70,6 +71,32 @@ def renameable_cxx(c_sym: str, t_sym: str) -> bool:
     if c_sym.startswith("?") and not c_sym.startswith("??_") and "@@" in c_sym:
         return c_sym.split("@@", 1)[1][:1] not in ("2", "3") and t_sym.startswith("fn_")
     return False
+
+def same_target(c_sym: str, t_sym: str, address: dict, known_names, aliases) -> str | None:
+    """Do two differently named relocation targets mean one address? `address` maps the
+    symbols.txt names to addresses. Returns "same", "stale" (same, and the candidate name is an
+    outdated placeholder that should be rewritten), a problem text, or None (no opinion: the
+    other rules decide).
+
+    - A reviewed alias (config/54540859/icf_aliases.json: a function or vtable the original
+      linker folded, or the C name of a C++ member) equals the symbol at the alias's address,
+      and nothing else.
+    - Two symbols.txt names at one address in any section are the same target (a seed name and
+      the generated label of one constant: 0x8814B440 up to b224).
+    - A generated placeholder (lbl_8814B440) that is no longer a symbols.txt name encodes its
+      address; it equals the named symbol at that address. tools/fix_refs.py rewrites it."""
+    if c_sym in aliases:
+        if aliases.same(c_sym, address.get(t_sym)):
+            return "same"
+        return f"alias {c_sym} stands for {aliases.address(c_sym):#010x}, target {t_sym}"
+    if c_sym in address and address.get(t_sym) == address[c_sym]:
+        return "same"
+    encoded = icf_alias.placeholder_address(c_sym)
+    if encoded is not None and c_sym not in known_names and encoded == address.get(t_sym) \
+            and not t_sym.startswith(PLACEHOLDER_PREFIXES):
+        return "stale"
+    return None
+
 
 MASKS = {
     0x2: 0xFFFFFFFF,  # ADDR32
@@ -281,6 +308,10 @@ def main() -> int:
     by_addr = {entry[2]: entry[0] for entry in symbols if entry[1] == ".text"}
     known_names = {entry[0] for entry in symbols}
     text_address = {entry[0]: entry[2] for entry in symbols if entry[1] == ".text"}
+    any_address = {}
+    for entry in symbols:
+        any_address.setdefault(entry[0], entry[2])
+    aliases = icf_alias.AliasMap()
 
     obj_path = compile_candidate(args.source, args.flags)
     obj = read_coff(obj_path)
@@ -288,6 +319,7 @@ def main() -> int:
 
     failures = 0
     renames: dict[str, str] = {}
+    stale: dict[str, str] = {}
     for mapping in args.mappings:
         cand_name, _, target = mapping.partition("=")
         if target.lower().startswith("0x"):
@@ -378,6 +410,15 @@ def main() -> int:
                     # Aliases at one address, e.g. __savegprlr / __savegprlr_14.
                     if c_sym in text_address and text_address.get(t_sym) == text_address[c_sym]:
                         continue
+                    verdict = same_target(c_sym, t_sym, any_address, known_names, aliases)
+                    if verdict == "same":
+                        continue
+                    if verdict == "stale":
+                        stale[c_sym] = t_sym
+                        continue
+                    if verdict is not None:
+                        problems.append(f"reloc +{r.offset:#x}: {verdict}")
+                        continue
                     if c_sym.startswith("$T") and t_sym.startswith(("jumptable_", "lbl_")):
                         # Compact (8/16-bit offset) switch table emitted as a local
                         # data symbol: accept it when its bytes equal the target's.
@@ -442,6 +483,8 @@ def main() -> int:
                 print(f"SEH {cand_name}: {note}")
     for old, new in sorted(renames.items()):
         print(f"RENAME {old} -> {new}")
+    for old, new in sorted(stale.items()):
+        print(f"STALE {old} is {new} now: write {new} (tools/fix_refs.py does it for a spec's source)")
     if args.keep:
         print(f"kept {obj_path.parent}")
     elif not failures:

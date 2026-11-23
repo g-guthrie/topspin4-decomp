@@ -16,7 +16,7 @@ typedef struct Node { u8 pad[0x6e8]; u8 bit7 : 1; u8 bit6 : 1; u8 bits_lo : 6; }
 typedef struct Holder { u32 pad0; u32 pad4; Node *node; } Holder;
 extern Holder *fn_881CECD0(void *key);
 extern void fn_881C1298(Node *node, u32 one, float f);
-extern const float lbl_8814B440;
+extern const float g_ts4_event_value;
 extern Val *g_ts4_default_script_value;
 extern const char g_ts4_true_string[];
 extern double g_ts4_script_constants[];
@@ -92,7 +92,7 @@ u32 ts4_script_node_mode_881D2998(Ctx *c)
                 n->bit6 = on != 0;
             }
         } else {
-            fn_881C1298(n, 1, lbl_8814B440);
+            fn_881C1298(n, 1, g_ts4_event_value);
         }
     }
     return 0;
@@ -113,7 +113,7 @@ u32 ts4_script_node_mode_881D2A70(Ctx *c)
                 n->bit6 = on != 0;
             }
         } else {
-            fn_881C1298(n, 1, lbl_8814B440);
+            fn_881C1298(n, 1, g_ts4_event_value);
         }
     }
     return 0;

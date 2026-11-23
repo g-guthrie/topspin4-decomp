@@ -151,7 +151,7 @@ struct Ts4Cond {
 };
 
 extern float g_ts4_script_constants[];
-extern float lbl_8814B440;      /* 0.0f */
+extern float g_ts4_event_value;      /* 0.0f */
 
 int ts4_ratio_above_threshold_8865B3B0(struct Ts4Cond *self);
 int ts4_ratio_ge_8865B570(struct Ts4Cond *self);

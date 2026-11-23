@@ -3,11 +3,11 @@
 typedef struct Stat { char p[0xc]; float v[4]; } Stat;
 typedef struct Table { int offset; int count; } Table;
 typedef struct Obj { char p[0x30]; Table *stats; } Obj;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 void ts4_clear_stat_values_8865BD98(Obj *o)
 {
     Table * t = o->stats;
-    float z = lbl_8814B440;
+    float z = g_ts4_event_value;
     unsigned int i;
     int n = t->count;
     for (i = 0; i < n; i++) {

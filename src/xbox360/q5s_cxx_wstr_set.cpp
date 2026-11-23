@@ -1,10 +1,11 @@
-/* nearmiss: 0 off as C++ member ?SetString@Ts4WStr@@QAAXPBGH@Z (plain, /Oc: MATCH);
- * 1 off (+0x80 sthx operand order) as extern "C" free function.
- * Concrete blocker: fn_8819C360 is referenced from C sources (hs1_d.c, fam5_nm6_000.c,
- * q5s_cont_strings.cpp extern "C"), so the matching mangled member name cannot be
- * integrated without renaming those callers (needs coordinator decision / tool alias).
- * Check: fn_check.py <this> "?SetString@Ts4WStr@@QAAXPBGH@Z=0x8819C360" --flags /Oc */
-#include "../include/ts4/ts4.h"
+/* 0x8819C360: Ts4WStr::SetString(src, n): replace the contents of a shared wide string with n UTF-16 units.
+ * n == 0 drops the shared buffer; else the buffer is made writable for n units (0x8819C528) and filled:
+ * with a memmove when src lies inside the old contents, else with an inline memcpy.
+ * It matches only as a C++ member (`this` is numbered differently from a first parameter: as an extern "C"
+ * function the last sthx has its operands swapped). symbols.txt therefore holds the decorated name
+ * ?SetString@Ts4WStr@@QAAXPBGH@Z; C sources call it as ts4_wstr_set_string_8819C360, its reviewed "cxx"
+ * alias (config/54540859/icf_aliases.json, docs/ltcg-route.md section 12). */
+#include "include/ts4/ts4.h"
 #ifdef _MSC_VER
 extern "C" void *memcpy(void *, const void *, unsigned int);
 #pragma intrinsic(memcpy)

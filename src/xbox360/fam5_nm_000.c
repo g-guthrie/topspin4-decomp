@@ -17,7 +17,7 @@ typedef unsigned long ts4_word;
 
 extern char g_ts4_session_context[];
 extern char lbl_880D2EFC[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C4770C[];
 extern char lbl_88C6B4AC[];
 extern char lbl_88D41FC0[];
@@ -371,7 +371,7 @@ void ts4_if_call_seq_fn_88939470_8891B5B0(ts4_word a0, ts4_word a1)
     fn_88939470((ts4_word)a1, (ts4_word)(a0 + 1068), (ts4_word)3);
     ts4_bits_step_88936BB0((ts4_word)a1, (ts4_word)(a0 + 1120));
     t3 = *(unsigned char *)((char *)(ts4_word)(a0) + 1120);
-    t4 = *(float *)lbl_8814B440;
+    t4 = *(float *)g_ts4_event_value;
     if ((ts4_word)t3 != 0) {
         fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 1072));
         fn_889395D8((ts4_word)a1, (ts4_word)(a0 + 1076));

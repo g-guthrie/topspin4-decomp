@@ -1,6 +1,6 @@
 /* 0x888C24B0: ping-pong/clamp/wrap oscillator step; per-edge mode 0 reverses step, 1 sets hi, 2 sets lo; value resets to 0 when the countdown hits 0 (agAY). Plain /Oc. */
 typedef struct Osc { int count; float v; float step; float hi; float lo; unsigned hiMode; unsigned loMode; } Osc;
-extern const float lbl_8814B440;
+extern const float g_ts4_event_value;
 void ts4_oscillator_step_888C24B0(Osc *o)
 {
     float v = o->v + o->step;
@@ -18,5 +18,5 @@ void ts4_oscillator_step_888C24B0(Osc *o)
         case 2: o->v = o->lo; break;
         }
     }
-    if (--o->count == 0) o->v = lbl_8814B440;
+    if (--o->count == 0) o->v = g_ts4_event_value;
 }

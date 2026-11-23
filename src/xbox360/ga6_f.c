@@ -16,7 +16,7 @@ void ts4_layout_refresh_886D3A00(void *list, void *item, int a, ts4_word b, int 
 void ts4_r2_swing_ring_release_entry_886DC9C0(void *owner, ts4_word item);
 void fn_886CDFD8(void *self);
 extern char lbl_880FC650[];
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 
 struct Ga6Limits { char pad_00[0x3FC]; ts4_word limit; };
 struct Ga6Stats { char pad_00[0x14]; struct Ga6Limits *limits; };

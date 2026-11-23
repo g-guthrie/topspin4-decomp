@@ -21,7 +21,7 @@ extern void lib3_gfind_aux_88828338(void);
 extern void fn_888313E0(void);
 extern int cx19_lua_tolwstring_888348A0(void *L, int idx);
 extern char lbl_880C9684[];
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern char lbl_880DC810[];
 extern void fn_888AF5C0(void *self);
 
@@ -102,7 +102,7 @@ typedef struct pc4_mode_holder {
 /* 0x8893C880: if 0 <= x <= pool[0], set a value scaled by pool double 0x338; otherwise default mode to 3 if unset. */
 void *ts4_set_scaled_or_default_mode_8893C880(pc4_mode_holder *self, float x)
 {
-    if (x >= lbl_8814B440 && x <= g_ts4_script_constants[0]) {
+    if (x >= g_ts4_event_value && x <= g_ts4_script_constants[0]) {
         ts4_bits_write_bits_889393C0(self, (u32)(x * POOLD(0x338)), 10);
     } else if (self->mode == 0) {
         self->mode = 3;

@@ -87,6 +87,6 @@ void ga6_clear_vec16_886DFC38(struct Ga6Vec16 *self)
 
 /* ---- 886D19C8: initialise a four-vector block with the default pose ---- */
 extern char lbl_880FC650[];
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 struct Ga6Pose { __vector4 v[4]; ts4_word w40; float f44; };
 struct Ga6PoseHolder { char pad_00[8]; struct Ga6Pose *pose; char pad_0c[0xC]; int w18; };

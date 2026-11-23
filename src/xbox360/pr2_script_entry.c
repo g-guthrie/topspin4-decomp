@@ -51,7 +51,7 @@ typedef struct PlayerSel PlayerSel;
 extern PlayerSel *lbl_88D459E0;
 extern void fn_88855420(PlayerSel *s, int pad, u32 *key, u32 a, u32 b, u32 c, u32 d, u32 e, int slot);
 extern const char lbl_880D82C4[]; /* "S4Loading" */
-extern const float lbl_8814B440;  /* 0.0f */
+extern const float g_ts4_event_value;  /* 0.0f */
 extern u32 ts4_crc32_cstr_seed_88608590(u32 seed, void *text);
 extern void fn_887BE998(void *pkgmgr, void *name, u32 *hash, u32 a, u32 b, u32 c, u32 d, float t);
 extern Engine *lbl_88D45B1C;
@@ -148,7 +148,7 @@ u32 ts4_script_change_package_887C09D8(Ctx *c)
     fn_887BFDA8(lbl_88D45A60, &s, 0, 0, 0);
     svc = ts4_find_service(ts4_crc32_cstr_seed_88608590(0, *(void **)mgr->payload));
     h = ts4_crc32_cstr_seed_88608590(0, *(void **)scene->payload);
-    fn_887BE998(svc, *(void **)pkg->payload, &h, 0, 0, 0, 0, lbl_8814B440);
+    fn_887BE998(svc, *(void **)pkg->payload, &h, 0, 0, 0, 0, g_ts4_event_value);
     return 0;
 }
 

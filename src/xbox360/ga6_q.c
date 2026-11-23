@@ -75,7 +75,7 @@ void ts4_destroy_owned_object(void *object);
 void ts4_registry_dispatch_888860A0(void *buffer);
 void ts4_object_dtor_886CA260(void *sub);
 void ts4_object_dtor_886DABD0(void *sub);
-void fn_886D0EB0(void *sub);
+void ts4_tracker_sub30_dtor_886D0EB0(void *sub);
 void ts4_loop_call_seq_u32_off0_881B68A8(void *a, ts4_word b);
 struct Ga6OwnerChain;
 #ifdef _MSC_VER
@@ -193,7 +193,7 @@ void ga6_run_hold_set_886D7C28(void *self, struct Ga6HoldSet *set)
     fn_886D2E78(self);
 }
 
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 void ga6_finish_request_886D7AE0(void *self, void *item);
 void ga6_add_reference_886D2AF0(void *self, void *item);
 
@@ -219,7 +219,7 @@ void ga6_apply_hold_886D9698(struct Ga6HoldOwner *self, struct Ga6HoldRec *rec, 
     } else {
         ga6_add_reference_886D2AF0(self, entry);
     }
-    if (rec->amount > lbl_8814B440) {
+    if (rec->amount > g_ts4_event_value) {
         entry = (struct Ga6Held16 *)((char *)table + (table->rel + rec->second * 0x10));
         if (arg < 0) {
             if (entry->count != 0) {

@@ -136,7 +136,7 @@ extern char lbl_880F50FC[];
 extern char lbl_880F5A24[];
 extern char lbl_880F5F70[];
 extern char lbl_880F8C44[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_8814B910[];
 extern char lbl_88C6A10C[];
 extern char lbl_88C6AEF0[];
@@ -1027,7 +1027,7 @@ void ts4_set_u32_off0_886454F8(ts4_word a0)
 
     vv1 = __vspltisw(0);
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)0;
-    t2 = *(float *)lbl_8814B440;
+    t2 = *(float *)g_ts4_event_value;
     *(ts4_word *)((char *)(ts4_word)(a0) + 36) = (ts4_word)0;
     *(float *)((char *)(ts4_word)(a0) + 32) = t2;
     *(ts4_word *)((char *)(ts4_word)(a0) + 40) = (ts4_word)0;
@@ -1072,7 +1072,7 @@ ts4_word ts4_call_seq_u32_off24_886459A8(ts4_word a0, ts4_word a1, ts4_word a2)
     t5 = *(float *)((char *)(ts4_word)(a2) + 8);
     *(float *)((char *)loc50 + 0) = t3;
     *(float *)((char *)loc50 + 4) = t4;
-    t6 = *(float *)lbl_8814B440;
+    t6 = *(float *)g_ts4_event_value;
     *(float *)((char *)loc50 + 8) = t5;
     t7 = *(ts4_word *)((char *)(ts4_word)(t2) + 0);
     *(float *)((char *)loc50 + 12) = t6;
@@ -1327,7 +1327,7 @@ void ts4_get_u32_off14_8865A0A0(ts4_word a0)
 
     vv1 = __vspltisw(0);
     t2 = *(ts4_word *)((char *)(ts4_word)(a0) + 20);
-    *(float *)((char *)(ts4_word)(t2) + 16) = (*(float *)lbl_8814B440);
+    *(float *)((char *)(ts4_word)(t2) + 16) = (*(float *)g_ts4_event_value);
     *(__vector4 *)((ts4_word)(t2)) = vv1;
     return;
 }
@@ -1531,7 +1531,7 @@ void ts4_get_886614D8(ts4_word a0)
     __vector4 vv1;
 
     vv1 = __vspltisw(0);
-    *(float *)((char *)(ts4_word)(a0) + 32) = (*(float *)lbl_8814B440);
+    *(float *)((char *)(ts4_word)(a0) + 32) = (*(float *)g_ts4_event_value);
     *(__vector4 *)((ts4_word)(a0)) = vv1;
     *(__vector4 *)((ts4_word)(a0 + 16)) = vv1;
     return;
@@ -1685,7 +1685,7 @@ ts4_word ts4_call_seq_u32_off10_8866CF40(ts4_word a0)
     *(ts4_word *)((char *)(ts4_word)(a0) + 20) = (ts4_word)((*(ts4_word *)((char *)(ts4_word)(t1) + 116)) + 2464);
     t4 = fn_8865E638((ts4_word)t2, (ts4_word)t1);
     vv5 = __vspltisw(0);
-    t6 = *(float *)lbl_8814B440;
+    t6 = *(float *)g_ts4_event_value;
     *(float *)((char *)(ts4_word)(a0) + 100) = t6;
     *(float *)((char *)(ts4_word)(a0) + 104) = t6;
     *(__vector4 *)((ts4_word)(a0 + 64)) = vv5;
@@ -1860,7 +1860,7 @@ float ts4_if_call_seq_u8_off13c_88698B28(ts4_word a0, ts4_word a1, float f1, ts4
         *(volatile unsigned char *)((char *)(ts4_word)(a0) + 316) = (unsigned char)1;
         t2 = fn_886887C0((ts4_word)a0, f1);
         t4 = *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 340))) + 116);
-        t5 = *(float *)lbl_8814B440;
+        t5 = *(float *)g_ts4_event_value;
         *(volatile unsigned char *)((char *)(ts4_word)(t4) + 3564) = (unsigned char)1;
         *(volatile float *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 340))) + 116))) + 3560) = t2;
         *(volatile float *)((char *)(ts4_word)(a0) + 320) = t2;
@@ -4539,7 +4539,7 @@ void ts4_if_get_u32_off8_888AF140(ts4_word a0)
     ts4_word t10;
 
     t1 = *(volatile ts4_word *)((char *)(ts4_word)(a0) + 8);
-    *(volatile float *)((char *)(ts4_word)(a0) + 164) = (*(float *)lbl_8814B440);
+    *(volatile float *)((char *)(ts4_word)(a0) + 164) = (*(float *)g_ts4_event_value);
     if ((int)t1 == 0) {
         return;
     }

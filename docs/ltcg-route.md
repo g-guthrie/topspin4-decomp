@@ -305,6 +305,22 @@ to add by hand (`--context` values are kept in front):
 of the exact command. `tools/integrate_match.py` records such specs in `config/54540859/ltcg_units.json`.
 Say "LTCG route" in your report.
 
+**What `--auto-context` does beyond the rules above (2026-11-23).**
+- *Prototype.* When the source under test declares a callee as returning a value and a candidate source
+  defines it as `void` (or the reverse), that candidate is passed over if another agrees, also in favour of
+  a stand-in: 0x8816CBB0 uses `*ts4_index_to_name_hash_887F7BC8(&h, i)`, the matched rm2_index_hash_tables.c
+  defines the hash as `void`, and cx39_ctx_hash.c (returns its out pointer) is chosen.
+- *Partly inlined callee.* A callee the original calls more often than the linked candidate was inlined at
+  some call site; its source gets `flags(/Ob1):` like one inlined everywhere.
+- *Context-only helpers.* A function that only a context-only file of a registered unit defines and that is
+  at no address of the original (os1_ctx_checksum.c: folding stand-ins for crc32/adler32) brings its file
+  into the link when the source under test names it; that file stays in every fallback link.
+- *Ranked fallback.* On FAIL it tries, in this order and at most `--auto-tries` (12) times: without the
+  /INCLUDEs; `flags(/Ob1):` on every callee source; without one callee source at a time (as is, then with
+  `/Ob1` on the others); one callee source alone; no callee source. The first MATCH is reported with its
+  explicit command (0x8816CBB0: "MATCH without d1_band1_offset_array_ptrs_8815E4D0.c": the body of its
+  0x88187738 callee changes r30/r31 in the caller).
+
 **Pitfalls.**
 - Write float literals freely: pooled literals compare by value.
 - Do not convert plain matches to this route.
@@ -383,6 +399,8 @@ source shape.
 ## 11. Files
 
 - `tools/fn_check_ltcg.py`: the checker; `--setup` prepares the toolchain.
+- `tools/icf_alias.py`, `config/54540859/icf_aliases.json`, `tests/test_icf_alias.py`: reviewed aliases
+  (section 12).
 - `tools/ltcg_route.py`: pipeline hooks.
 - `tests/test_fn_check_ltcg.py`, `tests/test_ltcg_route.py`: synthetic tests.
 - `docs/ltcg-route-pipeline.patch`: the matching.py / integrate_match.py / sync_progress.py / link_probe.py
@@ -390,6 +408,88 @@ source shape.
   `tools/ltcg_route.py` and `tools/fn_check_ltcg.py`, so matching.py needs no further change.
 - `docs/ltcg-ranges.json`: the range map.
 - `src/xbox360/lt1_msg_send_encrypted.c`, `src/xbox360/lt1_lua_auxsort.c`, and specs in `work/specs/LT1/`.
+
+## 12. Two names for one address: ICF folds and C++ members (2026-11-23)
+
+Both routes compare relocation targets by symbol name. Two kinds of correct source need a second name for
+an address, and `config/54540859/icf_aliases.json` (`tools/icf_alias.py`) lists each one with its evidence:
+
+- **`"kind": "icf"`**: the original linker folded identical functions or identical vtables (/OPT:ICF), so
+  the image has one address where the source had two symbols. The compiler reproduces the code only with
+  two symbols: 0x881A2508 has two `bl 0x881A2570` that cl merges when both calls name one function;
+  0x886D0EB0 loads 0x880D6B70 twice (`lis r11`, `lis r9`) and cl loads one symbol once.
+- **`"kind": "cxx"`**: the function matches only as a C++ member, so symbols.txt holds its decorated name
+  (`?SetString@Ts4WStr@@QAAXPBGH@Z` at 0x8819C360, `??MHKey@@QBA_NABU0@@Z` at 0x881509F8), and C sources,
+  which cannot spell that, call it under a C identifier (`ts4_wstr_set_string_8819C360`).
+
+```json
+{"alias": "ts4_call_seq_u32_off0_881A2570_icf_b", "canonical": "ts4_call_seq_u32_off0_881A2570",
+ "address": "0x881A2570", "kind": "icf", "evidence": "two separate bl in 0x881A2508 ..."}
+```
+
+Rules (checked by `python3 tools/icf_alias.py --check`, by `tests/test_icf_alias.py` and at the start of
+the build):
+
+- the address decides: a candidate relocation to the alias equals a target relocation to the symbol at
+  that address with the same offset, and nothing else. Code bytes are compared as before;
+- an alias is a C identifier, is not a symbols.txt name, has evidence, and is only ever *referenced*
+  (an object that defines an alias name stops the build);
+- `"canonical"` is the symbols.txt name at the address; `tools/integrate_match.py` keeps it current.
+
+Where it acts:
+
+| Tool | What it does |
+|---|---|
+| `tools/fn_check.py`, `tools/fn_check_ltcg.py` | accept the alias in the relocation comparison (LTCG: the alias gets a function stub of its own, so the two calls stay distinct) |
+| `tools/ltcg_route.py` | nothing new: it uses fn_check_ltcg's comparison |
+| `tools/matching.py` | after the plain compiles, `icf_alias.patch_rebuilt()` renames the alias in each rebuilt object's symbol table to the canonical name (or moves the relocations to the canonical symbol when the object has both), so objdiff sees the names the original linker produced. It prints one `alias:` line per object |
+| `tools/fix_refs.py` | a rename to a decorated name writes the `cxx` alias into the callers instead (and stops when there is none) |
+| `tools/integrate_match.py` | records a spec's `"aliases"` in icf_aliases.json and follows the batch's renames |
+
+**Spec.** Add the aliases the source uses (an entry already in icf_aliases.json may be repeated):
+
+```json
+{"source": "src/xbox360/q5s_cxx_wstr_set.cpp",
+ "functions": {"?SetString@Ts4WStr@@QAAXPBGH@Z": "0x8819C360"},
+ "aliases": {"ts4_wstr_set_string_8819C360": {"canonical": "?SetString@Ts4WStr@@QAAXPBGH@Z",
+   "address": "0x8819C360", "kind": "cxx", "evidence": "matches only as a member; called from C units"}}}
+```
+
+**When to use an alias.** Only with evidence in the target code: two separate materializations of one
+address that the compiler would merge for one symbol (icf), or a function that matches as a member and
+not as an `extern "C"` function (cxx). Declare the alias in the source next to the canonical symbol and say
+why in a comment. An ICF alias before the batch is integrated goes into icf_aliases.json by hand (the
+checkers read the file); a cxx alias goes into the spec, because its canonical name exists only after
+integration.
+
+**Not covered.** A context source in an LTCG check defines the canonical function only: a call through an
+ICF or cxx alias goes to an opaque stub, so the caller gets no register knowledge for that call.
+
+**Proof.** Build `work/matching-chk` (scratch tree `work/chk-tree`, 2026-11-23) integrated
+`q5s_icf_variant_reset.c`, `q5s_icf_tracker_dtor.c`, `q5s_cxx_wstr_set.cpp` and `q5s_cxx_hkey_less.cpp`;
+the alias pass rewrote `fam5_nm6_000.obj`, `q5s_icf_variant_reset.obj` and `q5s_icf_tracker_dtor.obj`, and
+the LTCG unit `q5s_cont_strings.cpp` passed with its call through the cxx alias.
+
+## 13. One name per address: 0x8814B440 (2026-11-23)
+
+The plain route takes relocation names from the split objects, i.e. from Jeff's symbols, which start from
+`config/54540859/symbols.seed.txt`. The seed had `g_ts4_event_value = .rdata:0x8814B440`, but the address
+lies in section `BINKCONS`, so Jeff kept the seed entry *and* generated `lbl_8814B440 = BINKCONS:...`; the
+4,536 relocations of the split used the generated name. The LTCG route resolves targets by address and
+took the first name, `g_ts4_event_value`. One constant, two names, and a correct function failed on the
+route that used the other one.
+
+- The seed now says `BINKCONS`; a fresh analysis has the one name `g_ts4_event_value`
+  (`work/matching-chk/analysis/symbols.txt`).
+- The 98 plain units that wrote `lbl_8814B440` now write `g_ts4_event_value` (each object was compiled
+  before and after: identical sections and relocations, that name aside).
+- Both checkers accept two symbols.txt names of one address as one target, in any section (this is what
+  makes them agree on the b224 split), and accept a generated placeholder that is no longer a symbols.txt
+  name for the symbol at the address it encodes, with a `STALE` line (`tools/fix_refs.py` rewrites those
+  in a spec's source at integration; the build does not accept them in a plain unit).
+- Survey of the b224 analysis: 541 addresses carry two names; 539 are `jumptable_`/`$LN` pairs inside
+  functions and one is a `BINK` pair, all handled as local labels. 0x8814B440 was the only data symbol
+  with the split.
 
 ## Correction (FP1)
 

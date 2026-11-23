@@ -64,7 +64,7 @@ extern char lbl_880F019C[];
 extern char lbl_880F01AC[];
 extern char lbl_880F01C0[];
 extern char lbl_880F5A60[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C6B4AC[];
 extern char lbl_88C6B8EC[];
 extern char lbl_88C6C018[];
@@ -992,7 +992,7 @@ ts4_word ts4_if_call_seq_fn_88150770_886F7738(ts4_word a0)
         t10 = loc50[0];
         return t10;
     }
-    *(float *)((char *)loc50 + 0) = (*(float *)lbl_8814B440);
+    *(float *)((char *)loc50 + 0) = (*(float *)g_ts4_event_value);
     t8 = loc50[0];
     return t8;
 }

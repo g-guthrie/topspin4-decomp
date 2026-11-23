@@ -30,7 +30,7 @@ typedef struct Mode {
     void *vt; char p[0x18]; Registry *reg; Body *aux; void *timer; unsigned char armed; char q[3]; u32 *pending; void *queue;
     char r[0x10]; Ts4ModeObj *ctl;
 } Mode;
-extern "C" const float lbl_8814B440; /* 0.0f */
+extern "C" const float g_ts4_event_value; /* 0.0f */
 
 extern "C" void ts4_mode_exit_886875D8(Mode *m)
 {
@@ -60,7 +60,7 @@ extern "C" void ts4_mode_exit_886875D8(Mode *m)
         r->body->t2 = 0x7FFFFFFF;
     }
     m->reg->anim->stop();
-    m->reg->body->fe00 = lbl_8814B440;
+    m->reg->body->fe00 = g_ts4_event_value;
     m->reg->body->b6f1 = 0;
     m->reg->body->b6f0 = 0;
 }

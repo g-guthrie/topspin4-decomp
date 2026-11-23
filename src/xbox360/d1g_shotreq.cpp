@@ -6,7 +6,7 @@
 
 D1G_EXTERN_C void ts4_shot_request_8868F178(struct Ts4PlayerController *pc);
 D1G_EXTERN_C void fn_8866B8C0(struct Ts4SwingRequest *self);
-D1G_EXTERN_C const float lbl_8814B440; /* 0.0f */
+D1G_EXTERN_C const float g_ts4_event_value; /* 0.0f */
 
 /* Reset a hold counter to {0 frames, 0.0}. */
 static void ts4_hold_counter_reset(struct Ts4HoldCounter *c, float zero)
@@ -24,7 +24,7 @@ D1G_EXTERN_C void ts4_shot_request_repress_88698538(struct Ts4SwingRequest *self
     ts4_shot_request_8868F178(self->pc);
     fn_8866B8C0(self);
     self->committed = 0;
-    float zero = lbl_8814B440;
+    float zero = g_ts4_event_value;
     ts4_hold_counter_reset(&self->receiver->power, zero);
     ts4_hold_counter_reset(&self->receiver->risk, zero);
     self->unk_40 = 0;

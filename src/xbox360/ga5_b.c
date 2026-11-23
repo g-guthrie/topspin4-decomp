@@ -80,7 +80,7 @@ void ts4_header_cursor_init_886C7230(Ga5HeaderCursor *self, Ga5HeaderOwner *owne
 }
 
 extern float g_ts4_script_constants[];
-extern float lbl_8814B440;            /* 0.0f */
+extern float g_ts4_event_value;            /* 0.0f */
 extern float fn_886CBEE8(void *self, float time);
 
 typedef struct Ga5TimedClip {
@@ -107,7 +107,7 @@ float ts4_advance_clip_time_886CBFF8(Ga5TimedPlayer *self, float time)
     Ga5TimedClip *clip = self->ref->clip;
     float result = (clip->time_ratio - g_ts4_script_constants[0]) * self->rate + time;
     if (clip->kind_hash == 0xAD11D5A1) {
-        float zero = lbl_8814B440;
+        float zero = g_ts4_event_value;
         self->offset_b = zero;
         self->offset_a = zero;
         return result;

@@ -12,6 +12,7 @@ import subprocess
 from pathlib import Path
 
 import ltcg_route  # LTCG route, see docs/ltcg-route.md
+import icf_alias  # reviewed second names for one address (ICF, C names of C++ members)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51633,6 +51634,39 @@ MATCHING_UNITS = (
         "extra_flags": ["/Oc"],
         "symbols": {"ts4_placed_set_888C0818": 116},
     },
+    {
+        "source": "src/xbox360/q5s_icf_variant_reset.c",
+        "object": "q5s_icf_variant_reset.obj",
+        "symbols": {"ts4_tagged_value_reset_881A2508": 100},
+    },
+    {
+        "source": "src/xbox360/q5s_icf_tracker_dtor.c",
+        "object": "q5s_icf_tracker_dtor.obj",
+        "symbols": {"ts4_tracker_sub30_dtor_886D0EB0": 196},
+    },
+    {
+        "source": "src/xbox360/q5s_cxx_wstr_set.cpp",
+        "object": "q5s_cxx_wstr_set.obj",
+        "symbols": {"?SetString@Ts4WStr@@QAAXPBGH@Z": 140},
+    },
+    {
+        "source": "src/xbox360/q5s_cxx_hkey_less.cpp",
+        "object": "q5s_cxx_hkey_less.obj",
+        "symbols": {"??MHKey@@QBA_NABU0@@Z": 184},
+    },
+    {
+        "source": "src/xbox360/q5s_cls_xform.cpp",
+        "object": "q5s_cls_xform.obj",
+        "symbols": {
+            "?Set@Ts4XformBlock@@QAAXABU1@@Z": 164,
+            "?Set@Ts4XformRecord@@QAAXABU1@@Z": 516,
+        },
+    },
+    {
+        "source": "src/xbox360/q5s_cls_tracker.cpp",
+        "object": "q5s_cls_tracker.obj",
+        "symbols": {"?Reset@Ts4Tracker@@QAAXXZ": 124},
+    },
 )
 
 
@@ -51873,6 +51907,8 @@ def main() -> int:
             ]
         )
 
+    # Before the LTCG units: a bad alias file stops the build here, not 40 minutes in.
+    icf_alias.patch_rebuilt(list(rebuilt_by_source.values()), symbols)
     rebuilt_by_source.update(ltcg_route.build(args, rebuilt_dir, split_dir, symbols, xex))
     split_config = json.loads((split_dir / "config.json").read_text())
     patch_seh_labels(split_config)

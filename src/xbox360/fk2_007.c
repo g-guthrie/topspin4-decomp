@@ -94,7 +94,7 @@ extern char lbl_880E3638[];
 extern char lbl_880E3644[];
 extern char lbl_880E3E74[];
 extern char lbl_880F7F38[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C46F6A[];
 extern char lbl_88C6ADAC[];
 extern char lbl_88C6ADC8[];
@@ -709,7 +709,7 @@ void ts4_set_u32_off0_88871810(ts4_word a0)
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 8) = (ts4_word)0;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 12) = (ts4_word)0;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 16) = (ts4_word)0;
-    t1 = *(float *)lbl_8814B440;
+    t1 = *(float *)g_ts4_event_value;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 20) = (ts4_word)0;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)0;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 32) = (ts4_word)0;
@@ -2517,7 +2517,7 @@ void ts4_set_u32_off14_888C7178(ts4_word a0)
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)0;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 32) = (ts4_word)0;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 36) = (ts4_word)0;
-    t1 = *(float *)lbl_8814B440;
+    t1 = *(float *)g_ts4_event_value;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 40) = (ts4_word)0;
     *(volatile float *)((char *)(ts4_word)(a0) + 44) = t1;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)0;
@@ -3945,7 +3945,7 @@ ts4_word ts4_loop_call_seq_u32_off20_8890F158(ts4_word a0, ts4_word a1)
     ts4_word t4;
 
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 32) = (ts4_word)a1;
-    t1 = *(float *)lbl_8814B440;
+    t1 = *(float *)g_ts4_event_value;
     *(volatile float *)((char *)(ts4_word)(a0) + 4) = t1;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 36) = (ts4_word)0;
     *(volatile float *)((char *)(ts4_word)(a0) + 16) = t1;
@@ -4079,7 +4079,7 @@ void ts4_addr_lbl_880D7604_8890FFF0(ts4_word a0)
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880D7604;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 20) = (ts4_word)0;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 24) = (ts4_word)0;
-    t1 = *(float *)lbl_8814B440;
+    t1 = *(float *)g_ts4_event_value;
     *(volatile ts4_word *)((char *)(ts4_word)(a0) + 28) = (ts4_word)0;
     *(volatile float *)((char *)(ts4_word)(a0) + 4) = t1;
     *(volatile float *)((char *)(ts4_word)(a0) + 8) = t1;

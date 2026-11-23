@@ -2,13 +2,13 @@
 typedef long long ts4_s64;
 
 extern float g_ts4_script_constants[];
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern float lbl_88001A20;
 
 /* fill 4 floats with the first script constant */
 void ts4_fill4_script_constant_886EB230(float *p) { p[0] = g_ts4_script_constants[0]; p[1] = p[0]; p[2] = p[0]; p[3] = p[0]; }
 /* fill floats 1..4 with a global constant */
-void ts4_fill4_from_1_886C44A0(float *p) { p[1] = lbl_8814B440; p[2] = p[1]; p[3] = p[1]; p[4] = p[1]; }
+void ts4_fill4_from_1_886C44A0(float *p) { p[1] = g_ts4_event_value; p[2] = p[1]; p[3] = p[1]; p[4] = p[1]; }
 /* set floats 3, 5 and 7 to a global constant */
 void ts4_set_floats_3_5_7_88508CE0(float *p) { p[3] = lbl_88001A20; p[5] = p[3]; p[7] = p[3]; }
 

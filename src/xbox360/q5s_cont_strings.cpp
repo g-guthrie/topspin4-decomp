@@ -47,7 +47,7 @@ extern "C" Ts4Str *ts4_string_right_8819BE18(Ts4Str *out, const Ts4Str *src, int
 
 /* ---- Wide string assign(const wchar *). ---- */
 struct Ts4WStr;
-extern "C" void fn_8819C360(Ts4WStr *self, const unsigned short *s, int n); /* wide SetString (unmatched) */
+extern "C" void ts4_wstr_set_string_8819C360(Ts4WStr *self, const unsigned short *s, int n); /* wide SetString (unmatched) */
 struct Ts4WStr {
     unsigned short *data;
     static int StringLength(const unsigned short *s)
@@ -66,6 +66,6 @@ struct Ts4WStr {
 
 extern "C" Ts4WStr *ts4_wstring_assign_cstr_8819AE68(Ts4WStr *self, const unsigned short *s)
 {
-    fn_8819C360(self, s, Ts4WStr::StringLength(s));
+    ts4_wstr_set_string_8819C360(self, s, Ts4WStr::StringLength(s));
     return self;
 }

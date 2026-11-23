@@ -45,7 +45,7 @@ extern char lbl_880E9154[];
 extern char lbl_880E9158[];
 extern char lbl_880E9168[];
 extern char lbl_880E9378[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C697D0[];
 extern char lbl_88C697EC[];
 extern char lbl_88C69804[];

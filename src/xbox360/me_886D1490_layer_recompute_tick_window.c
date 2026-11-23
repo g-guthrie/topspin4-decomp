@@ -16,7 +16,7 @@ typedef struct Layer {
     float span;                          /* +0x40 */
 } Layer;
 extern float g_ts4_script_constants[];
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 float ts4_layer_time_warp_886D1408(Layer *l, float t);
 static __inline void set_span(Layer *l, float one) { l->span = (l->w_end - l->w_start) * (l->inner->desc->time_ratio - one); }
 static __inline float ratio_m1(Layer *l, float one) { return l->inner->desc->time_ratio - one; }
@@ -27,7 +27,7 @@ void ts4_layer_recompute_tick_window(Layer *l)
     { float *w = &l->w_start; w[2] = (w[1] - w[0]) * ratio_m1(l, one); }
     parent = l->parent;
     if (parent != 0) l->base = ts4_layer_time_warp_886D1408(parent, l->parent_time);
-    else l->base = lbl_8814B440;
+    else l->base = g_ts4_event_value;
     {
         float d = l->w_end - l->t_ref;
         float k = l->inner->desc->time_ratio - one;

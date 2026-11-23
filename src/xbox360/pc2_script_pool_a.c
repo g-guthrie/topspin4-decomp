@@ -15,7 +15,7 @@ static float __fres(float x) { return 1.0f / x; }
 #endif
 
 /* Float zero constant used by the original code. */
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 /* Float 3.0-style constant used in one select. */
 extern float lbl_8814B45C;
 /* Returns the float of ts4_rng_range_8861E598 (called with a sub-object and two constants). */
@@ -32,7 +32,7 @@ void ts4_clamp_float_to_unit_886EBBC8(int unused, float *value)
 {
     float v = *value;
     (void)unused;
-    *value = v < lbl_8814B440 ? lbl_8814B440 : (v > K[0] ? K[0] : v);
+    *value = v < g_ts4_event_value ? g_ts4_event_value : (v > K[0] ? K[0] : v);
 }
 
 typedef struct Ts4PoolRangeInner { char pad[0x14]; float scale; } Ts4PoolRangeInner;
@@ -87,7 +87,7 @@ void ts4_set_hashes_and_const0_8866CD58(void *o)
 /* Swing_DLL.xex 0x8867EB38: return whether ts4_rng_range_8861E598(sub-object+0xb4, 0, const0) is below x. */
 unsigned char ts4_lookup_below_8867EB38(void *o, float x)
 {
-    return ts4_rng_range_8861E598((char *)PP(PP(o, 4), 0x44) + 0xb4, lbl_8814B440, K[0]) < x;
+    return ts4_rng_range_8861E598((char *)PP(PP(o, 4), 0x44) + 0xb4, g_ts4_event_value, K[0]) < x;
 }
 
 /* Swing_DLL.xex 0x886EC4B8: pack a vec3 scaled by pool constant 73 into three 10-bit fields (z high, y, x low). */
@@ -123,7 +123,7 @@ void ts4_reset_pending_state_8866D868(void *o)
     IP(PP(o, 0x24), 0) = 0x7fffffff;
     q = PP(o, 0x20);
     IP(o, 0x2c) = BP(PP(q, 0x30), 0x327) ? 2 : 1;
-    FP(PP(o, 0x24), 0xbc) = BP(PP(PP(o, 0x20), 0x30), 0x327) ? K[0] : lbl_8814B440;
+    FP(PP(o, 0x24), 0xbc) = BP(PP(PP(o, 0x20), 0x30), 0x327) ? K[0] : g_ts4_event_value;
     IP(PP(o, 0x24), 0xb4) = 0;
     IP(o, 0x30) = -1;
 }

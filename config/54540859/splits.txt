@@ -55609,3 +55609,28 @@ src/xbox360/q5s_swan_blend.cpp:
 
 src/xbox360/q5s_swan_pose.c:
 	.text       start:0x886C6590 end:0x886C665C
+
+src/xbox360/q5s_icf_variant_reset.c:
+	.pdata      start:0x88109F78 end:0x88109F80
+	.text       start:0x881A2508 end:0x881A256C
+
+src/xbox360/q5s_icf_tracker_dtor.c:
+	.pdata      start:0x88124DC8 end:0x88124DD0
+	.text       start:0x886D0EB0 end:0x886D0F74
+
+src/xbox360/q5s_cxx_wstr_set.cpp:
+	.pdata      start:0x88109E10 end:0x88109E18
+	.text       start:0x8819C360 end:0x8819C3EC
+
+src/xbox360/q5s_cxx_hkey_less.cpp:
+	.pdata      start:0x88106C98 end:0x88106CA0
+	.text       start:0x881509F8 end:0x88150AB0
+
+src/xbox360/q5s_cls_xform.cpp:
+	.pdata      start:0x88109210 end:0x88109218
+	.pdata      start:0x88109218 end:0x88109220
+	.text       start:0x88187B18 end:0x88187BBC
+	.text       start:0x88187BC0 end:0x88187DC4
+
+src/xbox360/q5s_cls_tracker.cpp:
+	.text       start:0x886CBC30 end:0x886CBCAC

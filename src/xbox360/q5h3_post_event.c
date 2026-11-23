@@ -30,7 +30,7 @@ typedef struct Q5h3EvOwner {
     char p13c[4];
     u8 enabled;         /* +0x140 */
 } Q5h3EvOwner;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern const float g_ts4_script_constants[];
 extern void fn_888CC9D8(Q5h3EvOwner *o, Q5h3Event *e);
 
@@ -45,11 +45,11 @@ void ts4_post_event_ad796eef_888D72F0(Q5h3EvOwner *o, Q5h3EvId *id)
         if (id->v != cur.v) {
             e.id.v = id->v;
             e.a = 0;
-            e.f0 = lbl_8814B440;
+            e.f0 = g_ts4_event_value;
             e.c = -1;
-            e.f1 = lbl_8814B440;
+            e.f1 = g_ts4_event_value;
             e.d = 0;
-            e.f2 = lbl_8814B440;
+            e.f2 = g_ts4_event_value;
             e.e = -1;
             e.w = g_ts4_script_constants[0];
             e.b = 0;

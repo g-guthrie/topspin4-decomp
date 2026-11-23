@@ -4,7 +4,7 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 typedef unsigned long long u64;
 
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern char g_ts4_script_constants[];
 extern void *lbl_88D45B38;
 
@@ -147,7 +147,7 @@ void ts4_repeat_step_88879DA0(Cx32TD *t, u32 n)
 {
     int i;
     u32 k;
-    if (t->obj && t->f > lbl_8814B440 && n) {
+    if (t->obj && t->f > g_ts4_event_value && n) {
         k = n;
         do {
             for (i = 0; i < t->cnt; i++)
@@ -188,12 +188,12 @@ void ts4_transform_two_points_8887A488(Cx32TA *t, Cx32SrcA *s, void *d)
     char m[0x40];
     if (t->c && s && d) {
         t->vt.vt[7](&t->vt, d, m);
-        l50.x = lbl_8814B440;
-        l50.y = lbl_8814B440;
-        l50.z = lbl_8814B440;
-        l60.x = lbl_8814B440;
-        l60.y = lbl_8814B440;
-        l60.z = lbl_8814B440;
+        l50.x = g_ts4_event_value;
+        l50.y = g_ts4_event_value;
+        l50.z = g_ts4_event_value;
+        l60.x = g_ts4_event_value;
+        l60.y = g_ts4_event_value;
+        l60.z = g_ts4_event_value;
         memcpy(&l50, s->a, 12);
         memcpy(&l60, s->b, 12);
         ts4_transform_vec3_in_place_8864E9F8(&l50, m);

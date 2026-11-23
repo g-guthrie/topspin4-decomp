@@ -40,7 +40,7 @@ extern char lbl_880F5860[];
 extern char lbl_880F5878[];
 extern char lbl_880F5890[];
 extern char lbl_880F7AEC[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C6CE84[];
 extern char lbl_88CACF08[];
 extern char lbl_88D429F0[];
@@ -881,37 +881,37 @@ ts4_word ts4_fn_8864DFE8(void)
 /* Swing_DLL.xex 0x8864E060: get  */
 float ts4_get_8864E060(void)
 {
-    return (*(float *)lbl_8814B440);
+    return (*(float *)g_ts4_event_value);
 }
 
 /* Swing_DLL.xex 0x8864E070: get  */
 float ts4_get_8864E070(void)
 {
-    return (*(float *)lbl_8814B440);
+    return (*(float *)g_ts4_event_value);
 }
 
 /* Swing_DLL.xex 0x8864E080: get  */
 float ts4_get_8864E080(void)
 {
-    return (*(float *)lbl_8814B440);
+    return (*(float *)g_ts4_event_value);
 }
 
 /* Swing_DLL.xex 0x8864E090: get  */
 float ts4_get_8864E090(void)
 {
-    return (*(float *)lbl_8814B440);
+    return (*(float *)g_ts4_event_value);
 }
 
 /* Swing_DLL.xex 0x8864E0A0: get  */
 float ts4_get_8864E0A0(void)
 {
-    return (*(float *)lbl_8814B440);
+    return (*(float *)g_ts4_event_value);
 }
 
 /* Swing_DLL.xex 0x8864E0B0: get  */
 float ts4_get_8864E0B0(void)
 {
-    return (*(float *)lbl_8814B440);
+    return (*(float *)g_ts4_event_value);
 }
 
 /* Swing_DLL.xex 0x8864E4A0: set u32@0x8 */

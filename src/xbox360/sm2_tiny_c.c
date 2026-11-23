@@ -12,7 +12,7 @@ extern double sqrt(double x);
 extern float g_ts4_script_constants[];
 extern float lbl_88001B04;
 extern float lbl_880023D4;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 
 /* store flag at +0x98; when set, tail-call virtual slot 9 */
 void ts4_set_flag_98_call_vslot9_886EF308(char *p, unsigned char v)

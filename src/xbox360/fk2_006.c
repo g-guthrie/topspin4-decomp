@@ -89,7 +89,7 @@ extern char lbl_880EF6F0[];
 extern char lbl_880F2968[];
 extern char lbl_880F2B00[];
 extern char lbl_880F2B80[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C6C014[];
 extern char lbl_88C6C018[];
 extern char lbl_88C6C05C[];
@@ -616,7 +616,7 @@ void ts4_if_get_u32_lbl_88C6C220_887CDA68(ts4_word a0, ts4_word a1)
     float t2;
 
     t1 = *(float *)((char *)(ts4_word)(a1) + 0);
-    t2 = *(float *)lbl_8814B440;
+    t2 = *(float *)g_ts4_event_value;
     if (!(t1 < t2)) {
         *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(*(ts4_word *)lbl_88C6C21C);
         return;

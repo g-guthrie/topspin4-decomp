@@ -5,11 +5,11 @@ typedef struct Anim { u8 pad[0x30]; float f30; u8 pad34[0xc]; int n40; u32 id44;
 struct Obj;
 typedef struct ObjVt { void *m[0x21]; u8 (*step)(struct Obj *o, Anim *a); } ObjVt;
 typedef struct Obj { ObjVt *vt; } Obj;
-extern const float lbl_8814B440;
+extern const float g_ts4_event_value;
 extern const float g_ts4_script_constants[];
 void anim_step_repeat(Obj *o, Anim *a){
   Clip *c = a->clip;
-  int n, i; float zero = lbl_8814B440;
+  int n, i; float zero = g_ts4_event_value;
   if (!(c->len > zero)) return;
   if (c->id != 0xC55579FD && a->id44 == 0x171D6FBB) {
     float d, ratio, inv; int r;

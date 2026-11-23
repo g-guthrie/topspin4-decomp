@@ -2,13 +2,13 @@
  * weight divided by the total weight (all shares 0 when the total is 0). */
 typedef struct Cand { char p[0x88]; float weight; float share; char p2[0x98 - 0x90]; } Cand;
 typedef struct CandList { char p[0xc]; Cand *begin; char p2[4]; Cand *end; } CandList;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern float g_ts4_script_constants[];
 void ts4_cand_normalize_shares(CandList *l)
 {
     Cand *c;
     Cand *b = l->begin, *e = l->end;
-    float zero = lbl_8814B440;
+    float zero = g_ts4_event_value;
     float sum = zero;
     float inv;
     c = b;

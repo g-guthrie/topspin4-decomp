@@ -4,7 +4,7 @@
 #include "bm_ball.h"
 
 double fn_88565118(double x);
-extern float lbl_8814B440; /* g_ts4_event_value in config; the matching-b9 split still names it lbl_8814B440 */
+extern float g_ts4_event_value; /* g_ts4_event_value in config; the matching-b9 split still names it g_ts4_event_value */
 
 /* Arc-1 position at (tick - tick_prev) * dt, written to b->pos. Swing_DLL.xex 0x888AB558 */
 void ts4_bm_ball_arc1_position_888AB558(const float *gen, ts4_bm_ball *b)
@@ -63,7 +63,7 @@ void ts4_bm_ball_arc1_position_888AB558(const float *gen, ts4_bm_ball *b)
     t51 = t41 * t25 + t50;
     v.v[0] = t47;
     v.v[2] = t48;
-    v.v[3] = lbl_8814B440;
+    v.v[3] = g_ts4_event_value;
     v.v[1] = t51;
     *(__vector4 *)&tmp = v;
     b->pos = tmp;
@@ -88,6 +88,6 @@ void ts4_bm_ball_launch_velocity_888AB220(const ts4_bm_ball *b, __vector4 *out)
     v.v[0] = (((p0.v[0] - p1.v[0]) * T + a.v[0] * tau) * iE) * ia + b->inv_T * a.v[0];
     v.v[2] = (((p0.v[2] - p1.v[2]) * T + a.v[2] * tau) * iE) * ia + b->inv_T * a.v[2];
     v.v[1] = (((a.v[1] - ga) * b->tau + p0.v[1] * T) * iE) * ia + ay_g * it;
-    v.v[3] = lbl_8814B440;
+    v.v[3] = g_ts4_event_value;
     *out = v;
 }

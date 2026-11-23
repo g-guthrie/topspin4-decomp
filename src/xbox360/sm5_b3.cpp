@@ -23,10 +23,10 @@ extern void RtlLeaveCriticalSection(void *);
 extern void fn_88778BE8(void *, int);
 extern void ts4_tailcall_fn_88584548_8857AFE8(int);
 extern int lbl_88C6C220, lbl_88C6C21C;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 
 /* Swing_DLL.xex 0x887CE408 */
 int ts4_check_hash_pair_887CE408(char *s) { if (*(u32*)(*(char**)(s+0x38)+0x2c) == 0x1DCA7285u && (*(char**)(s+0x34))[0x1c]) return 0x99F8C8F0u == *(u32*)(*(char**)(s+0x3c)+0x2cc); return 0; }
 /* Swing_DLL.xex 0x887CE9B8 */
-bool ts4_float_ge_then_ne_887CE9B8(float *p) { int a = lbl_88C6C220; int b = (*p >= lbl_8814B440) ? lbl_88C6C21C : a; return b != a; }
+bool ts4_float_ge_then_ne_887CE9B8(float *p) { int a = lbl_88C6C220; int b = (*p >= g_ts4_event_value) ? lbl_88C6C21C : a; return b != a; }
 }

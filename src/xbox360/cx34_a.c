@@ -9,7 +9,7 @@ typedef unsigned char u8;
 #define CX34_PTR(p, o) (*(char **)((char *)(p) + (o)))
 
 extern char lbl_880D6B70[];
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern float lbl_880D06B4;
 extern float g_ts4_script_constants[];
 extern u32 *fn_881ABC10(u32 *first, u32 *last, u32 *key);

@@ -1,0 +1,53 @@
+{
+ "aliases": [
+  {
+   "alias": "ts4_call_seq_u32_off0_881A2570_icf_b",
+   "canonical": "ts4_call_seq_u32_off0_881A2570",
+   "address": "0x881A2570",
+   "kind": "icf",
+   "evidence": "0x881A2508 has two separate `bl 0x881A2570` (at +0x34 for type 0xfffe, at +0x40 for types 0xfffd/0xffff) with identical arguments; cl 16.00.10224 tail-merges two calls of one function (15 instructions off), so the source called two functions whose identical bodies the linker folded (/OPT:ICF)."
+  },
+  {
+   "alias": "lbl_880D6B70_icf_b",
+   "canonical": "lbl_880D6B70",
+   "address": "0x880D6B70",
+   "kind": "icf",
+   "evidence": "0x886D0EB0 materializes 0x880D6B70 twice (lis r11 at +0x3C for the +0xA0 sub-object, lis r9 at +0x44 for the +0x74 sub-object); cl reuses one lis/addi for two loads of one symbol (31 instructions off), so the two sub-objects have distinct classes whose identical vtables the linker folded."
+  },
+  {
+   "alias": "ts4_wstr_set_string_8819C360",
+   "canonical": "?SetString@Ts4WStr@@QAAXPBGH@Z",
+   "address": "0x8819C360",
+   "kind": "cxx",
+   "evidence": "0x8819C360 matches byte for byte only as the member Ts4WStr::SetString(const unsigned short *, int) (as an extern \"C\" function the sthx at +0x80 has its operands swapped); C units (fam5_nm6_000.c, q5s_cont_strings.cpp via extern \"C\") call it and cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_hkey_less_881509F8",
+   "canonical": "??MHKey@@QBA_NABU0@@Z",
+   "address": "0x881509F8",
+   "kind": "cxx",
+   "evidence": "0x881509F8 matches byte for byte only as the member HKey::operator<(const HKey &) const (39 instructions off as an extern \"C\" function); the alias is the name for C callers (four unmatched callers in the original: 0x88657410, 0x8899DE24, 0x889A0540 ranges)."
+  },
+  {
+   "alias": "ts4_xform_block_set_88187B18",
+   "canonical": "?Set@Ts4XformBlock@@QAAXABU1@@Z",
+   "address": "0x88187B18",
+   "kind": "cxx",
+   "evidence": "0x88187B18 matches byte for byte as the C++ member ?Set@Ts4XformBlock@@QAAXABU1@@Z (class-recovery pass, docs/agents/classes.md); C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_xform_record_set_88187BC0",
+   "canonical": "?Set@Ts4XformRecord@@QAAXABU1@@Z",
+   "address": "0x88187BC0",
+   "kind": "cxx",
+   "evidence": "0x88187BC0 matches byte for byte as the C++ member ?Set@Ts4XformRecord@@QAAXABU1@@Z (class-recovery pass, docs/agents/classes.md); C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_tracker_reset_886CBC30",
+   "canonical": "?Reset@Ts4Tracker@@QAAXXZ",
+   "address": "0x886CBC30",
+   "kind": "cxx",
+   "evidence": "0x886CBC30 matches byte for byte as the C++ member ?Reset@Ts4Tracker@@QAAXXZ (class-recovery pass, docs/agents/classes.md); C callers cannot spell the decorated name."
+  }
+ ]
+}

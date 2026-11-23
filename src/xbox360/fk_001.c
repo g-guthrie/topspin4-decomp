@@ -32,7 +32,7 @@ extern char lbl_880E39C8[];
 extern char lbl_880F31D8[];
 extern char lbl_880F6400[];
 extern char lbl_880F7F38[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C6A6E8[];
 extern char lbl_88C6A720[];
 extern char lbl_88C6A73C[];
@@ -723,7 +723,7 @@ void ts4_set_u8_off4_88187DC8(ts4_word a0)
 
     *(unsigned char *)((char *)(ts4_word)(a0) + 4) = (unsigned char)0;
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)-1;
-    t1 = *(float *)lbl_8814B440;
+    t1 = *(float *)g_ts4_event_value;
     *(unsigned char *)((char *)(ts4_word)(a0) + 5) = (unsigned char)0;
     *(float *)((char *)(ts4_word)(a0) + 12) = t1;
     *(unsigned char *)((char *)(ts4_word)(a0) + 6) = (unsigned char)0;

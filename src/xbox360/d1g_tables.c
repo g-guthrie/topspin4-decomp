@@ -12,7 +12,7 @@ struct Ts4Table2DRow {
     float key;                  /* +0x0C ascending row key */
 };
 
-extern const float lbl_8814B440; /* 0.0f */
+extern const float g_ts4_event_value; /* 0.0f */
 float ts4_range_lookup_881899D8(float x, struct Ts4Table2DRow *curve);
 
 /* Sign bit of a float, read from its high half-word (true when negative). */
@@ -44,7 +44,7 @@ float ts4_table2d_eval_8826D278(struct Ts4RelArray *table, float x, float y)
         float b = ts4_range_lookup_881899D8(y, it);
         float d = x - lo->key;
         float span = it->key - lo->key;
-        if (d <= lbl_8814B440)
+        if (d <= g_ts4_event_value)
             return a;
         if (d >= span)
             return b;

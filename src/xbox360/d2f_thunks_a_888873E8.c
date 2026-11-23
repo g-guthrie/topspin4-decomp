@@ -108,7 +108,7 @@ extern char lbl_880DC6B8[];
 extern char lbl_880DC810[];
 extern char lbl_880DCE3C[];
 extern char lbl_880E3DAC[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C6B468[];
 extern char lbl_88C6B484[];
 extern char lbl_88C6B4AC[];

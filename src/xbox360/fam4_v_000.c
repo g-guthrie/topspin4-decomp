@@ -50,7 +50,7 @@ extern char lbl_880F537C[];
 extern char lbl_880F538C[];
 extern char lbl_880F7C94[];
 extern char lbl_880F8C1C[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88B3302C[];
 extern char lbl_88C74998[];
 extern char lbl_88C78998[];
@@ -2426,7 +2426,7 @@ void ts4_if_get_u32_off4_88677058(ts4_word a0)
             *(ts4_word *)((char *)(ts4_word)(a0) + 16) = (ts4_word)1;
         } else {
             t6 = *(ts4_word *)((char *)(ts4_word)(t1) + 48);
-            *(float *)((char *)(ts4_word)(t6) + 812) = (*(float *)lbl_8814B440);
+            *(float *)((char *)(ts4_word)(t6) + 812) = (*(float *)g_ts4_event_value);
             t8 = *(unsigned char *)((char *)(ts4_word)(t2) + 12);
             p10 = (ts4_word)0;
             if ((ts4_word)t8 == 0) {
@@ -2826,7 +2826,7 @@ void ts4_if_get_u32_off34_88710080(ts4_word a0)
                         t12 = *(ts4_word *)((char *)(ts4_word)(t11) + 12);
                         if ((ts4_word)t12 != 0) {
                             t13 = *(float *)((char *)(ts4_word)(t12) + 16);
-                            t14 = *(float *)lbl_8814B440;
+                            t14 = *(float *)g_ts4_event_value;
                             if (t13 > t14) {
                                 *(float *)((char *)(ts4_word)(t12) + 16) = t14;
                                 fn_8870FE00((ts4_word)a0);

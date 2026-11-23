@@ -1,3 +1,7 @@
+/* STATE (2026-11-23): still 6 off with the recovered class (include/ts4/classes.h: Ts4Tracker, ctor
+ * `Ts4Tracker::Ts4Tracker() { f_30 = 0; Reset(); }` with member ctors for a/b and Reset defined in the same TU;
+ * decorated ??0Ts4Tracker@@QAA@XZ). Same three swapped scheduling pairs as below. Also tried with the class:
+ * Acc ctor body orders, Reset out of line (cl still inlines it under /O2), fn_check_ltcg /Oc. */
 /* nearmiss: 6 off (three swapped pairs); concrete blocker: list-scheduling order only. Target issues
  * lis(script_constants) before `li r11,0`, the dead `addi r10,r3,0x44` before `stw a.n`, and the 1.0f load
  * before the f04 store; here each pair is the other way round. All stores, registers and the dead addi

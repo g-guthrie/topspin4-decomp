@@ -6,7 +6,7 @@ typedef unsigned int u32;
 #define INL static inline
 #endif
 struct fvec { float *first; float *last; };
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern void *fn_88562DC0(void *dst, void *src, u32 n);
 extern void fn_88159D08(struct fvec *v, float *where, u32 n, float *value);
 INL float *cpf(float *first, float *last, float *dest)
@@ -20,7 +20,7 @@ INL float *cpf(float *first, float *last, float *dest)
 }
 void ts4_fvec_resize_88158B28(struct fvec *v, u32 n)
 {
-    float zero = lbl_8814B440;
+    float zero = g_ts4_event_value;
     u32 size = (u32)(v->last - v->first);
     if (n < size) {
         float *p = v->first + n;

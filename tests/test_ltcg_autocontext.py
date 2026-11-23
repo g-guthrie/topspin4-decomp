@@ -218,5 +218,135 @@ class FailingContext(unittest.TestCase):
         self.assertEqual(L.failing_context(error, self.CONTEXTS, 1), self.CONTEXTS[2])
 
 
+class Prototypes(unittest.TestCase):
+    def test_return_kind_of_declarations(self):
+        text = ('extern "C" unsigned int *hash_887F7BC8(unsigned int *out, unsigned char index);\n'
+                "extern void plain_82002000(void *p);\n/* int in_comment(void); */\n"
+                "ts4_word knr_82003000();\nstatic __inline float f(float x) { return g(x) + 1; }\n"
+                "void user(void) { if (*hash_887F7BC8(&h, 1) == 2) plain_82002000(0); x = called(1); }\n")
+        self.assertEqual(A.return_kind(text, "hash_887F7BC8"), "value")
+        self.assertEqual(A.return_kind(text, "plain_82002000"), "void")
+        self.assertEqual(A.return_kind(text, "knr_82003000"), "value")
+        self.assertEqual(A.return_kind(text, "f"), "value")
+        self.assertIsNone(A.return_kind(text, "called"))        # only called: no declaration
+        self.assertIsNone(A.return_kind(text, "g"))
+        self.assertIsNone(A.return_kind(text, "in_comment"))
+        self.assertIsNone(A.return_kind(text, "absent"))
+
+    def test_return_kind_of_definitions(self):
+        self.assertEqual(A.return_kind("void hash(u32 *out, u8 index)\n{\n}\n", "hash", definition=True), "void")
+        self.assertEqual(A.return_kind("u32 *hash(u32 *out, u8 index)\n{ return out; }\n", "hash", True), "value")
+        self.assertEqual(A.return_kind("void *hash(u32 *out)\n{ return out; }\n", "hash", True), "value")
+        self.assertIsNone(A.return_kind("void hash(u32 *out, u8 index);\n", "hash", definition=True))
+
+    def choose(self, want, kinds):
+        match = A.Candidate("src/xbox360/rm2.c", "hash_82002000", "match")
+        stand = A.Candidate("src/xbox360/cx39.c", "hash_82002000", "stand-in")
+        source_map = {0x82002000: [match, stand]}
+        with tempfile.TemporaryDirectory() as tmp:
+            return A.choose([0x82002000], source_map, "src/xbox360/test.c", Path(tmp),
+                            wants={0x82002000: want} if want else None,
+                            returns_of=lambda c: kinds.get(c.origin)), match, stand
+
+    def test_stand_in_with_the_callers_prototype_beats_a_matched_source_without_it(self):
+        sel, _match, stand = self.choose("value", {"match": "void", "stand-in": "value"})
+        self.assertEqual(sel.covered[0x82002000], stand)
+        self.assertEqual(sel.contexts, ["src/xbox360/cx39.c", A.PRIMER])
+        self.assertEqual(sel.missing, [])                       # the callee itself is matched
+        self.assertIn("left out src/xbox360/rm2.c (void)", " ".join(sel.notes))
+        self.assertEqual(sel.includes(), ["hash_82002000"])
+
+    def test_matched_source_stays_when_it_agrees_or_nothing_is_known(self):
+        for want, kinds in (("value", {"match": "value", "stand-in": "value"}),
+                            ("value", {"match": None, "stand-in": "value"}),     # unreadable: no opinion
+                            ("void", {"match": "void", "stand-in": "value"}),
+                            (None, {"match": "void", "stand-in": "value"}),
+                            ("value", {"match": "void", "stand-in": "void"})):   # nobody agrees
+            sel, match, _stand = self.choose(want, kinds)
+            self.assertEqual(sel.covered[0x82002000], match, (want, kinds))
+            self.assertEqual(sel.notes, [])
+
+
+class Fallbacks(unittest.TestCase):
+    P = "src/xbox360/"
+    PRIMER = A.PRIMER
+
+    def variants(self, auto, manual=(), limit=12):
+        contexts = [*manual, *auto, self.PRIMER]
+        owner = {"f_a": self.P + "a.c", "f_b": self.P + "b.c", "f_c": self.P + "c.c"}
+        includes = ["given"] + [n for n, src in owner.items() if any(c.endswith(src) for c in auto)]
+        return A.fallback_variants(contexts, list(manual), includes, ["given"], owner, limit=limit)
+
+    def test_two_callee_sources(self):
+        a, b = self.P + "a.c", self.P + "b.c"
+        got = self.variants([a, "flags(/Ob1):" + b])
+        labels = [label for label, _c, _i in got]
+        self.assertEqual(labels[0], "without the /INCLUDE of the callees")
+        self.assertEqual(got[0][1:], ([a, "flags(/Ob1):" + b, self.PRIMER], ["given"]))
+        self.assertEqual(got[1][1:], (["flags(/Ob1):" + a, "flags(/Ob1):" + b, self.PRIMER], ["given", "f_a", "f_b"]))
+        by = {label: (c, i) for label, c, i in got}
+        # dropping a source drops the /INCLUDE of its callee, keeps the primer and the other's prefix
+        self.assertEqual(by[f"without {a}"], (["flags(/Ob1):" + b, self.PRIMER], ["given", "f_b"]))
+        self.assertEqual(by[f"without {b}"], ([a, self.PRIMER], ["given", "f_a"]))
+        self.assertEqual(by[f"without {b}, flags(/Ob1): on the others"],
+                         (["flags(/Ob1):" + a, self.PRIMER], ["given", "f_a"]))
+        self.assertEqual(got[-1], ("without the callee sources", [self.PRIMER], ["given"]))
+        self.assertEqual(len({(tuple(c), tuple(i)) for _l, c, i in got}), len(got))      # no repeats
+
+    def test_explicit_contexts_stay_and_the_limit_holds(self):
+        m = "flags(/Ob1):" + self.P + "m.c"
+        got = self.variants([self.P + "a.c", self.P + "b.c", self.P + "c.c"], manual=[m], limit=5)
+        self.assertEqual(len(got), 5)
+        for _label, ctx, inc in got:
+            self.assertEqual(ctx[0], m)
+            self.assertEqual(ctx[-1], self.PRIMER)
+            self.assertIn("given", inc)
+        full = self.variants([self.P + "a.c", self.P + "b.c", self.P + "c.c"], manual=[m], limit=50)
+        self.assertIn(f"with {self.P}b.c alone", [label for label, _c, _i in full])
+
+    def test_one_callee_source(self):
+        a = self.P + "a.c"
+        self.assertEqual([label for label, _c, _i in self.variants([a])],
+                         ["without the /INCLUDE of the callees", "with flags(/Ob1): on every callee source",
+                          "without the callee sources"])
+
+    def test_nothing_to_try_without_callee_sources(self):
+        self.assertEqual(A.fallback_variants([self.PRIMER], [], [], [], {}), [])
+
+
+class Helpers(unittest.TestCase):
+    def test_context_only_helper_named_by_the_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tree(root)
+            address_of = {"f_b_82003000": 0x82003000, "fn_82002000": 0x82002000}.get
+            helpers = A.load_helpers(root, address_of)
+            # ctx.c defines f_print (no address: a helper) and renamed_82002000 (an address: a stand-in)
+            self.assertEqual(helpers, {"f_print": "flags(/Ob1):src/xbox360/ctx.c"})
+            self.assertNotIn("if", helpers)   # `if (f_print(0)) {` in ctx.c is not a definition
+            self.assertEqual(A.helper_contexts("int f_print(char *, ...);\nint g(void) { return f_print(0); }",
+                                               helpers), ["flags(/Ob1):src/xbox360/ctx.c"])
+            self.assertEqual(A.helper_contexts("/* f_print */ int g(void) { return 1; }", helpers), [])
+            self.assertEqual(A.helper_contexts("int f_print(char *d, ...) { return 0; }", helpers), [])
+
+
+class PartlyInlined(unittest.TestCase):
+    """A callee the original calls twice and the candidate once was inlined at one call site."""
+
+    def check(self, candidate_calls):
+        cand = A.Candidate("src/xbox360/a.c", "f_a", "match")
+        index = L.SymbolIndex([("f_a", 0x82002000), ("other", 0x82003000)])
+        item = L.Checked("t", "t_name", 0x83000000, L.Result(False, ["x"], {}, [], []),
+                         c_sites=[L.Site(4 * i, L.REL24, 0x82002000) for i in range(candidate_calls)]
+                         + [L.Site(0x40, L.REL24, 0x82003000)],
+                         t_sites=[L.Site(0, L.REL24, 0x88001000), L.Site(4, L.REL24, 0x88001000)])
+        return L.inlined_sources([item], index, {"t_name": [cand]}, "f_a(1); f_a(2);", {cand: 0x88001000})
+
+    def test_counts(self):
+        self.assertEqual(len(self.check(0)), 1)     # inlined everywhere
+        self.assertEqual(len(self.check(1)), 1)     # inlined at one of two call sites
+        self.assertEqual(self.check(2), [])         # both calls are there
+
+
 if __name__ == "__main__":
     unittest.main()

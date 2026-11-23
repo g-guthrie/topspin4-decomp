@@ -9,7 +9,7 @@ typedef long long ts4_s64;
 typedef unsigned long ts4_word;
 
 extern "C" {
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 }
 extern "C" ts4_word ts4_transform_vec3_in_place_8864E9F8(...);
 extern "C" ts4_word ts4_if_get_fn_88804058_888083C0(...);
@@ -73,7 +73,7 @@ ts4_word ts4_if_get_u32_offc_8887A540(ts4_word a0, ts4_word a1, ts4_word a2, ts4
     p7 = (ts4_word)a0;
     if (((ts4_word)t1 != 0 && (ts4_word)a1 != 0) && (ts4_word)a2 != 0) {
         ((Vk *)(ts4_word)a0)->s7((ts4_word)a2, (ts4_word)(ts4_word)&loc60[0]);
-        t5 = *(float *)lbl_8814B440;
+        t5 = *(float *)g_ts4_event_value;
         *(float *)((char *)loc50 + 0) = t5;
         *(float *)((char *)loc50 + 4) = t5;
         *(float *)((char *)loc50 + 8) = t5;

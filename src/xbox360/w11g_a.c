@@ -2,13 +2,13 @@ extern char lbl_880F378C[], lbl_880D6B70[], lbl_880F37A4[], lbl_880F3794[];
 void ts4_destroy_owned_object(void *object);
 void ts4_object_dtor_886CA260(void *p);
 void ts4_object_dtor_886DABD0(void *p);
-void fn_886D0EB0(void *p);
+void ts4_tracker_sub30_dtor_886D0EB0(void *p);
 
 typedef struct S270 { void *vt; char pad[0x2c]; char sub30[0x30]; } S270;
 static __inline void s270_dtor(S270 *s)
 {
     s->vt = lbl_880F3794;
-    fn_886D0EB0(&s->sub30);
+    ts4_tracker_sub30_dtor_886D0EB0(&s->sub30);
 }
 static __inline void rel_owned(void **pp) { if (*pp) ts4_destroy_owned_object(*pp); }
 typedef struct S430 { void *vt; char pad[8]; void *o; } S430;
@@ -45,6 +45,6 @@ void ts4_object_dtor_886E34F8(Big *self)
     s430_dtor(&self->s430);
     if (self->o414) ts4_destroy_owned_object(self->o414);
     s270_dtor(&self->s270);
-    fn_886D0EB0(self->sub150);
-    fn_886D0EB0(self->sub30);
+    ts4_tracker_sub30_dtor_886D0EB0(self->sub150);
+    ts4_tracker_sub30_dtor_886D0EB0(self->sub30);
 }

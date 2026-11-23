@@ -21,7 +21,7 @@ extern char lbl_88CAD32C[];
 extern char lbl_88D4589C[];
 ts4_word ts4_bstr_concat_88164000();
 ts4_word ts4_string_assign_range_8819B448();
-ts4_word fn_8819C360();
+ts4_word ts4_wstr_set_string_8819C360();
 ts4_word ts4_vector_grow_append_88280ED8();
 ts4_word fn_88421338();
 ts4_word fn_8857ACB8();
@@ -88,7 +88,7 @@ ts4_word ts4_if_call_seq_u32_off0_8819C190(ts4_word a0, ts4_word a1)
             *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(t9 + 16);
             return a0;
         }
-        fn_8819C360((ts4_word)a0, (ts4_word)t2, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t2) + -12)));
+        ts4_wstr_set_string_8819C360((ts4_word)a0, (ts4_word)t2, (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t2) + -12)));
     }
     return a0;
 }

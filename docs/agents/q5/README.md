@@ -95,8 +95,25 @@ first. `tools/fn_check_ltcg.py --auto-context` picks the contexts:
   that produced the result.
 - Call each callee by the name its matched source uses; the output says when the source does not.
 - It prints the equivalent explicit command: put that context list (and `include`) in the spec.
+- A candidate source whose definition returns `void` where the source under test uses a value (or the reverse)
+  is passed over when another candidate agrees, also for a stand-in (0x8816CBB0: cx39_ctx_hash.c, not
+  rm2_index_hash_tables.c). A callee the original calls more often than the candidate (inlined at some call site)
+  gets `flags(/Ob1):`.
+- A helper that only a context-only file defines (os1_ctx_crc32 in os1_ctx_checksum.c) brings that file in when the
+  source names it.
+- On FAIL it tries up to `--auto-tries` (12) smaller links in a fixed order: without the /INCLUDEs, `/Ob1` on every
+  callee source, without one callee source at a time, one callee source alone, no callee source.
 - It cannot know `--no-include` with a caller context, or a new stand-in for an unmatched callee: pass those by
   hand. Logic and tests: tools/ltcg_autocontext.py, tests/test_ltcg_autocontext.py.
+
+## Tools: aliases (ICF folds, C++ members called from C)
+
+docs/ltcg-route.md section 12. Two symbols the original linker folded to one address (two `bl` to one function
+that the compiler would merge, one vtable address loaded twice) need a second name in the source: add it to
+config/54540859/icf_aliases.json (`"kind": "icf"`, with the evidence) and both checkers and the build accept it.
+A function that matches only as a C++ member gets its decorated name in the spec's `"functions"` plus a
+`"kind": "cxx"` alias in the spec's `"aliases"`; fix_refs.py writes the alias into the C callers and
+integrate_match.py registers it. `python3 tools/icf_alias.py --check` validates the file.
 
 ## Debugging equivalence failures
 
@@ -122,7 +139,8 @@ are in src/xbox360/drafts/q5s_*_nearmiss.* with blockers; claims under work/q5/c
 once a new wave starts (clear them by exact name).
 
 Recommended order on resume:
-1. Checker fixes for false negatives: ICF-folded functions (881A2508, 886D0EB0 vtable pair),
+1. (Done 2026-11-23: aliases, seed fix and auto-context changes; see "Tools: aliases" above and
+   docs/ltcg-route.md sections 12-13.) Checker fixes for false negatives: ICF-folded functions (881A2508, 886D0EB0 vtable pair),
    C++ member symbols called from C (8819C360, 881509F8: rename callers or /alternatename),
    0x8814B440 constant naming differs between plain and LTCG routes, auto-context stand-in choice.
 2. Class-recovery pass (C++ classes from vtables/ctors/dtors into src/xbox360/include/ts4/):

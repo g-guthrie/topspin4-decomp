@@ -90,7 +90,7 @@ typedef struct Q5CurveSrcVt {
 } Q5CurveSrcVt;
 struct Q5CurveSrc { Q5CurveSrcVt *vt; };
 typedef struct Q5CurveUser { char pad[0x1c]; Q5CurveSrc src; char pad20[0x58]; void *override78; } Q5CurveUser;
-extern float lbl_8814B440; /* 0.0f */
+extern float g_ts4_event_value; /* 0.0f */
 
 /* Swing_DLL.xex 0x88656538: when the embedded curve source (+0x1c) is ready (slot +0x30) and no
  * override is set (+0x78), return entry i of the description's self-relative float array
@@ -98,7 +98,7 @@ extern float lbl_8814B440; /* 0.0f */
 float ts4_curve_value_88656538(Q5CurveUser *self, u32 i)
 {
     Q5CurveSrc *s = &self->src;
-    float zero = lbl_8814B440;
+    float zero = g_ts4_event_value;
     if (s->vt->ready(s) && self->override78 == 0) {
         Q5CurveSrcVt *vt = s->vt;
         Q5RelF32 *v = &vt->desc(s, 0)->values;

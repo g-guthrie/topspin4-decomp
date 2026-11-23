@@ -27,7 +27,7 @@ extern char lbl_880F1D38[];
 extern char lbl_880F216C[];
 extern char lbl_880F2190[];
 extern char lbl_880F285C[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C6C014[];
 extern char lbl_88C6C058[];
 extern char lbl_88C6C21C[];
@@ -858,7 +858,7 @@ ts4_word ts4_loop_get_ts4_object_finalize_887D3BB0(ts4_word a0, ts4_word a1, ts4
     ts4_object_finalize((ts4_word)a0);
     fn_887CFAC0((ts4_word)(ts4_word)&loc58[0], (ts4_word)a2, (ts4_word)0);
     t3 = *(float *)((char *)loc58 + 0);
-    t4 = *(float *)lbl_8814B440;
+    t4 = *(float *)g_ts4_event_value;
     if (!(t3 < t4)) {
         p7 = (ts4_word)(*(ts4_word *)lbl_88C6C21C);
     } else {

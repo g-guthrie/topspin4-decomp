@@ -10,7 +10,7 @@ typedef unsigned char u8;
 #define CX34_VT(o, slot) ((*(void ***)(o))[(slot) / 4])
 
 extern void *ts4_find_service(u32 hash);
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 
 /* 0x888C0130 */
 void ts4_add_and_publish_24_888C0130(char *self, int d)

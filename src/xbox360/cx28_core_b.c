@@ -3,7 +3,7 @@ typedef unsigned int cx28_u32;
 typedef unsigned char cx28_u8;
 
 extern unsigned char lbl_880C1320[];
-extern const float lbl_8814B440;
+extern const float g_ts4_event_value;
 void ts4_assign_formatted_text(void *dst, void *src);
 
 #ifdef _MSC_VER

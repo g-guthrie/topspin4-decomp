@@ -8,7 +8,7 @@ __vector4 __vsldoi(__vector4 a, __vector4 b, int imm);
 #ifdef _MSC_VER
 #pragma intrinsic(__vsldoi)
 #endif
-extern float lbl_8814B440;  /* 1.0f */
+extern float g_ts4_event_value;  /* 1.0f */
 typedef struct Q5SF3 { float x, y, z; } Q5SF3;
 typedef struct Q5SXform {
     __vector4 pos;      /* +0x00 */
@@ -31,7 +31,7 @@ static __inline __vector4 q5s_load3(const void *p)
 void ts4_placed_set_888C0818(Q5SPlaced *o, float sy, float a, float b, float x, float y, float z)
 {
     Q5SF3 t, s;
-    float one = lbl_8814B440;
+    float one = g_ts4_event_value;
     t.x = x;
     t.y = y;
     t.z = z;

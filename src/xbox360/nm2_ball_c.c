@@ -3,7 +3,7 @@
  * whose variable is defined later comes first (here the A components are defined after inv_T * t). */
 #include "bm_ball.h"
 double fn_88565118(double x);
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 /* Arc-2 position from arc2_pos/arc2_vel, written to b->pos. Swing_DLL.xex 0x888AD1C8 */
 void ts4_bm_ball_arc2_position_888AD1C8(const float *gen, ts4_bm_ball *b)
 {
@@ -74,7 +74,7 @@ void ts4_bm_ball_arc2_position_888AD1C8(const float *gen, ts4_bm_ball *b)
     t58 = (t52 * t36) + t57;
     v.v[0] = t53;
     v.v[2] = t54;
-    v.v[3] = lbl_8814B440;
+    v.v[3] = g_ts4_event_value;
     v.v[1] = t58;
     *(__vector4 *)&tmp = v;
     b->pos = tmp;

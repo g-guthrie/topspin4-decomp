@@ -1,13 +1,13 @@
-/* nearmiss: 31 off (one missing lis/addi pair shifts the tail; every other instruction matches);
- * concrete blocker: the game materializes lbl_880D6B70 twice (lis r11 and lis r9, for the +0xA0 and +0x74
- * sub-object vtables) while MSVC CSEs one address for both stores. The likely cause is two distinct vtable
- * symbols that the linker folded to one address; one symbol name cannot express that, and declaring a second
- * name for the same address would be a fake symbol. Tried: per-sub-object inline vt helpers, direct stores.
- * 0x886D0EB0: tracker sub-object (owner +0x30) destructor: destroys the +0xD4 u32 vector (element loop, then
+/* 0x886D0EB0: tracker sub-object (owner +0x30) destructor: destroys the +0xD4 u32 vector (element loop, then
  * storage), resets the +0xA0/+0x90/+0x74/+0x58 sub-object vtables, frees the +0x58 owned pointer and the
- * storage of the +0x4C/+0x40/+0x34 vectors. The +0x58 helper passes &o->p to a deeper helper (DA1: dead addi). */
+ * storage of the +0x4C/+0x40/+0x34 vectors. The +0x58 helper passes &o->p to a deeper helper (dead addi).
+ * The +0xA0 and +0x74 sub-objects are of two classes whose identical vtables the original linker folded
+ * (/OPT:ICF) to 0x880D6B70: the code loads that address twice (lis r11, lis r9). The second name is the
+ * reviewed alias lbl_880D6B70_icf_b (config/54540859/icf_aliases.json); with one name the compiler loads
+ * the address once. */
 extern char lbl_880F3790[];
-extern char lbl_880D6B70[];
+extern char lbl_880D6B70[];       /* vtable of the +0x74 sub-object class */
+extern char lbl_880D6B70_icf_b[]; /* vtable of the +0xA0 sub-object class: same address (folded) */
 extern char lbl_880F4460[];
 extern char lbl_880D75FC[];
 extern void ts4_destroy_owned_object(void *p);
@@ -32,13 +32,12 @@ typedef struct Q5sTracker30 {
 static __inline void q5s_vec_free(Q5sVec *v) { if (v->begin) ts4_destroy_owned_object(v->begin); }
 static __inline void q5s_vec_dtor(Q5sVec *v) { ts4_loop_get_u32_off0_882666E0(v->begin, v->end); q5s_vec_free(v); }
 static __inline void q5s_ptr_free(void **pp) { if (*pp) ts4_destroy_owned_object(*pp); }
-static __inline void q5s_vt_dtor(Q5sVtOnly *o) { o->vt = lbl_880D6B70; }
 static __inline void q5s_owned_dtor(Q5sOwned *o) { o->vt = lbl_880D75FC; q5s_ptr_free(&o->p); }
-void fn_886D0EB0(Q5sTracker30 *s)
+void ts4_tracker_sub30_dtor_886D0EB0(Q5sTracker30 *s)
 {
     s->vt = lbl_880F3790;
     q5s_vec_dtor(&s->v);
-    s->sa0.vt = lbl_880D6B70;
+    s->sa0.vt = lbl_880D6B70_icf_b;
     s->s90.vt = lbl_880F4460;
     s->s74.vt = lbl_880D6B70;
     q5s_owned_dtor(&s->s58);

@@ -1,7 +1,7 @@
 #include "gp0_types.h"
 
 /* Swing_DLL.xex float constant 0.0f used by the gameplay code. */
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 
 struct Gp0PlayerState {
     gp0_u8 u_0000[0x430];
@@ -43,7 +43,7 @@ void ts4_gp0_clear_player_float_block_8865F518(struct Gp0InstanceA *instance)
     if (it == end) {
         return;
     }
-    zero = lbl_8814B440;
+    zero = g_ts4_event_value;
     do {
         struct Gp0Player *player = *it;
         if (player != 0) {

@@ -30,7 +30,7 @@ extern char lbl_8803D1C8[];
 extern char lbl_8803F49C[];
 extern char lbl_8803F4AC[];
 extern char lbl_8803F948[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88CACF08[];
 extern char lbl_88D459E8[];
 extern char lbl_88D45A48[];
@@ -932,7 +932,7 @@ float ts4_if_call_seq_u8_off0_889905A8(ts4_word a0, ts4_word a1, ts4_word a2, ts
 
     t1 = *(unsigned char *)((char *)(ts4_word)(a0) + 0);
     if ((ts4_word)t1 == 0) {
-        return (*(float *)lbl_8814B440);
+        return (*(float *)g_ts4_event_value);
     }
     t2 = fn_8815A998((ts4_word)(ts4_word)&loc50[0], (ts4_word)(((int)(((((a1 << 1) + a2) + 9) << 1) + a3) * 28) + a0), (ts4_word)(((a3 + (a3 << 2)) << 3) + a4));
     t3 = *(ts4_word *)((char *)(ts4_word)(t2) + 8);

@@ -35,7 +35,7 @@ extern char lbl_880DB76C[];
 extern char lbl_880DB7BC[];
 extern char lbl_880DB7E4[];
 extern char lbl_880DBD30[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C6B4AC[];
 extern char lbl_88C6B910[];
 extern char lbl_88C6B914[];
@@ -1076,7 +1076,7 @@ ts4_word ts4_call_seq_fn_88617D88_888DE4C8(ts4_word a0)
     fn_88617D88((ts4_word)a0);
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880DB580;
     fn_8816D1A8((ts4_word)(a0 + 28));
-    t3 = *(float *)lbl_8814B440;
+    t3 = *(float *)g_ts4_event_value;
     *(float *)((char *)(ts4_word)(a0) + 40) = t3;
     *(float *)((char *)(ts4_word)(a0) + 44) = t3;
     return a0;

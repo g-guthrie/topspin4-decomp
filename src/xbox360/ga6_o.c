@@ -3,7 +3,7 @@
  */
 typedef unsigned int ts4_word;
 
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 
 void fn_886DC610(void *self, void *entry);
 unsigned char ts4_data_condition_eval_886C9F08(void *table, void *key, void *item);
@@ -34,7 +34,7 @@ void ga6_erase_idle_entries_886DC708(struct Ga6EntryList *self)
     struct Ga6Entry98 *e = self->cur;
     float zero;
     if (e != self->end) {
-        zero = lbl_8814B440;
+        zero = g_ts4_event_value;
         do {
             if (ga6_entry_is_idle(e, zero))
                 fn_886DC610(self, e);

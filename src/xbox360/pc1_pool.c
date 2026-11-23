@@ -7,8 +7,8 @@
  */
 static const float g_ts4_script_constants[668] = {1.0f};
 
-/* Float constant 0.0f (lbl_8814B440 in the original image). */
-extern float lbl_8814B440;
+/* Float constant 0.0f (g_ts4_event_value in the original image). */
+extern float g_ts4_event_value;
 /* Seconds-per-tick style scale factor (lbl_88D459B0). */
 extern float lbl_88D459B0;
 
@@ -58,7 +58,7 @@ float ts4_curve_delta_scaled_8820DBB0(Ts4VCall *self)
 {
     float a = self->vt->get_a(self, self->t);
     float b = self->vt->get_b(self, self->t);
-    if (b - a < lbl_8814B440)
+    if (b - a < g_ts4_event_value)
         return (b - a) * g_ts4_script_constants[14];
     return b - a;
 }
@@ -183,7 +183,7 @@ typedef struct Ts4WeightRecord {
 void ts4_sum_indexed_weights_881794E0(Ts4WeightTable *self, int *record_ref)
 {
     Ts4WeightRecord *rec = (Ts4WeightRecord *)((char *)record_ref + *record_ref);
-    float zero = lbl_8814B440;
+    float zero = g_ts4_event_value;
     float sum = zero;
     unsigned char bad = 0;
     int i = 0;

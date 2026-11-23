@@ -66,10 +66,17 @@ callees without a matched source ("missing callee bodies": match those first)
 and the equivalent explicit command are printed. A context that fails to
 compile, or that makes the link fail (two sources defining one function), is
 dropped with a message and the check is repeated without it. When the result
-is FAIL, two smaller links are also tried (without the /INCLUDEs; without the
-callee sources) and a MATCH there is reported with its explicit command: in a
-small link a callee source can also disturb the function (a global declared
-with another type there); --auto-no-fallback skips this.
+is FAIL, smaller links are also tried in a fixed order (without the /INCLUDEs;
+`flags(/Ob1):` on every callee source; without one callee source at a time; one
+callee source alone; without the callee sources: at most --auto-tries of them)
+and a MATCH there is reported with its explicit command: in a small link a
+callee source can also disturb the function (a global declared with another
+type there, a body whose register use the original did not have);
+--auto-no-fallback skips this. A candidate source that defines a callee with
+another return kind (void / a value) than SRC declares is passed over when
+another candidate agrees, also for a stand-in. A callee the original calls more
+often than the linked candidate (inlined at some call site) gets
+`flags(/Ob1):` like one that is inlined everywhere.
 """
 
 from __future__ import annotations
@@ -86,6 +93,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import icf_alias  # noqa: E402
 import ltcg_autocontext as auto  # noqa: E402
 from xcoff import ROOT, Reloc, load_symbols  # noqa: E402
 
@@ -362,14 +370,17 @@ class Result:
     renames: dict[str, str]
     pools: list[str]
     diff_words: list[int]
+    stale: dict[str, str] = field(default_factory=dict)  # old placeholder -> current name
 
 
 def compare(c_code: bytes, c_sites: list[Site], c_start: int, c_index: SymbolIndex,
             c_read, t_code: bytes, t_sites: list[Site], t_start: int, t_index: SymbolIndex,
-            t_read, known_names: set[str]) -> Result:
+            t_read, known_names: set[str], aliases=None, name_address: dict | None = None) -> Result:
     problems: list[str] = []
     renames: dict[str, str] = {}
     pools: list[str] = []
+    stale: dict[str, str] = {}
+    name_address = name_address or {}
     size = len(t_code)
     if len(c_code) < size or any(c_code[size:].strip(b"\0")):
         problems.append(f"size {len(c_code):#x} != target {size:#x}")
@@ -413,6 +424,18 @@ def compare(c_code: bytes, c_sites: list[Site], c_start: int, c_index: SymbolInd
                     continue
                 problems.append(f"{where}: pooled constant {cv[:4].hex()} != target {tv[:4].hex()} ({tn}+{to:#x})")
                 continue
+            if aliases is not None and cn in aliases:
+                # A reviewed alias (icf_aliases.json) equals the symbol at its own address only.
+                if not (co == to and aliases.same(cn, ts.address - to)):
+                    problems.append(f"{where}: alias {cn}+{co:#x} stands for {aliases.address(cn):#010x}, "
+                                    f"target {tn}+{to:#x}")
+                continue
+            if cn != tn and co == to and name_address.get(cn) == ts.address - to:
+                continue  # two symbols.txt names at one address (0x8814B440 up to b224)
+            if cn != tn and co == to and cn not in known_names and not tn.startswith(PLACEHOLDER_PREFIXES) \
+                    and icf_alias.placeholder_address(cn) == ts.address - to:
+                stale[cn] = tn  # the placeholder of an older split: it encodes this address
+                continue
             if co != to:
                 problems.append(f"{where}: {cn}+{co:#x} vs target {tn}+{to:#x}")
             elif cn == tn:
@@ -424,7 +447,7 @@ def compare(c_code: bytes, c_sites: list[Site], c_start: int, c_index: SymbolInd
                 renames[tn] = cn
             else:
                 problems.append(f"{where}: candidate {cn} vs target {tn}")
-    return Result(not problems, problems, renames, pools, diff)
+    return Result(not problems, problems, renames, pools, diff, stale)
 
 
 # --------------------------------------------------------------------------- build
@@ -606,6 +629,12 @@ def verify(source: Path, contexts: list[str], flags: list[str], pairs: list[tupl
     code_names = {e[0] for e in symbols if e[1] == ".text"}
     t_index = SymbolIndex([(e[0], e[2]) for e in symbols])
     t_read = LazyImage(target_image).read
+    aliases = icf_alias.AliasMap()
+    name_address = {}
+    for entry in symbols:
+        name_address.setdefault(entry[0], entry[2])
+    text_addresses = {e[2] for e in symbols if e[1] == ".text"}
+    code_names |= {e.alias for e in aliases.entries if e.address in text_addresses}  # function stubs
     workdir = Path(tempfile.mkdtemp(prefix="ltcgcheck-", dir=ROOT / "work"))
     includes = ([] if no_include else [c for c, _ in pairs]) + list(extra_includes or [])
     image, map_symbols, alias = build(source, contexts, flags, includes, toolchain, wibo,
@@ -623,7 +652,7 @@ def verify(source: Path, contexts: list[str], flags: list[str], pairs: list[tupl
         c_sites = candidate_sites(image, entry.address, c_code)
         t_sites = target_sites(t_code, t_start, t_relocs)
         res = compare(c_code, c_sites, entry.address, c_index, image.read,
-                      t_code, t_sites, t_start, t_index, t_read, known_names)
+                      t_code, t_sites, t_start, t_index, t_read, known_names, aliases, name_address)
         out.append(Checked(cand, tname, t_start, res, c_code, t_code, c_sites, t_sites))
     if not keep and all(c.result and c.result.ok for c in out):
         shutil.rmtree(workdir, ignore_errors=True)
@@ -652,9 +681,33 @@ def auto_contexts(args, pairs, symbols, find_function) -> list[str]:
     direct = {a for t in targets for a in callees_of(t)}
     inlined = [a for a in auto.referenced_addresses(text, address_of.get, skip=set(targets) | direct)
                if a in names and not auto.HELPER.match(names[a])]
+    # What SRC declares each callee to return, under any name a candidate source gives it.
+    wants = {}
+    for address in [*callees, *inlined]:
+        for name in dict.fromkeys([names.get(address, "")] + [c.symbol for c in source_map.get(address, [])]):
+            kind = auto.return_kind(text, name) if name else None
+            if kind:
+                wants[address] = kind
+                break
+    texts = {}
+
+    def returns_of(cand):
+        if cand.source not in texts:
+            texts[cand.source] = (ROOT / cand.source).read_text(errors="replace")
+        return auto.return_kind(texts[cand.source], cand.symbol, definition=True)
+
     sel = auto.choose(callees, source_map, args.source, ROOT, targets, args.auto_prefix or "",
                       manual=args.context, inlined=inlined, recorded=auto.load_recorded(ROOT),
-                      flags=args.flags)
+                      flags=args.flags, wants=wants, returns_of=returns_of)
+    # Helpers that only a context-only file defines (folding stand-ins the link inlines): the
+    # source names them, so their file is in every link, like an explicit --context.
+    have = {auto.split_context(c)[1] for c in sel.contexts}
+    for entry in auto.helper_contexts(text, auto.load_helpers(ROOT, address_of.get)):
+        if auto.split_context(entry)[1] not in have and auto.split_context(entry)[1] != str(args.source):
+            at = len(sel.contexts) - (1 if sel.contexts and sel.contexts[-1] == auto.PRIMER else 0)
+            sel.contexts.insert(at, entry)
+            HELPER_CONTEXTS.append(entry)
+            sel.notes.append(f"{entry}: defines a helper the source names (context-only file)")
     for address, cand in sel.covered.items():
         if address in direct and cand.symbol not in text:
             sel.notes.append(f"{args.source.name} does not mention {cand.symbol}: a call under "
@@ -663,6 +716,9 @@ def auto_contexts(args, pairs, symbols, find_function) -> list[str]:
     if not args.auto_no_include:
         args.include += [n for n in sel.includes() if n not in args.include]
     called = {names[t]: [sel.covered[a] for a in callees_of(t) if a in sel.covered] for t in targets}
+    for cand_list in called.values():   # where each callee is, for counting its call sites
+        for cand in cand_list:
+            CALLEE_ADDRESS[cand] = next(a for a, c in sel.covered.items() if c == cand)
     return sel.contexts, called, {c.symbol: c.source for c in sel.covered.values()}
 
 
@@ -670,17 +726,31 @@ def matched(checked: list[Checked]) -> bool:
     return all(c.result and c.result.ok for c in checked)
 
 
-def inlined_sources(checked: list[Checked], c_index: SymbolIndex, called: dict, text: str) -> list:
-    """Chosen callees (Candidate) the original calls but the linked candidate does not: the
-    link inlined them (or SRC does not call them: only callees SRC names are reported)."""
+HELPER_CONTEXTS: list = []  # context-only helper files the source names: kept in every fallback
+CALLEE_ADDRESS: dict = {}   # Candidate -> address of the callee in the original (auto_contexts)
+
+
+def inlined_sources(checked: list[Checked], c_index: SymbolIndex, called: dict, text: str,
+                    addresses: dict | None = None) -> list:
+    """Chosen callees (Candidate) the original calls more often than the linked candidate does:
+    the link inlined them, at every call site or at some (or SRC does not call them: only
+    callees SRC names are reported). addresses: Candidate -> callee address in the original;
+    without it only a callee with no call left in the candidate is reported."""
+    addresses = CALLEE_ADDRESS if addresses is None else addresses
     out = []
     for item in checked:
         if item.result is None:
             continue
         hits = [c_index.lookup(s.address) for s in item.c_sites if s.kind == REL24 and s.address >= 0]
-        present = {hit[0] for hit in hits if hit}
-        out += [c for c in called.get(item.target, [])
-                if c.symbol not in present and c.symbol in text and c not in out]
+        present = [hit[0] for hit in hits if hit and hit[1] == 0]
+        for c in called.get(item.target, []):
+            if c.symbol not in text or c in out:
+                continue
+            have = present.count(c.symbol)
+            want = sum(1 for s in item.t_sites if s.kind == REL24 and s.address == addresses[c]) \
+                if c in addresses else 1
+            if have < want or have == 0:
+                out.append(c)
     return out
 
 
@@ -748,6 +818,8 @@ def main() -> int:
                         help="do not force the called context callees with /INCLUDE")
     parser.add_argument("--auto-no-fallback", action="store_true",
                         help="on FAIL, do not also try without the /INCLUDEs and without the callee sources")
+    parser.add_argument("--auto-tries", type=int, default=12,
+                        help="on FAIL, how many smaller links to try at most (default 12)")
     parser.add_argument("--keep", action="store_true", help="keep the scratch directory")
     parser.add_argument("--quiet", action="store_true", help="omit listings for failures")
     parser.add_argument("--setup", action="store_true", help="prepare work/ltcg-toolchain and exit")
@@ -827,12 +899,11 @@ def main() -> int:
             shutil.rmtree(workdir, ignore_errors=True)
     if args.auto_context and not args.auto_no_fallback and not matched(checked):
         # In a small link the callee bodies, or forcing them, can also move a function away
-        # from its match: say so when a smaller context matches.
-        smaller = [c for c in contexts if c in args.context or c == auto.PRIMER]
-        for label, ctx, inc in (("without the /INCLUDE of the callees", contexts, given_includes),
-                                ("without the callee sources", smaller, given_includes)):
-            if (ctx, inc) == (contexts, args.include):
-                continue
+        # from its match: try the ranked smaller links and say which one matches.
+        variants = auto.fallback_variants(contexts, args.context + HELPER_CONTEXTS, args.include,
+                                          given_includes, owner,
+                                          limit=args.auto_tries)
+        for label, ctx, inc in variants:
             try:
                 other = verify(args.source, ctx, args.flags, pairs, find_target, symbols,
                                no_include=args.no_include, toolchain=args.toolchain, wibo=args.wibo,
@@ -847,6 +918,10 @@ def main() -> int:
                 (checked, c_index, t_index, workdir), contexts, args.include = other, ctx, inc
                 break
             shutil.rmtree(other[3], ignore_errors=True)
+        else:
+            if variants:
+                print(f"auto-context: no match with the full context or with {len(variants)} smaller link(s): "
+                      + "; ".join(label for label, _c, _i in variants))
     if args.auto_context:
         print("explicit command: " + explicit_command(args, contexts))
     failures, renames = 0, {}
@@ -862,6 +937,8 @@ def main() -> int:
             print(f"MATCH {cand} vs {tname} @ {t_start:08X} size {len(t_code):#x} (ltcg)")
             for line in res.pools:
                 print(f"  POOL {line}")
+            for old, new in sorted(res.stale.items()):
+                print(f"  STALE {old} is {new} now: write {new} (tools/fix_refs.py does it for a spec's source)")
             continue
         failures += 1
         print(f"FAIL {cand} vs {tname} @ {t_start:08X}: " + "; ".join(res.problems))

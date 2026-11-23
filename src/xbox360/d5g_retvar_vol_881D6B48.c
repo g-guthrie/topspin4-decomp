@@ -15,7 +15,7 @@ typedef unsigned long ts4_word;
 
 extern char lbl_880E8624[];
 extern char lbl_880E9E98[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 ts4_word ts4_dispatch2_88199068();
 
 /* Swing_DLL.xex 0x881D6B48: if_call_seq ts4_dispatch2_88199068, u32@0x4, lbl_880E8624, u32@0x0, u32@0xc, u32@0x10 */
@@ -34,7 +34,7 @@ ts4_word ts4_if_call_seq_fn_88199068_881D6B48(void)
         *(volatile ts4_word *)((char *)(ts4_word)(t1) + 0) = (ts4_word)(ts4_word)lbl_880E8624;
         *(volatile ts4_word *)((char *)(ts4_word)(t1) + 12) = (ts4_word)0;
         *(volatile ts4_word *)((char *)(ts4_word)(t1) + 16) = (ts4_word)0;
-        t2 = *(float *)lbl_8814B440;
+        t2 = *(float *)g_ts4_event_value;
         *(volatile ts4_word *)((char *)(ts4_word)(t1) + 20) = (ts4_word)0;
         *(volatile ts4_word *)((char *)(ts4_word)(t1) + 24) = (ts4_word)0;
         *(volatile ts4_word *)((char *)(ts4_word)(t1) + 28) = (ts4_word)0;

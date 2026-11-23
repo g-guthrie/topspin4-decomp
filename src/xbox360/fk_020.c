@@ -42,7 +42,7 @@ extern char lbl_880F4C50[];
 extern char lbl_880F4D10[];
 extern char lbl_880F4DC8[];
 extern char lbl_880F4E2C[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88D41FDC[];
 extern char lbl_88D42940[];
 extern char lbl_88D45A4C[];
@@ -1200,7 +1200,7 @@ ts4_word ts4_call_seq_ts4_object_finalize_886C4838(ts4_word a0)
     ts4_word t1;
 
     t1 = ts4_object_finalize((ts4_word)(a0 + 4));
-    *(float *)((char *)(ts4_word)(a0) + 16) = (*(float *)lbl_8814B440);
+    *(float *)((char *)(ts4_word)(a0) + 16) = (*(float *)g_ts4_event_value);
     return t1;
 }
 
@@ -1884,7 +1884,7 @@ float ts4_if_get_u32_off34_886EEE70(ts4_word a0)
     if ((ts4_word)t2 != 0) {
         return (*(float *)((char *)(ts4_word)(t2) + 8));
     }
-    return (*(float *)lbl_8814B440);
+    return (*(float *)g_ts4_event_value);
 }
 
 /* Swing_DLL.xex 0x886EF170: if_get u32@0x34, u32@0xa8, u32@0xc, u8@0x58, u16@0xac, u16@0xac */
@@ -1986,7 +1986,7 @@ void ts4_set_u8_off78_886F0010(ts4_word a0)
 
     *(unsigned char *)((char *)(ts4_word)(a0) + 120) = (unsigned char)0;
     *(unsigned char *)((char *)(ts4_word)(a0) + 148) = (unsigned char)0;
-    t1 = *(float *)lbl_8814B440;
+    t1 = *(float *)g_ts4_event_value;
     *(unsigned char *)((char *)(ts4_word)(a0) + 152) = (unsigned char)0;
     *(float *)((char *)(ts4_word)(a0) + 108) = t1;
     *(unsigned char *)((char *)(ts4_word)(a0) + 151) = (unsigned char)0;

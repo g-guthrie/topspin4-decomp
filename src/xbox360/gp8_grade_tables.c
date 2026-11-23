@@ -5,7 +5,7 @@
  * (names are zlib crc32 of the ASCII word). Unknown grade (e.g. Medium 0xC1DF4081) yields zeros.
  */
 
-extern float lbl_8814B440[];   /* 0.0f */
+extern float g_ts4_event_value[];   /* 0.0f */
 
 struct Gp8GradePair {          /* two floats, 8 bytes */
     float a;
@@ -38,8 +38,8 @@ void ts4_grade_table_pair_8826DD20(const struct Gp8GradePair *table, const unsig
         break;
     default: {
         struct Gp8GradePair zero;
-        zero.a = lbl_8814B440[0];
-        zero.b = lbl_8814B440[0];
+        zero.a = g_ts4_event_value[0];
+        zero.b = g_ts4_event_value[0];
         *out = zero;
         break;
     }
@@ -68,10 +68,10 @@ void ts4_grade_table_quad_8826DDF8(const struct Gp8GradeQuad *table, const unsig
         break;
     default: {
         struct Gp8GradeQuad zero;
-        zero.v[0] = lbl_8814B440[0];
-        zero.v[1] = lbl_8814B440[0];
-        zero.v[2] = lbl_8814B440[0];
-        zero.v[3] = lbl_8814B440[0];
+        zero.v[0] = g_ts4_event_value[0];
+        zero.v[1] = g_ts4_event_value[0];
+        zero.v[2] = g_ts4_event_value[0];
+        zero.v[3] = g_ts4_event_value[0];
         *out = zero;
         break;
     }

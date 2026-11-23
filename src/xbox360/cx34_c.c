@@ -9,7 +9,7 @@ typedef unsigned char u8;
 #define CX34_PTR(p, o) (*(char **)((char *)(p) + (o)))
 #define CX34_VT(o, slot) ((*(void ***)(o))[(slot) / 4])
 
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern void ts4_update_angles_888AD6F0(char *self);
 
 static __inline void cx34_v3(float *d, float *s)
@@ -27,7 +27,7 @@ void ts4_publish_position_triples_888AEBF8(char *self)
         cx34_v3((float *)(self + 0x2c), (float *)(self + 0x78));
         cx34_v3((float *)(self + 0x38), (float *)(self + 0x84));
         cx34_v3((float *)(self + 0x44), (float *)(self + 0x90));
-        zero = lbl_8814B440;
+        zero = g_ts4_event_value;
         CX34_F32(self, 0xf0) = zero;
         CX34_F32(self, 0xf4) = zero;
         cx34_v3((float *)CX34_PTR(self, 0x6c), (float *)(self + 0x2c));

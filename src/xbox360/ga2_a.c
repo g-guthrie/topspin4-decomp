@@ -7,7 +7,7 @@
 typedef unsigned char ga2_u8;
 typedef unsigned int ga2_u32;
 
-extern float lbl_8814B440; /* 0.0f */
+extern float g_ts4_event_value; /* 0.0f */
 
 /* Self-relative record: the first word is the byte offset from the record to its payload. */
 struct Ga2Rel24 {

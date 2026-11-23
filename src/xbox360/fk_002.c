@@ -45,7 +45,7 @@ extern char lbl_880E9154[];
 extern char lbl_880E9158[];
 extern char lbl_880E9168[];
 extern char lbl_880E9378[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C697D0[];
 extern char lbl_88C697EC[];
 extern char lbl_88C69804[];
@@ -655,7 +655,7 @@ void ts4_get_u32_off14_881C1E40(ts4_word a0)
 /* Swing_DLL.xex 0x881C2180: get  */
 void ts4_get_881C2180(ts4_word a0)
 {
-    *(float *)((char *)(ts4_word)(a0) + 20) = (*(float *)lbl_8814B440);
+    *(float *)((char *)(ts4_word)(a0) + 20) = (*(float *)g_ts4_event_value);
     return;
 }
 

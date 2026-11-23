@@ -9,7 +9,7 @@ typedef unsigned long long u64;
 #define CX32_INL static inline
 #endif
 
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern int lbl_880C9DCC[];
 extern int lbl_88C6BDF8[];
 
@@ -42,7 +42,7 @@ typedef struct CxT54 { char pad[0x54]; CxVF *o; } CxT54;
 void ts4_call_child_vslot3_default_888791B8(CxT54 *t)
 {
     CxVF *o = t->o;
-    o->vt[3](o, lbl_8814B440);
+    o->vt[3](o, g_ts4_event_value);
 }
 
 /* ---- 16-bit flag test (0x888845D0) ---- */

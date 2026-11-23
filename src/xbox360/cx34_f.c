@@ -104,7 +104,7 @@ extern u32 ts4_dc44_copy_881817A0(u32 first, u32 last, u32 dst);
 extern void ts4_destroy_owned_object(void *);
 extern void ts4_if_call_seq_lbl_880F7EE4_88617D28(void *self);
 
-extern void fn_88187BC0(char *a, char *b);
+extern void ts4_xform_record_set_88187BC0(char *a, char *b);
 
 extern char *ts4_pad_record_find_88614938(char *o, u32 i);
 extern u32 ts4_if_call_seq_u32_off0_8857B180(int id, char *out);

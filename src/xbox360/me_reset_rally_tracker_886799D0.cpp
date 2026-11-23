@@ -18,7 +18,7 @@ typedef struct Game { char p[0x14]; int player; char p2[0x48 - 0x18]; Club *club
 typedef struct SlotVec { Slot *begin; Slot *end; } SlotVec;
 typedef struct Tracker { char p[8]; Game *game; SlotVec slots; char p2[0x18 - 0x14]; int state; } Tracker;
 extern "C" void ts4_set_u8_off0_8826B918(void *p);
-extern "C" float lbl_8814B440;
+extern "C" float g_ts4_event_value;
 static __forceinline Pair *pb_begin(PairBuf *t) { int off = t->offset; Pair *r = 0; if (off != -1) r = (Pair *)((char *)t + off); return r; }
 static __forceinline Pair *pb_end(PairBuf *t) { int off = t->offset; Pair *r = 0; if (off != -1) r = (Pair *)((char *)t + (t->count * 8 + off)); return r; }
 static __forceinline void clear_slots(Slot *b, Slot *e) { for (; b != e; b++) ts4_set_u8_off0_8826B918(b); }
@@ -44,5 +44,5 @@ extern "C" void ts4_reset_rally_tracker_886799D0(Tracker *t)
     pb = &t->game->hud->pairs;
     pb->count = pb->capacity;
     pe = pb_end(pb);
-    for (p = pb_begin(pb); p != pe; p++) { p->a = lbl_8814B440; p->b = lbl_8814B440; }
+    for (p = pb_begin(pb); p != pe; p++) { p->a = g_ts4_event_value; p->b = g_ts4_event_value; }
 }

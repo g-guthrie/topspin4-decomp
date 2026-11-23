@@ -180,7 +180,7 @@ extern char lbl_880F3268[];
 extern char lbl_880F3270[];
 extern char lbl_880F3278[];
 extern char lbl_880F90BC[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88B30FA4[];
 extern char lbl_88B30FA8[];
 extern char lbl_88B31770[];
@@ -224,7 +224,7 @@ ts4_word ts4_string_copy_with_owner_8819ACC8();
 ts4_word ts4_call_seq_u32_off0_8819AD80();
 ts4_word ts4_if_call_seq_u32_off0_8819B0C8();
 ts4_word ts4_if_call_seq_u32_off0_8819C190();
-ts4_word fn_881A2508();
+ts4_word ts4_tagged_value_reset_881A2508();
 ts4_word fn_881A4B80(ts4_word, float);
 ts4_word fn_881A4C18(ts4_word, float);
 ts4_word fn_881AA7A0();
@@ -826,7 +826,7 @@ ts4_word ts4_if_call_seq_fn_88199F00_88199E90(ts4_word a0)
     return p6;
 }
 
-/* Swing_DLL.xex 0x881A23E8: if_call_seq u32@0x0, u32@0x8, fn_881A2508, u32@0x0, u32@0x8, fn_881A2508 */
+/* Swing_DLL.xex 0x881A23E8: if_call_seq u32@0x0, u32@0x8, ts4_tagged_value_reset_881A2508, u32@0x0, u32@0x8, ts4_tagged_value_reset_881A2508 */
 ts4_word ts4_if_call_seq_u32_off0_881A23E8(ts4_word a0, ts4_word a1)
 {
     ts4_word t1;
@@ -837,19 +837,19 @@ ts4_word ts4_if_call_seq_u32_off0_881A23E8(ts4_word a0, ts4_word a1)
     switch ((ts4_word)((t1 - ((0) | 65531)))) {
         case 0:
         t2 = *(ts4_word *)((char *)(ts4_word)(a1) + 8);
-        fn_881A2508((ts4_word)a0);
+        ts4_tagged_value_reset_881A2508((ts4_word)a0);
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)((0) | 65531);
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 8) = (ts4_word)t2;
         return a0;
         case 1:
         t4 = *(double *)((char *)(ts4_word)(a1) + 8);
-        fn_881A2508((ts4_word)a0);
+        ts4_tagged_value_reset_881A2508((ts4_word)a0);
         *(volatile double *)((char *)(ts4_word)(a0) + 8) = t4;
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)((0) | 65532);
         return a0;
         case 2:
         case 4:
-        fn_881A2508((ts4_word)a0);
+        ts4_tagged_value_reset_881A2508((ts4_word)a0);
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)((0) | 65533);
         if ((int)(a0 + 8) != 0) {
             fn_8818EB10((ts4_word)(a0 + 8), (ts4_word)(a1 + 8));
@@ -857,7 +857,7 @@ ts4_word ts4_if_call_seq_u32_off0_881A23E8(ts4_word a0, ts4_word a1)
         }
         return a0;
         case 3:
-        fn_881A2508((ts4_word)a0);
+        ts4_tagged_value_reset_881A2508((ts4_word)a0);
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)((0) | 65534);
         if ((int)(a0 + 8) != 0) {
             ts4_string_copy_with_owner_8819ACC8((ts4_word)(a0 + 8), (ts4_word)(a1 + 8));
@@ -865,7 +865,7 @@ ts4_word ts4_if_call_seq_u32_off0_881A23E8(ts4_word a0, ts4_word a1)
         }
         return a0;
         default:
-        fn_881A2508((ts4_word)a0);
+        ts4_tagged_value_reset_881A2508((ts4_word)a0);
         *(volatile ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 0));
         return a0;
     }
@@ -1433,7 +1433,7 @@ ts4_word ts4_if_call_seq_u32_off0_882244F0(ts4_word a0, ts4_word a1)
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 0);
     t2 = *(ts4_word *)((char *)(ts4_word)(a0) + 4);
     loc50[28] = (ts4_word)0;
-    t3 = *(float *)lbl_8814B440;
+    t3 = *(float *)g_ts4_event_value;
     *(float *)((char *)loc50 + 0) = t3;
     *(float *)((char *)loc50 + 4) = t3;
     *(float *)((char *)loc50 + 8) = t3;
@@ -2263,7 +2263,7 @@ ts4_word ts4_if_call_seq_u32_off0_88263000(ts4_word a0, ts4_word a1)
     t2 = *(ts4_word *)((char *)(ts4_word)(a0) + 4);
     loc50[0] = (ts4_word)0;
     *(unsigned char *)((char *)loc50 + 8) = (unsigned char)0;
-    *(float *)((char *)loc50 + 4) = (*(float *)lbl_8814B440);
+    *(float *)((char *)loc50 + 4) = (*(float *)g_ts4_event_value);
     if ((ts4_word)a1 < (ts4_word)((int)(t2 - t1) / (int)12)) {
         t5 = fn_882683B8((ts4_word)t2, (ts4_word)t2, (ts4_word)(((a1 + (a1 << 1)) << 2) + t1), (ts4_word)(t2 - t1), (ts4_word)12);
         *(ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)t5;

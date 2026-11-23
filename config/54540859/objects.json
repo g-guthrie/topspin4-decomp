@@ -15120,6 +15120,30 @@
       "src/xbox360/q5s_swan_pose.c": {
         "status": "Matching",
         "source": "xbox360/q5s_swan_pose.c"
+      },
+      "src/xbox360/q5s_icf_variant_reset.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_icf_variant_reset.c"
+      },
+      "src/xbox360/q5s_icf_tracker_dtor.c": {
+        "status": "Matching",
+        "source": "xbox360/q5s_icf_tracker_dtor.c"
+      },
+      "src/xbox360/q5s_cxx_wstr_set.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5s_cxx_wstr_set.cpp"
+      },
+      "src/xbox360/q5s_cxx_hkey_less.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5s_cxx_hkey_less.cpp"
+      },
+      "src/xbox360/q5s_cls_xform.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5s_cls_xform.cpp"
+      },
+      "src/xbox360/q5s_cls_tracker.cpp": {
+        "status": "Matching",
+        "source": "xbox360/q5s_cls_tracker.cpp"
       }
     }
   }

@@ -24,7 +24,7 @@ extern void fn_8879A380(void *);
 extern void fn_88617D88(void *);
 extern void fn_8857BA40(void *, int, int);
 extern VT *lbl_88D45A24;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern int lbl_88C6C220, lbl_88C6C21C;
 extern void __eieio(void);
 extern void fn_88151AE0(void *, int);

@@ -42,7 +42,7 @@ void ts4_umat_resize_881592D8(Cx21UMat *m, u32 w, u32 h)
 /* ---- vector of two-float elements ---- */
 typedef struct Cx21F2 { float x, y; } Cx21F2;
 typedef struct Cx21F2Vec { Cx21F2 *first; Cx21F2 *last; Cx21F2 *cap; } Cx21F2Vec;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern void fn_8815A000(Cx21F2Vec *v, Cx21F2 *where, u32 n, Cx21F2 *value);
 
 CX21_INL Cx21F2 *f2_copy(Cx21F2 *first, Cx21F2 *last, Cx21F2 *dest)
@@ -57,8 +57,8 @@ void ts4_f2vec_resize_88158DD0(Cx21F2Vec *v, u32 n)
 {
     Cx21F2 zero;
     u32 size;
-    zero.x = lbl_8814B440;
-    zero.y = lbl_8814B440;
+    zero.x = g_ts4_event_value;
+    zero.y = g_ts4_event_value;
     size = v->last - v->first;
     if (n < size) {
         Cx21F2 *p = v->first + n;
@@ -103,9 +103,9 @@ void ts4_f3vec_resize_88158BB8(Cx21F3Vec *v, u32 n)
 {
     Cx21F3 zero;
     u32 size;
-    zero.x = lbl_8814B440;
-    zero.y = lbl_8814B440;
-    zero.z = lbl_8814B440;
+    zero.x = g_ts4_event_value;
+    zero.y = g_ts4_event_value;
+    zero.z = g_ts4_event_value;
     size = v->last - v->first;
     if (n < size) {
         Cx21F3 *p = v->first + n;

@@ -1,9 +1,9 @@
-/* Swing_DLL.xex 0x886CBA80: stores the key at +0x18, reserves 20 u32 slots in the vector at +4 (heap allocator via ts4_if_call_seq_fn_88883CD0_8860D250/fn_88613570, memmove, ts4_destroy_owned_object) and resets the value at +0x10 to lbl_8814B440.
+/* Swing_DLL.xex 0x886CBA80: stores the key at +0x18, reserves 20 u32 slots in the vector at +4 (heap allocator via ts4_if_call_seq_fn_88883CD0_8860D250/fn_88613570, memmove, ts4_destroy_owned_object) and resets the value at +0x10 to g_ts4_event_value.
  * /Oc. allocate and reserve must be __forceinline (the allocator is expanded twice). */
 typedef struct UVec { unsigned int *first; unsigned int *last; unsigned int *end; } UVec;
 typedef struct Owner { unsigned int f0; UVec items; float value; unsigned int f14; unsigned int key; } Owner;
 extern void *lbl_88D45B38;
-extern const float lbl_8814B440;
+extern const float g_ts4_event_value;
 void *ts4_if_call_seq_fn_88883CD0_8860D250(void *heap);
 void *fn_88613570(void *alloc, unsigned int size, unsigned int align, void *owner);
 void *fn_88562DC0(void *dst, const void *src, unsigned int n);
@@ -43,5 +43,5 @@ void fn_886CBA80(Owner *o, unsigned int key)
 {
     o->key = key;
     reserve(&o->items, 20);
-    o->value = lbl_8814B440;
+    o->value = g_ts4_event_value;
 }

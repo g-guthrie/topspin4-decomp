@@ -8,7 +8,7 @@ extern double fabs(double x);
 
 extern const float lbl_8802C1D4;
 extern const float lbl_88091E18;
-extern const float lbl_8814B440;
+extern const float g_ts4_event_value;
 extern const float lbl_88001A20;
 extern const float lbl_88004444;
 extern const float g_ts4_script_constants[];
@@ -58,7 +58,7 @@ void ts4_set_both_positive_88482358(unsigned char *out, const char *p)
 }
 unsigned char ts4_is_unset_and_default_886C45B8(const char *p)
 {
-    return *(const unsigned *)(p + 0x84) == 0 && *(const float *)(p + 0x88) == lbl_8814B440;
+    return *(const unsigned *)(p + 0x84) == 0 && *(const float *)(p + 0x88) == g_ts4_event_value;
 }
 char *ts4_elem_ptr_stride48_886602B8(const char *p)
 {

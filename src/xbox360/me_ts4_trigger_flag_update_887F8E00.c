@@ -12,7 +12,7 @@ typedef struct Tgt Tgt;
 typedef struct { char p[0x34]; void (*fire)(Tgt *t, u32 a, u32 b); } TgtVt;
 struct Tgt { TgtVt *vt; };
 typedef struct { char p[8]; u32 x8; char pc[8]; Flags *fl; char p18[8]; X20 *x20; Tgt *tgt; Hdr *hdr; u8 b2c; char p2d[3]; u32 x30; } O;
-extern float lbl_8814B440;
+extern float g_ts4_event_value;
 extern float g_ts4_script_constants[];
 int ts4_trigger_flag_update_887F8E00(O *o) {
     Rel *hr = &o->hdr->r;
@@ -20,7 +20,7 @@ int ts4_trigger_flag_update_887F8E00(O *o) {
     Rel *fr = &o->x20->x->f->r;
     float *v = (float *)((char *)fr + fr->rel) + b->idx;
     Flags *f;
-    if (o->fl->active) { *v = lbl_8814B440; o->b2c = 0; }
+    if (o->fl->active) { *v = g_ts4_event_value; o->b2c = 0; }
     f = o->fl;
     if (f->on) o->b2c = 1;
     if (f->off) o->b2c = 0;

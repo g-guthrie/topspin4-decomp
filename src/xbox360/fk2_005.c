@@ -86,7 +86,7 @@ extern char lbl_880F8440[];
 extern char lbl_880F84BC[];
 extern char lbl_880F8BF4[];
 extern char lbl_880F8D28[];
-extern char lbl_8814B440[];
+extern char g_ts4_event_value[];
 extern char lbl_88C6CBEC[];
 extern char lbl_88C6CBF4[];
 extern char lbl_88C6CD7C[];
@@ -684,7 +684,7 @@ void ts4_if_set_u32_off4_88660AB0(ts4_word a0, ts4_word a1)
 
     *(ts4_word *)((char *)(ts4_word)(a0) + 4) = (ts4_word)a1;
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)0;
-    *(float *)((char *)(ts4_word)(a0) + 8) = (*(float *)lbl_8814B440);
+    *(float *)((char *)(ts4_word)(a0) + 8) = (*(float *)g_ts4_event_value);
     p3 = (ts4_word)0;
     if ((ts4_word)a1 != 0) {
         p3 = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 140));
@@ -2493,7 +2493,7 @@ ts4_word ts4_if_get_u32_off34_8870FFF0(ts4_word a0)
         return a0;
     }
     t4 = *(float *)((char *)(ts4_word)(t3) + 16);
-    t5 = *(float *)lbl_8814B440;
+    t5 = *(float *)g_ts4_event_value;
     if (!(t4 > t5)) {
         return a0;
     }
@@ -2528,7 +2528,7 @@ ts4_word ts4_if_get_u32_off34_88710028(ts4_word a0, ts4_word a1)
         return a0;
     }
     t8 = *(float *)((char *)(ts4_word)(t7) + 16);
-    t9 = *(float *)lbl_8814B440;
+    t9 = *(float *)g_ts4_event_value;
     if (!(t8 > t9)) {
         return a0;
     }

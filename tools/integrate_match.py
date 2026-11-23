@@ -10,7 +10,15 @@ Each spec is JSON:
     "functions": {"ts4_name": "0x88170328"},   # defined symbol -> original address
     "renames": {"fn_88171960": "ts4_callee"}  # optional placeholder renames
     "seh": {"funclets": {"0x88883E4C": "..."}, "except_data": "0x88883DD8"}   # optional
+    "aliases": {"ts4_c_name_8819C360": {"canonical": "?F@C@@QAAXXZ", "address": "0x8819C360",
+                "kind": "cxx", "evidence": "..."}}                            # optional
   }
+
+"aliases" are reviewed second names for one address (tools/icf_alias.py): "icf" for a
+function or vtable the original linker folded with an identical one, "cxx" for the C
+identifier under which C sources call a function whose symbols.txt name is a decorated
+C++ name. They are recorded in config/54540859/icf_aliases.json; the "canonical" names
+there follow the renames of the batch.
 
 "seh" describes a function with structured exception handling as tools/fn_check.py
 matched it: the funclets (`__except` filters; separate .pdata functions in the target,
@@ -35,12 +43,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from xcoff import ROOT, read_coff  # noqa: E402
 import ltcg_route  # noqa: E402
+import icf_alias  # noqa: E402
 
 CONFIG = ROOT / "config" / "54540859"
 SYMBOLS = CONFIG / "symbols.txt"
 SEED = CONFIG / "symbols.seed.txt"
 SPLITS = CONFIG / "splits.txt"
 OBJECTS = CONFIG / "objects.json"
+ALIASES = CONFIG / "icf_aliases.json"
 MATCHING = ROOT / "tools" / "matching.py"
 SPLIT_DIR = ROOT / "work" / "matching" / "split"
 PLACEHOLDER = re.compile(r"^(fn|lbl|jumptable)_[0-9A-Fa-f]+$")
@@ -116,6 +126,8 @@ def main() -> int:
     split_blocks = []
     matching_entries = []
     new_seed = []
+    spec_aliases = {}
+    applied_renames = {}
     for spec in specs:
         source = spec["source"]
         if source in configured:
@@ -135,6 +147,7 @@ def main() -> int:
             for start, end in existing:
                 if start < address + size and address < end:
                     raise SystemExit(f"{name} overlaps an existing split {start:#x}-{end:#x}")
+            applied_renames[LINE.match(lines[index]).group(1)] = name
             line = rename(index, name)
             if name not in seed_names:
                 new_seed.append(line.split(" // ")[0].rstrip() + f" // type:function size:{size:#X}".replace("0X", "0x"))
@@ -178,10 +191,23 @@ def main() -> int:
                 if new in by_name:
                     continue  # already renamed by an earlier spec
                 raise SystemExit(f"unknown symbol {old}")
+            applied_renames[old] = new
             line = rename(by_name[old], new)
             if new not in seed_names:
                 new_seed.append(line)
                 seed_names.add(new)
+        for alias, item in spec.get("aliases", {}).items():
+            if alias in by_name:
+                raise SystemExit(f"alias {alias} is a symbols.txt name")
+            if item["canonical"] not in by_name:
+                raise SystemExit(f"alias {alias}: unknown canonical symbol {item['canonical']}")
+            address = int(LINE.match(lines[by_name[item["canonical"]]]).group(3), 16)
+            if address != int(str(item["address"]), 16):
+                raise SystemExit(f"alias {alias}: {item['canonical']} is at {address:#x}, not {item['address']}")
+            if not str(item.get("evidence", "")).strip() or item.get("kind") not in icf_alias.KINDS:
+                raise SystemExit(f"alias {alias}: needs \"kind\" ({'/'.join(icf_alias.KINDS)}) and \"evidence\"")
+            if spec_aliases.setdefault(alias, item) != item:
+                raise SystemExit(f"alias {alias} is given twice with different contents")
         text_ranges.sort()
         merged = []
         for start, end in text_ranges:
@@ -224,6 +250,9 @@ def main() -> int:
         matching_entries.append("\n".join(entry))
 
     SYMBOLS.write_text("\n".join(lines) + "\n")
+    if spec_aliases:
+        icf_alias.register(spec_aliases, ALIASES)
+    icf_alias.follow_renames(applied_renames, ALIASES)
     if new_seed:
         SEED.write_text("\n".join(seed_lines + new_seed) + "\n")
     SPLITS.write_text(SPLITS.read_text().rstrip("\n") + "\n\n" + "\n\n".join(split_blocks) + "\n")

@@ -64,7 +64,7 @@ char *ts4_uninit_copy_text2_88166838(char *first, char *last, char *dst) { for (
 
 void ts4_addr_fn_881F7958_881F4108(void *);
 extern char lbl_880E7810[];
-extern const float lbl_8814B440;
+extern const float g_ts4_event_value;
 
 void *fn_88562DC0(void *, void *, u32);
 #define SBSHRINK(NAME, N, CAP) \
