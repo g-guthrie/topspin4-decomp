@@ -36,9 +36,9 @@ You get entries from docs/agents/q5/templates.json, listed in your prompt. For e
 
 - **No shortcuts.** No stand-in callee stubs, no knowingly false prototypes, no volatile hacks. If the sister calls a function, declare it with the same prototype the template uses for its counterpart.
 - **Host syntax.** .c files must pass `cc -std=c11 -Wall -Wextra -Werror -Wno-deprecated-non-prototype -fsyntax-only -Isrc/xbox360`.
-- **Every sister gets solved.** A sister is solved when it MATCHES. If byte matching stalls after the permuter, it is also solved when equivalent C passes `tools/fn_equiv.py`; write its spec with `"route": "equiv"` and evidence. Nothing is skipped. If a sister really is not a clone (different control flow), still write it from its own asm. Then match it or make it equivalent.
+- **Every sister gets solved.** A sister is solved when it MATCHES. Owner decision (2026-11-23): byte-exact only, no equivalent route. If a sister will not match after the permuter, save it as a near-miss draft and report its exact state. If a sister really is not a clone (different control flow), still write it from its own asm and match it.
 - **Files and git.** Don't edit any file other than your own. Don't run tools/matching.py. Don't commit. Never put game data in the repo.
-- **Honesty.** A function counts only if the checker says MATCH, or PASS for the equivalent route.
+- **Honesty.** A function counts only if the checker says MATCH.
 
 ## Final report
 

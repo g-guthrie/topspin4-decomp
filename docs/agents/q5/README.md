@@ -1,8 +1,11 @@
 # Q5: solve every port function (runbook)
 
-Goal: every gameplay function (then renderer) reaches MATCH (byte-identical) or
-EQUIVALENT (behaviour proven by tools/fn_equiv.py, owed a byte match later; see
-docs/equivalence-tier.md section 10 and reports/byte_exact_backlog.md).
+Goal: every gameplay function (then renderer) reaches MATCH (byte-identical).
+
+Owner decision (2026-11-23): **byte-exact only.** No new equivalent functions. The 116 already registered
+(config/54540859/equivalent.json, reports/byte_exact_backlog.md) are work still owed and go back on the list.
+Stalled functions become near-miss drafts plus an escalate.json entry, never equivalents. Equivalence
+sections below are kept only for maintaining the existing 116.
 Middleware (Havok, FMOD, Bink, XDK, CRT) is out of scope.
 
 ## Files here (committed, durable)
@@ -29,16 +32,14 @@ config/54540859/equivalent.json; specs can be rebuilt from it), build dirs
 
 ## Roles (what worked)
 
-- **Coordinator** (one session): hands out work, registers equivalents,
+- **Coordinator** (one session): hands out work,
   integrates matches, runs the ~40 min build, commits. Never solves functions
   itself.
 - **Opus solvers**: section 2 split by direction. Opus A ascending (small end),
   Opus B descending (large end); more solvers can take interleaved slices
-  (claims prevent collisions). Functions about 400 B and up, or stalled on
-  scheduling/LTCG register choice, go straight to EQUIVALENT with a
-  `/* byte-gap: ... */` comment above the definition.
-- **Haiku (high effort)**: sister functions of a matched template, byte-gap
-  backfills, other rote passes.
+  (claims prevent collisions). Every size is byte-matched; for large LTCG
+  functions, match the callees first.
+- **Haiku (high effort)**: sister functions of a matched template, other rote passes.
 - **Fable**: escalations and checker/tool fixes only.
 
 Hand-in cadence: small-end agents every 6-10 functions; large-end agents after

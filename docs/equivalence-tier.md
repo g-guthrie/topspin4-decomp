@@ -1,5 +1,7 @@
 # The "equivalent" tier: behaviour checked by running original and candidate side by side
 
+> **Closed to new functions (owner decision, 2026-11-23).** The project is byte-exact only. The 116 functions already registered stay, as a backlog still owed a byte match (section 10). Nothing new is registered as equivalent.
+
 EQ1, 2026-11-14. Tool: `tools/fn_equiv.py` (checker version string `fn_equiv/2` since Q5F; the EQ1 evidence below was made with `fn_equiv/1`), tests:
 `tests/test_fn_equiv.py`. Nothing in `src/`, `config/` or `tools/matching.py` was changed and
 `tools/matching.py` was not run. This document describes the checker, the evidence that it

@@ -5,10 +5,9 @@ You solve the Top Spin 4 functions that the main decomp agent got stuck on. The 
 
 ## What counts as solved
 
-A function is solved in one of two ways:
+Owner decision (2026-11-23): byte-exact only. A function is solved only by a MATCH; no new equivalent functions.
 
 1. **MATCH:** `python3 tools/fn_check.py <src> name=0xADDR [--flags]` passes. For an LTCG unit, use `tools/fn_check_ltcg.py ... --context src/xbox360/pp1_pool_primer.c`.
-2. **EQUIVALENT:** readable, named and typed C that passes `python3 tools/fn_equiv.py <src> name=0xADDR --json <evidence>` with its default coverage.
 
 ## Read first
 
@@ -34,10 +33,10 @@ Start from that attempt. Don't redo what was tried. Try the big levers:
 - **Different source structure:** helpers that the compiler inlines, loops written another way, or struct temporaries.
 - **Probes of the compiler:** small test programs that isolate the one construct that diverges.
 - **Flag variants:** `/O1`, `/Oc`, `/GS-`, or the LTCG route.
-- **Fixing the model of a callee** in fn_equiv.
+- **Matching the callees first:** under LTCG their bodies change this function's register use and reloads.
 - **Splitting the function** into its natural pieces.
 
-If byte matching is not reachable, finish it as EQUIVALENT.
+If byte matching is not reached, save the best attempt as a near-miss draft with its exact state; never fall back to equivalence.
 If a tool is truly at fault (for example an undecoded instruction, or a harness that cannot model something), fix the tool:
 - keep the fix small;
 - keep it standard library only;

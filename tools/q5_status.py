@@ -3,6 +3,9 @@
 
 Usage: python3 tools/q5_status.py [--next N] [--section 2] [--from-end]
 
+Byte-exact only (owner decision 2026-11-23): equivalent functions are counted
+in the "equiv" column but still listed as left.
+
 Reads docs/agents/q5/worklist.txt (lines "0xADDR SIZE QUEUE [| sisters...]"
 under "## <n>: <title>" headers), config/54540859/match.json,
 config/54540859/equivalent.json, docs/agents/q5/escalate.json and the claim
@@ -56,11 +59,11 @@ def main() -> int:
     for k, items in sections.items():
         n_m = sum(a_ in matched for a_, _ in items)
         n_e = sum(a_ in equiv and a_ not in matched for a_, _ in items)
-        left = [(a_, s) for a_, s in items if a_ not in matched and a_ not in equiv]
+        left = [(a_, s) for a_, s in items if a_ not in matched]  # equivalents are owed a byte match
         n_x = sum(a_ in esc for a_, _ in left)
         print(f"{k:<4}{titles[k][:33]:<34}{len(items):>6}{n_m:>7}{n_e:>7}{n_x:>5}{len(left):>6}{sum(s for _, s in left):>9}")
     left = [(a_, s) for a_, s in sections.get(a.section, [])
-            if a_ not in matched and a_ not in equiv and a_ not in esc and a_ not in claims]
+            if a_ not in matched and a_ not in esc and a_ not in claims]
     left.sort(key=lambda t: (-t[1] if a.from_end else t[1], t[0]))
     print(f"\nnext {a.next} in section {a.section} ({'largest' if a.from_end else 'smallest'} first, unclaimed):")
     for a_, s in left[: a.next]:
