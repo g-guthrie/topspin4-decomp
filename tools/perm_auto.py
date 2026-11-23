@@ -2,7 +2,7 @@
 """Automatic permuter: random source mutations, hill climb on fn_check's score.
 
 Usage:
-  python3 tools/perm_auto.py SRC name=0xADDR [--ltcg [--context C ...]] [--flags F ...]
+  python3 tools/perm_auto.py SRC name=0xADDR [--ltcg [--context C ...] [--include NAME ...]] [--flags F ...]
                              [-j 4] [--time 600] [--seed N] [--func NAME] [--out PATH]
 
 No markup is needed (tools/permute.py is the markup-driven exhaustive search).
@@ -795,6 +795,8 @@ def evaluate(text, args, tmpdir):
             cmd = [sys.executable, str(ROOT / "tools/fn_check_ltcg.py"), path, *args.mappings, "--quiet"]
             for c in args.context:
                 cmd += ["--context", c]
+            for n in args.include:
+                cmd += ["--include", n]
         else:
             cmd = [sys.executable, str(ROOT / "tools/fn_check.py"), path, *args.mappings]
         if args.flags:
@@ -814,6 +816,8 @@ def main(argv=None):
     ap.add_argument("--func", help="function to mutate (default: name of the first mapping)")
     ap.add_argument("--ltcg", action="store_true", help="score with tools/fn_check_ltcg.py")
     ap.add_argument("--context", action="append", default=[])
+    ap.add_argument("--include", action="append", default=[],
+                    help="with --ltcg: passed through to fn_check_ltcg.py --include")
     ap.add_argument("--flags", nargs="*", default=None)
     ap.add_argument("-j", type=int, default=4)
     ap.add_argument("--time", type=float, default=600)
