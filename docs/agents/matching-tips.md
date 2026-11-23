@@ -3199,3 +3199,32 @@ Use it on schedule-only misses after the hand trial. Extend the mutation set whe
 - A cursor helper that reads through an address-taken pointer reproduces a large reader frame (888DDD70).
 - Null-checked self-relative `{int off; u32 count}` lists: write begin/end as `T *r = 0; if (a->off != -1) r = ...; return r;`, not a ternary (25 off to match, 8886FCC0).
 - Loops over heap vectors that make a virtual call per element (88912118, 8886AB08) rarely terminate under fn_equiv's seeded inputs; they need a byte match or bounded-range harness support.
+
+## Q5S subsystem rounds (cont/eng/swan/math/move/world), 2026-11-23
+
+Rules reported by the subsystem solvers; each names the function that proved it.
+
+- **C++ where the original is class-based.** Virtual-slot calls as real C++ virtuals; some methods match only as real members (`this` is numbered differently from a first parameter: 8819C360, 881509F8). If the callers are C, integration needs a rename or a linker alias.
+- **Constant argument to a virtual slot**: pass a one-member struct by value (cont 88172D50 family).
+- **One-word by-value class argument** with a ctor spills (`stw r3,0x50(r1)`) instead of tail-calling; an explicit temporary or a plain C struct folds to a tail call (eng).
+- **Constructor body assignment order** sets the hidden-pointer store order.
+- **Bounded field reads (XData readers, 66 functions)**: one inlined `static int rd(T *out, const u8 *p, u32 *__restrict n)` doing check, load, store, `*n -= size` (store `*out` before `*n -=`); caller keeps `p = src; n = *rem`, `p += size` per call, ends `*rem -= p - src; return 1;`. Spell a redundant bound as `2 > *n`. After a call that took `&n`, use a fresh block-local copy. New/delete helpers need `static __forceinline`.
+- **Vector size()**: `u32 *e = end; u32 *b = begin; return e - b;` gives end-before-begin and the clrrwi copy (8860B368). `operator[]` returning a reference gives the clrrwi begin copy; a named index local stops displacement folding.
+- **CRC/string loops**: copy the parameter first (`const u8 *p = s; if (p) for (; *p; p++)`) to fix r9/r10/r11 ties (88605438, 88608590).
+- **If/else store branch sense**: `if (!flag) A; else B;` rather than a ternary (8863A5B0). Result preset before a call (`int r = -1; p = call(); if (p) r = p - s;`) keeps the constant in a callee-saved reg.
+- **fsel**: MSVC emits mfcr/fsel only when both arms are already-live values; a computed arm (`e - t`) always branches. Use `__fself(c - kZero, x, y)` with a NAMED file-static `static const float kZero = 0.0f;` (abs = `__fself(x - kZero, x, -x)`).
+- **Named float globals** (g_ts4_event_value = 0.0f, g_ts4_script_constants[...]) instead of literals, or relocations differ.
+- **fadds operand order** follows local declaration order. `#pragma fp_contract(off)` splits fmadds (guard with `#ifdef _MSC_VER`).
+- **Copy loops**: copy parameters into locals first (88186110). Iterator as a separate local gives `mr r11,r3`.
+- **Inlined heap free in loops**: load the heap global once before the loop, reload only after calls that may change it.
+- **Re-read `o->ptr->` per statement** (or a hoist block) to make stores alias barriers (886C4540).
+- **Bool from callee tested with clrlwi**: cast to `(unsigned char)`; `vcmpeqfp.` result via `ok = (cr >> 5) & 1; if ((unsigned char)ok)`.
+- **VMX (XM-style)**: load3 = `__lvlx(p,0)`, `__lvrx(p,12)`, `__vsldoi(hi,hi,4)`, `__vor`; `__lvlx(p + 1, 0)` vs `__lvlx(p, 4)` flips operand order; `__vupkd3d(v, 1)` (disassembles as 0x4); look-to: half from `vcfsx(vspltisw(1),1)`, cross via `vpermwi` 0x63/0x87, negate via `vxor` with `vslw(-1,-1)`; write a transpose into a returned local for NRVO. Matrix multiply: `T t = mul(*a, b); set(out, &t);` (881A4308). cl crashes silently when load3 feeds an inline helper taking `__vector4` by value.
+- **Dead per-slot addi**: one nested inline helper per {value, flag} group, called per element (88273318).
+- **Self-relative tables**: `rel_get(int *p){return (char*)p+*p;}`.
+- **Inline helper became a tail call**: `__forceinline` the inner function (acos 88189630).
+- **memcmp**: `#ifdef _MSC_VER extern int memcmp(...); #pragma intrinsic(memcmp) #else #include <string.h> #endif`; basic_string compare = memcmp intrinsic + `std::min` returning a reference.
+- **Functions returning a class from C++** must be `extern "C"` or the checker picks a wrong body.
+- **Checks**: functions with a twllei divide trap check without /Oc. An LTCG callee whose saved registers the caller relies on must be in context; an ordinary callee must not be.
+
+Known checker limits (not yet fixed): ICF-folded functions cannot match via alias names (881A2508); the 0x8814B440 constant is named differently on the plain and LTCG routes; `--auto-context` can pick a wrong stand-in source (8816CBB0) or a callee the target did not inline (881A2508) — use explicit `--context` then.
