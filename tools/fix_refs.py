@@ -52,7 +52,11 @@ for sp in specs:
     src=open(sp['source']).read()
     hits=set(pat.findall(src))
     if hits:
-        open(sp['source'],'w').write(pat.sub(lambda m:spell(m.group(1),ren[m.group(1)]),src))
+        # Build the new text before opening for write: spell() can raise SystemExit,
+        # and open(..., 'w') would already have truncated the source (b227 lost
+        # q5s_glue_obj_ctor.cpp this way).
+        new_src=pat.sub(lambda m:spell(m.group(1),ren[m.group(1)]),src)
+        open(sp['source'],'w').write(new_src)
         print(sp['source'],sorted(hits)[:8],len(hits))
 
 # Existing sources that call a function these specs rename must follow the
@@ -79,5 +83,6 @@ if spec_ren:
         if str(f) in own: continue
         t=f.read_text()
         if p2.search(t):
-            f.write_text(p2.sub(lambda m:spell(m.group(1),spec_ren[m.group(1)]),t))
+            new_t=p2.sub(lambda m:spell(m.group(1),spec_ren[m.group(1)]),t)
+            f.write_text(new_t)
             print('updated caller',f)

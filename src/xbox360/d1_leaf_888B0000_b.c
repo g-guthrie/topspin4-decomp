@@ -3,7 +3,7 @@
  * describe that behaviour and end in the function address. */
 
 extern void fn_881B9148(void *);
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880DB2A4[];
 
 void ts4_store_u8_8_and_forward_888B1D80(char *object)

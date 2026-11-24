@@ -67,7 +67,7 @@ typedef struct Cx36ObjS {
     u8 pad[0x4c4 - 0x14];
     u16 h4c4;
 } Cx36ObjS;
-extern char lbl_880D2A0C[];
+extern char ts4_vtbl_TS4Obj880D2A0C[];
 extern char lbl_880D5ABC[];
 extern void *lbl_88D45B38;
 extern void *ts4_node_dispatch_with_target_88613268(void *tgt, u32 size, u32 align, u32 a, u32 b);

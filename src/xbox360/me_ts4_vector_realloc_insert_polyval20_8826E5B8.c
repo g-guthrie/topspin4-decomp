@@ -1,8 +1,8 @@
-/* 0x8826E5B8: std::vector of 20-byte polymorphic values {vtbl lbl_880D6B70, 4 words} reallocating insert, no flag; lbl_88D45B38 allocator path, out-of-line uninitialized copy 0x88270720 and range destroy 0x8826DFB8. */
+/* 0x8826E5B8: std::vector of 20-byte polymorphic values {vtbl ts4_vtbl_Ts4TrackerShell880D6B70, 4 words} reallocating insert, no flag; lbl_88D45B38 allocator path, out-of-line uninitialized copy 0x88270720 and range destroy 0x8826DFB8. */
 /* Matched on /Oc plain and LTCG (work/army/ME/v.py chk); adapted from 0x881712D0. */
 typedef struct Item { const void *vtbl; int a, b, c, e; } Item;
-extern const char lbl_880D6B70[];
-static __inline void construct(Item *d, const Item *s) { d->vtbl = lbl_880D6B70; d->a = s->a; d->b = s->b; d->c = s->c; d->e = s->e; }
+extern const char ts4_vtbl_Ts4TrackerShell880D6B70[];
+static __inline void construct(Item *d, const Item *s) { d->vtbl = ts4_vtbl_Ts4TrackerShell880D6B70; d->a = s->a; d->b = s->b; d->c = s->c; d->e = s->e; }
 void ts4_loop_get_u32_off0_8826DFB8(Item *first, Item *last);
 typedef struct Vec { Item *begin; Item *end; Item *cap; } Vec;
 extern void *lbl_88D45B38;

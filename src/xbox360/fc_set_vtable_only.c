@@ -8,7 +8,7 @@ extern char lbl_880D5AD8;
 extern char lbl_880D5B34;
 extern char lbl_880D5C10;
 extern char lbl_880D63EC;
-extern char lbl_880D6B70;
+extern char ts4_vtbl_Ts4TrackerShell880D6B70;
 extern char lbl_880DB2A4;
 extern char lbl_880DC604;
 extern char lbl_880E165C;
@@ -227,13 +227,13 @@ SET_VTABLE(ts4_set_vtable_88606008, lbl_880D19F0)
 SET_VTABLE(ts4_set_vtable_88606C30, lbl_880F799C)
 
 /* Swing_DLL.xex 0x88607A00 */
-SET_VTABLE(ts4_set_vtable_88607A00, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_88607A00, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x88607A58 */
 SET_VTABLE(ts4_set_vtable_88607A58, lbl_880D19F0)
 
 /* Swing_DLL.xex 0x88607C28 */
-SET_VTABLE(ts4_set_vtable_88607C28, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_88607C28, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x88608818 */
 SET_VTABLE(ts4_set_vtable_88608818, lbl_880D19F0)
@@ -245,7 +245,7 @@ SET_VTABLE(ts4_set_vtable_88608828, lbl_880D19F0)
 SET_VTABLE(ts4_set_vtable_88609418, lbl_880F799C)
 
 /* Swing_DLL.xex 0x88644700 */
-SET_VTABLE(ts4_set_vtable_88644700, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_88644700, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x8864DF98 */
 SET_VTABLE(ts4_set_vtable_8864DF98, lbl_88D49304)
@@ -254,7 +254,7 @@ SET_VTABLE(ts4_set_vtable_8864DF98, lbl_88D49304)
 SET_VTABLE(ts4_set_vtable_88659508, lbl_880F45D0)
 
 /* Swing_DLL.xex 0x88659538 */
-SET_VTABLE(ts4_set_vtable_88659538, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_88659538, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x88659568 */
 SET_VTABLE(ts4_set_vtable_88659568, lbl_880F45D0)
@@ -281,7 +281,7 @@ SET_VTABLE(ts4_set_vtable_886596D0, lbl_880F48B8)
 SET_VTABLE(ts4_set_vtable_886596E0, lbl_880F48B8)
 
 /* Swing_DLL.xex 0x88659700 */
-SET_VTABLE(ts4_set_vtable_88659700, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_88659700, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x88659850 */
 SET_VTABLE(ts4_set_vtable_88659850, lbl_880F436C)
@@ -293,7 +293,7 @@ SET_VTABLE(ts4_set_vtable_88659940, lbl_880D19F0)
 SET_VTABLE(ts4_set_vtable_88659950, lbl_880D19F0)
 
 /* Swing_DLL.xex 0x88659CF0 */
-SET_VTABLE(ts4_set_vtable_88659CF0, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_88659CF0, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x8865A338 */
 SET_VTABLE(ts4_set_vtable_8865A338, lbl_880F43E0)
@@ -317,25 +317,25 @@ SET_VTABLE(ts4_set_vtable_88670258, lbl_880F4460)
 SET_VTABLE(ts4_set_vtable_886C3448, lbl_880F3784)
 
 /* Swing_DLL.xex 0x886C3458 */
-SET_VTABLE(ts4_set_vtable_886C3458, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_886C3458, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x886C3468 */
-SET_VTABLE(ts4_set_vtable_886C3468, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_886C3468, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x886C3490 */
-SET_VTABLE(ts4_set_vtable_886C3490, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_886C3490, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x886C34A0 */
-SET_VTABLE(ts4_set_vtable_886C34A0, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_886C34A0, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x886C34B0 */
-SET_VTABLE(ts4_set_vtable_886C34B0, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_886C34B0, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x886C3548 */
-SET_VTABLE(ts4_set_vtable_886C3548, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_886C3548, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x886C35A0 */
-SET_VTABLE(ts4_set_vtable_886C35A0, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_886C35A0, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x886C35B8 */
 SET_VTABLE(ts4_set_vtable_886C35B8, lbl_880F4460)
@@ -350,7 +350,7 @@ SET_VTABLE(ts4_set_vtable_886EBC38, lbl_880F2480)
 SET_VTABLE(ts4_set_vtable_886EBC88, lbl_880F2298)
 
 /* Swing_DLL.xex 0x886EC0B8 */
-SET_VTABLE(ts4_set_vtable_886EC0B8, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_886EC0B8, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x886ECEB8 */
 SET_VTABLE(ts4_set_vtable_886ECEB8, lbl_880F2480)
@@ -368,55 +368,55 @@ SET_VTABLE(ts4_set_vtable_886ECFB8, lbl_880F2298)
 SET_VTABLE(ts4_set_vtable_886EFF30, lbl_880F2480)
 
 /* Swing_DLL.xex 0x8876D080 */
-SET_VTABLE(ts4_set_vtable_8876D080, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_8876D080, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x8876D0D0 */
-SET_VTABLE(ts4_set_vtable_8876D0D0, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_8876D0D0, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x888382B8 */
 SET_VTABLE(ts4_set_vtable_888382B8, lbl_880E165C)
 
 /* Swing_DLL.xex 0x88883EE0 */
-SET_VTABLE(ts4_set_vtable_88883EE0, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_88883EE0, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x888849C8 */
 SET_VTABLE(ts4_set_vtable_888849C8, lbl_880F799C)
 
 /* Swing_DLL.xex 0x888AA958 */
-SET_VTABLE(ts4_set_vtable_888AA958, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_888AA958, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x888AD198 */
-SET_VTABLE(ts4_set_vtable_888AD198, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_888AD198, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x888AD420 */
 SET_VTABLE(ts4_set_vtable_888AD420, lbl_880DC604)
 
 /* Swing_DLL.xex 0x888AD460 */
-SET_VTABLE(ts4_set_vtable_888AD460, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_888AD460, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x888BFB50 */
 SET_VTABLE(ts4_set_vtable_888BFB50, lbl_880DB2A4)
 
 /* Swing_DLL.xex 0x888BFB60 */
-SET_VTABLE(ts4_set_vtable_888BFB60, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_888BFB60, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x888BFB78 */
-SET_VTABLE(ts4_set_vtable_888BFB78, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_888BFB78, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x8890D6C0 */
-SET_VTABLE(ts4_set_vtable_8890D6C0, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_8890D6C0, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x889158B0 */
-SET_VTABLE(ts4_set_vtable_889158B0, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_889158B0, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x889158D8 */
-SET_VTABLE(ts4_set_vtable_889158D8, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_889158D8, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x889224E0 */
 SET_VTABLE(ts4_set_vtable_889224E0, lbl_880D63EC)
 
 /* Swing_DLL.xex 0x88922528 */
-SET_VTABLE(ts4_set_vtable_88922528, lbl_880D6B70)
+SET_VTABLE(ts4_set_vtable_88922528, ts4_vtbl_Ts4TrackerShell880D6B70)
 
 /* Swing_DLL.xex 0x88930F40 */
 SET_VTABLE(ts4_set_vtable_88930F40, lbl_880D5B34)

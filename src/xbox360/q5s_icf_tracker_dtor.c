@@ -6,7 +6,7 @@
  * reviewed alias lbl_880D6B70_icf_b (config/54540859/icf_aliases.json); with one name the compiler loads
  * the address once. */
 extern char lbl_880F3790[];
-extern char lbl_880D6B70[];       /* vtable of the +0x74 sub-object class */
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];       /* vtable of the +0x74 sub-object class */
 extern char lbl_880D6B70_icf_b[]; /* vtable of the +0xA0 sub-object class: same address (folded) */
 extern char lbl_880F4460[];
 extern char lbl_880D75FC[];
@@ -39,7 +39,7 @@ void ts4_tracker_sub30_dtor_886D0EB0(Q5sTracker30 *s)
     q5s_vec_dtor(&s->v);
     s->sa0.vt = lbl_880D6B70_icf_b;
     s->s90.vt = lbl_880F4460;
-    s->s74.vt = lbl_880D6B70;
+    s->s74.vt = ts4_vtbl_Ts4TrackerShell880D6B70;
     q5s_owned_dtor(&s->s58);
     q5s_vec_free(&s->s4c);
     q5s_vec_free(&s->s40);

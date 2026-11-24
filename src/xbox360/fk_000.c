@@ -32,7 +32,7 @@ extern char lbl_880D5B10[];
 extern char lbl_880D5BBC[];
 extern char lbl_880D5EE8[];
 extern char lbl_880D6A78[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880D7058[];
 extern char lbl_880D7074[];
 extern char lbl_880D709C[];
@@ -2720,7 +2720,7 @@ ts4_word ts4_if_call_seq_u32_off24_88177980(ts4_word a0, ts4_word a1)
     t3 = *(ts4_word *)((char *)(ts4_word)(a0) + 44);
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880D7570;
     fn_88616758((ts4_word)t3, (ts4_word)t2, (ts4_word)t1);
-    *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880D6B70;
+    *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)ts4_vtbl_Ts4TrackerShell880D6B70;
     if ((ts4_word)(a1 & 0x1) != 0) {
         ts4_tsu_cleanup_end((ts4_word)a0);
     }

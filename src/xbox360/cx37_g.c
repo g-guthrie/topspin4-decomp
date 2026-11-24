@@ -375,12 +375,12 @@ void ts4_release_and_clear_88948200(Cx37Own3 *o)
 
 typedef struct Cx37VObj { void **vt; } Cx37VObj;
 typedef u32 (*Cx37VFn1)(Cx37VObj *o, u32 a);
-extern Cx37VObj *fn_88941B30(void *self, u32 *key);
+extern Cx37VObj *ts4_glue_map_lookup_88941B30(void *self, u32 *key);
 #if 0 /* near miss, needs the LTCG route (r5 survives the call) */
 /* 0x88943CB8: call virtual slot 19 of the object found for the key */
 u32 ts4_lookup_vcall_88943CB8(void *self, u32 *key, u32 arg)
 {
-    Cx37VObj *o = fn_88941B30(self, key);
+    Cx37VObj *o = ts4_glue_map_lookup_88941B30(self, key);
     if (o)
         return ((Cx37VFn1)o->vt[19])(o, arg);
     return 0;

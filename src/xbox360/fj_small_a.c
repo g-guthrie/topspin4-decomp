@@ -93,7 +93,7 @@ extern void ts4_reset_entries_886E0E60(void *);
 extern void * lbl_88D45AF8;
 extern void fn_886E53F0(void *);
 extern int lbl_88D45B14;
-extern char * fn_88883CD0(int);
+extern char * ts4_input_thread_slot_data_88883CD0(int);
 extern void * ts4_find_service(u32);
 extern void ts4_object_finalize(char *);
 extern void ts4_pv_destroy_all_88922B28(char *);
@@ -145,7 +145,7 @@ extern u32 fn_882EBF70(void *);
 extern u32 fn_882EB938(void *);
 extern char lbl_88029418;
 extern char lbl_880F4518;
-extern char lbl_880D6B70;
+extern char ts4_vtbl_Ts4TrackerShell880D6B70;
 extern char lbl_880F5848;
 extern void fn_8860BBD8(void *);
 extern char lbl_880F4E18;
@@ -770,19 +770,19 @@ void ts4_call_if_global_set_twice_886E6198(void)
 /* Swing_DLL.xex 0x8863A418 */
 u32 ts4_deref_result_of_global_lookup_8863A418(void)
 {
-    return W(fn_88883CD0(lbl_88D45B14), 0);
+    return W(ts4_input_thread_slot_data_88883CD0(lbl_88D45B14), 0);
 }
 
 /* Swing_DLL.xex 0x8863A4E8 */
 u32 ts4_deref_result_of_global_lookup_8863A4E8(void)
 {
-    return W(fn_88883CD0(lbl_88D45B14), 0);
+    return W(ts4_input_thread_slot_data_88883CD0(lbl_88D45B14), 0);
 }
 
 /* Swing_DLL.xex 0x8863A570 */
 u32 ts4_deref_result_of_global_lookup_8863A570(void)
 {
-    return W(fn_88883CD0(lbl_88D45B14), 0);
+    return W(ts4_input_thread_slot_data_88883CD0(lbl_88D45B14), 0);
 }
 
 /* find_service_by_hash_return_zero */
@@ -1417,7 +1417,7 @@ void ts4_init_vtable_zero_field8_88659DD0(char *a)
 void ts4_init_vtable_zero_field8_8876D0B8(char *a)
 {
     W(a, 8) = 0;
-    *(void **)a = &lbl_880D6B70;
+    *(void **)a = &ts4_vtbl_Ts4TrackerShell880D6B70;
 }
 
 /* extract_bits_5_4_of_byte38_or_zero */
@@ -1534,14 +1534,14 @@ u32 ts4_get_indexed_pair_second_886EF918(char *a, u32 i)
 /* Swing_DLL.xex 0x888AAF60 */
 void ts4_init_vtable_and_script_constant_888AAF60(char *a)
 {
-    *(void **)a = &lbl_880D6B70;
+    *(void **)a = &ts4_vtbl_Ts4TrackerShell880D6B70;
     FL(a, 4) = g_ts4_script_constants[56];
 }
 
 /* Swing_DLL.xex 0x888AD1A8 */
 void ts4_init_vtable_and_script_constant_888AD1A8(char *a)
 {
-    *(void **)a = &lbl_880D6B70;
+    *(void **)a = &ts4_vtbl_Ts4TrackerShell880D6B70;
     FL(a, 4) = g_ts4_script_constants[56];
 }
 
@@ -3034,7 +3034,7 @@ u32 ts4_return_constant_36_88603100(void)
 /* Swing_DLL.xex 0x88608848 */
 char * ts4_forward_with_zero_first_arg_88608848(int a)
 {
-    return fn_88883CD0(0);
+    return ts4_input_thread_slot_data_88883CD0(0);
 }
 
 /* Swing_DLL.xex 0x88801AB0 */

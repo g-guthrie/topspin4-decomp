@@ -98,9 +98,9 @@ void ts4_bind_ctx_8865E638(Q5Binder *b, Q5Ctx *c)
  * scheduling. */
 extern void *fn_88617D88(void *self);
 
-/* 0x88886608: two flags and an embedded 0x20-byte sub-object (vtable lbl_880D6B70). */
+/* 0x88886608: two flags and an embedded 0x20-byte sub-object (vtable ts4_vtbl_Ts4TrackerShell880D6B70). */
 extern char lbl_880DF438[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 typedef struct Q5Sub20 { void *vtbl; u32 w4, w8, wc, w10, w14; char pad18[4]; u8 b1c; } Q5Sub20;
 typedef struct Q5FlagObj { void *vtbl; char base[0x18]; u8 b1c; u8 b1d; char pad1e[2]; Q5Sub20 sub; } Q5FlagObj;
 
@@ -112,7 +112,7 @@ Q5FlagObj *ts4_flag_obj_ctor_88886608(Q5FlagObj *o)
     o->b1c = 0;
     o->vtbl = lbl_880DF438;
     o->b1d = 0;
-    o->sub.vtbl = lbl_880D6B70;
+    o->sub.vtbl = ts4_vtbl_Ts4TrackerShell880D6B70;
     o->sub.b1c = 0;
     o->sub.w4 = 0;
     o->sub.w8 = 0;

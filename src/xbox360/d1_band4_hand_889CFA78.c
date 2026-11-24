@@ -19,7 +19,7 @@ extern void *lbl_88D45910;
 extern void *fn_885805C0(void *, int, void *);
 extern void *ts4_get_u32_lbl_88D4E11C_88581A90(void);
 extern char lbl_880D7570[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern void fn_88616758(void *, int, int);
 extern void fn_889C6888(void *, int *);
 

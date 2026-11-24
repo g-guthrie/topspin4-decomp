@@ -8,7 +8,7 @@ typedef unsigned int u32; typedef unsigned char u8;
 extern const void *lbl_880F4308[];
 extern const void *lbl_880F4508[];
 extern const void *lbl_880F4518[];
-extern const void *lbl_880D6B70[];
+extern const void *ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern void *lbl_88D45B38;
 extern void *lbl_88D45AFC;
 void *ts4_node_dispatch_with_target_88613268(void *heap, u32 size, u32 alignment, u32 flags, u32 pool);
@@ -40,7 +40,7 @@ Mgr *ts4_mgr_ctor_886B12D0(Mgr *m)
     if (p) { ((Small *)p)->f4 = 0; ((Small *)p)->vt = lbl_880F4518; o = p; } else o = 0;
     m->b = (Small *)o;
     p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 0x90, 0x10, 0, 2);
-    if (p) { ((Big *)p)->f78 = 0; ((Big *)p)->vt = lbl_880D6B70; o = p; } else o = 0;
+    if (p) { ((Big *)p)->f78 = 0; ((Big *)p)->vt = ts4_vtbl_Ts4TrackerShell880D6B70; o = p; } else o = 0;
     m->big = (Big *)o;
     p = ts4_node_dispatch_with_target_88613268(lbl_88D45B38, 0x70, 0x10, 0, 2);
     m->addr_obj = p ? ts4_addr_lbl_880F44EC_8867E7B0(p) : 0;

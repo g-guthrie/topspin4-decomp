@@ -1,4 +1,4 @@
-/* 0x881B9EA0: std::vector<24-byte item> reallocating insert of n copies of *val at where, no flag. Same as 0x881595C0, with the storage taken from the lbl_88D45B38 allocator path (fn_88613570 with the optional fn_88883CD0 hook, align 4). */
+/* 0x881B9EA0: std::vector<24-byte item> reallocating insert of n copies of *val at where, no flag. Same as 0x881595C0, with the storage taken from the lbl_88D45B38 allocator path (fn_88613570 with the optional ts4_input_thread_slot_data_88883CD0 hook, align 4). */
 /* Matched on /Oc (work/army/ME/v.py chk). The newcap sum uses an inline ternary to reproduce the operand order. */
 typedef struct Item { int w[6]; } Item;
 typedef struct Vec { Item *begin; Item *end; Item *cap; } Vec;

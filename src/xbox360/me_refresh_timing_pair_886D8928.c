@@ -7,7 +7,7 @@ typedef struct Node { char p[0x70]; char f70[4]; } Node;
 typedef struct Self { char p[0x12]; unsigned char b12; char p2[5]; float f18; char p3[4]; Link *f20; char p4[8]; Node *f2c; char p5[0x28]; char f58[0x1c]; char f74[4]; } Self;
 void fn_882694D0(Node *n, int on);
 float fn_886D62F8(Self *s);
-void fn_886D8078(void *sub, float *pair);
+void ts4_swan_update_held_elems_886D8078(void *sub, float *pair);
 void fn_886D6AD0(void *sub, float *pair);
 void fn_88649A90(Node *n, void *p);
 void ts4_if_call_seq_fn_886465A0_88648590(Node *n, Own *o, void *x);
@@ -21,7 +21,7 @@ void ts4_refresh_timing_pair_886D8928(Self *s)
         v = s->f18;
         if (v > 0.0f) w = v - lead; else w = v;
         pair[0] = v; pair[1] = w;
-        fn_886D8078(s->f74, pair);
+        ts4_swan_update_held_elems_886D8078(s->f74, pair);
         fn_886D6AD0(s->f58, pair);
         fn_88649A90(s->f2c, s->f2c->f70);
         ts4_if_call_seq_fn_886465A0_88648590(s->f2c, s->f20->f10->f48, s->f20->f14);

@@ -138,19 +138,19 @@ TS4_ASSERT_SIZE(Ts4XformRecord, 0xD0);
 #endif
 
 /* ===================================================================================================
- * Ts4Tracker (0x98): vtable lbl_880F3798 (1 slot: scalar deleting dtor 88262BB0), a polymorphic shell member
- * at +0x08 (vtable lbl_880D6B70: the linker-folded vtable of trivial classes whose only virtual is the dtor,
+ * Ts4Tracker (0x98): vtable ts4_vtbl_Q5sTrackerItem880F3798 (1 slot: scalar deleting dtor 88262BB0), a polymorphic shell member
+ * at +0x08 (vtable ts4_vtbl_Ts4TrackerShell880D6B70: the linker-folded vtable of trivial classes whose only virtual is the dtor,
  * shared by the 16-byte elements of 88267630 and the service members of 8817D2A0/88212040; not one class),
  * two accumulators and a block of floats/counters.
  *   ctor   886CC058: vptrs, a(), b() (member ctors), then { f_30 = 0; Reset(); } with Reset inlined
  *   Reset  886CBC30: clears everything except the vptrs, f_30 and b; scale (+0x3C) = 1.0f
  *   dtor   886C3510 (inline body: the two vptr stores), deleting dtor 88262BB0, vector delete 88262730 (stride 0x98)
- *   other loaders of lbl_880F3798 (embedding ctors, not examined): 88266740, 886D66A8, 886E1328
+ *   other loaders of ts4_vtbl_Q5sTrackerItem880F3798 (embedding ctors, not examined): 88266740, 886D66A8, 886E1328
  * The zero is the literal 0.0f (pooled at 0x8814B440, `g_ts4_event_value`); 1.0f is g_ts4_script_constants[0].
  * Reset only matches with the literal: a named extern float is reloaded after every float store in C++.
  * =================================================================================================== */
 #ifdef __cplusplus
-struct Ts4TrackerShell {                         /* vtable lbl_880D6B70 */
+struct Ts4TrackerShell {                         /* vtable ts4_vtbl_Ts4TrackerShell880D6B70 */
     virtual ~Ts4TrackerShell() {}
 };
 struct Ts4TrackerAcc {                           /* 0x14 */
@@ -160,9 +160,9 @@ struct Ts4TrackerAcc {                           /* 0x14 */
     void Clear() { n = 0; v[0] = 0.0f; v[1] = 0.0f; v[2] = 0.0f; v[3] = 0.0f; }
 };
 TS4_STATIC_ASSERT(sizeof(Ts4TrackerAcc) == 0x14, Ts4TrackerAcc_size);
-struct Ts4Tracker {                              /* vtable lbl_880F3798 at +0x00 */
+struct Ts4Tracker {                              /* vtable ts4_vtbl_Q5sTrackerItem880F3798 at +0x00 */
     int f_04;                                    /* +0x04 V 886CBC30 */
-    Ts4TrackerShell shell;                       /* +0x08 U asm 886CC058 886C3510 88262BB0 (vptr lbl_880D6B70) */
+    Ts4TrackerShell shell;                       /* +0x08 U asm 886CC058 886C3510 88262BB0 (vptr ts4_vtbl_Ts4TrackerShell880D6B70) */
     float f_0c, f_10, f_14, f_18;                /* +0x0C V 886CBC30 */
     float f_1c, f_20, f_24, f_28, f_2c;          /* +0x1C V 886CBC30 (paired with f_6c/f_74/f_78/f_7c/f_80 in Reset order) */
     int f_30;                                    /* +0x30 U asm 886CC058 (ctor only) */
@@ -194,9 +194,9 @@ TS4_ASSERT_SIZE(Ts4Tracker, 0x98);
 #else
 typedef struct Ts4TrackerAcc { float v[4]; int n; } Ts4TrackerAcc;
 typedef struct Ts4Tracker {
-    const void *vtbl;                            /* +0x00 lbl_880F3798 */
+    const void *vtbl;                            /* +0x00 ts4_vtbl_Q5sTrackerItem880F3798 */
     int f_04;
-    const void *shell_vtbl;                      /* +0x08 lbl_880D6B70 */
+    const void *shell_vtbl;                      /* +0x08 ts4_vtbl_Ts4TrackerShell880D6B70 */
     float f_0c, f_10, f_14, f_18, f_1c, f_20, f_24, f_28, f_2c;
     int f_30, f_34;
     float f_38, scale, f_40;

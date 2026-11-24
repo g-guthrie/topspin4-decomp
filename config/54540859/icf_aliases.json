@@ -9,7 +9,7 @@
   },
   {
    "alias": "lbl_880D6B70_icf_b",
-   "canonical": "lbl_880D6B70",
+   "canonical": "??_7Ts4TrackerShell@@6B@",
    "address": "0x880D6B70",
    "kind": "icf",
    "evidence": "0x886D0EB0 materializes 0x880D6B70 twice (lis r11 at +0x3C for the +0xA0 sub-object, lis r9 at +0x44 for the +0x74 sub-object); cl reuses one lis/addi for two loads of one symbol (31 instructions off), so the two sub-objects have distinct classes whose identical vtables the linker folded."
@@ -223,6 +223,55 @@
    "address": "0x889A0540",
    "kind": "cxx",
    "evidence": "0x889A0540 matches byte for byte only as the C++ member ?Init@Ts4IdTable@@QAAHI@Z; as an extern \"C\" function taking the table first the fill stwx operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers (fn_889A4888)."
+  },
+  {
+   "alias": "ts4_vtbl_TS4Obj880D2A0C",
+   "canonical": "??_7TS4Obj880D2A0C@@6B@",
+   "address": "0x880D2A0C",
+   "kind": "cxx",
+   "evidence": "0x88934788 matches byte for byte only as the C++ constructor ??0TS4Obj880D2A0C@@QAA@XZ, whose vtable is the compiler-named ??_7TS4Obj880D2A0C@@6B@ at 0x880D2A0C; C units (cx36_d.c, cx36_i.c) reference the vtable and cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_pres_shared_handle_ctor_888907A0",
+   "canonical": "??0Ts4SharedHandle880DCE3C@@QAA@I@Z",
+   "address": "0x888907A0",
+   "kind": "cxx",
+   "evidence": "0x888907A0 stores vtable 0x880DCE3C, sets +6 = 1 (base ctor, base vtable 0x88089574 store dead) and +0xC = 1, then fills +8 from service slot 10 by sret; it matches byte for byte only as the C++ constructor ??0Ts4SharedHandle880DCE3C@@QAA@I@Z (fn_check_ltcg /Oc, context pp1_pool_primer.c, b215, 2026-11-24); C bodies with a hand-written vtable store are 5-15 off. C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_vtbl_Ts4SharedHandle880DCE3C",
+   "canonical": "??_7Ts4SharedHandle880DCE3C@@6B@",
+   "address": "0x880DCE3C",
+   "kind": "cxx",
+   "evidence": "0x888907A0 matches byte for byte only as the C++ constructor ??0Ts4SharedHandle880DCE3C@@QAA@I@Z, whose vtable is the compiler-named ??_7Ts4SharedHandle880DCE3C@@6B@ at 0x880DCE3C; C units (d2f_thunks_a_888873E8.c, fam5_h_000.c, fk2_007.c, fk2_007_1.c) reference the vtable and cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_ring_write_88655310",
+   "canonical": "?Write@Ts4ByteRing@@QAAXPBEI@Z",
+   "address": "0x88655310",
+   "kind": "cxx",
+   "evidence": "0x88655310 matches byte for byte as the C++ member ?Write@Ts4ByteRing@@QAAXPBEI@Z; the C free-function form is 1 off (add operand order). C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_tracker_item_copy_88266740",
+   "canonical": "??0Q5sTrackerItem@@QAA@ABU0@@Z",
+   "address": "0x88266740",
+   "kind": "cxx",
+   "evidence": "0x88266740 matches byte for byte as the C++ copy constructor ??0Q5sTrackerItem@@QAA@ABU0@@Z (LTCG, primer context); C callers (me_ts4_vector_realloc_insert_88266840.c) cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_vtbl_Q5sTrackerItem880F3798",
+   "canonical": "??_7Q5sTrackerItem@@6B@",
+   "address": "0x880F3798",
+   "kind": "cxx",
+   "evidence": "0x88266740 matches byte for byte only as the C++ copy constructor ??0Q5sTrackerItem@@QAA@ABU0@@Z, which stores the compiler-named vtable ??_7Q5sTrackerItem@@6B@ at 0x880F3798; C units reference the vtable and cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_vtbl_Ts4TrackerShell880D6B70",
+   "canonical": "??_7Ts4TrackerShell@@6B@",
+   "address": "0x880D6B70",
+   "kind": "cxx",
+   "evidence": "0x88266740 matches byte for byte only with the +0x08 member typed Ts4TrackerShell (include/ts4/classes.h), whose compiler-named vtable ??_7Ts4TrackerShell@@6B@ is at 0x880D6B70; C units reference the vtable and cannot spell the decorated name."
   }
  ]
 }

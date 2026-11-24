@@ -124,7 +124,7 @@ ts4_uptr fn_8861E530(ts4_uptr);
 ts4_uptr fn_8863F068(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr ts4_call_seq_u32_lbl_88D45B20_886496F0(ts4_uptr);
 ts4_uptr ts4_reset_sub_886C5C28(ts4_uptr);
-ts4_uptr fn_88883CD0(ts4_uptr);
+ts4_uptr ts4_input_thread_slot_data_88883CD0(ts4_uptr);
 ts4_uptr fn_888860A0(ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr, ts4_uptr);
 ts4_uptr fn_8890DDA8(ts4_uptr);
 ts4_uptr fn_8892EB28(ts4_uptr, ts4_uptr);

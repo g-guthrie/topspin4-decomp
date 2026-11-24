@@ -127,7 +127,7 @@ CW8C_INL void cw8_guard_set(Cw8GuardRec *r, u8 v)
 }
 typedef struct Cw8Guarded { u8 pad[0x6c]; u32 slots; } Cw8Guarded;
 typedef struct Cw8Guard { Cw8Guarded *obj; u8 saved; } Cw8Guard;
-extern u32 fn_88883CD0(void *key);
+extern u32 ts4_input_thread_slot_data_88883CD0(void *key);
 extern void *lbl_88D459B4;
 
 /* 0x881E3930: constructor of a scope guard: remember the object and clear its flag byte */
@@ -142,7 +142,7 @@ Cw8Guard *ts4_guard_ctor_881E3930(Cw8Guard *self, Cw8Guarded *obj)
         u8 *rec;
         u32 off;
         self->saved = 0;
-        off = fn_88883CD0(lbl_88D459B4) + 0x18;
+        off = ts4_input_thread_slot_data_88883CD0(lbl_88D459B4) + 0x18;
         rec = (u8 *)(cw8_uptr)(obj->slots + off);
         cw8_guard_set((Cw8GuardRec *)rec, 0);
     }
@@ -160,7 +160,7 @@ void ts4_guard_dtor_881E3988(Cw8Guard *self)
         u8 *rec;
         u32 off;
         u8 saved = self->saved;
-        off = fn_88883CD0(lbl_88D459B4) + 0x18;
+        off = ts4_input_thread_slot_data_88883CD0(lbl_88D459B4) + 0x18;
         rec = (u8 *)(cw8_uptr)(obj->slots + off);
         cw8_guard_set((Cw8GuardRec *)rec, saved);
     }

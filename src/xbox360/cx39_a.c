@@ -322,7 +322,7 @@ typedef struct Cx39HNm2 { u8 pad[0x50]; int w50; } Cx39HNm2;
 typedef struct Cx39HOwn { u8 pad; } Cx39HOwn;
 extern u8 lbl_880C1320[];
 extern u32 ts4_crc32_cstr_seed_88608590(u32 seed, const char *s);
-extern Cx39HOb *fn_88941B30(Cx39HOwn *g, u32 *h);
+extern Cx39HOb *ts4_glue_map_lookup_88941B30(Cx39HOwn *g, u32 *h);
 extern void *ts4_find_by_name_88943978(Cx39HOwn *self, char **a);
 extern void fn_8897CE90(char **b, void *arg);
 Cx39HOb *ts4_register_named_8897CF90(Cx39HOwn *self, char **a, char **b)
@@ -336,7 +336,7 @@ Cx39HOb *ts4_register_named_8897CF90(Cx39HOwn *self, char **a, char **b)
     seed = ts4_crc32_cstr_seed_88608590(0, *a);
     n = *b;
     h0 = ts4_crc32_cstr_seed_88608590(seed, n);
-    r = fn_88941B30(self, &h0);
+    r = ts4_glue_map_lookup_88941B30(self, &h0);
     if (r == 0) {
         p = ts4_find_by_name_88943978(self, a);
         if (p != 0) {
@@ -352,12 +352,12 @@ Cx39HOb *ts4_register_named_8897CF90(Cx39HOwn *self, char **a, char **b)
                     s = (const char *)lbl_880C1320;
                 seed = ts4_crc32_cstr_seed_88608590(0, s);
                 h1 = ts4_crc32_cstr_seed_88608590(seed, n);
-                f = fn_88941B30(self, &h1);
+                f = ts4_glue_map_lookup_88941B30(self, &h1);
                 if (f == 0)
                     fn_8897CE90(b, q);
                 else
                     f->vt->f20(f, p);
-                return fn_88941B30(self, &h0);
+                return ts4_glue_map_lookup_88941B30(self, &h0);
             }
         }
     }

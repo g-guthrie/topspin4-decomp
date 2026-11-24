@@ -24,7 +24,7 @@ typedef struct Owner {
 } Owner;
 void *fn_88562DC0(void *dst, const void *src, unsigned int n);
 void fn_887EFFD8(Owner *o);
-void fn_88890CB0(void *session);
+void ts4_pres_session_clear_88890CB0(void *session);
 void ts4_tsu_cleanup_end(void *session);
 void ts4_vec204_move_tail_881B9148(Vec204 *v);
 static __forceinline char *copy_bytes(char *first, char *last, char *dest)
@@ -61,7 +61,7 @@ void fn_887F2C48(Owner *o)
     fn_887EFFD8(o);
     { ByteVec *d = &o->data; d->last = copy_bytes(d->last, d->last, d->first); }
     if ((int)o->session != 0)
-        fn_88890CB0(o->session);
+        ts4_pres_session_clear_88890CB0(o->session);
     if (o->session)
         ts4_tsu_cleanup_end(o->session);
     o->session = 0;

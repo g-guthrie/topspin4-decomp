@@ -18,7 +18,7 @@ struct Hd { struct HVt *vt; u8 pad[0x6c - 4]; u32 off; };
 typedef void (*Cb2)(int ev, int a, int b, struct Hd *h);
 extern Cb2 lbl_88D3E3AC;
 extern void *lbl_88D459B4;
-u32 *fn_88883CD0(void *g);
+u32 *ts4_input_thread_slot_data_88883CD0(void *g);
 struct Hd *ts4_if_call_seq_u32_lbl_88D3E3B4_8818A0F8(void);
 int ts4_dispatch_881991A0(int a, int b, int *p)
 {
@@ -28,9 +28,9 @@ int ts4_dispatch_881991A0(int a, int b, int *p)
     dflt[0] = 1000;
     dflt[1] = 0;
     if (p == 0) p = dflt;
-    h = *(struct Hd **)fn_88883CD0(lbl_88D459B4);
+    h = *(struct Hd **)ts4_input_thread_slot_data_88883CD0(lbl_88D459B4);
     if (h == (struct Hd *)-1 || h == 0) h = ts4_if_call_seq_u32_lbl_88D3E3B4_8818A0F8();
-    if (*p == 1000) { u32 *g2 = fn_88883CD0(lbl_88D459B4); u32 b = (u32)(cl2_uptr)(g2 + 1); u8 *q = (u8 *)(cl2_uptr)(h->off + b); *p = q[1]; }
+    if (*p == 1000) { u32 *g2 = ts4_input_thread_slot_data_88883CD0(lbl_88D459B4); u32 b = (u32)(cl2_uptr)(g2 + 1); u8 *q = (u8 *)(cl2_uptr)(h->off + b); *p = q[1]; }
     if (lbl_88D3E3AC) lbl_88D3E3AC(2, a, b, h);
     r = h->vt->run(h, a, b, p);
     if (lbl_88D3E3AC) lbl_88D3E3AC(3, r, b, h);
@@ -46,10 +46,10 @@ int ts4_dispatch2_88199068(struct Hd *h, int b, int *p)
     dflt[1] = 0;
     if (p == 0) p = dflt;
     if (h == 0) {
-        h = *(struct Hd **)fn_88883CD0(lbl_88D459B4);
+        h = *(struct Hd **)ts4_input_thread_slot_data_88883CD0(lbl_88D459B4);
         if (h == (struct Hd *)-1 || h == 0) h = ts4_if_call_seq_u32_lbl_88D3E3B4_8818A0F8();
     }
-    if (*p == 1000) { u32 *g2 = fn_88883CD0(lbl_88D459B4); u32 bs = (u32)(cl2_uptr)(g2 + 1); u8 *q = (u8 *)(cl2_uptr)(h->off + bs); *p = q[1]; }
+    if (*p == 1000) { u32 *g2 = ts4_input_thread_slot_data_88883CD0(lbl_88D459B4); u32 bs = (u32)(cl2_uptr)(g2 + 1); u8 *q = (u8 *)(cl2_uptr)(h->off + bs); *p = q[1]; }
     p[1] = (int)(cl2_uptr)h;
     if (lbl_88D3E3AC) lbl_88D3E3AC(0, 0, b, h);
     r = h->vt->run5(h, b, p);

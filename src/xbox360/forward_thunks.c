@@ -178,12 +178,12 @@ void fn_88855B70(void);
 void fn_88867958(void);
 void fn_8887B5A8(void);
 void fn_888860A0(void);
-void fn_88886938(void);
+void ts4_input_pick_event_88886938(void);
 void fn_88887BE0(void);
 void fn_8888D120(void);
 void ts4_type_register_88890140(void);
 void ts4_publish_position_triples_888AEBF8(void);
-void fn_888AF2D0(void);
+void ts4_emit_release_888AF2D0(void);
 void fn_888B1960(void);
 void ts4_destroy_all_children_888B1BF8(void);
 void ts4_call_seq_lbl_880DBEC0_888B83E8(void);
@@ -304,7 +304,7 @@ TS4_FORWARD(88613D48, fn_8860E6E8)
 TS4_FORWARD(88613D50, fn_8860E740)
 TS4_FORWARD(88613DF0, ts4_first_accepting_8860E7B8)
 TS4_FORWARD(88618388, fn_888860A0)
-TS4_FORWARD(8861DB90, fn_88886938)
+TS4_FORWARD(8861DB90, ts4_input_pick_event_88886938)
 TS4_FORWARD(8861F950, ts4_if_call_seq_u8_off68_886195A0)
 TS4_FORWARD(88625790, fn_8861DE40)
 TS4_FORWARD(8862DB50, fn_8862BA88)
@@ -414,8 +414,8 @@ TS4_FORWARD(88888330, fn_88887BE0)
 TS4_FORWARD(8888D220, fn_8888D120)
 TS4_FORWARD(88890208, ts4_type_register_88890140)
 TS4_FORWARD(888902E0, fn_8841B618)
-TS4_FORWARD(888B0C48, fn_888AF2D0)
-TS4_FORWARD(888B0E20, fn_888AF2D0)
+TS4_FORWARD(888B0C48, ts4_emit_release_888AF2D0)
+TS4_FORWARD(888B0E20, ts4_emit_release_888AF2D0)
 TS4_FORWARD(888B3C90, ts4_publish_position_triples_888AEBF8)
 TS4_FORWARD(888B5078, fn_888B1960)
 TS4_FORWARD(888B81E8, ts4_destroy_all_children_888B1BF8)

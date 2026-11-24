@@ -8,7 +8,7 @@ extern void ts4_call_seq_u32_lbl_88D45B20_886496F0(void *);
 extern void ts4_make_by_key_889BD910(void *, int);
 extern char lbl_880C88D9[];
 extern char lbl_880C88DA[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880F58D8[];
 extern char lbl_880F6024[];
 extern char lbl_88D49304[];

@@ -34,7 +34,7 @@ struct lg1_unknown_encoding {
 int fn_88891700(const struct ts4_xml_encoding *enc, const char *p); /* unknown_isName */
 int fn_88891678(const struct ts4_xml_encoding *enc, const char *p); /* unknown_isNmstrt */
 int fn_88894E10(const struct ts4_xml_encoding *enc, const char *p); /* unknown_isInvalid */
-void fn_888915C0(const struct ts4_xml_encoding *enc, const char **from_p, const char *from_lim, unsigned short **to_p,
+void ts4_xmltok_unknown_to_utf16_888915C0(const struct ts4_xml_encoding *enc, const char **from_p, const char *from_lim, unsigned short **to_p,
                  const unsigned short *to_lim); /* unknown_toUtf16 */
 void ts4_xmltok_unknown_to_utf8_88894C50(const struct ts4_xml_encoding *enc, const char **from_p, const char *from_lim,
                                          char **to_p, const char *to_lim);
@@ -154,6 +154,6 @@ const struct ts4_xml_encoding *ts4_xmltok_init_unknown_encoding_88899C70(void *m
         e->normal.is_invalid4 = fn_88894E10;
     }
     e->normal.enc.utf8_convert = ts4_xmltok_unknown_to_utf8_88894C50;
-    e->normal.enc.utf16_convert = fn_888915C0;
+    e->normal.enc.utf16_convert = ts4_xmltok_unknown_to_utf16_888915C0;
     return &e->normal.enc;
 }

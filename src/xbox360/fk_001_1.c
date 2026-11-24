@@ -12,7 +12,7 @@ typedef unsigned long ts4_word;
 
 extern char ts4_get_u32_lbl_88D493C8_88AFF0B0[];
 extern char lbl_880D19F0[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880DB834[];
 extern char lbl_880DCF20[];
 extern char lbl_880DD088[];

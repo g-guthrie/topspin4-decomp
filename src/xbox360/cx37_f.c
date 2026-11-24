@@ -63,7 +63,7 @@ u32 ts4_forward_children_88940DB0(Cx37List *o, u32 a, u32 b)
 #endif
 
 extern u32 ts4_crc32_cstr_seed_88608590(u32 a, const void *name);
-extern Cx37Obj *fn_88941B30(void *self, u32 *key);
+extern Cx37Obj *ts4_glue_map_lookup_88941B30(void *self, u32 *key);
 extern u8 lbl_880C1320[];
 typedef struct Cx37Src { u8 pad[0x1c]; int o1c; u8 pad2[0x4c - 0x20]; int o4c; } Cx37Src;
 /* 0x88946090 */
@@ -80,7 +80,7 @@ u32 ts4_lookup_call_88946090(void *self, Cx37Src *src, u32 *key2, u32 arg)
         s = (const char *)lbl_880C1320;
     t = ts4_crc32_cstr_seed_88608590(0, s);
     k = ts4_crc32_cstr_seed_88608590(t, (const void *)(unsigned long)*key2);
-    o = fn_88941B30(self, &k);
+    o = ts4_glue_map_lookup_88941B30(self, &k);
     if (o)
         return ((Cx37Fn2)o->vt->s[19])(o, arg);
     return 0;
@@ -97,7 +97,7 @@ u32 ts4_lookup_call_88946118(void *self, Cx37Src *src, u32 arg)
     else
         s = (const char *)lbl_880C1320;
     k = ts4_crc32_cstr_seed_88608590(0, s);
-    o = fn_88941B30(self, &k);
+    o = ts4_glue_map_lookup_88941B30(self, &k);
     if (o)
         return ((Cx37Fn2)o->vt->s[19])(o, arg);
     return 0;

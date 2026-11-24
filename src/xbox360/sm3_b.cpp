@@ -17,7 +17,7 @@ extern "C" {
 extern char *lbl_88D45930;
 extern char *lbl_88D45B1C;
 extern u32 lbl_88C6BFF8, lbl_88C6BFF4;
-extern char lbl_88C6C050[], lbl_88D48820[], lbl_88C6C058[], lbl_88D48848[], lbl_880D6B70[];
+extern char lbl_88C6C050[], lbl_88D48820[], lbl_88C6C058[], lbl_88D48848[], ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern void fn_887561A8(void *, int);
 extern struct ts4_sm3_slot lbl_88D45CC0[];
 extern void fn_8890DB90(void *, void *, int);

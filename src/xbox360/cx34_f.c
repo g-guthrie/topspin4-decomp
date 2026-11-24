@@ -68,7 +68,7 @@ extern void *ts4_if_call_seq_u32_lbl_88D459E4_8883F238(void);
 extern void fn_886223B0(void *a, u32 i, char *name);
 
 extern char lbl_880DB4B8[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char *lbl_88D45940;
 
 extern char lbl_880DB904[];

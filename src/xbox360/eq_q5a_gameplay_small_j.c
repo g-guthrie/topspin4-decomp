@@ -182,7 +182,7 @@ typedef struct Q5Session {
     void *res_bc;
 } Q5Session;
 extern const char lbl_880DC64C[];
-extern const char lbl_880D6B70[];
+extern const char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern u32 lbl_88D45964;
 extern void ts4_destroy_owned_object(void *p);
 extern void ts4_if_call_seq_lbl_880F7EE4_88617D28(void *self);
@@ -195,7 +195,7 @@ void ts4_session_dtor_888B8D98(Q5Session *self)
     lbl_88D45964 = 0;
     if (self->res_bc)
         ts4_destroy_owned_object(self->res_bc);
-    self->sub_vt = lbl_880D6B70;
+    self->sub_vt = ts4_vtbl_Ts4TrackerShell880D6B70;
     ts4_destroy_owned_object(self->res_54);
     if (self->res_40)
         ts4_destroy_owned_object(self->res_40);

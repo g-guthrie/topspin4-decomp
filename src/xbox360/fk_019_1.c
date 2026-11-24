@@ -13,7 +13,7 @@ typedef unsigned long ts4_word;
 extern char g_ts4_script_constants[];
 extern char lbl_880C88D9[];
 extern char lbl_880C88DA[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880F436C[];
 extern char lbl_880F43E0[];
 extern char lbl_880F4508[];

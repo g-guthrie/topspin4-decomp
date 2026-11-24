@@ -17,7 +17,7 @@ extern void ts4_obj44_dtor_8890F1E8(void *p);
 extern void ts4_if_call_seq_lbl_880F7EE4_88617D28(void *o);
 extern char lbl_880D2484[];
 extern char lbl_880D75FC[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 typedef struct Cx43Big {
     void *vt;
     u8 pad[0x1c - 4];
@@ -42,9 +42,9 @@ void ts4_dtor_889A3C20(Cx43Big *o)
     ref_dtor(&o->r178);
     ref_dtor(&o->r164);
     ts4_obj44_dtor_8890F1E8((u8 *)o + 0x120);
-    o->w118 = lbl_880D6B70;
+    o->w118 = ts4_vtbl_Ts4TrackerShell880D6B70;
     ts4_obj44_dtor_8890F1E8((u8 *)o + 0xd4);
-    o->wcc = lbl_880D6B70;
+    o->wcc = ts4_vtbl_Ts4TrackerShell880D6B70;
     if (o->w20 != 0)
         ts4_destroy_owned_object(o->w20);
     ts4_clear_intrusive_list((u8 *)o + 0x1c);

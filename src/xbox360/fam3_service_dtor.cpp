@@ -36,7 +36,7 @@ extern char lbl_880D5118[];
 extern char lbl_880D5140[];
 extern char lbl_880D5694[];
 extern char lbl_880D5E0C[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880D7590[];
 extern char lbl_880D75FC[];
 extern char lbl_880D7600[];
@@ -348,8 +348,8 @@ OBJECT_DELETING_DTOR(8815F4B0, lbl_880D4B20, Ts4NoBase, char pad4[0xC]; Ts4Owned
 SERVICE_DELETING_DTOR(88160278, lbl_880D5694, lbl_88D45894, Ts4Base_88617D28, char pad4[0x24]; Ts4OwnedRaw m28;)
 SERVICE_DELETING_DTOR(881606B8, lbl_880D5140, lbl_88D458D0, Ts4Base_88617D28, char pad4[0x18]; Ts4OwnedRaw m1C;)
 OBJECT_DELETING_DTOR(8816D3A8, lbl_880D5E0C, Ts4NoBase, char pad4[0x4]; Ts4OwnedRaw m8;)
-SERVICE_DELETING_DTOR(8817D2A0, lbl_880DB4B8, lbl_88D45940, Ts4Base_88617D28, char pad4[0x28]; Ts4VtShell<lbl_880D6B70> m2C;)
-SERVICE_DELETING_DTOR(88212040, lbl_880EA63C, lbl_88D45A48, Ts4Base_88617D28, char pad4[0x20]; Ts4VtShell<lbl_880D6B70> m24; char pad28[0xC]; Ts4VtShell<lbl_880D6B70> m34; char pad38[0xC]; Ts4VtShell<lbl_880D6B70> m44; char pad48[0xC]; Ts4VtShell<lbl_880D6B70> m54;)
+SERVICE_DELETING_DTOR(8817D2A0, lbl_880DB4B8, lbl_88D45940, Ts4Base_88617D28, char pad4[0x28]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m2C;)
+SERVICE_DELETING_DTOR(88212040, lbl_880EA63C, lbl_88D45A48, Ts4Base_88617D28, char pad4[0x20]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m24; char pad28[0xC]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m34; char pad38[0xC]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m44; char pad48[0xC]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m54;)
 VT_OBJECT_DELETING_DTOR(88212B10, lbl_880EF510, lbl_880E4BA0, Ts4Base_8860BBD8, char pad4[0x24]; Ts4OwnedRaw m28;)
 OBJECT_DELETING_DTOR(8821AE48, lbl_880F2148, Ts4NoBase, char pad4[0x4]; Ts4OwnedRaw m8;)
 SERVICE_DELETING_DTOR(8821D3C8, lbl_880F2A08, lbl_88D45ACC, Ts4Base_88720080, char pad4[0x150]; Ts4OwnedRaw m154;)
@@ -370,7 +370,7 @@ OBJECT_DTOR(887205B0, lbl_880F3388, Ts4NoBase, char pad4[0x20]; Ts4HeapBuf m24;)
 SERVICE_DTOR(88720D00, lbl_880F3388, lbl_88D45AB4, Ts4NoBase, char pad4[0x20]; Ts4HeapBuf m24;)
 SERVICE_DTOR(88720D50, lbl_880F3388, lbl_88D45AB0, Ts4NoBase, char pad4[0x20]; Ts4HeapBuf m24;)
 VT_OBJECT_DTOR(8877DEB0, lbl_880EF510, lbl_880E4BA0, Ts4Base_8860BBD8, char pad4[0x24]; Ts4OwnedRaw m28;)
-SERVICE_DTOR(887C7C58, lbl_880EA63C, lbl_88D45A48, Ts4Base_88617D28, char pad4[0x20]; Ts4VtShell<lbl_880D6B70> m24; char pad28[0xC]; Ts4VtShell<lbl_880D6B70> m34; char pad38[0xC]; Ts4VtShell<lbl_880D6B70> m44; char pad48[0xC]; Ts4VtShell<lbl_880D6B70> m54;)
+SERVICE_DTOR(887C7C58, lbl_880EA63C, lbl_88D45A48, Ts4Base_88617D28, char pad4[0x20]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m24; char pad28[0xC]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m34; char pad38[0xC]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m44; char pad48[0xC]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m54;)
 SERVICE_DTOR(887D2AE8, lbl_880E70D8, lbl_88D45A24, Ts4Base_88617D28, char pad4[0x3C]; Ts4OwnedRef m40;)
 SERVICE_DTOR(887D2F40, lbl_880E7070, lbl_88D45A20, Ts4Base_8860BBD8, char pad4[0x4]; Ts4OwnedRef m8;)
 SERVICE_DTOR(887DB5E8, lbl_880E7038, g_ts4_tsu_notification_object, Ts4Base_88617D28, char pad4[0x68]; Ts4OwnedRaw m6C; char pad70[0x8]; Ts4OwnedRaw m78; char pad7C[0x8]; Ts4OwnedRaw m84; char pad88[0x2B8]; Ts4OwnedRaw m340; char pad344[0x20]; Ts4OwnedRef m364; char pad368[0x18]; Ts4OwnedRef m380;)
@@ -381,7 +381,7 @@ SERVICE_DTOR(88866368, lbl_880E0638, lbl_88D459D4, Ts4Base_88617D28, char pad4[0
 SERVICE_DTOR(8887DB70, lbl_880DF8B0, lbl_88D459C4, Ts4Base_88617D28, char pad4[0x20]; Ts4Holder8887DB70_24 m24; char pad2C[0x14]; Ts4OwnedRef m40; char pad44[0x18]; Ts4VtShell<lbl_880D19F0> m5C;)
 VT_SERVICE_DTOR(888888D0, lbl_880DF328, lbl_880F7B28, lbl_88D45B2C, Ts4Base_88617D28, char pad4[0x24]; Ts4OwnedRaw m28; char pad2C[0x8]; Ts4OwnedRaw m34;)
 SERVICE_DTOR(888C8048, lbl_880DB92C, lbl_88D4595C, Ts4Base_88617D28, char pad4[0x38]; Ts4OwnedRef m3C;)
-SERVICE_DTOR(888CAD28, lbl_880DB4B8, lbl_88D45940, Ts4Base_88617D28, char pad4[0x28]; Ts4VtShell<lbl_880D6B70> m2C;)
+SERVICE_DTOR(888CAD28, lbl_880DB4B8, lbl_88D45940, Ts4Base_88617D28, char pad4[0x28]; Ts4VtShell<ts4_vtbl_Ts4TrackerShell880D6B70> m2C;)
 SERVICE_DTOR(888D0348, lbl_880DB904, lbl_88D45958, Ts4Base_88617D28, char pad4[0x30]; Ts4OwnedRef m34;)
 SERVICE_DTOR(888D1A78, lbl_880DB490, lbl_88D45954, Ts4Base_88617D28, char pad4[0x1C]; Ts4OwnedRef m20; char pad24[0x8]; Ts4OwnedRef m2C;)
 SERVICE_DTOR(888D7428, lbl_880DBE20, lbl_88D45930, Ts4Base_88617D28, char pad4[0x15C]; Ts4OwnedRef m160;)

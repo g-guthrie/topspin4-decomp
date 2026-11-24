@@ -12,7 +12,7 @@ typedef unsigned long ts4_word;
 
 extern char lbl_880D19F0[];
 extern char lbl_880D5A64[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880DC520[];
 extern char lbl_880F3350[];
 extern char lbl_880F3420[];
@@ -24,7 +24,7 @@ extern char lbl_880F3454[];
 extern char lbl_880F3458[];
 extern char lbl_880F34BC[];
 extern char lbl_880F3794[];
-extern char lbl_880F3798[];
+extern char ts4_vtbl_Q5sTrackerItem880F3798[];
 extern char lbl_880F444C[];
 extern char lbl_880F4464[];
 extern char lbl_880F4468[];

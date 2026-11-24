@@ -16,7 +16,7 @@ typedef struct Cx36ObjS {
     u8 pad[0x4c4 - 0x14];
     u16 h4c4;
 } Cx36ObjS;
-extern char lbl_880D2A0C[];
+extern char ts4_vtbl_TS4Obj880D2A0C[];
 extern char lbl_880D5AA0[];
 extern char lbl_880D5ABC[];
 CX36_INL void cx36_sub_base_init(Cx36Sub *s)
@@ -31,7 +31,7 @@ CX36_INL void cx36_sub_init(Cx36Sub *s)
     s->a = 0;
     s->b = 0;
     s->c = 0;
-    s->vtbl = lbl_880D2A0C;
+    s->vtbl = ts4_vtbl_TS4Obj880D2A0C;
 }
 /* 0x88934D00 */
 void ts4_objs_ctor_a_88934D00(Cx36ObjS *o)

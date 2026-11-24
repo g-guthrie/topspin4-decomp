@@ -23,7 +23,7 @@ u8 ts4_flag_f0_8877A1F8(void) { return 0 != cx48_getf0(); }
 u8 ts4_flag_sess_8877BE98(void) { return 0 != cx48_get2c4(); }
 void ts4_set_from_global_88779790(char *self, Cx48S16 a) { Cx48S16 *q = &a; W(self, 8) = W(lbl_88D41FC4, 0x88); (void)q; }
 
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 typedef struct { u32 a, b, c; } Cx48X;
 CX48_INL void cx48_x_ini(Cx48X *x) { x->a = 0; x->c = 0; x->b = 0xFFFFF; }
-void ts4_ctor_vt_x_8876D470(char *o) { W(o, 0) = (u32)(unsigned long)lbl_880D6B70; cx48_x_ini((Cx48X *)(o + 4)); }
+void ts4_ctor_vt_x_8876D470(char *o) { W(o, 0) = (u32)(unsigned long)ts4_vtbl_Ts4TrackerShell880D6B70; cx48_x_ini((Cx48X *)(o + 4)); }

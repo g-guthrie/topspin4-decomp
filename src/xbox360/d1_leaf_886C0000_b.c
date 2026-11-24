@@ -5,7 +5,7 @@
 extern void fn_881705B0(void *, int);
 extern void fn_88262F70(void *, int);
 extern void fn_88617D28(void *);
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880F3784[];
 extern char lbl_880F37DC[];
 extern char lbl_880F4460[];

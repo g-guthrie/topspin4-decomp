@@ -42,7 +42,7 @@ void ga4_publish_query_flag_8869A4D0(struct Ga4Host154 *host)
 }
 
 /* ------------------------------------------------------------------ */
-extern char lbl_880F4428, lbl_880D19F0, lbl_880F46F0, lbl_880F4BCC, lbl_880D6B70;
+extern char lbl_880F4428, lbl_880D19F0, lbl_880F46F0, lbl_880F4BCC, ts4_vtbl_Ts4TrackerShell880D6B70;
 extern void ts4_obj44_dtor_8890F1E8(void *element);
 
 /* 0x44-byte element with its own vtable. */
@@ -284,7 +284,7 @@ void ga4_multipart_dtor_886A3A38(struct Ga4MultiPart *self)
     ts4_obj44_dtor_8890F1E8(&self->elem[1]);
     ts4_obj44_dtor_8890F1E8(&self->elem[0]);
     ga4_base_part_dtor(&self->base);
-    self->vtbl_28 = &lbl_880D6B70;
+    self->vtbl_28 = &ts4_vtbl_Ts4TrackerShell880D6B70;
 }
 
 /* ------------------------------------------------------------------ */

@@ -9,7 +9,7 @@ extern const char lbl_880DFE28[]; /* "Media\\BinData\\Save\\%s\\" */
 extern const char lbl_880DFE40[]; /* "%s%u\\" */
 
 extern const char lbl_880D1CEC[]; /* "PlayerCreated%d" */
-extern void *fn_88923380(void *out, u32 src);
+extern void *ts4_glue_front_handle_88923380(void *out, u32 src);
 extern void fn_8884EB98(void *self, const char *name, void *handle);
 
 typedef struct Cx18Svc { u8 pad[0x234]; void *mid; } Cx18Svc;
@@ -60,5 +60,5 @@ void ts4_register_created_player_88853608(void *self, int n, u32 src)
     char name[0x20];
     char tmp[0x10];
     ts4_format_text(name, 0x20, lbl_880D1CEC, n);
-    fn_8884EB98(self, name, fn_88923380(tmp, src));
+    fn_8884EB98(self, name, ts4_glue_front_handle_88923380(tmp, src));
 }

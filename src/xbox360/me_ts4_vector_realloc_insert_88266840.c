@@ -1,23 +1,23 @@
-/* 0x88266840: std::vector 132-byte items, helper copy fn_88266740, range destroy ts4_loop_get_u32_off0_882666E0 (global allocator), the same _Insert_n grow path as 0x8817A2A0. */
+/* 0x88266840: std::vector 132-byte items, helper copy ts4_tracker_item_copy_88266740, range destroy ts4_loop_get_u32_off0_882666E0 (global allocator), the same _Insert_n grow path as 0x8817A2A0. */
 /* Matched on /Oc (work/army/ME fn_check via the b134 build). The newcap sum uses an inline ternary to reproduce the operand order. */
 typedef struct Item { unsigned char w[132]; } Item;
 typedef struct Vec { Item *begin; Item *end; Item *cap; } Vec;
 extern void *lbl_88D45B38;
 void *ts4_if_call_seq_fn_88883CD0_8860D250(void *g);
 void *fn_88613570(void *alloc, unsigned size, unsigned align, void *owner);
-void fn_88266740(Item *dest, const Item *src);
+void ts4_tracker_item_copy_88266740(Item *dest, const Item *src);
 void ts4_loop_get_u32_off0_882666E0(Item *first, Item *last);
 void ts4_destroy_owned_object(void *p);
 static __inline Item *ucopy(Item *first, Item *last, Item *dest)
 {
     for (; first != last; ++dest, ++first)
-        if (dest) fn_88266740(dest, first);
+        if (dest) ts4_tracker_item_copy_88266740(dest, first);
     return dest;
 }
 static __inline Item *ufill(Item *dest, unsigned n, const Item *val)
 {
     for (; n; --n, ++dest)
-        if (dest) fn_88266740(dest, val);
+        if (dest) ts4_tracker_item_copy_88266740(dest, val);
     return dest;
 }
 void ts4_vector_realloc_insert_88266840(Vec *v, Item *where, const Item *val, unsigned n)
@@ -30,7 +30,7 @@ void ts4_vector_realloc_insert_88266840(Vec *v, Item *where, const Item *val, un
         nb = (Item *)fn_88613570(lbl_88D45B38 ? ts4_if_call_seq_fn_88883CD0_8860D250(lbl_88D45B38) : 0, newcap * 132, 4, &v->cap);
     d = ucopy(v->begin, where, nb);
     if (n == 1) {
-        if (d) fn_88266740(d, val);
+        if (d) ts4_tracker_item_copy_88266740(d, val);
         d++;
     } else {
         d = ufill(d, n, val);

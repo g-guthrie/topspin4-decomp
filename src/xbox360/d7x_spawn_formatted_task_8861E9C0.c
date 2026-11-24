@@ -16,7 +16,7 @@ extern char lbl_88D45B38[];
 ts4_word fn_8857B598(ts4_word, ts4_word);
 ts4_word fn_8857B6D8(ts4_word, ts4_word, ts4_word, ts4_word);
 ts4_word fn_88618998(ts4_word, ts4_word);
-ts4_word fn_88883CD0(ts4_word);
+ts4_word ts4_input_thread_slot_data_88883CD0(ts4_word);
 ts4_word ts4_loop_call_seq_fn_88563230_88884B20(ts4_word, ts4_word, ts4_word, ts4_word);
 ts4_word ts4_format_text(ts4_word, ts4_word, ts4_word, ts4_word);
 ts4_word ts4_if_call_seq_fn_88883CD0_8860D250(ts4_word);
@@ -64,7 +64,7 @@ ts4_word ts4_spawn_formatted_task_8861E9C0(ts4_word a0, ts4_word a1, ts4_word a2
     }
     t15 = *(ts4_word *)((char *)(ts4_word)(a0) + 28);
     if ((int)t15 == 0) {
-        t16 = fn_88883CD0((ts4_word)0);
+        t16 = ts4_input_thread_slot_data_88883CD0((ts4_word)0);
         if ((ts4_word)t16 != 0) {
             p18 = (ts4_word)(*(ts4_word *)((char *)(ts4_word)(t16) + 16));
         } else {

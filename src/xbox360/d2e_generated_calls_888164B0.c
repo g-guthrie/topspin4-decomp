@@ -15,7 +15,7 @@ typedef unsigned long long ts4_u64;
 typedef unsigned long ts4_word;
 
 extern char lbl_880C9D1B[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_88C6BE68[];
 extern char lbl_88D459B8[];
 extern char lbl_88D45B1C[];

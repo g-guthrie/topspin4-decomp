@@ -194,7 +194,7 @@ void ts4_service_slot_release_88611D80(void *self)
 }
 
 /* ---- node dispatch ---- */
-extern u8 *fn_88883CD0(u32 key);
+extern u8 *ts4_input_thread_slot_data_88883CD0(u32 key);
 extern u32 ts4_if_call_seq_fn_88883CD0_8860D208(void);
 extern u32 fn_8860DC50(void *n, u32 a, u32 mode);
 extern u32 ts4_node_dispatch_8860DCF8(void *n, u32 a, u32 b, u32 c);
@@ -205,7 +205,7 @@ struct FNode { u8 pad0[0x20]; u8 f20; u8 pad21[3]; FNode *f24; u8 pad28[0x40 - 0
 void ts4_node_dispatch_default_88613350(FNode *self, u32 a)
 {
     u32 mode = 2;
-    u8 *p = fn_88883CD0(0);
+    u8 *p = ts4_input_thread_slot_data_88883CD0(0);
     FNode *n;
     if (p != 0) {
         if (*p != 0) mode = 0;
@@ -230,7 +230,7 @@ void ts4_node_dispatch_default_88613350(FNode *self, u32 a)
 /* 0x88613268: as above with an explicit start node (0 = default, -1 = the owner's) and extra arguments */
 void ts4_node_dispatch_with_target_88613268(FNode *self, u32 a, u32 b, u32 c, u32 mode)
 {
-    u8 *p = fn_88883CD0(0);
+    u8 *p = ts4_input_thread_slot_data_88883CD0(0);
     if (p != 0) {
         if (*p != 0) mode = 0;
     }

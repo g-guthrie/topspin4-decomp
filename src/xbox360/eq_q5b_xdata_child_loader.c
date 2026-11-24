@@ -54,8 +54,8 @@ extern void fn_88707908(Q5bRef child);
 
 extern void fn_888B9460(Q5bChildOwner *self);
 extern void ts4_bind_child_by_id_888BB5A8(Q5bChildOwner *self, q5b_u32 id, q5b_u32 key);
-extern void fn_888AE880(Q5bChildOwner *self, q5b_u32 key, Q5bF3 *a, Q5bF3 *b, float *lo, float *hi);
-extern void fn_888AE7F8(Q5bChildOwner *self, q5b_u32 key, Q5bF3 *a, Q5bF3 *b);
+extern void ts4_emit_child_set_vvff_888AE880(Q5bChildOwner *self, q5b_u32 key, Q5bF3 *a, Q5bF3 *b, float *lo, float *hi);
+extern void ts4_emit_child_set_vv_888AE7F8(Q5bChildOwner *self, q5b_u32 key, Q5bF3 *a, Q5bF3 *b);
 extern void ts4_child_set_pair_58_888AE788(Q5bChildOwner *self, q5b_u32 key, float *a, float *b);
 extern q5b_u32 ts4_if_get_u32_off10_888AE728(Q5bChildOwner *self, q5b_u32 key, float *v8);
 extern void ts4_child_set_float_60_888AE6C8(Q5bChildOwner *self, q5b_u32 key, float v);
@@ -66,7 +66,7 @@ extern void ts4_child_set_float_78_888AE4D0(Q5bChildOwner *self, q5b_u32 key, fl
 extern void ts4_child_set_float_7c_888AE470(Q5bChildOwner *self, q5b_u32 key, float v);
 extern q5b_u32 ts4_if_get_u32_off10_888AE410(Q5bChildOwner *self, q5b_u32 key, Q5bF3Pair *v);
 extern q5b_u32 ts4_if_get_u32_off10_888AE3B0(Q5bChildOwner *self, q5b_u32 key, float *v6);
-extern void fn_888AF6E8(Q5bChildOwner *self, q5b_u32 key, float v);
+extern void ts4_emit_owner_set_f_888AF6E8(Q5bChildOwner *self, q5b_u32 key, float v);
 extern void ts4_child_set_u8_888AE358(Q5bChildOwner *self, q5b_u32 key, q5b_u8 v);
 
 #define Q5B_VIEW_ID 0x2c77dc6au
@@ -184,7 +184,7 @@ void ts4_load_child_params_888BB670(Q5bChildOwner *self)
             q5b_float3(&pa, &sub);
             q5b_sub_next(&sub, &cur, 0xffd3d99eu);
             q5b_float3(&pb, &sub);
-            fn_888AE880(self, key, &pa, &pb, &lo, &hi);
+            ts4_emit_child_set_vvff_888AE880(self, key, &pa, &pb, &lo, &hi);
         } else if (q5b_type_of(&cur) == 0x9d13f134u) {
             q5b_u32 key = q5b_id_of(&cur);
             Q5bF3 pa, pb;
@@ -193,7 +193,7 @@ void ts4_load_child_params_888BB670(Q5bChildOwner *self)
             q5b_float3(&pa, &sub);
             q5b_sub_next(&sub, &cur, 0xffd3d99eu);
             q5b_float3(&pb, &sub);
-            fn_888AE7F8(self, key, &pa, &pb);
+            ts4_emit_child_set_vv_888AE7F8(self, key, &pa, &pb);
         } else if (q5b_type_of(&cur) == 0xf9a165c1u) {
             q5b_u32 key = q5b_id_of(&cur);
             float lo = q5b_float(&cur, 0x9c643acfu);
@@ -286,7 +286,7 @@ void ts4_load_child_params_888BB670(Q5bChildOwner *self)
             ts4_if_get_u32_off10_888AE3B0(self, key, v);
         } else if (q5b_type_of(&cur) == 0x24137f53u) {
             q5b_u32 key = q5b_id_of(&cur);
-            fn_888AF6E8(self, key, q5b_float(&cur, 0x55b78841u));
+            ts4_emit_owner_set_f_888AF6E8(self, key, q5b_float(&cur, 0x55b78841u));
         } else if (q5b_type_of(&cur) == 0x3ee4175cu) {
             q5b_u32 key = q5b_id_of(&cur);
             ts4_child_set_u8_888AE358(self, key, q5b_bool(&cur, 0x413df12cu));

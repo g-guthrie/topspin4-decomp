@@ -367,7 +367,7 @@ typedef struct Q5Vec3w { Q5Item *begin; Q5Item *end; void *alloc; } Q5Vec3w;
 typedef struct Q5Tables { char pad[0x10]; u32 count; u32 index; char pad18[0x20]; Q5Vec3w b38; Q5Vec3w b44;
     Q5Vec3w b50; char list5c[0xc]; char list68[0xc]; char obj74[4]; } Q5Tables;
 extern Q5Item *ts4_copy_mtx_rows_88186110(Q5Item *first, Q5Item *last, Q5Item *dest);
-extern void fn_881A6728(void *list);
+extern void ts4_vec48_clear_881A6728(void *list);
 
 static __inline void q5_vec_clear(Q5Vec3w *v)
 {
@@ -384,8 +384,8 @@ void ts4_tables_reset_8887C000(Q5Tables *self)
     q5_vec_clear(&self->b50);
     q5_vec_clear(&self->b38);
     q5_vec_clear(&self->b44);
-    fn_881A6728(self->list5c);
-    fn_881A6728(self->list68);
+    ts4_vec48_clear_881A6728(self->list5c);
+    ts4_vec48_clear_881A6728(self->list68);
     ts4_object_finalize(self->obj74);
 }
 

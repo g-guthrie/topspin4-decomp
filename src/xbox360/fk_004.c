@@ -12,7 +12,7 @@ typedef unsigned long ts4_word;
 
 extern char lbl_880D19F0[];
 extern char lbl_880D5A64[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880DC520[];
 extern char lbl_880F3350[];
 extern char lbl_880F3420[];
@@ -24,7 +24,7 @@ extern char lbl_880F3454[];
 extern char lbl_880F3458[];
 extern char lbl_880F34BC[];
 extern char lbl_880F3794[];
-extern char lbl_880F3798[];
+extern char ts4_vtbl_Q5sTrackerItem880F3798[];
 extern char lbl_880F444C[];
 extern char lbl_880F4464[];
 extern char lbl_880F4468[];
@@ -658,15 +658,15 @@ ts4_word ts4_if_call_seq_u32_lbl_88D45B38_882624C8(ts4_word a0, ts4_word a1, ts4
     return t4;
 }
 
-/* Swing_DLL.xex 0x88262BB0: if_call_seq lbl_880F3798, lbl_880D6B70, u32@0x0, u32@0x8, ts4_tsu_cleanup_end */
+/* Swing_DLL.xex 0x88262BB0: if_call_seq ts4_vtbl_Q5sTrackerItem880F3798, ts4_vtbl_Ts4TrackerShell880D6B70, u32@0x0, u32@0x8, ts4_tsu_cleanup_end */
 ts4_word ts4_if_call_seq_lbl_880F3798_88262BB0(ts4_word a0, ts4_word a1, ts4_word a2, ts4_word a3)
 {
     ts4_word p2;
 
     (void)a2;
     (void)a3;
-    *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880F3798;
-    *(ts4_word *)((char *)(ts4_word)(a0) + 8) = (ts4_word)(ts4_word)lbl_880D6B70;
+    *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)ts4_vtbl_Q5sTrackerItem880F3798;
+    *(ts4_word *)((char *)(ts4_word)(a0) + 8) = (ts4_word)(ts4_word)ts4_vtbl_Ts4TrackerShell880D6B70;
     p2 = (ts4_word)a0;
     if ((ts4_word)(a1 & 0x1) != 0) {
         ts4_tsu_cleanup_end((ts4_word)a0);
@@ -2727,11 +2727,11 @@ ts4_word ts4_get_u32_off14_8827F030(ts4_word a0, ts4_word a1, ts4_word a2)
     return ((ts4_word (*)(ts4_word, ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t1) + 0))) + 24))))((ts4_word)t1, (ts4_word)a1, (ts4_word)a2);
 }
 
-/* Swing_DLL.xex 0x8827F2B8: if_call_seq lbl_880F7810, lbl_880D6B70, u32@0x0, u32@0x44, fn_88617D28, ts4_tsu_cleanup_end */
+/* Swing_DLL.xex 0x8827F2B8: if_call_seq lbl_880F7810, ts4_vtbl_Ts4TrackerShell880D6B70, u32@0x0, u32@0x44, fn_88617D28, ts4_tsu_cleanup_end */
 ts4_word ts4_if_call_seq_lbl_880F7810_8827F2B8(ts4_word a0, ts4_word a1)
 {
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880F7810;
-    *(ts4_word *)((char *)(ts4_word)(a0) + 68) = (ts4_word)(ts4_word)lbl_880D6B70;
+    *(ts4_word *)((char *)(ts4_word)(a0) + 68) = (ts4_word)(ts4_word)ts4_vtbl_Ts4TrackerShell880D6B70;
     fn_88617D28((ts4_word)a0);
     if ((ts4_word)(a1 & 0x1) != 0) {
         ts4_tsu_cleanup_end((ts4_word)a0);

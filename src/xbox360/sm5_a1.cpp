@@ -5,7 +5,7 @@ typedef unsigned int u32;
 typedef unsigned long long u64;
 extern "C" {
 extern char *lbl_88D45AD4;
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char *lbl_88D45B1C;
 extern char *lbl_88C46F42x;
 extern u8 lbl_88C46F42;

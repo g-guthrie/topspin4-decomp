@@ -2,14 +2,14 @@
 typedef unsigned int u32;
 typedef unsigned char u8;
 
-/* ---- 0x88270720: construct a range of 0x14-byte records (vtable lbl_880D6B70 + 4 words) from [first,last) into dst ---- */
-extern char lbl_880D6B70[];
+/* ---- 0x88270720: construct a range of 0x14-byte records (vtable ts4_vtbl_Ts4TrackerShell880D6B70 + 4 words) from [first,last) into dst ---- */
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 typedef struct Cx17E14 { const void *vt; u32 a, b, c, d; } Cx17E14;
 Cx17E14 *ts4_uninit_copy_e14_88270720(Cx17E14 *first, Cx17E14 *last, Cx17E14 *dst)
 {
     for (; first != last; first++, dst++) {
         if (dst != 0) {
-            dst->vt = lbl_880D6B70;
+            dst->vt = ts4_vtbl_Ts4TrackerShell880D6B70;
             dst->a = first->a;
             dst->b = first->b;
             dst->c = first->c;

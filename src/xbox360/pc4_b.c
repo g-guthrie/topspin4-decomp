@@ -72,7 +72,7 @@ void ts4_classify_range_hash_888C4708(float x, u8 flag, int *kind, u32 *hash)
 
 extern void fn_88939288(void *self, u32 *out, int n);
 
-extern void fn_888ADBA8(float a, float b);
+extern void ts4_emit_set_lohi_888ADBA8(float a, float b);
 extern void fn_888C1910(void *self);
 
 /* 0x8893C808: read a counter via fn_88939288(self,&v,10) and store it scaled by pool double 0x768 as float. */

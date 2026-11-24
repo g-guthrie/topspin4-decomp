@@ -24,7 +24,7 @@ typedef struct Ts4TeamState {
     char pad_004C[0x1C];
     int launch_frame;                            /* +0x068 V 886AFDF8 */
     char pad_006C[0x44];
-    int side_tag;                                /* +0x0B0 V 88679518~ 886AB438~ */
+    int side_tag;                                /* +0x0B0 V 88679518~ 886AB438~ 886986C8 */
     char pad_00B4[0x4];
     int receiver_slot;                           /* +0x0B8 V 8865EB60 88660F70~ 8867DEF0~ */
 } Ts4TeamState;
@@ -36,7 +36,7 @@ TS4_ASSERT_OFFSET(Ts4TeamState, receiver_slot, 0xB8);
 /* Team / player slot (Player+0x4C). rt1: Rt1TeamView/W/R; d1g: Ts4PlayerSlot. */
 typedef struct Ts4Team {
     char pad_0000[0x20];
-    struct Ts4Match *match;                      /* +0x020 V 88663208~ 88682B58~ 886AFDF8 */
+    struct Ts4Match *match;                      /* +0x020 V 88663208~ 88682B58~ 886AFDF8 88662F60~ */
     struct Ts4TeamState *state;                  /* +0x024 V 8865EB60 88660F70~ 8866DF18~ 886706C8~ +4 */
     int team;                                    /* +0x028 V 8865EB60 88660F70~ 88663208~ 8866DA58~ +4 */
     int mode;                                    /* +0x02C V 88660F70~ 88671350~ 88672878~ 886782D0~ +1 */
@@ -123,7 +123,10 @@ typedef struct Ts4PlayerState {
     float base_time;                             /* +0x038 V 8866FB60 */
     char pad_003C[0x5C];
     int frame;                                   /* +0x098 V 88662458~ 88662510~ */
-    char pad_009C[0x2C0];
+    char pad_009C[0x260];
+    unsigned int anim_upper;                     /* +0x2FC V 88669B98 (animation set hash: 0xB388F633 win / 0xD6FE8128 lose) */
+    unsigned int anim_lower;                     /* +0x300 V 88669B98 */
+    char pad_0304[0x58];
     unsigned int swing_class;                    /* +0x35C V 886B01A8 */
     unsigned int swing_category;                 /* +0x360 V 886AFDF8 */
     char pad_0364[0x4];
@@ -193,9 +196,9 @@ typedef struct Ts4PlayerState {
     char pad_0841[0x8F];
     int f_8d0;                                   /* +0x8D0 V 8866BEE0~ */
     char pad_08D4[0xC];
-    Ts4Vec4 local_position;                      /* +0x8E0 V 8866BEE0~ 88672878~ 88682B58~ */
+    Ts4Vec4 local_position;                      /* +0x8E0 V 8866BEE0~ 88672878~ 88682B58~ 88662F60~ */
     char pad_08F0[0x30];
-    Ts4Vec4 f_920[8];                            /* +0x920 V 8866DA58~ */
+    Ts4Vec4 f_920[8];                            /* +0x920 V 8866DA58~ 88662F60~ */
     Ts4Vec4 move_state;                          /* +0x9A0 V 88663208~ 88672878~ 88682B58~ */
     char pad_09B0[0x20];
     float required_move_dir;                     /* +0x9D0 V 8865E980~ */
@@ -261,6 +264,8 @@ typedef struct Ts4PlayerState {
 } Ts4PlayerState;
 TS4_ASSERT_OFFSET(Ts4PlayerState, base_time, 0x38);
 TS4_ASSERT_OFFSET(Ts4PlayerState, frame, 0x98);
+TS4_ASSERT_OFFSET(Ts4PlayerState, anim_upper, 0x2FC);
+TS4_ASSERT_OFFSET(Ts4PlayerState, anim_lower, 0x300);
 TS4_ASSERT_OFFSET(Ts4PlayerState, swing_class, 0x35C);
 TS4_ASSERT_OFFSET(Ts4PlayerState, swing_category, 0x360);
 TS4_ASSERT_OFFSET(Ts4PlayerState, pro_style, 0x368);
@@ -415,7 +420,7 @@ TS4_ASSERT_OFFSET(Ts4ReceiverState, risk, 0x3C4);
 /* Player hub: "PlayerCtx" / "PC" in docs/gameplay. d1g: Ts4PlayerController; rt1: Rt1PlayerCtx*; q5: Q5Player. Every controller component points here (+0x1C) and the planner at +0x154. */
 typedef struct Ts4Player {
     char pad_0000[0x10];
-    unsigned char is_human;                      /* +0x010 V 8866DA58~ 886706C8~ 886AFDF8 886B83B0 */
+    unsigned char is_human;                      /* +0x010 V 8866DA58~ 886706C8~ 886AFDF8 886B83B0 88662F60~ */
     char pad_0011[0x3];
     int index;                                   /* +0x014 V 8865F858~ 886714C0~ */
     int slot;                                    /* +0x018 V 8865EB60 88660F70~ 8866DA58~ 8867DEF0~ +2 also read as unsigned int (8866DA58) */
@@ -430,16 +435,16 @@ typedef struct Ts4Player {
     unsigned int shot_id;                        /* +0x03C V 886783B0~ 8868F178 */
     void *f_040;                                 /* +0x040 V 8866DA58~ */
     struct Ts4World *world;                      /* +0x044 V 8865E490~ 8866AAF8~ 886821A0~ 88682B58~ +1 */
-    struct Ts4Match *match;                      /* +0x048 V 8865A890~ 8865AD50~ 8865DB50~ 8865E490~ +29 also read as unsigned int (8865AD50) */
-    struct Ts4Team *team;                        /* +0x04C V 8865EB60 8865EC70 88660F70~ 88663208~ +13 also read as unsigned int (8865EC70) */
+    struct Ts4Match *match;                      /* +0x048 V 8865A890~ 8865AD50~ 8865DB50~ 8865E490~ 886A1128~ +29 also read as unsigned int (8865AD50) */
+    struct Ts4Team *team;                        /* +0x04C V 8865EB60 8865EC70 88660F70~ 88663208~ 88662F60~ +13 also read as unsigned int (8865EC70) */
     struct Ts4AIController *ai;                  /* +0x050 V 886AFDF8 */
     char pad_0054[0xC];
     void *rig;                                   /* +0x060 V 886624C8~ 886AC7E0 886AC928 886B83B0 */
     char pad_0064[0x4];
-    struct Ts4Body *body;                        /* +0x068 V 8869A4D0 */
+    struct Ts4Body *body;                        /* +0x068 V 8869A4D0 886986C8 */
     char pad_006C[0x4];
     struct Ts4ShotContext *shot_ctx;             /* +0x070 V 886783B0~ */
-    struct Ts4PlayerState *state;                /* +0x074 V 8865A890~ 8865AB70~ 8865DAC0 8865DB50~ +37 also read as unsigned int (8865EC70) */
+    struct Ts4PlayerState *state;                /* +0x074 V 8865A890~ 8865AB70~ 8865DAC0 8865DB50~ 88662F60~ +37 also read as unsigned int (8865EC70) */
     void *move_path;                             /* +0x078 V 886A5BB0~ */
     char pad_007C[0x4];
     void *swing_flags;                           /* +0x080 V 8865AD50~ 88698538 886AC7E0 also read as unsigned int (8865AD50) */
@@ -452,6 +457,8 @@ typedef struct Ts4Player {
     struct Ts4ShotTree *tree;                    /* +0x0AC V 8865ED78 */
     struct Ts4ShotRow *row;                      /* +0x0B0 V 8865ED78 88662B60 8868F178 */
     struct Ts4BallLink *ball_link;               /* +0x0B4 V 8866BD00 8869D870~ */
+    char pad_00B8[0x10];
+    void *cursor;                                /* +0x0C8 V 886A1128~ (passed to ts4_cursor_out_of_range_886603C0) */
 } Ts4Player;
 TS4_ASSERT_OFFSET(Ts4Player, is_human, 0x10);
 TS4_ASSERT_OFFSET(Ts4Player, index, 0x14);
@@ -481,6 +488,7 @@ TS4_ASSERT_OFFSET(Ts4Player, conditions, 0xA0);
 TS4_ASSERT_OFFSET(Ts4Player, tree, 0xAC);
 TS4_ASSERT_OFFSET(Ts4Player, row, 0xB0);
 TS4_ASSERT_OFFSET(Ts4Player, ball_link, 0xB4);
+TS4_ASSERT_OFFSET(Ts4Player, cursor, 0xC8);
 
 /* Common prefix of the per-player controller components (class not identified; only +0x1C is shared). */
 typedef struct Ts4PlayerComponent {

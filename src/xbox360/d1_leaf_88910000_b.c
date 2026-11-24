@@ -10,7 +10,7 @@ extern void fn_8893B3E0(void *);
 extern char lbl_880CF0C7[];
 extern char lbl_880CFC4E[];
 extern char lbl_880D2CF8[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880D6BC0[];
 extern char lbl_880D7030[];
 extern char lbl_880D7228[];

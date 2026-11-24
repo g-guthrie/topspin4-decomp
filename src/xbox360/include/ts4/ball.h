@@ -47,7 +47,7 @@ TS4_ASSERT_OFFSET(Ts4BallPrediction, first_sample, 0x5BC);
 /* Ball system (Match+0x5C). q5: Q5BallSys. */
 typedef struct Ts4BallSys {
     char pad_0000[0x20];
-    void *f_020;                                 /* +0x020 V 8866BEE0~ 886782D0~ 886783B0~ 8869FCF0 +1 */
+    void *f_020;                                 /* +0x020 V 8866BEE0~ 886782D0~ 886783B0~ 8869FCF0 886986C8 +1 */
     struct Ts4BallPrediction *prediction;        /* +0x024 V 8866BD00 8869FCF0 */
     int f_028;                                   /* +0x028 V 886624C8~ */
 } Ts4BallSys;
@@ -90,7 +90,7 @@ typedef struct Ts4Ball {
     char pad_0028[0x4];
     unsigned int mode;                           /* +0x02C U gp3_types.h (ball mode hash) */
     char pad_0030[0x10];
-    Ts4Vec4 pos;                                 /* +0x040 V 888AB558 888AD1C8 */
+    Ts4Vec4 pos;                                 /* +0x040 V 888AB558 888AD1C8 886986C8 */
     char pad_0050[0x10];
     Ts4Vec4 prev;                                /* +0x060 U bm_ball.h */
     Ts4Vec4 origin;                              /* +0x070 U bm_ball.h */

@@ -83,7 +83,7 @@ __declspec(noinline)
 #endif
 void ga6_destroy_owner_chain_886D36D8(struct Ga6OwnerChain *self);
 void ts4_if_call_seq_lbl_880F7EE4_88617D28(void *self);
-extern char lbl_880F378C[], lbl_880D6B70[], lbl_880F37A4[], lbl_880F3794[], lbl_880F37A8[];
+extern char lbl_880F378C[], ts4_vtbl_Ts4TrackerShell880D6B70[], lbl_880F37A4[], lbl_880F3794[], lbl_880F37A8[];
 extern void *lbl_88D45AF4;
 extern void *lbl_88D45AF8;
 

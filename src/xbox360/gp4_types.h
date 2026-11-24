@@ -57,7 +57,7 @@ struct Gp4Curve16Key { float x_a, x_b, y_a, y_b; };
  * Ball stepper object ("S", vtable lbl_880DCA74: slot2 ts4_each_item_889C28B0 = step every ball, slot4 ts4_set_handle_and_link_targets_889C28F0 = link templates)
  * ctor fn_889C1690:  +0x1C = 60.0 (ticks per second, pool+0x15C), +0x20 = 1/60 (pool+0xE0), +0x24 = 1.0,
  *                    +0x28..+0x30 vector<Gp4BallState*> of balls, +0x34/+0x38 generator objects G1/G2 (0xC bytes each:
- *                    vtable lbl_880D6B70, +4 = 1/60 s per tick, +8 = template table pointer = S+0x3C),
+ *                    vtable ts4_vtbl_Ts4TrackerShell880D6B70, +4 = 1/60 s per tick, +8 = template table pointer = S+0x3C),
  *                    +0x40 = "ball currently in local frame" flag (fn_889C1160/fn_889C0FE8), +0x41 same for the launch
  *                    vectors (ts4_scale_two_vectors_889C0F70/ts4_scale_two_vectors_889C0EF8), +0x42 = flag read by the net bounce (nonzero -> keep the spin).
  * --------------------------------------------------------------------------------------------- */

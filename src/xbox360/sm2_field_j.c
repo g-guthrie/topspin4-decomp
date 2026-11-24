@@ -3,7 +3,7 @@ extern void ts4_destroy_owned_object(void *object);
 extern char lbl_880D75FC[];
 extern char lbl_880F37A4[];
 extern char lbl_880F4854[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 
 /* own field A (+A) compared with the field B (+B) of the object at +0xc */
 #define OWNER_LE(NAME, A, B) \

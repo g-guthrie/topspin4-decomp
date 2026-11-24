@@ -103,7 +103,9 @@ def main():
             elif e["source_sha256"] != sha: why = "evidence is for an older source"
             elif int(addr, 16) in matched: why = "already matched"
             if why:
-                print(f"{key} {name}: NOT registered ({why})"); bad += 1; continue
+                # A row that no longer verifies must leave the registry, not keep its old evidence.
+                dropped = " (previous row removed)" if rows.pop(key, None) else ""
+                print(f"{key} {name}: NOT registered ({why}){dropped}"); bad += 1; continue
             r = {k: e[k] for k in KEEP if k in e}
             r["spec_flags"] = s.get("flags", [])
             rows[key] = r

@@ -12,7 +12,7 @@ typedef unsigned long ts4_word;
 
 extern char ts4_get_u32_lbl_88D493C8_88AFF0B0[];
 extern char lbl_880D19F0[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880DB834[];
 extern char lbl_880DCF20[];
 extern char lbl_880DD088[];
@@ -2085,10 +2085,10 @@ ts4_word ts4_if_call_seq_lbl_880DF260_881A53C8(ts4_word a0, ts4_word a1)
     return a0;
 }
 
-/* Swing_DLL.xex 0x881A5808: if_call_seq lbl_880D6B70, lbl_880F7F38, u32@0x20, u32@0x0, fn_88617D28, ts4_tsu_cleanup_end */
+/* Swing_DLL.xex 0x881A5808: if_call_seq ts4_vtbl_Ts4TrackerShell880D6B70, lbl_880F7F38, u32@0x20, u32@0x0, fn_88617D28, ts4_tsu_cleanup_end */
 ts4_word ts4_if_call_seq_lbl_880D6B70_881A5808(ts4_word a0, ts4_word a1)
 {
-    *(ts4_word *)((char *)(ts4_word)(a0) + 32) = (ts4_word)(ts4_word)lbl_880D6B70;
+    *(ts4_word *)((char *)(ts4_word)(a0) + 32) = (ts4_word)(ts4_word)ts4_vtbl_Ts4TrackerShell880D6B70;
     *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880F7F38;
     fn_88617D28((ts4_word)a0);
     if ((ts4_word)(a1 & 0x1) != 0) {

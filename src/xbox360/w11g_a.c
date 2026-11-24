@@ -1,4 +1,4 @@
-extern char lbl_880F378C[], lbl_880D6B70[], lbl_880F37A4[], lbl_880F3794[];
+extern char lbl_880F378C[], ts4_vtbl_Ts4TrackerShell880D6B70[], lbl_880F37A4[], lbl_880F3794[];
 void ts4_destroy_owned_object(void *object);
 void ts4_object_dtor_886CA260(void *p);
 void ts4_object_dtor_886DABD0(void *p);
@@ -40,7 +40,7 @@ void ts4_object_dtor_886E34F8(Big *self)
     self->vt = lbl_880F378C;
     rel_owned(&self->o5e8);
     ts4_object_dtor_886CA260(self->sub5ac);
-    self->vt540 = lbl_880D6B70;
+    self->vt540 = ts4_vtbl_Ts4TrackerShell880D6B70;
     ts4_object_dtor_886DABD0(self->sub4d0);
     s430_dtor(&self->s430);
     if (self->o414) ts4_destroy_owned_object(self->o414);

@@ -32,7 +32,7 @@ extern char lbl_880D5B10[];
 extern char lbl_880D5BBC[];
 extern char lbl_880D5EE8[];
 extern char lbl_880D6A78[];
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern char lbl_880D7058[];
 extern char lbl_880D7074[];
 extern char lbl_880D709C[];

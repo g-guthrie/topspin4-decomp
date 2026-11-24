@@ -14,8 +14,8 @@ void ts4_set_floats_3_5_7_88508CE0(float *p) { p[3] = lbl_88001A20; p[5] = p[3];
 
 /* constructors: store the vtable pointer, then zero the fields in the original order */
 struct sm4_c1 { void *vt; int f4; int f8; char c; };
-extern char lbl_880D6B70[];
-void ts4_ctor_vt_3fields_886C72C0(volatile struct sm4_c1 *s) { s->vt = lbl_880D6B70; s->f8 = 0; s->f4 = 0; s->c = 0; }
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
+void ts4_ctor_vt_3fields_886C72C0(volatile struct sm4_c1 *s) { s->vt = ts4_vtbl_Ts4TrackerShell880D6B70; s->f8 = 0; s->f4 = 0; s->c = 0; }
 struct sm4_c2 { void *vt; int f4, f8, fc, f10; };
 extern char lbl_880F4854[];
 void ts4_ctor_vt_4fields_8867C100(volatile struct sm4_c2 *s) { s->vt = lbl_880F4854; s->f8 = 0; s->fc = 0; s->f10 = 0; s->f4 = 0; }

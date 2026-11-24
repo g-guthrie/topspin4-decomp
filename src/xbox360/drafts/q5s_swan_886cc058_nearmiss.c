@@ -11,8 +11,8 @@
  * __forceinline, nested clear helper, C++ member ctors (23); perm_auto 320 candidates, nothing below 6.
  * 0x886CC058: tracker constructor: two vtables (+0, +8), clears the accumulators (+0x44, +0x58) and fields,
  * scale (+0x3C) = 1.0f, then the inlined reset clears the +0x44 accumulator again. */
-extern const char lbl_880F3798[];
-extern const char lbl_880D6B70[];
+extern const char ts4_vtbl_Q5sTrackerItem880F3798[];
+extern const char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern float g_ts4_event_value;
 extern const float g_ts4_script_constants[];
 typedef struct Accum4 { float v[4]; int n; } Accum4;
@@ -28,8 +28,8 @@ static __inline void acc_init(Accum4 *a) { a->v[0] = g_ts4_event_value; a->n = 0
 static __inline void acc_init2(Accum4 *a) { a->n = 0; a->v[0] = g_ts4_event_value; a->v[1] = g_ts4_event_value; a->v[2] = g_ts4_event_value; a->v[3] = g_ts4_event_value; }
 void ts4_tracker_ctor_886CC058(Tracker *t)
 {
-    t->vtbl = lbl_880F3798;
-    t->vtbl2 = lbl_880D6B70;
+    t->vtbl = ts4_vtbl_Q5sTrackerItem880F3798;
+    t->vtbl2 = ts4_vtbl_Ts4TrackerShell880D6B70;
     acc_init(&t->a);
     acc_init2(&t->b);
     t->f30 = 0; t->f34 = 0; t->f04 = 0;

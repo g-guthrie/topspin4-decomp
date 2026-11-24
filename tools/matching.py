@@ -52099,6 +52099,16 @@ MATCHING_UNITS = (
         "object": "q5s_nm_886c90f0.obj",
         "symbols": {"ts4_vec_box_test_forward_886C90F0": 32},
     },
+    {
+        "source": "src/xbox360/q5s_world_xmltok.c",
+        "object": "q5s_world_xmltok.obj",
+        "symbols": {"ts4_xmltok_unknown_to_utf16_888915C0": 184},
+    },
+    {
+        "source": "src/xbox360/q5s_math_ring.cpp",
+        "object": "q5s_math_ring.obj",
+        "symbols": {"?Write@Ts4ByteRing@@QAAXPBEI@Z": 132},
+    },
 )
 
 

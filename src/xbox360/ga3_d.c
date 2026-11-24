@@ -18,7 +18,7 @@ struct Ga3Stepper {
     unsigned int pawn_30;           /* +0x30 */
     unsigned int pawn_34;           /* +0x34 */
 };
-unsigned char fn_88672750(void *self, void *range);
+unsigned char ts4_gate_hold_88672750(void *self, void *range);
 void ts4_set_onehot_flags_from_mode(struct Ga3Stepper *self);
 
 /* Runs one state of the 4-state stepper: 0 sets stage 1, 1 caches the pawn value, 2 picks the stage from two range checks and finishes, 3 raises the reset flag. */
@@ -33,9 +33,9 @@ void ga3_stepper_run_state_88681848(struct Ga3Stepper *self, unsigned int state)
         break;
     case 2: {
         int one = 1;
-        if (fn_88672750(self, self->ranges + 0x60)) {
+        if (ts4_gate_hold_88672750(self, self->ranges + 0x60)) {
             self->out->stage = 3;
-        } else if (fn_88672750(self, self->ranges + 0x50)) {
+        } else if (ts4_gate_hold_88672750(self, self->ranges + 0x50)) {
             self->out->stage = 2;
         } else {
             self->out->stage = one;
@@ -181,7 +181,7 @@ void ga3_decide_stage_88681B80(struct Ga3Decider *self)
         self->latches->word_40 = 0;
         return;
     }
-    if (fn_88672750(self, self->ranges + 0x30) && self->out->armed) {
+    if (ts4_gate_hold_88672750(self, self->ranges + 0x30) && self->out->armed) {
         self->out->stage = 2;
         lat->s36 = 0;
         lat->s35 = 1;

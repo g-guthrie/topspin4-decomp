@@ -8,21 +8,21 @@ typedef unsigned char u8;
 #define CX34_U8(p, o) (*(u8 *)((char *)(p) + (o)))
 #define CX34_PTR(p, o) (*(char **)((char *)(p) + (o)))
 
-extern char lbl_880D6B70[];
+extern char ts4_vtbl_Ts4TrackerShell880D6B70[];
 extern float g_ts4_event_value;
 extern float lbl_880D06B4;
 extern float g_ts4_script_constants[];
 extern u32 *fn_881ABC10(u32 *first, u32 *last, u32 *key);
 extern void *fn_88562DC0(void *dst, void *src, u32 n);
 extern double fn_88564BF8(double y, double x);
-extern void fn_888ADBA8(float a, float b);
+extern void ts4_emit_set_lohi_888ADBA8(float a, float b);
 
 /* 0x888AD540: reset a range object: vtable, 0, 0xFFFFF, 0 */
 typedef struct Cx34RangeObj { char *vt; u32 a; u32 b; u32 c; } Cx34RangeObj;
 void ts4_init_range_obj_888AD540(Cx34RangeObj *o)
 {
     volatile Cx34RangeObj *v = o;
-    v->vt = lbl_880D6B70;
+    v->vt = ts4_vtbl_Ts4TrackerShell880D6B70;
     v->a = 0;
     v->c = 0;
     o->b = 0xFFFFF;

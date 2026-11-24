@@ -69,4 +69,4 @@ void ts4_reset_vec56_and_list_888CB7A0(char *self)
     ts4_vec204_move_tail_881B9148(self + 0x10);
 }
 
-extern u8 fn_8886FED0(char *o, u32 id, u32 *a, u32 *b, u32 *c);
+extern u8 ts4_entry_node_counts_8886FED0(char *o, u32 id, u32 *a, u32 *b, u32 *c);

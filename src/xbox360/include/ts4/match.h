@@ -60,9 +60,9 @@ typedef struct Ts4Match {
     void *f_01c;                                 /* +0x01C V 886AB438~ */
     char pad_0020[0x4];
     void *f_024;                                 /* +0x024 V 886BCDA8~ */
-    struct Ts4DebugConfig *debug;                /* +0x028 V 8865A890~ 8865ED78 88662B60 886630B8~ +2 */
+    struct Ts4DebugConfig *debug;                /* +0x028 V 8865A890~ 8865ED78 88662B60 886630B8~ 886A1128~ +2 */
     char pad_002C[0x4];
-    struct Ts4MatchFlow *flow;                   /* +0x030 V 8865AD50~ 8865DB50~ 8865E490~ 8865E980~ +16 also read as unsigned int (8865AD50) */
+    struct Ts4MatchFlow *flow;                   /* +0x030 V 8865AD50~ 8865DB50~ 8865E490~ 8865E980~ 88662F60~ +16 also read as unsigned int (8865AD50) */
     char pad_0034[0x10];
     struct Ts4GameplayInterface *hud;            /* +0x044 V 8865F858~ 88660F70~ 8866DA58~ 886706C8~ +3 */
     char pad_0048[0x8];
@@ -92,7 +92,9 @@ TS4_ASSERT_OFFSET(Ts4Match, f_07c, 0x7C);
 typedef struct Ts4MatchFlow {
     char pad_0000[0x7C];
     int key;                                     /* +0x07C V 8869D870~ */
-    char pad_0080[0x11];
+    char pad_0080[0xC];
+    int winner_team;                             /* +0x08C V 88669B98 (compared with Ts4Team.team to pick the win/lose animation pair) */
+    char pad_0090[0x1];
     unsigned char game_over;                     /* +0x091 V 88669878 88676960 */
     unsigned char set_over;                      /* +0x092 V 88669878 */
     unsigned char match_over;                    /* +0x093 V 88669878 */
@@ -100,7 +102,7 @@ typedef struct Ts4MatchFlow {
     unsigned char fault;                         /* +0x095 V 88669878 */
     char pad_0096[0x12];
     int serving_team;                            /* +0x0A8 V 8865EB60 8867DEF0~ */
-    unsigned int f_0ac;                          /* +0x0AC V 88682B58~ */
+    unsigned int f_0ac;                          /* +0x0AC V 88682B58~ 88662F60~ */
     char pad_00B0[0x260];
     int frame;                                   /* +0x310 V 8865AD50~ 8865DB50~ 8865E490~ 8865E980~ +7 also read as unsigned int (8865AD50) */
     char pad_0314[0x4];
@@ -108,9 +110,10 @@ typedef struct Ts4MatchFlow {
     char pad_031C[0xC];
     unsigned char f_328;                         /* +0x328 V 886782D0~ */
     unsigned char flag_329;                      /* +0x329 U rt1_types.h Rt1MatchFlowO (Net/Let gate) */
-    unsigned char serve_phase;                   /* +0x32A V 8865EB60 88660F70~ 88669878 886706C8~ +2 */
+    unsigned char serve_phase;                   /* +0x32A V 8865EB60 88660F70~ 88669878 886706C8~ 88662F60~ +2 */
 } Ts4MatchFlow;
 TS4_ASSERT_OFFSET(Ts4MatchFlow, key, 0x7C);
+TS4_ASSERT_OFFSET(Ts4MatchFlow, winner_team, 0x8C);
 TS4_ASSERT_OFFSET(Ts4MatchFlow, game_over, 0x91);
 TS4_ASSERT_OFFSET(Ts4MatchFlow, set_over, 0x92);
 TS4_ASSERT_OFFSET(Ts4MatchFlow, match_over, 0x93);
@@ -127,8 +130,9 @@ TS4_ASSERT_OFFSET(Ts4MatchFlow, serve_phase, 0x32A);
 /* Debug configuration (Match+0x28). d1g: Ts4DebugConfig. */
 typedef struct Ts4DebugConfig {
     char pad_0000[0x48];
-    unsigned char f_048;                         /* +0x048 V 886630B8~ */
-    char pad_0049[0x21];
+    unsigned char f_048;                         /* +0x048 V 886630B8~ 886A1128~ */
+    char pad_0049[0x20];
+    unsigned char f_069;                         /* +0x069 V 886A1128~ */
     unsigned char f_06a;                         /* +0x06A V 8865A890~ */
     char pad_006B[0x1];
     unsigned char f_06c;                         /* +0x06C V 8869D870~ */
@@ -147,6 +151,7 @@ typedef struct Ts4DebugConfig {
     unsigned char force_row;                     /* +0xF57 V 8865ED78 88662B60 */
 } Ts4DebugConfig;
 TS4_ASSERT_OFFSET(Ts4DebugConfig, f_048, 0x48);
+TS4_ASSERT_OFFSET(Ts4DebugConfig, f_069, 0x69);
 TS4_ASSERT_OFFSET(Ts4DebugConfig, f_06a, 0x6A);
 TS4_ASSERT_OFFSET(Ts4DebugConfig, f_06c, 0x6C);
 TS4_ASSERT_OFFSET(Ts4DebugConfig, f_07f, 0x7F);
@@ -193,9 +198,13 @@ typedef struct Ts4GameplayInterface {
     unsigned char busy;                          /* +0x099 V 88682B58~ 886B80B8~ */
     char pad_009A[0x1A];
     int self_off;                                /* +0x0B4 V 886B80B8~ */
-    char pad_00B8[0x4C];
+    char pad_00B8[0x28];
+    int point_target;                            /* +0x0E0 V 8865C578 (points to win the current game; 10 in a super tie-break) */
+    char pad_00E4[0x20];
     int players_rel;                             /* +0x104 V 8865F858~ 886714C0~ */
-    char pad_0108[0x238];
+    char pad_0108[0x1F6];
+    unsigned char f_2fe;                         /* +0x2FE V 88669B98 (win flag used when Ts4MatchFlow.f_328 is set) */
+    char pad_02FF[0x41];
     void *f_340;                                 /* +0x340 V 886B80B8~ */
 } Ts4GameplayInterface;
 TS4_ASSERT_OFFSET(Ts4GameplayInterface, f_048, 0x48);
@@ -203,6 +212,8 @@ TS4_ASSERT_OFFSET(Ts4GameplayInterface, f_054, 0x54);
 TS4_ASSERT_OFFSET(Ts4GameplayInterface, f_058, 0x58);
 TS4_ASSERT_OFFSET(Ts4GameplayInterface, busy, 0x99);
 TS4_ASSERT_OFFSET(Ts4GameplayInterface, self_off, 0xB4);
+TS4_ASSERT_OFFSET(Ts4GameplayInterface, point_target, 0xE0);
+TS4_ASSERT_OFFSET(Ts4GameplayInterface, f_2fe, 0x2FE);
 TS4_ASSERT_OFFSET(Ts4GameplayInterface, players_rel, 0x104);
 TS4_ASSERT_OFFSET(Ts4GameplayInterface, f_340, 0x340);
 

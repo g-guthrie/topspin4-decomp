@@ -21,7 +21,7 @@ typedef unsigned long ts4_word;
 #include "fam4_refstr.h"
 
 extern char lbl_8803A308[];
-extern char lbl_880DCE3C[];
+extern char ts4_vtbl_Ts4SharedHandle880DCE3C[];
 extern char lbl_880DD088[];
 extern char lbl_88C6B4AC[];
 extern char lbl_88D45B38[];
@@ -446,7 +446,7 @@ void ts4_call_seq_u32_off4c_886B62E0(ts4_word a0, ts4_word a1)
     return;
 }
 
-/* Swing_DLL.xex 0x88890718: if_get u32@0x8, lbl_880DCE3C, u32@0x0, u8@0xc, u32@0x0, u32@0x4 */
+/* Swing_DLL.xex 0x88890718: if_get u32@0x8, ts4_vtbl_Ts4SharedHandle880DCE3C, u32@0x0, u8@0xc, u32@0x0, u32@0x4 */
 void ts4_if_get_u32_off8_88890718(ts4_word a0)
 {
     ts4_word q80;
@@ -455,7 +455,7 @@ void ts4_if_get_u32_off8_88890718(ts4_word a0)
 
     q80 = a0 + 8;
     t1 = *(ts4_word *)((char *)(ts4_word)(a0) + 8);
-    *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)lbl_880DCE3C;
+    *(ts4_word *)((char *)(ts4_word)(a0) + 0) = (ts4_word)(ts4_word)ts4_vtbl_Ts4SharedHandle880DCE3C;
     if ((int)t1 != 0 && (ts4_word)(*(unsigned char *)((char *)(ts4_word)(a0) + 12)) != 0) {
         t4 = *(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)((q80)) + 0))) + 4);
         ((ts4_word (*)(ts4_word, ts4_word))((*(ts4_word *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(t4) + 0))) + 88))))((ts4_word)t4, (ts4_word)(q80));

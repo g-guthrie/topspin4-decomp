@@ -41,14 +41,14 @@ void ts4_flag_if_sub_ready_887E94F8(char *self)
 
 extern void ts4_loop_get_u32_off1dc_887EEF68(void *);
 extern void fn_887EAC80(void *);
-extern void fn_887ECB68(void *);
+extern void ts4_anlz_publish_slot_25bd833a_887ECB68(void *);
 /* 0x887EF2D8: when the sub-object is ready, reset its queue and refresh. */
 void ts4_refresh_if_sub_ready_887EF2D8(char *self)
 {
     if (cx40_sub_ready(self)) {
         ts4_loop_get_u32_off1dc_887EEF68(self);
         fn_887EAC80(self);
-        fn_887ECB68(*(void **)(self + 0x1bc));
+        ts4_anlz_publish_slot_25bd833a_887ECB68(*(void **)(self + 0x1bc));
     }
 }
 
