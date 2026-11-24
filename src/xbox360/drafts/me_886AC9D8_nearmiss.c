@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; li r6 vs stw v scheduling; C++ const-ref temporaries share slots (22 off), target has distinct slots so real locals */
 /* agP 2026-11-19: same 8822AFE8 constant-by-address family; pointer-local store of v (tips agO r3) does not apply, still 2. */
 /* agentA2 2026-11-18: still 2 (/Oc): named cnt/key-pointer locals for the 881644F0 call args (the trick that fixed 886CB3A8) do not move li r6,0. */
 /* 0x886AC9D8 near miss (2 off, /Oc plain; scheduling of `li r6,0` vs the `v = 5` store). Sets option service

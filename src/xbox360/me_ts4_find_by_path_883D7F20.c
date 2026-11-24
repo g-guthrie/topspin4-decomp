@@ -6,7 +6,7 @@ typedef struct Node Node;
 typedef struct Kids { int p0; Link head; } Kids;
 struct Node { int vt; Link link; char pc[0x14 - 0xc]; const char *name; char p18[0x28 - 0x18]; Kids *kids; char p2c[0x34 - 0x2c]; Link items; };
 int fn_883298D8(const char *a, const char *b, int n);
-int fn_88329868(const char *a, const char *b);
+int ts4_stricmp_ascii_88329868(const char *a, const char *b);
 const char *fn_883C6740(Item *it);
 
 #define NODE(n) ((n) ? (Node *)((char *)(n) - 4) : 0)
@@ -41,7 +41,7 @@ int fn_883D7F20(Node *node, const char *path, Item **out_item, Node **out_node)
         }
     } while (*p++ == '/');
     for (l = t->items.next; l != &t->items; l = l->next) {
-        if (fn_883C6740(ITEM(l)) && !fn_88329868(fn_883C6740(ITEM(l)), start)) {
+        if (fn_883C6740(ITEM(l)) && !ts4_stricmp_ascii_88329868(fn_883C6740(ITEM(l)), start)) {
             if (out_item)
                 *out_item = ITEM(l);
             if (out_node)

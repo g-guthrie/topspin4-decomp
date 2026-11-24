@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; objs.last/first load order; tried for_each functor temp, Manager::Release begin()/end(), decl orders, while, pads 0-9 */
 /* DRAFT 8862BA88: 2 instructions off (/Oc). Only the load order of objs.first/objs.last differs; the vector sits at offset 0, so the o->last / v->first trick does not apply. */
 typedef struct Obj Obj;
 typedef struct ObjVtbl { void (*destroy)(Obj *self, int flags); } ObjVtbl;

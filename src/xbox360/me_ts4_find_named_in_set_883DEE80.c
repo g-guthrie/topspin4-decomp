@@ -4,14 +4,14 @@ typedef struct Link { struct Link *next; } Link;
 typedef struct Item { int f0; Link link; char pad[0xc]; const char *name; } Item;
 typedef struct Set { int f0; Link head; } Set;
 typedef struct T { char pad[0x48]; Set *set; } T;
-int fn_88329868(const char *a, const char *b);
+int ts4_stricmp_ascii_88329868(const char *a, const char *b);
 #define ITEM_OF(n) ((n) ? (Item *)((char *)(n) - 4) : 0)
 Item *ts4_find_named_in_set_883DEE80(T *t, const char *name)
 {
     Link *n;
     if (name && t->set) {
         for (n = t->set->head.next; n != (t->set ? &t->set->head : 0); n = n->next) {
-            if (ITEM_OF(n)->name && fn_88329868(ITEM_OF(n)->name, name) == 0)
+            if (ITEM_OF(n)->name && ts4_stricmp_ascii_88329868(ITEM_OF(n)->name, name) == 0)
                 return ITEM_OF(n);
         }
     }

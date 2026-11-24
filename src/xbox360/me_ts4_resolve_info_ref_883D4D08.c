@@ -10,7 +10,7 @@ typedef struct Node Node;
 typedef struct Obj { char pad[0x14]; Info *info; char pad2[0x20 - 0x18]; Node *node; } Obj;
 typedef struct Sys { char pad[0x8054]; Link head; } Sys;
 void fn_88315F10(void *heap, void *buf, const char *file, int line);
-int fn_88329868(const char *a, const char *b);
+int ts4_stricmp_ascii_88329868(const char *a, const char *b);
 unsigned char ts4_if_call_seq_ts4_get_bits_24_1b_1_883E1880_883D45F8(Obj *o);
 unsigned char ts4_get_bits_60_f_1_883C7068(Node *n);
 void ts4_set_flag_bit17_off60_883C7078(Node *n, int on);
@@ -28,7 +28,7 @@ int fn_883D4D08(Sys *s, Link *start, int version, Obj *o)
         o->info->ref.link = n;
     } else {
         for (n = start; n != &s->head; n = n->next) {
-            if (!fn_88329868(o->info->ref.name, n->name)) {
+            if (!ts4_stricmp_ascii_88329868(o->info->ref.name, n->name)) {
                 fn_88315F10(lbl_88B3302C->heap, o->info->ref.name, lbl_880391A8, 0x14c6);
                 o->info->ref.link = n;
                 found = 1;

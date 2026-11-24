@@ -119,3 +119,34 @@ No corpus function closed (0/13 attempted; 885FF748 notes only). Score = differi
 | 0x88165170 | 3/3 | 3 | C2: every compare spelling couples load and compare order (9 or 12 off) |
 
 Logs: work/regalloc/logs/*.log, work/regalloc/c0a0_perm.log (git-ignored scratch).
+
+## Near-miss round findings (2026-11-24, b226)
+
+The solver reports for this round, condensed. Each rule cites the function or functions that show it. The probe files were in session scratch and were not kept.
+
+- **M1. Parameter order and `this`.** For an indexed `lwzx`/`stwx`/`stdx`/`add` whose base is loaded off one parameter and whose index comes from another, operands follow parameter order, with the earlier parameter's value first. In a C++ member, `this` counts as coming *after* the explicit parameters, so `this->arr[i]` gives (index, base) while `extern "C" f(T *t, int i)` gives (base, index). This closed most of the old "lwzx order" near-misses: 88329478, 88423580, 88423600, 88423C28, 88464D78, 889A0540, 884D14F8, 8851EC30, 884C9AC8, 883FD1D8 and others. A function referenced only from a vtable slot is a strong hint to use the member form (88209E80, 887CCB00). C callers reach the decorated name through a `kind: cxx` alias.
+- **M2. Inline accessors change load order.** Reading a field through an inline member accessor loads it at a different point than a direct field read (883D1240). A compound assignment through a reference-returning accessor loads the right-hand field first (8870FF70). `int n = v.size()` through an inline `size()` gives `lwzx index,base`; writing out `last - first` gives `base,index` (887FD7A8).
+- **M3. Float constants as literals.** A constant read through `lbl_*` or `g_ts4_script_constants[]` changes fadds/fmuls operand order once written as a literal. Use the shortest float that round-trips `fn_check.target_data(lbl)`. On LTCG the literal lands in the pool. Seen in 8843F788, 88472A88, 883E0640, 888D9420, 888DC298 and 88516E38. The exception: a file-scope `static const` that feeds inline min/max helpers must stay a static const (88672130 becomes a different body shape with a literal).
+- **M4. cmplw order (C2 recipe).** Make the key a one-word struct and copy the operand that must be loaded first into a block-scoped struct local. Then compare in the target's order. For a two-key find, put the copy inside the first key's `if`. Seen in 886EDDF8, 887F7678, 886EFCC0 and 88945960.
+- **M5. Locals.**
+  - A named factoring local is *not* inert: `start = i*n; return start + n - 1;` flips the mullw order (885A9A08, against R2).
+  - A cached count `int n = count; for (i=0;i<n;i++)` puts `li i` before `mr n` (884DCC60).
+  - Reading the third factor into its own local first fixes load and mullw order (888FBCA0).
+  - A `const T &h = a->b->field` reference keeps the whole pointer chain in one register (8877BF58, 889A4930, 889A00A8).
+  - C++ call-site temporaries, such as STLport tag arguments, count toward the OP1 period-8 local count, while temporaries inside inline helpers do not (8815C0B0, 8815C708). They do not help where the target uses separate stack slots (886AC9D8).
+- **M6. Branch and epilogue shape.**
+  - An inline checked helper (`p = alloc(); if (!p) return 0; return p;`) moves the caller's null test to cr6 (882BF4D8).
+  - A duplicated early `{ *out = res; return 0; }` puts `li r3,0` before the store under /O1 (882C73D8).
+  - On a failure path, `node = 0;` falling through to a shared `return node;` beats an early `return 0;` (887CCB00).
+- **M7. Flags.** Where the member fix leaves only a register-reuse difference (`add r11,r11,r5` against a fresh register), /O1 merges the registers and /Oc does not (885E39B0, 885E60F0).
+- **M8. Struct copies.**
+  - `out = Vec3(a.x, a.y, a.z)`, with a three-float ctor and a member-wise `operator=`, keeps the x,y,z load and store order (88942A90).
+  - `float &operator[](int)` on Vec3 gives parameter-first fadds operands with a serial load/store order (8864E640).
+- **M9. Re-read the semantics first.** Several old drafts had the meaning wrong, such as a flag set on both paths or the wrong return value. Re-reading the target's branches fixed them outright (883DD5E8, 885871A0).
+
+**Still unsolved families:**
+- the merge add of unrolled-loop accumulators (88669F30, 88676AF0);
+- a load (IV, base) paired with a store (base, IV) in one loop (886D9AB8);
+- the parameter-spill vs load order class (8864BAE8, 8864BBB0, 8865FD40);
+- srwi vs rldicl, where the cast moves stores (888C00A0, 8890C618);
+- v0 vs v63 for vector copies (8847E770).

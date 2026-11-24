@@ -152,7 +152,7 @@ ts4_word ts4_cx42_b_8899D750();
 ts4_word fn_8899FA00();
 ts4_word fn_8899FAE8();
 ts4_word ts4_session_event_post_8899FE40();
-ts4_word fn_889A00A8();
+ts4_word ts4_slot_set_team_889A00A8();
 ts4_word ts4_get_u32_g_ts4_session_context_889A01E8();
 ts4_word fn_889A0208();
 ts4_word fn_889A0808();

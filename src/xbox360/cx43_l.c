@@ -6,7 +6,7 @@ typedef unsigned int u32;
 /* 0x889A4888 */
 typedef struct Cx43Ent { u8 pad[0x60]; u32 w60; } Cx43Ent;
 typedef struct Cx43Set { u8 pad[0x14]; Cx43Ent *p14; Cx43Ent **first; Cx43Ent **last; u8 pad1[0xbc - 0x20]; u8 sub[8]; u32 wc4; u32 wc8; u32 wcc; } Cx43Set;
-extern void fn_889A0540(void *g, u32 n);
+extern void ts4_id_table_init_889A0540(void *g, u32 n);
 void ts4_renumber_889A4888(Cx43Set *self)
 {
     if (self->wc4 <= 0) {
@@ -22,7 +22,7 @@ void ts4_renumber_889A4888(Cx43Set *self)
             e->w60 = i;
             i++;
         }
-        fn_889A0540(self->sub, i);
+        ts4_id_table_init_889A0540(self->sub, i);
         self->wc8 = z;
         self->wcc = z;
     }

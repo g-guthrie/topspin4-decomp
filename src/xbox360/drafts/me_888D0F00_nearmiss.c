@@ -1,3 +1,4 @@
+/* nearmiss: 2 off (q5s batch 2); the target stores id (+0x4c) right after state, then channel, then time; ours puts time first. The source order state,id,channel,time gives 3; a pre-loaded id local gives 5; a C++ inline Cue::Start(id,ch) member (by value or const ref) stays at 2. Blocker: probably the lazy-init table is a C++ function-local static and the cue fill is a different inline helper; not found yet. */
 /* DRAFT (2 instructions off on /Oc): Swing_DLL.xex 0x888D0F00, lazily initialised table of three cue ids (guard bit in lbl_88D4BD90),
  * each assigned to the next free 0x170-byte cue of the self-relative cue table. Only the id store is scheduled after the channel/time stores; all 24 orders of the four field stores were tried. */
 typedef struct Cue {

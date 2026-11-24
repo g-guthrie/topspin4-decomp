@@ -1,7 +1,9 @@
 /* NEAR MISS fn_88672130 push point out of rect margin: 6 off (same size 0x278, same 15 relocs), LTCG + pp1_pool_primer.c, /Oc.
  * Remaining: z (lfs 0x8(r4)) is loaded where the target loads half_x (lfs 0x20(r1), between the two std spills);
  * the target computes |x| - half_x before loading z. Declaring z with its initializer (z = p->v[2]) took it from 11 to 6;
- * by-value inline helpers, a hoisted half_x local, a block and a rect copy all left it unchanged. */
+ * by-value inline helpers, a hoisted half_x local, a block and a rect copy all left it unchanged.
+ * nearmiss: 6 off; z load is scheduled ahead of half_x load. kZero as a literal 0.0f -> 153 off (body shrinks to 0x170);
+ * z assigned after dx or scoped in a block -> 11 off; hoisted half_x local -> 6 (2026-11-24). */
 /* Swing_DLL.xex 0x88672130: push a point that is just inside the margin of a rectangle out along its nearer edge. */
 typedef unsigned char ts4_u8;
 #include "../ts4_vector.h"

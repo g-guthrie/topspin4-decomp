@@ -1,3 +1,4 @@
+/* q5s-nm (2026-11-24): not reworked this round; still 8 off (players_rel read once with a dead mr copy, win computed first). */
 /* agH (2026-11-19): pad sweep 0-7 on both routes, win/lose order x helper forms (players()+i, player(i), mixed, int-index local) x pads 0-7, LTCG /Ox: best stays 8 off; MSVC always groups lose as (s - w*24) + rel and drops the mr copy. */
 /* agentA2 (2026-11-18 tips pass): win-first order, named lw index, single players_rel local (size grows): best stays 8 off (plain and LTCG). */
 /* NEAR MISS 0x8865C818 (agentA2, C++ real virtuals): 13 -> 8 off, plain /Oc (LTCG same). point_winner is a real

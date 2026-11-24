@@ -207,7 +207,7 @@ ts4_word ts4_adler32_88878A90();
 ts4_word fn_88882868();
 ts4_word ts4_loop_call_seq_u32_off0_88884FD0();
 ts4_word fn_888860A0();
-ts4_word fn_8888A4E8();
+ts4_word ts4_worker_start_8888A4E8();
 ts4_word fn_88891310();
 ts4_word fn_888A10A0();
 ts4_word ts4_xml_pool_grow_888A2F00();

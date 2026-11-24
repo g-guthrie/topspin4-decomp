@@ -35,7 +35,7 @@ void *aud1__vorbis_block_alloc_883BBDD8(void *ctx, vorbis_block *vb, long bytes)
     if (bytes + vb->localtop > vb->localalloc) {
         /* can't just _ogg_realloc... there are outstanding pointers */
         if (vb->localstore) {
-            struct alloc_chain *link = fn_8836CBE8(ctx, sizeof(*link));
+            struct alloc_chain *link = ts4_alloc_count_500_8836CBE8(ctx, sizeof(*link));
             if (!link) return 0;
             vb->totaluse += vb->localtop;
             link->next = vb->reap;
@@ -44,7 +44,7 @@ void *aud1__vorbis_block_alloc_883BBDD8(void *ctx, vorbis_block *vb, long bytes)
         }
         /* highly conservative */
         vb->localalloc = bytes;
-        vb->localstore = fn_8836CBE8(ctx, vb->localalloc);
+        vb->localstore = ts4_alloc_count_500_8836CBE8(ctx, vb->localalloc);
         if (!vb->localstore) return 0;
         vb->localtop = 0;
     }

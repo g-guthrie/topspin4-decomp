@@ -99,7 +99,7 @@ ts4_word fn_88478648();
 ts4_word fn_88478D50();
 ts4_word ts4_ref_holder_dtor_88479760();
 ts4_word fn_8847A4A0();
-ts4_word fn_8847AF38();
+ts4_word ts4_ref_array_dtor_8847AF38();
 ts4_word fn_8847B270();
 ts4_word fn_8847D7F0();
 ts4_word fn_8847EF68();

@@ -1,3 +1,4 @@
+/* nearmiss: 4 off; real C++ ctor forms worse: init-list + Sub member ctor 11 off (vt store after li r30), loop 18 off, assignment body worse */
 /* agP 2026-11-19: now 4 off (both routes). Pointer-local vtbl/n18/n1c/slots stores, early sub pointer, result local: 4-9, no gain. */
 /* agentA2 (arg-setup pass, 2026-11-18): n10 zero stored through a block-local pointer `{ ts4_u32 *p = &self->n10; *p = 0; }` -> 9 to 4 off (plain and LTCG). Residue: `addi r3,r3,0x30` before the n10 store and `mr r3,r31` before the 0x150 store. Named sub/return locals, restrict, other block-pointer stores: no gain. */
 /* NEAR MISS fn_886D48F8: 9 off (store scheduling around the vtable store), LTCG + primer, /Oc. */

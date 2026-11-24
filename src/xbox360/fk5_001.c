@@ -237,7 +237,7 @@ ts4_word ga3_add_to_first_other_counter_886917F8();
 ts4_word fn_8869C010();
 ts4_word ga4_entry_select_886A7610();
 ts4_word fn_886C0050();
-ts4_word fn_886EC0E0();
+ts4_word ts4_font_find_glyph_886EC0E0();
 ts4_word fn_88713970();
 ts4_word fn_88718C90();
 ts4_word fn_88728C48();
@@ -2318,14 +2318,14 @@ ts4_word ts4_loop_get_u32_off48_886ECE38(ts4_word a0, ts4_word a1, ts4_word a2, 
     return 0;
 }
 
-/* Swing_DLL.xex 0x886ED628: call_seq fn_886EC0E0, u16@0x10, u16@0x14, u16@0x10, u32@0x8 */
+/* Swing_DLL.xex 0x886ED628: call_seq ts4_font_find_glyph_886EC0E0, u16@0x10, u16@0x14, u16@0x10, u32@0x8 */
 void ts4_call_seq_fn_886EC0E0_886ED628(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t1;
     unsigned short t3;
     unsigned short t4;
 
-    t1 = fn_886EC0E0((ts4_word)a0, (ts4_word)a1);
+    t1 = ts4_font_find_glyph_886EC0E0((ts4_word)a0, (ts4_word)a1);
     *(float *)((char *)(ts4_word)(a2) + 0) = ((float)((double)((ts4_s64)((short)(*(unsigned short *)((char *)(ts4_word)(t1) + 16))))));
     t3 = *(unsigned short *)((char *)(ts4_word)(t1) + 20);
     t4 = *(unsigned short *)((char *)(ts4_word)(t1) + 16);

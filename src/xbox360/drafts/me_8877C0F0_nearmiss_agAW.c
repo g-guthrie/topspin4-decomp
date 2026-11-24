@@ -1,3 +1,4 @@
+/* nearmiss: 3 off; hoisting rel into a local before t= gives 18 off (vcall regs shift); unresolved */
 /* agAW near-miss, 3 off: target loads t->rel (lwz 0x214) before li/addi. plain /Oc and LTCG ctx=[] same. */
 
 typedef struct Ent { int pad0[3]; int val; int pad1[3]; int key; } Ent;

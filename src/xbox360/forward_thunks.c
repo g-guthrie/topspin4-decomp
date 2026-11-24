@@ -67,7 +67,7 @@ void fn_882AB878(void);
 void fn_882ABA10(void);
 void fn_882ABCC0(void);
 void fn_882AEE28(void);
-void fn_882C73D8(void);
+void ts4_create_resource_882C73D8(void);
 void fn_882D11D8(void);
 void fn_882D12D8(void);
 void ts4_create_refobj_882DD5F0(void);
@@ -262,7 +262,7 @@ TS4_FORWARD(882ABF50, fn_882AB878)
 TS4_FORWARD(882AC038, fn_882ABCC0)
 TS4_FORWARD(882AC040, fn_882ABA10)
 TS4_FORWARD(882AEF80, fn_882AEE28)
-TS4_FORWARD(882C74C0, fn_882C73D8)
+TS4_FORWARD(882C74C0, ts4_create_resource_882C73D8)
 TS4_FORWARD(882D1330, fn_882D11D8)
 TS4_FORWARD(882D1858, fn_882D12D8)
 TS4_FORWARD(882DD6C0, ts4_create_refobj_882DD5F0)

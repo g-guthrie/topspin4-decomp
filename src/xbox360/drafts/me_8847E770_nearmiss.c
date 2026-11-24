@@ -1,5 +1,9 @@
 /* 0x8847E770: Copies the 16-byte vector array at +0x20 of an object into out (pool buffer assign: regrow when capacity < count, kind 0x17, then element copy). */
 /* Near miss (agAH): /Oc, 2 instructions off: the element copy uses lvx128/stvx128 v63 where the target uses v0 (open v0-v13 register issue). The same assign helper matches 8847B028/884A74E8/88473EB0. */
+/* nearmiss: 2 off; blocker: the v0-v13 vector register issue. The same 2 off as a C++ const member (VecOwner::get) and with a
+ * named __vector4 local; a struct element type (struct { __vector4 q; } or 16-byte aligned floats) copies as words, and
+ * as a plain struct copy it stops the helper from being inlined; operator= on a wrapper class gives v63 again.
+ * Revisit once a v0 element-copy source shape is found anywhere in the repo. */
 #include "ts4_vector.h"
 extern unsigned int lbl_88CACF08;
 void *KeTlsGetValue(unsigned int index);

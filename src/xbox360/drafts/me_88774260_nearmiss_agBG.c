@@ -1,3 +1,4 @@
+/* nearmiss: 3 off; target loads st.p into r30 right after li r3,0; C local variants same 3 off; C++ member + Str RAII puts this in r30 (worse) */
 /*
  * DRAFT (not part of the matching build). 0x88774260 (0xA0): base init (fn_8876FBD0), hash the self-relative name
  * at +0x14 into +0x24, copy three words from service 0xFBFC93C6 (+0x34..0x3c) into +0x28..0x30.

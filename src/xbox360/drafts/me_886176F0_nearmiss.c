@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; addi r3,r1,0x50 must precede first zero store; tried C++ Rng member+LocalTime ctor, t.Fill(), =T(), ={0,...}, pads 0-8 */
 /* NEAR MISS 0x886176F0 (2 instructions off on plain /Oc and LTCG, work/army/ME/v.py chk, matching-b129):
  * seed the random generator from the local clock. Zeroes an 8-int local time record, fills it through
  * ts4_call_seq_fn_88582018_88885388 (which widens a SYSTEMTIME-like set of u16 fields into ints:

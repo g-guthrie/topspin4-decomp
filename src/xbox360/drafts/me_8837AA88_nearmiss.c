@@ -1,3 +1,4 @@
+/* nearmiss: 2 off (q5s 2026-11-24); concrete blocker: target sets the i*4 register (li r29) before the skip-array base (addi r28,l,0x10). Tried C++ member Owner::CountNotReady(L*) / (L&) / L accessors (3 off), bool r, continue, nested if, unsigned i, while, skip pointer local (6 off), item local (3 off). */
 /* 0x8837AA88: returns how many of the list items are not ready (ts4_get_ready_flag_883332F0), counting skipped items as not ready */
 /* Near miss (agAH): /Oc, 2 off at +0x24: the target initialises the i*4 offset register before the skip-array base (li r29 before addi r28). Declaration order, nested ifs, pointer forms and an inline accessor do not move it. */
 typedef struct Item Item;

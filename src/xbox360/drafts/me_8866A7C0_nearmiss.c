@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): draft relies on volatile (disallowed); non-volatile C++ member forms size 0x100 vs 0x104 (missing mr r5,r9) */
 /* agentA2 2026-11-18: still 2: single local offset read (drops volatile) goes to 37 off; two copies of the local also 37. */
 /* NEAR MISS (2 instructions): target reads sides->offset once and copies it (mr r5,r9) where this
  * source issues a second volatile load. */

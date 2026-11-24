@@ -1,3 +1,4 @@
+/* nearmiss: 2 off (q5s 2026-11-24); concrete blocker: the target schedules `lis r8,0xdfa2` AFTER the first `stw r11,0(r3)`, every C and C++ form puts it first. Tried as a real C++ ctor `??0Self@@QAA@XZ` /Oc: Base9 base ctor zeroing w[9], Slot{-1,0,0} ctor, Pair74 ctor, Sub24 ctor with a/b/m38 clears, hash set in Self body / via Id struct setter / via a Pair74(h) temporary (59 off) / Sub24 body (6 off); all others stay 2 off. */
 /* agP 2026-11-19: pointer-local hash/header stores and a pointer-local w[] base do not move the lis (still 2 off both routes). */
 /* NEAR MISS 0x88151088 (fn_88151088), 2 instructions off on both plain /Oc and LTCG routes (work/army/ME/v.py chk, matching-b133).
  * Only difference: the target schedules `lis r8,0xdfa2` before the first `stw r11,0x0(r3)`; ours puts it after.

@@ -1,3 +1,4 @@
+/* nearmiss: 3 off (q5s 2026-11-24); concrete blocker: register numbering of slot*8 (target r8) vs offset (r9) in the self-relative slot address. C++ member Player::PostCue with a SlotTable operator[] (three spellings) makes it 13 off, so keep the C form. */
 /* agentA2 2026-11-18: skipped: operand order, operand_order_pad 0..9 already tried; still 3. */
 /* NEAR MISS (3 instructions): the slot-entry address add has its operands (and the r8/r9 pair)
  * swapped. Tried named table local, helper, expression orders and operand_order_pad 0..9. */

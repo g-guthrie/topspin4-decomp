@@ -86,9 +86,9 @@ int fn_883BBFB8(void *ctx, vorbis_dsp_state *v, vorbis_info *vi)
     /* initialize the storage vectors. blocksize[1] is small for encode,
        but the correct size for decode */
     v->pcm_storage = ci->blocksizes[1];
-    v->pcm = fn_8836CBE8(ctx, vi->channels * sizeof(*v->pcm));
+    v->pcm = ts4_alloc_count_500_8836CBE8(ctx, vi->channels * sizeof(*v->pcm));
     if (!v->pcm) return OV_EMEMORY;
-    v->pcmret = fn_8836CBE8(ctx, vi->channels * sizeof(*v->pcmret));
+    v->pcmret = ts4_alloc_count_500_8836CBE8(ctx, vi->channels * sizeof(*v->pcmret));
     if (!v->pcmret) return OV_EMEMORY;
     {
         int i;

@@ -181,7 +181,7 @@ ts4_word ts4_if_set_u32_off0_8862C0E8();
 ts4_word fn_88636CF0();
 ts4_word ts4_format_save_entry_8886B1B0();
 ts4_word ts4_registry_dispatch_888860A0();
-ts4_word fn_8888A4E8();
+ts4_word ts4_worker_start_8888A4E8();
 ts4_word fn_888AA228();
 ts4_word fn_888AA328();
 ts4_word ts4_bm_ball_cache_arc_constants_888AAEA8();

@@ -9,7 +9,7 @@ struct Item {
     char pad1[0x20 - 0x18]; float a; char pad2[0x28 - 0x24]; float b;
     char pad3[0x48 - 0x2c]; Set *set;
 };
-int fn_88329868(const char *a, const char *b);
+int ts4_stricmp_ascii_88329868(const char *a, const char *b);
 int ts4_release_tree_883DF0F0(Item *t);
 int fn_883DFE20(Item *t, Item *it);
 int fn_883DEF28(Item *it, Item *t);
@@ -23,7 +23,7 @@ int fn_883DFF90(Item *t, Item *it, unsigned char update)
     int r;
     if (t->set) {
         for (n = t->set->head.next; n != HEAD(t->set); n = n->next) {
-            if (!fn_88329868(ITEM(n)->name, it->name)) {
+            if (!ts4_stricmp_ascii_88329868(ITEM(n)->name, it->name)) {
                 found = ITEM(n);
                 if (!found)
                     break;

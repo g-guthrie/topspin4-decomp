@@ -7,7 +7,7 @@ extern const char lbl_880F6350[];
 void ts4_copy_bytes_until_nul_883296A0(char *dst, const char *src, int n);
 char *fn_88329700(char *dst, const char *src, unsigned int n);
 char *fn_88329C00(const char *s, const char *sub);
-int fn_88329868(const char *a, const char *b);
+int ts4_stricmp_ascii_88329868(const char *a, const char *b);
 
 #define ENT(l) ((l) ? (Ent *)((char *)(l) - 4) : 0)
 
@@ -26,7 +26,7 @@ int fn_883D3168(Sys *s, const char *name, int id, int *out)
             if (!fn_88329C00(buf, lbl_880F6350))
                 fn_88329700(buf, lbl_880F6350, 0x100);
         }
-        if ((!fn_88329868(e->name, name) || (s->prefix && !fn_88329868(buf, name))) && id == e->id) {
+        if ((!ts4_stricmp_ascii_88329868(e->name, name) || (s->prefix && !ts4_stricmp_ascii_88329868(buf, name))) && id == e->id) {
             if (out)
                 *out = e->value;
             return 0;

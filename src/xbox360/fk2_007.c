@@ -204,7 +204,7 @@ ts4_word ts4_adler32_88878A90();
 ts4_word fn_88882868();
 ts4_word ts4_loop_call_seq_u32_off0_88884FD0();
 ts4_word fn_888860A0();
-ts4_word fn_8888A4E8();
+ts4_word ts4_worker_start_8888A4E8();
 ts4_word fn_88891310();
 ts4_word fn_888A10A0();
 ts4_word ts4_xml_pool_grow_888A2F00();
@@ -1269,7 +1269,7 @@ ts4_word ts4_addr_lbl_880DF260_88889220(ts4_word a0)
     return ts4_dtor_body_88631048((ts4_word)a0);
 }
 
-/* Swing_DLL.xex 0x8888A568: loop_call_seq fn_88622E88, fn_8888A4E8 */
+/* Swing_DLL.xex 0x8888A568: loop_call_seq fn_88622E88, ts4_worker_start_8888A4E8 */
 ts4_word ts4_loop_call_seq_fn_88622E88_8888A568(ts4_word a0)
 {
     ts4_word lv2;
@@ -1283,7 +1283,7 @@ ts4_word ts4_loop_call_seq_fn_88622E88_8888A568(ts4_word a0)
     if ((ts4_word)(a0 + 5364) != (ts4_word)(a0 + 5340)) {
         lv2 = (ts4_word)(a0 + 5340);
         do {
-            t3 = fn_8888A4E8((ts4_word)lv2);
+            t3 = ts4_worker_start_8888A4E8((ts4_word)lv2);
             p4 = (ts4_word)(lv2 + 24);
             lv2 = p4;
         } while ((ts4_word)p4 != (ts4_word)(a0 + 5364));

@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; C++ member Match::ResetSlots and index spellings unchanged */
 /* agentA2 2026-11-18: skipped: operand-order sites off parameter loads, pad sweeps already exhausted (tips: not covered). Still 2. */
 /* NEAR MISS 0x8868FAB8: 2 off: operand order only (add r29,r10 for the track address; lwzx players base/index). 8 variants.  ME sweep (+~50 incl. pads): index spellings (players + k, k[players], local array, four slot-address forms), LTCG, dead-local pads at function top / loop / per-statement blocks (period 8; they flip the two slot adds together but never the players lwzx). Still 2. */
 #include "vx1_vector.h"

@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; reg of size-8 (r10 vs r8); tried block scopes, size-=8, sizeof form, nested if */
 /* NEAR MISS 0x88600D88 (2 instructions off on plain /Oc and LTCG, work/army/ME/v.py chk, matching-b129):
  * create an object from a serialized blob. The 8-byte header {u16 type, u16 sub, int} is copied and the object is
  * made by ts4_make_by_key_889BD910(type, sub). If made, its vtable slot 3 loads the payload (blob + 8, size - 8 by

@@ -1,3 +1,4 @@
+/* nearmiss: 6 off; residue in winner/loser item stores (r6/r7 swap, (24w+off)+t vs (t-24w)+off add order, dead mr/addi +0x18). Member form void Obj::EndPoint() with this-> and 0-8 pads: best 6 (19 unpadded); member Items::at(): 6 (2026-11-24). */
 /* agH (2026-11-19): 19 -> 6 off (plain and LTCG). 4 dead-local pads at the top (period 8: 12 also gives 6); block position of the pads does not matter. Left: r6/r7 swap and add operand order (w*24 + rel) in the winner/loser item stores; 5 item() helper forms, w/l order, steps local, items()+i tried. */
 /* NEAR MISS 0x8865C920 (agentA2, C++ real virtuals): 27 -> 19 off, plain /Oc (LTCG same). server_for/finish/restart_*
    are real virtuals (slots 8/7/16/14). Residue only in the final winner/loser item stores: target loads limits->steps

@@ -5,7 +5,7 @@ typedef unsigned int ts4_word;
 
 extern float g_ts4_event_value;
 
-void fn_886DC610(void *self, void *entry);
+void ts4_pending_take_886DC610(void *self, void *entry);
 unsigned char ts4_data_condition_eval_886C9F08(void *table, void *key, void *item);
 void ts4_vector_realloc_insert_88263908(void *vec, void *where, void *item, int count, int flag);
 unsigned char fn_886CB778(void *a, void *b);
@@ -37,7 +37,7 @@ void ga6_erase_idle_entries_886DC708(struct Ga6EntryList *self)
         zero = g_ts4_event_value;
         do {
             if (ga6_entry_is_idle(e, zero))
-                fn_886DC610(self, e);
+                ts4_pending_take_886DC610(self, e);
             else
                 e++;
         } while (e != self->end);

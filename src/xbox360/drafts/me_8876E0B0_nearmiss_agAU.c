@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; lwz 0x18(r31) vs lwz 0x50(r1) order; reversed compare a!=o->a gives 3 */
 /* agAU near-miss, plain /Oc, 2 off: target loads o->a (0x18) before the stack local a; every decl/ptr/cur/.cpp variant keeps the stack load first. */
 
 typedef unsigned int u32;

@@ -1,3 +1,4 @@
+/* nearmiss: 1 off only with the op1/op2 pads (not plausible source; 8 off without them); blocker: the unrolled set-loop accumulator merge add r11,r31,r30 is a compiler temp. The C++ virtual-member form Ts4StdScoring::UpdateServerAndEnds (vtable lbl_880F4900+0x38) gives exactly the same 1/8 off (q5s 2026-11-24): with no explicit params the this-after-params rule has nothing to reorder. */
 /* NEAR MISS fn_88676AF0 StdScoring_UpdateServerAndEnds (ME, 2026-11-18), fn_check /Oc: 1 instruction off (+0x22C),
  * size matches. fn_equiv --flags /Oc --seed 1 --trials 1500: EQUIVALENT (16/16 blocks).
  * Operand-order sites 1 and 2 fixed with the period-8 numbering rule: 4 function-scope pads + named players base

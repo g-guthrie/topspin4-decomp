@@ -1,5 +1,5 @@
 /* 0x887C7BD0: Stores level. If the control is active, finds key 0xD2284DB4 in the global registry and calls fn_886FFB60 on that slot target with its stored value. */
-/* Near miss (agAH): /Oc, 1 off: the slot address add is (base, index) in the target; named locals tb/end/slots/idx do not flip it. */
+/* nearmiss: 1 off; blocker: slot address add is (slots load, idx*0x120) in the target, (product, slots) in ours. No member/param-order handle: the function has one object param, and the C++ member forms Ctl::SetLevel, inline Registry::Find/At, byte offset, idx[slots], Slot* local, if-nesting and OP1 pads 0..16 (q5s 2026-11-24) all keep ours. Next: identify the registry class (key 0xD2284DB4) and copy its real Find helper shape. */
 typedef struct KeyIndex { unsigned int key; int index; } KeyIndex;
 typedef struct Target { char p0[0x18]; float value; } Target;
 typedef struct Slot { char p0[8]; Target *target; char pc[0x120 - 0xc]; } Slot;

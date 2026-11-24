@@ -1,7 +1,7 @@
 /* Swing_DLL.xex 0x883D0938-0x883D09CC, executable version 0.0.0.3. */
 typedef struct Ln { struct Ln *next; } Ln;
 typedef struct En { char pad0[0x1c]; void *name; } En;
-int fn_88329868(void *a, void *b);
+int ts4_stricmp_ascii_88329868(void *a, void *b);
 
 int ts4_find_by_name_883D0938(char *o, void *name, void **out)
 {
@@ -14,7 +14,7 @@ int ts4_find_by_name_883D0938(char *o, void *name, void **out)
     *out = 0;
     for (e = head->next; e != head; e = e->next) {
         p = e != 0 ? (En *)((char *)e - 8) : 0;
-        if (fn_88329868(p->name, name) == 0) {
+        if (ts4_stricmp_ascii_88329868(p->name, name) == 0) {
             *out = e != 0 ? (char *)e - 8 : 0;
             return 0;
         }

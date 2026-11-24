@@ -1,3 +1,4 @@
+/* nearmiss: 3 off; C++ dtor form (vt store before global) fixes order but 10 off register numbering (target allocates li r11,0 first) */
 /* agAS near-miss (3 off, plain /Oc): singleton-clearing dtor. The target emits lis(vt) before lis(global) and stores the vtable before the global clear; writing the clear first gets the order of the lis pair wrong, writing it second (or LTCG ctx=[]) is 8-10 off. Same family as agAQ 88888C80. */
 typedef struct PtrVec { void **first; void **last; void *alloc; } PtrVec;
 typedef struct Obj { void *vt; char p4[0x20]; PtrVec v; char p30[0x18]; void *owned; } Obj;

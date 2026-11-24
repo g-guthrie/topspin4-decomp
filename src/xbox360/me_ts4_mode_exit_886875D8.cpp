@@ -7,7 +7,7 @@ typedef unsigned int u32;
 typedef struct Registry Registry;
 extern "C" unsigned char fn_8826ACB8(void *set, const u32 *id);
 extern "C" void ts4_registry_release_8866DD78(Registry *r, const u32 *id);
-extern "C" void fn_8866C248(void *p);
+extern "C" void ts4_move_reset_8866C248(void *p);
 extern "C" void ts4_if_call_seq_u32_off1c_88678468(void *a, u32 b);
 
 struct Ts4ModeObj {
@@ -45,7 +45,7 @@ extern "C" void ts4_mode_exit_886875D8(Mode *m)
     if (!m->reg->locked)
         m->reg->body->b47e = 0;
     m->ctl->reset();
-    fn_8866C248(m->timer);
+    ts4_move_reset_8866C248(m->timer);
     m->aux->b424 = 0;
     m->aux->b23c = 0;
     if (*m->pending) {

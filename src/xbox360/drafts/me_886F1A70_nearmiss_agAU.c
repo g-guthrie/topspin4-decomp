@@ -1,3 +1,4 @@
+/* nearmiss: 2 off (q5s 2026-11-24); concrete blocker: as C++ member `?Apply@Obj@@QAAXH@Z` (/Oc) the keys[i] lhzx order is fixed (this after params); left: after the find call the target loads map.head (+0x18) before the found node (stack). Tried end() member, end/iterator locals, It struct with member/free operator!=, end()!=it (3 off), find returning It (30 off). */
 /* agAU near-miss, plain /Oc, 3 off: lhzx operands swapped and map head loaded after the iterator (target loads head first). Same in .cpp with a real iterator class and LTCG ctx=[]. */
 
 typedef unsigned short u16;

@@ -1,3 +1,4 @@
+/* nearmiss: 3 off (q5s 2026-11-24); concrete blocker: constant passed by address (stack temp) is stored one slot earlier than in the target; C++ const-ref member setter same 3 off, by-value 7 off (same family as 88701280). */
 /* NEAR MISS (agO, 2026-11-19): 3 off on plain and LTCG (/Oc): the constant 4 for field 0x735BAF9F is materialised before
  * the stb in our build, after it in the target (same residue as 888E1FC0). */
 /* Swing_DLL.xex 0x887011A8: forwards the data handle at lbl_88D45AD4->+0xBC by hash 0xCE952F7E, clears flag 0xB01F4F95

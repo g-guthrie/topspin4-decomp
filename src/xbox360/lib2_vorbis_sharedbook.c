@@ -58,7 +58,7 @@ ogg_uint32_t *lib2__make_words_883BD3A0(void *ctx, long *l, long n, long sparsec
 {
     long i, j, count = 0;
     ogg_uint32_t marker[33];
-    ogg_uint32_t *r = fn_8836CBE8(ctx, (sparsecount ? sparsecount : n) * sizeof(*r));
+    ogg_uint32_t *r = ts4_alloc_count_500_8836CBE8(ctx, (sparsecount ? sparsecount : n) * sizeof(*r));
     if (!r) return 0; /* FMOD addition: allocation check */
     ts4_memset(marker, 0, sizeof(marker));
 

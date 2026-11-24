@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; stb +0x10 scheduled after addi r3,0x18; tried C++ polymorphic class+Lock member (20), nested Lock, fl[2], void**pv, Lock* local */
 /* NEAR MISS (agO round 3, 2026-11-19): 2 off on plain and LTCG (/Oc): stb +0x10 and addi r3,r3,0x18 are swapped.
  * Lookalike of 88889240; the state_init/pv form there makes this one worse (10 off). */
 /* Swing_DLL.xex 0x8860C2E0: constructor; float g_ts4_script_constants[79] at +4, clears +8/+0xc and the flags at +0x10/+0x11, sets the

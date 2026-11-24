@@ -3,7 +3,7 @@
 typedef struct Link { struct Link *next; } Link;
 typedef struct Item { int f0; Link link; char pad[0xc]; const char *name; } Item;
 typedef struct T { char pad[0x8060]; Link head; } T;
-int fn_88329868(const char *a, const char *b);
+int ts4_stricmp_ascii_88329868(const char *a, const char *b);
 int ts4_find_named_index_883D0B68(T *t, const char *name, Item **out, int *index)
 {
     Link *n;
@@ -12,7 +12,7 @@ int ts4_find_named_index_883D0B68(T *t, const char *name, Item **out, int *index
         *out = 0;
         i = 0;
         for (n = t->head.next; n != &t->head; n = n->next, i++) {
-            if (fn_88329868((n ? (Item *)((char *)n - 4) : 0)->name, name) == 0) {
+            if (ts4_stricmp_ascii_88329868((n ? (Item *)((char *)n - 4) : 0)->name, name) == 0) {
                 *out = n ? (Item *)((char *)n - 4) : 0;
                 if (index)
                     *index = i;

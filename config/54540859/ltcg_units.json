@@ -4031,5 +4031,457 @@
   "symbols": {
    "ts4_pose_slots_sync_886C6590": 204
   }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_88224728.c",
+  "object": "q5s_sweep_88224728.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/fk_020.c",
+   "flags(/Ob1):src/xbox360/me_ts4_vector_grow_append_88226CF8.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_call_seq_fn_88255AA0_88714730",
+   "ts4_vector_grow_append_88226CF8"
+  ],
+  "symbols": {
+   "ts4_vdecl_build_pos_uv_color_88224728": 332
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_88329868.c",
+  "object": "q5s_sweep_88329868.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_stricmp_ascii_88329868": 108
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_883CC388.cpp",
+  "object": "q5s_sweep_883CC388.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/fi_accessor_thunks_00.c",
+   "src/xbox360/me_ts4_position_changed_883C7158.c",
+   "src/xbox360/me_ts4_tick_fade_delay_883CC1F0.cpp",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/O1"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_call_seq_fn_8857B830_8831A8B8",
+   "ts4_position_changed_883C7158",
+   "ts4_tick_fade_delay_883CC1F0"
+  ],
+  "symbols": {
+   "ts4_tick_883CC388": 284
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_8866C248.c",
+  "object": "q5s_sweep_8866C248.obj",
+  "context": [
+   "src/xbox360/q5_gameplay_move_leave.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_move_state_leave_8865DAC0"
+  ],
+  "symbols": {
+   "ts4_move_reset_8866C248": 164
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_8868E320.c",
+  "object": "q5s_sweep_8868E320.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/fk5_001.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_if_get_u32_off4c_8865EC70"
+  ],
+  "symbols": {
+   "ts4_update_from_world_pos_8868E320": 76
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_886DC610.c",
+  "object": "q5s_sweep_886DC610.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/q5s_swan_shot_rec.c",
+   "flags(/Ob1):src/xbox360/me_ts4_record_copy_886C4AF0.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_shot_rec_copy_886C6660"
+  ],
+  "symbols": {
+   "ts4_pending_take_886DC610": 128
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_886F58A0.c",
+  "object": "q5s_sweep_886F58A0.obj",
+  "context": [
+   "src/xbox360/me_ts4_vector_grow_append_scalar4_8816DD48.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_vector_grow_append_scalar4_8816DD48"
+  ],
+  "symbols": {
+   "ts4_ptr_pool_add_886F58A0": 232
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_88723CF0.c",
+  "object": "q5s_sweep_88723CF0.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_rmod_c_ctor_88723CF0": 108
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_88725208.c",
+  "object": "q5s_sweep_88725208.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_rmod_c_ctor_88725208": 136
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_887322A8.c",
+  "object": "q5s_sweep_887322A8.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/fk_020.c",
+   "flags(/Ob1):src/xbox360/me_ts4_vector_grow_append_88226CF8.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_call_seq_fn_88255AA0_88714730",
+   "ts4_vector_grow_append_88226CF8"
+  ],
+  "symbols": {
+   "ts4_vdecl_build_pos_uv_color_887322A8": 332
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_887323F8.c",
+  "object": "q5s_sweep_887323F8.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/fk_020.c",
+   "flags(/Ob1):src/xbox360/me_ts4_vector_grow_append_88226CF8.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_call_seq_fn_88255AA0_88714730",
+   "ts4_vector_grow_append_88226CF8"
+  ],
+  "symbols": {
+   "ts4_vdecl_build_pos_uv_color_887323F8": 332
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_88779EB0.c",
+  "object": "q5s_sweep_88779EB0.obj",
+  "context": [
+   "src/xbox360/me_ts4_vector_grow_append_scalar4_88174A38.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_vector_grow_append_scalar4_88174A38"
+  ],
+  "symbols": {
+   "ts4_pend_owner_push_88779EB0": 140
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_8877C3E8.c",
+  "object": "q5s_sweep_8877C3E8.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_script_set_contains_8877C3E8": 188
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_887ED280.c",
+  "object": "q5s_sweep_887ED280.obj",
+  "context": [
+   "src/xbox360/me_ts4_vector_grow_append_scalar4_88174A38.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_vector_grow_append_scalar4_88174A38"
+  ],
+  "symbols": {
+   "ts4_job_submit_887ED280": 168
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_888868E0.c",
+  "object": "q5s_sweep_888868E0.obj",
+  "context": [
+   "src/xbox360/d9t_vec_move_tail2_88161620.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_vec204_move_tail_881B9148"
+  ],
+  "symbols": {
+   "ts4_deactivate_move_tail_888868E0": 28
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_888AF478.c",
+  "object": "q5s_sweep_888AF478.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_pose_write_outputs_888AF478": 128
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_888C2860.c",
+  "object": "q5s_sweep_888C2860.obj",
+  "context": [
+   "src/xbox360/cw1_ctx_format_text.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_format_text"
+  ],
+  "symbols": {
+   "ts4_format_owner_text_888C2860": 60
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_888CA910.c",
+  "object": "q5s_sweep_888CA910.obj",
+  "context": [
+   "src/xbox360/cx27_dc_a.c",
+   "flags(/Ob1):src/xbox360/me_ts4_object_finalize_881B4590.c",
+   "flags(/Ob1):src/xbox360/cx26_core_b.c",
+   "flags(/Ob1):src/xbox360/fk2_004.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_dc44_copy_881817A0",
+   "ts4_object_finalize",
+   "ts4_destroy_owned_object",
+   "ts4_if_call_seq_lbl_880F7EE4_88617D28"
+  ],
+  "symbols": {
+   "ts4_svc_dtor_888CA910": 144
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_888CC218.c",
+  "object": "q5s_sweep_888CC218.obj",
+  "context": [
+   "src/xbox360/me_ts4_vector_grow_append_881784B0.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_vector_grow_append_881784B0"
+  ],
+  "symbols": {
+   "ts4_queue_push_record_888CC218": 176
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_888E9840.c",
+  "object": "q5s_sweep_888E9840.obj",
+  "context": [
+   "src/xbox360/fam2_hash_find_null.c",
+   "flags(/Ob1):src/xbox360/d2a_find_record_by_key_881877A8.c",
+   "src/xbox360/hs3_k.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_hash_find_null_888E1D40",
+   "ts4_find_record_by_key_881877A8",
+   "ts4_clear_script_prop_B1CA7E98_888C8190"
+  ],
+  "symbols": {
+   "ts4_restore_record_and_clear_prop_888E9840": 84
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_888E9898.c",
+  "object": "q5s_sweep_888E9898.obj",
+  "context": [
+   "src/xbox360/fam2_hash_find_null.c",
+   "flags(/Ob1):src/xbox360/d2a_find_record_by_key_881877A8.c",
+   "src/xbox360/hs3_k.c",
+   "src/xbox360/d9hs_hash_service_str_888C8370.c",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [
+   "ts4_hash_find_null_888E1D40",
+   "ts4_find_record_by_key_881877A8",
+   "ts4_clear_script_prop_052C33A9_888C82D0",
+   "ts4_hash_service_str_888C8370"
+  ],
+  "symbols": {
+   "ts4_apply_prop_record_888E9898": 152
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_sweep_889C2940.c",
+  "object": "q5s_sweep_889C2940.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_stepper_eval_at_889C2940": 164
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_nm_884390b8.cpp",
+  "object": "q5s_nm_884390b8.obj",
+  "context": [
+   "flags(/Ob1):src/xbox360/q5s_nm_88438fc0.cpp",
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_group_filter_shape_key_enabled_884390B8": 76,
+   "ts4_group_collision_filter_shape_key_enabled_884A5F20": 76
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_nm_888d9420.c",
+  "object": "q5s_nm_888d9420.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_send_vectors_5392B268_888D9420": 120
+  }
+ },
+ {
+  "source": "src/xbox360/q5s_nm_888dc298.c",
+  "object": "q5s_nm_888dc298.obj",
+  "context": [
+   "src/xbox360/pp1_pool_primer.c"
+  ],
+  "flags": [
+   "/Oc"
+  ],
+  "no_include": false,
+  "include": [],
+  "symbols": {
+   "ts4_send_scaled_5392B268_888DC298": 136
+  }
  }
 ]

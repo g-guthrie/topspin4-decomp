@@ -55634,3 +55634,365 @@ src/xbox360/q5s_cls_xform.cpp:
 
 src/xbox360/q5s_cls_tracker.cpp:
 	.text       start:0x886CBC30 end:0x886CBCAC
+
+src/xbox360/q5s_sweep_88224728.c:
+	.pdata      start:0x8810D910 end:0x8810D918
+	.text       start:0x88224728 end:0x88224874
+
+src/xbox360/q5s_sweep_88329868.c:
+	.text       start:0x88329868 end:0x883298D4
+
+src/xbox360/q5s_sweep_8836CBE8.c:
+	.pdata      start:0x881137B0 end:0x881137B8
+	.text       start:0x8836CBE8 end:0x8836CC5C
+
+src/xbox360/q5s_sweep_883CC388.cpp:
+	.pdata      start:0x88114B00 end:0x88114B08
+	.text       start:0x883CC388 end:0x883CC4A4
+
+src/xbox360/q5s_sweep_883D90A8.c:
+	.pdata      start:0x88114E50 end:0x88114E58
+	.text       start:0x883D90A8 end:0x883D92C4
+
+src/xbox360/q5s_sweep_883E3F20.c:
+	.pdata      start:0x881151E8 end:0x881151F0
+	.text       start:0x883E3F20 end:0x883E3FEC
+
+src/xbox360/q5s_sweep_883E5900.c:
+	.pdata      start:0x88115350 end:0x88115358
+	.text       start:0x883E5900 end:0x883E5A9C
+
+src/xbox360/q5s_sweep_883EA1F8.c:
+	.pdata      start:0x88115638 end:0x88115640
+	.text       start:0x883EA1F8 end:0x883EA348
+
+src/xbox360/q5s_sweep_8841ED80.cpp:
+	.text       start:0x8841ED80 end:0x8841ED98
+
+src/xbox360/q5s_sweep_8841F0D8.cpp:
+	.text       start:0x8841F0D8 end:0x8841F0F0
+
+src/xbox360/q5s_sweep_88443518.cpp:
+	.text       start:0x88443518 end:0x8844352C
+
+src/xbox360/q5s_sweep_88446550.c:
+	.pdata      start:0x88117A70 end:0x88117A78
+	.text       start:0x88446550 end:0x884465C8
+
+src/xbox360/q5s_sweep_88475BF8.c:
+	.text       start:0x88475BF8 end:0x88475CA8
+
+src/xbox360/q5s_sweep_8847AF38.c:
+	.pdata      start:0x88118FC0 end:0x88118FC8
+	.text       start:0x8847AF38 end:0x8847B000
+
+src/xbox360/q5s_sweep_8848E4F8.c:
+	.pdata      start:0x881196D8 end:0x881196E0
+	.text       start:0x8848E4F8 end:0x8848E568
+
+src/xbox360/q5s_sweep_88605DA0.cpp:
+	.text       start:0x88605DA0 end:0x88605DB8
+
+src/xbox360/q5s_sweep_88614900.c:
+	.text       start:0x88614900 end:0x88614934
+
+src/xbox360/q5s_sweep_8866C248.c:
+	.pdata      start:0x88123550 end:0x88123558
+	.text       start:0x8866C248 end:0x8866C2EC
+
+src/xbox360/q5s_sweep_8868E320.c:
+	.pdata      start:0x88123E98 end:0x88123EA0
+	.text       start:0x8868E320 end:0x8868E36C
+
+src/xbox360/q5s_sweep_886DC610.c:
+	.pdata      start:0x881250D8 end:0x881250E0
+	.text       start:0x886DC610 end:0x886DC690
+
+src/xbox360/q5s_sweep_886EBA80.cpp:
+	.text       start:0x886EBA80 end:0x886EBA90
+
+src/xbox360/q5s_sweep_886EC0E0.c:
+	.text       start:0x886EC0E0 end:0x886EC180
+
+src/xbox360/q5s_sweep_886F58A0.c:
+	.pdata      start:0x88125790 end:0x88125798
+	.text       start:0x886F58A0 end:0x886F5988
+
+src/xbox360/q5s_sweep_88719D50.c:
+	.pdata      start:0x88126258 end:0x88126260
+	.text       start:0x88719D50 end:0x88719EB0
+
+src/xbox360/q5s_sweep_88723CF0.c:
+	.pdata      start:0x88126648 end:0x88126650
+	.text       start:0x88723CF0 end:0x88723D5C
+
+src/xbox360/q5s_sweep_88725208.c:
+	.pdata      start:0x881266E0 end:0x881266E8
+	.text       start:0x88725208 end:0x88725290
+
+src/xbox360/q5s_sweep_887322A8.c:
+	.pdata      start:0x881269D8 end:0x881269E0
+	.text       start:0x887322A8 end:0x887323F4
+
+src/xbox360/q5s_sweep_887323F8.c:
+	.pdata      start:0x881269E0 end:0x881269E8
+	.text       start:0x887323F8 end:0x88732544
+
+src/xbox360/q5s_sweep_88760D00.c:
+	.pdata      start:0x881272F8 end:0x88127300
+	.text       start:0x88760D00 end:0x88760DB0
+
+src/xbox360/q5s_sweep_88779EB0.c:
+	.pdata      start:0x88127860 end:0x88127868
+	.text       start:0x88779EB0 end:0x88779F3C
+
+src/xbox360/q5s_sweep_8877C3E8.c:
+	.pdata      start:0x88127968 end:0x88127970
+	.text       start:0x8877C3E8 end:0x8877C4A4
+
+src/xbox360/q5s_sweep_887ED280.c:
+	.pdata      start:0x88129F30 end:0x88129F38
+	.text       start:0x887ED280 end:0x887ED328
+
+src/xbox360/q5s_sweep_888868E0.c:
+	.text       start:0x888868E0 end:0x888868FC
+
+src/xbox360/q5s_sweep_8888A4E8.c:
+	.pdata      start:0x8812DDA8 end:0x8812DDB0
+	.text       start:0x8888A4E8 end:0x8888A568
+
+src/xbox360/q5s_sweep_888AF478.c:
+	.text       start:0x888AF478 end:0x888AF4F8
+
+src/xbox360/q5s_sweep_888B8F58.c:
+	.pdata      start:0x8812E868 end:0x8812E870
+	.text       start:0x888B8F58 end:0x888B8FD4
+
+src/xbox360/q5s_sweep_888C2860.c:
+	.pdata      start:0x8812EA30 end:0x8812EA38
+	.text       start:0x888C2860 end:0x888C289C
+
+src/xbox360/q5s_sweep_888CA910.c:
+	.pdata      start:0x8812EDA0 end:0x8812EDA8
+	.text       start:0x888CA910 end:0x888CA9A0
+
+src/xbox360/q5s_sweep_888CC218.c:
+	.pdata      start:0x8812EE78 end:0x8812EE80
+	.text       start:0x888CC218 end:0x888CC2C8
+
+src/xbox360/q5s_sweep_888E9840.c:
+	.pdata      start:0x8812F9A0 end:0x8812F9A8
+	.text       start:0x888E9840 end:0x888E9894
+
+src/xbox360/q5s_sweep_888E9898.c:
+	.pdata      start:0x8812F9A8 end:0x8812F9B0
+	.text       start:0x888E9898 end:0x888E9930
+
+src/xbox360/q5s_sweep_889C2940.c:
+	.pdata      start:0x88133D90 end:0x88133D98
+	.text       start:0x889C2940 end:0x889C29E4
+
+src/xbox360/q5s_nm_881591f8.cpp:
+	.pdata      start:0x88107260 end:0x88107268
+	.text       start:0x881591F8 end:0x88159250
+
+src/xbox360/q5s_nm_8815c0b0.cpp:
+	.pdata      start:0x881073C8 end:0x881073D0
+	.text       start:0x8815C0B0 end:0x8815C1BC
+
+src/xbox360/q5s_nm_8815c708.cpp:
+	.pdata      start:0x881073F0 end:0x881073F8
+	.text       start:0x8815C708 end:0x8815C81C
+
+src/xbox360/q5s_nm_88209e80.cpp:
+	.pdata      start:0x8810C9C0 end:0x8810C9C8
+	.text       start:0x88209E80 end:0x88209EF8
+
+src/xbox360/q5s_nm_882a0398.c:
+	.pdata      start:0x88110568 end:0x88110570
+	.text       start:0x882A0398 end:0x882A03EC
+
+src/xbox360/q5s_nm_882af4a8.c:
+	.pdata      start:0x88110940 end:0x88110948
+	.text       start:0x882AF4A8 end:0x882AF62C
+
+src/xbox360/q5s_nm_882bf4d8.c:
+	.pdata      start:0x88110C70 end:0x88110C78
+	.text       start:0x882BF4D8 end:0x882BF5C8
+
+src/xbox360/q5s_nm_882c73d8.c:
+	.pdata      start:0x88110DE8 end:0x88110DF0
+	.text       start:0x882C73D8 end:0x882C74C0
+
+src/xbox360/q5s_nm_88329478.cpp:
+	.text       start:0x88329478 end:0x883294B4
+
+src/xbox360/q5s_nm_883d1240.cpp:
+	.pdata      start:0x88114C58 end:0x88114C60
+	.text       start:0x883D1240 end:0x883D1374
+
+src/xbox360/q5s_nm_883dd5e8.cpp:
+	.pdata      start:0x88114F98 end:0x88114FA0
+	.text       start:0x883DD5E8 end:0x883DD7A0
+
+src/xbox360/q5s_nm_883e0640.c:
+	.text       start:0x883E0640 end:0x883E06A0
+
+src/xbox360/q5s_nm_883e4838.cpp:
+	.pdata      start:0x88115290 end:0x88115298
+	.text       start:0x883E4838 end:0x883E48B0
+
+src/xbox360/q5s_nm_883f9d78.cpp:
+	.text       start:0x883F9D78 end:0x883F9DCC
+
+src/xbox360/q5s_nm_883fd1d8.cpp:
+	.pdata      start:0x88115CA8 end:0x88115CB0
+	.text       start:0x883FD1D8 end:0x883FD24C
+
+src/xbox360/q5s_nm_88423580.cpp:
+	.text       start:0x88423580 end:0x884235C0
+
+src/xbox360/q5s_nm_88423600.cpp:
+	.text       start:0x88423600 end:0x88423640
+
+src/xbox360/q5s_nm_88423c28.cpp:
+	.pdata      start:0x881169E8 end:0x881169F0
+	.text       start:0x88423C28 end:0x88423CE0
+
+src/xbox360/q5s_nm_88432b08.cpp:
+	.pdata      start:0x881170B8 end:0x881170C0
+	.text       start:0x88432B08 end:0x88432B6C
+
+src/xbox360/q5s_nm_88438fc0.cpp:
+	.text       start:0x88438FC0 end:0x88439050
+	.text       start:0x884A5A40 end:0x884A5E20
+
+src/xbox360/q5s_nm_884390b8.cpp:
+	.pdata      start:0x88117508 end:0x88117510
+	.pdata      start:0x88119E30 end:0x88119E38
+	.text       start:0x884390B8 end:0x88439104
+	.text       start:0x884A5F20 end:0x884A5F6C
+
+src/xbox360/q5s_nm_8843f788.c:
+	.text       start:0x8843F788 end:0x8843F7CC
+
+src/xbox360/q5s_nm_88464d78.cpp:
+	.text       start:0x88464D78 end:0x88464D9C
+
+src/xbox360/q5s_nm_88472a88.c:
+	.text       start:0x88472A88 end:0x88472AD8
+
+src/xbox360/q5s_nm_8847ebd0.cpp:
+	.pdata      start:0x88119178 end:0x88119180
+	.text       start:0x8847EBD0 end:0x8847EC18
+
+src/xbox360/q5s_nm_884c1520.cpp:
+	.text       start:0x884C1520 end:0x884C1558
+
+src/xbox360/q5s_nm_884c9ac8.cpp:
+	.text       start:0x884C9AC8 end:0x884C9AF0
+
+src/xbox360/q5s_nm_884d14f8.cpp:
+	.text       start:0x884D14F8 end:0x884D1578
+
+src/xbox360/q5s_nm_884dcc60.c:
+	.pdata      start:0x8811B0F8 end:0x8811B100
+	.text       start:0x884DCC60 end:0x884DCD68
+
+src/xbox360/q5s_nm_884ec070.cpp:
+	.pdata      start:0x8811B550 end:0x8811B558
+	.text       start:0x884EC070 end:0x884EC0E8
+
+src/xbox360/q5s_nm_88516e38.c:
+	.text       start:0x88516E38 end:0x88516E78
+
+src/xbox360/q5s_nm_88518ac0.c:
+	.text       start:0x88518AC0 end:0x88518B04
+	.text       start:0x88518B08 end:0x88518B7C
+
+src/xbox360/q5s_nm_8851ec30.cpp:
+	.text       start:0x8851EC30 end:0x8851EC84
+
+src/xbox360/q5s_nm_885871a0.c:
+	.pdata      start:0x8811DA50 end:0x8811DA58
+	.text       start:0x885871A0 end:0x88587214
+
+src/xbox360/q5s_nm_885934f0.c:
+	.text       start:0x885934F0 end:0x885935A0
+
+src/xbox360/q5s_nm_885a9a08.c:
+	.pdata      start:0x8811E740 end:0x8811E748
+	.text       start:0x885A9A08 end:0x885A9A4C
+
+src/xbox360/q5s_nm_885e39b0.cpp:
+	.text       start:0x885E39B0 end:0x885E39F8
+
+src/xbox360/q5s_nm_885e60f0.cpp:
+	.text       start:0x885E60F0 end:0x885E6138
+
+src/xbox360/q5s_nm_8864e640.cpp:
+	.text       start:0x8864E640 end:0x8864E668
+
+src/xbox360/q5s_nm_886eddf8.c:
+	.text       start:0x886EDDF8 end:0x886EDE40
+
+src/xbox360/q5s_nm_886efcc0.c:
+	.text       start:0x886EFCC0 end:0x886EFD34
+
+src/xbox360/q5s_nm_88702bf0.cpp:
+	.pdata      start:0x88125C90 end:0x88125C98
+	.text       start:0x88702BF0 end:0x88702C98
+
+src/xbox360/q5s_nm_8870ff70.cpp:
+	.text       start:0x8870FF70 end:0x8870FFEC
+
+src/xbox360/q5s_nm_8877bf58.cpp:
+	.text       start:0x8877BF58 end:0x8877BFD8
+
+src/xbox360/q5s_nm_887ccb00.cpp:
+	.pdata      start:0x88129458 end:0x88129460
+	.text       start:0x887CCB00 end:0x887CCB6C
+
+src/xbox360/q5s_nm_887f7678.c:
+	.text       start:0x887F7678 end:0x887F76CC
+
+src/xbox360/q5s_nm_887fd7a8.cpp:
+	.pdata      start:0x8812A5A0 end:0x8812A5A8
+	.text       start:0x887FD7A8 end:0x887FD860
+
+src/xbox360/q5s_nm_888d9420.c:
+	.pdata      start:0x8812F3C0 end:0x8812F3C8
+	.text       start:0x888D9420 end:0x888D9498
+
+src/xbox360/q5s_nm_888dc298.c:
+	.pdata      start:0x8812F490 end:0x8812F498
+	.text       start:0x888DC298 end:0x888DC320
+
+src/xbox360/q5s_nm_888fbca0.c:
+	.pdata      start:0x8812FDC0 end:0x8812FDC8
+	.text       start:0x888FBCA0 end:0x888FBD40
+
+src/xbox360/q5s_nm_88942a90.cpp:
+	.text       start:0x88942A90 end:0x88942AEC
+
+src/xbox360/q5s_nm_88945960.c:
+	.text       start:0x88945960 end:0x889459D4
+
+src/xbox360/q5s_nm_889a00a8.cpp:
+	.pdata      start:0x88133188 end:0x88133190
+	.text       start:0x889A00A8 end:0x889A01B8
+
+src/xbox360/q5s_nm_889a0540.cpp:
+	.pdata      start:0x881331A0 end:0x881331A8
+	.text       start:0x889A0540 end:0x889A05E0
+
+src/xbox360/q5s_nm_889a4930.cpp:
+	.text       start:0x889A4930 end:0x889A4970
+
+src/xbox360/q5s_nm_886c8c48.c:
+	.pdata      start:0x88124B08 end:0x88124B10
+	.text       start:0x886C8C48 end:0x886C8C68
+
+src/xbox360/q5s_nm_886c90f0.c:
+	.pdata      start:0x88124B18 end:0x88124B20
+	.text       start:0x886C90F0 end:0x886C9110

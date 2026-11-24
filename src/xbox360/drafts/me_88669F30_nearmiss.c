@@ -1,3 +1,4 @@
+/* nearmiss: 1 off (q5s 2026-11-24); concrete blocker: the unrolled-by-2 loop merges its accumulators as `add r11,r4,r31` in the target, ours `r31,r4`. Also tried: unsigned/long sum, split sums, sum = x + sum, i < cur+1, and C++ self-relative RelArray/RelPtr members (`?Total@Obj@@QAAHXZ`: 8 off, the remainder loop changes and the merge stays r31,r4); perm_auto --targeted 900 s found nothing (baseline 1). */
 /* NEAR MISS (1 off: the compiler-unrolled loop merges its two accumulators as r31 + r4 instead
  * of r4 + r31). Tried statement orders, helpers, while/for, long sum.
  * 0x88669F30: total of both sides' per-game values over games 0..current

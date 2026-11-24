@@ -152,7 +152,7 @@ ts4_word ts4_cx42_b_8899D750();
 ts4_word fn_8899FA00();
 ts4_word fn_8899FAE8();
 ts4_word ts4_session_event_post_8899FE40();
-ts4_word fn_889A00A8();
+ts4_word ts4_slot_set_team_889A00A8();
 ts4_word fn_889A0208();
 ts4_word fn_889A0808();
 ts4_word fn_889A1108();
@@ -675,10 +675,10 @@ ts4_word ts4_tailcall_fn_889A0208_889A0440(ts4_word a0, ts4_word a1, ts4_word a2
     return fn_889A0208((ts4_word)a2, (ts4_word)a0, (ts4_word)a1);
 }
 
-/* Swing_DLL.xex 0x889A0460: tailcall fn_889A00A8 */
+/* Swing_DLL.xex 0x889A0460: tailcall ts4_slot_set_team_889A00A8 */
 ts4_word ts4_tailcall_fn_889A00A8_889A0460(ts4_word a0, ts4_word a1, ts4_word a2)
 {
-    return fn_889A00A8((ts4_word)a2, (ts4_word)a0, (ts4_word)a1);
+    return ts4_slot_set_team_889A00A8((ts4_word)a2, (ts4_word)a0, (ts4_word)a1);
 }
 
 /* Swing_DLL.xex 0x889A08D0: if_call_seq ts4_cx42_b_8899D750, u32@g_ts4_session_context, u32@0x10, u32@0x68, fn_88866C30, u32@0xec */

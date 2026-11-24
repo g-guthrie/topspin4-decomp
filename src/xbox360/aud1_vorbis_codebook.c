@@ -52,7 +52,7 @@ int aud1_vorbis_staticbook_unpack_883BE2A8(void *ctx, oggpack_buffer *opb, stati
     switch ((int)lib2_oggpack_read_883BD268(opb, 1)) {
     case 0:
         /* unordered */
-        s->lengthlist = fn_8836CBE8(ctx, sizeof(*s->lengthlist) * s->entries);
+        s->lengthlist = ts4_alloc_count_500_8836CBE8(ctx, sizeof(*s->lengthlist) * s->entries);
         if (!s->lengthlist) { ret = OV_EMEMORY; goto _errout; }
 
         /* allocated but unused entries? */
@@ -79,7 +79,7 @@ int aud1_vorbis_staticbook_unpack_883BE2A8(void *ctx, oggpack_buffer *opb, stati
         /* ordered */
         {
             long length = lib2_oggpack_read_883BD268(opb, 5) + 1;
-            s->lengthlist = fn_8836CBE8(ctx, sizeof(*s->lengthlist) * s->entries);
+            s->lengthlist = ts4_alloc_count_500_8836CBE8(ctx, sizeof(*s->lengthlist) * s->entries);
             if (!s->lengthlist) { ret = OV_EMEMORY; goto _errout; }
 
             for (i = 0; i < s->entries;) {
@@ -123,7 +123,7 @@ int aud1_vorbis_staticbook_unpack_883BE2A8(void *ctx, oggpack_buffer *opb, stati
             }
 
             /* quantized values */
-            s->quantlist = fn_8836CBE8(ctx, sizeof(*s->quantlist) * quantvals);
+            s->quantlist = ts4_alloc_count_500_8836CBE8(ctx, sizeof(*s->quantlist) * quantvals);
             if (!s->quantlist) { ret = OV_EMEMORY; goto _errout; }
             for (i = 0; i < quantvals; i++)
                 s->quantlist[i] = lib2_oggpack_read_883BD268(opb, s->q_quant);

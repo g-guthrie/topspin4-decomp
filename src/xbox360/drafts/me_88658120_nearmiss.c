@@ -1,3 +1,4 @@
+/* q5s-nm (2026-11-24): both arms written in full (ev.type=12; ev.value=o->vt->get_id(o); ev.name=HASH) -> 7 to 5 off (plain). Remaining 5: target does cmplwi before lwz vt (vt in r11, 12 in r10); we hoist the vt load above the compare. C++ member, bool and arm-order variants same or worse; perm_auto --targeted 600 s on that form: best 5 after 1092 candidates. */
 /* agentA2 (2026-11-18 tips pass): block-local pointer store of ev.type, volatile vtable read, named call args, named 12: still 7 off (plain and LTCG). */
 /* agentA2 (b120 real-virtuals pass): C++ with the vtable callees as real virtuals (correct slots) gives the same 7 off;
    tried up to 8 variants (inline members, guard object, zero/hash locals, early-return spellings). Still 7 off. */

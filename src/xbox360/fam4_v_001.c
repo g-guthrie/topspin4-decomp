@@ -157,7 +157,7 @@ ts4_word fn_8886C1C0();
 ts4_word fn_88883CD0();
 ts4_word ts4_if_call_seq_u32_lbl_88D45B38_88884DE0();
 ts4_word fn_888903D8();
-ts4_word fn_888B8F58();
+ts4_word ts4_bind_read_fe11d138_888B8F58();
 ts4_word fn_888B9E40();
 ts4_word ts4_timed_tree_reset_888C2C80();
 ts4_word fn_888C39A0();
@@ -168,7 +168,7 @@ ts4_word fn_888E62C8();
 ts4_word fn_888EE650();
 ts4_word fn_888F67B8();
 ts4_word fn_888FA780();
-ts4_word fn_888FBCA0();
+ts4_word ts4_school_play_commit_block_888FBCA0();
 ts4_word fn_88901010();
 ts4_word fn_88907128();
 ts4_word fn_889074A8();
@@ -1577,7 +1577,7 @@ void ts4_if_call_seq_u32_off8_888BA500(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x888BB500: get fn_888B8F58, ts4_handle_forward_88150770, u32@0x0, u32@0x50, vcall, ts4_if_set_u32_off0_8862BE08 */
+/* Swing_DLL.xex 0x888BB500: get ts4_bind_read_fe11d138_888B8F58, ts4_handle_forward_88150770, u32@0x0, u32@0x50, vcall, ts4_if_set_u32_off0_8862BE08 */
 void ts4_get_fn_888B8F58_888BB500(ts4_word a0, ts4_args3 sp1)
 {
     ts4_word loc50[2];
@@ -1591,7 +1591,7 @@ void ts4_get_fn_888B8F58_888BB500(ts4_word a0, ts4_args3 sp1)
     ts4_word t14;
 
     (void)sp1.w[2];
-    fn_888B8F58((ts4_word)a0, sp1);
+    ts4_bind_read_fe11d138_888B8F58((ts4_word)a0, sp1);
     loc50[0] = (ts4_word)((2749431808) | 30809);
     ts4_handle_forward_88150770((ts4_word)(ts4_word)&loc58[0], (ts4_word)(ts4_word)&sp1, (ts4_word)(ts4_word)&loc50[0]);
     t4 = loc58[0];
@@ -1912,7 +1912,7 @@ void ts4_loop_call_seq_u32_lbl_88D458F0_888E9088(ts4_word a0)
     return;
 }
 
-/* Swing_DLL.xex 0x888FC080: if_call_seq u8@0x88, u32@0x24, fn_888FBCA0, u8@0x98, u8@0x89, u32@0x20 */
+/* Swing_DLL.xex 0x888FC080: if_call_seq u8@0x88, u32@0x24, ts4_school_play_commit_block_888FBCA0, u8@0x98, u8@0x89, u32@0x20 */
 void ts4_if_call_seq_u8_off88_888FC080(ts4_word a0)
 {
     unsigned char t1;
@@ -1923,12 +1923,12 @@ void ts4_if_call_seq_u8_off88_888FC080(ts4_word a0)
 
     t1 = *(unsigned char *)((char *)(ts4_word)(a0) + 136);
     if ((ts4_word)t1 == 1 && (int)(*(ts4_word *)((char *)(ts4_word)(a0) + 36)) <= 0) {
-        fn_888FBCA0((ts4_word)a0);
+        ts4_school_play_commit_block_888FBCA0((ts4_word)a0);
         *(unsigned char *)((char *)(ts4_word)(a0) + 152) = (unsigned char)1;
     }
     t5 = *(unsigned char *)((char *)(ts4_word)(a0) + 137);
     if ((ts4_word)t5 == 1 && (int)(*(ts4_word *)((char *)(ts4_word)(a0) + 32)) < 0) {
-        fn_888FBCA0((ts4_word)a0);
+        ts4_school_play_commit_block_888FBCA0((ts4_word)a0);
         *(unsigned char *)((char *)(ts4_word)(a0) + 152) = (unsigned char)1;
     }
     t9 = *(unsigned char *)((char *)(ts4_word)(a0) + 139);
@@ -1937,12 +1937,12 @@ void ts4_if_call_seq_u8_off88_888FC080(ts4_word a0)
     }
     t12 = *(unsigned char *)((char *)(ts4_word)(a0) + 172);
     if ((ts4_word)t12 == 1 && (int)(((int)((int)(*(ts4_word *)((char *)(ts4_word)(a0) + 176)) * (int)(*(ts4_word *)((char *)(ts4_word)(a0) + 168))) * (int)(*(ts4_word *)((char *)(ts4_word)(a0) + 160))) + (*(ts4_word *)((char *)(ts4_word)(a0) + 8))) >= (int)(*(ts4_word *)((char *)(ts4_word)(a0) + 148))) {
-        fn_888FBCA0((ts4_word)a0);
+        ts4_school_play_commit_block_888FBCA0((ts4_word)a0);
         *(unsigned char *)((char *)(ts4_word)(a0) + 152) = (unsigned char)1;
     }
     t20 = *(unsigned char *)((char *)(ts4_word)(a0) + 138);
     if ((ts4_word)t20 == 1 && (int)(*(ts4_word *)((char *)(ts4_word)(a0) + 52)) <= 0) {
-        fn_888FBCA0((ts4_word)a0);
+        ts4_school_play_commit_block_888FBCA0((ts4_word)a0);
         *(unsigned char *)((char *)(ts4_word)(a0) + 152) = (unsigned char)1;
     }
     return;

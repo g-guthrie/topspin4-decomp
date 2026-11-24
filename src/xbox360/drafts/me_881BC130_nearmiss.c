@@ -1,3 +1,4 @@
+/* nearmiss: 3 off (q5s batch 2); r9/r10 swap between the first lbz and addi rX,r3,8. Member-wise copy, ctor with init list or body all stay at 3; copying sub first or via a local gives 49+; a base-class head turns it into a block-copy loop (52). Blocker: the order of the byte/word head copies and the sub-object copy is still unknown. */
 /* Swing_DLL.xex 0x881BC130: copy constructor of {three bytes; word; 16-byte block; vector<unsigned int>}.
  * /Oc near miss, 3 off: r9/r10 swapped between the first byte copy and the &t->sub address (block struct assignment is needed for the address; member copies give 49 off). */
 typedef struct Text { char *p; char *last; char *end; } Text;

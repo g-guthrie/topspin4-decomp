@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; param-spill vs load order class; tried C++ member RecordTable::Find(const u32&), pads 0-9 */
 /* Near-miss (2 off at /Oc, also with LTCG): the target spills id (stw r4,0x7c(r1)) before mr r31,r3 / lwz 0x1c; this source schedules the load first. Lookup by id in a self-relative 0x3c-byte record table, falling back to the first record. */
 typedef unsigned char u8;
 typedef unsigned int u32;

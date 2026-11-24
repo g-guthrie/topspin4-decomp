@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; tag store order; member Set stays 2, ctor 18 (mr r11,r3) */
 /* near miss 886F3350 (2 off, /Oc plain: the tag store is scheduled after the a.x reload; target stores the tag first). */
 /* Swing_DLL.xex 0x886F3350: stamp a block's tag and copy two by-value 3-int triples into it. */
 typedef struct Ts4Int3 { int x, y, z; } Ts4Int3;

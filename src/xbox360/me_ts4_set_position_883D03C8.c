@@ -1,4 +1,4 @@
-/* 0x883D03C8: maps x into [lo, hi] (+0x2C/+0x30) as a clamped 0..1 ratio; on change either queues it as the fade target (flag 1) or applies it directly, flags all, flushes the owner's kind-0x30 items and ticks the owner (fn_883CC388); sets flag 2 when the owner is idle */
+/* 0x883D03C8: maps x into [lo, hi] (+0x2C/+0x30) as a clamped 0..1 ratio; on change either queues it as the fade target (flag 1) or applies it directly, flags all, flushes the owner's kind-0x30 items and ticks the owner (ts4_tick_883CC388); sets flag 2 when the owner is idle */
 /* Matched on /O1 plain only (work/army/ME/v.py chk); the zero constant is a float local; OSYS() is the null-guarded owner->q->sys macro re-read at each use. */
 typedef struct Link { struct Link *next; } Link;
 typedef struct Mode { char pad[0x1C]; float fade; char p20[0x28 - 0x20]; unsigned int flags; } Mode;
@@ -9,7 +9,7 @@ typedef struct Own { char pad[0x60]; unsigned int flags; char p64[0xAC - 0x64]; 
 typedef struct T { char pad[0x14]; Mode *mode; float cur, target, c20; char p24[4]; unsigned int flags; float lo, hi; char p34[4]; Own *own; } T;
 void ts4_flag_all_883CF138(T *t);
 int fn_883CF9B8(Item *it, int a);
-int fn_883CC388(Own *o);
+int ts4_tick_883CC388(Own *o);
 #define OSYS(o) ((o)->q ? (o)->q->sys : 0)
 int ts4_set_position_883D03C8(T *t, float x)
 {
@@ -40,7 +40,7 @@ int ts4_set_position_883D03C8(T *t, float x)
                     if (r) return r;
                 }
             }
-            r = fn_883CC388(t->own);
+            r = ts4_tick_883CC388(t->own);
             if (r) return r;
         }
     }

@@ -1,3 +1,4 @@
+/* nearmiss (q5s 2026-11-24): 2 off; addi/lwz of self-relative header; RelHdr::Get / Pose::Init members stay 2, SkelData::Info() gives 7 */
 /* agK 2026-11-19: top pads 0-7: 0 pads 2, 1-7 pads 3. */
 /* agentA2 2026-11-18: skipped: 18+ helper/volatile spellings already swept, no new idea; still 2. */
 /* 0x886CF760 near miss (2 off; sweep 2026-11-18, 10 more (volatile offset/header/pointer reads, restrict/uint base, offset-first): best 3, still 2; 8 more helper spellings reading the offset via the data pointer all fold the addi (7 off), /Oc plain): pose init: stores the model, reserves four 0x9C4 vectors, sets

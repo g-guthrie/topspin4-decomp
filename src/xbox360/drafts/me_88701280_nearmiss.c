@@ -1,3 +1,4 @@
+/* nearmiss: 3 off (q5s 2026-11-24); concrete blocker: same family as 887011A8/888E1FC0 (constant passed by address scheduled one slot early). C++ member setter on Out taking const u32& still 3 off; by-value setter 7 off. */
 /* NEAR MISS 0x88701280, 3 instructions off on plain /Oc and LTCG (checked against work/matching-b134; b133 is gone).
  * Model: me_ts4_publish_value_887013A8.c. Only difference: at the last call the target loads the constant 4 into r4 and the
  * hash 0x735BAF9F into r6 after the stb; ours uses r5/r6 and schedules li 4 before the stb.

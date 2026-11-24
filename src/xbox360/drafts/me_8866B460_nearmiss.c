@@ -1,3 +1,4 @@
+/* nearmiss: 5 off with volatile offset (not acceptable); 25 off without it. Blocker: the dead mr r6,r9 copy of the single offset load; at() helper variants without volatile all 25 (2026-11-24). */
 /* agentB 2026-11-18 pass 2: still 5 off (plain and LTCG). Non-volatile offset (25 off, 0x134), shared/copied offset local (28),
  * volatile first + at() second (19), C++ reference accessors (19-25): none reproduce the dead mr r6,r9. */
 /* NEAR MISS (5 instructions): target reads sides->offset once and keeps a dead copy (mr r6,r9);

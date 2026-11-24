@@ -1,3 +1,4 @@
+/* nearmiss: 3 off (q5s 2026-11-24); concrete blocker: the store of 0 to lbl_88D45AD0 must come after the buf load+cmplwi. C forms tried: p before store (6 off), inline release/free helpers, pointer-to-global, store in both arms. Likely a real C++ dtor (static reset in body, member buffer dtor, base dtor) but the implicit vtable/base-dtor relocations would need C++ names the symbol map lacks. */
 /* Near-miss (agAP), 0x88720108, plain /Oc: 3 off. The store of 0 to lbl_88D45AD0 is scheduled before the s->buf load; the target places it after the cmplwi. */
 extern void *lbl_88D45B38; extern int lbl_88D45AD0; extern char lbl_880F2A80[];
 void ts4_if_call_seq_fn_881F04B8_886131F0(void *g, void *p, void *h);

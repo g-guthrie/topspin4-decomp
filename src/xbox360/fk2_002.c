@@ -137,7 +137,7 @@ ts4_word fn_88332408();
 ts4_word fn_8834FB00();
 ts4_word fn_88356728();
 ts4_word fn_88358250();
-ts4_word fn_8836CBE8();
+ts4_word ts4_alloc_count_500_8836CBE8();
 ts4_word ts4_if_get_u32_off500_8836CD70();
 ts4_word fn_8837C680();
 ts4_word fn_8837D100();
@@ -2449,7 +2449,7 @@ ts4_word ts4_get_u32_off0_883BABA8(ts4_word a0)
     return ((*(unsigned char *)((char *)(ts4_word)((*(ts4_word *)((char *)(ts4_word)(a0) + 0))) + 5)) & 0x4);
 }
 
-/* Swing_DLL.xex 0x883BB920: if_call_seq ts4_memset, u32@0x4, u32@0x18, fn_8836CBE8, u32@0x0, u32@0x18 */
+/* Swing_DLL.xex 0x883BB920: if_call_seq ts4_memset, u32@0x4, u32@0x18, ts4_alloc_count_500_8836CBE8, u32@0x0, u32@0x18 */
 ts4_word ts4_if_call_seq_ts4_memset_883BB920(ts4_word a0, ts4_word a1, ts4_word a2)
 {
     ts4_word t2;
@@ -2461,11 +2461,11 @@ ts4_word ts4_if_call_seq_ts4_memset_883BB920(ts4_word a0, ts4_word a1, ts4_word 
         ts4_memset((ts4_word)a1, (ts4_word)0, (ts4_word)360);
         *(ts4_word *)((char *)(ts4_word)(a1) + 4) = (ts4_word)4608;
         *(ts4_word *)((char *)(ts4_word)(a1) + 24) = (ts4_word)64;
-        t2 = fn_8836CBE8((ts4_word)a0, (ts4_word)4608);
+        t2 = ts4_alloc_count_500_8836CBE8((ts4_word)a0, (ts4_word)4608);
         *(ts4_word *)((char *)(ts4_word)(a1) + 0) = (ts4_word)t2;
-        t4 = fn_8836CBE8((ts4_word)a0, (ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 24)) << 2));
+        t4 = ts4_alloc_count_500_8836CBE8((ts4_word)a0, (ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 24)) << 2));
         *(ts4_word *)((char *)(ts4_word)(a1) + 16) = (ts4_word)t4;
-        t6 = fn_8836CBE8((ts4_word)a0, (ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 24)) << 3));
+        t6 = ts4_alloc_count_500_8836CBE8((ts4_word)a0, (ts4_word)((*(ts4_word *)((char *)(ts4_word)(a1) + 24)) << 3));
         t7 = *(ts4_word *)((char *)(ts4_word)(a1) + 0);
         *(ts4_word *)((char *)(ts4_word)(a1) + 20) = (ts4_word)t6;
         if (((ts4_word)t7 != 0 && (ts4_word)(*(ts4_word *)((char *)(ts4_word)(a1) + 16)) != 0) && (ts4_word)t6 != 0) {

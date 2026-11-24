@@ -17,7 +17,7 @@ ts4_script_u32 fn_888CDF68(int);
 ts4_script_u32 fn_888DBFC0(ts4_script_u32);
 ts4_script_u32 fn_888E01E0(void *object, int);
 ts4_script_u32 fn_888E04C8(void *object, int);
-ts4_script_u32 fn_888E9898(void *object, ts4_script_u32);
+ts4_script_u32 ts4_apply_prop_record_888E9898(void *object, ts4_script_u32);
 ts4_script_u32 fn_888E9930(void *object, ts4_script_u32);
 ts4_script_u32 fn_888E9A50(void *object, ts4_script_u32);
 ts4_script_u32 fn_888EC458(int);
@@ -230,7 +230,7 @@ ts4_script_u32 ts4_script_number_arg_call_88796AB0(struct TS4ScriptContext *cont
     } else {
         number = g_ts4_script_constants[11];
     }
-    fn_888E9898(lbl_88D45954, (ts4_script_u32)number);
+    ts4_apply_prop_record_888E9898(lbl_88D45954, (ts4_script_u32)number);
     return 0;
 }
 

@@ -9,7 +9,7 @@ typedef struct Item { int vt; Link link; char pad[0x14 - 0xc]; const char *name;
 typedef struct T { char pad[0x28]; Kids *kids; } T;
 void *ts4_tailcall_fn_88315C60_88316068(void *heap, unsigned int size, const char *file, int line, int flags);
 Kids *fn_883D92C8(void *p);
-int fn_88329868(const char *a, const char *b);
+int ts4_stricmp_ascii_88329868(const char *a, const char *b);
 
 #define ITEM(n) ((n) ? (Item *)((char *)(n) - 4) : 0)
 
@@ -24,7 +24,7 @@ int fn_883D93D0(T *t, Item *it)
             return 0x2c;
     } else if (it->name) {
         for (n = t->kids->head.next; n != (t->kids ? &t->kids->head : 0); n = n->next)
-            if (ITEM(n)->name && !fn_88329868(ITEM(n)->name, it->name))
+            if (ITEM(n)->name && !ts4_stricmp_ascii_88329868(ITEM(n)->name, it->name))
                 return 0x25;
     }
     h = t->kids ? &t->kids->head : 0;

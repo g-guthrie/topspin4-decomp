@@ -116,7 +116,7 @@ char *lib2_ogg_sync_buffer_883BAE48(void *ctx, ogg_sync_state *oy, long size)
         if (oy->data)
             ret = ts4_realloc_count_500_8836CCD8(ctx, oy->data, newsize);
         else
-            ret = fn_8836CBE8(ctx, newsize);
+            ret = ts4_alloc_count_500_8836CBE8(ctx, newsize);
         oy->data = 0;
         if (!ret) {
             ts4_if_call_seq_u32_off0_883BADF0(ctx, oy);

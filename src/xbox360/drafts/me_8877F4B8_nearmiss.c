@@ -1,3 +1,4 @@
+/* nearmiss: 3 off; target schedules lis r11/ori r3,r11 id build around mr r31,r3; int flag, inline get_svc, named id, sibling d2e_script_bool_arg_setters shape all fail */
 /* near miss 8877F4B8 (3 off, /Oc plain and LTCG: target builds the service id as lis r11 / ori r3,r11 scheduled around mr r31,r3; candidate builds it in r3 directly). */
 /* Swing_DLL.xex 0x8877F4B8: script handler: set service 0xFD5F7168's flag from argument 0 == "true". */
 typedef unsigned int u32;

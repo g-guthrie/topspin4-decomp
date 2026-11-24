@@ -327,7 +327,7 @@ ts4_word fn_8848DCF0();
 ts4_word fn_8848FE30();
 ts4_word fn_88492108();
 ts4_word fn_884934E8();
-ts4_word fn_884A5A40();
+ts4_word ts4_group_collision_filter_pair_enabled_884A5A40();
 ts4_word fn_884B76C8();
 ts4_word fn_884C5468();
 ts4_word fn_884C6A10();
@@ -5012,7 +5012,7 @@ ts4_word ts4_loop_get_u32_off0_884A5E50(ts4_word a0, ts4_word a1, ts4_word a2, t
         lv6 = p9;
         p11 = (ts4_word)lv6;
     }
-    t13 = fn_884A5A40((ts4_word)a0, (ts4_word)(a1 + -12), (ts4_word)(*(ts4_word *)((char *)(ts4_word)(p11) + 28)), (ts4_word)t3);
+    t13 = ts4_group_collision_filter_pair_enabled_884A5A40((ts4_word)a0, (ts4_word)(a1 + -12), (ts4_word)(*(ts4_word *)((char *)(ts4_word)(p11) + 28)), (ts4_word)t3);
     return t13;
 }
 
