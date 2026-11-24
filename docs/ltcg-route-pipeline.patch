@@ -1,0 +1,122 @@
+--- a/tools/matching.py	2026-11-14 17:11:38.107139255 +0000
++++ b/tools/matching.py	2026-11-14 17:11:38.182709418 +0000
+@@ -11,6 +11,8 @@
+ import subprocess
+ from pathlib import Path
+ 
++import ltcg_route  # LTCG route, see docs/ltcg-route.md
++
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ VERSION = "54540859"
+@@ -38290,6 +38292,7 @@
+         for unit in MATCHING_UNITS
+         for symbol, size in unit["symbols"].items()
+     }
++    expected.update(ltcg_route.expected_symbols())
+     found = {
+         function["name"]: function
+         for unit in report.get("units", [])
+@@ -38320,6 +38323,7 @@
+     parser.add_argument("--work-dir", type=Path, default=ROOT / "work" / "matching")
+     parser.add_argument("--fresh-analysis", action="store_true")
+     parser.add_argument("--publish-report", type=Path)
++    ltcg_route.add_arguments(parser)
+     args = parser.parse_args()
+ 
+     xex = checked_file(args.xex, MODULE)
+@@ -38379,6 +38383,7 @@
+             ]
+         )
+ 
++    rebuilt_by_source.update(ltcg_route.build(args, rebuilt_dir, split_dir, symbols, xex))
+     split_config = json.loads((split_dir / "config.json").read_text())
+     project = objdiff_config(split_config, rebuilt_by_source)
+     (project_dir / "objdiff.json").write_text(
+--- a/tools/integrate_match.py	2026-11-14 17:11:38.115142076 +0000
++++ b/tools/integrate_match.py	2026-11-14 17:11:38.184547540 +0000
+@@ -26,6 +26,7 @@
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ from xcoff import ROOT, read_coff  # noqa: E402
++import ltcg_route  # noqa: E402
+ 
+ CONFIG = ROOT / "config" / "54540859"
+ SYMBOLS = CONFIG / "symbols.txt"
+@@ -161,6 +162,9 @@
+             "status": "Matching",
+             "source": source.removeprefix("src/"),
+         }
++        if spec.get("route") == "ltcg":
++            ltcg_route.register(spec, symbol_sizes)
++            continue
+         entry = [
+             "    {",
+             f'        "source": "{source}",',
+@@ -184,12 +188,13 @@
+         SEED.write_text("\n".join(seed_lines + new_seed) + "\n")
+     SPLITS.write_text(SPLITS.read_text().rstrip("\n") + "\n\n" + "\n\n".join(split_blocks) + "\n")
+     OBJECTS.write_text(json.dumps(objects, indent=2) + "\n")
+-    text = MATCHING.read_text()
+-    marker = "\n)\n\n\ndef sha256"
+-    if marker not in text:
+-        raise SystemExit("cannot find the end of MATCHING_UNITS")
+-    text = text.replace(marker, "\n" + "\n".join(matching_entries) + marker, 1)
+-    MATCHING.write_text(text)
++    if matching_entries:
++        text = MATCHING.read_text()
++        marker = "\n)\n\n\ndef sha256"
++        if marker not in text:
++            raise SystemExit("cannot find the end of MATCHING_UNITS")
++        text = text.replace(marker, "\n" + "\n".join(matching_entries) + marker, 1)
++        MATCHING.write_text(text)
+     print(f"Integrated {len(specs)} unit(s), {sum(len(s['functions']) for s in specs)} function(s)")
+     return 0
+ 
+--- a/tools/sync_progress.py	2026-11-14 17:11:38.118745072 +0000
++++ b/tools/sync_progress.py	2026-11-14 17:11:38.185235323 +0000
+@@ -19,6 +19,7 @@
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ from matching import MATCHING_UNITS  # noqa: E402
++from ltcg_route import all_units  # noqa: E402
+ from xcoff import ROOT, load_symbols, read_coff  # noqa: E402
+ 
+ MATCH = ROOT / "config" / "54540859" / "match.json"
+@@ -78,7 +79,7 @@
+     pdata_by_source = pdata_ranges()
+     entries = []
+     flag_exceptions = {}
+-    for unit in MATCHING_UNITS:
++    for unit in all_units(MATCHING_UNITS):
+         source = unit["source"]
+         if unit.get("extra_flags"):
+             flag_exceptions[source] = unit["extra_flags"]
+@@ -199,7 +200,7 @@
+ 
+     doc = ROOT / "docs" / "matching-build.md"
+     text = doc.read_text()
+-    units = len(MATCHING_UNITS)
++    units = len(all_units(MATCHING_UNITS))
+     text = re.sub(
+         r"^The first [a-z -]+ matching measurement units reproduce all [\d,]+ code bytes across [a-z -]+ functions exactly\.",
+         f"The first {words(units)} matching measurement units reproduce all {code:,} code bytes across {words(functions)} functions exactly.",
+--- a/tools/link_probe.py	2026-11-14 17:11:38.127267931 +0000
++++ b/tools/link_probe.py	2026-11-14 17:11:38.185563514 +0000
+@@ -25,6 +25,7 @@
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ from matching import MATCHING_UNITS  # noqa: E402
++from ltcg_route import all_units  # noqa: E402
+ from sync_progress import words  # noqa: E402
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+@@ -55,7 +56,7 @@
+     dll, mapfile = out_dir / "all.dll", out_dir / "all.map"
+     for path in (dll, mapfile):
+         path.unlink(missing_ok=True)
+-    objects = [args.work_dir / "rebuilt" / unit["object"] for unit in MATCHING_UNITS]
++    objects = [args.work_dir / "rebuilt" / unit["object"] for unit in all_units(MATCHING_UNITS)]
+     missing = [str(o) for o in objects if not o.is_file()]
+     if missing:
+         raise SystemExit(f"missing rebuilt objects (run tools/matching.py): {missing[:3]}")

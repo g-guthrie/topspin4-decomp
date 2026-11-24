@@ -1,0 +1,93 @@
+# GA6 failed functions (first point of divergence, what was tried)
+- 0x886E2578 (0x3C) float-pair ctor: all instructions equal in content, register allocation differs: target does both `lis` first (r11 vtbl, r10 float), li r11,0 after; candidate allocates r10/r9/r8. Tried local float, load placement.
+- 0x886D50F8 (0x44) zero-fill: target has dead `addi r10,r3,0x14` at +4 (address of an embedded member never used). Cannot reproduce the dead addi.
+- 0x886D32A0 (0x70) singleton ctor: dead `addi r11,r3,0x28` before stb 0x44 + vtbl store order. A static inline sub-object init helper fixed the global reloc order but not the dead addi.
+- 0x886E7738 (0x48) two vector constants + zeros: target stores both vectors before the first stw; candidate interleaves, and loads 760 before 770.
+- 0x886D8020 (0x58) three conditional ts4_destroy_owned_object: target keeps `addi r31,r3,0x14` (pointer to embedded block) across calls; candidate keeps r3. Tried inner struct and static helper.
+- 0x886D7D68 (0x50) bind source: only scheduling/regalloc differs (9 insn): target reuses r9 for src->0x10 and r10 for rec->0xc.
+- 0x886E6F30 (0x6c) vector row blend: target has vor128 copies (v62,v13) of the loaded row; candidate elides them (known v-copy blocker).
+- 0x886D19C8 (0x58) pose init: target has three vor128 copies (v62,v61,v60) of one lvx; candidate reuses v62. lfs scheduling matches with float loaded first.
+- 0x886D7578 (0x40) activate slot: target stores `1` through the same reg r7 that is the 5th call arg; candidate uses r4 and moves item r10->r4 (+2 insn).
+- 0x886E39A8 (0x54) scoped worker: LTCG convention, callee 0x8864A920 preserves r4/r6 (target reloads r6=0x14(r6), r4=0x148(r4) after the call without saving).
+- 0x886E61E0 (0x58) swap-remove from global pointer table lbl_88D42948 (count at +0x31A4): only register assignment differs (target r9=base, r8=count; candidate swaps them). Scratch body in work/army/ga6_scratch/failed_bodies.c.
+- 0x886E6FA0 (0x58) copy row pairs: 1 insn differs, `add r10,r11,r10` (offset+dst) vs candidate `add r10,r10,r11`; src side `add r8,r8,r11` matches. Tried i*0x40+dst, struct-array indexing.
+- 0x886E7578 (0x58) set_source with self-relative pointers: `cmpwi` signed compare fixed by `(long)src != 0`; target computes src+0x3c, src+0x30 up front then adds the loaded rel word to them; candidate folds the constants into one add chain.
+- 0x886CEEC0 (0x60) float interpolation: target has dead `addi r11,r3,0xc` (address of embedded float pair) and int-copy stw/lwz pairs; candidate differs in load scheduling (22 insn). Same dead-addi idiom as 0x886D50F8/0x886D32A0.
+- 0x886E3938 (0x70) visit items loop: 1 insn differs: target 'add r9,r10,r31' (rel + offset) vs candidate 'add r9,r31,r10'; operand order of the self-relative item address. Everything else matches (for-loop with i*4 / i*0x530 indices).
+- 0x886D48F8 (0x80) wide ctor (vtbl lbl_880F3794, field_0x14 = 0xFFFFF, sub-init fn_886D0F78(+0x30)): only ordering differs; target does `lis r11` (vtbl) before `mr r31,r3` and stores vtbl before +0x10; candidate emits mr first. permute.py over the store blocks found nothing.
+- 0x886DFA60 (0x84) clamped walk (min(count,limit) then fn_886DBB30(a, f, n, self+rel0, &arr18+rel18, &result)): 4 insn differ: target `add r7,r10,r11` (rel + &arr18) and schedules `addi r8,r1,0x50` after `stw 0x1c`; candidate has add operands swapped. Same operand-order issue as 0x886E3938.
+- 0x886DC610 (0x80) erase one 0x98-byte entry (move last into it): target keeps `last` in volatile r4 across the call to fn_886C6660 (LTCG-style preserved-register callee); candidate saves it in r29.
+- 0x886D1408 (0x84) clamp via fsel +-1 table (mfcr form, needs pool relocation): not attempted, known blocker.
+- 0x886DEBF0 (0x84) no prologue, bool arg passed in r10 (LTCG register passing): not attempted.
+- 0x886E7EF0 (0x88) ctor with two default vectors at +0x20/+0x30 (lbl_880FC770, lbl_880FC760) after base ctor fn_88617D88: same vector-pair problem as 0x886E7738: target loads 770 into v63 and 760 into v62 (in that order) and stores v63->+0x20, v62->+0x30 using one addi'd pointer r10=self+0x20; the candidate loads 760 first (reloc order and registers swapped). Tried locals, a pair struct, a static setter, swapped statement order.
+- 0x886D3A00 (0xAC) queue item into slot entry: 6 insn differ, pure register numbering of the early loads (target r6=item->0x28, r9=slot, r8=cfg->0x1c; candidate r9/r8/r7). Body otherwise identical; permute.py over the load order found nothing.
+- 0x886D0D88 (0x94) is_earlier(a, _, b, t): `if (a->stamp != -1 && b->stamp != -1) return !fn_886CB778(a,b); return t < a->time;` Target computes both (stamp+1 != 0) flags eagerly via addi/subic/subfe/clrlwi (no cmpwi, no short circuit) then branches on each; every form tried (unsigned char temps, helper functions, & instead of &&) either folds to cmpwi/addic. or gives the single `and` form.
+- 0x886D5F78 (0x9C) find entry in self-relative 0x28-byte array: float arg kept in volatile f4 across the call (LTCG register preservation), candidate spills to f31.
+- 0x886D5F78: LTCG with fn_886D0CE0 as context (noinline): float stays in f1, shape differs (0x84 vs 0x9c); not matched. 0x886DC610 and 0x886E39A8: callees 0x886C6660 and 0x8864A920 have no source in src/, no LTCG context available.
+- 0x886DAFA0 (0xB4) destroy items vector: matches the d10xy_owner_release_items pattern (copy helper + pointer vector) except the three ts4_destroy_owned_object calls on obj+0x30, +0x24, +0x18 (an array of three 12-byte slots, destroyed in reverse): target keeps `addi r31,r29,0x14` (array base) in a register after the first call and loads 0x10(r31), 0x4(r31); candidate addresses everything from the object register. A real loop is not unrolled by the compiler. Same obstacle as 0x886D8020.
+- Not attempted (about 160 functions, mostly 0x84..0x1400 bytes): remaining entries of work/army/GA6.txt after the ones above. Quick triage of those viewed: 0x886DC7A8 and 0x886D1910 contain `clrrwi rX,rX,0`; 0x886DCDC0 has 12-byte struct spills (rldicr); 0x886CEA10 has fctiwz clamp; 0x886CF6B0 is an allocator ctor.
+- 0x886E34F8 (0xB8) big object dtor: vtbl `lis` is scheduled before `mr r31,r3` in the target (same vtbl-first scheduling problem as 0x886D48F8); dead `addi r11,r31,0x430`.
+- 0x886D77B8 (0xBC) manager dtor: 7 insn, only ordering of li/addi/mr and the vtbl store vs. the null test differ (permute over the stores found nothing).
+- 0x886D1318 (0xB0) float clamp with fsel +-1 table (mfcr): known blocker. 0x886D6C60 (0xB8): clrrwi rX,rX,0 idiom.
+- 0x886D0808 (0x8C): `cmpw cr6` result left in cr6 for the callee (LTCG condition register passing); 0x886CE648 (0xB8): stack-built vtable object, not attempted.
+- 0x886D1318: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886D6C60: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886CE940: skipped on first read: v0-13 (known blocker, see TIPS.md).
+- 0x886DA728: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886D8EF8: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886E2410: skipped on first read: mfcr v0-13 (known blocker, see TIPS.md).
+- 0x886DCCB0: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886E0328: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886E3818: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886D8078: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886E3A00: skipped on first read: clrrwi0 rldicr (known blocker, see TIPS.md).
+- 0x886DCE78: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886DC2C8: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886E31F0: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886D1C70: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886D6988: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886D38B0: skipped on first read: v0-13 (known blocker, see TIPS.md).
+- 0x886DFAE8: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886DEC78: skipped on first read: divw (known blocker, see TIPS.md).
+- 0x886E7110: skipped on first read: fcti (known blocker, see TIPS.md).
+- 0x886D6820: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886E6728: skipped on first read: v0-13 (known blocker, see TIPS.md).
+- 0x886D66A8: skipped on first read: divw (known blocker, see TIPS.md).
+- 0x886D1578: skipped on first read: divw (known blocker, see TIPS.md).
+- 0x886D62F8: skipped on first read: fcti (known blocker, see TIPS.md).
+- 0x886DAA48: skipped on first read: fcti (known blocker, see TIPS.md).
+- 0x886D7638: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886DBD00: skipped on first read: v0-13 (known blocker, see TIPS.md).
+- 0x886D2E78: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886D6D18: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886D53F0: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886E6BE8: skipped on first read: v0-13 (known blocker, see TIPS.md).
+- 0x886E6D88: skipped on first read: v0-13 (known blocker, see TIPS.md).
+- 0x886CECE0: skipped on first read: divw (known blocker, see TIPS.md).
+- 0x886DB950: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886DCAC8: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886E20A0: skipped on first read: divw (known blocker, see TIPS.md).
+- 0x886E5178: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886DA840: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886E7798: skipped on first read: v0-13 (known blocker, see TIPS.md).
+- 0x886D16F8: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886E4958: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886DC0A8: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886D6478: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886D0390: skipped on first read: mfcr v0-13 (known blocker, see TIPS.md).
+- 0x886E5F50: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886DEDD8: skipped on first read: mfcr divw (known blocker, see TIPS.md).
+- 0x886D10B8: skipped on first read: mfcr (known blocker, see TIPS.md).
+- 0x886E53F0: skipped on first read: clrrwi0 (known blocker, see TIPS.md).
+- 0x886D22A0: skipped on first read: divw (known blocker, see TIPS.md).
+- 0x886D0108: skipped on first read: mfcr v0-13 (known blocker, see TIPS.md).
+- 0x886E7A28: skipped on first read: v0-13 (known blocker, see TIPS.md).
+- 0x886D5140: skipped on first read: mfcr v0-13 (known blocker, see TIPS.md).
+- 0x886D56B0: skipped on first read: fcti (known blocker, see TIPS.md).
+- 0x886E6470: skipped on first read: v0-13 (known blocker, see TIPS.md).
+- 0x886D6018: skipped on first read: clrrwi0 divw (known blocker, see TIPS.md).
+- 0x886E1D90: skipped on first read: rldicr (known blocker, see TIPS.md).
+- 0x886DD4D8: skipped on first read: mfcr divw (known blocker, see TIPS.md).
+- 0x886D8928 (0xC0) float select then fn calls: not matched (float ?: with branches, not attempted beyond first read). 0x886E0C48 (0xC0): v62 vor128 copy of the default-pose vector (v-copy blocker). 0x886D0EB0 (0xC4): dtor with five vtbl/consts stored before dead addi; vtbl-first scheduling problem as 0x886E34F8.
+- 0x886D5028 (0x8C) reverse item walk (fn_886C3658, fn_886C66C0, fn_886D4978 over vector at +0x58): code is the same shape but register numbering of self/obj/n/q differs from the first line (r28/r31 vs r27/r30), and the target has a dead addi of the vector sub-object (+0x58).
+- 0x886D21B8 (0xE8) in-window test (type-id bool, fn_886C66C0 index, fn_886D1318 float): register allocation of the item pointer (target keeps it in r3) and 3 saved registers differ; 38 insn. Body in work/army/ga6_scratch/886D21B8.txt.

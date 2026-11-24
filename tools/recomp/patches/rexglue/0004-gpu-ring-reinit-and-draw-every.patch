@@ -1,0 +1,170 @@
+diff --git a/src/graphics/command_processor.cpp b/src/graphics/command_processor.cpp
+index a744375..0549f97 100644
+--- a/src/graphics/command_processor.cpp
++++ b/src/graphics/command_processor.cpp
+@@ -9,6 +9,7 @@
+  * @modified    Tom Clay, 2026 - Adapted for ReXGlue runtime
+  */
+ 
++#include <cstdlib>
+ #include <algorithm>
+ #include <cinttypes>
+ #include <cmath>
+@@ -101,6 +102,68 @@ ReadbackResolveMode ParseReadbackResolveMode(std::string_view value) {
+ 
+ }  // namespace
+ 
++namespace {
++// Local patch (Top Spin 4 bring-up): REX_DRAW_EVERY=N renders only every Nth frame.
++// Skipped frames still execute every packet (register writes, fences, interrupts), so the
++// title runs at simulation speed while the host GPU (lavapipe here) idles. Frames whose
++// swap index is a multiple of N are drawn and presented normally.
++uint32_t DrawEvery() {
++  static const uint32_t n = [] {
++    const char* v = std::getenv("REX_DRAW_EVERY");
++    long x = v ? std::strtol(v, nullptr, 0) : 1;
++    return uint32_t(x > 1 ? x : 1);
++  }();
++  return n;
++}
++// REX_DRAW_WINDOW=K: with REX_DRAW_EVERY=N, render the last K frames of every N (default 1),
++// so caches that a title refreshes over several frames are current in the captured frame.
++bool DrawThisFrame(uint32_t next_swap) {
++  static const uint32_t k = [] {
++    const char* v = std::getenv("REX_DRAW_WINDOW");
++    long x = v ? std::strtol(v, nullptr, 0) : 1;
++    return uint32_t(x > 1 ? x : 1);
++  }();
++  uint32_t n = DrawEvery();
++  return n <= 1 || next_swap % n >= n - (k < n ? k : n);
++}
++// Swap packets executed by the GPU worker. counter_ cannot be used for frame selection: it also
++// advances on every host vblank (GraphicsSystem::MarkVblank), so a slow title frame spans several
++// counter_ values and a window keyed on counter_ draws the final copy of a frame whose scene draws
++// were skipped (black output).
++uint32_t g_rc2_swaps = 0;
++// RC2 debug: REX_SKIP_DRAWS=A:B skips draw packets A..B (1-based, inclusive) of every frame
++// after swap REX_SKIP_DRAWS_FROM (default 600); used to bisect which pass blackens a frame.
++uint32_t g_rc2_draw_in_frame = 0;
++bool SkipDrawForBisect(uint32_t swap, uint32_t draw_index) {
++  static const uint32_t from = [] {
++    const char* v = std::getenv("REX_SKIP_DRAWS_FROM");
++    return v ? uint32_t(std::strtoul(v, nullptr, 0)) : 600u;
++  }();
++  static const std::pair<uint32_t, uint32_t> r = [] {
++    const char* v = std::getenv("REX_SKIP_DRAWS");
++    if (!v) return std::pair<uint32_t, uint32_t>(1, 0);
++    char* end;
++    uint32_t a = uint32_t(std::strtoul(v, &end, 0));
++    uint32_t b = *end == ':' ? uint32_t(std::strtoul(end + 1, nullptr, 0)) : a;
++    return std::pair<uint32_t, uint32_t>(a, b);
++  }();
++  return swap >= from && draw_index >= r.first && draw_index <= r.second;
++}
++// RC2 debug: REX_FRAME_TRACE=FIRST:COUNT logs every draw, copy and swap the GPU executes in
++// swaps [FIRST, FIRST+COUNT) (only frames that are drawn when REX_DRAW_EVERY is set).
++bool FrameTraced(uint32_t swap) {
++  static const std::pair<uint32_t, uint32_t> range = [] {
++    const char* v = std::getenv("REX_FRAME_TRACE");
++    if (!v) return std::pair<uint32_t, uint32_t>(0, 0);
++    char* end;
++    uint32_t a = uint32_t(std::strtoul(v, &end, 0));
++    uint32_t n = *end == ':' ? uint32_t(std::strtoul(end + 1, nullptr, 0)) : 1;
++    return std::pair<uint32_t, uint32_t>(a, n);
++  }();
++  return range.second && swap >= range.first && swap - range.first < range.second;
++}
++}  // namespace
++
+ CommandProcessor::CommandProcessor(GraphicsSystem* graphics_system,
+                                    system::KernelState* kernel_state)
+     : memory_(graphics_system->memory()),
+@@ -312,9 +375,28 @@ bool CommandProcessor::SetupContext() {
+ void CommandProcessor::ShutdownContext() {}
+ 
+ void CommandProcessor::InitializeRingBuffer(uint32_t ptr, uint32_t size_log2) {
+-  read_ptr_index_ = 0;
+-  primary_buffer_ptr_ = ptr;
+-  primary_buffer_size_ = uint32_t(1) << (size_log2 + 3);
++  // A title that re-initialises the GPU (Top Spin 4: Loader_DLL shuts the engines down and
++  // Swing_DLL starts them again) restarts writing at offset 0. Reset both indices on the
++  // worker thread, between packets, so a stale write index from the previous ring is never
++  // executed against the new buffer.
++  auto reset = [this, ptr, size_log2]() {
++    read_ptr_index_ = 0;
++    write_ptr_index_ = 0;
++    primary_buffer_ptr_ = ptr;
++    primary_buffer_size_ = uint32_t(1) << (size_log2 + 3);
++  };
++  if (!worker_running_ || !worker_thread_ || system::XThread::IsInThread(worker_thread_.get()) ||
++      primary_buffer_ptr_ == 0) {
++    reset();
++    return;
++  }
++  thread::Fence fence;
++  CallInThread([&fence, reset]() {
++    reset();
++    fence.Signal();
++  });
++  write_ptr_index_event_->Set();
++  fence.Wait();
+ }
+ 
+ void CommandProcessor::EnableReadPointerWriteBack(uint32_t ptr, uint32_t block_size_log2) {
+@@ -958,8 +1040,16 @@ bool CommandProcessor::ExecutePacketType3_XE_SWAP(memory::RingBuffer* reader, ui
+   uint32_t frontbuffer_height = reader->ReadAndSwap<uint32_t>();
+   reader->AdvanceRead((count - 4) * sizeof(uint32_t));
+ 
+-  IssueSwap(frontbuffer_ptr, frontbuffer_width, frontbuffer_height);
++  if (DrawThisFrame(g_rc2_swaps + 1)) {
++    if (FrameTraced(g_rc2_swaps + 1)) {
++      REXGPU_INFO("[rc2-trace] swap {} ptr={:08X} {}x{}", g_rc2_swaps + 1, frontbuffer_ptr,
++                  frontbuffer_width, frontbuffer_height);
++    }
++    IssueSwap(frontbuffer_ptr, frontbuffer_width, frontbuffer_height);
++  }
+ 
++  ++g_rc2_swaps;
++  g_rc2_draw_in_frame = 0;
+   ++counter_;
+   return true;
+ }
+@@ -1282,6 +1372,7 @@ bool CommandProcessor::ExecutePacketType3_EVENT_WRITE_ZPD(memory::RingBuffer* re
+   return true;
+ }
+ 
++
+ bool CommandProcessor::ExecutePacketType3Draw(memory::RingBuffer* reader, uint32_t packet,
+                                               const char* opcode_name, uint32_t viz_query_condition,
+                                               uint32_t count_remaining) {
+@@ -1378,8 +1469,28 @@ bool CommandProcessor::ExecutePacketType3Draw(memory::RingBuffer* reader, uint32
+ 
+       bool major_mode_explicit =
+           xenos::IsMajorModeExplicit(vgt_draw_initiator.major_mode, vgt_draw_initiator.prim_type);
+-      draw_succeeded = IssueDraw(vgt_draw_initiator.prim_type, vgt_draw_initiator.num_indices,
+-                                 is_indexed ? &index_buffer_info : nullptr, major_mode_explicit);
++      ++g_rc2_draw_in_frame;
++      if (!DrawThisFrame(g_rc2_swaps + 1) ||
++          SkipDrawForBisect(g_rc2_swaps + 1, g_rc2_draw_in_frame)) {
++        draw_succeeded = true;
++      } else {
++        if (FrameTraced(g_rc2_swaps + 1)) {
++          const RegisterFile& r = *register_file_;
++          REXGPU_INFO(
++              "[rc2-trace] f{} draw prim={} n={} mode={} surf={:08X} c0={:08X} depth={:08X} "
++              "mask={:08X} blend0={:08X} dctl={:08X} copyctl={:08X} copydst={:08X} copyinfo={:08X} "
++              "vs={:08X} ps={:08X}",
++              g_rc2_swaps + 1, uint32_t(vgt_draw_initiator.prim_type), uint32_t(vgt_draw_initiator.num_indices),
++              r[XE_GPU_REG_RB_MODECONTROL] & 7, r[XE_GPU_REG_RB_SURFACE_INFO],
++              r[XE_GPU_REG_RB_COLOR_INFO], r[XE_GPU_REG_RB_DEPTH_INFO], r[XE_GPU_REG_RB_COLOR_MASK],
++              r[XE_GPU_REG_RB_BLENDCONTROL0], r[XE_GPU_REG_RB_DEPTHCONTROL],
++              r[XE_GPU_REG_RB_COPY_CONTROL], r[XE_GPU_REG_RB_COPY_DEST_BASE],
++              r[XE_GPU_REG_RB_COPY_DEST_INFO], r[XE_GPU_REG_SQ_VS_PROGRAM],
++              r[XE_GPU_REG_SQ_PS_PROGRAM]);
++        }
++        draw_succeeded = IssueDraw(vgt_draw_initiator.prim_type, vgt_draw_initiator.num_indices,
++                                   is_indexed ? &index_buffer_info : nullptr, major_mode_explicit);
++      }
+       if (!draw_succeeded) {
+         auto vgt_output_path_cntl = register_file_->Get<reg::VGT_OUTPUT_PATH_CNTL>();
+         auto vgt_hos_cntl = register_file_->Get<reg::VGT_HOS_CNTL>();

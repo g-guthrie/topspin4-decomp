@@ -1,0 +1,19 @@
+# Boot to the practice ground and open the main menu (FSI render path). Gate on game state, not
+# frame counts: Loader Press START pulses, wait for Swing's engine global, wait until the
+# practice-ground gameplay instance is ticking, then START (= main menu) and wait for loading.
+200 START
++8 -
++40 START
++8 -
++40 START
++8 -
++40 START
++8 -
++40 START
++8 -
+wait u32 0x88D45B1C != 0 max=3000
+wait u32 [[[[0x88D45B00]+0x78]]+0x30]+0x310 > 120 max=4000
++30 START
++8 -
+idle NtReadFile 150 max=3000
++600 -

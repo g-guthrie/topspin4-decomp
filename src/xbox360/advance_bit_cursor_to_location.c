@@ -10,7 +10,7 @@ typedef struct Ts4BitLocation {
     u32 mask;
 } Ts4BitLocation;
 
-extern Ts4BitCursor *fn_8816FE78(
+extern Ts4BitCursor *ts4_bit_iter_add_8816FE78(
     Ts4BitCursor *output,
     const Ts4BitCursor *source,
     int distance
@@ -25,7 +25,7 @@ Ts4BitLocation *ts4_advance_bit_cursor_to_location(
 {
     Ts4BitCursor copy = *source;
     Ts4BitCursor advanced;
-    volatile Ts4BitCursor *result = fn_8816FE78(&advanced, &copy, distance);
+    volatile Ts4BitCursor *result = ts4_bit_iter_add_8816FE78(&advanced, &copy, distance);
     u32 *word = result->word;
     u32 mask = 1u << result->bit;
 

@@ -1,0 +1,431 @@
+# Top Spin 4 crowd tunables and crowd placement summary (readable dump, no assets).
+generated_by: "python3 -I tools/ts4_venue.py crowd-yaml --out data/gameplay/crowd.yaml"
+sources_sha256:
+  Settings.bin (Core.arc 334e7e0d): "55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167"
+  TrackSideBehaviorList.bin (Amsterdam.arc): "9c113c7f8962116a430c8c491066b2333287b4b69991e55bdd005562f33591af"
+  TrackSideAnimationList.bin (Core.arc be22e5c4): "b6c3e2217619cc324db136e5efd1b26e9bf4894b0585db05974eee975106e073"
+notes: "Formats, code addresses and confidence: docs/port/venues-and-crowd.md. Update rule (gp1 s6, fn_8868EA30): level = clamp(level + sum(event_deltas) + clamp(gain(level, ratio), -cap, cap), 0, 1). Per-venue counts come from each archive's Crowd<Venue>.bin; groups are LOW/MEDIUM/HIGH quality tiers (inferred)."
+excitement:
+  gain_table:
+    - level_limit: 0.4
+      ratio_gain: [[0.2, 0.04], [0.4, 0.03], [0.6, 0.02], [0.8, 0.0], [0.99, -0.01], [1.0, -0.02]]
+    - level_limit: 0.75
+      ratio_gain: [[0.2, 0.04], [0.4, 0.02], [0.6, 0.0], [0.8, -0.01], [0.99, -0.02], [1.0, -0.03]]
+    - level_limit: 1.0
+      ratio_gain: [[0.2, 0.02], [0.4, 0.01], [0.6, 0.0], [0.8, -0.02], [0.99, -0.03], [1.0, -0.04]]
+  cap_by_shots: [[1, 0.01], [2, 0.02], [3, 0.03]]
+  event_deltas:
+    - event: "LoseUnforcedError"
+      crc32: "74ea79ab"
+      delta: -0.01
+    - event: "LoseUnforcedErrorEasyBall"
+      crc32: "90f481d0"
+      delta: -0.01
+    - event: "LoseWinner"
+      crc32: "a51ff087"
+      delta: -0.01
+    - event: "WinWinner"
+      crc32: "5e8f70a2"
+      delta: 0.01
+    - event: "WinWinnerPowerfulShot"
+      crc32: "6add051e"
+      delta: 0.01
+    - event: "WinPassingShot"
+      crc32: "5ba198eb"
+      delta: 0.02
+    - event: "WinSmash"
+      crc32: "ae80ba27"
+      delta: 0.01
+    - event: "WinTwentyShots"
+      crc32: "a0e0e3b0"
+      delta: 0.01
+    - event: "WinServeAndVolley"
+      crc32: "fa298a9c"
+      delta: 0.01
+    - event: "WinAce"
+      crc32: "edc246a4"
+      delta: 0.01
+behaviour_graph:
+  line_judge:
+    setup_indices: [0]
+    behaviours: ["Idle", "Idle", "a0408a04", "3949dbbe", "Watch1", "Watch2", "fc289842", "6521c9f8", "Good", "Good2", "FaultLeft", "FaultLeft2", "FaultRight", "FaultRight2", "ac77ccd1", "06a16e17", "bb18fa25 (no clip resolved)", "bc663724 (no clip resolved)", "a29617c2 (no clip resolved)", "b70ea670 (no clip resolved)", "e6c8696a (no clip resolved)", "2318c78e (no clip resolved)", "888fca21 (no clip resolved)", "e21a9099 (no clip resolved)", "e21a9099 (no clip resolved)", "45020cf7 = start a0408a04+Watch1; stop fc289842+Idle", "45020cf7 = start 3949dbbe+Watch2; stop 6521c9f8+Idle"]
+  ball_boy:
+    setup_indices: [1]
+    behaviours: ["Idle"]
+  net:
+    setup_indices: [2]
+    behaviours: ["Idle", "IdleNet", "Running", "Running2", "28bd8c9d = start Running+Running2; stop Running2+IdleNet"]
+  umpire_chair:
+    setup_indices: [3]
+    behaviours: ["Idle", "dce71491", "abe02407", "876adf8e", "f06def18", "7453931e", "24bad369", "53bde3ff", "34f4f867", "43f3c8f1", "a8c493b8"]
+  spectators:
+    setup_indices: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    behaviours: ["Idle", "ApplauseLowIn", "ApplauseLowLoop", "ApplauseLowOut", "ApplauseAverageIn", "ApplauseAverageLoop", "ApplauseAverageOut", "ApplauseStrongIn", "ApplauseStrongLoop", "ApplauseStrongOut", "ApplauseWildIn", "ApplauseWildLoop", "ApplauseWildOut", "DeceptionLowIn", "DeceptionAverageIn", "cf1dbb45", "cf1dbb45", "cf1dbb45", "07dc8681 = start cf1dbb45+ApplauseLowLoop", "30d8eef7 = start ApplauseLowOut+Idle", "ApplauseLow = start ApplauseLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "ApplauseAverage = start ApplauseAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "ApplauseStrong = start ApplauseStrongIn+ApplauseStrongLoop; stop ApplauseStrongOut+Idle", "ApplauseWild = start ApplauseWildIn+ApplauseWildLoop; stop ApplauseWildOut+Idle", "DeceptionLow = start DeceptionLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "DeceptionAverage = start DeceptionAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle"]
+  standing:
+    setup_indices: [20, 21, 22, 23]
+    behaviours: ["Idle", "ApplauseLowIn", "ApplauseLowLoop", "ApplauseLowOut", "ApplauseAverageIn", "ApplauseAverageLoop", "ApplauseAverageOut", "ApplauseStrongIn", "ApplauseStrongLoop", "ApplauseStrongOut", "ApplauseWildIn", "ApplauseWildLoop", "ApplauseWildOut", "DeceptionLowIn", "DeceptionAverageIn", "cf1dbb45", "cf1dbb45", "cf1dbb45", "123808ec = start ApplauseLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "b7ab9844 = start ApplauseAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "85027e0a = start ApplauseStrongIn+ApplauseStrongLoop; stop ApplauseStrongOut+Idle", "f5d8657d = start ApplauseWildIn+ApplauseWildLoop; stop ApplauseWildOut+Idle", "3dbedc91 = start DeceptionLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "62767f7d = start DeceptionAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "6f86c683 = start ApplauseLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "68da3fa6 = start ApplauseAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "84e86609 = start ApplauseStrongIn+ApplauseStrongLoop; stop ApplauseStrongOut+Idle", "c50e242b = start ApplauseWildIn+ApplauseWildLoop; stop ApplauseWildOut+Idle", "bb7bad64 = start DeceptionLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "475cebdb = start DeceptionAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "3b3738f9 = start ApplauseLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "9ea4a851 = start ApplauseAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "ac0d4e1f = start ApplauseStrongIn+ApplauseStrongLoop; stop ApplauseStrongOut+Idle", "dcd75568 = start ApplauseWildIn+ApplauseWildLoop; stop ApplauseWildOut+Idle", "14b1ec84 = start DeceptionLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "4b794f68 = start DeceptionAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "2498ab0f = start ApplauseLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "6f9b23b1 = start ApplauseAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "291eaf91 = start ApplauseStrongIn+ApplauseStrongLoop; stop ApplauseStrongOut+Idle", "fc3f0837 = start ApplauseWildIn+ApplauseWildLoop; stop ApplauseWildOut+Idle", "1a2221bf = start DeceptionLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "4100a8e4 = start DeceptionAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "f9e86908 = start ApplauseLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "2140d142 = start ApplauseAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle", "b0161433 = start ApplauseStrongIn+ApplauseStrongLoop; stop ApplauseStrongOut+Idle", "7e072ab7 = start ApplauseWildIn+ApplauseWildLoop; stop ApplauseWildOut+Idle", "d773e25d = start DeceptionLowIn+ApplauseLowLoop; stop ApplauseLowOut+Idle", "7e9084ad = start DeceptionAverageIn+ApplauseAverageLoop; stop ApplauseAverageOut+Idle"]
+  standard:
+    setup_indices: [24]
+    behaviours: ["Idle (no clip resolved)", "Idle01", "Flourish_01_01", "Flourish_01_03", "Idle02", "Flourish_02_01", "Flourish_02_02", "Flourish_02_03", "Idle03", "Flourish_03_01", "Flourish_03_03", "Idle04", "Flourish_04_01", "Flourish_04_02", "Flourish_04_03", "Idle05", "Flourish_05_01", "Flourish_05_02", "Flourish_05_03", "Idle06", "Flourish_06_01", "Flourish_06_03", "Idle07", "Flourish_07_01", "Flourish_07_02", "Flourish_07_03", "Idle08", "Flourish_08_01", "Flourish_08_02", "Flourish_08_03", "SitBase", "724cfeaf", "bf6ec907", "ed5de17e", "f2f2681a = start 724cfeaf+bf6ec907; stop ed5de17e+SitBase", "6bfb39a0", "1cfc0936", "82989c95", "d26b3e47", "6f59df2b", "9f33bffc", "19a7cd52", "d2fb1ef7 (no clip resolved)", "3ff5c1b0", "409be9c6", "5f43185b = start d26b3e47+6f59df2b+9f33bffc; stop 3ff5c1b0+409be9c6+SitBase", "c64a49e1 = start d26b3e47+6f59df2b+19a7cd52; stop 3ff5c1b0+409be9c6+SitBase", "b14d7977 = start d26b3e47+6f59df2b+d2fb1ef7; stop 3ff5c1b0+409be9c6+SitBase", "917eeaf7", "fddcb8ef", "6a4689bd", "SitBase2 = start 917eeaf7+fddcb8ef; stop 6a4689bd+SitBase", "StandBase", "0c5e2e1c", "7c34da93", "StandWatchBack", "StandLookBack", "a13abeb3", "b680d6ea", "8cacd55d", "656a5d6b", "b448735d", "e2f01d56 = start 8cacd55d+656a5d6b; stop b448735d+SitBase", "Idle09", "Flourish_09_01", "Flourish_09_02", "Flourish_09_03", "Idle10", "Flourish_10_02", "Idle11", "Flourish_11_02", "Idle12", "Flourish_12_01", "Flourish_12_02", "Flourish_12_03", "71212e6e", "e8287fd4", "4dc65a2e", "67b54fdf", "957bdecb", "JogBase", "c3ecc24e", "WalkBase", "Walk01", "Player01", "Player02", "81f4e91d", "fa0e5371", "d6aa9ca1", "eee4c3bc", "83ad62b6", "4fa3cd1b", "77ed9206", "b245782b (no clip resolved)", "38a4fd8d", "00eaa290", "1432739f (no clip resolved)", "a6c0682e", "9e8e3733", "d1954d11 (no clip resolved)", "a6e255dd = start d6aa9ca1+eee4c3bc; stop 83ad62b6+fa0e5371", "3feb0467 = start 4fa3cd1b+77ed9206; stop b245782b+fa0e5371", "48ec34f1 = start 38a4fd8d+00eaa290; stop 1432739f+fa0e5371", "d688a152 = start a6c0682e+9e8e3733; stop d1954d11+fa0e5371", "04216150", "a1d28272", "91ca86bd", "f4d57c65", "38dbd3c8", "08c3d707", "c53d66f8", "4fdce35e", "7fc4e791", "634a6d4c", "d1b876fd", "e1a07232", "a6ed53c2", "5bf9a882 = start a1d28272+91ca86bd; stop f4d57c65+04216150", "c2f0f938 = start 38dbd3c8+08c3d707; stop c53d66f8+04216150", "b5f7c9ae = start 4fdce35e+7fc4e791; stop 634a6d4c+04216150", "2b935c0d = start d1b876fd+e1a07232; stop a6ed53c2+04216150"]
+venues:
+  - venue: "Amsterdam"
+    crowd_file: "CrowdAmsterdam.bin"
+    count: 5836
+    groups_start_count: [[0, 2932], [2932, 1068], [4000, 1836]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "ArthurAshe"
+    crowd_file: "CrowdArthurAshe.bin"
+    count: 29709
+    groups_start_count: [[0, 4095], [4095, 8520], [12615, 6193], [18808, 10901]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "GrandSlam"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Athens"
+    crowd_file: "CrowdAthens.bin"
+    count: 12150
+    groups_start_count: [[0, 5702], [5702, 6448]]
+    capacity: "Huge"
+    inout: "Indoor"
+    type: "Special"
+    crowd_sound: ["Crowd_Huge_Full_Indoor"]
+  - venue: "Atlanta"
+    crowd_file: "CrowdAtlanta.bin"
+    count: 32
+    groups_start_count: [[0, 32]]
+    capacity: "Playground"
+    inout: "Outdoor"
+    type: "Playground"
+    crowd_sound: ["Crowd_Playground_Full"]
+  - venue: "Auckland"
+    crowd_file: "CrowdAuckland.bin"
+    count: 2360
+    groups_start_count: [[0, 120], [120, 2240]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "Barcelone"
+    crowd_file: "CrowdBarcelone.bin"
+    count: 1847
+    groups_start_count: [[0, 672], [672, 659], [1331, 516]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "Bermudes"
+    crowd_file: "CrowdBermudes.bin"
+    count: 391
+    groups_start_count: [[0, 391]]
+    capacity: "Tiny"
+    inout: "Outdoor"
+    type: "Playground"
+    crowd_sound: ["Crowd_Tiny_Full"]
+  - venue: "Boston"
+    crowd_file: "CrowdBoston.bin"
+    count: 3286
+    groups_start_count: [[0, 852], [852, 2167], [3019, 267]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "BuenosAires"
+    crowd_file: "CrowdBuenosAires.bin"
+    count: 14310
+    groups_start_count: [[0, 2418], [2418, 4788], [7206, 2486], [9692, 4618]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Casablanca"
+    crowd_file: "CrowdCasablanca.bin"
+    count: 2766
+    groups_start_count: [[0, 598], [598, 2168]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "Cincinnati"
+    crowd_file: "CrowdCincinnati.bin"
+    count: 10503
+    groups_start_count: [[0, 1680], [1680, 3929], [5609, 4244], [9853, 650]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "Masters"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Dallas"
+    crowd_file: "CrowdDallas.bin"
+    count: 3302
+    groups_start_count: [[0, 856], [856, 2165], [3021, 281]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "Dubai"
+    crowd_file: null
+    count: 0
+    groups_start_count: []
+    capacity: "Playground"
+    inout: "Indoor"
+    type: "Playground"
+    crowd_sound: ["Crowd_Playground_Full_Indoor"]
+  - venue: "Estoril"
+    crowd_file: "CrowdEstoril.bin"
+    count: 1824
+    groups_start_count: [[0, 672], [672, 808], [1480, 344]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "Hambourg"
+    crowd_file: "CrowdHambourg.bin"
+    count: 6986
+    groups_start_count: [[0, 1406], [1406, 2108], [3514, 3472]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "HongKong"
+    crowd_file: "CrowdHongKong.bin"
+    count: 12150
+    groups_start_count: [[0, 3568], [3568, 4724], [8292, 3858]]
+    capacity: "Huge"
+    inout: "Indoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Huge_Full_Indoor"]
+  - venue: "Houston"
+    crowd_file: "CrowdHouston.bin"
+    count: 18744
+    groups_start_count: [[0, 3498], [3498, 3868], [7366, 5156], [12522, 6222]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "IndianWells"
+    crowd_file: "CrowdIndianWells.bin"
+    count: 13895
+    groups_start_count: [[0, 4084], [4084, 2809], [6893, 2410], [9303, 4592]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "Masters"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Irland"
+    crowd_file: "CrowdIrland.bin"
+    count: 14337
+    groups_start_count: [[0, 2435], [2435, 4798], [7233, 2486], [9719, 4618]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "GrandSlam"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Kiev"
+    crowd_file: "CrowdKiev.bin"
+    count: 14444
+    groups_start_count: [[0, 5274], [5274, 5882], [11156, 3288]]
+    capacity: "Huge"
+    inout: "Indoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Huge_Full_Indoor"]
+  - venue: "LasVegas"
+    crowd_file: "CrowdLasVegas.bin"
+    count: 9042
+    groups_start_count: [[0, 3000], [3000, 3306], [6306, 2736]]
+    capacity: "Huge"
+    inout: "Indoor"
+    type: "Special"
+    crowd_sound: ["Crowd_Huge_Full_Indoor"]
+  - venue: "LondonO2"
+    crowd_file: "CrowdLondonO2.bin"
+    count: 11926
+    groups_start_count: [[0, 3104], [3104, 4590], [7694, 4232]]
+    capacity: "Huge"
+    inout: "Indoor"
+    type: "Special"
+    crowd_sound: ["Crowd_Huge_Full_Indoor"]
+  - venue: "Londres"
+    crowd_file: "CrowdLondres.bin"
+    count: 5152
+    groups_start_count: [[0, 2888], [2888, 2264]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "Madrid"
+    crowd_file: "CrowdMadrid.bin"
+    count: 14500
+    groups_start_count: [[0, 2228], [2228, 3428], [5656, 2560], [8216, 6284]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "Masters"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Melbourne"
+    crowd_file: "CrowdMelbourne.bin"
+    count: 9960
+    groups_start_count: [[0, 1984], [1984, 3548], [5532, 2832], [8364, 1596]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "GrandSlam"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "MonteCarlo"
+    crowd_file: "CrowdMonteCarlo.bin"
+    count: 5836
+    groups_start_count: [[0, 2932], [2932, 1068], [4000, 1836]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "Masters"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Moscou"
+    crowd_file: "CrowdMoscou.bin"
+    count: 2639
+    groups_start_count: [[0, 644], [644, 1344], [1988, 651]]
+    capacity: "Medium"
+    inout: "Indoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Medium_Full_Indoor"]
+  - venue: "Munich"
+    crowd_file: "CrowdMunich.bin"
+    count: 1760
+    groups_start_count: [[0, 1056], [1056, 704]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "NewDelhi"
+    crowd_file: "CrowdNewDelhi.bin"
+    count: 2826
+    groups_start_count: [[0, 428], [428, 2398]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "Omis"
+    crowd_file: "CrowdOmis.bin"
+    count: 640
+    groups_start_count: [[0, 640]]
+    capacity: "Tiny"
+    inout: "Outdoor"
+    type: "Playground"
+    crowd_sound: ["Crowd_Tiny_Full"]
+  - venue: "ParisBercy"
+    crowd_file: "CrowdParisBercy.bin"
+    count: 14444
+    groups_start_count: [[0, 5274], [5274, 5882], [11156, 3288]]
+    capacity: "Huge"
+    inout: "Indoor"
+    type: "Masters"
+    crowd_sound: ["Crowd_Huge_Full_Indoor"]
+  - venue: "PlayerBackGround"
+    crowd_file: null
+    count: 0
+    groups_start_count: []
+    capacity: "Playground"
+    inout: "Indoor"
+    type: "Playground"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "PracticeGroundPart"
+    crowd_file: null
+    count: 0
+    groups_start_count: []
+    capacity: null
+    inout: null
+    type: null
+    crowd_sound: []
+  - venue: "Riviera"
+    crowd_file: "CrowdRiviera.bin"
+    count: 12
+    groups_start_count: [[0, 12]]
+    capacity: "Playground"
+    inout: "Outdoor"
+    type: "Playground"
+    crowd_sound: ["Crowd_Playground_Full"]
+  - venue: "RolandGarros"
+    crowd_file: "CrowdRolandGarros.bin"
+    count: 14947
+    groups_start_count: [[0, 3541], [3541, 4062], [7603, 5103], [12706, 2241]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "GrandSlam"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Rome"
+    crowd_file: "CrowdRome.bin"
+    count: 3361
+    groups_start_count: [[0, 886], [886, 1644], [2530, 831]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Masters"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "SanFrancisco"
+    crowd_file: "CrowdSanFrancisco.bin"
+    count: 2360
+    groups_start_count: [[0, 120], [120, 2240]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "Santiago"
+    crowd_file: "CrowdSantiago.bin"
+    count: 2639
+    groups_start_count: [[0, 1034], [1034, 1605]]
+    capacity: "Medium"
+    inout: "Indoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Medium_Full_Indoor"]
+  - venue: "Seoul"
+    crowd_file: "CrowdSeoul.bin"
+    count: 3198
+    groups_start_count: [[0, 852], [852, 2134], [2986, 212]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Major"
+    crowd_sound: ["Crowd_Medium_Full"]
+  - venue: "Shanghai"
+    crowd_file: "CrowdShanghai.bin"
+    count: 9129
+    groups_start_count: [[0, 2903], [2903, 2512], [5415, 3714]]
+    capacity: "Huge"
+    inout: "Indoor"
+    type: "Masters"
+    crowd_sound: ["Crowd_Huge_Full_Indoor"]
+  - venue: "SonyEricsson"
+    crowd_file: "CrowdSonyEricsson.bin"
+    count: 9312
+    groups_start_count: [[0, 1530], [1530, 3394], [4924, 3804], [8728, 584]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "Masters"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Stavgaard"
+    crowd_file: "CrowdStavgaard.bin"
+    count: 524
+    groups_start_count: [[0, 524]]
+    capacity: "Tiny"
+    inout: "Indoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Tiny_Full_Indoor"]
+  - venue: "TopSpinAcademy"
+    crowd_file: null
+    count: 0
+    groups_start_count: []
+    capacity: null
+    inout: null
+    type: null
+    crowd_sound: []
+  - venue: "Toronto"
+    crowd_file: "CrowdToronto.bin"
+    count: 14500
+    groups_start_count: [[0, 2228], [2228, 3428], [5656, 2560], [8216, 6284]]
+    capacity: "Huge"
+    inout: "Outdoor"
+    type: "Masters"
+    crowd_sound: ["Crowd_Huge_Full"]
+  - venue: "Vienna"
+    crowd_file: "CrowdVienna.bin"
+    count: 6968
+    groups_start_count: [[0, 1402], [1402, 2094], [3496, 1500], [4996, 1972]]
+    capacity: "Medium"
+    inout: "Outdoor"
+    type: "Minor"
+    crowd_sound: ["Crowd_Medium_Full"]
+desc_only_venues: ["AtlantaSchool", "PC_Presets", "PC_Thumbnails", "PracticeGround", "Rio", "Tokyo"]

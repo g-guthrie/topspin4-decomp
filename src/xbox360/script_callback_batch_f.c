@@ -4,9 +4,9 @@ extern void *lbl_88D45A18;
 extern void *lbl_88D45894;
 extern void *lbl_88D459D4;
 extern void *lbl_88D4594C;
-void fn_887E1C50(void *object);
-void fn_8886BCE0(void);
-void fn_8886BEC8(void);
+void ts4_record_value_887E1C50(void *object);
+void ts4_register_hash_list32_8886BCE0(void);
+void ts4_register_hash_list16_8886BEC8(void);
 void fn_8897D628(void);
 void fn_8886CBA8(void *object);
 void fn_889813B8(void *object);
@@ -17,21 +17,21 @@ void fn_88987938(void *object, ts4_u32 enabled);
 /* Registered as ChooseInGameCamera. */
 ts4_u32 ts4_script_choose_in_game_camera(void)
 {
-    fn_887E1C50(lbl_88D45A18);
+    ts4_record_value_887E1C50(lbl_88D45A18);
     return 0;
 }
 
 /* Registered as UnloadAllPlayerPortraits. */
 ts4_u32 ts4_script_unload_all_player_portraits(void)
 {
-    fn_8886BCE0();
+    ts4_register_hash_list32_8886BCE0();
     return 0;
 }
 
 /* Registered as UnloadAllTemporaryPlayerPortraits. */
 ts4_u32 ts4_script_unload_all_temporary_player_portraits(void)
 {
-    fn_8886BEC8();
+    ts4_register_hash_list16_8886BEC8();
     return 0;
 }
 

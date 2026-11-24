@@ -9,12 +9,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROGRESS_PATH = ROOT / "config" / "progress.json"
-REPORT_PATH = ROOT / "reports" / "54540859" / "report.json"
+REPORT_PATH = ROOT / "reports" / "54540859" / "report.json.gz"
 
 
 def main() -> int:
     progress = json.loads(PROGRESS_PATH.read_text(encoding="utf-8"))
-    report = json.loads(REPORT_PATH.read_text(encoding="utf-8"))
+    import gzip
+    report = json.loads(gzip.decompress(REPORT_PATH.read_bytes()).decode("utf-8"))
     measures = report["measures"]
 
     expected = {

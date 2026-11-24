@@ -1,0 +1,7 @@
+/* 0x8834A758: for k 0, returns the float at +0x13c of the outer object in *out and formats it into buf; returns 0 */
+/* Matched on /Oc plain and LTCG (work/army/ME/v.py chk). */
+typedef struct { char p[0x1c]; } Base;
+typedef struct { char p[0x13c]; float v; } O;
+extern const char lbl_8802974C[];
+int fn_885635D0(char *buf, const char *fmt, ...);
+int ts4_format_value_13c_8834A758(Base *b, int k, float *out, char *buf) { O *o = b ? (O *)((char *)b - 0x1c) : 0; if (k == 0) { *out = o->v; fn_885635D0(buf, lbl_8802974C, (double)o->v); } return 0; }

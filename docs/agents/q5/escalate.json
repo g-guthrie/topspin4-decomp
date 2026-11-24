@@ -1,0 +1,153 @@
+[
+ {
+  "addr": "0x88720108",
+  "queue": "renderer",
+  "status": "deferred (gameplay first)",
+  "notes": "3 off: global clear scheduled before buf load; draft src/xbox360/drafts/me_88720108_nearmiss_agAP.c; perm 553 cand best 3. Next: equiv."
+ },
+ {
+  "addr": "0x886EF330",
+  "queue": "renderer",
+  "status": "deferred (gameplay first)",
+  "notes": "9 off: extra li r10,0, branchy bool vs cntlzw; scratchpad/q5/w7.cpp. Next: equiv."
+ },
+ {
+  "addr": "0x88720B70",
+  "queue": "renderer",
+  "status": "deferred (gameplay first)",
+  "notes": "3 off: vtable store vs singleton clear order; draft src/xbox360/drafts/me_88720B70_nearmiss_agAS.c. Next: perm, equiv."
+ },
+ {
+  "addr": "0x887F73F0",
+  "queue": "gameplay",
+  "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_int_vec_zero.json)",
+  "notes": "Zero a [first,last) int vector via ts4_memset tail call. fn_check 5 off (perm_auto best 5 after 414 candidates; target reloads first with lwz r3,0x14(r3) after the subtract, every C/C++ accessor variant gives clrrwi or mr instead). fn_equiv (b207b, seed 1, 400 trials): no difference in 388 valid trials but coverage 67% (2/3 blocks); the only uncovered block 0x887F7418 is the dead blr after the tail call, so 90% is unreachable for this 3-block function. Draft src/xbox360/drafts/q5_887F73F0_int_vec_zero.c. Needs a coverage rule that ignores the dead blr after a tail branch, or a match."
+ },
+ {
+  "addr": "0x88883E4C",
+  "queue": "gameplay",
+  "status": "resolved: MATCH by Fable (SEH funclet of ts4_set_thread_name_88883DE0, work/specs/Q5/q5f_set_thread_name_seh.json)",
+  "notes": "__except filter funclet of 0x88883DE0 (SetThreadName: RaiseException 0x406D1388 with a 4-word info block; filter returns -1 for that code, else 1). Draft src/xbox360/drafts/q5_88883DE0_set_thread_name_seh.c with __try/__except reproduces except_data 0x88883DD8 + 0x88883DE0 + this funclet: fn_check on 0x88883DE0 shows 0 differing instructions and FAILs only on size 0x94 != 0x6c (the funclet follows inside the same candidate symbol; funclet bytes identical to fn_88883E4C). fn_equiv cannot run either function: the original never finishes (limit) in all trials, likely the SEH marker 'mr r8,r8' / frame layout. Needs fn_check/fn_equiv funclet support. Also covers 0x88883DE0 (opus.txt line 72)."
+ },
+ {
+  "addr": "0x886696A8",
+  "queue": "gameplay",
+  "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_rally_goal_check.json)",
+  "notes": "Rally goal check: if state->count == rules->goal->target and !state->locked, fn_88668650(sink, state->event_arg) as a tail call. fn_check 6 off (target reloads self->game after the first test, then clrrwi copy; perm_auto best 6 after 362). fn_equiv seed 1: no difference in 725 valid of 1000, coverage 75% (3/4); only 0x886696F0 uncovered, the unreachable blr after the tail branch. Draft src/xbox360/drafts/q5_886696A8_rally_goal_check.c. Same tool issue as 0x887F73F0: a coverage rule that excludes the dead blr after a tail branch would close both."
+ },
+ {
+  "addr": "0x88883E80",
+  "queue": "gameplay",
+  "status": "skipped: likely XDK/CRT",
+  "notes": "Reads the r13 processor control block (+0x6c selects the stack bounds pair +0x70/+0x74 or +0x78/+0x7c) and returns whether r3 lies within the current stack: a runtime _AddressOnStack-style helper sharing an object with the SetThreadName code (0x88883DE0). Not decompiled under the no-XDK/CRT rule; needs a coordinator decision."
+ },
+ {
+  "addr": "0x886D19C8",
+  "queue": "gameplay",
+  "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_pose_reset_default.json)",
+  "draft": "src/xbox360/drafts/q5_886D19C8_nearmiss.c",
+  "notes": "5 off, VMX. The target makes three independent vor128 copies of one lvx; __vor(d,d) gets CSEd. perm_auto best 9. fn_equiv cannot check VMX."
+ },
+ {
+  "addr": "0x886E7738",
+  "queue": "gameplay",
+  "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_xform_reset_identity.json)",
+  "draft": "src/xbox360/drafts/q5_886E7738_nearmiss.c",
+  "notes": "2 off, VMX constant loads (lbl_880FC760/770 identity rows). fn_equiv cannot check VMX."
+ },
+ {
+  "addr": "0x888B3BF0",
+  "queue": "gameplay",
+  "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_command_dispatch.json)",
+  "draft": "src/xbox360/drafts/q5_888B3BF0_jumptable.c",
+  "notes": "Switch on cmd 0..14. Cases 0-13 jump to bodies the split carries as separate, already-matched functions (sm3_a/sm3_b/fj_small_a/forward_thunks/fk_024); case 14 toggles +0x69. fn_equiv --flags /Oc --seed 1 --trials 1000: UNCHECKED, 1000/1000 valid agree, coverage 75% (3/4). The only uncovered 'block' is 0x888B3C10, the inline jump-table data words, so all executable code is covered. Needs a fn_equiv fix (do not count table data as a block) or a coordinator decision."
+ },
+ {
+  "addr": "0x888842F0",
+  "queue": "gameplay",
+  "status": "dropped: CRT (_open), out of port scope (coordinator)",
+  "notes": "Varargs wrapper f(path, flags, ...): if (flags & 0x100) passes va_arg(int) as the third argument to 0x88568C70, otherwise 0. This is the CRT _open(path, oflag, [pmode]) pattern (O_CREAT = 0x100); 0x88568C70 is already specced as me_ts4_open_mode40_wrapper_88568C70. Not decompiled under the no-CRT rule; needs a coordinator decision like 0x88883E80."
+ },
+ {
+  "addr": "0x8869FCF0",
+  "queue": "gameplay",
+  "status": "resolved: MATCH by Fable (work/specs/Q5/q5f_range_endpoints.json)",
+  "notes": "Tail-calls fn_88692670 with two __vector4 arguments in v1/v2: the last and the current element of the 0x30-byte vector at owner->+0x24 (+0x5a0 begin, +0x5a4 end, +0x5bc index) when both exist, otherwise the +0x100/+0x110 vectors of owner->+0x20. fn_equiv does not compare VMX argument registers. Not drafted."
+ },
+ {
+  "addr": "0x8865EF18",
+  "queue": "gameplay",
+  "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_group_has_state1.json)",
+  "draft": "src/xbox360/drafts/q5_8865EF18_coverage.c",
+  "notes": "fn_equiv --trials 4000 --time 600 --flags /Oc: UNCHECKED, 1899 valid agree, coverage 67%. The loop needs a small positive begin/end element count, which random pointers rarely give."
+ },
+ {
+  "addr": "0x888C15A0",
+  "queue": "gameplay",
+  "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_bits_clear.json)",
+  "draft": "src/xbox360/drafts/q5_888C15A0_stackresidue.c",
+  "notes": "vector<bool> reset bit. The original reuses the stack slot holding the copied first iterator as the pure-output reference for fn_8817E150 (at(), which writes all 8 bytes). fn_equiv compares the pre-call stale bytes of that stack object, so it reports DIFFERENT."
+ },
+ {
+  "addr": "0x886AD1F0",
+  "queue": "gameplay",
+  "status": "resolved: EQUIVALENT by Fable (work/specs/Q5/eq_q5f_body_settle.json)",
+  "draft": "src/xbox360/drafts/q5_886AD1F0_eventcap.c",
+  "notes": "Solver settle loop of up to 600 calls; only the callee can end it early. Intercepted callees never write heap memory, so every trial makes 600 calls, more than the 400-event cap: 0 valid trials."
+ },
+ {
+  "addr": "0x888795F8",
+  "queue": "gameplay",
+  "status": "blocked: fn_equiv coverage (fault-only block)",
+  "draft": "src/xbox360/drafts/q5_888795F8_faultblock.c",
+  "notes": "Agrees on every valid trial (2859 of 4000, seed 1, /Oc, --time 900) but coverage stays at 8/9 = 89%. The uncovered block is the negative-map-index path (li r11,0), which then reads +0x70 of the null item, so the original faults on every input that reaches it and fn_equiv discards those trials. Needs a policy for blocks whose only continuation faults in the original."
+ },
+ {
+  "addr": "0x8886AB08",
+  "queue": "gameplay",
+  "status": "blocked: byte match 27 off; fn_equiv UNCHECKED (too few valid trials)",
+  "draft": "src/xbox360/drafts/q5a_8886AB08_nearmiss.c",
+  "notes": "Clears the flag mirror (88865508), finds the 0x5c-byte entry whose key matches in [+0x5c,+0x60), calls fn_88869D28(entry, 0xCF0C5EA8) and sets the mirror again when that fails. Byte gap: 27 off (perm not run); the target keeps the redundant it != end compare after the loop, and self/key sit in r30/r31 where the candidate has them swapped. fn_equiv seed 1, /Oc, b215: UNCHECKED, 14 valid trials of 76 (the original faults or does not finish in 62), coverage 8/8."
+ },
+ {
+  "addr": "0x886B8468",
+  "name": "ts4_move_planner_transition_886B8468",
+  "queue": "gameplay",
+  "best_source": "src/xbox360/eq_q5b_move_planner.c",
+  "state": "blocked by tool limit (fn_equiv DIFFERENT, a false difference)",
+  "tried": "Full readable C for the 23-state movement planner transition (8960 B, byte-gap: not attempted (size)); host syntax check passes; MSVC builds it with /Oc (source sha256 aa60fdb5a3b80991f33f71bdb0879dc54a22371ea65268f87fd7642a0c760236). fn_equiv (work/matching-b215, seed 1, --flags /Oc) DIFFERENT after 3 trials, 4% coverage: 'original makes call #3 to fn_8868ED00, candidate does not'. Cause: Machine._intercept poisons every VEC_VOLATILE register (v0-v13, v32-v63) at each intercepted call, but GPR/FPR clobbers follow Analysis.defs_of. The LTCG original keeps the committed target vector in volatile v50 across ts4_if_get_8865E730 (lvx 886B853C, used by vsubfp128 v53,v50,v47 at 886B8558), and keeps v47/v50/v53/v58 across fn_8868ED00 and ts4_vec_with_offset_8867A908. So the emulated original computes the retarget distance from poison bytes (0xBAD0rrkk), and every trial that enters the preamble diverges. The candidate keeps the same values in callee-saved v126/v127. Needs: vector clobbers per callee (a vector defs_of: poison only the v-registers a callee transitively writes, as for GPR/FPR). Then re-run fn_equiv. Earlier fixes in the source: ICE C1001 (be/p2/reader.c 5463) on '__vmsum3fp(a,b).v[0]' on an rvalue; worked around with a local-vector helper q5b_dot.",
+  "status": "open: source done, fn_equiv/6 clean but coverage 78% (285/366 blocks) at 6000 trials",
+  "notes": "fn_equiv/6 fixed the false DIFFERENT (per-callee vector clobbers, returns_arg, own-store reads, out-param seeding). Two real source bugs fixed (courts at match+4; jump needs !lo && !hi). Next: better input generation for the remaining 81 blocks.",
+  "byte_match": "round 2 (2026-11-23): best 605 off aligned / 237 with registers and stack offsets masked (round-2 script; round 1's file measures 681 / 294 with it), size 0x22a0 vs 0x2300, frame 0x1d0 as the target; C++ draft src/xbox360/drafts/q5_move_planner_best.cpp; LTCG contexts q5_ctx_move_planner_callees.c, q5_path_sample.cpp, q5_prediction_ticks_until_x.c, cl1_clrrwi_reload.c, fk5_001.c, ga1_gameplay_a.c, ltcg_ctx_rally_active_8866D930.c, drafts/q5_select_best_sample.c; log docs/agents/q5/notes/886b8468_match_log.md (round 2). Blockers: state reload after the path getters, order of the position-getter result slots, one epilogue copy, inexact 0x8865DBA8.",
+  "side_results": "MATCH under LTCG with specs in work/specs/Q5: ts4_path_sample_8867A7C0 (q5_path_sample.json, C++), ts4_path_weighted_ahead_8868ED00 and ts4_vec_with_offset_8867A908 (q5_path_getters.json), ts4_prediction_ticks_until_x_886600E0 (q5_prediction_ticks_until_x.json). Near miss: 0x8865DBA8 (src/xbox360/drafts/q5_select_best_sample.c, size equal, 266 aligned off)."
+ },
+ {
+  "addr": "0x88912118",
+  "name": "ts4_binding_remove_88912118",
+  "queue": "gameplay",
+  "best_source": "src/xbox360/drafts/q5a_88912118_nearmiss.c",
+  "state": "blocked by tool limit (fn_equiv UNCHECKED: too few valid trials)",
+  "tried": "Readable C for 'remove the first binding with (owner, *key, slot): destroy it through vtable slot 0 with flag 1, erase it (881AAE10), return 1, else 0' (0xa8 B). fn_check (work/matching-b215, /Oc) 1 instruction off: the target emits cmplw cr6, r8(b->key), r9(*key); the candidate swaps the operands. Tried f3-fA: operand order of the compare, !(a != b), u32 cast, key struct with an inline compare helper (both argument orders); best 1 off. fn_equiv seed 1, 1000 trials: UNCHECKED, 14 valid of 309, coverage 25% (2/8 blocks); the original rarely leaves the loop on seeded heap vectors (same failure as 0x8886AB08). Source sha256 d589096b38187122b85a2973f03b1bf3aceda65f0a51a6304bc97ee4c7550872. Needs a byte match (one cmplw operand order) or a harness option for bounded vector ranges."
+ },
+ {
+  "addr": "0x88678708",
+  "name": "ts4_target_within_radius_88678708",
+  "best_source": "src/xbox360/drafts/q5_88678708_within_radius_nearmiss.cpp",
+  "state": "open: 19 off against real (matched) callee 8866BC48 (3-arg form); older 10-off figure was against a stub",
+  "tried": "fn_check_ltcg /Oc + pool primer: C++ Path()/Actor() members reproduce the pointer reload; remaining gaps are the self-relative &rel address form (target lwz r10,4(r11); addi r11,r11,4; lvx with idx*16+rel) and mr r5,r6 for fn_8866BC48's unused 3rd argument. operator[] via const int* variant 34 off, permuter best 27. Round 4. Round 5 (q5s move): callees 886601F0/8866BC48 now MATCH (src/xbox360/q5s_move_ball_reach.c); 101 accessor combinations for self->target->actor plateau at 19 off; draft src/xbox360/drafts/q5s_move_88678708_nearmiss.cpp. Blocker: single post-join actor reload + mr r5,r6 late-CSE copy not reproduced; class at self+0x154 has no shared type."
+ },
+ {
+  "addr": "0x88564BF8",
+  "name": "atan2 (CRT) fn_88564BF8",
+  "best_source": "src/xbox360/drafts/q5_88564BF8_atan2_nearmiss.c",
+  "state": "open: 68 off, size 0x13c vs 0x130",
+  "tried": "Outside LTCG; plain fn_check. Table struct at lbl_88C30C70 identified (half_pi,pi,tan15,sqrt3,p[4],q[4],offset[4],zero,one). Gaps: record-form clrrwi. sign tests (we get clrrwi+cmplwi), fabs(x)-first ordering, polynomial register allocation. Likely hand-written/CRT asm-shaped; low value. Round 4."
+ },
+ {
+  "addr": "0x8866E318",
+  "name": "ts4_court_bounds_8866E318",
+  "best_source": "src/xbox360/drafts/me_8866E318_nearmiss.c",
+  "state": "open: 36 off (round 5 draft src/xbox360/drafts/q5s_move_8866E318_nearmiss.c)",
+  "tried": "Constants decoded (g_ts4_script_constants +0x140/+0x3ac/+0x2c4/+0x3fc/+0x2c0/+0x400/+0x2bc, lbl_880C8F9C, radius scale lbl_8814B45C). Target re-reads z_max/z_min after storing them (no store forwarding); not reproduced. Round 4. Round 5 (q5s move): named globals in place of literals; volatile re-read of z_min/z_max reproduces the reloads but not operand order/FPR numbering; per-branch stores and a local struct copy worse; perm_auto 900s best 36."
+ }
+]

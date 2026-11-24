@@ -1,0 +1,12 @@
+# Front-end watch list (docs/gameplay/gp0.md, docs/frontend-map.md s4). For a match use
+# watch_match.txt (ball and players).
+# name                 type  expr
+engine_ptr             u32   0x88D45B1C
+engine_frame           u32   [0x88D45B1C]+0x270
+engine_state           u32   [0x88D45B1C]+0x278
+engine_scene_hash      u32   [0x88D45B1C]+0x27C
+gameplay_ptr           u32   0x88D45B00
+match0_ptr             u32   [[0x88D45B00]+0x78]
+match0_frame_a         u32   [[[[0x88D45B00]+0x78]]+0x30]+0x310
+match0_frame_b         u32   [[[[0x88D45B00]+0x78]]+0x30]+0x314
+scene_name             str   [[[[[0x88D45A60]+0x1B0]+0x6C]+0x50]+0x60]

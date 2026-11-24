@@ -1,0 +1,277 @@
+{
+ "aliases": [
+  {
+   "alias": "ts4_call_seq_u32_off0_881A2570_icf_b",
+   "canonical": "ts4_call_seq_u32_off0_881A2570",
+   "address": "0x881A2570",
+   "kind": "icf",
+   "evidence": "0x881A2508 has two separate `bl 0x881A2570` (at +0x34 for type 0xfffe, at +0x40 for types 0xfffd/0xffff) with identical arguments; cl 16.00.10224 tail-merges two calls of one function (15 instructions off), so the source called two functions whose identical bodies the linker folded (/OPT:ICF)."
+  },
+  {
+   "alias": "lbl_880D6B70_icf_b",
+   "canonical": "??_7Ts4TrackerShell@@6B@",
+   "address": "0x880D6B70",
+   "kind": "icf",
+   "evidence": "0x886D0EB0 materializes 0x880D6B70 twice (lis r11 at +0x3C for the +0xA0 sub-object, lis r9 at +0x44 for the +0x74 sub-object); cl reuses one lis/addi for two loads of one symbol (31 instructions off), so the two sub-objects have distinct classes whose identical vtables the linker folded."
+  },
+  {
+   "alias": "ts4_wstr_set_string_8819C360",
+   "canonical": "?SetString@Ts4WStr@@QAAXPBGH@Z",
+   "address": "0x8819C360",
+   "kind": "cxx",
+   "evidence": "0x8819C360 matches byte for byte only as the member Ts4WStr::SetString(const unsigned short *, int) (as an extern \"C\" function the sthx at +0x80 has its operands swapped); C units (fam5_nm6_000.c, q5s_cont_strings.cpp via extern \"C\") call it and cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_hkey_less_881509F8",
+   "canonical": "??MHKey@@QBA_NABU0@@Z",
+   "address": "0x881509F8",
+   "kind": "cxx",
+   "evidence": "0x881509F8 matches byte for byte only as the member HKey::operator<(const HKey &) const (39 instructions off as an extern \"C\" function); the alias is the name for C callers (four unmatched callers in the original: 0x88657410, 0x8899DE24, 0x889A0540 ranges)."
+  },
+  {
+   "alias": "ts4_xform_block_set_88187B18",
+   "canonical": "?Set@Ts4XformBlock@@QAAXABU1@@Z",
+   "address": "0x88187B18",
+   "kind": "cxx",
+   "evidence": "0x88187B18 matches byte for byte as the C++ member ?Set@Ts4XformBlock@@QAAXABU1@@Z (class-recovery pass, docs/agents/classes.md); C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_xform_record_set_88187BC0",
+   "canonical": "?Set@Ts4XformRecord@@QAAXABU1@@Z",
+   "address": "0x88187BC0",
+   "kind": "cxx",
+   "evidence": "0x88187BC0 matches byte for byte as the C++ member ?Set@Ts4XformRecord@@QAAXABU1@@Z (class-recovery pass, docs/agents/classes.md); C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_tracker_reset_886CBC30",
+   "canonical": "?Reset@Ts4Tracker@@QAAXXZ",
+   "address": "0x886CBC30",
+   "kind": "cxx",
+   "evidence": "0x886CBC30 matches byte for byte as the C++ member ?Reset@Ts4Tracker@@QAAXXZ (class-recovery pass, docs/agents/classes.md); C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_items24_at_8841ED80",
+   "canonical": "?At@Ts4Items24Owner_8841ED80@@QAAPAUTs4Item24_8841ED80@@H@Z",
+   "address": "0x8841ED80",
+   "kind": "cxx",
+   "evidence": "0x8841ED80 returns &items[i] for 24-byte items at +0x18 and matches byte for byte only as the C++ member ?At@Ts4Items24Owner_8841ED80@@QAAPAUTs4Item24_8841ED80@@H@Z (fn_check plain, flags none and /Oc, b225 split, 2026-11-24); as a C or extern \"C\" function the load takes r10 instead of r11 (2-4 instructions off, drafts/me_8841ED80_nearmiss.cpp). C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_items20_at_8841F0D8",
+   "canonical": "?At@Ts4Items20Owner_8841F0D8@@QAAPAUTs4Item20_8841F0D8@@H@Z",
+   "address": "0x8841F0D8",
+   "kind": "cxx",
+   "evidence": "0x8841F0D8 returns &items[i] for 20-byte items at +0x10 and matches byte for byte only as the C++ member ?At@Ts4Items20Owner_8841F0D8@@QAAPAUTs4Item20_8841F0D8@@H@Z (fn_check plain, flags none and /Oc, b225 split, 2026-11-24); as a C or extern \"C\" function the load takes r10 instead of r11 (2-4 instructions off, drafts/me_8841F0D8_nearmiss.cpp). C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_quad_word1_at_88443518",
+   "canonical": "?Word1At@Ts4QuadOwner_88443518@@QAAIH@Z",
+   "address": "0x88443518",
+   "kind": "cxx",
+   "evidence": "0x88443518 returns items[i].b for 16-byte items at +0x8 and matches byte for byte only as the C++ member ?Word1At@Ts4QuadOwner_88443518@@QAAIH@Z (fn_check plain, flags none and /Oc, b225 split, 2026-11-24); as a C or extern \"C\" function the load takes r10 instead of r11 (2-4 instructions off, drafts/me_88443518_nearmiss.cpp). C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_quad_word1_shr12_at_88605DA0",
+   "canonical": "?Word1Shr12At@Ts4QuadOwner_88605DA0@@QAAIH@Z",
+   "address": "0x88605DA0",
+   "kind": "cxx",
+   "evidence": "0x88605DA0 returns items[i].b >> 12 for 16-byte items at +0x1c and matches byte for byte only as the C++ member ?Word1Shr12At@Ts4QuadOwner_88605DA0@@QAAIH@Z (fn_check plain, flags none and /Oc, b225 split, 2026-11-24); as a C or extern \"C\" function the load takes r10 instead of r11 (2-4 instructions off, drafts/me_88605DA0_nearmiss.cpp). C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_items16_at_886EBA80",
+   "canonical": "?At@Ts4Items16Owner_886EBA80@@QAAPAUTs4Item16_886EBA80@@H@Z",
+   "address": "0x886EBA80",
+   "kind": "cxx",
+   "evidence": "0x886EBA80 returns &items[i] for 16-byte items at +0x10 and matches byte for byte only as the C++ member ?At@Ts4Items16Owner_886EBA80@@QAAPAUTs4Item16_886EBA80@@H@Z (fn_check plain, flags none and /Oc, b225 split, 2026-11-24); as a C or extern \"C\" function the load takes r10 instead of r11 (2-4 instructions off, drafts/me_886EBA80_nearmiss.cpp). C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_float_grid_ctor_881591F8",
+   "canonical": "??0Ts4FloatGrid@@QAA@II@Z",
+   "address": "0x881591F8",
+   "kind": "cxx",
+   "evidence": "0x881591F8 matches byte for byte only as the C++ constructor Ts4FloatGrid::Ts4FloatGrid(u32, u32) (member initialisers; the C spelling loads w before h for the multiply); C callers 0x8815B888 and 0x889913B0 cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_entry32_vector_insert_overflow_8815C0B0",
+   "canonical": "?_M_insert_overflow@Entry32Vector@@QAAXPAUEntry32@@ABU2@I@Z",
+   "address": "0x8815C0B0",
+   "kind": "cxx",
+   "evidence": "0x8815C0B0 matches byte for byte only as the C++ member ?_M_insert_overflow@Entry32Vector@@QAAXPAUEntry32@@ABU2@I@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_entry48_vector_insert_overflow_8815C708",
+   "canonical": "?_M_insert_overflow@Entry48Vector@@QAAXPAUEntry48@@ABU2@I@Z",
+   "address": "0x8815C708",
+   "kind": "cxx",
+   "evidence": "0x8815C708 matches byte for byte only as the C++ member ?_M_insert_overflow@Entry48Vector@@QAAXPAUEntry48@@ABU2@I@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_int_slot_list_get_at_88329478",
+   "canonical": "?GetAt@Ts4IntSlotList@@QAAHHPAH@Z",
+   "address": "0x88329478",
+   "kind": "cxx",
+   "evidence": "0x88329478 matches byte for byte only as the C++ member ?GetAt@Ts4IntSlotList@@QAAHHPAH@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_item_list_forward_883F9D78",
+   "canonical": "?Forward@Ts4ItemList@@QAAHIIPAX@Z",
+   "address": "0x883F9D78",
+   "kind": "cxx",
+   "evidence": "0x883F9D78 matches byte for byte only as the C++ member ?Forward@Ts4ItemList@@QAAHIIPAX@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_word_hash_set_init_external_88423580",
+   "canonical": "?InitExternal@Ts4WordHashSet@@QAAXPAII@Z",
+   "address": "0x88423580",
+   "kind": "cxx",
+   "evidence": "0x88423580 matches byte for byte only as the C++ member ?InitExternal@Ts4WordHashSet@@QAAXPAII@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_qword_hash_set_init_external_88423600",
+   "canonical": "?InitExternal@Ts4QwordHashSet@@QAAXPA_JI@Z",
+   "address": "0x88423600",
+   "kind": "cxx",
+   "evidence": "0x88423600 matches byte for byte only as the C++ member ?InitExternal@Ts4QwordHashSet@@QAAXPA_JI@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_elem8_table_ctor_expected_88423C28",
+   "canonical": "??0Ts4Elem8Table@@QAA@H@Z",
+   "address": "0x88423C28",
+   "kind": "cxx",
+   "evidence": "0x88423C28 matches byte for byte only as the C++ member ??0Ts4Elem8Table@@QAA@H@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_elem8_table_ctor_from_pairs_88432B08",
+   "canonical": "??0Ts4Elem8Table@@QAA@ABUTs4Elem8Vec@@@Z",
+   "address": "0x88432B08",
+   "kind": "cxx",
+   "evidence": "0x88432B08 matches byte for byte only as the C++ member ??0Ts4Elem8Table@@QAA@ABUTs4Elem8Vec@@@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_item_owner_call_sub_88464D78",
+   "canonical": "?CallSub@Ts4ItemOwner@@QAAHH@Z",
+   "address": "0x88464D78",
+   "kind": "cxx",
+   "evidence": "0x88464D78 matches byte for byte only as the C++ member ?CallSub@Ts4ItemOwner@@QAAHH@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_ref_list_owner_remove_at_8847EBD0",
+   "canonical": "?RemoveAt@Ts4RefListOwner@@QAAXH@Z",
+   "address": "0x8847EBD0",
+   "kind": "cxx",
+   "evidence": "0x8847EBD0 matches byte for byte only as the C++ member ?RemoveAt@Ts4RefListOwner@@QAAXH@Z; as an extern \"C\" function the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_fixup_table_apply_884D14F8",
+   "canonical": "?Apply@Ts4FixupTable@@QBAXPAD@Z",
+   "address": "0x884D14F8",
+   "kind": "cxx",
+   "evidence": "0x884D14F8 matches byte for byte only as the C++ member ?Apply@Ts4FixupTable@@QBAXPAD@Z; as an extern \"C\" function taking the object as its first parameter the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_locked_writer_write_items_884EC070",
+   "canonical": "?WriteItems@Ts4LockedWriter@@QAAXPAUTs4ItemArray@@@Z",
+   "address": "0x884EC070",
+   "kind": "cxx",
+   "evidence": "0x884EC070 matches byte for byte only as the C++ member ?WriteItems@Ts4LockedWriter@@QAAXPAUTs4ItemArray@@@Z; as an extern \"C\" function taking the object as its first parameter the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_float_matrix_sub_8851EC30",
+   "canonical": "?Sub@Ts4FloatMatrix@@QAAXABU1@@Z",
+   "address": "0x8851EC30",
+   "kind": "cxx",
+   "evidence": "0x8851EC30 matches byte for byte only as the C++ member ?Sub@Ts4FloatMatrix@@QAAXABU1@@Z; as an extern \"C\" function taking the object as its first parameter the indexed/add operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_cell_grid_a_set_cell_885E39B0",
+   "canonical": "?SetCell@Ts4CellGridA@@QAAXHHH@Z",
+   "address": "0x885E39B0",
+   "kind": "cxx",
+   "evidence": "0x885E39B0 matches byte for byte only on /O1 as the C++ member ?SetCell@Ts4CellGridA@@QAAXHHH@Z; as an extern \"C\" function the add/stbx operand order differs (regalloc.md C1 member rule), and /Oc allocates the row+j sum to r9 instead of reusing r11. The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_cell_grid_b_set_cell_885E60F0",
+   "canonical": "?SetCell@Ts4CellGridB@@QAAXHHH@Z",
+   "address": "0x885E60F0",
+   "kind": "cxx",
+   "evidence": "0x885E60F0 matches byte for byte only on /O1 as the C++ member ?SetCell@Ts4CellGridB@@QAAXHHH@Z; as an extern \"C\" function the add/stbx operand order differs (regalloc.md C1 member rule), and /Oc allocates the row+j sum to r9 instead of reusing r11. The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_pos_object_add_position_8864E640",
+   "canonical": "?AddPosition@Ts4PosObject8864E640@@QAAXMMM@Z",
+   "address": "0x8864E640",
+   "kind": "cxx",
+   "evidence": "0x8864E640 matches byte for byte only as the C++ member ?AddPosition@Ts4PosObject8864E640@@QAAXMMM@Z indexing a Vec3 through operator[] (float&); as an extern \"C\" function the fadds operand order differs (regalloc.md C1 member rule), and direct field += reorders the loads. The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_obj_owner_reset_88702BF0",
+   "canonical": "?Reset@Ts4ObjOwner@@QAAXXZ",
+   "address": "0x88702BF0",
+   "kind": "cxx",
+   "evidence": "0x88702BF0 matches byte for byte only as the C++ member ?Reset@Ts4ObjOwner@@QAAXXZ with vector begin()/end()/clear() members; the C struct-pointer form is 3 off (end/first load order of the loop guard). The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_gauge_owner_on_event_8870FF70",
+   "canonical": "?OnEvent@Ts4GaugeOwner@@QAAXPBUTs4GaugeEvent@@@Z",
+   "address": "0x8870FF70",
+   "kind": "cxx",
+   "evidence": "0x8870FF70 matches byte for byte only as the C++ member ?OnEvent@Ts4GaugeOwner@@QAAXPBUTs4GaugeEvent@@@Z with the gauge taken by reference (Get().value += Get().rate loads rate before value); the C pointer form is 3 off. The alias is the name for C callers."
+  },
+  {
+   "alias": "ts4_id_table_init_889A0540",
+   "canonical": "?Init@Ts4IdTable@@QAAHI@Z",
+   "address": "0x889A0540",
+   "kind": "cxx",
+   "evidence": "0x889A0540 matches byte for byte only as the C++ member ?Init@Ts4IdTable@@QAAHI@Z; as an extern \"C\" function taking the table first the fill stwx operand order differs (1 off, regalloc.md C1 member rule). The alias is the name for C callers (fn_889A4888)."
+  },
+  {
+   "alias": "ts4_vtbl_TS4Obj880D2A0C",
+   "canonical": "??_7TS4Obj880D2A0C@@6B@",
+   "address": "0x880D2A0C",
+   "kind": "cxx",
+   "evidence": "0x88934788 matches byte for byte only as the C++ constructor ??0TS4Obj880D2A0C@@QAA@XZ, whose vtable is the compiler-named ??_7TS4Obj880D2A0C@@6B@ at 0x880D2A0C; C units (cx36_d.c, cx36_i.c) reference the vtable and cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_pres_shared_handle_ctor_888907A0",
+   "canonical": "??0Ts4SharedHandle880DCE3C@@QAA@I@Z",
+   "address": "0x888907A0",
+   "kind": "cxx",
+   "evidence": "0x888907A0 stores vtable 0x880DCE3C, sets +6 = 1 (base ctor, base vtable 0x88089574 store dead) and +0xC = 1, then fills +8 from service slot 10 by sret; it matches byte for byte only as the C++ constructor ??0Ts4SharedHandle880DCE3C@@QAA@I@Z (fn_check_ltcg /Oc, context pp1_pool_primer.c, b215, 2026-11-24); C bodies with a hand-written vtable store are 5-15 off. C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_vtbl_Ts4SharedHandle880DCE3C",
+   "canonical": "??_7Ts4SharedHandle880DCE3C@@6B@",
+   "address": "0x880DCE3C",
+   "kind": "cxx",
+   "evidence": "0x888907A0 matches byte for byte only as the C++ constructor ??0Ts4SharedHandle880DCE3C@@QAA@I@Z, whose vtable is the compiler-named ??_7Ts4SharedHandle880DCE3C@@6B@ at 0x880DCE3C; C units (d2f_thunks_a_888873E8.c, fam5_h_000.c, fk2_007.c, fk2_007_1.c) reference the vtable and cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_ring_write_88655310",
+   "canonical": "?Write@Ts4ByteRing@@QAAXPBEI@Z",
+   "address": "0x88655310",
+   "kind": "cxx",
+   "evidence": "0x88655310 matches byte for byte as the C++ member ?Write@Ts4ByteRing@@QAAXPBEI@Z; the C free-function form is 1 off (add operand order). C callers cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_tracker_item_copy_88266740",
+   "canonical": "??0Q5sTrackerItem@@QAA@ABU0@@Z",
+   "address": "0x88266740",
+   "kind": "cxx",
+   "evidence": "0x88266740 matches byte for byte as the C++ copy constructor ??0Q5sTrackerItem@@QAA@ABU0@@Z (LTCG, primer context); C callers (me_ts4_vector_realloc_insert_88266840.c) cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_vtbl_Q5sTrackerItem880F3798",
+   "canonical": "??_7Q5sTrackerItem@@6B@",
+   "address": "0x880F3798",
+   "kind": "cxx",
+   "evidence": "0x88266740 matches byte for byte only as the C++ copy constructor ??0Q5sTrackerItem@@QAA@ABU0@@Z, which stores the compiler-named vtable ??_7Q5sTrackerItem@@6B@ at 0x880F3798; C units reference the vtable and cannot spell the decorated name."
+  },
+  {
+   "alias": "ts4_vtbl_Ts4TrackerShell880D6B70",
+   "canonical": "??_7Ts4TrackerShell@@6B@",
+   "address": "0x880D6B70",
+   "kind": "cxx",
+   "evidence": "0x88266740 matches byte for byte only with the +0x08 member typed Ts4TrackerShell (include/ts4/classes.h), whose compiler-named vtable ??_7Ts4TrackerShell@@6B@ is at 0x880D6B70; C units reference the vtable and cannot spell the decorated name."
+  }
+ ]
+}

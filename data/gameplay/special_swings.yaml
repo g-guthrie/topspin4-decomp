@@ -1,0 +1,938 @@
+# Top Spin 4 special and situational swings: clips per SwingCategory / Properties value (agent G8).
+# Generated; do not edit by hand.  Docs: docs/gameplay/controls-and-shot-selection.md s18,
+# docs/gameplay/movement-and-animation.md "G8: special swings".
+# Generator: python3 tools/ts4data/special_swings.py --rules data/gameplay/animation_rules.yaml --root-motion data/gameplay/root_motion.yaml --settings work/disc/core/334e7e0d.bin --core work/disc/core_all --out data/gameplay/special_swings.yaml
+# Python 3.13.18
+# Source animation_rules.yaml: data/gameplay/animation_rules.yaml, 2123981 bytes, sha256 3f6b28f01006a564c1ec0716e2579683593a07cd2b4a524b9c68bdab8101e634
+# Source root_motion.yaml: data/gameplay/root_motion.yaml, 1206529 bytes, sha256 bc6c3623103d7b4605fb6460068f5af3ec77251ed9a4dd13ce03799783b90fa6
+# Source Settings.bin: work/disc/core/334e7e0d.bin, 286492 bytes, sha256 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167
+# Source AnimationsDB.bin: work/disc/core_all/70155255.bin, 3437395 bytes, sha256 3a3a98cf71d1c82479bd5842ac596a599d5e90fa12c22e69e8c65f64aaf7a3dc
+# Source upstream AnimationsDB.bin: AnimationsDB.bin (Core.arc 70155255), 3437395 bytes, sha256 3a3a98cf71d1c82479bd5842ac596a599d5e90fa12c22e69e8c65f64aaf7a3dc
+# Source upstream swinganimation.bin: swinganimation.bin (Core.arc 85ff436e), 445172 bytes, sha256 901b8cefe0ae6fd42e27f511b87db000ed1d81af92ee03bb0138824a7f49e43c
+# Source upstream Layoutall.bin: Layoutall.bin (disc root), 760816 bytes, sha256 67793f5b7dc771f8fde298ef07e8976d9362c864ac577a4c9db6b2bf874788c5
+# Source upstream AnimationsDBcrc.bin: AnimationsDBcrc.bin (Core.arc 136bf02a), 336149 bytes, sha256 ab2af8c7ccbb2d063988c8dd403182c885b03d1f0e4698297c8891a2977b0b7f
+# Units: frames at 60 Hz (play rate 1), cm.  Men setup counts (Women mirror).  [min, median, max].
+# entry_to_contact_shortest/longest: frames from entering the clip at the end / start of its In
+# transition window to the EventRacket contact.  contact_to_out: contact to the first Out window.
+sources:
+  animation_rules.yaml: {path: data/gameplay/animation_rules.yaml, size: 2123981, sha256: 3f6b28f01006a564c1ec0716e2579683593a07cd2b4a524b9c68bdab8101e634}
+  root_motion.yaml: {path: data/gameplay/root_motion.yaml, size: 1206529, sha256: bc6c3623103d7b4605fb6460068f5af3ec77251ed9a4dd13ce03799783b90fa6}
+  Settings.bin: {path: work/disc/core/334e7e0d.bin, size: 286492, sha256: 55cb175dbaf64e30d75f6fe72ae71305a39a39cffca7a2fa3b2e5471431a0167}
+  AnimationsDB.bin: {path: work/disc/core_all/70155255.bin, size: 3437395, sha256: 3a3a98cf71d1c82479bd5842ac596a599d5e90fa12c22e69e8c65f64aaf7a3dc}
+  "upstream AnimationsDB.bin": {path: "AnimationsDB.bin (Core.arc 70155255)", size: 3437395, sha256: 3a3a98cf71d1c82479bd5842ac596a599d5e90fa12c22e69e8c65f64aaf7a3dc}
+  "upstream swinganimation.bin": {path: "swinganimation.bin (Core.arc 85ff436e)", size: 445172, sha256: 901b8cefe0ae6fd42e27f511b87db000ed1d81af92ee03bb0138824a7f49e43c}
+  "upstream Layoutall.bin": {path: "Layoutall.bin (disc root)", size: 760816, sha256: 67793f5b7dc771f8fde298ef07e8976d9362c864ac577a4c9db6b2bf874788c5}
+  "upstream AnimationsDBcrc.bin": {path: "AnimationsDBcrc.bin (Core.arc 136bf02a)", size: 336149, sha256: ab2af8c7ccbb2d063988c8dd403182c885b03d1f0e4698297c8891a2977b0b7f}
+triggers:
+  Fatality:
+    grade: "C+D"
+    trigger: "row condition 0xC78C8F06: not following to the net (human: !(sticky RB && |world z| < PT+0x6F0 = 300 cm, the central corridor); AI: !S+0x4E0) and raw charge S+0xE00 > 0.15 (lbl_880D0934).  First row of FlatPower in all three modes; dead in FlatFinesse (that class means power < 0.15).  AI at difficulty 3-5 (S+0x3F0, graph 139/140) tries it first in its release fn_886AE0E8"
+    clip_gate: "a Fatality clip must fit the ball (fn_886DAA48 clip fit within the selection horizon now+40 frames, tolerance box [40, 40, 80, -50, 50, -80], facing clamp [-90, 30/45/90]); all are FH, Shoulder height, Baseline; contact 1.4-2.4 s after clip start, so the clip needs a long, early fit (see entry_to_contact)"
+    ball: "link SwingCategory/Fatality in graphs 17, 205, 206, 238, 239, 243, 244, 248, 249, 292: fixes PowerfulFactor and removes the late-timing aim penalty (charge_table.yaml category_effects)"
+    rule_rows: ["Normal/FlatPower row 0 value cond Fatality, easy", "Normal/FlatFinesse row 0 value cond Fatality, easy", "AutoSwingGood/FlatPower row 0 value cond Fatality, easy", "AutoSwingGood/FlatFinesse row 0 value cond Fatality, easy", "AutoSwingBad/FlatPower row 0 value cond Fatality, easy", "AutoSwingBad/FlatFinesse row 0 value cond Fatality, easy"]
+  FlatPerfect:
+    grade: "C+D"
+    trigger: "condition 0x07F0DF25: PerfectShotEvaluation S+0x7D4 > 0.5 (graph 168: -0.1 <= ManualShotTiming < 0.1)"
+    clip_gate: "4 clips (2 Men)"
+    ball: "no graph link port found (I: visual only)"
+    rule_rows: ["Normal/FlatPower row 2 value cond IsPerfect", "Normal/FlatFinesse row 2 value cond IsPerfect"]
+  FlatGoodReach:
+    grade: "C+D"
+    trigger: "conditions 0x693616C3 / 0xDE050FD0: min(LeftLine, RightLine MinSpeed) > PT+0x1B0 (and timing window for humans)"
+    clip_gate: "SwingReach clips"
+    ball: "link #0698037d in 44 graphs: lowers PF and aim, adds error when late"
+    rule_rows: ["Normal/FlatPower row 4 value cond de050fd0", "Normal/FlatFinesse row 4 value cond de050fd0", "AutoSwingGood/FlatPower row 5 value cond 693616c3, easy", "AutoSwingGood/FlatFinesse row 5 value cond 693616c3, easy", "AutoSwingBad/FlatPower row 4 value cond 693616c3, easy", "AutoSwingBad/FlatFinesse row 4 value cond 693616c3, easy"]
+  FlatBadReach:
+    grade: "C+D"
+    trigger: "conditions 0x60D5B606 / 0x42864090: MinSpeed > PT+0x1B4"
+    clip_gate: "SwingReach clips"
+    ball: "link #b2b40919 in graph 7"
+    rule_rows: ["Normal/FlatPower row 5 value cond 42864090", "Normal/FlatFinesse row 5 value cond 42864090", "Normal/Slice row 4 value cond 42864090", "AutoSwingGood/FlatPower row 6 value cond 60d5b606", "AutoSwingGood/FlatFinesse row 6 value cond 60d5b606", "AutoSwingBad/FlatPower row 3 value cond 60d5b606", "AutoSwingBad/FlatFinesse row 3 value cond 60d5b606", "AutoSwingBad/Slice row 2 value cond 60d5b606"]
+  FlatTooLate:
+    grade: C
+    trigger: "conditions 0xD00AC582 (TimingValue > PT+0x5BC = 0.1) / 0x4041760A (ManualShotTiming > 0.1 and SlowDown < 0.5)"
+    clip_gate: "Timing TooLate clips"
+    ball: "none found beyond the timing value itself (I)"
+    rule_rows: ["Normal/FlatPower row 6 alt (fallback) cond None", "Normal/FlatFinesse row 6 alt (fallback) cond None", "AutoSwingGood/FlatPower row 3 alt (fallback) cond None", "AutoSwingGood/FlatFinesse row 3 alt (fallback) cond None", "AutoSwingBad/FlatPower row 6 value cond BadTiming", "AutoSwingBad/FlatFinesse row 6 value cond BadTiming"]
+  FlatReturn:
+    grade: C
+    trigger: "condition 0xFE98362E: Context.IsFastBall S+0x5DD or IsBaselineFastBall S+0x5DF (Planner_Reset fn_886BA768)"
+    clip_gate: "return clips"
+    ball: "no link port (I)"
+    rule_rows: ["Normal/FlatPower row 7 value cond IsFastBall", "Normal/FlatFinesse row 7 value cond IsFastBall", "Normal/Slice row 6 alt (fallback) cond IsFastBall, easy", "AutoSwingGood/FlatPower row 4 value cond IsFastBall, easy", "AutoSwingGood/FlatFinesse row 4 value cond IsFastBall, easy", "AutoSwingGood/Slice row 4 alt (fallback) cond IsFastBall, easy", "AutoSwingBad/FlatPower row 5 value cond IsFastBall, easy", "AutoSwingBad/FlatFinesse row 5 value cond IsFastBall, easy", "AutoSwingBad/Slice row 5 alt (fallback) cond IsFastBall, easy"]
+  VolleyReflex:
+    grade: "C+D"
+    trigger: "volley rows; AI probe on S+0x5DE (net fast ball, < 35 frames, |dz| < 200 cm)"
+    clip_gate: "ReflexVolley clips"
+    ball: "link #f2885ba2 in graphs 230-233, 264-267, 323-329: lowers PF and aim"
+    rule_rows: ["Normal/VolleyStandard row 4 value cond None", "Normal/VolleyPower row 4 value cond None", "AutoSwingGood/VolleyStandard row 4 value cond None", "AutoSwingGood/VolleyPower row 4 value cond None", "AutoSwingBad/VolleyStandard row 2 value cond None", "AutoSwingBad/VolleyPower row 2 value cond None"]
+  VolleySpectacular:
+    grade: C
+    trigger: "condition 0x1DE220E2: SwingSelection.VolleySpectacular S+0x388"
+    clip_gate: "4 clips"
+    ball: "no link port (I)"
+    rule_rows: ["Normal/VolleyStandard row 3 value cond VolleySpectacular", "Normal/VolleyPower row 3 value cond VolleySpectacular", "AutoSwingGood/VolleyStandard row 3 value cond VolleySpectacular", "AutoSwingGood/VolleyPower row 3 value cond VolleySpectacular", "AutoSwingBad/VolleyStandard row 1 value cond VolleySpectacular", "AutoSwingBad/VolleyPower row 1 value cond VolleySpectacular"]
+  VolleyForward:
+    grade: C
+    trigger: "condition 0x7D633A62: LocalPosition S+0x8E0 + (600 doubles / 450 singles) < 0 and shot not Slice/DropShot"
+    clip_gate: "26 clips"
+    ball: "no link port (I)"
+    rule_rows: ["Normal/VolleyStandard row 1 value cond VolleyForward, easy", "Normal/VolleyPower row 1 value cond VolleyForward, easy", "AutoSwingGood/VolleyStandard row 1 value cond VolleyForward, easy", "AutoSwingGood/VolleyPower row 1 value cond VolleyForward, easy"]
+  FlatFollowNet:
+    grade: C
+    trigger: "condition 0x7E522D55: sticky RB and |world z| < 300 cm"
+    clip_gate: "MoveToNet clips"
+    ball: "MoveToNet link #4daa7349: no measured effect"
+    rule_rows: ["Normal/FlatPower row 1 value cond GoToNet", "Normal/FlatFinesse row 1 value cond GoToNet", "AutoSwingGood/FlatPower row 1 value cond GoToNet, easy", "AutoSwingGood/FlatFinesse row 1 value cond GoToNet, easy", "AutoSwingBad/FlatPower row 1 value cond GoToNet, easy", "AutoSwingBad/FlatFinesse row 1 value cond GoToNet, easy"]
+  SliceFollowNet:
+    grade: C
+    trigger: "condition 0x7E522D55 (as FlatFollowNet) in the Slice list"
+    clip_gate: "MoveToNet clips"
+    ball: "as FlatFollowNet"
+    rule_rows: ["Normal/Slice row 0 value cond GoToNet, easy", "AutoSwingGood/Slice row 0 value cond GoToNet, easy", "AutoSwingBad/Slice row 0 value cond GoToNet, easy"]
+by_swing_category:
+  FlatFinesse:
+    clips_men: 76
+    clips_women: 75
+    swing_type: {BH: 68, FH: 8}
+    height: {Shoulder: 28, Knee: 24, Waist: 24}
+    power_q: {Good: 66, Normal: 10}
+    control_q: {Good: 76}
+    preference: {"5": 49, "6": 20, "4": 6, "8": 1}
+    ignore_speed_coef: 0
+    frames_min_med_max: [105.0, 143.0, 174.0]
+    contact_frame_min_med_max: [40.0, 47.0, 73.5]
+    entry_to_contact_shortest_min_med_max: [3.0, 5.0, 21.0]
+    entry_to_contact_longest_min_med_max: [40.0, 47.0, 73.5]
+    contact_to_out_min_med_max: [25.0, 37.0, 62.0]
+    groups: {Swings_BH_Jog_Medium: 40, Swings_BH_Steps: 28, Swings_FH_Jog_Medium: 4, Swings_FH_Steps: 4}
+    properties: {WoodUpCompliant: 3, Spectacular: 2, SwingReach: 2, TrickShot: 2, WoodDownCompliant: 2}
+    root_travel_last_20f_before_contact_cm_min_med_max: [1.5, 78.3, 147.3]
+    root_travel_last_40f_before_contact_cm_min_med_max: [16.0, 175.7, 296.6]
+    root_travel_to_contact_cm_min_med_max: [16.0, 223.6, 411.7]
+    root_travel_contact_to_out_cm_min_med_max: [16.7, 86.2, 200.7]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.77, 2.71, 6.41]
+    rule_rows: []
+  FlatPower:
+    clips_men: 186
+    clips_women: 182
+    swing_type: {BH: 117, FH: 69}
+    height: {Waist: 73, Knee: 61, Shoulder: 52}
+    power_q: {Good: 171, Normal: 9, VeryGood: 6}
+    control_q: {Good: 186}
+    preference: {"5": 114, "6": 62, "4": 9, "8": 1}
+    ignore_speed_coef: 0
+    frames_min_med_max: [95.0, 132.0, 174.0]
+    contact_frame_min_med_max: [35.0, 47.0, 87.0]
+    entry_to_contact_shortest_min_med_max: [2.0, 4.4, 22.0]
+    entry_to_contact_longest_min_med_max: [35.0, 47.0, 87.0]
+    contact_to_out_min_med_max: [16.0, 36.0, 66.0]
+    groups: {Swings_BH_Jog_Medium: 61, Swings_BH_Steps: 56, Swings_FH_Steps: 37, Swings_FH_Jog_Medium: 32}
+    properties: {WoodUpCompliant: 10, Spectacular: 5, SwingReach: 5, PowerfulShot: 2, TrickShot: 2, WoodDownCompliant: 2}
+    root_travel_last_20f_before_contact_cm_min_med_max: [1.5, 69.4, 147.3]
+    root_travel_last_40f_before_contact_cm_min_med_max: [16.0, 154.1, 312.7]
+    root_travel_to_contact_cm_min_med_max: [14.4, 190.1, 490.9]
+    root_travel_contact_to_out_cm_min_med_max: [7.1, 74.7, 273.9]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.5, 2.52, 6.41]
+    rule_rows: ["Normal/FlatPower row 6 value cond None", "Normal/FlatFinesse row 6 value cond None", "AutoSwingGood/FlatPower row 3 value cond None", "AutoSwingGood/FlatFinesse row 3 value cond None", "AutoSwingBad/FlatPower row 6 alt (fallback) cond BadTiming", "AutoSwingBad/FlatFinesse row 6 alt (fallback) cond BadTiming"]
+  Slice:
+    clips_men: 90
+    clips_women: 90
+    swing_type: {BH: 45, FH: 45}
+    height: {Knee: 30, Waist: 30, Shoulder: 29, "-": 1}
+    power_q: {Good: 90}
+    control_q: {Good: 90}
+    preference: {"5": 90}
+    ignore_speed_coef: 0
+    frames_min_med_max: [112.0, 138.0, 186.0]
+    contact_frame_min_med_max: [36.0, 48.5, 74.0]
+    entry_to_contact_shortest_min_med_max: [2.0, 4.4, 6.0]
+    entry_to_contact_longest_min_med_max: [36.0, 48.5, 74.0]
+    contact_to_out_min_med_max: [21.0, 34.7, 57.0]
+    groups: {Swings_BH_Jog_Medium: 24, Swings_FH_Jog_Medium: 24, Swings_BH_Steps: 21, Swings_FH_Steps: 21}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [10.8, 75.6, 111.8]
+    root_travel_last_40f_before_contact_cm_min_med_max: [17.3, 162.0, 220.6]
+    root_travel_to_contact_cm_min_med_max: [17.3, 207.2, 388.4]
+    root_travel_contact_to_out_cm_min_med_max: [17.4, 69.3, 127.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.39, 2.72, 5.06]
+    rule_rows: ["Normal/Slice row 5 value cond None", "AutoSwingGood/Slice row 3 value cond None", "AutoSwingBad/Slice row 4 value cond None"]
+  VolleyStandard:
+    clips_men: 45
+    clips_women: 45
+    swing_type: {FH: 25, BH: 20}
+    height: {Knee: 15, Shoulder: 15, Waist: 15}
+    power_q: {Normal: 40, Good: 4, Bad: 1}
+    control_q: {Normal: 30, Good: 14, Bad: 1}
+    preference: {"5": 28, "3": 6, "7": 6, "4": 5}
+    ignore_speed_coef: 0
+    frames_min_med_max: [115.0, 132.0, 159.0]
+    contact_frame_min_med_max: [34.0, 41.0, 78.0]
+    entry_to_contact_shortest_min_med_max: [4.0, 8.0, 20.0]
+    entry_to_contact_longest_min_med_max: [34.0, 41.0, 78.0]
+    contact_to_out_min_med_max: [27.0, 39.0, 55.0]
+    groups: {Swings_Volley_FH_Jog_Medium: 25, Swings_Volley_BH_Jog_Medium: 20}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [11.1, 51.4, 142.7]
+    root_travel_last_40f_before_contact_cm_min_med_max: [7.1, 68.6, 292.1]
+    root_travel_to_contact_cm_min_med_max: [7.1, 68.6, 360.9]
+    root_travel_contact_to_out_cm_min_med_max: [3.1, 72.7, 149.9]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.55, 3.32, 5.89]
+    rule_rows: ["Normal/VolleyStandard row 2 value cond IsGoodVolleyRelease", "AutoSwingGood/VolleyStandard row 2 value cond None"]
+  VolleyPower:
+    clips_men: 53
+    clips_women: 53
+    swing_type: {BH: 27, FH: 26}
+    height: {Shoulder: 20, Waist: 18, Knee: 15}
+    power_q: {Good: 34, Normal: 19}
+    control_q: {Good: 39, Normal: 14}
+    preference: {"5": 28, "7": 14, "3": 6, "4": 5}
+    ignore_speed_coef: 0
+    frames_min_med_max: [119.0, 142.0, 170.0]
+    contact_frame_min_med_max: [36.1, 57.0, 78.0]
+    entry_to_contact_shortest_min_med_max: [4.0, 6.4, 22.0]
+    entry_to_contact_longest_min_med_max: [36.1, 57.0, 78.0]
+    contact_to_out_min_med_max: [18.0, 37.0, 55.0]
+    groups: {Swings_Volley_BH_Jog_Medium: 27, Swings_Volley_FH_Jog_Medium: 26}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [12.6, 59.1, 142.7]
+    root_travel_last_40f_before_contact_cm_min_med_max: [18.9, 89.6, 292.1]
+    root_travel_to_contact_cm_min_med_max: [19.0, 110.3, 376.8]
+    root_travel_contact_to_out_cm_min_med_max: [2.1, 70.7, 149.9]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.31, 3.42, 6.31]
+    rule_rows: ["Normal/VolleyPower row 2 value cond IsGoodVolleyRelease", "AutoSwingGood/VolleyPower row 2 value cond None"]
+  VolleyDropShot:
+    clips_men: 22
+    clips_women: 22
+    swing_type: {BH: 16, FH: 6}
+    height: {Waist: 10, Knee: 9, Shoulder: 3}
+    power_q: {Normal: 22}
+    control_q: {Good: 16, Normal: 6}
+    preference: {"5": 22}
+    ignore_speed_coef: 0
+    frames_min_med_max: [94.0, 130.0, 157.0]
+    contact_frame_min_med_max: [38.0, 51.0, 63.0]
+    entry_to_contact_shortest_min_med_max: [6.0, 16.0, 25.0]
+    entry_to_contact_longest_min_med_max: [38.0, 51.0, 63.0]
+    contact_to_out_min_med_max: [25.0, 39.0, 47.0]
+    groups: {Swings_Volley_BH_Jog_Medium: 16, Swings_Volley_FH_Jog_Medium: 6}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [32.2, 48.5, 90.0]
+    root_travel_last_40f_before_contact_cm_min_med_max: [35.8, 60.9, 137.7]
+    root_travel_to_contact_cm_min_med_max: [27.8, 61.8, 144.5]
+    root_travel_contact_to_out_cm_min_med_max: [11.0, 72.7, 179.7]
+    root_speed_at_contact_cm_per_frame_min_med_max: [1.06, 3.49, 5.86]
+    rule_rows: ["Normal/VolleyStandard row 0 value cond DropShot", "Normal/VolleyPower row 0 value cond DropShot", "AutoSwingGood/VolleyStandard row 0 value cond DropShot", "AutoSwingGood/VolleyPower row 0 value cond DropShot", "AutoSwingBad/VolleyStandard row 0 value cond DropShot", "AutoSwingBad/VolleyPower row 0 value cond DropShot"]
+  Smash:
+    clips_men: 19
+    clips_women: 19
+    swing_type: {FH: 10, BH: 9}
+    height: {"-": 19}
+    power_q: {Good: 8, Normal: 7, VeryBad: 4}
+    control_q: {Good: 19}
+    preference: {"5": 15, "3": 4}
+    ignore_speed_coef: 0
+    frames_min_med_max: [102.0, 141.0, 205.0]
+    contact_frame_min_med_max: [23.0, 59.0, 92.6]
+    entry_to_contact_shortest_min_med_max: [4.0, 9.0, 27.6]
+    entry_to_contact_longest_min_med_max: [23.0, 59.0, 92.6]
+    contact_to_out_min_med_max: [26.0, 42.0, 61.0]
+    groups: {"-": 8, Swings_FH_Smash: 6, Swings_BH_Smash: 5}
+    properties: {Smash: 19, Spectacular: 1}
+    root_travel_last_20f_before_contact_cm_min_med_max: [10.1, 44.6, 89.0]
+    root_travel_last_40f_before_contact_cm_min_med_max: [27.0, 111.5, 191.7]
+    root_travel_to_contact_cm_min_med_max: [27.0, 178.2, 307.6]
+    root_travel_contact_to_out_cm_min_med_max: [9.9, 93.8, 158.5]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.24, 2.37, 4.41]
+    rule_rows: ["Normal/Smash row 0 value cond None, easy", "AutoSwingGood/Smash row 0 value cond None, easy", "AutoSwingBad/Smash row 0 value cond None, easy"]
+  FlatFollowNet:
+    clips_men: 41
+    clips_women: 41
+    swing_type: {BH: 22, FH: 19}
+    height: {Waist: 15, Knee: 13, Shoulder: 13}
+    power_q: {Good: 41}
+    control_q: {Good: 41}
+    preference: {"5": 41}
+    ignore_speed_coef: 0
+    frames_min_med_max: [96.0, 133.0, 206.0]
+    contact_frame_min_med_max: [34.0, 40.0, 106.0]
+    entry_to_contact_shortest_min_med_max: [0.0, 6.5, 11.0]
+    entry_to_contact_longest_min_med_max: [34.0, 40.0, 106.0]
+    contact_to_out_min_med_max: [19.0, 29.2, 65.3]
+    groups: {Swings_BH_Steps: 13, Swings_FH_Steps: 10, Swings_BH_Jog_Medium: 9, Swings_FH_Jog_Medium: 9}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [26.7, 77.8, 99.1]
+    root_travel_last_40f_before_contact_cm_min_med_max: [39.3, 149.2, 213.9]
+    root_travel_to_contact_cm_min_med_max: [39.3, 149.2, 511.4]
+    root_travel_contact_to_out_cm_min_med_max: [48.6, 127.9, 293.7]
+    root_speed_at_contact_cm_per_frame_min_med_max: [1.41, 3.52, 4.62]
+  FlatGoodReach:
+    clips_men: 28
+    clips_women: 28
+    swing_type: {BH: 15, FH: 13}
+    height: {Knee: 12, Waist: 10, Shoulder: 6}
+    power_q: {Normal: 28}
+    control_q: {Bad: 28}
+    preference: {"5": 28}
+    ignore_speed_coef: 25
+    frames_min_med_max: [101.0, 141.0, 176.0]
+    contact_frame_min_med_max: [35.0, 44.2, 58.0]
+    entry_to_contact_shortest_min_med_max: [1.0, 5.2, 10.4]
+    entry_to_contact_longest_min_med_max: [35.0, 44.2, 58.0]
+    contact_to_out_min_med_max: [15.0, 32.0, 53.0]
+    groups: {Swings_BH_Jog_Medium: 15, Swings_FH_Jog_Medium: 13}
+    properties: {SwingReach: 28, WoodRadiusCompliant: 18, WoodDownCompliant: 6, Spectacular: 4}
+    root_travel_last_20f_before_contact_cm_min_med_max: [94.3, 124.7, 173.8]
+    root_travel_last_40f_before_contact_cm_min_med_max: [191.6, 259.9, 345.4]
+    root_travel_to_contact_cm_min_med_max: [191.6, 290.5, 457.9]
+    root_travel_contact_to_out_cm_min_med_max: [40.0, 121.7, 249.4]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.83, 4.92, 7.88]
+  FlatBadReach:
+    clips_men: 11
+    clips_women: 11
+    swing_type: {BH: 6, FH: 5}
+    height: {Knee: 7, Waist: 4}
+    power_q: {VeryBad: 11}
+    control_q: {Bad: 6, VeryBad: 5}
+    preference: {"5": 11}
+    ignore_speed_coef: 11
+    frames_min_med_max: [147.0, 161.0, 189.0]
+    contact_frame_min_med_max: [43.0, 49.0, 62.0]
+    entry_to_contact_shortest_min_med_max: [3.4, 7.4, 11.0]
+    entry_to_contact_longest_min_med_max: [43.0, 49.0, 62.0]
+    contact_to_out_min_med_max: [38.0, 52.0, 56.0]
+    groups: {Swings_BH_Jog_Medium: 6, Swings_FH_Jog_Medium: 5}
+    properties: {Spectacular: 11, SwingReach: 11, WoodRadiusCompliant: 6}
+    root_travel_last_20f_before_contact_cm_min_med_max: [150.8, 173.5, 184.1]
+    root_travel_last_40f_before_contact_cm_min_med_max: [297.9, 337.6, 361.5]
+    root_travel_to_contact_cm_min_med_max: [334.5, 396.2, 535.8]
+    root_travel_contact_to_out_cm_min_med_max: [165.2, 327.7, 380.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [6.06, 8.35, 10.03]
+  FlatTooLate:
+    clips_men: 9
+    clips_women: 9
+    swing_type: {BH: 6, FH: 3}
+    height: {Knee: 3, Shoulder: 3, Waist: 3}
+    power_q: {Normal: 9}
+    control_q: {Good: 9}
+    preference: {"5": 9}
+    ignore_speed_coef: 0
+    frames_min_med_max: [109.0, 127.0, 134.0]
+    contact_frame_min_med_max: [35.0, 45.0, 45.0]
+    entry_to_contact_shortest_min_med_max: [6.0, 6.0, 6.0]
+    entry_to_contact_longest_min_med_max: [35.0, 45.0, 45.0]
+    contact_to_out_min_med_max: [34.0, 36.0, 44.0]
+    groups: {Swings_BH_TooLate_Stand_CloseStance: 6, Swings_FH_TooLate_Stand_CloseStance: 3}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [26.0, 37.9, 51.5]
+    root_travel_last_40f_before_contact_cm_min_med_max: [46.5, 53.5, 66.0]
+    root_travel_to_contact_cm_min_med_max: [46.5, 55.5, 71.0]
+    root_travel_contact_to_out_cm_min_med_max: [18.8, 61.8, 72.8]
+    root_speed_at_contact_cm_per_frame_min_med_max: [1.24, 1.58, 2.77]
+  DropShot:
+    clips_men: 6
+    clips_women: 6
+    swing_type: {BH: 3, FH: 3}
+    height: {Knee: 2, Shoulder: 2, Waist: 2}
+    power_q: {Good: 6}
+    control_q: {Good: 6}
+    preference: {"5": 6}
+    ignore_speed_coef: 0
+    frames_min_med_max: [121.0, 132.0, 149.0]
+    contact_frame_min_med_max: [37.0, 40.4, 44.0]
+    entry_to_contact_shortest_min_med_max: [4.0, 4.4, 5.0]
+    entry_to_contact_longest_min_med_max: [37.0, 40.4, 44.0]
+    contact_to_out_min_med_max: [35.0, 40.6, 45.2]
+    groups: {Swings_BH_Steps: 3, Swings_FH_Steps: 3}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [10.1, 18.0, 21.6]
+    root_travel_last_40f_before_contact_cm_min_med_max: [13.6, 25.8, 30.6]
+    root_travel_to_contact_cm_min_med_max: [13.6, 26.1, 30.6]
+    root_travel_contact_to_out_cm_min_med_max: [11.5, 17.2, 25.1]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.85, 1.34, 1.55]
+    rule_rows: ["Normal/Slice row 2 value cond DropShot"]
+  SliceFollowNet:
+    clips_men: 18
+    clips_women: 18
+    swing_type: {BH: 9, FH: 9}
+    height: {Knee: 6, Shoulder: 6, Waist: 6}
+    power_q: {Good: 18}
+    control_q: {Good: 18}
+    preference: {"5": 18}
+    ignore_speed_coef: 0
+    frames_min_med_max: [113.0, 124.0, 160.0]
+    contact_frame_min_med_max: [40.0, 41.0, 68.5]
+    entry_to_contact_shortest_min_med_max: [6.0, 7.0, 9.5]
+    entry_to_contact_longest_min_med_max: [40.0, 41.0, 68.4]
+    contact_to_out_min_med_max: [29.7, 36.7, 44.0]
+    groups: {Swings_BH_Steps: 9, Swings_FH_Steps: 9}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [28.3, 87.3, 104.0]
+    root_travel_last_40f_before_contact_cm_min_med_max: [48.7, 175.9, 209.4]
+    root_travel_to_contact_cm_min_med_max: [48.7, 180.8, 283.3]
+    root_travel_contact_to_out_cm_min_med_max: [137.0, 210.9, 241.5]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.07, 4.34, 5.13]
+  SliceGoodReach:
+    clips_men: 32
+    clips_women: 32
+    swing_type: {BH: 16, FH: 16}
+    height: {Knee: 12, Waist: 12, Shoulder: 8}
+    power_q: {Normal: 29, Bad: 3}
+    control_q: {Good: 32}
+    preference: {"5": 32}
+    ignore_speed_coef: 0
+    frames_min_med_max: [134.0, 178.0, 204.0]
+    contact_frame_min_med_max: [43.0, 60.0, 78.0]
+    entry_to_contact_shortest_min_med_max: [3.8, 8.0, 10.0]
+    entry_to_contact_longest_min_med_max: [43.0, 60.0, 78.0]
+    contact_to_out_min_med_max: [38.0, 49.5, 74.0]
+    groups: {Swings_BH_Jog_Medium: 16, Swings_FH_Jog_Medium: 16}
+    properties: {SwingReach: 32, WoodRadiusCompliant: 12, Spectacular: 9}
+    root_travel_last_20f_before_contact_cm_min_med_max: [112.0, 147.9, 167.3]
+    root_travel_last_40f_before_contact_cm_min_med_max: [268.0, 307.8, 336.1]
+    root_travel_to_contact_cm_min_med_max: [295.5, 451.1, 606.9]
+    root_travel_contact_to_out_cm_min_med_max: [111.6, 161.9, 284.0]
+    root_speed_at_contact_cm_per_frame_min_med_max: [4.13, 5.51, 8.39]
+    rule_rows: ["Normal/Slice row 3 value cond de050fd0", "AutoSwingGood/Slice row 2 value cond 693616c3, easy", "AutoSwingBad/Slice row 3 value cond 693616c3, easy"]
+  SliceBadReach:
+    clips_men: 11
+    clips_women: 11
+    swing_type: {BH: 6, FH: 5}
+    height: {Knee: 7, Waist: 4}
+    power_q: {VeryBad: 11}
+    control_q: {Bad: 6, VeryBad: 5}
+    preference: {"5": 11}
+    ignore_speed_coef: 11
+    frames_min_med_max: [147.0, 161.0, 189.0]
+    contact_frame_min_med_max: [43.0, 49.0, 62.0]
+    entry_to_contact_shortest_min_med_max: [3.4, 7.4, 11.0]
+    entry_to_contact_longest_min_med_max: [43.0, 49.0, 62.0]
+    contact_to_out_min_med_max: [38.0, 52.0, 56.0]
+    groups: {Swings_BH_Jog_Medium: 6, Swings_FH_Jog_Medium: 5}
+    properties: {Spectacular: 11, SwingReach: 11, WoodRadiusCompliant: 6}
+    root_travel_last_20f_before_contact_cm_min_med_max: [150.8, 173.5, 184.1]
+    root_travel_last_40f_before_contact_cm_min_med_max: [297.9, 337.6, 361.5]
+    root_travel_to_contact_cm_min_med_max: [334.5, 396.2, 535.8]
+    root_travel_contact_to_out_cm_min_med_max: [165.2, 327.7, 380.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [6.06, 8.35, 10.03]
+    rule_rows: []
+  SliceTooLate:
+    clips_men: 18
+    clips_women: 18
+    swing_type: {BH: 9, FH: 9}
+    height: {Knee: 6, Shoulder: 6, Waist: 6}
+    power_q: {Good: 18}
+    control_q: {Good: 18}
+    preference: {"5": 18}
+    ignore_speed_coef: 0
+    frames_min_med_max: [126.0, 150.0, 170.0]
+    contact_frame_min_med_max: [47.4, 61.3, 72.5]
+    entry_to_contact_shortest_min_med_max: [2.0, 4.5, 6.0]
+    entry_to_contact_longest_min_med_max: [47.4, 61.3, 72.5]
+    contact_to_out_min_med_max: [21.0, 35.9, 46.2]
+    groups: {Swings_BH_Jog_Medium: 9, Swings_FH_Jog_Medium: 9}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [70.8, 91.2, 111.8]
+    root_travel_last_40f_before_contact_cm_min_med_max: [161.2, 193.5, 220.6]
+    root_travel_to_contact_cm_min_med_max: [226.0, 289.4, 388.4]
+    root_travel_contact_to_out_cm_min_med_max: [58.9, 80.2, 127.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.31, 3.36, 4.62]
+    rule_rows: []
+  VolleyReflex:
+    clips_men: 50
+    clips_women: 50
+    swing_type: {BH: 35, FH: 15}
+    height: {Waist: 19, Shoulder: 13, "-": 9, Knee: 9}
+    power_q: {Normal: 42, Bad: 5, VeryBad: 2, Good: 1}
+    control_q: {Good: 44, Normal: 6}
+    preference: {"5": 48, "3": 2}
+    ignore_speed_coef: 0
+    frames_min_med_max: [95.0, 133.0, 197.0]
+    contact_frame_min_med_max: [28.0, 37.5, 79.0]
+    entry_to_contact_shortest_min_med_max: [2.0, 7.0, 47.0]
+    entry_to_contact_longest_min_med_max: [28.0, 37.5, 79.0]
+    contact_to_out_min_med_max: [16.9, 46.5, 81.0]
+    groups: {Swings_Volley_BH_Jog_Medium: 26, Swings_Volley_FH_Jog_Medium: 15, Swings_BH_Smash: 5, "-": 4}
+    properties: {Spectacular: 13, Smash: 9, SwingReach: 9, ReflexVolley: 8}
+    root_travel_last_20f_before_contact_cm_min_med_max: [20.4, 41.6, 117.1]
+    root_travel_last_40f_before_contact_cm_min_med_max: [21.5, 55.1, 202.2]
+    root_travel_to_contact_cm_min_med_max: [21.5, 55.8, 307.6]
+    root_travel_contact_to_out_cm_min_med_max: [9.9, 140.8, 234.5]
+    root_speed_at_contact_cm_per_frame_min_med_max: [1.09, 3.41, 6.82]
+  VolleyFollowNet: null  # no clip
+  FlatPerfect:
+    clips_men: 2
+    clips_women: 2
+    swing_type: {BH: 1, FH: 1}
+    height: {Waist: 2}
+    power_q: {Good: 2}
+    control_q: {Good: 2}
+    preference: {"5": 2}
+    ignore_speed_coef: 0
+    frames_min_med_max: [100.0, 116.0, 132.0]
+    contact_frame_min_med_max: [37.7, 42.8, 48.0]
+    entry_to_contact_shortest_min_med_max: [3.7, 5.8, 8.0]
+    entry_to_contact_longest_min_med_max: [37.7, 42.8, 48.0]
+    contact_to_out_min_med_max: [38.2, 41.1, 44.0]
+    groups: {Swings_BH_Steps: 1, Swings_FH_Steps: 1}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [7.5, 11.7, 15.9]
+    root_travel_last_40f_before_contact_cm_min_med_max: [5.8, 18.2, 30.6]
+    root_travel_to_contact_cm_min_med_max: [5.8, 17.8, 29.7]
+    root_travel_contact_to_out_cm_min_med_max: [35.7, 39.1, 42.5]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.89, 0.98, 1.06]
+  FlatReturn:
+    clips_men: 117
+    clips_women: 114
+    swing_type: {BH: 78, FH: 39}
+    height: {Waist: 48, Shoulder: 44, Knee: 24, "-": 1}
+    power_q: {Good: 86, Normal: 31}
+    control_q: {Good: 117}
+    preference: {"5": 117}
+    ignore_speed_coef: 6
+    frames_min_med_max: [109.0, 135.0, 218.0]
+    contact_frame_min_med_max: [36.0, 59.0, 94.0]
+    entry_to_contact_shortest_min_med_max: [7.0, 19.0, 50.0]
+    entry_to_contact_longest_min_med_max: [36.0, 59.0, 94.0]
+    contact_to_out_min_med_max: [14.1, 36.0, 67.0]
+    groups: {Swings_BH_Stand_OpenStance: 78, Swings_FH_Stand_OpenStance: 39}
+    properties: {SwingReach: 6}
+    root_travel_last_20f_before_contact_cm_min_med_max: [4.0, 46.6, 112.1]
+    root_travel_last_40f_before_contact_cm_min_med_max: [3.9, 58.9, 168.1]
+    root_travel_to_contact_cm_min_med_max: [1.1, 61.2, 204.1]
+    root_travel_contact_to_out_cm_min_med_max: [4.5, 54.9, 202.0]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.18, 2.25, 5.87]
+  SliceReturn:
+    clips_men: 15
+    clips_women: 15
+    swing_type: {FH: 8, BH: 7}
+    height: {Waist: 8, Shoulder: 7}
+    power_q: {Normal: 15}
+    control_q: {Good: 15}
+    preference: {"5": 15}
+    ignore_speed_coef: 4
+    frames_min_med_max: [109.0, 130.0, 141.0]
+    contact_frame_min_med_max: [35.5, 45.0, 53.0]
+    entry_to_contact_shortest_min_med_max: [6.5, 16.0, 24.0]
+    entry_to_contact_longest_min_med_max: [35.5, 45.0, 53.0]
+    contact_to_out_min_med_max: [23.0, 26.6, 32.0]
+    groups: {Swings_FH_Stand_OpenStance: 8, Swings_BH_Stand_OpenStance: 7}
+    properties: {SwingReach: 4}
+    root_travel_last_20f_before_contact_cm_min_med_max: [27.2, 42.2, 107.4]
+    root_travel_last_40f_before_contact_cm_min_med_max: [39.1, 66.8, 165.5]
+    root_travel_to_contact_cm_min_med_max: [40.8, 68.8, 167.6]
+    root_travel_contact_to_out_cm_min_med_max: [18.5, 30.6, 96.1]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.95, 2.09, 5.09]
+    rule_rows: ["Normal/Slice row 6 value cond IsFastBall, easy", "AutoSwingGood/Slice row 4 value cond IsFastBall, easy", "AutoSwingBad/Slice row 5 value cond IsFastBall, easy"]
+  FlatPowerfulBall:
+    clips_men: 4
+    clips_women: 4
+    swing_type: {BH: 2, FH: 2}
+    height: {Shoulder: 2, Waist: 2}
+    power_q: {Bad: 4}
+    control_q: {Good: 4}
+    preference: {"5": 4}
+    ignore_speed_coef: 0
+    frames_min_med_max: [120.0, 137.0, 157.0]
+    contact_frame_min_med_max: [42.5, 46.3, 47.5]
+    entry_to_contact_shortest_min_med_max: [8.0, 8.0, 10.0]
+    entry_to_contact_longest_min_med_max: [42.3, 46.1, 47.3]
+    contact_to_out_min_med_max: [50.3, 50.7, 58.9]
+    groups: {Swings_BH_Steps: 2, Swings_FH_Steps: 2}
+    properties: {BadControl: 4}
+    root_travel_last_20f_before_contact_cm_min_med_max: [37.0, 46.8, 56.6]
+    root_travel_last_40f_before_contact_cm_min_med_max: [71.9, 77.1, 105.1]
+    root_travel_to_contact_cm_min_med_max: [75.0, 84.9, 119.1]
+    root_travel_contact_to_out_cm_min_med_max: [56.8, 65.9, 84.1]
+    root_speed_at_contact_cm_per_frame_min_med_max: [1.78, 1.9, 2.49]
+    rule_rows: []
+  FlatHighTopSpin: null  # no clip
+  VolleyReflexExtra: null  # no clip
+  VolleyStandardExtra: null  # no clip
+  VolleyPowerExtra: null  # no clip
+  FlatClay:
+    clips_men: 17
+    clips_women: 17
+    swing_type: {BH: 12, FH: 5}
+    height: {Waist: 9, Knee: 8}
+    power_q: {Good: 17}
+    control_q: {Good: 17}
+    preference: {"5": 17}
+    ignore_speed_coef: 0
+    frames_min_med_max: [117.0, 138.0, 153.0]
+    contact_frame_min_med_max: [44.0, 57.0, 70.0]
+    entry_to_contact_shortest_min_med_max: [3.0, 14.0, 27.0]
+    entry_to_contact_longest_min_med_max: [44.0, 57.0, 70.0]
+    contact_to_out_min_med_max: [28.0, 37.0, 47.0]
+    groups: {Swings_BH_Jog_Medium: 12, Swings_FH_Jog_Medium: 5}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [78.5, 108.0, 144.6]
+    root_travel_last_40f_before_contact_cm_min_med_max: [209.9, 235.1, 291.1]
+    root_travel_to_contact_cm_min_med_max: [264.6, 363.5, 459.2]
+    root_travel_contact_to_out_cm_min_med_max: [61.2, 93.0, 143.7]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.67, 3.91, 6.17]
+    rule_rows: ["Normal/FlatPower row 3 value cond 693616c3", "Normal/FlatFinesse row 3 value cond 693616c3", "AutoSwingGood/FlatPower row 2 value cond 693616c3, easy", "AutoSwingGood/FlatFinesse row 2 value cond 693616c3, easy", "AutoSwingBad/FlatPower row 2 value cond 693616c3, easy", "AutoSwingBad/FlatFinesse row 2 value cond 693616c3, easy"]
+  SliceClay:
+    clips_men: 19
+    clips_women: 19
+    swing_type: {FH: 11, BH: 8}
+    height: {Waist: 10, Knee: 9}
+    power_q: {Good: 19}
+    control_q: {Good: 19}
+    preference: {"5": 19}
+    ignore_speed_coef: 0
+    frames_min_med_max: [105.0, 121.0, 151.0]
+    contact_frame_min_med_max: [33.0, 43.0, 64.0]
+    entry_to_contact_shortest_min_med_max: [4.0, 4.4, 20.0]
+    entry_to_contact_longest_min_med_max: [33.0, 43.0, 64.0]
+    contact_to_out_min_med_max: [30.0, 37.0, 54.0]
+    groups: {Swings_FH_Jog_Medium: 11, Swings_BH_Jog_Medium: 8}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [89.0, 116.5, 153.6]
+    root_travel_last_40f_before_contact_cm_min_med_max: [181.5, 245.7, 302.4]
+    root_travel_to_contact_cm_min_med_max: [181.5, 265.0, 426.6]
+    root_travel_contact_to_out_cm_min_med_max: [73.8, 103.3, 195.3]
+    root_speed_at_contact_cm_per_frame_min_med_max: [3.06, 4.6, 7.65]
+    rule_rows: ["Normal/Slice row 1 value cond 693616c3, easy", "AutoSwingGood/Slice row 1 value cond 693616c3, easy", "AutoSwingBad/Slice row 1 value cond 693616c3, easy"]
+  VolleySpectacular:
+    clips_men: 2
+    clips_women: 2
+    swing_type: {BH: 1, FH: 1}
+    height: {Waist: 2}
+    power_q: {Normal: 2}
+    control_q: {Good: 2}
+    preference: {"5": 2}
+    ignore_speed_coef: 0
+    frames_min_med_max: [240.0, 248.0, 256.0]
+    contact_frame_min_med_max: [72.0, 72.0, 72.0]
+    entry_to_contact_shortest_min_med_max: [23.0, 23.0, 23.0]
+    entry_to_contact_longest_min_med_max: [72.0, 72.0, 72.0]
+    contact_to_out_min_med_max: [123.0, 123.5, 124.0]
+    groups: {Swings_Volley_BH_Jog_Medium: 1, Swings_Volley_FH_Jog_Medium: 1}
+    properties: {Spectacular: 2}
+    root_travel_last_20f_before_contact_cm_min_med_max: [85.5, 86.2, 87.0]
+    root_travel_last_40f_before_contact_cm_min_med_max: [111.9, 112.0, 112.0]
+    root_travel_to_contact_cm_min_med_max: [125.1, 125.9, 126.8]
+    root_travel_contact_to_out_cm_min_med_max: [303.4, 304.6, 305.8]
+    root_speed_at_contact_cm_per_frame_min_med_max: [5.86, 5.92, 5.98]
+  VolleyForward:
+    clips_men: 13
+    clips_women: 13
+    swing_type: {FH: 7, BH: 6}
+    height: {Shoulder: 5, Knee: 4, Waist: 4}
+    power_q: {VeryGood: 7, Normal: 6}
+    control_q: {Normal: 11, Good: 2}
+    preference: {"8": 13}
+    ignore_speed_coef: 0
+    frames_min_med_max: [82.0, 100.0, 108.0]
+    contact_frame_min_med_max: [30.0, 38.0, 40.2]
+    entry_to_contact_shortest_min_med_max: [6.0, 9.0, 9.4]
+    entry_to_contact_longest_min_med_max: [30.0, 38.0, 40.2]
+    contact_to_out_min_med_max: [24.6, 37.0, 49.0]
+    groups: {Swings_Volley_FH_Jog_Medium: 7, Swings_Volley_BH_Jog_Medium: 6}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [121.0, 132.4, 149.8]
+    root_travel_last_40f_before_contact_cm_min_med_max: [209.9, 241.1, 296.8]
+    root_travel_to_contact_cm_min_med_max: [209.9, 241.1, 296.8]
+    root_travel_contact_to_out_cm_min_med_max: [130.5, 214.2, 284.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [4.52, 6.36, 7.24]
+  Fatality:
+    clips_men: 37
+    clips_women: 37
+    swing_type: {FH: 37}
+    height: {Shoulder: 37}
+    power_q: {VeryGood: 37}
+    control_q: {VeryGood: 37}
+    preference: {"5": 37}
+    ignore_speed_coef: 0
+    frames_min_med_max: [178.0, 227.0, 254.0]
+    contact_frame_min_med_max: [97.0, 136.0, 158.0]
+    entry_to_contact_shortest_min_med_max: [8.0, 9.0, 11.0]
+    entry_to_contact_longest_min_med_max: [97.0, 136.0, 158.0]
+    contact_to_out_min_med_max: [30.0, 45.0, 58.0]
+    groups: {Swings_FH_Fatality: 37}
+    properties: {}
+    root_travel_last_20f_before_contact_cm_min_med_max: [20.4, 59.0, 82.2]
+    root_travel_last_40f_before_contact_cm_min_med_max: [58.2, 127.9, 173.2]
+    root_travel_to_contact_cm_min_med_max: [166.3, 394.1, 546.9]
+    root_travel_contact_to_out_cm_min_med_max: [36.6, 99.1, 135.8]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.71, 2.09, 2.9]
+by_properties:
+  Rushing:
+    clips_men: 10
+    clips_women: 10
+    swing_type: {"-": 10}
+    height: {"-": 10}
+    power_q: {"-": 10}
+    control_q: {"-": 10}
+    preference: {"5": 10}
+    ignore_speed_coef: 0
+    frames_min_med_max: [90.0, 122.0, 212.0]
+    contact_frame_min_med_max: null
+    entry_to_contact_shortest_min_med_max: null
+    entry_to_contact_longest_min_med_max: null
+    contact_to_out_min_med_max: null
+    groups: {Rush: 10}
+    categories: {"-": 10}
+  Spectacular:
+    clips_men: 46
+    clips_women: 46
+    swing_type: {BH: 22, FH: 22, "-": 2}
+    height: {Waist: 17, Knee: 16, Shoulder: 10, "-": 3}
+    power_q: {Normal: 27, VeryBad: 11, Good: 5, "-": 2, Bad: 1}
+    control_q: {Good: 29, Bad: 10, VeryBad: 5, "-": 2}
+    preference: {"5": 45, "8": 1}
+    ignore_speed_coef: 15
+    frames_min_med_max: [121.0, 163.0, 256.0]
+    contact_frame_min_med_max: [34.0, 51.0, 78.0]
+    entry_to_contact_shortest_min_med_max: [3.4, 8.0, 42.0]
+    entry_to_contact_longest_min_med_max: [34.0, 51.0, 78.0]
+    contact_to_out_min_med_max: [34.0, 52.5, 124.0]
+    groups: {Swings_FH_Jog_Medium: 17, Swings_BH_Jog_Medium: 12, Swings_Volley_BH_Jog_Medium: 9, Swings_Volley_FH_Jog_Medium: 5, Rush: 2, "-": 1}
+    categories: {VolleyReflex: 13, FlatBadReach: 11, SliceBadReach: 11, SliceGoodReach: 9, FlatPower: 5, FlatGoodReach: 4, "-": 2, FlatFinesse: 2, VolleySpectacular: 2, Smash: 1}
+    root_travel_last_20f_before_contact_cm_min_med_max: [35.8, 140.2, 184.1]
+    root_travel_last_40f_before_contact_cm_min_med_max: [42.4, 288.5, 361.5]
+    root_travel_to_contact_cm_min_med_max: [42.4, 365.8, 580.6]
+    root_travel_contact_to_out_cm_min_med_max: [22.7, 207.9, 380.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.37, 5.71, 10.03]
+  PowerfulShot:
+    clips_men: 2
+    clips_women: 2
+    swing_type: {BH: 2}
+    height: {Shoulder: 2}
+    power_q: {Good: 2}
+    control_q: {Good: 2}
+    preference: {"6": 2}
+    ignore_speed_coef: 0
+    frames_min_med_max: [106.0, 110.0, 115.0]
+    contact_frame_min_med_max: [47.0, 47.2, 47.5]
+    entry_to_contact_shortest_min_med_max: [4.0, 5.7, 7.5]
+    entry_to_contact_longest_min_med_max: [47.0, 47.2, 47.5]
+    contact_to_out_min_med_max: [23.0, 25.3, 27.5]
+    groups: {Swings_BH_Steps: 2}
+    categories: {FlatPower: 2}
+    root_travel_last_20f_before_contact_cm_min_med_max: [49.7, 51.2, 52.7]
+    root_travel_last_40f_before_contact_cm_min_med_max: [109.9, 117.1, 124.3]
+    root_travel_to_contact_cm_min_med_max: [131.4, 140.2, 149.1]
+    root_travel_contact_to_out_cm_min_med_max: [52.6, 53.6, 54.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.49, 2.73, 2.96]
+  SwingReach:
+    clips_men: 97
+    clips_women: 96
+    swing_type: {BH: 49, FH: 46, "-": 2}
+    height: {Knee: 36, Waist: 36, Shoulder: 23, "-": 2}
+    power_q: {Normal: 75, VeryBad: 11, Good: 5, Bad: 4, "-": 2}
+    control_q: {Good: 56, Bad: 34, VeryBad: 5, "-": 2}
+    preference: {"5": 96, "8": 1}
+    ignore_speed_coef: 46
+    frames_min_med_max: [101.0, 155.0, 212.0]
+    contact_frame_min_med_max: [34.0, 51.0, 78.0]
+    entry_to_contact_shortest_min_med_max: [1.0, 8.0, 42.0]
+    entry_to_contact_longest_min_med_max: [34.0, 51.0, 78.0]
+    contact_to_out_min_med_max: [15.0, 45.0, 77.0]
+    groups: {Swings_BH_Jog_Medium: 38, Swings_FH_Jog_Medium: 38, Swings_Volley_BH_Jog_Medium: 7, Swings_FH_Stand_OpenStance: 6, Swings_BH_Stand_OpenStance: 4, Rush: 2, Swings_Volley_FH_Jog_Medium: 2}
+    categories: {SliceGoodReach: 32, FlatGoodReach: 28, FlatBadReach: 11, SliceBadReach: 11, VolleyReflex: 9, FlatReturn: 6, FlatPower: 5, SliceReturn: 4, "-": 2, FlatFinesse: 2}
+    root_travel_last_20f_before_contact_cm_min_med_max: [63.2, 136.5, 184.1]
+    root_travel_last_40f_before_contact_cm_min_med_max: [74.4, 281.0, 361.5]
+    root_travel_to_contact_cm_min_med_max: [75.5, 356.8, 606.9]
+    root_travel_contact_to_out_cm_min_med_max: [22.7, 158.4, 380.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.45, 5.3, 10.03]
+  ReflexVolley:
+    clips_men: 8
+    clips_women: 8
+    swing_type: {FH: 5, BH: 3}
+    height: {Shoulder: 3, Waist: 3, Knee: 2}
+    power_q: {Normal: 7, Bad: 1}
+    control_q: {Good: 8}
+    preference: {"5": 8}
+    ignore_speed_coef: 0
+    frames_min_med_max: [116.0, 142.0, 165.0]
+    contact_frame_min_med_max: [37.0, 37.0, 40.0]
+    entry_to_contact_shortest_min_med_max: [2.0, 5.5, 11.0]
+    entry_to_contact_longest_min_med_max: [37.0, 37.0, 40.0]
+    contact_to_out_min_med_max: [40.0, 60.0, 81.0]
+    groups: {Swings_Volley_FH_Jog_Medium: 5, Swings_Volley_BH_Jog_Medium: 3}
+    categories: {VolleyReflex: 8}
+    root_travel_last_20f_before_contact_cm_min_med_max: [21.4, 42.6, 68.4]
+    root_travel_last_40f_before_contact_cm_min_med_max: [25.9, 51.4, 75.7]
+    root_travel_to_contact_cm_min_med_max: [25.9, 51.5, 75.7]
+    root_travel_contact_to_out_cm_min_med_max: [74.5, 188.1, 228.2]
+    root_speed_at_contact_cm_per_frame_min_med_max: [1.41, 3.62, 5.06]
+  Smash:
+    clips_men: 19
+    clips_women: 19
+    swing_type: {FH: 10, BH: 9}
+    height: {"-": 19}
+    power_q: {Good: 8, Normal: 7, VeryBad: 4}
+    control_q: {Good: 19}
+    preference: {"5": 15, "3": 4}
+    ignore_speed_coef: 0
+    frames_min_med_max: [102.0, 141.0, 205.0]
+    contact_frame_min_med_max: [23.0, 59.0, 92.6]
+    entry_to_contact_shortest_min_med_max: [4.0, 9.0, 27.6]
+    entry_to_contact_longest_min_med_max: [23.0, 59.0, 92.6]
+    contact_to_out_min_med_max: [26.0, 42.0, 61.0]
+    groups: {"-": 8, Swings_FH_Smash: 6, Swings_BH_Smash: 5}
+    categories: {Smash: 19, VolleyReflex: 9}
+    root_travel_last_20f_before_contact_cm_min_med_max: [10.1, 44.6, 89.0]
+    root_travel_last_40f_before_contact_cm_min_med_max: [27.0, 111.5, 191.7]
+    root_travel_to_contact_cm_min_med_max: [27.0, 178.2, 307.6]
+    root_travel_contact_to_out_cm_min_med_max: [9.9, 93.8, 158.5]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.24, 2.37, 4.41]
+  WrongFoot:
+    clips_men: 15
+    clips_women: 15
+    swing_type: {"-": 15}
+    height: {"-": 15}
+    power_q: {"-": 15}
+    control_q: {"-": 15}
+    preference: {"5": 15}
+    ignore_speed_coef: 1
+    frames_min_med_max: [81.0, 96.0, 691.0]
+    contact_frame_min_med_max: null
+    entry_to_contact_shortest_min_med_max: null
+    entry_to_contact_longest_min_med_max: null
+    contact_to_out_min_med_max: null
+    groups: {Tr_Sidesteps_To_Jog: 9, EOP: 2, Rush: 2, Tr_Backsteps_To_Jog: 2}
+    categories: {"-": 15}
+  BadControl:
+    clips_men: 4
+    clips_women: 4
+    swing_type: {BH: 2, FH: 2}
+    height: {Shoulder: 2, Waist: 2}
+    power_q: {Bad: 4}
+    control_q: {Good: 4}
+    preference: {"5": 4}
+    ignore_speed_coef: 0
+    frames_min_med_max: [120.0, 137.0, 157.0]
+    contact_frame_min_med_max: [42.5, 46.3, 47.5]
+    entry_to_contact_shortest_min_med_max: [8.0, 8.0, 10.0]
+    entry_to_contact_longest_min_med_max: [42.3, 46.1, 47.3]
+    contact_to_out_min_med_max: [50.3, 50.7, 58.9]
+    groups: {Swings_BH_Steps: 2, Swings_FH_Steps: 2}
+    categories: {FlatPowerfulBall: 4}
+    root_travel_last_20f_before_contact_cm_min_med_max: [37.0, 46.8, 56.6]
+    root_travel_last_40f_before_contact_cm_min_med_max: [71.9, 77.1, 105.1]
+    root_travel_to_contact_cm_min_med_max: [75.0, 84.9, 119.1]
+    root_travel_contact_to_out_cm_min_med_max: [56.8, 65.9, 84.1]
+    root_speed_at_contact_cm_per_frame_min_med_max: [1.78, 1.9, 2.49]
+  SplitStepsCompliant:
+    clips_men: 9
+    clips_women: 9
+    swing_type: {"-": 9}
+    height: {"-": 9}
+    power_q: {"-": 9}
+    control_q: {"-": 9}
+    preference: {"5": 9}
+    ignore_speed_coef: 0
+    frames_min_med_max: [90.0, 197.0, 251.0]
+    contact_frame_min_med_max: null
+    entry_to_contact_shortest_min_med_max: null
+    entry_to_contact_longest_min_med_max: null
+    contact_to_out_min_med_max: null
+    groups: {Jog: 3, Rush: 3, Volley_Repositioning: 3}
+    categories: {"-": 9}
+  WoodDownCompliant:
+    clips_men: 8
+    clips_women: 8
+    swing_type: {BH: 6, FH: 2}
+    height: {Knee: 8}
+    power_q: {Normal: 6, Good: 2}
+    control_q: {Bad: 6, Good: 2}
+    preference: {"5": 8}
+    ignore_speed_coef: 6
+    frames_min_med_max: [139.0, 154.0, 163.0]
+    contact_frame_min_med_max: [38.0, 46.5, 62.0]
+    entry_to_contact_shortest_min_med_max: [2.0, 6.2, 8.1]
+    entry_to_contact_longest_min_med_max: [38.0, 46.5, 62.0]
+    contact_to_out_min_med_max: [24.0, 35.0, 50.0]
+    groups: {Swings_BH_Jog_Medium: 6, Swings_FH_Jog_Medium: 2}
+    categories: {FlatGoodReach: 6, FlatFinesse: 2, FlatPower: 2}
+    root_travel_last_20f_before_contact_cm_min_med_max: [99.3, 116.0, 158.4]
+    root_travel_last_40f_before_contact_cm_min_med_max: [229.4, 250.4, 331.1]
+    root_travel_to_contact_cm_min_med_max: [250.5, 296.5, 390.1]
+    root_travel_contact_to_out_cm_min_med_max: [90.8, 153.9, 209.2]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.94, 4.55, 6.9]
+  WoodUpCompliant:
+    clips_men: 12
+    clips_women: 7
+    swing_type: {BH: 6, FH: 4, "-": 2}
+    height: {Waist: 4, Knee: 3, Shoulder: 3, "-": 2}
+    power_q: {Good: 10, "-": 2}
+    control_q: {Good: 10, "-": 2}
+    preference: {"5": 12}
+    ignore_speed_coef: 0
+    frames_min_med_max: [95.0, 117.0, 540.0]
+    contact_frame_min_med_max: [40.0, 47.0, 48.0]
+    entry_to_contact_shortest_min_med_max: [4.0, 5.5, 10.0]
+    entry_to_contact_longest_min_med_max: [40.0, 47.0, 48.0]
+    contact_to_out_min_med_max: [16.0, 25.5, 40.0]
+    groups: {Swings_BH_Steps: 6, Swings_FH_Steps: 4, EOP: 2}
+    categories: {FlatPower: 10, FlatFinesse: 3, "-": 2}
+    root_travel_last_20f_before_contact_cm_min_med_max: [1.5, 24.1, 40.9]
+    root_travel_last_40f_before_contact_cm_min_med_max: [16.0, 36.5, 70.3]
+    root_travel_to_contact_cm_min_med_max: [16.0, 37.5, 79.2]
+    root_travel_contact_to_out_cm_min_med_max: [7.2, 20.0, 52.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [0.5, 0.89, 1.63]
+  FrustrationLow: null  # no clip
+  FrustrationHigh: null  # no clip
+  VictoryLow: null  # no clip
+  VictoryMedium:
+    clips_men: 26
+    clips_women: 13
+    swing_type: {"-": 26}
+    height: {"-": 26}
+    power_q: {"-": 26}
+    control_q: {"-": 26}
+    preference: {"5": 26}
+    ignore_speed_coef: 0
+    frames_min_med_max: [327.0, 508.0, 540.0]
+    contact_frame_min_med_max: null
+    entry_to_contact_shortest_min_med_max: null
+    entry_to_contact_longest_min_med_max: null
+    contact_to_out_min_med_max: null
+    groups: {EOP: 26}
+    categories: {"-": 26}
+  VictoryHigh: null  # no clip
+  TrickShot:
+    clips_men: 2
+    clips_women: 2
+    swing_type: {BH: 1, FH: 1}
+    height: {Knee: 2}
+    power_q: {Good: 2}
+    control_q: {Good: 2}
+    preference: {"5": 1, "8": 1}
+    ignore_speed_coef: 0
+    frames_min_med_max: [154.0, 164.0, 174.0]
+    contact_frame_min_med_max: [66.0, 68.0, 70.0]
+    entry_to_contact_shortest_min_med_max: [16.0, 18.5, 21.0]
+    entry_to_contact_longest_min_med_max: [66.0, 68.0, 70.0]
+    contact_to_out_min_med_max: [44.0, 51.0, 58.0]
+    groups: {Swings_BH_Jog_Medium: 1, Swings_FH_Jog_Medium: 1}
+    categories: {FlatFinesse: 2, FlatPower: 2}
+    root_travel_last_20f_before_contact_cm_min_med_max: [72.3, 86.3, 100.4]
+    root_travel_last_40f_before_contact_cm_min_med_max: [163.7, 189.5, 215.3]
+    root_travel_to_contact_cm_min_med_max: [330.2, 352.8, 375.4]
+    root_travel_contact_to_out_cm_min_med_max: [22.7, 46.6, 70.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.45, 3.54, 4.64]
+  WoodRadiusCompliant:
+    clips_men: 36
+    clips_women: 36
+    swing_type: {FH: 24, BH: 12}
+    height: {Knee: 17, Waist: 16, Shoulder: 3}
+    power_q: {Normal: 29, VeryBad: 6, Bad: 1}
+    control_q: {Bad: 19, Good: 12, VeryBad: 5}
+    preference: {"5": 36}
+    ignore_speed_coef: 23
+    frames_min_med_max: [131.0, 157.0, 204.0]
+    contact_frame_min_med_max: [35.0, 47.7, 75.0]
+    entry_to_contact_shortest_min_med_max: [2.0, 7.0, 11.0]
+    entry_to_contact_longest_min_med_max: [35.0, 47.7, 75.0]
+    contact_to_out_min_med_max: [20.6, 43.5, 74.0]
+    groups: {Swings_FH_Jog_Medium: 24, Swings_BH_Jog_Medium: 12}
+    categories: {FlatGoodReach: 18, SliceGoodReach: 12, FlatBadReach: 6, SliceBadReach: 6}
+    root_travel_last_20f_before_contact_cm_min_med_max: [99.3, 148.4, 184.1]
+    root_travel_last_40f_before_contact_cm_min_med_max: [229.4, 308.6, 361.5]
+    root_travel_to_contact_cm_min_med_max: [230.9, 378.3, 606.9]
+    root_travel_contact_to_out_cm_min_med_max: [86.2, 185.8, 380.6]
+    root_speed_at_contact_cm_per_frame_min_med_max: [2.94, 5.37, 10.03]

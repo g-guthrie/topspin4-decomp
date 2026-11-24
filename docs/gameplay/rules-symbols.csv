@@ -1,0 +1,46 @@
+module,address,name,confidence,evidence
+Swing_DLL.xex,88676028,Scoring_CreateClassForFormat,high,factory selects one of five scoring vtables by CRC32 of the game format (cfg+0x1d0); Standard=0xE981B5D1
+Swing_DLL.xex,8866a5e0,StdScoring_Init,high,vtable 880f4900 slot +4; stores owner and RulesInfo pointer (owner+0x44)+0x90 and zeroes counters
+Swing_DLL.xex,88677058,StdScoring_StartMatch,high,reads match config (+4 games/set +8 sets +0xc +0xd +0x78) then StartSet/StartGame/UpdateServerAndEnds
+Swing_DLL.xex,88676fb0,StdScoring_InitServeState,medium,writes serve-side and ends hashes into owner+0x44+0x48 then calls ResetCounters
+Swing_DLL.xex,8866a1c8,StdScoring_OnPointEnd,high,vtable slot +0x18; fault/let/double-fault logic then AddPoint; also withdrawal branch (CRC32 Withdrawal=0x22703895)
+Swing_DLL.xex,8865c648,Scoring_RefreshDisplayScore,high,stores 0/15/30/40/-1 display values and deuce flags from raw point counts
+Swing_DLL.xex,8865c308,Scoring_GetPointWinner,high,maps point-end reason hash to winning player; Let returns -1
+Swing_DLL.xex,88669cf8,StdScoring_PointWinsMatch,medium,simulates game/set/match completion if a given player wins the next point
+Swing_DLL.xex,88676668,StdScoring_ClassifyPointImportance,medium,stores one of CRC32 Normal/Important/Crucial (0x26296dd2/0x4850af43/0xc920ac38) at RulesInfo+0x64
+Swing_DLL.xex,886764a0,StdScoring_UpdateLeadStats,low,writes per-player lead values into owner+0x50 stat entries; contains tiebreak 98-98 cap check
+Swing_DLL.xex,88676228,StdScoring_UpdateSetMatchPointFlags,medium,sets per-player flags when games>=gamesPerSet-1 and ahead or in tiebreak; match point when sets won == (sets-1)/2
+Swing_DLL.xex,88676af0,StdScoring_UpdateServerAndEnds,high,server=(tbSwitches+totalGames)%2; serve side from point parity; ends parity from ceil(games/2) per set plus tiebreak changeovers
+Swing_DLL.xex,8866a188,StdScoring_ResetCounters,high,calls ResetScoreRecords and zeroes class +0x18 +0x1c +0x20
+Swing_DLL.xex,88676db0,StdScoring_AddPoint,high,increments winner points; game won when points>=target and lead>=2 (or tiebreak cap 99 or short format); tiebreak counters every 6 and odd points
+Swing_DLL.xex,88676960,StdScoring_GameWon,high,increments games for current set; resets points; set won when games>=gamesToWin and lead>=2 or tiebreak
+Swing_DLL.xex,8866a060,StdScoring_SetWon,high,increments sets won; match over when final set index or 2*sets>numSets else advances set
+Swing_DLL.xex,88676898,StdScoring_StartGame,high,games both equal gamesToWin starts tiebreak (target 7) else target 4 (1 in short format)
+Swing_DLL.xex,8865c578,StdScoring_StartSet,high,deciding set with final-set flag becomes 10 point super tiebreak; sets per-set flag
+Swing_DLL.xex,88669f30,StdScoring_TotalGamesPlayed,high,sums games of both players over sets 0..current
+Swing_DLL.xex,88669c30,Scoring_ResetScoreRecords,high,zeroes per-set games/tiebreak/flag entries and RulesInfo flags +0x30..+0x3a +0x46..+0x48
+Swing_DLL.xex,88669878,Rules_PublishPointEndFlags,high,copies game/set/match-over flags into RulesInfo +0x44..+0x46 and updates second-serve flag +9
+Swing_DLL.xex,8865c3d8,StdScoring_ComputeMatchProgress,low,returns a 0..1 float from games/sets remaining stored at owner+0x30+0x32c
+Swing_DLL.xex,8865c790,Scoring_SelectModeFloat,low,stores a float constant at owner+0x30+0x330 depending on mode ids
+Swing_DLL.xex,8865cbc0,Scoring_InitOwner,high,matched: stores owner and RulesInfo pointer; see src/xbox360/gp_rules_8865CBC0.c
+Swing_DLL.xex,8865c558,Scoring_GetPointWinnerThunk,high,matched: tail-calls vtable slot 0x20 with owner+0x48; see src/xbox360/gp_rules_8865C558.c
+Swing_DLL.xex,88676950,StdScoring_UpdateStats,high,matched: tail-calls fn_88674ED0 with owner+0x4C; see src/xbox360/gp_rules_88676950.c
+Swing_DLL.xex,8865c920,FirstToN_ClassC_OnPointEnd,medium,vtable 880f4990 slot +0x18; point-end handler with withdrawal branch for mode hash 0xD8898BEC
+Swing_DLL.xex,8865c818,FirstToN_ClassC_AddPoint,medium,winner points++ and game over when lead>=2 and points>=cfg+0x1d4
+Swing_DLL.xex,8865ccd0,FirstToN_ClassE_OnPointEnd,medium,vtable 880f4a20 slot +0x18; mode hash 0x5EC3EE35
+Swing_DLL.xex,8865cbd8,FirstToN_ClassE_AddPoint,medium,winner points++ and loser reset to 0; game over at cfg+0x1d4
+Swing_DLL.xex,8865d108,FirstToN_ClassD_OnPointEnd,medium,vtable 880f49d8 slot +0x18; mode hash 0xDC5643EE
+Swing_DLL.xex,8865cf88,FirstToN_ClassD_AddPoint,medium,reason-dependent winner++ or loser-- clamped at 0; game over when lead>=2 and points>=cfg+0x1d4
+Swing_DLL.xex,8865d3c0,FirstToN_ClassB_OnPointEnd,low,vtable 880f4948 slot +0x18; mode hash 0xDA442B95; not read in detail
+Swing_DLL.xex,8866b1c8,FirstToN_ClassB_AddPoint,low,vtable 880f4948 slot +0x3c/0x40; not read in detail
+Swing_DLL.xex,8888e828,Umpire_Update,high,per-frame dispatcher choosing set/game/point/let calls from RulesInfo flags +0x44 +0x45 +0x4d +0x40
+Swing_DLL.xex,8888c7e8,Umpire_AnnounceSet,high,formats Root/Umpire/SetNormal strings from per-set game and tiebreak entries
+Swing_DLL.xex,8888cb48,Umpire_AnnounceGame,high,formats Root/Umpire/GameNormal strings (TieBreak/SuperTieBreak selected by target 7)
+Swing_DLL.xex,8888cce8,Umpire_AnnouncePoint,high,formats Rally score Deuce Advantage and TieBreakNormal strings from display scores
+Swing_DLL.xex,8888cf40,Umpire_AnnounceLet,high,selects LetFirstServe or LetSecondServe from RulesInfo +9
+Swing_DLL.xex,8888c620,Umpire_GetPlayerNameToken,medium,builds the player name token used by umpire strings
+Swing_DLL.xex,886a8170,ServiceJudge_Update,medium,emits Let Fault Miss reasons from serve trajectory timeline (LetIn 0x8F903DFB LetOut 0x02315629)
+Swing_DLL.xex,886a5718,PointJudge_RegisterPointEnd,medium,writes reason hash to owner+0x48 info and marks the judge done
+Swing_DLL.xex,886a84c0,RallyJudge_Update,low,references In/Out/Let/Fault reasons; not read in detail
+Swing_DLL.xex,88685060,Crowd_ComputeEndOfPointModifiers,medium,end of point modifier text (Ace Double fault Game point Set point Match point) from RulesInfo
+Swing_DLL.xex,88792d48,Script_InitMatchRules,high,script InitMatchRules (string registered at 887b41e8): writes match config +4 +8 +0xc +0xd +0xe +0xf

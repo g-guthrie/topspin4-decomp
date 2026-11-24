@@ -34,6 +34,10 @@ class SymbolMapTests(unittest.TestCase):
                     "-Wall",
                     "-Wextra",
                     "-Werror",
+                    # Matching sources intentionally declare callees without
+                    # prototypes (MSVC accepts them); Apple clang warns about
+                    # that even in C11. GCC ignores the unknown option.
+                    "-Wno-deprecated-non-prototype",
                     "-fsyntax-only",
                     str(source),
                 ],

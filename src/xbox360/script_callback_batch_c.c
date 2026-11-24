@@ -9,7 +9,7 @@ void fn_888F09E0(void *service);
 void fn_888F2D70(void *service);
 void fn_888548F8(void *object);
 void fn_888F3478(void *service);
-void fn_888F70A0(void);
+void ts4_rigs_restore_888F70A0(void);
 
 /* Registered as KingOfTheCourt_WaitForPlayersLoading. */
 ts4_u32 ts4_script_king_of_the_court_wait_for_players_loading(void)
@@ -62,6 +62,6 @@ ts4_u32 ts4_script_enter_practice_ground(void)
 /* Registered as FacialStopAnim. */
 ts4_u32 ts4_script_facial_stop_anim(void)
 {
-    fn_888F70A0();
+    ts4_rigs_restore_888F70A0();
     return 0;
 }
